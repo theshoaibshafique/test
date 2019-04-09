@@ -1,0 +1,22 @@
+@import '../../styles/global-styles';
+
+header {
+    height: $header-height;
+    background: #fff;
+    border-bottom: 1px solid $light-blue;
+    img {
+        height: 30px;
+        margin: 10px 0px 0px 15px;
+    }
+    .col {
+        height: 100%;
+    }
+    .menu-column {
+        height: $header-height;
+    }
+}
+
+.SST-Menu {
+    cursor: pointer;
+    margin: 0px 10px 0px 0px;
+}

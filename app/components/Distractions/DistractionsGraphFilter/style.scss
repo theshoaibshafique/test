@@ -1,0 +1,20 @@
+@import '../../../styles/global-styles';
+
+.external {
+    span[class*="MuiSwitch-colorSecondary"][class*="MuiSwitch-checked"] {
+      color: $dark-green;
+      & + span[class*="MuiSwitch-bar"] { background-color: $dark-green; }
+    }
+}
+.alerts {
+    span[class*="MuiSwitch-colorSecondary"][class*="MuiSwitch-checked"] {
+      color: $pink;
+      & + span[class*="MuiSwitch-bar"] { background-color: $pink; }
+    }
+}
+.door {
+    span[class*="MuiSwitch-colorSecondary"][class*="MuiSwitch-checked"] {
+      color: $brown;
+      & + span[class*="MuiSwitch-bar"] { background-color: $brown; }
+    }
+}

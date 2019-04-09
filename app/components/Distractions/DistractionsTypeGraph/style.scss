@@ -1,0 +1,37 @@
+@import '../../../styles/global-styles';
+
+.Distractions-Type-Graph {
+    margin-top: 25px;
+}
+
+.Distractions-Bar {
+    height: 0px;
+    margin: 20px 0px;
+    border-bottom: none;
+    &:after {
+        content: ' ';
+        position: absolute;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        right: -10px;
+        top: -10px;
+        border: 2px solid black;
+        background: #fff;
+    }
+    &.external {
+        height: 2px;
+        background: $dark-green;
+        &:after { border-color: $dark-green; }
+    }
+    &.alerts {
+        height: 2px;
+        background: $pink;
+        &:after { border-color: $pink; }
+    }
+    &.door {
+        height: 2px;
+        background: $brown;
+        &:after { border-color: $brown; }
+    }
+}

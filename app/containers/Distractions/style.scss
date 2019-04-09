@@ -1,0 +1,36 @@
+@import '../../styles/global-styles';
+
+.Package-Section {
+    h4 {
+        text-align: center;
+        margin-bottom: 0px;
+    }
+}
+
+.Distractions-Dashboard {
+    .dashboard-stats {
+        text-align: center;
+        width: '50%';
+        flex: 1 1 auto;
+        @include fontSizeLineHeight(1.5);
+        span {
+            @include fontSizeLineHeight(3);
+        }
+    }
+}
+
+.card-content {
+    margin: 60px 0px;
+    @include fontSizeLineHeight(1.5);
+    .large { @include fontSizeLineHeight(3.5); }
+    .medium {
+        @include fontSizeLineHeight(2);
+        margin: 0px;
+    }
+    p {
+        @include fontSizeLineHeight(1);
+        margin: 25px 0px;
+    }
+    &.card-content-small { margin-top: 20px; }
+}
+

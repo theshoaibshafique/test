@@ -1,0 +1,10 @@
+@import '../../../styles/global-styles';
+
+.Distraction-Category-Main-Column {
+    width: 45%;
+    margin: 0px 2.5%;
+}
+.Alert-Alarm-Wrapper { margin-top: 25px; }
+.Alert-Alarm-Stat { @include fontSizeLineHeight(1.5); }
+.Distraction-Icon-Row { margin-top: 25px; }
+.Distraction-Icon { margin-right: 25px; }

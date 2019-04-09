@@ -1,0 +1,19 @@
+@import '../../../styles/global-styles';
+
+.Package-Step {
+    text-align: center;
+    line-height: 1.1rem;
+    font-weight: 600;
+    display: inline-block;
+    width: 25%;
+    vertical-align: top;
+    cursor: pointer;
+    &:before {
+        @extend .triangle;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid $dark-blue;
+        top: -15px;
+        left: calc(50% - 10px);
+    }
+}

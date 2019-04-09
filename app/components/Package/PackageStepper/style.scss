@@ -1,0 +1,16 @@
+@import '../../../styles/global-styles';
+
+.Package-Stepper-Wrapper {
+    width: 60%;
+    max-width: 820px;
+    margin: 50px auto;
+    hr {
+        border: 0px;
+        border-bottom: 1px solid $dark-blue;
+        margin-bottom: 0px;
+    }
+}
+
+.Package-Steps {
+    margin-top: 15px;
+}

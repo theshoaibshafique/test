@@ -1,0 +1,15 @@
+@import '../../../styles/global-styles';
+
+.Distractions-Graph-Header-Marker {
+    margin-bottom: 15px;
+    &:after {
+        content: ' ';
+        position: absolute;
+        display: block;
+        height: 15px;
+        border-left: 1px solid $grey;
+        bottom: -15px;
+        left: 0px;
+    }
+    &:last-child { display: none; }
+}

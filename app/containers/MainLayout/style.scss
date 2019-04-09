@@ -1,0 +1,28 @@
+@import '../../styles/global-styles';
+
+.APP-MAIN-WRAPPER {
+  height: calc(100% - #{$header-height} )
+}
+
+.MAIN-NAVIGATION [class*="AnchorLeft"] {
+  width: $nav-width;
+  border-right: 1px solid $light-blue;
+  height: calc(100% - #{$header-height});
+  top: $header-height;
+}
+
+.Nav-Wrapper {
+  background: #fff;
+  width: $nav-width;
+  vertical-align: top;
+}
+
+.Content-Wrapper {
+  width: calc(100% - #{$nav-width});
+  margin-left: $nav-width;
+  height: 100%;
+  overflow-x: hidden;
+  & > section {
+    padding: 3rem;
+  }
+}

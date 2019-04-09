@@ -1,0 +1,82 @@
+@import '../../../../app/styles/global-styles';
+
+.Package-Selector {
+    list-style: none;
+    color: #fff;
+    font-weight: bold;
+    li > div > a {
+        display: block;
+        width: 100%;
+        border-top: 1px solid $border-grey;
+        border-bottom: 1px solid $border-grey;
+        text-transform: uppercase;
+        line-height: 50px;
+        height: 50px;
+        font-size: 0.9rem;
+        padding-left: 20px;
+    }
+    a {
+        color: $dark-blue;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .fa-chevron-right {
+        transition: all 0.5s;
+        margin-right: 15px;
+        position: absolute;
+        right: 0px;
+        top: 17px;
+    }
+    .SubPackage-Links {
+        max-height: 0px;
+        font-weight: normal;
+        margin-left: 15px;
+        .SubPackage-Link {
+            height: 20px;
+            line-height: 20px;
+            margin: 20px 0px;
+            // height: 50px;
+            // line-height: 50px;
+            font-size: 0.9rem;
+            padding-left: 25px;
+        }
+    }
+    .SubPackage-Link { position: relative; opacity: 0; display: none; }
+    .Main-Package.open,
+    .Main-Package.selected {
+        .SubPackage-Links { max-height: 700px; }
+        .SubPackage-Link { opacity: 1; display: block; }
+        .fa-chevron-right { transform: rotate(90deg); }
+    }
+    .Main-Package.selected {
+        & >a {
+            @extend .dark-green;
+            svg { @extend .dark-green; }
+            &:before {
+                content: ' ';
+                background: $dark-green;
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                width: 5px;
+                height: 100%;
+            }
+        }
+    }
+    .SubPackage-Link:hover > a,
+    .SubPackage-Link .selected {
+            @extend .dark-green;
+            &:before {
+                content: ' ';
+                background: $dark-green;
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                width: 1px;
+                height: 100%;
+            }
+    }
+    .SubPackage-Link .selected { @extend .bold; }
+}

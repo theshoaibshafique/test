@@ -1,0 +1,187 @@
+@import './radial.scss';
+
+@mixin fontSizeLineHeight($property) {
+  font-size: $property + rem;
+  line-height: ($property + 0.2) + rem;
+}
+
+$dark-blue : #004f6e;
+$light-blue : #3db3e3;
+$dark-green : #009483;
+$light-green : #65c7c7;
+$yellow : #ffb71b;
+$purple : #592d82;
+$dark-grey: #51596C;
+$grey: #999999;
+$light-grey: #e6e6e6;
+$border-grey: #C6C6C6;
+$brown: #70450d;
+$pink: #cf0ab2;
+$grey: #A2A2A2;
+$red: #C1272D;
+
+$header-height: 55px;
+$nav-width: 240px;
+
+html,
+body,
+#app,
+.app-wrapper {
+  height: 100%;
+  width: 100%;
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #f2f2f2;
+}
+
+body.fontLoaded {
+  font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+#app {
+}
+
+p,
+label {
+  line-height: 1.5em;
+}
+
+.dark-blue { color: $dark-blue; }
+.light-blue { color: $light-blue; }
+.dark-green { color: $dark-green; }
+.light-green { color: $light-green; }
+.yellow { color: $yellow; }
+.purple { color: $purple; }
+.pink { color: $pink; }
+.brown { color: $brown; }
+.grey { color: $grey; }
+.dark-grey { color: $dark-grey; }
+.grey { color: $grey; }
+.red { color: $red; }
+
+.small { font-size: 0.875rem; }
+.smaller { font-size: 0.75rem; }
+.large { @include fontSizeLineHeight(1.25); }
+.larger {
+  @include fontSizeLineHeight(1.5);
+  .highlight { @include fontSizeLineHeight(2.5) }
+}
+.largest {
+  @include fontSizeLineHeight(2.5);
+}
+
+.bold { font-weight: bold; }
+.semibold { font-weight: 700; }
+.small { @include fontSizeLineHeight(0.9); }
+.capitalize { text-transform: uppercase; }
+
+.left-align { text-align: left; }
+.right-align { text-align: right; }
+.center-align { text-align: center; }
+.vertical-top { vertical-align: top; }
+
+.inline { display: inline-block; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+
+.hidden { display: none; }
+.overflow-y { overflow-y: auto; }
+
+.padding20 { padding: 20px; }
+.padding0 { padding: 0px; }
+.margin0 { margin: 0px !important; }
+
+.flex {
+  display: flex;
+  &.vertical-center {
+    align-items: center;
+    justify-content: center;
+  }
+  &.left-center {
+    align-items: center;
+  }
+  &.right-center {
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+.triangle {
+    content: ' ';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+Button.primary {
+  color: #fff;
+  background: $dark-blue !important;
+}
+
+.round {
+  border-radius: 25px;
+}
+
+.Modal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 32px;
+  outline: none;
+  position: absolute;
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12);
+  background-color: #fff;
+  h5 {
+    font-size: 1.5rem;
+    margin: 0px;
+  }
+  .Button-Row {
+    margin: 25px 0px 15px;
+    Button { margin-left: 15px; }
+  }
+}
+
+
+span[class*="MuiTypography-subheading"] { color: $dark-blue; }
+span[class*="MuiSwitch-colorSecondary"][class*="MuiSwitch-checked"] {
+  color: $dark-blue;
+  & + span[class*="MuiSwitch-bar"] { background-color: $dark-blue; }
+}
+
+.no-border [class*="MuiInput-underline"]:before { border: none; }
+.Procedure-Filter [class*="MuiSelect"] {
+  color: $light-blue;
+}
+
+a hr { border-bottom: none; }
+
+.People-Icon-Wrapper{
+  width: 165px;
+  margin: 30px auto;
+}
+
+/*************************************************************************/
+/**                                                                     **/
+/**                             CARD STYLES                             **/
+/**                                                                     **/
+/*************************************************************************/
+.Card {
+  .small-text { @include fontSizeLineHeight(0.875); }
+  h1 { @include fontSizeLineHeight(3); font-weight: bold; margin: 15px 0px; }
+  .Card-Header {
+    @include fontSizeLineHeight(1);
+    margin-top: 0px;
+    &.large {
+      @include fontSizeLineHeight(1.75);
+      margin: 0px 8%;
+    }
+  }
+  .Card-Content-Wrapper { padding: 0px 25px; }
+}
+
+.dashboard-even-height [class*="MuiPaper-root"] { height: 100%; }
