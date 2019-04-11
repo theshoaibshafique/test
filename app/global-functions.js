@@ -17,7 +17,7 @@ function getInsightData(api, tileName, oauth) {
     .then(response => response.json()); // parses JSON response into native Javascript objects
 }
 
-function getSurveyData(api, tileName, oauth) {
+function getSurveyData(api, tileName, oauth, surveyName) {
     return fetch(api, {
         method: 'post',
         headers: {
@@ -26,7 +26,7 @@ function getSurveyData(api, tileName, oauth) {
         },
         body: JSON.stringify({
             "facilityName": null,
-            "surveyName": "abc-123",
+            "surveyName": surveyName,
             "tileName": tileName,
             "startDate": "2019-03-01",
             "endDate": "2019-05-01",
@@ -41,4 +41,19 @@ function customMinMax(value) {
     return (newValue < 1) ? 1 : newValue;
 }
 
-export default {getInsightData, getSurveyData, customMinMax};
+function mapValuesToProperties(fullList, values, targetProperty) {
+    let possibleValues = fullList.reduce(function(map, obj) {
+        map[obj] = 0;
+        return map;
+    }, {});
+    values.map((value) => {
+        possibleValues[value.value] = value[targetProperty]
+    });
+    let formattedObject = Object.keys(possibleValues).map((key, index) => {
+        return {'name': key, 'responses': possibleValues[key]};
+    });
+
+    return formattedObject;
+}
+
+export default {getInsightData, getSurveyData, customMinMax, mapValuesToProperties};

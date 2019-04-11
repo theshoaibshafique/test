@@ -1,5 +1,5 @@
 /*
- * Distractions Page
+ * Distractions by Category Page
  *
  */
 
@@ -18,7 +18,7 @@ import TargetLarge from './img/target-large.jpg'
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import getInsightData from '../../global-functions';
+import globalFuncs from '../../global-functions';
 
 export default class DistractionsCategory extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -68,7 +68,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
   }
 
   card1Data() {
-    getInsightData(process.env.DISTRACTIONS_API, 'DDC_AIAANFSD', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DDC_AIAANFSD', this.props.usertoken).then((result) => {
       let cardValue = {...this.state.card1};
       cardValue['lowPercentage'] = result.body.TopItem;
       cardValue['highPercentage'] = result.body.BottomItem;
@@ -81,7 +81,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
   }
 
   card2Data() {
-    getInsightData(process.env.DISTRACTIONS_API, 'DDC_ECICFOTOACTINRTTC', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DDC_ECICFOTOACTINRTTC', this.props.usertoken).then((result) => {
       let cardValue = {...this.state.card2};
       cardValue['externalDuration'] = Math.round(result.body.Duration);
       cardValue['externalInstance'] = Math.round(result.body.Average);
@@ -93,7 +93,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
   }
 
   card3Data() {
-    getInsightData(process.env.DISTRACTIONS_API, 'DDC_DOIEADIIODTP', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DDC_DOIEADIIODTP', this.props.usertoken).then((result) => {
       let cardValue = {...this.state.card3};
       cardValue['enterExitCount'] = Math.round(result.body.Average);
       cardValue['doorInstanceHour'] = Math.round(result.body.Duration);

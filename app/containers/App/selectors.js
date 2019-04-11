@@ -38,6 +38,16 @@ const makeSelectFacilityRooms = () => createSelector(
   (globalState) => globalState.get('facilityRooms')
 );
 
+const makeSelectPublishedSurveys = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('publishedSurveys')
+);
+
+const makeSelectMostRecentSurvey = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('mostRecentSurvey')
+);
+
 export {
   selectGlobal,
   makeSelectCurrentUser,
@@ -46,5 +56,7 @@ export {
   makeSelectRepos,
   makeSelectLocation,
   makeSelectProcedures,
-  makeSelectFacilityRooms
+  makeSelectFacilityRooms,
+  makeSelectPublishedSurveys,
+  makeSelectMostRecentSurvey
 };

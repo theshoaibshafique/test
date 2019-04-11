@@ -107,6 +107,7 @@ export default class Login extends React.PureComponent { // eslint-disable-line 
     })
     .then(response => response.json())
     .then((result) => {
+
       this.props.setMostRecentPublishedSurvey(result)
       this.props.history.push(`/dashboard`);
     })

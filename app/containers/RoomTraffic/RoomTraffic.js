@@ -88,7 +88,7 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
     globalFuncs.getInsightData(process.env.ROOMTRAFFIC_API, 'DRT_CDCS', this.props.usertoken).then((result) => {
       let cardValue = {...this.state.card2};
       cardValue['changeOverInstance'] = Math.round(result.body.Average);
-      cardValue['numberOfProcedures'] = Math.round(result.body.TotalIems);
+      cardValue['numberOfProcedures'] = Math.round(result.body.TotalItems);
       this.setState({
         card2: cardValue
       });

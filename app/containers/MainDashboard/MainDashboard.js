@@ -100,7 +100,7 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
   }
 
   card5Data() {
-    globalFuncs.getSurveyData(process.env.CULTURESURVEY_API, 'MD_CSI', this.props.usertoken).then((result) => {
+    globalFuncs.getSurveyData(process.env.CULTURESURVEY_API, 'MD_CSI', this.props.usertoken, this.props.mostRecentSurvey.name).then((result) => {
       console.log(result);
       // let card5Value = {...this.state.card5};
       // card5Value['people'] = Math.round(result.body.Average);
@@ -157,7 +157,7 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
                     <div className="dark-grey bold smaller">{this.state.cases} cases captured</div>
                   </Grid>
                   <Grid item xs={6}>
-                  <div className="right-align dark-grey bold smaller">{this.state.hours} hours captured</div>
+                    <div className="right-align dark-grey bold smaller">{this.state.hours} hours captured</div>
                   </Grid>
                 </Grid>
                 <div className={`pie-wrapper progress style-2 progress-` + this.state.card1.severePercentage}>
