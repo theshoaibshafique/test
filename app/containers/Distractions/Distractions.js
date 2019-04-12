@@ -100,7 +100,6 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
           <title>Distractions</title>
           <meta name="description" content="SST Insights" />
         </Helmet>
-        <button onClick={() => this.fetchContainerData()}>Fetch</button>
         <Grid container spacing={24} className="Main-Dashboard-Header">
           <Grid item xs={6} className="Dashboard-Welcome dark-blue">
             <ProcedureFilter

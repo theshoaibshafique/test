@@ -65,7 +65,6 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
           <title>Distractions</title>
           <meta name="description" content="SST Insights" />
         </Helmet>
-        <button onClick={() => this.fetchContainerData()}>Fetch</button>
         <Card className="Card Distraction-Category-Card">
           <CardContent className="dark-blue">
             <h3 className="Card-Header">Alerts include alarms and noise from surgical devices</h3>
