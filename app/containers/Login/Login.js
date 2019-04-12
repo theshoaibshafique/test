@@ -136,7 +136,7 @@ export default class Login extends React.PureComponent { // eslint-disable-line 
             provider={new MsalAuthProviderFactory({
               authority: process.env.REACT_APP_AUTHORITY,
               clientID: process.env.REACT_APP_AAD_APP_CLIENT_ID,
-              scopes: ["https://SSTapps.onmicrosoft.com/insightsapitest/user_impersonation", "openid", "offline_access"],
+              scopes: process.env.REACT_APP_AAD_SCOPES.split(' '),
               redirectUri: process.env.REACT_APP_AAD_CALLback,
               type: LoginType.Redirect,
               validateAuthority: false,
