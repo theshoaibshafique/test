@@ -31,7 +31,7 @@ class SurveyResultGraph extends React.Component { // eslint-disable-line react/p
         <Grid item xs={3} className="flex vertical-center">
           <div className="largest purple bold center-align">
             <span className="small">N/A</span><br />
-            {this.props.questionNA}
+            {this.props.questionValue[5]}
           </div>
         </Grid>
       </Grid>

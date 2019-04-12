@@ -95,6 +95,8 @@ label {
 .padding0 { padding: 0px; }
 .margin0 { margin: 0px !important; }
 
+.full-height { height: 100%; }
+
 .flex {
   display: flex;
   &.vertical-center {
@@ -108,6 +110,7 @@ label {
     align-items: center;
     justify-content: flex-end;
   }
+  &.flex-column { flex-direction: column }
 }
 
 .triangle {
