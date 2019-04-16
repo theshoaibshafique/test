@@ -13,6 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import SurveyDemographicGeneral from 'components/SurveyDemographicGeneral';
+import GenericCard from 'components/GenericCard';
 import { BarChart, XAxis, Tooltip, Legend, Bar, ResponsiveContainer } from 'recharts';
 import globalFuncs from '../../global-functions';
 
@@ -20,32 +21,30 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
   constructor(props) {
     super(props);
     this.state = {
-      hospital: "St. Michael's Hospital",
-      cases: 45,
-      hours: 132,
+      cases: null,
+      hours: null,
       card1: {
-        severePercentage: 99
+        severePercentage: null
       },
       card2: {
-        caseList: [
-          'Cholecystectomy', 'Right Colon Resection', 'Gastric Resection', 'Hartmann\'s Reversal', 'Left Color Resection'
-        ],
-        hourList: [
-          'Low Anterior Resection', 'Right Colon Resection', 'Gastric Resection', 'Small Bowel Resection', 'Left Colon Resection'
-        ]
+        caseList: null,
+        caseListLength: null,
+        hourList: null,
+        hourListLength: null
       },
       card3 : {
-        type: "Door Opening"
+        type: null
       },
       card4 : {
-        people: 6
+        people: null
       },
       hospitalName: 'St. Michael\'s Hospital'
     }
   }
 
   componentWillMount() {
-    this.fetchContainerData();
+    if (this.props.userLoggedIn)
+      this.fetchContainerData();
   }
 
   fetchContainerData() {
@@ -72,7 +71,10 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
     globalFuncs.getInsightData(process.env.INSIGHT_API, 'MD_PTA', this.props.usertoken).then((result) => {
       let card2Value = {...this.state.card2};
       card2Value['caseList'] = result.body.TopItem;
+      card2Value['caseListLength'] = result.body.TopItemHour.length;
       card2Value['hourList'] = result.body.TopItemHour;
+      card2Value['hourListLength'] = result.body.TopItemHour.length;
+
       this.setState({
         card2: card2Value
       });
@@ -118,13 +120,20 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
       {name: '50+', responses: 17}
     ];
 
-    let procedureList1 = this.state.card2.caseList.map((procedure) => {
-      return <li key={procedure}>{procedure}</li>
-    })
+    let procedureByCase;
+    if(this.state.card2.caseList) {
+      procedureByCase = this.state.card2.caseList.map((procedure) => {
+        return <li key={procedure}>{procedure}</li>
+      })
+    }
 
-    let procedureList2 = this.state.card2.hourList.map((procedure) => {
-      return <li key={procedure}>{procedure}</li>
-    })
+    let procedureByHours;
+    if(this.state.card2.hourList)  {
+      procedureByHours = this.state.card2.hourList.map((procedure) => {
+        return <li key={procedure}>{procedure}</li>
+      })
+    }
+
 
     return (
       <section className="MAIN-DASHBOARD dashboard-even-height">
@@ -132,7 +141,6 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
           <title>SST Insights Dashboard</title>
           <meta name="description" content="SST Insights Dashboard" />
         </Helmet>
-
         <Grid container spacing={24} className="Main-Dashboard-Header">
           <Grid item xs={9} className="Dashboard-Welcome dark-blue">
             <h3 className="larger">Hello, {this.state.hospitalName}</h3>
@@ -147,38 +155,42 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
         </Grid>
         <Grid container spacing={24}>
           <Grid item xs={6}>
-            <Card className="Card">
-              <CardContent className="dark-blue">
-                <h3 className="Card-Header">Procedures Analyzed Without Severe Intraoperative Adverse Events</h3>
-                <hr />
-                <Grid container spacing={24}>
-                  <Grid item xs={6}>
-                    <div className="dark-grey bold smaller">{this.state.cases} cases captured</div>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <div className="right-align dark-grey bold smaller">{this.state.hours} hours captured</div>
-                  </Grid>
-                </Grid>
-                <div className={`pie-wrapper progress style-2 progress-` + this.state.card1.severePercentage}>
-                  <span className="label">{this.state.card1.severePercentage}<span >%</span></span>
-                  <div className="pie">
-                    <div className="left-side half-circle"></div>
-                    <div className="right-side half-circle"></div>
-                  </div>
-                  <div className="shadow"></div>
-                </div>
-              </CardContent>
-            </Card>
+              <Card className="Card">
+                <CardContent className="dark-blue">
+                  <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                    <h3 className="Card-Header">Procedures Analyzed Without Severe Intraoperative Adverse Events</h3>
+                    <hr />
+                    <Grid container spacing={24}>
+                      <Grid item xs={6}>
+                        <div className="dark-grey bold smaller">{this.state.cases} cases captured</div>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <div className="right-align dark-grey bold smaller">{this.state.hours} hours captured</div>
+                      </Grid>
+                    </Grid>
+                    <div className={`pie-wrapper progress style-2 progress-` + this.state.card1.severePercentage}>
+                      <span className="label">{this.state.card1.severePercentage}<span >%</span></span>
+                      <div className="pie">
+                        <div className="left-side half-circle"></div>
+                        <div className="right-side half-circle"></div>
+                      </div>
+                      <div className="shadow"></div>
+                    </div>
+                  </GenericCard>
+                </CardContent>
+              </Card>
           </Grid>
           <Grid item xs={6}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">Procedure Types Analyzed</h3>
-                <hr />
-                <div className="dark-grey bold smaller">Top 5 procedures(number of cases analyzed)</div>
-                <ol>{procedureList1}</ol>
-                <div className="dark-grey bold smaller">Top 5 procedures(number of hours analyzed)</div>
-                <ol>{procedureList2}</ol>
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">Procedure Types Analyzed</h3>
+                  <hr />
+                  <div className="dark-grey bold smaller">Top {this.state.card2.caseListLength} procedures(number of cases analyzed)</div>
+                  <ol>{procedureByCase}</ol>
+                  <div className="dark-grey bold smaller">Top {this.state.card2.hourListLength} procedures(number of hours analyzed)</div>
+                  <ol>{procedureByHours}</ol>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>
@@ -187,26 +199,30 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">Distractions Insights</h3>
-                <hr />
-                <div className="dark-grey bold smaller">Category of distractions</div>
-                <div className="Card-Content-Wrapper center-align">
-                  <img src={Hallway} style={{marginTop: '25px', width: '100px'}}/>
-                  <h1 className="purple">{this.state.card3.type}</h1>
-                  <div className="small-text dark-grey">
-                    is the category with the highest number of distractions per minute
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">Distractions Insights</h3>
+                  <hr />
+                  <div className="dark-grey bold smaller">Category of distractions</div>
+                  <div className="Card-Content-Wrapper center-align">
+                    <img src={Hallway} style={{marginTop: '25px', width: '100px'}}/>
+                    <h1 className="purple">{this.state.card3.type}</h1>
+                    <div className="small-text dark-grey">
+                      is the category with the highest number of distractions per minute
+                    </div>
                   </div>
-                </div>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">Room Traffic Insights</h3>
-                <hr />
-                <div className="dark-grey bold smaller">Average head count</div>
-                <ORHeadCount headCount={this.state.card4.people} />
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">Room Traffic Insights</h3>
+                  <hr />
+                  <div className="dark-grey bold smaller">Average head count</div>
+                  <ORHeadCount headCount={this.state.card4.people} />
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>

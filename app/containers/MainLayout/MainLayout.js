@@ -26,11 +26,28 @@ import SSTNav from 'components/SSTNav';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
+import AzureLogin from 'components/AzureLogin';
 
 export default class MainLayout extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  constructor(props) {
+    super(props);
+    this.state = {
+      userLoggedIn: false
+    }
+  }
+
+  resourcesGathered() {
+    this.setState({
+      userLoggedIn: true
+    });
+  }
+
   render() {
     return (
       <div className="app-wrapper">
+        <AzureLogin
+          resourcesGathered={() => this.resourcesGathered()}
+        />
         <CssBaseline />
         <Helmet
           titleTemplate="%s - SST Insight"
@@ -63,16 +80,16 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
           </nav>
           <div className="Content-Wrapper inline overflow-y">
             <Switch>
-              <Route path="/dashboard" component={MainDashboard} />
-              <Route path="/distractions/category" component={DistractionsCategory} />
-              <Route path="/distractions/procedure" component={DistractionsProcedure} />
-              <Route path="/distractions/room" component={DistractionsOR} />
-              <Route path="/distractions" component={Distractions} />
-              <Route path="/user-manager" component={UserManager} />
-              <Route path="/culture-survey/demographic" component={CultureSurveyDemographic} />
-              <Route path="/culture-survey/question-results" component={CultureSurveyResult} />
-              <Route path="/culture-survey" component={CultureSurvey} />
-              <Route path="/room-traffic" component={RoomTraffic} />
+              <Route path="/dashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} /> }/>
+              <Route path="/distractions/category" component={() => <DistractionsCategory userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/distractions/procedure" component={() => <DistractionsProcedure userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/distractions/room" component={() => <DistractionsOR userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/distractions" component={() => <Distractions userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/user-manager" component={() => <UserManager userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/culture-survey/demographic" component={() => <CultureSurveyDemographic userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/culture-survey/question-results" component={() => <CultureSurveyResult userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/culture-survey" component={() => <CultureSurvey userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/room-traffic" component={() => <RoomTraffic userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="" component={NotFoundPage} />
             </Switch>
             <SSTFooter />

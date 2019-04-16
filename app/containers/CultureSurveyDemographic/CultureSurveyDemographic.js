@@ -40,7 +40,8 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
   }
 
   componentWillMount() {
-    this.fetchContainerData();
+    if (this.props.userLoggedIn)
+      this.fetchContainerData();
   }
 
   fetchContainerData() {

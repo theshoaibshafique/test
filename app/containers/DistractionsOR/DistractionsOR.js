@@ -30,7 +30,8 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
   }
 
   componentWillMount() {
-    this.fetchContainerData();
+    if (this.props.userLoggedIn)
+      this.fetchContainerData();
   }
 
   fetchContainerData() {

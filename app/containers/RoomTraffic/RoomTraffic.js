@@ -8,6 +8,7 @@ import { Helmet } from 'react-helmet';
 import './style.scss';
 import InsightDate from 'components/InsightDate';
 import ProcedureFilter from 'components/ProcedureFilter';
+import GenericCard from 'components/GenericCard';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -24,41 +25,42 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
       numberOfCase: 66,
       numberOfHours: 133,
       card1: {
-        doorOpenInstance: 40,
-        doorOpenTotal: 3492,
-        hoursOfSurgery: 133,
+        doorOpenInstance: null,
+        doorOpenTotal: null,
+        hoursOfSurgery: null,
         dataBar : [
-          {name: 'Storage Door', instances: 13},
-          {name: 'Sterile Door', instances: 2},
-          {name: 'Patient Door', instances: 9},
-          {name: 'Hallway Door', instances: 16}
+          {name: 'Storage Door', instances: null},
+          {name: 'Sterile Door', instances: null},
+          {name: 'Patient Door', instances: null},
+          {name: 'Hallway Door', instances: null}
         ],
       },
       card2: {
-        numberOfProcedures: 44,
-        changeOverInstance: 2,
+        numberOfProcedures: null,
+        changeOverInstance: null,
       },
       card3: {
-        missingInstance: 99,
-        numberOfProcedures: 77,
+        missingInstance: null,
+        numberOfProcedures: null,
       },
       card4: {
-        averageHeadCount: 6,
+        averageHeadCount: null,
       },
       card5: {
-        hoursOfSurgery: 44,
-        changeOverTotal: 25,
+        hoursOfSurgery: null,
+        changeOverTotal: null,
         dataBar : [
-          {participant: 'Nurses', instances: 40},
-          {participant: 'Anesthesiologist', instances: 11},
-          {participant: 'Surgeons', instances: 0},
+          {participant: 'Nurses', instances: null},
+          {participant: 'Anesthesiologist', instances: null},
+          {participant: 'Surgeons', instances: null},
         ]
       }
     }
   }
 
   componentWillMount() {
-    this.fetchContainerData();
+    if (this.props.userLoggedIn)
+      this.fetchContainerData();
   }
 
   fetchContainerData() {
@@ -163,31 +165,33 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           <Grid item xs={12}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">How Often Does A Door Open After Incision?</h3>
-                <hr />
-                <Grid container spacing={0}>
-                  <Grid item xs={6} className="flex vertical-center" style={{height: '300px'}}>
-                  <div className="center-align larger">
-                    Door Open Count <br />
-                    <span className="highlight purple bold">{this.state.card1.doorOpenInstance} instances</span> <br />
-                    per surgery
-                  </div>
-                  </Grid>
-                  <Grid item xs={6} className="center-align">
-                    <div className="larger">
-                      <span className="highlight purple bold">{this.state.card1.doorOpenTotal}</span><br />
-                      Instances of door open when observe in<br />
-                      <span className="purple bold">{this.state.card1.hoursOfSurgery} hours of surgery</span>
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">How Often Does A Door Open After Incision?</h3>
+                  <hr />
+                  <Grid container spacing={0}>
+                    <Grid item xs={6} className="flex vertical-center" style={{height: '300px'}}>
+                    <div className="center-align larger">
+                      Door Open Count <br />
+                      <span className="highlight purple bold">{this.state.card1.doorOpenInstance} instances</span> <br />
+                      per surgery
                     </div>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={this.state.card1.dataBar}>
-                        <XAxis dataKey="name" />
-                        <Tooltip />
-                        <Bar dataKey="instances" fill="#592d82" />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    </Grid>
+                    <Grid item xs={6} className="center-align">
+                      <div className="larger">
+                        <span className="highlight purple bold">{this.state.card1.doorOpenTotal}</span><br />
+                        Instances of door open when observe in<br />
+                        <span className="purple bold">{this.state.card1.hoursOfSurgery} hours of surgery</span>
+                      </div>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={this.state.card1.dataBar}>
+                          <XAxis dataKey="name" />
+                          <Tooltip />
+                          <Bar dataKey="instances" fill="#592d82" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </Grid>
                   </Grid>
-                </Grid>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>
@@ -196,56 +200,62 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">Changeover During Critical Steps</h3>
-                <hr />
-                <Grid container spacing={24}>
-                  <Grid item xs={12}>
-                    <div className="dark-grey bold smaller">{this.state.card2.numberOfProcedures} procedure types</div>
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">Changeover During Critical Steps</h3>
+                  <hr />
+                  <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                      <div className="dark-grey bold smaller">{this.state.card2.numberOfProcedures} procedure types</div>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <div className="center-align larger">
-                  <FontAwesomeIcon icon="exclamation-triangle" color="#c1272c" size="4x" style={{margin: '25px 0'}} /><br />
-                  <h1 className="highlight purple bold" style={{margin: '15px 0'}}>{this.state.card2.changeOverInstance} Instances</h1>
-                </div>
-                <div className="center-align grey">
-                  When a key team member was missing during a critical step
-                </div>
+                  <div className="center-align larger">
+                    <FontAwesomeIcon icon="exclamation-triangle" color="#c1272c" size="4x" style={{margin: '25px 0'}} /><br />
+                    <h1 className="highlight purple bold" style={{margin: '15px 0'}}>{this.state.card2.changeOverInstance} Instances</h1>
+                  </div>
+                  <div className="center-align grey">
+                    When a key team member was missing during a critical step
+                  </div>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">Missing During Critical Steps</h3>
-                <hr />
-                <Grid container spacing={24}>
-                  <Grid item xs={12}>
-                    <div className="dark-grey bold smaller">{this.state.card3.numberOfProcedures} procedure types</div>
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">Missing During Critical Steps</h3>
+                  <hr />
+                  <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                      <div className="dark-grey bold smaller">{this.state.card3.numberOfProcedures} procedure types</div>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <div className="center-align larger">
-                  <FontAwesomeIcon icon="exclamation-triangle" color="#c1272c" size="4x" style={{margin: '25px 0'}} /><br />
-                  <h1 className="highlight purple bold" style={{margin: '15px 0'}}>{this.state.card3.missingInstance} Instances</h1>
-                </div>
-                <div className="center-align grey">
-                  When a key team member was missing during a critical step
-                </div>
+                  <div className="center-align larger">
+                    <FontAwesomeIcon icon="exclamation-triangle" color="#c1272c" size="4x" style={{margin: '25px 0'}} /><br />
+                    <h1 className="highlight purple bold" style={{margin: '15px 0'}}>{this.state.card3.missingInstance} Instances</h1>
+                  </div>
+                  <div className="center-align grey">
+                    When a key team member was missing during a critical step
+                  </div>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">Average Head Count</h3>
-                <hr />
-                <Grid container spacing={24}>
-                  <Grid item xs={12}>
-                    <div className="dark-grey bold smaller">Room Density</div>
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">Average Head Count</h3>
+                  <hr />
+                  <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                      <div className="dark-grey bold smaller">Room Density</div>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <div className="center-align">
-                  <ORHeadCount headCount={this.state.card4.averageHeadCount} />
-                </div>
+                  <div className="center-align">
+                    <ORHeadCount headCount={this.state.card4.averageHeadCount} />
+                  </div>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>
@@ -254,27 +264,29 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           <Grid item xs={12}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">Change Over During Procedure</h3>
-                <hr />
-                <Grid container spacing={0}>
-                  <Grid item xs={5}>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={this.state.card5.dataBar} layout="vertical" margin={{left:80}}>
-                        <YAxis dataKey="participant" type="category"/>
-                        <XAxis type="number" />
-                        <Tooltip />
-                        <Bar dataKey="instances" fill="#592d82" />
-                      </BarChart>
-                    </ResponsiveContainer>
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">Change Over During Procedure</h3>
+                  <hr />
+                  <Grid container spacing={0}>
+                    <Grid item xs={5}>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={this.state.card5.dataBar} layout="vertical" margin={{left:80}}>
+                          <YAxis dataKey="participant" type="category"/>
+                          <XAxis type="number" />
+                          <Tooltip />
+                          <Bar dataKey="instances" fill="#592d82" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </Grid>
+                    <Grid item xs={7} className="flex vertical-center larger center-align">
+                      <div>
+                        <span className="highlight purple bold">{this.state.card5.changeOverTotal}</span><br />
+                        <span className="highlight purple bold">Change Overs</span><br />
+                        <span className="dark-blue bold">during</span> <span className="purple bold">{this.state.card5.hoursOfSurgery} </span><span className="dark-blue bold">hours of surgery</span><br />
+                      </div>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={7} className="flex vertical-center larger center-align">
-                    <div>
-                      <span className="highlight purple bold">{this.state.card5.changeOverTotal}</span><br />
-                      <span className="highlight purple bold">Change Overs</span><br />
-                      <span className="dark-blue bold">during</span> <span className="purple bold">{this.state.card5.hoursOfSurgery} </span><span className="dark-blue bold">hours of surgery</span><br />
-                    </div>
-                  </Grid>
-                </Grid>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>

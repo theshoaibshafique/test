@@ -43,7 +43,8 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
   }
 
   componentWillMount() {
-    this.fetchContainerData();
+    if (this.props.userLoggedIn)
+      this.fetchContainerData();
   }
 
   fetchContainerData() {

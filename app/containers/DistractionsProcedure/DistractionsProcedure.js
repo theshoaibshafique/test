@@ -7,6 +7,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import './style.scss';
 import DistractionsTypeGraph from '../../components/Distractions/DistractionsTypeGraph';
+import GenericCard from 'components/GenericCard';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import globalFuncs from '../../global-functions';
@@ -40,7 +41,8 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
   }
 
   componentWillMount() {
-    this.fetchContainerData();
+    if (this.props.userLoggedIn)
+      this.fetchContainerData();
   }
 
   fetchContainerData() {

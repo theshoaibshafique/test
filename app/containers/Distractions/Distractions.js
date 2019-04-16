@@ -8,6 +8,7 @@ import { Helmet } from 'react-helmet';
 import './style.scss';
 import InsightDate from 'components/InsightDate';
 import ProcedureFilter from 'components/ProcedureFilter';
+import GenericCard from 'components/GenericCard';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -22,20 +23,21 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
     super(props);
     this.state = {
       currentProcedure: 'All',
-      numberOfCase: 66,
-      numberOfHours: 133,
-      numberOfDistractions: 45,
-      mostDistractionCategory: 'Door Closing',
-      mostDistractionProcedure: 'Gastric Sleeve',
+      numberOfCase: null,
+      numberOfHours: null,
+      numberOfDistractions: null,
+      mostDistractionCategory: null,
+      mostDistractionProcedure: null,
       mostDistractionOR: 'Room #6',
-      distractionTime: 5,
+      distractionTime: null,
       columnSize: 4,
       columnHidden: ''
     }
   }
 
   componentWillMount() {
-    this.fetchContainerData();
+    if (this.props.userLoggedIn)
+      this.fetchContainerData();
   }
 
   procedureChange(e) {
@@ -118,8 +120,8 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
         </Grid>
         <Grid container spacing={24}>
           <Grid item xs={6}>
-            <Card className="Card flex vertical-center">
-              <CardContent className="dark-blue">
+            <Card className="Card">
+              <CardContent className="dark-blue flex vertical-center">
                 <a href="https://www.facs.org/about-acs/statements/89-distractions" target="_blank"  style={{textDecoration: 'none', display: 'block'}}>
                   <h3 className="Card-Header large center-align">Statement on Distrations in the Operating Room</h3>
                   <div className="grey center-align padding20">
@@ -133,36 +135,40 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
           <Grid item xs={6}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">Every second of distraction adds up</h3>
-                <hr />
-                <div className="dark-grey bold smaller">{this.state.numberOfCase} cases captured</div>
-                <div className="card-content center-align">
-                  Distraction time in your hospital is <br />
-                  <span className="large purple bold">{this.state.distractionTime} minutes</span><br />
-                  per operation
-                </div>
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">Every second of distraction adds up</h3>
+                  <hr />
+                  <div className="dark-grey bold smaller">{this.state.numberOfCase} cases captured</div>
+                  <div className="card-content center-align">
+                    Distraction time in your hospital is <br />
+                    <span className="large purple bold">{this.state.distractionTime} minutes</span><br />
+                    per operation
+                  </div>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">How many instances of distractions does your team face?</h3>
-                <hr />
-                <Grid container spacing={24}>
-                  <Grid item xs={6}>
-                    <div className="dark-grey bold smaller">{this.state.numberOfCase} cases captured</div>
+                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <h3 className="Card-Header">How many instances of distractions does your team face?</h3>
+                  <hr />
+                  <Grid container spacing={24}>
+                    <Grid item xs={6}>
+                      <div className="dark-grey bold smaller">{this.state.numberOfCase} cases captured</div>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <div className="right-align dark-grey bold smaller">{this.state.numberOfHours} hours captured</div>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <div className="right-align dark-grey bold smaller">{this.state.numberOfHours} hours captured</div>
-                  </Grid>
-                </Grid>
-                <div className="card-content center-align">
-                  In your hospital, there are<br />
-                  <span className="large purple bold">{this.state.numberOfDistractions} distractions</span><br />
-                  per<br />
-                  <span className="large purple bold">1 hour or surgery</span><br />
-                </div>
+                  <div className="card-content center-align">
+                    In your hospital, there are<br />
+                    <span className="large purple bold">{this.state.numberOfDistractions} distractions</span><br />
+                    per<br />
+                    <span className="large purple bold">1 hour or surgery</span><br />
+                  </div>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>
@@ -170,14 +176,16 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
             <Link to="./distractions/category" style={{textDecoration: 'none'}}>
               <Card className="Card">
                 <CardContent className="dark-blue">
-                  <h3 className="Card-Header">Search by Categories</h3>
-                  <hr />
-                  <div className="dark-grey bold smaller">4 categories</div>
-                  <div className="card-content card-content-small center-align">
-                    <img src={Hallway} style={{width: '85px'}} />
-                    <h5 className="medium purple bold">{this.state.mostDistractionCategory}</h5>
-                    <p>is the category with the highest number of distractions per minute</p>
-                  </div>
+                  <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                    <h3 className="Card-Header">Search by Categories</h3>
+                    <hr />
+                    <div className="dark-grey bold smaller">4 categories</div>
+                    <div className="card-content card-content-small center-align">
+                      <img src={Hallway} style={{width: '85px'}} />
+                      <h5 className="medium purple bold">{this.state.mostDistractionCategory}</h5>
+                      <p>is the category with the highest number of distractions per minute</p>
+                    </div>
+                  </GenericCard>
                 </CardContent>
               </Card>
             </Link>
@@ -186,14 +194,16 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
             <Link to="./distractions/procedure" style={{textDecoration: 'none'}}>
               <Card className="Card">
                 <CardContent className="dark-blue">
-                  <h3 className="Card-Header">Search by Procedure Type</h3>
-                  <hr />
-                  <div className="dark-grey bold smaller">10 procedure types</div>
-                  <div className="card-content card-content-small center-align">
-                    <FontAwesomeIcon icon="exclamation-triangle" color="#c1272c" size="4x" style={{marginBottom: '14px'}} />
-                    <h5 className="medium purple bold">{this.state.mostDistractionProcedure}</h5>
-                    <p>The procedure with the highest number of distractions per minute</p>
-                  </div>
+                  <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                    <h3 className="Card-Header">Search by Procedure Type</h3>
+                    <hr />
+                    <div className="dark-grey bold smaller">10 procedure types</div>
+                    <div className="card-content card-content-small center-align">
+                      <FontAwesomeIcon icon="exclamation-triangle" color="#c1272c" size="4x" style={{marginBottom: '14px'}} />
+                      <h5 className="medium purple bold">{this.state.mostDistractionProcedure}</h5>
+                      <p>The procedure with the highest number of distractions per minute</p>
+                    </div>
+                  </GenericCard>
                 </CardContent>
               </Card>
             </Link>
@@ -202,14 +212,16 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
             <Link to="./distractions/room" style={{textDecoration: 'none'}}>
               <Card className="Card">
                 <CardContent className="dark-blue">
-                  <h3 className="Card-Header">Search by Operating Room</h3>
-                  <hr />
-                  <div className="dark-grey bold smaller">3 Operating rooms</div>
-                  <div className="card-content card-content-small center-align">
-                    <img src={Layout} />
-                    <h5 className="medium purple bold">{this.state.mostDistractionOR}</h5>
-                    <p>Operating Room with the highest inefficiency</p>
-                  </div>
+                  <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                    <h3 className="Card-Header">Search by Operating Room</h3>
+                    <hr />
+                    <div className="dark-grey bold smaller">3 Operating rooms</div>
+                    <div className="card-content card-content-small center-align">
+                      <img src={Layout} />
+                      <h5 className="medium purple bold">{this.state.mostDistractionOR}</h5>
+                      <p>Operating Room with the highest inefficiency</p>
+                    </div>
+                  </GenericCard>
                 </CardContent>
               </Card>
             </Link>

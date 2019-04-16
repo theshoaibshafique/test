@@ -187,4 +187,5 @@ a hr { border-bottom: none; }
   .Card-Content-Wrapper { padding: 0px 25px; }
 }
 
-.dashboard-even-height [class*="MuiPaper-root"] { height: 100%; }
+.dashboard-even-height [class*="MuiPaper-root"],
+.dashboard-even-height [class*="MuiCardContent-root"] { height: 100%; }
