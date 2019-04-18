@@ -80,13 +80,16 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
   card1Data() {
     globalFuncs.getSurveyData(process.env.SURVEY_API, 'DCSQR_QRTC', this.props.usertoken, this.state.selectedSurvey).then((result) => {
       let cardValue = {...this.state.card1};
-      let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
-
-      cardValue['questionValue'] = mappedResponse.map((response) => {
-        return response.responses;
-      })
       cardValue['questionName'] = result.title;
-      cardValue['totalQuestions'] = result.body.TotalQuestions;
+      if (result.body) {
+        let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
+        cardValue['questionValue'] = mappedResponse.map((response) => {
+          return response.responses;
+        })
+        cardValue['totalQuestions'] = result.body.TotalQuestions;
+      } else {
+        cardValue['questionValue'] = null;
+      }
 
       this.setState({
         card1: cardValue
@@ -97,13 +100,17 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
   card2Data() {
     globalFuncs.getSurveyData(process.env.SURVEY_API, 'DCSQR_QRSC', this.props.usertoken, this.state.selectedSurvey).then((result) => {
       let cardValue = {...this.state.card2};
-      let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
-
-      cardValue['questionValue'] = mappedResponse.map((response) => {
-        return response.responses;
-      })
       cardValue['questionName'] = result.title;
-      cardValue['totalQuestions'] = result.body.TotalQuestions;
+
+      if (result.body) {
+        let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
+        cardValue['questionValue'] = mappedResponse.map((response) => {
+          return response.responses;
+        })
+        cardValue['totalQuestions'] = result.body.TotalQuestions;
+      } else {
+        cardValue['questionValue'] = null;
+      }
 
       this.setState({
         card2: cardValue
@@ -114,13 +121,17 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
   card3Data() {
     globalFuncs.getSurveyData(process.env.SURVEY_API, 'DSCQR_QRJS', this.props.usertoken, this.state.selectedSurvey).then((result) => {
       let cardValue = {...this.state.card3};
-      let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
-
-      cardValue['questionValue'] = mappedResponse.map((response) => {
-        return response.responses;
-      })
       cardValue['questionName'] = result.title;
-      cardValue['totalQuestions'] = result.body.TotalQuestions;
+
+      if (result.body) {
+        let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
+        cardValue['questionValue'] = mappedResponse.map((response) => {
+          return response.responses;
+        })
+        cardValue['totalQuestions'] = result.body.TotalQuestions;
+      } else {
+        cardValue['questionValue'] = null;
+      }
 
       this.setState({
         card3: cardValue
@@ -131,13 +142,17 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
   card4Data() {
     globalFuncs.getSurveyData(process.env.SURVEY_API, 'DSCQR_QRSR', this.props.usertoken, this.state.selectedSurvey).then((result) => {
       let cardValue = {...this.state.card4};
-      let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
-
-      cardValue['questionValue'] = mappedResponse.map((response) => {
-        return response.responses;
-      })
       cardValue['questionName'] = result.title;
-      cardValue['totalQuestions'] = result.body.TotalQuestions;
+
+      if (result.body) {
+        let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
+        cardValue['questionValue'] = mappedResponse.map((response) => {
+          return response.responses;
+        })
+        cardValue['totalQuestions'] = result.body.TotalQuestions;
+      } else {
+        cardValue['questionValue'] = null;
+      }
 
       this.setState({
         card4: cardValue
@@ -148,13 +163,17 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
   card5Data() {
     globalFuncs.getSurveyData(process.env.SURVEY_API, 'DSCQR_QRPOM', this.props.usertoken, this.state.selectedSurvey).then((result) => {
       let cardValue = {...this.state.card5};
-      let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
-
-      cardValue['questionValue'] = mappedResponse.map((response) => {
-        return response.responses;
-      })
       cardValue['questionName'] = result.title;
-      cardValue['totalQuestions'] = result.body.TotalQuestions;
+
+      if (result.body) {
+        let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
+        cardValue['questionValue'] = mappedResponse.map((response) => {
+          return response.responses;
+        })
+        cardValue['totalQuestions'] = result.body.TotalQuestions;
+      } else {
+        cardValue['questionValue'] = null;
+      }
 
       this.setState({
         card5: cardValue
@@ -165,13 +184,17 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
   card6Data() {
     globalFuncs.getSurveyData(process.env.SURVEY_API, 'DSCQR_QRWC', this.props.usertoken, this.state.selectedSurvey).then((result) => {
       let cardValue = {...this.state.card6};
-      let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
-
-      cardValue['questionValue'] = mappedResponse.map((response) => {
-        return response.responses;
-      })
       cardValue['questionName'] = result.title;
-      cardValue['totalQuestions'] = result.body.TotalQuestions;
+
+      if (result.body) {
+        let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
+        cardValue['questionValue'] = mappedResponse.map((response) => {
+          return response.responses;
+        })
+        cardValue['totalQuestions'] = result.body.TotalQuestions;
+      } else {
+        cardValue['questionValue'] = null;
+      }
 
       this.setState({
         card6: cardValue
@@ -182,13 +205,17 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
   card7Data() {
     globalFuncs.getSurveyData(process.env.SURVEY_API, 'DSCQR_QRQATOBBS', this.props.usertoken, this.state.selectedSurvey).then((result) => {
       let cardValue = {...this.state.card7};
-      let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
-
-      cardValue['questionValue'] = mappedResponse.map((response) => {
-        return response.responses;
-      })
       cardValue['questionName'] = result.title;
-      cardValue['totalQuestions'] = result.body.TotalQuestions;
+
+      if (result.body) {
+        let mappedResponse = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
+        cardValue['questionValue'] = mappedResponse.map((response) => {
+          return response.responses;
+        })
+        cardValue['totalQuestions'] = result.body.TotalQuestions;
+      } else {
+        cardValue['questionValue'] = null;
+      }
 
       this.setState({
         card7: cardValue
