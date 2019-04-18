@@ -39,7 +39,7 @@ function appReducer(state = initialState, action) {
       return state
         .set('userToken', action.token.jwtAccessToken)
         .set('userName', action.token.user.name)
-        .set('userID', action.token.user.idToken.oid);
+        .set('userID', action.token.user.idToken.sub);
     case USER_FACILITY:
       return state
         .set('userFacility', action.facility)

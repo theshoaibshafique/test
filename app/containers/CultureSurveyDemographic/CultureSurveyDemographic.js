@@ -158,7 +158,7 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
                       />
 
                       <h3 className="center-align">Healthcare provider role</h3>
-                      <GenericCard userLoggedIn={this.props.userLoggedIn}>
+
                       <ResponsiveContainer width="100%" height={400}>
                         <BarChart data={this.state.card2.data} layout="vertical" margin={{left:20}}>
                           <YAxis dataKey="name" type="category"/>
@@ -168,7 +168,7 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
                         </BarChart>
                       </ResponsiveContainer>
 
-                      </GenericCard>
+
 
                       <h3 className="center-align">Days in the Operating Room with OR BlackBox<sup>&reg;</sup> for the past 30 days</h3>
                       <ResponsiveContainer width="100%" height={300}>

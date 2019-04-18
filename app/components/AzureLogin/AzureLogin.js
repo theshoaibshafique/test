@@ -13,7 +13,7 @@ class AzureLogin extends React.Component { // eslint-disable-line react/prefer-s
   }
 
   getUserFacility() {
-    fetch(process.env.USER_API + this.props.userID, {
+    fetch(process.env.USER_API, {
       method: 'get',
       headers: {
         'Authorization': 'Bearer ' + this.props.userToken,
@@ -105,6 +105,7 @@ class AzureLogin extends React.Component { // eslint-disable-line react/prefer-s
 
   authenticatedFunction = logout => {
     return (
+      // <button onClick={logout}>Logout</button>
       null
     )
   }
