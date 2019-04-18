@@ -32,17 +32,20 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
         lowPercentage: null,
         highPercentage: null,
         alertInstance: null,
-        alertDuration: null
+        alertDuration: null,
+        dataReceived: false
       },
       card2: {
         externalDuration: null,
         externalInstance: null,
-        externalLongest: null
+        externalLongest: null,
+        dataReceived: false
       },
       card3 : {
         enterExitCount: null,
         doorInstanceHour: null,
-        doorDuration: null
+        doorDuration: null,
+        dataReceived: false
       }
     }
   }
@@ -71,6 +74,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
       cardValue['highPercentage'] = result.body.BottomItem;
       cardValue['alertInstance'] = Math.round(result.body.Average);
       cardValue['alertDuration'] = Math.round(result.body.Duration);
+      cardValue['dataReceived'] = true;
       this.setState({
         card1: cardValue
       });
@@ -83,6 +87,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
       cardValue['externalDuration'] = Math.round(result.body.Duration);
       cardValue['externalInstance'] = Math.round(result.body.Average);
       cardValue['externalLongest'] = Math.round(result.body.MaxDuration);
+      cardValue['dataReceived'] = true;
       this.setState({
         card2: cardValue
       });
@@ -95,6 +100,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
       cardValue['enterExitCount'] = Math.round(result.body.Average);
       cardValue['doorInstanceHour'] = Math.round(result.body.Duration);
       cardValue['doorDuration'] = Math.round(result.body.Average2);
+      cardValue['dataReceived'] = true;
       this.setState({
         card3: cardValue
       });
@@ -127,7 +133,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
         <div className="Package-Section Distractions-Category">
         <Card className="Card Distraction-Category-Card">
           <CardContent className="dark-blue">
-            <GenericCard userLoggedIn={this.props.userLoggedIn}>
+            <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card1.dataReceived}>
               <Grid container spacing={0}>
                 <Grid item xs={12}>
                   <h3 className="Card-Header">Alerts include alarms and noise from surgical devices</h3>
@@ -167,7 +173,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
 
         <Card className="Card Distraction-Category-Card">
           <CardContent className="dark-blue">
-            <GenericCard userLoggedIn={this.props.userLoggedIn}>
+            <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card2.dataReceived}>
               <Grid container spacing={0}>
                 <Grid item xs={12}>
                   <h3 className="Card-Header">External Communication include calls from outside the OR and communications that is not relevent to the case</h3>
@@ -197,7 +203,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
 
         <Card className="Card Distraction-Category-Card">
           <CardContent className="dark-blue">
-            <GenericCard userLoggedIn={this.props.userLoggedIn}>
+            <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card3.dataReceived}>
               <Grid container spacing={0}>
                 <Grid item xs={12}>
                   <h3 className="Card-Header">Door Opening include everytime a door is open during the procedure</h3>

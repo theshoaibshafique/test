@@ -23,13 +23,30 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
     super(props);
     this.state = {
       currentProcedure: 'All',
+      card1: {
+        distractionTime: null,
+        dataReceived: false
+      },
+      card2: {
+        numberOfDistractions: null,
+        dataReceived: false
+      },
+      card3: {
+        mostDistractionCategory: null,
+        dataReceived: false
+      },
+      card4: {
+        mostDistractionProcedure: null,
+        dataReceived: false
+      },
+      card5: {
+
+        dataReceived: false
+      },
       numberOfCase: null,
       numberOfHours: null,
-      numberOfDistractions: null,
-      mostDistractionCategory: null,
-      mostDistractionProcedure: null,
+
       mostDistractionOR: 'Room #6',
-      distractionTime: null,
       columnSize: 4,
       columnHidden: ''
     }
@@ -56,32 +73,48 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
 
   card1Data() {
     globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_ESODAU', this.props.usertoken).then((result) => {
+      let cardValue = {...this.state.card1};
+      cardValue['distractionTime'] = Math.round(result.body.Average);
+      cardValue['dataReceived'] = true;
+
       this.setState({
-        distractionTime: Math.round(result.body.Average)
+        card1: cardValue
       });
     })
   }
 
   card2Data() {
     globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_HMIODDYTF', this.props.usertoken).then((result) => {
+      let cardValue = {...this.state.card2};
+      cardValue['distractionTime'] = Math.round(result.body.Average);
+      cardValue['dataReceived'] = true;
+
       this.setState({
-        numberOfDistractions: Math.round(result.body.Average)
+        card2: cardValue
       });
     })
   }
 
   card3Data() {
     globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_SBC', this.props.usertoken).then((result) => {
+      let cardValue = {...this.state.card3};
+      cardValue['mostDistractionCategory'] = result.body.TopItem;
+      cardValue['dataReceived'] = true;
+
       this.setState({
-        mostDistractionCategory: result.body.TopItem
+        card3: cardValue
       });
     })
   }
 
   card4Data() {
     globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_SBPT', this.props.usertoken).then((result) => {
+      let cardValue = {...this.state.card4};
+      cardValue['mostDistractionProcedure'] = result.body.TopItem;
+      cardValue['dataReceived'] = true;
+
       this.setState({
-        mostDistractionProcedure: result.body.TopItem
+        card4: cardValue
       });
     })
   }
@@ -135,13 +168,13 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
           <Grid item xs={6}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card1.dataReceived}>
                   <h3 className="Card-Header">Every second of distraction adds up</h3>
                   <hr />
                   <div className="dark-grey bold smaller">{this.state.numberOfCase} cases captured</div>
                   <div className="card-content center-align">
                     Distraction time in your hospital is <br />
-                    <span className="large purple bold">{this.state.distractionTime} minutes</span><br />
+                    <span className="large purple bold">{this.state.card1.distractionTime} minutes</span><br />
                     per operation
                   </div>
                 </GenericCard>
@@ -151,7 +184,7 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
           <Grid item xs={12}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card2.dataReceived}>
                   <h3 className="Card-Header">How many instances of distractions does your team face?</h3>
                   <hr />
                   <Grid container spacing={24}>
@@ -164,7 +197,7 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
                   </Grid>
                   <div className="card-content center-align">
                     In your hospital, there are<br />
-                    <span className="large purple bold">{this.state.numberOfDistractions} distractions</span><br />
+                    <span className="large purple bold">{this.state.card2.numberOfDistractions} distractions</span><br />
                     per<br />
                     <span className="large purple bold">1 hour or surgery</span><br />
                   </div>
@@ -176,13 +209,13 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
             <Link to="./distractions/category" style={{textDecoration: 'none'}}>
               <Card className="Card">
                 <CardContent className="dark-blue">
-                  <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card3.dataReceived}>
                     <h3 className="Card-Header">Search by Categories</h3>
                     <hr />
                     <div className="dark-grey bold smaller">4 categories</div>
                     <div className="card-content card-content-small center-align">
                       <img src={Hallway} style={{width: '85px'}} />
-                      <h5 className="medium purple bold">{this.state.mostDistractionCategory}</h5>
+                      <h5 className="medium purple bold">{this.state.card3.mostDistractionCategory}</h5>
                       <p>is the category with the highest number of distractions per minute</p>
                     </div>
                   </GenericCard>
@@ -194,13 +227,13 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
             <Link to="./distractions/procedure" style={{textDecoration: 'none'}}>
               <Card className="Card">
                 <CardContent className="dark-blue">
-                  <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card4.dataReceived}>
                     <h3 className="Card-Header">Search by Procedure Type</h3>
                     <hr />
                     <div className="dark-grey bold smaller">10 procedure types</div>
                     <div className="card-content card-content-small center-align">
                       <FontAwesomeIcon icon="exclamation-triangle" color="#c1272c" size="4x" style={{marginBottom: '14px'}} />
-                      <h5 className="medium purple bold">{this.state.mostDistractionProcedure}</h5>
+                      <h5 className="medium purple bold">{this.state.card4.mostDistractionProcedure}</h5>
                       <p>The procedure with the highest number of distractions per minute</p>
                     </div>
                   </GenericCard>

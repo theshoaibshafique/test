@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 class GenericCard extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     let cardContent;
-    if (this.props.userLoggedIn)
+    if (this.props.userLoggedIn && this.props.dataReceived)
       cardContent = this.props.children;
     else
       cardContent = <div className="empty-card flex vertical-center center-align full-height">

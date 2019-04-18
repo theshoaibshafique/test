@@ -23,7 +23,8 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
       card1: {
         totalSurveys: null,
         totalResponded: null,
-        noValues: false
+        noValues: false,
+        dataReceived: false
       },
       card2: {
         data : [
@@ -32,7 +33,8 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
           {name: '40-49', responses: 0},
           {name: '50+', responses: 0}
         ],
-        noValues: false
+        noValues: false,
+        dataReceived: false
       },
       card3: {
         data : [
@@ -42,7 +44,8 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
           {name: 'Agree', responses: 0},
           {name: 'Agree Strongly', responses: 0},
         ],
-        noValues: false
+        noValues: false,
+        dataReceived: false
       },
     }
   }
@@ -64,6 +67,7 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
       cardValue['totalSurveys'] = result.body.SentSurveys;
       cardValue['totalResponded'] = result.body.CompleteSurveys;
       cardValue['noValues'] = (result.body.SentSurveys == 0);
+      cardValue['dataReceived'] = true;
 
       this.setState({
         card1: cardValue
@@ -76,6 +80,7 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
       let cardValue = {...this.state.card2};
       cardValue['data'] = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
       cardValue['noValues'] = (result.body.TotalAnswers == 0);
+      cardValue['dataReceived'] = true;
 
       this.setState({
         card2: cardValue
@@ -88,6 +93,7 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
       let cardValue = {...this.state.card3};
       cardValue['data'] = globalFuncs.mapValuesToProperties(result.body.PossibleValues, result.body.Answers, 'count')
       cardValue['noValues'] = (result.body.TotalAnswers == 0);
+      cardValue['dataReceived'] = true;
 
       this.setState({
         card3: cardValue
@@ -172,7 +178,7 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
           <Grid item xs={12}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card1.dataReceived}>
                   <h3 className="Card-Header">Measure of Engagement</h3>
                   <hr />
                   <Grid container spacing={0}>
@@ -189,7 +195,7 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
           <Grid item xs={6}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card2.dataReceived}>
                   <h3 className="Card-Header">Demographic Diversity</h3>
                   <hr />
                   <Grid container spacing={0} className="full-height">
@@ -204,7 +210,7 @@ export default class CultureSurvey extends React.PureComponent { // eslint-disab
           <Grid item xs={6}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card3.dataReceived}>
                   <h3 className="Card-Header">Question Results</h3>
                   <hr />
                   <Grid container spacing={0} className="full-height">

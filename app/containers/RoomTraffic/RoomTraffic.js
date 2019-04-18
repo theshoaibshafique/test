@@ -34,17 +34,21 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           {name: 'Patient Door', instances: null},
           {name: 'Hallway Door', instances: null}
         ],
+        dataReceived: false
       },
       card2: {
         numberOfProcedures: null,
         changeOverInstance: null,
+        dataReceived: false
       },
       card3: {
         missingInstance: null,
         numberOfProcedures: null,
+        dataReceived: false
       },
       card4: {
         averageHeadCount: null,
+        dataReceived: false
       },
       card5: {
         hoursOfSurgery: null,
@@ -53,7 +57,8 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           {participant: 'Nurses', instances: null},
           {participant: 'Anesthesiologist', instances: null},
           {participant: 'Surgeons', instances: null},
-        ]
+        ],
+        dataReceived: false
       }
     }
   }
@@ -80,6 +85,8 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
       cardValue['dataBar'] = result.body.GroupItems.map((item) => {
         return {'name' : item.doorName, 'instances': Math.round(item.average)}
       });
+      cardValue['dataReceived'] = true;
+
       this.setState({
         card1: cardValue
       });
@@ -91,6 +98,8 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
       let cardValue = {...this.state.card2};
       cardValue['changeOverInstance'] = Math.round(result.body.Average);
       cardValue['numberOfProcedures'] = Math.round(result.body.TotalItems);
+      cardValue['dataReceived'] = true;
+
       this.setState({
         card2: cardValue
       });
@@ -102,6 +111,8 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
       let cardValue = {...this.state.card3};
       cardValue['missingInstance'] = Math.round(result.body.Average);
       cardValue['numberOfProcedures'] = Math.round(result.body.TotalItems);
+      cardValue['dataReceived'] = true;
+
       this.setState({
         card3: cardValue
       });
@@ -112,6 +123,8 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
     globalFuncs.getInsightData(process.env.ROOMTRAFFIC_API, 'DRT_AHC', this.props.usertoken).then((result) => {
       let cardValue = {...this.state.card4};
       cardValue['averageHeadCount'] = Math.round(result.body.Average);
+      cardValue['dataReceived'] = true;
+
       this.setState({
         card4: cardValue
       });
@@ -126,6 +139,8 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
       cardValue['dataBar'] = result.body.GroupItems.map((item) => {
         return {'participant' : item.item1, 'instances': Math.round(item.item2)}
       });
+      cardValue['dataReceived'] = true;
+
       this.setState({
         card5: cardValue
       });
@@ -165,7 +180,7 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           <Grid item xs={12}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card1.dataReceived}>
                   <h3 className="Card-Header">How Often Does A Door Open After Incision?</h3>
                   <hr />
                   <Grid container spacing={0}>
@@ -200,7 +215,7 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card2.dataReceived}>
                   <h3 className="Card-Header">Changeover During Critical Steps</h3>
                   <hr />
                   <Grid container spacing={24}>
@@ -222,7 +237,7 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card3.dataReceived}>
                   <h3 className="Card-Header">Missing During Critical Steps</h3>
                   <hr />
                   <Grid container spacing={24}>
@@ -244,7 +259,7 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card4.dataReceived}>
                   <h3 className="Card-Header">Average Head Count</h3>
                   <hr />
                   <Grid container spacing={24}>
@@ -264,7 +279,7 @@ export default class RoomTraffic extends React.PureComponent { // eslint-disable
           <Grid item xs={12}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card5.dataReceived}>
                   <h3 className="Card-Header">Change Over During Procedure</h3>
                   <hr />
                   <Grid container spacing={0}>

@@ -24,7 +24,8 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
       cases: null,
       hours: null,
       card1: {
-        severePercentage: null
+        severePercentage: null,
+        dataReceived: false
       },
       card2: {
         caseList: null,
@@ -57,46 +58,52 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
 
   card1Data() {
     globalFuncs.getInsightData(process.env.INSIGHT_API, 'MD_PWSIAE', this.props.usertoken).then((result) => {
-      let card1Value = {...this.state.card1};
-      card1Value['severePercentage'] = result.body.Percent;
+      let cardValue = {...this.state.card1};
+      cardValue['severePercentage'] = result.body.Percent;
+      cardValue['dataReceived'] = true;
       this.setState({
         cases: result.body.TotalItems,
         hours: Math.round(result.body.Duration),
-        card1: card1Value
+        card1: cardValue,
       });
     })
   }
 
   card2Data() {
     globalFuncs.getInsightData(process.env.INSIGHT_API, 'MD_PTA', this.props.usertoken).then((result) => {
-      let card2Value = {...this.state.card2};
-      card2Value['caseList'] = result.body.TopItem;
-      card2Value['caseListLength'] = result.body.TopItemHour.length;
-      card2Value['hourList'] = result.body.TopItemHour;
-      card2Value['hourListLength'] = result.body.TopItemHour.length;
+      let cardValue = {...this.state.card2};
+      cardValue['caseList'] = result.body.TopItem;
+      cardValue['caseListLength'] = result.body.TopItemHour.length;
+      cardValue['hourList'] = result.body.TopItemHour;
+      cardValue['hourListLength'] = result.body.TopItemHour.length;
+      cardValue['dataReceived'] = true;
 
       this.setState({
-        card2: card2Value
+        card2: cardValue
       });
     })
   }
 
   card3Data() {
     globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'MD_DI', this.props.usertoken).then((result) => {
-      let card3Value = {...this.state.card3};
-      card3Value['type'] = result.body.TopItem;
+      let cardValue = {...this.state.card3};
+      cardValue['type'] = result.body.TopItem;
+      cardValue['dataReceived'] = true;
+
       this.setState({
-        card3: card3Value
+        card3: cardValue
       });
     })
   }
 
   card4Data() {
     globalFuncs.getInsightData(process.env.ROOMTRAFFIC_API, 'MD_RTI', this.props.usertoken).then((result) => {
-      let card4Value = {...this.state.card4};
-      card4Value['people'] = Math.round(result.body.Average);
+      let cardValue = {...this.state.card4};
+      cardValue['people'] = Math.round(result.body.Average);
+      cardValue['dataReceived'] = true;
+
       this.setState({
-        card4: card4Value
+        card4: cardValue
       });
     })
   }
@@ -157,7 +164,7 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
           <Grid item xs={6}>
               <Card className="Card">
                 <CardContent className="dark-blue">
-                  <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                  <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card1.dataReceived}>
                     <h3 className="Card-Header">Procedures Analyzed Without Severe Intraoperative Adverse Events</h3>
                     <hr />
                     <Grid container spacing={24}>
@@ -183,7 +190,7 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
           <Grid item xs={6}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card2.dataReceived}>
                   <h3 className="Card-Header">Procedure Types Analyzed</h3>
                   <hr />
                   <div className="dark-grey bold smaller">Top {this.state.card2.caseListLength} procedures(number of cases analyzed)</div>
@@ -199,7 +206,7 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card3.dataReceived}>
                   <h3 className="Card-Header">Distractions Insights</h3>
                   <hr />
                   <div className="dark-grey bold smaller">Category of distractions</div>
@@ -217,7 +224,7 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <GenericCard userLoggedIn={this.props.userLoggedIn}>
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card4.dataReceived}>
                   <h3 className="Card-Header">Room Traffic Insights</h3>
                   <hr />
                   <div className="dark-grey bold smaller">Average head count</div>

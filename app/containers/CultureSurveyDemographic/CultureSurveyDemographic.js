@@ -7,10 +7,10 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import './style.scss';
 import SurveyFilter from 'components/SurveyFilter';
-import GenericCard from 'components/GenericCard';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import GenericCard from 'components/GenericCard';
 import SurveyDemographicGeneral from 'components/SurveyDemographicGeneral';
 import { BarChart, XAxis, YAxis, Tooltip, Legend, Bar, ResponsiveContainer } from 'recharts';
 import BubbleChart from '../../components/DemographicBubbleChart/DemographicBubbleChart';
@@ -158,6 +158,7 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
                       />
 
                       <h3 className="center-align">Healthcare provider role</h3>
+                      <GenericCard userLoggedIn={this.props.userLoggedIn}>
                       <ResponsiveContainer width="100%" height={400}>
                         <BarChart data={this.state.card2.data} layout="vertical" margin={{left:20}}>
                           <YAxis dataKey="name" type="category"/>
@@ -166,6 +167,8 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
                           <Bar dataKey="responses" fill="#592d82" />
                         </BarChart>
                       </ResponsiveContainer>
+
+                      </GenericCard>
 
                       <h3 className="center-align">Days in the Operating Room with OR BlackBox<sup>&reg;</sup> for the past 30 days</h3>
                       <ResponsiveContainer width="100%" height={300}>
