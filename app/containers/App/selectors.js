@@ -18,6 +18,11 @@ const makeSelectID = () => createSelector(
   (globalState) => globalState.get('userID')
 );
 
+const makeSelectUserLoggedIn = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('userLoggedIn')
+);
+
 const makeSelectRepos = () => createSelector(
   selectGlobal,
   (globalState) => globalState.getIn(['userData', 'repositories'])
@@ -52,6 +57,7 @@ export {
   selectGlobal,
   makeSelectCurrentUser,
   makeSelectToken,
+  makeSelectUserLoggedIn,
   makeSelectID,
   makeSelectRepos,
   makeSelectLocation,
