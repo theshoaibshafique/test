@@ -149,7 +149,7 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
               <CardContent className="dark-blue">
                 <h3 className="Card-Header">Demographic</h3>
                 <hr />
-                <Grid container spacing={0}>
+                <Grid container spacing={40}>
                   {/* left column */}
                   <Grid item xs={6}>
                       <h3 className="center-align">Gender</h3>
@@ -168,17 +168,10 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
                         </BarChart>
                       </ResponsiveContainer>
 
-
-
-                      <h3 className="center-align">Days in the Operating Room with OR BlackBox<sup>&reg;</sup> for the past 30 days</h3>
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={this.state.card3.data}>
-                          <XAxis dataKey="name" />
-                          <Tooltip />
-                          <Legend />
-                          <Bar dataKey="responses" fill="#592d82" />
-                        </BarChart>
-                      </ResponsiveContainer>
+                      <h3 className="center-align">Have you had previous experience with the OR Black Box<sup>&reg;</sup> in another hospital?</h3>
+                      <SurveyDemographicGeneral
+                        data={this.state.card6.data}
+                      />
 
                       <h3 className="center-align">Have you had previous involvement in a patient complaint?</h3>
                       <SurveyDemographicGeneral
@@ -200,10 +193,15 @@ export default class CultureSurveyDemographic extends React.PureComponent { // e
                     <h3 className="center-align">Years of experience in current role</h3>
                     <BubbleChart /> */}
 
-                    <h3 className="center-align">Have you had previous experience with the OR Black Box<sup>&reg;</sup> in another hospital?</h3>
-                    <SurveyDemographicGeneral
-                      data={this.state.card6.data}
-                    />
+                      <h3 className="center-align">Days in the Operating Room with OR BlackBox<sup>&reg;</sup> for the past 30 days</h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={this.state.card3.data}>
+                          <XAxis dataKey="name" />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="responses" fill="#592d82" />
+                        </BarChart>
+                      </ResponsiveContainer>
 
                     <h3 className="center-align">Have you had previous involvement in a patient lawsuit?</h3>
                     <SurveyDemographicGeneral

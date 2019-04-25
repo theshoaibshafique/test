@@ -145,6 +145,7 @@ export default class Login extends React.PureComponent { // eslint-disable-line 
             unauthenticatedFunction={this.unauthenticatedFunction}
             userInfoCallback={this.userJustLoggedIn}
             authenticatedFunction={this.authenticatedFunction}
+            storeAuthStateInCookie={true}
             forceLogin={true}
           />
         </div>

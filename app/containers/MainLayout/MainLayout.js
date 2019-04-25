@@ -34,6 +34,8 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
     this.state = {
       userLoggedIn: false
     }
+
+    this.logoutFunction = this.logoutFunction.bind(this);
   }
 
   resourcesGathered() {
@@ -42,11 +44,25 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
     });
   }
 
+  logoutFunction(logout) {
+    if (logout != undefined) {
+      this.getLogoutFunction(logout)
+    }
+  }
+
+  getLogoutFunction(logout) {
+    // return logout;
+    if (logout) {
+    }
+    return (() => logout)
+  }
+
   render() {
     return (
       <div className="app-wrapper">
         <AzureLogin
           resourcesGathered={() => this.resourcesGathered()}
+          logoutFunction={(logout) => this.logoutFunction(logout)}
         />
         <CssBaseline />
         <Helmet
@@ -57,6 +73,7 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
         </Helmet>
         <SSTHeader />
         <div className="APP-MAIN-WRAPPER">
+
         <nav className="MAIN-NAVIGATION">
             {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
             <Hidden smUp implementation="css">
@@ -79,6 +96,7 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
             </Hidden>
           </nav>
           <div className="Content-Wrapper inline overflow-y">
+            <a onClick={this.getLogoutFunction()}>Click Me</a>
             <Switch>
               <Route path="/dashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} /> }/>
               <Route path="/distractions/category" component={() => <DistractionsCategory userLoggedIn={this.state.userLoggedIn} />} />

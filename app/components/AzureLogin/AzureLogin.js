@@ -96,7 +96,7 @@ class AzureLogin extends React.Component { // eslint-disable-line react/prefer-s
     .then((result) => {
 
       this.props.setMostRecentPublishedSurvey(result)
-      this.props.resourcesGathered();
+      this.props.resourcesGathered(true);
     })
     .catch(() => {
       // this.props.history.push(`/dashboard`);
@@ -104,10 +104,7 @@ class AzureLogin extends React.Component { // eslint-disable-line react/prefer-s
   }
 
   authenticatedFunction = logout => {
-    return (
-      // <button onClick={logout}>Logout</button>
-      null
-    )
+    // this.props.logoutFunction(logout);
   }
 
   render() {
@@ -126,6 +123,7 @@ class AzureLogin extends React.Component { // eslint-disable-line react/prefer-s
       unauthenticatedFunction={this.unauthenticatedFunction}
       userInfoCallback={this.userJustLoggedIn}
       authenticatedFunction={this.authenticatedFunction}
+      storeAuthStateInCookie={true}
       forceLogin={true}
     />
     );

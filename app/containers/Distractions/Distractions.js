@@ -40,7 +40,6 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
         dataReceived: false
       },
       card5: {
-
         dataReceived: false
       },
       numberOfCase: null,
@@ -100,7 +99,7 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
       let cardValue = {...this.state.card3};
       cardValue['mostDistractionCategory'] = result.body.TopItem;
       cardValue['dataReceived'] = true;
-
+      console.log(result)
       this.setState({
         card3: cardValue
       });

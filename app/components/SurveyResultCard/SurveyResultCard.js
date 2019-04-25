@@ -1,6 +1,7 @@
 import React from 'react';
 import './style.scss';
 import NoDataCard from '../NoDataCard/NoDataCard';
+import GenericCard from '../GenericCard/GenericCard';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -8,6 +9,13 @@ import SurveyResultGraph from '../SurveyResultGraph/SurveyResultGraph';
 
 class SurveyResultCard extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
+    let loadingCard = <Card className="Card Survey-Result">
+                        <CardContent className="dark-blue"></CardContent>
+                          <GenericCard
+                            userLoggedIn={this.props.userLoggedIn}
+                            dataReceived={this.props.dataReceived}
+                          />
+                      </Card>
 
     let nullRender = <Card className="Card Survey-Result">
                         <CardContent className="dark-blue">
@@ -39,11 +47,18 @@ class SurveyResultCard extends React.Component { // eslint-disable-line react/pr
                           </CardContent>
                         </Card>;
 
-    let renderedComponent = (this.props.questionNumber > 0) ? thisComponent : nullRender;
+    let componentToRender;
+
+    if (!this.props.userLogged && !this.props.dataReceived) {
+      componentToRender = loadingCard;
+    } else {
+      componentToRender = (this.props.questionNumber > 0) ? thisComponent : nullRender
+    }
+
 
     return (
       <div>
-        {renderedComponent}
+        {componentToRender}
       </div>
     );
   }
