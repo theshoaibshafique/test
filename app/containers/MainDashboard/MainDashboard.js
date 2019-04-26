@@ -39,6 +39,9 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
       card4 : {
         people: null
       },
+      card5: {
+        dataReceived: false
+      },
       hospitalName: 'St. Michael\'s Hospital'
     }
   }
@@ -110,12 +113,16 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
 
   card5Data() {
     globalFuncs.getSurveyData(process.env.CULTURESURVEY_API, 'MD_CSI', this.props.usertoken, this.props.mostRecentSurvey.name).then((result) => {
+    //globalFuncs.getSurveyData(process.env.CULTURESURVEY_API, 'MD_CSI', this.props.usertoken, '94ae1368-badb-41a1-a1f6-68225b8a6c57').then((result) => {
       console.log(result);
-      // let card5Value = {...this.state.card5};
-      // card5Value['people'] = Math.round(result.body.Average);
-      // this.setState({
-      //   card4: card5Value
-      // });
+      let cardValue = {...this.state.card5};
+      if (result.body.Answers.length > 0)
+        cardValue['dataReceived'] = true;
+      cardValue['data'] = globalFuncs.mapValuesToProperties(result.body.AllGenderValues, result.body.Answers, 'count');
+      cardValue['data2'] = globalFuncs.mapValuesToProperties(result.body.AllAgeValues, result.body.Answers2, 'count')
+      this.setState({
+        card5: cardValue
+      });
     })
   }
 
@@ -236,22 +243,23 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
           <Grid item xs={4}>
             <Card className="Card">
               <CardContent className="dark-blue">
-                <h3 className="Card-Header">Culture Survey Insights</h3>
-                <hr />
-                <div className="dark-grey bold smaller">Gender</div>
-                <SurveyDemographicGeneral
-                    questionValue={['MaleIcon', 'FemaleIcon', 'Prefer not to answer', 'Other']}
-                    questionPercentage={[33, 48, 17, 2]}
+                <GenericCard userLoggedIn={this.props.userLoggedIn} dataReceived={this.state.card5.dataReceived}>
+                  <h3 className="Card-Header">Culture Survey Insights</h3>
+                  <hr />
+                  <div className="dark-grey bold smaller">Gender</div>
+                  <SurveyDemographicGeneral
+                    data={this.state.card5.data}
                   />
-                <div className="dark-grey bold smaller">Age</div>
-                <ResponsiveContainer width="100%" height={150}>
-                  <BarChart data={dataBar}>
-                    <XAxis dataKey="name" />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="responses" fill="#592d82" />
-                  </BarChart>
-                </ResponsiveContainer>
+                  <div className="dark-grey bold smaller">Age</div>
+                  <ResponsiveContainer width="100%" height={150}>
+                    <BarChart data={this.state.card5.data2}>
+                      <XAxis dataKey="name" />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="responses" fill="#592d82" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </GenericCard>
               </CardContent>
             </Card>
           </Grid>

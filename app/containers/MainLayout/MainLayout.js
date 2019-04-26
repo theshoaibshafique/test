@@ -96,7 +96,6 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
             </Hidden>
           </nav>
           <div className="Content-Wrapper inline overflow-y">
-            <a onClick={this.getLogoutFunction()}>Click Me</a>
             <Switch>
               <Route path="/dashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} /> }/>
               <Route path="/distractions/category" component={() => <DistractionsCategory userLoggedIn={this.state.userLoggedIn} />} />
