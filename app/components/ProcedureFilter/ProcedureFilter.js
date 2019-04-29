@@ -6,6 +6,12 @@ import Select from '@material-ui/core/Select';
 
 class ProcedureFilter extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
+    let currentProcedures = this.props.procedures;
+
+    let procedureItems = Object.keys(currentProcedures).map(function(key, index) {
+      return <MenuItem value={key} key={key}>{currentProcedures[key]}</MenuItem>
+    });
+
     return (
       <div className="Procedure-Filter dark-blue">
         Procedure type:<br />
@@ -18,10 +24,7 @@ class ProcedureFilter extends React.Component { // eslint-disable-line react/pre
             }}
           >
             <MenuItem value="All">All</MenuItem>
-            <MenuItem value="Cholecystectomy">Cholecystectomy</MenuItem>
-            <MenuItem value="Roux-Y Gastric Bypass">Roux-Y Gastric Bypass</MenuItem>
-            <MenuItem value="Low Anterior Resection">Low Anterior Resection</MenuItem>
-            <MenuItem value="Ventral Hernia Repair">Ventral Hernia Repair</MenuItem>
+            {procedureItems}
           </Select>
         </FormControl>
         <span className="light-blue inline case-hours">({this.props.caseNo} cases | {this.props.hoursNo} hours)</span>

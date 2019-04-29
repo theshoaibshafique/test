@@ -59,6 +59,8 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
   procedureChange(e) {
     this.setState({
       currentProcedure: e.target.value
+    }, () => {
+      this.fetchContainerData();
     })
   }
 
@@ -71,7 +73,7 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
   }
 
   card1Data() {
-    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_ESODAU', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_ESODAU', this.props.usertoken, this.state.currentProcedure).then((result) => {
       let cardValue = {...this.state.card1};
       cardValue['distractionTime'] = Math.round(result.body.Average);
       cardValue['dataReceived'] = true;
@@ -83,7 +85,7 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
   }
 
   card2Data() {
-    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_HMIODDYTF', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_HMIODDYTF', this.props.usertoken, this.state.currentProcedure).then((result) => {
       let cardValue = {...this.state.card2};
       cardValue['distractionTime'] = Math.round(result.body.Average);
       cardValue['dataReceived'] = true;
@@ -95,7 +97,7 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
   }
 
   card3Data() {
-    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_SBC', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_SBC', this.props.usertoken, this.state.currentProcedure).then((result) => {
       let cardValue = {...this.state.card3};
       cardValue['mostDistractionCategory'] = result.body.TopItem;
       cardValue['dataReceived'] = true;
@@ -106,7 +108,7 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
   }
 
   card4Data() {
-    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_SBPT', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_SBPT', this.props.usertoken, this.state.currentProcedure).then((result) => {
       let cardValue = {...this.state.card4};
       cardValue['mostDistractionProcedure'] = result.body.TopItem;
       cardValue['dataReceived'] = true;
@@ -118,7 +120,7 @@ export default class Distractions extends React.PureComponent { // eslint-disabl
   }
 
   card5Data() {
-    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_SBOR', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DD_SBOR', this.props.usertoken, this.state.currentProcedure).then((result) => {
       let cardValue = {...this.state.card5};
       cardValue['mostDistractionOR'] = this.props.rooms[result.body.TopItem];
       cardValue['totalRooms'] = Object.keys(this.props.rooms).length;

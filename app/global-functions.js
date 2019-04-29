@@ -1,4 +1,4 @@
-function getInsightData(api, tileName, oauth) {
+function getInsightData(api, tileName, oauth, procedure = "All") {
     return fetch(api, {
         method: 'post',
         headers: {
@@ -7,7 +7,7 @@ function getInsightData(api, tileName, oauth) {
         },
         body: JSON.stringify({
             "facilityName": null,
-            "procedureName": "All",
+            "procedureName": procedure,
             "tileName": tileName,
             "startDate": "2019-03-01",
             "endDate": "2019-05-01",

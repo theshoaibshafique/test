@@ -26,6 +26,9 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
     super(props);
     this.state = {
       currentProcedure: 'All',
+      alertName: 'ALERTS',
+      highLowWidthClass: '',
+      computerWidth: 6,
       numberOfCase: 66,
       numberOfHours: 133,
       card1: {
@@ -56,9 +59,26 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
   }
 
   procedureChange(e) {
-    // this.setState({
-    //   currentProcedure: e.target.value
-    // })
+    let newHighLowWidthClass, newComputerWidth, newAlertName;
+
+    if (e.target.value !== "All") {
+      newHighLowWidthClass = 'hidden';
+      newComputerWidth = 12;
+      newAlertName = this.props.procedures[e.target.value];
+    } else {
+      newHighLowWidthClass = '';
+      newComputerWidth = 6;
+      newAlertName = 'ALERTS';
+    }
+
+    this.setState({
+      currentProcedure: e.target.value,
+      alertName: newAlertName,
+      highLowWidthClass: newHighLowWidthClass,
+      computerWidth: newComputerWidth,
+    }, () => {
+      this.fetchContainerData();
+    })
   }
 
   fetchContainerData() {
@@ -68,7 +88,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
   }
 
   card1Data() {
-    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DDC_AIAANFSD', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DDC_AIAANFSD', this.props.usertoken, this.state.currentProcedure).then((result) => {
       let cardValue = {...this.state.card1};
       cardValue['lowPercentage'] = result.body.TopItem;
       cardValue['highPercentage'] = result.body.BottomItem;
@@ -82,7 +102,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
   }
 
   card2Data() {
-    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DDC_ECICFOTOACTINRTTC', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DDC_ECICFOTOACTINRTTC', this.props.usertoken, this.state.currentProcedure).then((result) => {
       let cardValue = {...this.state.card2};
       cardValue['externalDuration'] = Math.round(result.body.Duration);
       cardValue['externalInstance'] = Math.round(result.body.Average);
@@ -95,7 +115,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
   }
 
   card3Data() {
-    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DDC_DOIEADIIODTP', this.props.usertoken).then((result) => {
+    globalFuncs.getInsightData(process.env.DISTRACTIONS_API, 'DDC_DOIEADIIODTP', this.props.usertoken, this.state.currentProcedure).then((result) => {
       let cardValue = {...this.state.card3};
       cardValue['enterExitCount'] = Math.round(result.body.Average);
       cardValue['doorInstanceHour'] = Math.round(result.body.Duration);
@@ -141,7 +161,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
                 </Grid>
                 <Grid item xs={6}>
                   <Grid container spacing={0} className="flex vertical-center">
-                    <Grid item xs={6} className="center-align">
+                    <Grid item xs={6} className={`center-align ` + this.state.highLowWidthClass}>
                       <img src={TargetSmall} /> <br />
                       <span className="Alert-Alarm-Stat dark-blue bold">{this.state.card1.lowPercentage}</span><br />
                       has the lowest percentage<br />
@@ -151,7 +171,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
                       has the highest percentage<br />
                       of Alerts/Alarms instances
                     </Grid>
-                    <Grid item xs={6} className="center-align">
+                    <Grid item xs={this.state.computerWidth} className="center-align">
                       <img src={Computer} style={{width: '200px'}}/>
                     </Grid>
                   </Grid>
@@ -161,7 +181,7 @@ export default class DistractionsCategory extends React.PureComponent { // eslin
                       <Grid item xs={12} className="center-align">
                         On average, there are <br />
                         <span style={{fontSize: '4rem', fontWeight: 'bold'}}>{this.state.card1.alertInstance} instances</span><br />
-                        of <span className="pink">ALERTS</span> per case<br />
+                        of <span className="pink">{this.state.alertName}</span> per case<br />
                         <span className="grey">(The duration average, is {this.state.card1.alertDuration} minutes per case)</span>
                       </Grid>
                   </Grid>
