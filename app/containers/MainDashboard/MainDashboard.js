@@ -113,8 +113,6 @@ export default class MainDashboard extends React.PureComponent { // eslint-disab
 
   card5Data() {
     globalFuncs.getSurveyData(process.env.CULTURESURVEY_API, 'MD_CSI', this.props.usertoken, this.props.mostRecentSurvey.name).then((result) => {
-    //globalFuncs.getSurveyData(process.env.CULTURESURVEY_API, 'MD_CSI', this.props.usertoken, '94ae1368-badb-41a1-a1f6-68225b8a6c57').then((result) => {
-      console.log(result);
       let cardValue = {...this.state.card5};
       if (result.body.Answers.length > 0)
         cardValue['dataReceived'] = true;
