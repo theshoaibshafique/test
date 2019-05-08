@@ -16,9 +16,9 @@ class SSTHeader extends React.Component { // eslint-disable-line react/prefer-st
             </Link>
           </Grid>
           <Grid item xs={6} className="flex right-center menu-column">
-            <Link to="/user-manager">
+            {/* <Link to="/user-manager">
               <FontAwesomeIcon className="SST-Menu" icon="cog" color="#004f6e" size="2x" />
-            </Link>
+            </Link> */}
           </Grid>
         </Grid>
       </header>
