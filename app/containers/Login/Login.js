@@ -22,7 +22,7 @@ export default class Login extends React.PureComponent { // eslint-disable-line 
 
   userJustLoggedIn = receivedToken => {
     this.props.userInfo(receivedToken);
-    this.props.history.push(`/dashboard`);
+    this.props.history.push(`/usermanagement`);
   }
 
   // getUserFacility() {

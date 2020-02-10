@@ -8,6 +8,7 @@ import './style.scss';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 
+import UserManagement from 'containers/UserManagement/Loadable';
 import MainDashboard from 'containers/MainDashboard/Loadable';
 import Distractions from 'containers/Distractions/Loadable';
 import DistractionsCategory from 'containers/DistractionsCategory/Loadable';
@@ -20,7 +21,6 @@ import CultureSurveyResult from 'containers/CultureSurveyResult/Loadable';
 import RoomTraffic from 'containers/RoomTraffic/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import SSTHeader from 'components/SSTHeader';
-import SSTFooter from 'components/SSTFooter';
 import SSTNav from 'components/SSTNav';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -71,7 +71,7 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
         >
           <meta name="description" content="SST Insight web portal" />
         </Helmet>
-        <SSTHeader />
+        
         <div className="APP-MAIN-WRAPPER">
 
         <nav className="MAIN-NAVIGATION">
@@ -97,6 +97,7 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
           </nav>
           <div className="Content-Wrapper inline overflow-y">
             <Switch>
+              <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
               <Route path="/dashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} /> }/>
               <Route path="/distractions/category" component={() => <DistractionsCategory userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="/distractions/procedure" component={() => <DistractionsProcedure userLoggedIn={this.state.userLoggedIn} />} />
@@ -109,7 +110,6 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
               <Route path="/room-traffic" component={() => <RoomTraffic userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="" component={NotFoundPage} />
             </Switch>
-            <SSTFooter />
           </div>
         </div>
       </div>

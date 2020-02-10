@@ -40,17 +40,29 @@ class SSTNav extends React.Component { // eslint-disable-line react/prefer-state
         PackageLogo = <img className="Package-Logo" src={RoomTrafficLogo} />;
         break;
       default:
-        PackageLogo = <span className="dark-green small"><em>Explore our curated insights</em></span>
+        PackageLogo = <span className="dark-green small"><em>Insights</em></span>
 
     }
 
     return (
       <div>
         <div className="Package-Location center-align">
+          <img className="Package-Logo" src={DistractionLogo} />
           {PackageLogo}<br />
         </div>
-        <ul className="Package-Selector dark-blue padding0">
-          {PackageCollection}
+        <ul className="dark-blue">
+          <li>eM&M</li>
+
+          {/* 
+            <li>Efficiency</li>
+            <li>Surgical Safety Checklist</li>
+            {PackageCollection}
+            <li>Request for eM&M</li>
+          */}
+
+          <li>User Management</li>
+          <li>My Profile</li>
+          <li>Logout</li>
         </ul>
       </div>
     );
