@@ -23,7 +23,8 @@ class AzureLogin extends React.Component { // eslint-disable-line react/prefer-s
     .then(response => response.json())
     .then((result) => {
       this.props.setUserFacility(result);
-      this.getFacilityRooms(result.facilityName);
+      this.props.resourcesGathered(true);
+      //this.getFacilityRooms(result.facilityName);
     })
   }
 
@@ -96,7 +97,7 @@ class AzureLogin extends React.Component { // eslint-disable-line react/prefer-s
     .then((result) => {
 
       this.props.setMostRecentPublishedSurvey(result)
-      this.props.resourcesGathered(true);
+
     })
     .catch(() => {
       // this.props.history.push(`/dashboard`);

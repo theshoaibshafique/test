@@ -3,11 +3,11 @@
 .User-Info-Form {
     margin-top: 20px;
     [class*="MuiFormControl-root"] {
-        width: 300px;
+        width: 330px;
         margin: 0px 20px 25px;
     }
 }
 
 .SST-Checkbox:not([class*="disabled"]) {
-    svg { color: $dark-blue; }
+    svg { color: $dark-grey; }
 }

@@ -20,7 +20,6 @@ import CultureSurveyDemographic from 'containers/CultureSurveyDemographic/Loadab
 import CultureSurveyResult from 'containers/CultureSurveyResult/Loadable';
 import RoomTraffic from 'containers/RoomTraffic/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import SSTHeader from 'components/SSTHeader';
 import SSTNav from 'components/SSTNav';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -55,6 +54,27 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
     if (logout) {
     }
     return (() => logout)
+  }
+
+  getContainer() {
+    if (this.state.userLoggedIn) {
+      return <Switch>
+              <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
+              <Route path="/dashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} /> }/>
+              <Route path="/distractions/category" component={() => <DistractionsCategory userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/distractions/procedure" component={() => <DistractionsProcedure userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/distractions/room" component={() => <DistractionsOR userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/distractions" component={() => <Distractions userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/user-manager" component={() => <UserManager userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/culture-survey/demographic" component={() => <CultureSurveyDemographic userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/culture-survey/question-results" component={() => <CultureSurveyResult userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/culture-survey" component={() => <CultureSurvey userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/room-traffic" component={() => <RoomTraffic userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="" component={NotFoundPage} />
+            </Switch> 
+    } else {
+      return ''
+    }
   }
 
   render() {
@@ -96,20 +116,7 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
             </Hidden>
           </nav>
           <div className="Content-Wrapper inline overflow-y">
-            <Switch>
-              <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
-              <Route path="/dashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} /> }/>
-              <Route path="/distractions/category" component={() => <DistractionsCategory userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/distractions/procedure" component={() => <DistractionsProcedure userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/distractions/room" component={() => <DistractionsOR userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/distractions" component={() => <Distractions userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/user-manager" component={() => <UserManager userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/culture-survey/demographic" component={() => <CultureSurveyDemographic userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/culture-survey/question-results" component={() => <CultureSurveyResult userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/culture-survey" component={() => <CultureSurvey userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/room-traffic" component={() => <RoomTraffic userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="" component={NotFoundPage} />
-            </Switch>
+            {this.getContainer()}
           </div>
         </div>
       </div>

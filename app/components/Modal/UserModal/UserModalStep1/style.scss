@@ -1,4 +1,9 @@
 .User-Modal {
-    width: 80%;
+    width: 50%;
     max-width: 1150px;
+}
+
+.ToolBar {
+    display: flex;
+    justify-content: space-between;
 }
