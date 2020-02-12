@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import UserManagement from './UserManagement';
-import { makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectToken, makeSelectUserFacility, makeSelectID } from '../App/selectors';
 
 const mapStateToProps = createStructuredSelector({
   userToken: makeSelectToken(),
-  facilityName : makeSelectUserFacility()
+  facilityName : makeSelectUserFacility(),
+  userId: makeSelectID()
 });
 
 export default connect(mapStateToProps, null)(UserManagement);

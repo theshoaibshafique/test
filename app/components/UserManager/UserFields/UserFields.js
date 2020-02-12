@@ -10,6 +10,10 @@ class UserFields extends React.Component { // eslint-disable-line react/prefer-s
     super(props);
   }
 
+  checkPermissions(value) {
+    return this.props.userValue.permissions.indexOf(value) >= 0;
+  }
+
   render() {
     return (
       <form className="User-Info-Form" noValidate autoComplete="off">
@@ -71,8 +75,8 @@ class UserFields extends React.Component { // eslint-disable-line react/prefer-s
                   name="mmView"
                   disabled={!this.props.enableField}
                   onChange={this.props.handleFormChange}
-                  checked={this.props.userValue.permissions[0]}
-                  value={this.props.userValue.permissions[0]}
+                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_EnhancedM&MView")}
+                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_EnhancedM&MView"
                 />
               }
               label="Enhanced M&M View"
@@ -85,8 +89,8 @@ class UserFields extends React.Component { // eslint-disable-line react/prefer-s
                   name="mmEdit"
                   disabled={!this.props.enableField}
                   onChange={this.props.handleFormChange}
-                  checked={this.props.userValue.permissions[1]}
-                  value={this.props.userValue.permissions[1]}
+                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit")}
+                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
                 />
               }
               label="Enhanced M&M Edit"
@@ -99,8 +103,8 @@ class UserFields extends React.Component { // eslint-disable-line react/prefer-s
                   name="userManagement"
                   disabled={!this.props.enableField}
                   onChange={this.props.handleFormChange}
-                  checked={this.props.userValue.permissions[2]}
-                  value={this.props.userValue.permissions[2]}
+                  checked={this.checkPermissions("6AD12264-46FA-8440-52AD1846BDF1_Admin")}
+                  value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
                 />
               }
               label="User Management (Create and Edit)"

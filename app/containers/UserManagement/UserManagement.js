@@ -41,6 +41,9 @@ export default class UserManagement extends React.PureComponent {
         email: '',
         title: '',
         department: '',
+        country: '',
+        preferredLanguage: 'en-US',
+        active: true,
         permissions: []
       },
     }
@@ -56,7 +59,6 @@ export default class UserManagement extends React.PureComponent {
           departments.map(function(department){
             if (department.departmentName === user.departmentName) {
               user.departmentName = department.departmentTitle;
-              if(user.roles) user.roles = user.roles.join(', ');
               users.push(user);
             }
           });
@@ -97,7 +99,72 @@ export default class UserManagement extends React.PureComponent {
   }
 
   addUser(){
-    this.state.userValue["currentUser"] = this.state.users.length;
+    //this.state.userValue["currentUser"] = this.state.users.length;
+    let jsonBody = {
+      firstName: this.state.userValue.firstName,
+      lastName: this.state.userValue.lastName,
+      email: this.state.userValue.email,
+      title: this.state.userValue.title,
+      preferredLanguage: 'en-US',
+      active: true
+    }
+
+    globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'post', this.props.userToken, jsonBody)
+    .then(result => { //result does not return user id!!!!!!!!!!!!
+      if (!result) {
+        // send error to modal
+      } else {
+        // add roles
+        let jsonBody;
+        if (this.state.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
+          jsonBody = {
+            updatedByName: this.props.userId,
+            userName: '',
+            appName: '6AD12264-46FA-8440-52AD1846BDF1',
+            rolesNames: ['Admin'],
+            statusCode: 0
+          }
+
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
+          .then(result => {
+            if (!result) {
+              // send error to modal
+            } else {
+
+            }
+          });
+        }
+          
+        let rolesNames = [];
+        if (this.state.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_EnhancedM&MView") >= 0) {
+          rolesNames.push('EnhancedM&MView');
+        }
+
+        if (this.state.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
+          rolesNames.push('Enhanced M&M Edit');
+        }
+
+        if (rolesNames.length > 0) {
+          jsonBody = {
+            updatedByName: this.props.userId,
+            userName: '',
+            appName: '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
+            rolesNames: rolesNames,
+            statusCode: 0
+          }
+
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
+          .then(result => {
+            if (!result) {
+              // send error to modal
+            } else {
+
+            }
+          });
+        }
+      }
+    })
+
     this.setState({
       users: [...this.state.users, this.state.userValue],
       currentView: 'User',
@@ -109,7 +176,12 @@ export default class UserManagement extends React.PureComponent {
   handleFormChange(e) {
     let currentUserValue = {...this.state.userValue};
     if (e.target.type == 'checkbox') {
-      currentUserValue[e.target.name] = e.target.checked;
+      let targetIndex = currentUserValue["permissions"].indexOf(e.target.value);
+      if (targetIndex < 0) {
+        currentUserValue["permissions"].push(e.target.value);
+      } else {
+        currentUserValue["permissions"].splice(targetIndex, 1);
+      }
     } else {
       currentUserValue[e.target.name] = e.target.value;
     }
@@ -140,7 +212,7 @@ export default class UserManagement extends React.PureComponent {
               { title: 'Last Name', field: 'lastName' },
               { title: 'Email', field: 'email' },
               { title: 'Department', field: 'departmentName' },
-              { title: 'Permissions', field: 'roles' }
+              { title: 'Title', field: 'title'}
             ]}
             options={{ 
               pageSize: 10,
