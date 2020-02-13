@@ -34,6 +34,7 @@ export default class UserManagement extends React.PureComponent {
       userList: [],
       open: false,
       enableField: false,
+      currentView: 'add',
       userValue: {
         currentUser: '',
         firstName: '',
@@ -71,10 +72,24 @@ export default class UserManagement extends React.PureComponent {
     
   };
 
-  openModal() {
+  openModal(e, view, rowData) {
+    //  get the user roles
+    
     this.setState({
       open: true,
-      enableField: true
+      enableField: true,
+      currentView: view,
+      userValue: {
+        currentUser: rowData.userName,
+        firstName: rowData.firstName,
+        lastName: rowData.lastName,
+        email: rowData.email,
+        title: rowData.title,
+        country: rowData.country,
+        preferredLanguage: rowData.preferredLanguage,
+        active: rowData.active,
+        permissions: ''
+      }
     });
   }
 
@@ -85,7 +100,7 @@ export default class UserManagement extends React.PureComponent {
   resetModal() {
     this.setState({
       open: false,
-      modalStage: 1,
+      currentView: 'add',
       userValue: {
         currentUser: '',
         firstName: '',
@@ -163,7 +178,7 @@ export default class UserManagement extends React.PureComponent {
 
     this.setState({
       users: [...this.state.users, this.state.userValue],
-      currentView: 'User',
+      currentView: 'add',
       enableField: false,
       open: false
     })
@@ -184,10 +199,6 @@ export default class UserManagement extends React.PureComponent {
     this.setState({userValue: currentUserValue});
   }
 
-  updateUser() {
-    this.setState({currentView: 'User'})
-  }
-
   handleClose = () => {
     this.setState({ open: false });
   };
@@ -196,7 +207,7 @@ export default class UserManagement extends React.PureComponent {
     return (
       <section className="">
         <div>
-          <p>User Management <Button variant="contained" className="primary" onClick={() => this.openModal()}>Add</Button> </p>
+          <p>User Management <Button variant="contained" className="primary" onClick={() => this.openModal('add')}>Add</Button> </p>
         </div>
 
         <div>
@@ -219,6 +230,7 @@ export default class UserManagement extends React.PureComponent {
             }}
             data={this.state.userList}
             icons={tableIcons}
+            onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
           />
         </div>
         
@@ -229,8 +241,8 @@ export default class UserManagement extends React.PureComponent {
           closeModal={() => this.closeModal()}
           addUser={() => this.addUser()}
           handleFormChange={(e) => this.handleFormChange(e)}
-          updateUser={() => this.updateUser()}
           handleClose={() => this.handleClose()}
+          currentView={this.state.currentView}
         />
       </section>
     );

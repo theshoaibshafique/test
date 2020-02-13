@@ -3,7 +3,7 @@ import Modal from '@material-ui/core/Modal';
 import DialogContent from '@material-ui/core/DialogContent';
 import UserModalStep1 from '../UserModalStep1';
 
-class UserModal extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class UserModal extends React.Component {
 
   render() {
     return (
@@ -21,6 +21,7 @@ class UserModal extends React.Component { // eslint-disable-line react/prefer-st
             enableField={this.props.enableField}
             handleFormChange={this.props.handleFormChange}
             userValue={this.props.userValue}
+            currentView={this.props.currentView}
           />
         </DialogContent>
       </Modal>

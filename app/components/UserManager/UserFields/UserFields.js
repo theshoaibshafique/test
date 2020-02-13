@@ -4,6 +4,8 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+import globalFuncs from '../../../utils/global-functions';
 
 class UserFields extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -12,6 +14,21 @@ class UserFields extends React.Component { // eslint-disable-line react/prefer-s
 
   checkPermissions(value) {
     return this.props.userValue.permissions.indexOf(value) >= 0;
+  }
+
+  passwordResetLink() {
+    let jsonBody = {
+      "userName": this.props.userValue.userName
+    }
+
+    globalFuncs.genericFetch(process.env.USERMANAGEMENTRESET_API, 'patch', this.props.userToken, jsonBody)
+    .then(result => {
+      if (!result) {
+        // send error to modal
+      } else {
+        // show toast for success
+      }
+    })
   }
 
   render() {
@@ -65,6 +82,8 @@ class UserFields extends React.Component { // eslint-disable-line react/prefer-s
             onChange={this.props.handleFormChange}
             variant="outlined"
           />
+          <div>{this.props.currentView === 'edit' &&
+            <Button style={{color : "#3db3e3"}} onClick={this.passwordResetLink()}>Send password reset link</Button> }</div>
           <h5>Permissions</h5>
           <FormControl className="User-Input" margin="normal">
             <FormControlLabel
