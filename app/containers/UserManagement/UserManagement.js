@@ -45,7 +45,7 @@ export default class UserManagement extends React.PureComponent {
         preferredLanguage: 'en-US',
         active: true,
         permissions: []
-      },
+      }
     }
   }
 
@@ -99,30 +99,28 @@ export default class UserManagement extends React.PureComponent {
   }
 
   addUser(){
-    //this.state.userValue["currentUser"] = this.state.users.length;
     let jsonBody = {
-      firstName: this.state.userValue.firstName,
-      lastName: this.state.userValue.lastName,
-      email: this.state.userValue.email,
-      title: this.state.userValue.title,
-      preferredLanguage: 'en-US',
-      active: true
+      "firstName": this.state.userValue.firstName,
+      "lastName": this.state.userValue.lastName,
+      "email": this.state.userValue.email,
+      "title": this.state.userValue.title,
+      "preferredLanguage": 'en-US',
+      "active": true,
+      "sendEmail": true
     }
 
     globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'post', this.props.userToken, jsonBody)
-    .then(result => { //result does not return user id!!!!!!!!!!!!
-      if (!result) {
+    .then(result => {
+      if (result.error) {
         // send error to modal
       } else {
         // add roles
         let jsonBody;
         if (this.state.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
           jsonBody = {
-            updatedByName: this.props.userId,
-            userName: '',
-            appName: '6AD12264-46FA-8440-52AD1846BDF1',
-            rolesNames: ['Admin'],
-            statusCode: 0
+            "userName": result,
+            "appName": '6AD12264-46FA-8440-52AD1846BDF1',
+            "roleNames": ['Admin']
           }
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
@@ -146,11 +144,9 @@ export default class UserManagement extends React.PureComponent {
 
         if (rolesNames.length > 0) {
           jsonBody = {
-            updatedByName: this.props.userId,
-            userName: '',
-            appName: '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-            rolesNames: rolesNames,
-            statusCode: 0
+            "userName": result,
+            "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
+            "roleNames": rolesNames
           }
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
