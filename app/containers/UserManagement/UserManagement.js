@@ -45,7 +45,7 @@ export default class UserManagement extends React.PureComponent {
         country: '',
         preferredLanguage: 'en-US',
         active: true,
-        permissions: []
+        permissions: ''
       }
     }
   }
@@ -73,23 +73,43 @@ export default class UserManagement extends React.PureComponent {
   };
 
   openModal(e, view, rowData) {
-    //  get the user roles
-    
+    if (rowData) {
+      //  get the user roles for edit
+      globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API + rowData.userName, 'get', this.props.userToken, {})
+      .then(result => {
+        if (!result) {
+          // send error to modal
+        } else {
+          const permission = []
+          result.map(userRole => {
+            if (userRole.roleNames.length) {
+              userRole.roleNames.map((role) => {
+                permission.push(userRole.appName + '_' + role);
+              })
+            }
+          });
+
+          this.setState({
+            userValue: {
+              currentUser: rowData.userName,
+              firstName: rowData.firstName,
+              lastName: rowData.lastName,
+              email: rowData.email,
+              title: rowData.title,
+              country: rowData.country,
+              preferredLanguage: rowData.preferredLanguage,
+              active: rowData.active,
+              permissions: permission
+            }
+          });
+        }
+      });
+    }
+
     this.setState({
       open: true,
       enableField: true,
       currentView: view,
-      userValue: {
-        currentUser: rowData.userName,
-        firstName: rowData.firstName,
-        lastName: rowData.lastName,
-        email: rowData.email,
-        title: rowData.title,
-        country: rowData.country,
-        preferredLanguage: rowData.preferredLanguage,
-        active: rowData.active,
-        permissions: ''
-      }
     });
   }
 
@@ -207,7 +227,7 @@ export default class UserManagement extends React.PureComponent {
     return (
       <section className="">
         <div>
-          <p>User Management <Button variant="contained" className="primary" onClick={() => this.openModal('add')}>Add</Button> </p>
+          <p>User Management <Button variant="contained" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </p>
         </div>
 
         <div>

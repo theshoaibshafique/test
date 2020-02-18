@@ -26,6 +26,7 @@ class UserModalStep1 extends React.Component {
 
   save() {
     let jsonBody = {
+      "userName": this.props.userValue.currentUser,
       "firstName": this.props.userValue.firstName,
       "lastName": this.props.userValue.lastName,
       "email": this.props.userValue.email,
@@ -34,12 +35,32 @@ class UserModalStep1 extends React.Component {
       "active": this.props.userValue.active
     }
 
-    globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'patch', this.props.userToken, jsonBody)
+    globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'PATCH', this.props.userToken, jsonBody)
     .then(result => {
       if (!result) {
-        // send error to modal
-      } else {
+        // this should be fixed, what happens with result?
         // update roles
+        this.props.userValue.permissions.map(role => {
+          let appName = '';
+          let roleNames = [];
+            appName = role.substring(0, role.indexOf('_'));
+            roleNames.push(role.substring(role.indexOf('_') + 1));
+
+            let jsonBody = {
+              "userName": this.props.userValue.currentUser,
+              "appName": appName,
+              "roleNames": roleNames
+            }
+
+            globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+            .then(result => {
+              if (!result) {
+                //error something
+              }
+            });
+          
+          });
+          
       }
     })
   }
@@ -63,13 +84,13 @@ class UserModalStep1 extends React.Component {
           />
           <div className="Button-Row right-align">
             {this.props.currentView === 'edit' &&
-              <Button variant="contained" className="secondary" style={{float: "left"}} onClick={this.deleteUser()}>Delete User</Button>
+              <Button variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.deleteUser()}>Delete User</Button>
             }
-            <Button style={{color : "#3db3e3"}} onClick={this.props.closeModal}>Cancel</Button>
+            <Button style={{color : "#3db3e3"}} onClick={() => this.props.closeModal()}>Cancel</Button>
             {this.props.currentView === 'add' ? (
-              <Button variant="contained" className="primary" onClick={this.props.addUser}>Add</Button>
+              <Button variant="contained" className="primary" onClick={() => this.props.addUser()}>Add</Button>
             ) : (
-              <Button variant="contained" className="primary" onClick={this.save()}>Save</Button>
+              <Button variant="contained" className="primary" onClick={() => this.save()}>Save</Button>
             )}
           </div>
         </div>

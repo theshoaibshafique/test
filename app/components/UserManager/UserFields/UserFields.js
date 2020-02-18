@@ -83,7 +83,7 @@ class UserFields extends React.Component { // eslint-disable-line react/prefer-s
             variant="outlined"
           />
           <div>{this.props.currentView === 'edit' &&
-            <Button style={{color : "#3db3e3"}} onClick={this.passwordResetLink()}>Send password reset link</Button> }</div>
+            <Button style={{color : "#3db3e3"}} onClick={() => this.passwordResetLink()}>Send password reset link</Button> }</div>
           <h5>Permissions</h5>
           <FormControl className="User-Input" margin="normal">
             <FormControlLabel
