@@ -1,29 +1,12 @@
 import React from 'react';
 import './style.scss';
 import Button from '@material-ui/core/Button';
-import { IconButton } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import UserFields from '../../../UserManager/UserFields/UserFields'
 import globalFuncs from '../../../../utils/global-functions';
 
 class UserModalStep1 extends React.Component {
-  deleteUser() {
-    // pop up modal asking to confirm
-
-    let jsonBody = {
-      "userName": this.props.userValue.userName
-    }
-
-    globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'delete', this.props.userToken, jsonBody)
-    .then(result => {
-      if (!result) {
-        // send error to modal
-      } else {
-        // go to users page
-      }
-    })
-  }
-
   save() {
     let jsonBody = {
       "userName": this.props.userValue.currentUser,
@@ -40,27 +23,49 @@ class UserModalStep1 extends React.Component {
       if (!result) {
         // this should be fixed, what happens with result?
         // update roles
-        this.props.userValue.permissions.map(role => {
-          let appName = '';
-          let roleNames = [];
-            appName = role.substring(0, role.indexOf('_'));
-            roleNames.push(role.substring(role.indexOf('_') + 1));
+        let jsonBody;
+        if (this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
+          jsonBody = {
+            "userName": this.props.userValue.currentUser,
+            "appName": '6AD12264-46FA-8440-52AD1846BDF1',
+            "roleNames": ['Admin']
+          }
 
-            let jsonBody = {
-              "userName": this.props.userValue.currentUser,
-              "appName": appName,
-              "roleNames": roleNames
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+          .then(result => {
+            if (!result) {
+              // send error to modal
+            } else {
+
             }
-
-            globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
-            .then(result => {
-              if (!result) {
-                //error something
-              }
-            });
-          
           });
+        }
           
+        let rolesNames = [];
+        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_EnhancedM&MView") >= 0) {
+          rolesNames.push('EnhancedM&MView');
+        }
+
+        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
+          rolesNames.push('Enhanced M&M Edit');
+        }
+
+        if (rolesNames.length > 0) {
+          jsonBody = {
+            "userName": this.props.userValue.currentUser,
+            "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
+            "roleNames": rolesNames
+          }
+
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+          .then(result => {
+            if (!result) {
+              // send error to modal
+            } else {
+
+            }
+          });
+        }
       }
     })
   }
@@ -81,10 +86,11 @@ class UserModalStep1 extends React.Component {
             enableField={this.props.enableField}
             handleFormChange={this.props.handleFormChange}
             currentView={this.props.currentView}
+            passwordResetLink={this.props.passwordResetLink}
           />
           <div className="Button-Row right-align">
             {this.props.currentView === 'edit' &&
-              <Button variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.deleteUser()}>Delete User</Button>
+              <Button variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.props.deleteUser()}>Delete User</Button>
             }
             <Button style={{color : "#3db3e3"}} onClick={() => this.props.closeModal()}>Cancel</Button>
             {this.props.currentView === 'add' ? (

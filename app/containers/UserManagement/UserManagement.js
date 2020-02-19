@@ -1,11 +1,14 @@
 import React from 'react';
 import { forwardRef } from 'react';
 import Button from '@material-ui/core/Button';
-import MaterialTable from "material-table";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import MaterialTable from 'material-table';
 import globalFuncs from '../../utils/global-functions';
 import './style.scss';
 
 import UserModal from '../../Components/Modal/UserModal/UserModal';
+import DeleteModal from '../../Components/Modal/DeleteModal';
 
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
@@ -15,6 +18,7 @@ import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const tableIcons = {
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
@@ -46,7 +50,9 @@ export default class UserManagement extends React.PureComponent {
         preferredLanguage: 'en-US',
         active: true,
         permissions: ''
-      }
+      },
+      snackBarOpen: false,
+      deleteDialogOpen: false
     }
   }
 
@@ -69,7 +75,6 @@ export default class UserManagement extends React.PureComponent {
           userList: users
         });
     });
-    
   };
 
   openModal(e, view, rowData) {
@@ -82,7 +87,7 @@ export default class UserManagement extends React.PureComponent {
         } else {
           const permission = []
           result.map(userRole => {
-            if (userRole.roleNames.length) {
+            if (userRole.roleNames && userRole.roleNames.length) {
               userRole.roleNames.map((role) => {
                 permission.push(userRole.appName + '_' + role);
               })
@@ -220,8 +225,41 @@ export default class UserManagement extends React.PureComponent {
   }
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ open: false, deleteDialogOpen: false });
   };
+
+  passwordResetLink() {
+    let jsonBody = {
+      "userName": this.state.userValue.currentUser
+    }
+
+    globalFuncs.genericFetch(process.env.USERMANAGEMENTRESET_API, 'PATCH', this.props.userToken, jsonBody)
+    .then(result => {
+      if (!result) {
+        // show toast for success
+        this.setState({
+          snackBarOpen: true
+        })
+      } else {
+        // send error to modal
+      }
+    })
+  }
+
+  handleCloseSnackBar() {
+    this.setState({
+      snackBarOpen: false
+    })
+  };
+
+  deleteUser() {
+    // pop up modal asking to confirm
+    this.setState({
+      open: false,
+      deleteDialogOpen: true
+    })
+
+  }
 
   render() {
     return (
@@ -263,7 +301,34 @@ export default class UserManagement extends React.PureComponent {
           handleFormChange={(e) => this.handleFormChange(e)}
           handleClose={() => this.handleClose()}
           currentView={this.state.currentView}
+          passwordResetLink={() => this.passwordResetLink()}
+          deleteUser={() => this.deleteUser()}
         />
+
+        <DeleteModal
+          deleteDialogOpen={this.state.deleteDialogOpen}
+          handleClose={() => this.handleClose()}
+          userValue={this.state.userValue}
+        />
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.snackBarOpen}
+          autoHideDuration={4000}
+          onClose={() => this.handleCloseSnackBar()}
+          message="Password Reset Email Sent"
+          action={
+            <React.Fragment>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={() => this.handleCloseSnackBar()}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
+
       </section>
     );
   }

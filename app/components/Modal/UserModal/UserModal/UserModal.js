@@ -22,6 +22,8 @@ class UserModal extends React.Component {
             handleFormChange={this.props.handleFormChange}
             userValue={this.props.userValue}
             currentView={this.props.currentView}
+            passwordResetLink={this.props.passwordResetLink}
+            deleteUser={this.props.deleteUser}
           />
         </DialogContent>
       </Modal>
