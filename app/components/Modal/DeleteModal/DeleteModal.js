@@ -15,6 +15,51 @@ class DeleteModal extends React.Component {
     globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'delete', this.props.userToken, jsonBody)
     .then(result => {
       if (!result) {
+        // find roles
+        let jsonBody;
+        if (this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
+          jsonBody = {
+            "userName": this.props.userValue.currentUser,
+            "appName": '6AD12264-46FA-8440-52AD1846BDF1',
+            "roleNames": ['Admin']
+          }
+
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'delete', this.props.userToken, jsonBody)
+          .then(result => {
+            if (!result) {
+              // send error to modal
+            } else {
+
+            }
+          });
+        }
+          
+        let rolesNames = [];
+        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_EnhancedM&MView") >= 0) {
+          rolesNames.push('EnhancedM&MView');
+        }
+
+        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
+          rolesNames.push('Enhanced M&M Edit');
+        }
+
+        if (rolesNames.length > 0) {
+          jsonBody = {
+            "userName": this.props.userValue.currentUser,
+            "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
+            "roleNames": rolesNames
+          }
+
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'delete', this.props.userToken, jsonBody)
+          .then(result => {
+            if (!result) {
+              // send error to modal
+            } else {
+
+            }
+          });
+        }
+
         this.props.handleClose();
       } else {
         // send error to modal
