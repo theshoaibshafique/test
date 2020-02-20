@@ -7,6 +7,13 @@ import UserFields from '../../../UserManager/UserFields/UserFields'
 import globalFuncs from '../../../../utils/global-functions';
 
 class UserModalStep1 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      errorMsgVisible: false
+    }
+  }
+  
   save() {
     let jsonBody = {
       "userName": this.props.userValue.currentUser,
@@ -20,9 +27,11 @@ class UserModalStep1 extends React.Component {
 
     globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'PATCH', this.props.userToken, jsonBody)
     .then(result => {
-      if (!result) {
-        // this should be fixed, what happens with result?
+      if (result === 'error') {
+        this.setState({ errorMsgVisible: true });
+      } else {
         // update roles
+        this.setState({ errorMsgVisible: false });
         let jsonBody;
         if (this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
           jsonBody = {
@@ -33,10 +42,9 @@ class UserModalStep1 extends React.Component {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
           .then(result => {
-            if (!result) {
+            if (result === 'error') {
               // send error to modal
-            } else {
-
+              this.setState({ errorMsgVisible: true });
             }
           });
         }
@@ -59,10 +67,9 @@ class UserModalStep1 extends React.Component {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
           .then(result => {
-            if (!result) {
+            if (result === 'error') {
               // send error to modal
-            } else {
-
+              this.setState({ errorMsgVisible: true });
             }
           });
         }
@@ -81,6 +88,11 @@ class UserModalStep1 extends React.Component {
             )}
             <IconButton onClick={this.props.closeModal}><CloseIcon fontSize='small'/></IconButton>
           </div>
+          <div>
+            {(this.props.errorMsgVisible || this.state.errorMsgVisible) &&
+              <p className="Paragraph-Error">{this.props.errorMsg}</p>
+            }
+          </div>
           <UserFields
             userValue={this.props.userValue}
             enableField={this.props.enableField}
@@ -90,7 +102,7 @@ class UserModalStep1 extends React.Component {
           />
           <div className="Button-Row right-align">
             {this.props.currentView === 'edit' &&
-              <Button variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.props.deleteUser()}>Delete User</Button>
+              <Button variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.props.deleteUser()}>Disable User</Button>
             }
             <Button style={{color : "#3db3e3"}} onClick={() => this.props.closeModal()}>Cancel</Button>
             {this.props.currentView === 'add' ? (

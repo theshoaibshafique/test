@@ -6,6 +6,12 @@ import globalFuncs from '../../../utils/global-functions';
 import './style.scss';
 
 class DeleteModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      errorMsgVisible: false
+    }
+  }
 
   deleteUser() {
     let jsonBody = {
@@ -14,7 +20,10 @@ class DeleteModal extends React.Component {
 
     globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'delete', this.props.userToken, jsonBody)
     .then(result => {
-      if (!result) {
+      if (result === 'error') {
+        // send error to modal
+        this.setState({ errorMsgVisible: true });
+      } else {
         // find roles
         let jsonBody;
         if (this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
@@ -26,10 +35,9 @@ class DeleteModal extends React.Component {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'delete', this.props.userToken, jsonBody)
           .then(result => {
-            if (!result) {
+            if (result === 'error') {
               // send error to modal
-            } else {
-
+              this.setState({ errorMsgVisible: true });
             }
           });
         }
@@ -52,19 +60,16 @@ class DeleteModal extends React.Component {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'delete', this.props.userToken, jsonBody)
           .then(result => {
-            if (!result) {
+            if (result === 'error') {
               // send error to modal
-            } else {
-
+              this.setState({ errorMsgVisible: true });
             }
           });
         }
-
         this.props.handleClose();
-      } else {
-        // send error to modal
+        this.setState({ errorMsgVisible: false });
       }
-    })
+    });
   }
 
   render() {
@@ -77,12 +82,15 @@ class DeleteModal extends React.Component {
       >
         <DialogContent>
           <div className="Modal Delete-Modal">
-            <p className="Title">Delete User</p>
-            <p className="Paragraph">Are you sure you want to delete user {this.props.userValue.firstName} {this.props.userValue.lastName}?</p>
-            <p className="Paragraph">This action cannot be undone.</p>
+            <p className="Title">Disable User</p>
+            {this.state.errorMsgVisible &&
+              <p className="Paragraph-Error">{this.props.errorMsg}</p>
+            }
+            <p className="Paragraph">Are you sure you want to disable this user {this.props.userValue.firstName} {this.props.userValue.lastName}?</p>
+            <p className="Paragraph">Disabled users will not be able to log into Insights</p>
             <div className="Button-Row right-align">
-              <Button style={{color : "#3db3e3"}} onClick={() => this.props.handleClose()}>Cancel</Button>
-              <Button variant="contained" className="secondary" onClick={() => this.deleteUser()}>Delete</Button>
+              <Button style={{color : "#3db3e3"}} onClick={() => { this.props.handleClose(); this.setState({ errorMsgVisible: false }); }}>Cancel</Button>
+              <Button variant="contained" className="secondary" onClick={() => this.deleteUser()}>Disable</Button>
             </div>
           </div>
         </DialogContent>

@@ -52,7 +52,9 @@ export default class UserManagement extends React.PureComponent {
         permissions: ''
       },
       snackBarOpen: false,
-      deleteDialogOpen: false
+      deleteDialogOpen: false,
+      errorMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
+      errorMsgVisible: false
     }
   }
 
@@ -61,6 +63,7 @@ export default class UserManagement extends React.PureComponent {
 
     await globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'get', this.props.userToken, {})
     .then(result => {
+      if (result) {
         const users = [];
         result.map(function(user) {
           departments.map(function(department){
@@ -74,17 +77,24 @@ export default class UserManagement extends React.PureComponent {
         this.setState({
           userList: users
         });
+      } else {
+        this.setState({
+          userList: []
+        });
+      }
     });
   };
 
   openModal(e, view, rowData) {
+    this.setState({
+      errorMsgVisible: false
+    })
+
     if (rowData) {
-      //  get the user roles for edit
+      // get the user roles for edit
       globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API + rowData.userName, 'get', this.props.userToken, {})
       .then(result => {
-        if (!result) {
-          // send error to modal
-        } else {
+        if (result != null) {
           const permission = []
           result.map(userRole => {
             if (userRole.roleNames && userRole.roleNames.length) {
@@ -107,6 +117,9 @@ export default class UserManagement extends React.PureComponent {
               permissions: permission
             }
           });
+        } else {
+          // send error to modal
+          this.setState({ errorMsgVisible: true });
         }
       });
     }
@@ -133,7 +146,8 @@ export default class UserManagement extends React.PureComponent {
         email: '',
         title: '',
         department: '',
-        permissions: []
+        permissions: [],
+        errorMsgVisible: false
       }
     })
   }
@@ -151,8 +165,8 @@ export default class UserManagement extends React.PureComponent {
 
     globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'post', this.props.userToken, jsonBody)
     .then(result => {
-      if (result.error) {
-        // send error to modal
+      if (result === 'error') {
+        this.setState({ errorMsgVisible: true });
       } else {
         // add roles
         let jsonBody;
@@ -165,10 +179,8 @@ export default class UserManagement extends React.PureComponent {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
           .then(result => {
-            if (!result) {
-              // send error to modal
-            } else {
-
+            if (result === 'error') {
+              this.setState({ errorMsgVisible: true });
             }
           });
         }
@@ -191,10 +203,8 @@ export default class UserManagement extends React.PureComponent {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
           .then(result => {
-            if (!result) {
-              // send error to modal
-            } else {
-
+            if (result === 'error') {
+              this.setState({ errorMsgVisible: true });
             }
           });
         }
@@ -202,7 +212,7 @@ export default class UserManagement extends React.PureComponent {
     })
 
     this.setState({
-      users: [...this.state.users, this.state.userValue],
+      userList: [...this.state.userList, this.state.userValue],
       currentView: 'add',
       enableField: false,
       open: false
@@ -225,7 +235,7 @@ export default class UserManagement extends React.PureComponent {
   }
 
   handleClose = () => {
-    this.setState({ open: false, deleteDialogOpen: false });
+    this.setState({ open: false, deleteDialogOpen: false, errorMsgVisible: false });
   };
 
   passwordResetLink() {
@@ -235,13 +245,14 @@ export default class UserManagement extends React.PureComponent {
 
     globalFuncs.genericFetch(process.env.USERMANAGEMENTRESET_API, 'PATCH', this.props.userToken, jsonBody)
     .then(result => {
-      if (!result) {
+      if (result === 'error') {
+        // send error to modal
+        this.setState({ errorMsgVisible: true });
+      } else {
         // show toast for success
         this.setState({
           snackBarOpen: true
         })
-      } else {
-        // send error to modal
       }
     })
   }
@@ -256,9 +267,9 @@ export default class UserManagement extends React.PureComponent {
     // pop up modal asking to confirm
     this.setState({
       open: false,
-      deleteDialogOpen: true
+      deleteDialogOpen: true, 
+      errorMsgVisible: false
     })
-
   }
 
   render() {
@@ -303,12 +314,15 @@ export default class UserManagement extends React.PureComponent {
           currentView={this.state.currentView}
           passwordResetLink={() => this.passwordResetLink()}
           deleteUser={() => this.deleteUser()}
+          errorMsg={this.state.errorMsg}
+          errorMsgVisible={this.state.errorMsgVisible}
         />
 
         <DeleteModal
           deleteDialogOpen={this.state.deleteDialogOpen}
           handleClose={() => this.handleClose()}
           userValue={this.state.userValue}
+          errorMsg={this.state.errorMsg}
         />
 
         <Snackbar

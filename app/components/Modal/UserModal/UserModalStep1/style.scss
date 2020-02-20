@@ -1,3 +1,5 @@
+@import '../../../../styles/global-styles.scss';
+
 .User-Modal {
     width: 50%;
     max-width: 1150px;
@@ -6,4 +8,10 @@
 .ToolBar {
     display: flex;
     justify-content: space-between;
+}
+
+.Paragraph-Error {
+    color: $red;
+    font-size: 14px;
+    line-height: 19px;
 }

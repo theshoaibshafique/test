@@ -24,6 +24,8 @@ class UserModal extends React.Component {
             currentView={this.props.currentView}
             passwordResetLink={this.props.passwordResetLink}
             deleteUser={this.props.deleteUser}
+            errorMsg={this.props.errorMsg}
+            errorMsgVisible={this.props.errorMsgVisible}
           />
         </DialogContent>
       </Modal>
