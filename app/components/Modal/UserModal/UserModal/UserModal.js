@@ -26,6 +26,7 @@ class UserModal extends React.Component {
             errorMsg={this.props.errorMsg}
             errorMsgVisible={this.props.errorMsgVisible}
             refreshGrid={this.props.refreshGrid}
+            updateGridEdit={this.props.updateGridEdit}
           />
         </DialogContent>
       </Modal>

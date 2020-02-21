@@ -239,6 +239,21 @@ export default class UserManagement extends React.PureComponent {
     })
   };
 
+  updateGridEdit(id) {
+    let newState = Object.assign({}, this.state);
+    newState.userList[id].firstName = this.state.userValue.firstName;
+    newState.userList[id].lastName = this.state.userValue.lastName;
+    newState.userList[id].email = this.state.userValue.email;
+    newState.userList[id].title = this.state.userValue.title;
+    newState.userList[id].permissions = this.state.userValue.permissions;
+
+    this.setState({
+      newState,
+      currentView: 'add',
+      open: false
+    })
+  };
+
   handleFormChange(e) {
     let currentUserValue = {...this.state.userValue};
     if (e.target.type == 'checkbox') {
@@ -336,6 +351,7 @@ export default class UserManagement extends React.PureComponent {
           errorMsg={this.state.errorMsg}
           errorMsgVisible={this.state.errorMsgVisible}
           refreshGrid={() => this.refreshGrid()}
+          updateGridEdit={(id) => this.updateGridEdit(id)}
         />
 
         <DeleteModal

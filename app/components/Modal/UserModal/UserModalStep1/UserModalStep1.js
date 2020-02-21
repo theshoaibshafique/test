@@ -79,7 +79,7 @@ class UserModalStep1 extends React.Component {
       }
 
       if (!this.state.errorMsgVisible && !this.props.errorMsgVisible) {
-        this.props.refreshGrid();
+        this.props.updateGridEdit(this.props.userValue.id);
       }
     })
   }
