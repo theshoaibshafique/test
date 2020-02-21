@@ -37,7 +37,6 @@ export default class UserManagement extends React.PureComponent {
     this.state = {
       userList: [],
       open: false,
-      enableField: false,
       currentView: 'add',
       userValue: {
         currentUser: '',
@@ -126,7 +125,6 @@ export default class UserManagement extends React.PureComponent {
 
     this.setState({
       open: true,
-      enableField: true,
       currentView: view,
     });
   }
@@ -214,7 +212,6 @@ export default class UserManagement extends React.PureComponent {
     this.setState({
       userList: [...this.state.userList, this.state.userValue],
       currentView: 'add',
-      enableField: false,
       open: false
     })
   }
@@ -274,7 +271,7 @@ export default class UserManagement extends React.PureComponent {
 
   render() {
     return (
-      <section className="">
+      <section>
         <div>
           <p>User Management <Button variant="contained" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </p>
         </div>
@@ -305,7 +302,6 @@ export default class UserManagement extends React.PureComponent {
         
         <UserModal
           open={this.state.open}
-          enableField={this.state.enableField}
           userValue={this.state.userValue}
           closeModal={() => this.closeModal()}
           addUser={() => this.addUser()}
@@ -342,7 +338,6 @@ export default class UserManagement extends React.PureComponent {
             </React.Fragment>
           }
         />
-
       </section>
     );
   }

@@ -18,7 +18,6 @@ class UserModal extends React.Component {
           <UserModalStep1
             closeModal={this.props.closeModal}
             addUser={this.props.addUser}
-            enableField={this.props.enableField}
             handleFormChange={this.props.handleFormChange}
             userValue={this.props.userValue}
             currentView={this.props.currentView}

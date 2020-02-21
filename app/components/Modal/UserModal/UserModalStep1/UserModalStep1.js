@@ -95,7 +95,6 @@ class UserModalStep1 extends React.Component {
           </div>
           <UserFields
             userValue={this.props.userValue}
-            enableField={this.props.enableField}
             handleFormChange={this.props.handleFormChange}
             currentView={this.props.currentView}
             passwordResetLink={this.props.passwordResetLink}
