@@ -111,7 +111,7 @@ class UserModalStep1 extends React.Component {
           />
           <div className="Button-Row right-align">
             {this.props.currentView === 'edit' &&
-              <Button variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.props.deleteUser()}>Disable User</Button>
+              <Button variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.props.deleteUser()}>{this.props.userValue.active ? 'Disable User' : 'Enable User'}</Button>
             }
             <Button style={{color : "#3db3e3"}} onClick={() => this.props.closeModal()}>Cancel</Button>
             {this.props.currentView === 'add' ? (

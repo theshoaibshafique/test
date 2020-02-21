@@ -48,7 +48,8 @@ export default class UserManagement extends React.PureComponent {
         country: '',
         preferredLanguage: 'en-US',
         active: true,
-        permissions: ''
+        permissions: '',
+        id: ''
       },
       snackBarOpen: false,
       deleteDialogOpen: false,
@@ -110,10 +111,12 @@ export default class UserManagement extends React.PureComponent {
               lastName: rowData.lastName,
               email: rowData.email,
               title: rowData.title,
+              department: '',
               country: rowData.country,
               preferredLanguage: rowData.preferredLanguage,
               active: rowData.active,
-              permissions: permission
+              permissions: permission,
+              id: rowData.tableData.id
             }
           });
         } else {
@@ -127,11 +130,11 @@ export default class UserManagement extends React.PureComponent {
       open: true,
       currentView: view,
     });
-  }
+  };
 
   closeModal() {
     this.resetModal();
-  }
+  };
 
   resetModal() {
     this.setState({
@@ -144,11 +147,15 @@ export default class UserManagement extends React.PureComponent {
         email: '',
         title: '',
         department: '',
-        permissions: [],
-        errorMsgVisible: false
-      }
+        country: '',
+        preferredLanguage: 'en-US',
+        active: true,
+        permissions: '',
+        id: ''
+      },
+      errorMsgVisible: false
     })
-  }
+  };
 
   addUser(){
     let jsonBody = {
@@ -212,7 +219,7 @@ export default class UserManagement extends React.PureComponent {
         }
       }
     })
-  }
+  };
 
   refreshGrid() {
     this.setState({
@@ -220,7 +227,17 @@ export default class UserManagement extends React.PureComponent {
       currentView: 'add',
       open: false
     })
-  }
+  };
+
+  updateGrid(id) {
+    let newState = Object.assign({}, this.state);
+    newState.userList[id].active = !this.state.userValue.active;
+
+    this.setState({
+      newState,
+      currentView: 'add'
+    })
+  };
 
   handleFormChange(e) {
     let currentUserValue = {...this.state.userValue};
@@ -235,7 +252,7 @@ export default class UserManagement extends React.PureComponent {
       currentUserValue[e.target.name] = e.target.value;
     }
     this.setState({userValue: currentUserValue});
-  }
+  };
 
   handleClose = () => {
     this.setState({ open: false, deleteDialogOpen: false, errorMsgVisible: false });
@@ -258,7 +275,7 @@ export default class UserManagement extends React.PureComponent {
         })
       }
     })
-  }
+  };
 
   handleCloseSnackBar() {
     this.setState({
@@ -273,7 +290,7 @@ export default class UserManagement extends React.PureComponent {
       deleteDialogOpen: true, 
       errorMsgVisible: false
     })
-  }
+  };
 
   render() {
     return (
@@ -326,6 +343,7 @@ export default class UserManagement extends React.PureComponent {
           handleClose={() => this.handleClose()}
           userValue={this.state.userValue}
           errorMsg={this.state.errorMsg}
+          updateGrid={(id) => this.updateGrid(id)}
         />
 
         <Snackbar
