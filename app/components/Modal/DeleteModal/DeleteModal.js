@@ -20,7 +20,7 @@ class DeleteModal extends React.Component {
 
     globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'delete', this.props.userToken, jsonBody)
     .then(result => {
-      if (result === 'error') {
+      if (result === 'error' || result === 'conflict') {
         // send error to modal
         this.setState({ errorMsgVisible: true });
       } else {

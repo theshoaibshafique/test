@@ -10,7 +10,8 @@ class UserModalStep1 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorMsgVisible: false
+      errorMsgVisible: false,
+      errorMsg: 'Email exists, please enter another email address.'
     }
   }
   
@@ -28,6 +29,8 @@ class UserModalStep1 extends React.Component {
     globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'PATCH', this.props.userToken, jsonBody)
     .then(result => {
       if (result === 'error') {
+        this.setState({ errorMsgVisible: true,  errorMsg: ''});
+      } else if (result === 'conflict') {
         this.setState({ errorMsgVisible: true });
       } else {
         // update roles
@@ -42,7 +45,7 @@ class UserModalStep1 extends React.Component {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
           .then(result => {
-            if (result === 'error') {
+            if (result === 'error' || result === 'conflict') {
               // send error to modal
               this.setState({ errorMsgVisible: true });
             }
@@ -67,12 +70,16 @@ class UserModalStep1 extends React.Component {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
           .then(result => {
-            if (result === 'error') {
+            if (result === 'error' || result === 'conflict') {
               // send error to modal
               this.setState({ errorMsgVisible: true });
             }
           });
         }
+      }
+
+      if (!this.state.errorMsgVisible && !this.props.errorMsgVisible) {
+        this.props.refreshGrid();
       }
     })
   }
@@ -91,6 +98,9 @@ class UserModalStep1 extends React.Component {
           <div>
             {(this.props.errorMsgVisible || this.state.errorMsgVisible) &&
               <p className="Paragraph-Error">{this.props.errorMsg}</p>
+            }
+            {(this.props.errorMsgVisible || this.state.errorMsgVisible) &&
+              <p className="Paragraph-Error">{this.state.errorMsg}</p>
             }
           </div>
           <UserFields

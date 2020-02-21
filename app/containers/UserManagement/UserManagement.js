@@ -163,7 +163,7 @@ export default class UserManagement extends React.PureComponent {
 
     globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'post', this.props.userToken, jsonBody)
     .then(result => {
-      if (result === 'error') {
+      if (result === 'error' || result === 'conflict') {
         this.setState({ errorMsgVisible: true });
       } else {
         // add roles
@@ -177,7 +177,7 @@ export default class UserManagement extends React.PureComponent {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
           .then(result => {
-            if (result === 'error') {
+            if (result === 'error' || result === 'conflict') {
               this.setState({ errorMsgVisible: true });
             }
           });
@@ -201,14 +201,20 @@ export default class UserManagement extends React.PureComponent {
 
           globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
           .then(result => {
-            if (result === 'error') {
+            if (result === 'error' || result === 'conflict') {
               this.setState({ errorMsgVisible: true });
             }
           });
         }
+
+        if (!this.state.errorMsgVisible) {
+          this.refreshGrid();
+        }
       }
     })
+  }
 
+  refreshGrid() {
     this.setState({
       userList: [...this.state.userList, this.state.userValue],
       currentView: 'add',
@@ -242,7 +248,7 @@ export default class UserManagement extends React.PureComponent {
 
     globalFuncs.genericFetch(process.env.USERMANAGEMENTRESET_API, 'PATCH', this.props.userToken, jsonBody)
     .then(result => {
-      if (result === 'error') {
+      if (result === 'error' || result === 'conflict') {
         // send error to modal
         this.setState({ errorMsgVisible: true });
       } else {
@@ -312,6 +318,7 @@ export default class UserManagement extends React.PureComponent {
           deleteUser={() => this.deleteUser()}
           errorMsg={this.state.errorMsg}
           errorMsgVisible={this.state.errorMsgVisible}
+          refreshGrid={() => this.refreshGrid()}
         />
 
         <DeleteModal
