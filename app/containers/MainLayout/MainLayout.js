@@ -19,6 +19,7 @@ import CultureSurvey from 'containers/CultureSurvey/Loadable';
 import CultureSurveyDemographic from 'containers/CultureSurveyDemographic/Loadable';
 import CultureSurveyResult from 'containers/CultureSurveyResult/Loadable';
 import RoomTraffic from 'containers/RoomTraffic/Loadable';
+import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import SSTNav from 'components/SSTNav';
 
@@ -27,7 +28,7 @@ import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
 import AzureLogin from 'components/AzureLogin';
 
-export default class MainLayout extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export default class MainLayout extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -70,6 +71,7 @@ export default class MainLayout extends React.PureComponent { // eslint-disable-
               <Route path="/culture-survey/question-results" component={() => <CultureSurveyResult userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="/culture-survey" component={() => <CultureSurvey userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="/room-traffic" component={() => <RoomTraffic userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/my-profile" component={() => <MyProfile userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="" component={NotFoundPage} />
             </Switch> 
     } else {

@@ -4,7 +4,7 @@ import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
 class AzureLogin extends React.Component { // eslint-disable-line react/prefer-stateless-function
   unauthenticatedFunction = loginFunction => {
-    this.props.history.push(`/usermanagement`);
+    //this.props.history.push(`/usermanagement`);
   }
 
   userJustLoggedIn = receivedToken => {

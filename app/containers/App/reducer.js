@@ -26,6 +26,10 @@ const initialState = fromJS({
   userToken: null,
   userName: null,
   userID: null,
+  firstName: null,
+  lastName: null,
+  email: null,
+  jobTitle: null,
   userFacility: null,
   facilityRooms: [],
   procedures: [],
@@ -40,7 +44,11 @@ function appReducer(state = initialState, action) {
         .set('userToken', action.token.jwtAccessToken)
         .set('userName', action.token.user.name)
         .set('userID', action.token.user.idToken.sub)
-        .set('userLoggedIn', true);
+        .set('userLoggedIn', true)
+        .set('firstName', action.token.user.idToken.given_name)
+        .set('lastName', action.token.user.idToken.family_name)
+        .set('email', action.token.user.idToken.email)
+        .set('jobTitle', action.token.user.idToken.job_title);
     case USER_FACILITY:
       return state
         .set('userFacility', action.facility)

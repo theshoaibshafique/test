@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './style.scss';
 import {PACKAGE_NAME} from '../../../app/constants.js';
 import PackageSelector from '../MainDashboard/PackageSelector';
@@ -60,8 +61,8 @@ class SSTNav extends React.Component { // eslint-disable-line react/prefer-state
             <li>Request for eM&M</li>
           */}
 
-          <li>User Management</li>
-          <li>My Profile</li>
+          <li><Link to="/usermanagement" className='text-link'>User Management</Link></li>
+          <li><Link to="/my-profile" className='text-link'>My Profile</Link></li>
           <li>Logout</li>
         </ul>
       </div>

@@ -53,8 +53,8 @@ class UserModalStep1 extends React.Component {
         }
           
         let rolesNames = [];
-        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_EnhancedM&MView") >= 0) {
-          rolesNames.push('EnhancedM&MView');
+        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0) {
+          rolesNames.push('Enhanced M&M View');
         }
 
         if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
