@@ -20,12 +20,20 @@ class AzureLogin extends React.Component { // eslint-disable-line react/prefer-s
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then((result) => {
-      this.props.setUserFacility(result);
-      this.props.resourcesGathered(true);
-      //this.getFacilityRooms(result.facilityName);
+    .then(response => {
+      if (response.status !== 204) {
+        response.json().then((result) => {
+          if (result) {
+            this.props.setUserFacility(result);
+            this.props.resourcesGathered(true);
+          }
+          //this.getFacilityRooms(result.facilityName);
+        });
+      } else {
+        this.props.redirect();
+      }
     })
+    
   }
 
   getFacilityRooms(facilityName) {

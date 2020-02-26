@@ -9,18 +9,9 @@ import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 
 import UserManagement from 'containers/UserManagement/Loadable';
-import MainDashboard from 'containers/MainDashboard/Loadable';
-import Distractions from 'containers/Distractions/Loadable';
-import DistractionsCategory from 'containers/DistractionsCategory/Loadable';
-import DistractionsProcedure from 'containers/DistractionsProcedure/Loadable';
-import DistractionsOR from 'containers/DistractionsOR/Loadable';
-import UserManager from 'containers/UserManager/Loadable';
-import CultureSurvey from 'containers/CultureSurvey/Loadable';
-import CultureSurveyDemographic from 'containers/CultureSurveyDemographic/Loadable';
-import CultureSurveyResult from 'containers/CultureSurveyResult/Loadable';
-import RoomTraffic from 'containers/RoomTraffic/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import NoAccess from 'containers/NoAccess/Loadable';
 import SSTNav from 'components/SSTNav';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -32,7 +23,8 @@ export default class MainLayout extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      userLoggedIn: false
+      userLoggedIn: false,
+      authenticated: true
     }
 
     this.logoutFunction = this.logoutFunction.bind(this);
@@ -57,7 +49,17 @@ export default class MainLayout extends React.PureComponent {
     return (() => logout)
   }
 
+  redirect() {
+    this.setState({
+      authenticated: false
+    });
+  }
+
   getContainer() {
+    if (!this.state.authenticated) {
+      return <NoAccess/>
+    }
+
     if (this.state.userLoggedIn) {
       return <Switch>
               <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
@@ -85,6 +87,7 @@ export default class MainLayout extends React.PureComponent {
         <AzureLogin
           resourcesGathered={() => this.resourcesGathered()}
           logoutFunction={(logout) => this.logoutFunction(logout)}
+          redirect={() => this.redirect()}
         />
         <CssBaseline />
         <Helmet
