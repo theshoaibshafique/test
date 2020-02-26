@@ -11,6 +11,7 @@ class UserModalStep1 extends React.Component {
     super(props);
     this.state = {
       errorMsgVisible: false,
+      errorMsgEmailVisible: false,
       errorMsg: 'Email exists, please enter another email address.'
     }
   }
@@ -26,16 +27,17 @@ class UserModalStep1 extends React.Component {
       "active": this.props.userValue.active
     }
 
-    globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'PATCH', this.props.userToken, jsonBody)
+    globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENT_API, 'PATCH', this.props.userToken, jsonBody)
     .then(result => {
       if (result === 'error') {
         this.setState({ errorMsgVisible: true,  errorMsg: ''});
       } else if (result === 'conflict') {
-        this.setState({ errorMsgVisible: true });
+        this.setState({ errorMsgEmailVisible: true });
       } else {
         // update roles
         this.setState({ errorMsgVisible: false });
         let jsonBody;
+        let rolesNames = [];
         if (this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
           jsonBody = {
             "userName": this.props.userValue.currentUser,
@@ -43,7 +45,9 @@ class UserModalStep1 extends React.Component {
             "roleNames": ['Admin']
           }
 
-          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+          rolesNames.push('Admin');
+
+          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
           .then(result => {
             if (result === 'error' || result === 'conflict') {
               // send error to modal
@@ -51,8 +55,7 @@ class UserModalStep1 extends React.Component {
             }
           });
         }
-          
-        let rolesNames = [];
+
         if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0) {
           rolesNames.push('Enhanced M&M View');
         }
@@ -61,25 +64,23 @@ class UserModalStep1 extends React.Component {
           rolesNames.push('Enhanced M&M Edit');
         }
 
-        if (rolesNames.length > 0) {
-          jsonBody = {
-            "userName": this.props.userValue.currentUser,
-            "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-            "roleNames": rolesNames
-          }
-
-          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
-          .then(result => {
-            if (result === 'error' || result === 'conflict') {
-              // send error to modal
-              this.setState({ errorMsgVisible: true });
-            }
-          });
+        jsonBody = {
+          "userName": this.props.userValue.currentUser,
+          "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
+          "roleNames": rolesNames
         }
-      }
 
-      if (!this.state.errorMsgVisible && !this.props.errorMsgVisible) {
-        this.props.updateGridEdit(this.props.userValue.id);
+        globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+        .then(result => {
+          if (result === 'error' || result === 'conflict') {
+            // send error to modal
+            this.setState({ errorMsgVisible: true });
+          }
+        })
+        .then(result => {
+          if (!this.state.errorMsgVisible) {
+          this.props.updateGridEdit(this.props.userValue.id);
+        }});
       }
     })
   }
@@ -99,7 +100,7 @@ class UserModalStep1 extends React.Component {
             {(this.props.errorMsgVisible || this.state.errorMsgVisible) &&
               <p className="Paragraph-Error">{this.props.errorMsg}</p>
             }
-            {(this.props.errorMsgVisible || this.state.errorMsgVisible) &&
+            {(this.state.errorMsgEmailVisible) &&
               <p className="Paragraph-Error">{this.state.errorMsg}</p>
             }
           </div>
