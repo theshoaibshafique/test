@@ -1,0 +1,32 @@
+@import '../../styles/global-styles.scss';
+
+.header {
+    font-size: 26px;
+    line-height: 36px;
+}
+
+.requestBox {
+    width: 900px;
+}
+
+.input {
+    display: flex;
+}
+
+.first-column {
+    width: 50%;
+}
+
+.user-info-buttons {
+    display: flex;
+    justify-content: flex-end;
+    width: 60%
+}
+
+.test {
+    min-width: 120px;
+}
+
+.button-padding {
+    margin-right: 40px;
+}

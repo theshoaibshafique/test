@@ -8,6 +8,7 @@ import './style.scss';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 
+import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
@@ -26,7 +27,8 @@ export default class MainLayout extends React.PureComponent {
       userLoggedIn: false,
       authenticated: true,
       userManagementAccess: false,
-      emmAccess: false
+      emmAccess: false,
+      emmRequestAccess: false
     }
 
     this.logoutFunction = this.logoutFunction.bind(this);
@@ -38,6 +40,7 @@ export default class MainLayout extends React.PureComponent {
     });
 
     this.getUserManagementAccess();
+    this.getEMMRequestAccess();
   }
 
   logoutFunction(logout) {
@@ -68,7 +71,7 @@ export default class MainLayout extends React.PureComponent {
       }
     })
     .then(response => {
-      if (response.status !== 403) {
+      if (response.status === 200) {
         response.json().then((result) => {
           if (result) {
             this.setState ({ userManagementAccess: true })
@@ -87,10 +90,29 @@ export default class MainLayout extends React.PureComponent {
       }
     })
     .then(response => {
-      if (response.status !== 403) {
+      if (response.status === 200) {
         response.json().then((result) => {
           if (result) {
             this.setState ({ emmAccess: true })
+          }
+        });
+      }
+    })
+  }
+
+  getEMMRequestAccess() {
+    fetch(process.env.EMMREQUESTACCESS_API, {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + this.props.userToken,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.status === 200) {
+        response.json().then((result) => {
+          if (result) {
+            this.setState ({ emmRequestAccess: true })
           }
         });
       }
@@ -104,19 +126,12 @@ export default class MainLayout extends React.PureComponent {
 
     if (this.state.userLoggedIn) {
       return <Switch>
+              {(this.state.emmRequestAccess) &&
+                <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} /> }/>
+              }
               {(this.state.userManagementAccess) &&
                 <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
-              } 
-              {/* <Route path="/dashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} /> }/>
-              <Route path="/distractions/category" component={() => <DistractionsCategory userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/distractions/procedure" component={() => <DistractionsProcedure userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/distractions/room" component={() => <DistractionsOR userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/distractions" component={() => <Distractions userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/user-manager" component={() => <UserManager userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/culture-survey/demographic" component={() => <CultureSurveyDemographic userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/culture-survey/question-results" component={() => <CultureSurveyResult userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/culture-survey" component={() => <CultureSurvey userLoggedIn={this.state.userLoggedIn} />} />
-              <Route path="/room-traffic" component={() => <RoomTraffic userLoggedIn={this.state.userLoggedIn} />} /> */}
+              }
               <Route path="/my-profile" component={() => <MyProfile userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="" component={NotFoundPage} />
             </Switch> 
@@ -149,7 +164,10 @@ export default class MainLayout extends React.PureComponent {
                 variant="permanent"
                 open
               >
-                <SSTNav userManagementAccess={this.state.userManagementAccess} />
+                <SSTNav 
+                  userManagementAccess={this.state.userManagementAccess} 
+                  emmRequestAccess={this.state.emmRequestAccess}
+                />
               </Drawer>
             </Hidden>
           </nav>

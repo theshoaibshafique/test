@@ -342,7 +342,7 @@ export default class UserManagement extends React.PureComponent {
               <p>User Management <Button variant="contained" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </p>
             </div>
 
-            <div className="test">
+            <div>
               <MaterialTable
                 title=""
                 columns={[
