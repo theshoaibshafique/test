@@ -1,4 +1,10 @@
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import MainLayout from './MainLayout';
+import { makeSelectToken } from '../App/selectors';
 
-export default MainLayout;
+const mapStateToProps = createStructuredSelector({
+  userToken: makeSelectToken()
+});
 
+export default connect(mapStateToProps, null)(MainLayout);

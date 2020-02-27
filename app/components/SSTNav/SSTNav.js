@@ -7,7 +7,11 @@ import DistractionLogo from './img/distraction.svg';
 import CultureSurveyLogo from './img/culture-survey.svg';
 import RoomTrafficLogo from './img/room-traffic.svg';
 
-class SSTNav extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class SSTNav extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     let path = window.location.pathname.split('/');
     let mainPackage, subPackage;
@@ -15,7 +19,6 @@ class SSTNav extends React.Component { // eslint-disable-line react/prefer-state
       mainPackage = path[1].replace('-', ' ').replace('/', '');
       subPackage = (path[2] != undefined) ? path[2] : undefined;
     }
-
 
     let PackageCollection = Object.keys(PACKAGE_NAME).map((key) => {
       return <PackageSelector
@@ -61,7 +64,9 @@ class SSTNav extends React.Component { // eslint-disable-line react/prefer-state
             <li>Request for eM&M</li>
           */}
 
-          <li><Link to="/usermanagement" className='text-link'>User Management</Link></li>
+          {(this.props.userManagementAccess) &&
+            <li><Link to="/usermanagement" className='text-link'>User Management</Link></li> 
+          }
           <li><Link to="/my-profile" className='text-link'>My Profile</Link></li>
           <li>Logout</li>
         </ul>

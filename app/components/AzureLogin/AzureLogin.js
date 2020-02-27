@@ -2,7 +2,7 @@ import React from 'react';
 import './style.scss';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
-class AzureLogin extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class AzureLogin extends React.Component {
   unauthenticatedFunction = loginFunction => {
     //this.props.history.push(`/usermanagement`);
   }
@@ -33,7 +33,6 @@ class AzureLogin extends React.Component { // eslint-disable-line react/prefer-s
         this.props.redirect();
       }
     })
-    
   }
 
   getFacilityRooms(facilityName) {

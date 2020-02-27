@@ -24,7 +24,9 @@ export default class MainLayout extends React.PureComponent {
     super(props);
     this.state = {
       userLoggedIn: false,
-      authenticated: true
+      authenticated: true,
+      userManagementAccess: false,
+      emmAccess: false
     }
 
     this.logoutFunction = this.logoutFunction.bind(this);
@@ -34,6 +36,8 @@ export default class MainLayout extends React.PureComponent {
     this.setState({
       userLoggedIn: true
     });
+
+    this.getUserManagementAccess();
   }
 
   logoutFunction(logout) {
@@ -55,6 +59,44 @@ export default class MainLayout extends React.PureComponent {
     });
   }
 
+  getUserManagementAccess() {
+    fetch(process.env.USERMANAGEMENTACCESS_API, {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + this.props.userToken,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.status !== 403) {
+        response.json().then((result) => {
+          if (result) {
+            this.setState ({ userManagementAccess: true })
+          }
+        });
+      }
+    })
+  }
+
+  getEMMAccess() {
+    fetch(process.env.EMMACCESS_API, {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + this.props.userToken,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.status !== 403) {
+        response.json().then((result) => {
+          if (result) {
+            this.setState ({ emmAccess: true })
+          }
+        });
+      }
+    })
+  }
+
   getContainer() {
     if (!this.state.authenticated) {
       return <NoAccess/>
@@ -62,7 +104,9 @@ export default class MainLayout extends React.PureComponent {
 
     if (this.state.userLoggedIn) {
       return <Switch>
-              <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
+              {(this.state.userManagementAccess) &&
+                <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
+              } 
               {/* <Route path="/dashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} /> }/>
               <Route path="/distractions/category" component={() => <DistractionsCategory userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="/distractions/procedure" component={() => <DistractionsProcedure userLoggedIn={this.state.userLoggedIn} />} />
@@ -100,23 +144,12 @@ export default class MainLayout extends React.PureComponent {
         <div className="APP-MAIN-WRAPPER">
 
         <nav className="MAIN-NAVIGATION">
-            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-            <Hidden smUp implementation="css">
-              <Drawer
-                variant="temporary"
-                anchor="left"
-                // open={this.state.mobileOpen}
-                // onClose={this.handleDrawerToggle}
-              >
-                <SSTNav />
-              </Drawer>
-            </Hidden>
             <Hidden xsDown implementation="css">
               <Drawer
                 variant="permanent"
                 open
               >
-                <SSTNav />
+                <SSTNav userManagementAccess={this.state.userManagementAccess} />
               </Drawer>
             </Hidden>
           </nav>
