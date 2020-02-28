@@ -46,16 +46,18 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
       body: JSON.stringify(fetchBodyJSON)
     }).then(response => {
       if (response) {
-        if ([200, 201, 202, 204].indexOf(response.status) >= 0 || [200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
+        if ([200, 201, 202, 204].indexOf(response.status) >= 0) {
           return response.json();
+        } else if (response.text.length) {
+            if ([200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
+              return response.json();
+            }
         } else if ([409].indexOf(response.status) >= 0) {
           return 'conflict';
         } else {
           return 'error';
         }
       }
-    }).catch(error => {
-      console.log(error)
     })
   }
 }

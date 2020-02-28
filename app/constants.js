@@ -49,4 +49,27 @@ export const GYNECOLOGY = [
     { value: 'A9EB0E20-CA53-420F-8777-F10DBA8C589C', name: 'Salpingo Oophorectomy'},
     { value: 'C1294BFB-E752-443E-AEA0-3C886512A4CF', name: 'Tubal Reversal'}
 ]
+
+export const COMPLICATIONS = [
+    { value: '9BBB21E3-4E9D-4A2B-AEBF-A4126913896B', name: 'Abscess'},
+    { value: '840A54CA-5D77-4615-ACFE-C1987622017D', name: 'Anastomotic Leak'},
+    { value: '1051672B-BAC9-4C1D-9EA5-5FA4191C739E', name: 'Bile Leak'},
+    { value: '1529799C-C4D9-4034-ABDD-2FAA21047904', name: 'Bleeding'},
+    { value: '56C4E921-CCB6-41E5-B607-0B1187B47621', name: 'Bowel obstruction'},
+    { value: '6E3391D7-AD83-4060-8D65-77C8F8AC294D', name: 'Cardiac failure'},
+    { value: '53E0A898-4005-4D0A-8A22-F3BE4388878E', name: 'DVT'},
+    { value: '51712BD0-2BB1-45AC-B17E-80B89E831066', name: 'Hernia'},
+    { value: '850B6CA9-8491-4A2D-8113-7785BA158ABF', name: 'Ileus'},
+    { value: 'FBB927FE-7549-43D6-9B2D-6EDD4E5970AB', name: 'Pancreatic leak'},
+    { value: '0EF069B8-1240-45C7-B7D3-A6AFBAD855AF', name: 'PE'},
+    { value: '886B628A-78BC-4267-9A43-C85F81FB003E', name: 'Pneumonia'},
+    { value: '3C399110-7CD2-4F8A-AB46-1C10F0F0854C', name: 'Readmission'},
+    { value: '3FF34DF9-0699-4D53-909E-9FC7388E1A0F', name: 'Respiratory failure'},
+    { value: '46D9EF33-46BF-49D9-A83E-FB6E9D7FAF56', name: 'Return to Operating Room'},
+    { value: '6A3473D6-B0AC-4EC6-98B0-20B01B75A2A3', name: 'Sepsis'},
+    { value: '28F7556C-DD63-440C-8DD5-7C857516D4CD', name: 'Unplanned ICU admission'},
+    { value: 'E2E6A43E-3F42-4AB6-AB84-F6A1FEFF18E0', name: 'Urinary Tract Infection'},
+    { value: '97CC9B23-B442-4D2F-A7C3-4B869F79EFFE', name: 'Wound dehiscence'},
+    { value: '069F3784-AEA2-4D76-BA82-37BD72D31465', name: 'Wound Infection'}
+]
     
