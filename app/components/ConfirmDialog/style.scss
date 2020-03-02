@@ -1,8 +1,0 @@
-@import '../../styles/global-styles';
-
-.SST-Dialog {
-  button {
-    font-size: 1rem;
-    &[class*="Primary"] { color: $dark-blue; font-weight: bold; }
-  }
-}

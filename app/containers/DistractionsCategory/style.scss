@@ -1,7 +1,0 @@
-@import '../../styles/global-styles';
-
-.extra-large { @include fontSizeLineHeight(4); }
-.Distraction-Category-Card {
-    margin-bottom: 20px;
-    &:first-child { margin-top: 20px; }
-}
