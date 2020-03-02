@@ -1,13 +1,9 @@
-/*
- * Distractions Page
- *
- */
-
 import React from 'react';
 import './style.scss';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 
+import EMMCases from 'containers/EMMCases/Loadable';
 import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
@@ -126,6 +122,9 @@ export default class MainLayout extends React.PureComponent {
 
     if (this.state.userLoggedIn) {
       return <Switch>
+              {(this.state.emmAccess) &&
+                <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} /> }/>
+              }
               {(this.state.emmRequestAccess) &&
                 <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} /> }/>
               }
@@ -167,6 +166,7 @@ export default class MainLayout extends React.PureComponent {
                 <SSTNav 
                   userManagementAccess={this.state.userManagementAccess} 
                   emmRequestAccess={this.state.emmRequestAccess}
+                  emmAccess={this.state.emmAccess}
                 />
               </Drawer>
             </Hidden>

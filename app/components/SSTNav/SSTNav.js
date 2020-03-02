@@ -40,8 +40,9 @@ class SSTNav extends React.Component {
           {PackageLogo}<br />
         </div>
         <ul className="dark-blue">
-          <li>eM&M</li>
-
+          {(this.props.emmAccess) &&
+            <li><Link to="/emmcases" className='text-link'>eM&M Cases</Link></li>
+          }
           {/* 
             <li>Efficiency</li>
             <li>Surgical Safety Checklist</li>
