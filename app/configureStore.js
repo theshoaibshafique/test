@@ -7,7 +7,6 @@ import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
-import { loadTranslations, setLocale, syncTranslationWithStore } from 'react-redux-i18n';
 
 import thunk from 'redux-thunk';
 
@@ -84,10 +83,6 @@ export default function configureStore(initialState = {}, history) {
   store.runSaga = sagaMiddleware.run;
   store.injectedReducers = {}; // Reducer registry
   store.injectedSagas = {}; // Saga registry
-
-  syncTranslationWithStore(store)
-  store.dispatch(loadTranslations(translationsObject));
-  store.dispatch(setLocale('en'));
 
   return store;
 }
