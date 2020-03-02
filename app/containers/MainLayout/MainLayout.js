@@ -37,6 +37,7 @@ export default class MainLayout extends React.PureComponent {
 
     this.getUserManagementAccess();
     this.getEMMRequestAccess();
+    this.getEMMAccess();
   }
 
   logoutFunction(logout) {
@@ -149,10 +150,10 @@ export default class MainLayout extends React.PureComponent {
         />
         <CssBaseline />
         <Helmet
-          titleTemplate="%s - SST Insight"
-          defaultTitle="SST Insight"
+          titleTemplate="%s - SST Insights"
+          defaultTitle="SST Insights"
         >
-          <meta name="description" content="SST Insight web portal" />
+          <meta name="description" content="SST Insights web portal" />
         </Helmet>
         
         <div className="APP-MAIN-WRAPPER">
