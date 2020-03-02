@@ -22,7 +22,6 @@ export default class RequestEMM extends React.PureComponent {
     this.state = {
       date: null,
       compDate: null,
-      selectedLocation: '',
       selectedOperatingRoom: '',
       selectedSpecialty: '',
       selectedProcedure: '',
@@ -48,10 +47,6 @@ export default class RequestEMM extends React.PureComponent {
   handleCompDateChange = (compDate) => {
     this.setState({ compDate })
   };
-
-  handleChangeLocation(e) {
-    this.setState({ selectedLocation: e.target.value });
-  }
 
   handleChange(e) {
     this.setState({ selectedOperatingRoom: e.target.value });
@@ -152,7 +147,6 @@ export default class RequestEMM extends React.PureComponent {
 
   submit() {
     let jsonBody = {
-      "location": this.state.selectedLocation,
       "operatingRoom": this.state.selectedOperatingRoom,
       "specialty": this.state.specialtyCheck ? this.state.specialtyValue : this.state.selectedSpecialty,
       "procedure": this.state.procedureCheck ? this.state.procedureValue : this.state.selectedProcedure,
@@ -184,7 +178,6 @@ export default class RequestEMM extends React.PureComponent {
     this.setState({
       date: null,
       compDate: null,
-      selectedLocation: '',
       selectedOperatingRoom: '',
       selectedSpecialty: '',
       selectedProcedure: '',
@@ -212,7 +205,7 @@ export default class RequestEMM extends React.PureComponent {
         
         <div className="requestBox">
           <div className="input">
-            <div className="first-column">Estimated Date and Time of Operation</div><div>Location</div>
+            <div className="first-column">Estimated Date and Time of Operation</div><div></div>
           </div>
           <div className="input">
             <div className="first-column">
@@ -228,13 +221,6 @@ export default class RequestEMM extends React.PureComponent {
               </MuiPickersUtilsProvider>
             </div>
             <div>
-              <FormControl style={{minWidth: 250}}>
-                <InputLabel htmlFor='location'></InputLabel>
-                  <Select value={this.state.selectedLocation} displayEmpty onChange={(e) => this.handleChangeLocation(e)} inputProps={{ name: 'location', id: 'location' }}>
-                    <MenuItem value=''>Select</MenuItem>
-                    <MenuItem value='dde247f8-fe3f-45d8-b69a-1c5966ff52b0'>Duke University Hospital</MenuItem>
-                  </Select>
-              </FormControl>
             </div>
           </div>
           <div className="input">
