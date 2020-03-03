@@ -7,9 +7,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from '@material-ui/core/Snackbar';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS } from '../../constants';
+import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM } from '../../constants';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -17,37 +20,46 @@ export default class EMMCases extends React.PureComponent {
     this.state = {
       requestID: '',
       report: {
-        name: '',
         requestId: '',
         procedureName: '',
         complicationNames: [],
-        room: ''
-      }
+        operatingRoom: ''
+      },
+      snackBarOpen: false
     };
   }
 
   search() {
+    this.reset();
+
     globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/' + this.state.requestID, 'get', this.props.userToken, {})
     .then(result => {
       if (result === 'error' || result === 'conflict') {
-
+        this.setState({ snackBarOpen: true })
       } else {
         let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY);
         let procedureName = '';
         let complicationList = [];
+        let operatingRoom = '';
 
         surgeryList.map(function(surgery) {
-          if (surgery.value === result.procedure) {
+          if (surgery.value.toUpperCase() === result.procedure.toUpperCase()) {
             procedureName = surgery.name;
           }
         });
 
         result.complications.map(function(complication) {
           COMPLICATIONS.map(function(comp) {
-            if (complication === comp.value) {
+            if (complication.toUpperCase() === comp.value.toUpperCase()) {
               complicationList.push(comp.name);
             }
           });
+        });
+
+        OPERATING_ROOM.map(function(room) {
+          if (room.value.toUpperCase() === result.operatingRoom.toUpperCase()) {
+            operatingRoom = room.name;
+          }
         });
 
         this.setState({
@@ -55,15 +67,32 @@ export default class EMMCases extends React.PureComponent {
             requestId: result.name,
             procedureName: procedureName,
             complicationNames: complicationList.join(', '),
-            room: result.operatingRoom
+            operatingRoom: operatingRoom
           }
         });
       }
     });
-  }
+  };
 
   handleFormChange(e) {
     this.setState({ requestID: e.target.value.trim() });
+  };
+
+  reset() {
+    this.setState({
+      report: {
+        requestId: '',
+        procedureName: '',
+        complicationNames: [],
+        operatingRoom: ''
+      }
+    });
+  };
+
+  handleCloseSnackBar() {
+    this.setState({
+      snackBarOpen: false
+    })
   };
 
   render() {
@@ -108,7 +137,7 @@ export default class EMMCases extends React.PureComponent {
                         <TableCell>{this.state.report.requestId}</TableCell>
                         <TableCell align="left">{this.state.report.procedureName}</TableCell>
                         <TableCell align="left">{this.state.report.complicationNames}</TableCell>
-                        <TableCell align="left">{this.state.report.room}</TableCell>
+                        <TableCell align="left">{this.state.report.operatingRoom}</TableCell>
                       </TableRow>
                   </TableBody>
                 </Table>
@@ -120,6 +149,24 @@ export default class EMMCases extends React.PureComponent {
         </div>
         
         <div><p className="recent">Recently accessed cases</p></div>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.snackBarOpen}
+          autoHideDuration={4000}
+          onClose={() => this.handleCloseSnackBar()}
+          message="A problem has occurred while completing your action. Please try again."
+          action={
+            <React.Fragment>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={() => this.handleCloseSnackBar()}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
 
       </section>
     );

@@ -72,4 +72,9 @@ export const COMPLICATIONS = [
     { value: '97CC9B23-B442-4D2F-A7C3-4B869F79EFFE', name: 'Wound dehiscence'},
     { value: '069F3784-AEA2-4D76-BA82-37BD72D31465', name: 'Wound Infection'}
 ]
+
+export const OPERATING_ROOM = [
+    { value: '41DFABFF-FA26-4ABB-9AA0-3598C53513BE', name: 'OR23'},
+    { value: '4AF37533-7F42-42EC-A46B-817926A4C90E', name: 'OR25'}
+]
     

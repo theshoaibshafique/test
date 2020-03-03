@@ -14,7 +14,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS } from '../../constants';
+import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM } from '../../constants';
 
 export default class RequestEMM extends React.PureComponent {
   constructor(props) {
@@ -29,6 +29,7 @@ export default class RequestEMM extends React.PureComponent {
       notes: '',
       emails: [],
       options: '',
+      operatingRooms: [],
       specialtyCheck: false,
       specialtyValue: '',
       procedureCheck: false,
@@ -38,6 +39,9 @@ export default class RequestEMM extends React.PureComponent {
       snackBarMsg: '',
       snackBarOpen: false
     };
+
+    this.state.operatingRooms = OPERATING_ROOM.map((data, index) =>
+            <MenuItem value={data.value} key={index}>{data.name}</MenuItem>);
   }
 
   handleDateChange = (date) => {
@@ -246,8 +250,7 @@ export default class RequestEMM extends React.PureComponent {
                 <InputLabel htmlFor='opRoom'></InputLabel>
                   <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }}>
                     <MenuItem value=''>Select</MenuItem>
-                    <MenuItem value='41dfabff-fa26-4abb-9aa0-3598c53513be'>OR23</MenuItem>
-                    <MenuItem value='4af37533-7f42-42ec-a46b-817926a4c90e'>OR25</MenuItem>
+                    {this.state.operatingRooms}
                   </Select>
               </FormControl>
             </div>
