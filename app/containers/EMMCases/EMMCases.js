@@ -25,53 +25,71 @@ export default class EMMCases extends React.PureComponent {
         complicationNames: [],
         operatingRoom: ''
       },
-      snackBarOpen: false
+      snackBarOpen: false,
+      recentSearch: []
     };
   }
 
+  componentDidMount() {
+    if (localStorage.getItem('recentSearch')) {
+      const recentSearchCache = JSON.parse(localStorage.getItem('recentSearch'));
+
+      this.setState({ 
+        recentSearch: recentSearchCache
+      });  
+    }
+  };
+
   search() {
-    this.reset();
+    if (this.state.requestID) {
+      this.reset();
+      
+      globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/' + this.state.requestID, 'get', this.props.userToken, {})
+      .then(result => {
+        if (result === 'error' || result === 'conflict') {
+          this.setState({ snackBarOpen: true })
+        } else {
+          let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY);
+          let procedureName = '';
+          let complicationList = [];
+          let operatingRoom = '';
 
-    globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/' + this.state.requestID, 'get', this.props.userToken, {})
-    .then(result => {
-      if (result === 'error' || result === 'conflict') {
-        this.setState({ snackBarOpen: true })
-      } else {
-        let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY);
-        let procedureName = '';
-        let complicationList = [];
-        let operatingRoom = '';
-
-        surgeryList.map(function(surgery) {
-          if (surgery.value.toUpperCase() === result.procedure.toUpperCase()) {
-            procedureName = surgery.name;
-          }
-        });
-
-        result.complications.map(function(complication) {
-          COMPLICATIONS.map(function(comp) {
-            if (complication.toUpperCase() === comp.value.toUpperCase()) {
-              complicationList.push(comp.name);
+          surgeryList.map((surgery) => {
+            if (surgery.value.toUpperCase() === result.procedure.toUpperCase()) {
+              procedureName = surgery.name;
             }
           });
-        });
 
-        OPERATING_ROOM.map(function(room) {
-          if (room.value.toUpperCase() === result.operatingRoom.toUpperCase()) {
-            operatingRoom = room.name;
-          }
-        });
+          result.complications.map((complication) => {
+            COMPLICATIONS.map((comp) => {
+              if (complication.toUpperCase() === comp.value.toUpperCase()) {
+                complicationList.push(comp.name);
+              }
+            });
+          });
 
-        this.setState({
-          report: {
+          OPERATING_ROOM.map((room) => {
+            if (room.value.toUpperCase() === result.operatingRoom.toUpperCase()) {
+              operatingRoom = room.name;
+            }
+          });
+
+          let report = {
             requestId: result.name,
             procedureName: procedureName,
             complicationNames: complicationList.join(', '),
             operatingRoom: operatingRoom
           }
-        });
-      }
-    });
+          
+          this.setState({
+            report: report,
+            recentSearch: [...this.state.recentSearch, report]
+          });
+          
+          localStorage.setItem('recentSearch', JSON.stringify([this.state.recentSearch]));
+        }
+      });
+    }
   };
 
   handleFormChange(e) {
@@ -114,7 +132,7 @@ export default class EMMCases extends React.PureComponent {
               onChange={(e) => this.handleFormChange(e)}
               fullWidth
             />
-          <Button variant="contained" className="primary search-button" onClick={() => this.search()}>Search</Button>  
+          <Button variant="contained" className="primary" onClick={() => this.search()}>Search</Button>  
         </div>
 
         <div className="search">Search Result</div>
@@ -133,7 +151,7 @@ export default class EMMCases extends React.PureComponent {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                      <TableRow onClick={() => alert('1')}>
+                      <TableRow onClick={() => alert('11')}>
                         <TableCell>{this.state.report.requestId}</TableCell>
                         <TableCell align="left">{this.state.report.procedureName}</TableCell>
                         <TableCell align="left">{this.state.report.complicationNames}</TableCell>
@@ -148,7 +166,39 @@ export default class EMMCases extends React.PureComponent {
            )}
         </div>
         
-        <div><p className="recent">Recently accessed cases</p></div>
+        {(this.state.recentSearch.length > 0) &&
+          <div><p className="recent">Recently accessed cases</p></div>
+        }
+            
+        <div>
+          {(this.state.recentSearch.length > 0) &&
+            <TableContainer>  
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Request ID</TableCell>
+                    <TableCell align="left">Procedure</TableCell>
+                    <TableCell align="left">Complications</TableCell>
+                    <TableCell align="left">Operating Room</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                
+                {this.state.recentSearch.map((cases, index) => {
+                    return <TableRow key={index}>
+                      <TableCell>{cases.requestId}</TableCell>
+                      <TableCell align="left">{cases.procedureName}</TableCell>
+                      <TableCell align="left">{cases.complicationNames}</TableCell>
+                      <TableCell align="left">{cases.operatingRoom}</TableCell>
+                    </TableRow>
+                  })
+                }
+
+                </TableBody>
+              </Table>
+            </TableContainer>
+          }
+        </div>
 
         <Snackbar
           anchorOrigin={{

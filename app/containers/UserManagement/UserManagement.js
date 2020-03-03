@@ -69,8 +69,8 @@ export default class UserManagement extends React.PureComponent {
     .then(result => {
       if (result) {
         const users = [];
-        result.map(function(user) {
-          departments.map(function(department){
+        result.map((user) => {
+          departments.map((department) => {
             if (department.departmentName === user.departmentName) {
               user.departmentName = department.departmentTitle;
               users.push(user);
