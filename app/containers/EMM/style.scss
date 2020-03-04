@@ -2,5 +2,18 @@
 
 .header {
     font-size: 26px;
-    line-height: 36px;
+    display: flex;
+}
+
+.table-row {
+    display: flex;
+}
+
+.first-column {
+    width: 37%;
+}
+
+.table-row-font {
+    font-size: 20px;
+    margin-bottom: 35px;
 }

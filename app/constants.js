@@ -77,4 +77,10 @@ export const OPERATING_ROOM = [
     { value: '41DFABFF-FA26-4ABB-9AA0-3598C53513BE', name: 'OR23'},
     { value: '4AF37533-7F42-42EC-A46B-817926A4C90E', name: 'OR25'}
 ]
+
+export const SPECIALTY = [
+    { value: 'DEB47645-C2A2-4F96-AD89-31FFBCF5F39F', name: 'General Surgery'},
+    { value: '95F656BA-06BE-4BB5-994C-3AC17FBC6DCB', name: 'Gynecology'},
+    { value: '043FEBC8-CF5B-409C-8738-9C83A682DA71', name: 'Urology'}
+]
     
