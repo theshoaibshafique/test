@@ -119,6 +119,10 @@ export default class EMMCases extends React.PureComponent {
     })
   };
 
+  redirect(requestId) {
+    this.props.pushUrl('/emm/' + requestId);
+  }
+
   render() {
     return (
       <section>
@@ -157,7 +161,7 @@ export default class EMMCases extends React.PureComponent {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                      <TableRow onClick={() => alert('11')}>
+                      <TableRow onClick={() => this.redirect(this.state.report.requestId)}>
                         <TableCell>{this.state.report.requestId}</TableCell>
                         <TableCell align="left">{this.state.report.procedureName}</TableCell>
                         <TableCell align="left">{this.state.report.complicationNames}</TableCell>

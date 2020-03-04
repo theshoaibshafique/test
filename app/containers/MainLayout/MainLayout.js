@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 
 import EMMCases from 'containers/EMMCases/Loadable';
+import EMM from 'containers/EMM/Loadable';
 import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
@@ -124,13 +125,16 @@ export default class MainLayout extends React.PureComponent {
     if (this.state.userLoggedIn) {
       return <Switch>
               {(this.state.emmAccess) &&
-                <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} /> }/>
+                  <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} /> }/>
+              }
+              {(this.state.emmAccess) &&
+                  <Route path="/emm/:requestid" component={EMM}/>
               }
               {(this.state.emmRequestAccess) &&
-                <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} /> }/>
+                  <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} /> }/>
               }
               {(this.state.userManagementAccess) &&
-                <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
+                  <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
               }
               <Route path="/my-profile" component={() => <MyProfile userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="" component={NotFoundPage} />
