@@ -69,6 +69,10 @@ export default class EMM extends React.PureComponent {
     });
   };
 
+  goBack() {
+    this.props.pushUrl('/emmcases');
+  }
+
   render() {
     return (
       <section>
@@ -104,7 +108,7 @@ export default class EMM extends React.PureComponent {
         </div>
 
         <div>
-            <Button variant="contained" className="secondary">Back</Button>
+            <Button variant="contained" className="secondary" onClick={() => this.goBack()}>Back</Button>
           </div>
 
       </section>

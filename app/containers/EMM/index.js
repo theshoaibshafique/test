@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import EMM from './EMM';
 import { makeSelectToken } from '../App/selectors';
@@ -8,4 +9,12 @@ const mapStateToProps = (state, ownProps) => createStructuredSelector({
   requestId: () => ownProps.match.params.requestid
 });
 
-export default connect(mapStateToProps, null)(EMM);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    pushUrl: (url) => {
+      dispatch(push(url));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EMM);
