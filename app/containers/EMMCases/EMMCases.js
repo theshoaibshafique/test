@@ -80,11 +80,17 @@ export default class EMMCases extends React.PureComponent {
             complicationNames: complicationList.join(', '),
             operatingRoom: operatingRoom
           }
-          
-          this.setState({
-            report: report,
-            recentSearch: [...this.state.recentSearch, report]
-          });
+
+          this.setState({ report: report });
+
+          if (this.state.recentSearch.length < 5) {
+            this.setState({ recentSearch: [...this.state.recentSearch, report] });
+          } else if (this.state.recentSearch.length = 5) {
+            let search = this.state.recentSearch;
+            search.shift();
+            search.push(report);
+            this.setState({ recentSearch: search });
+          }
           
           localStorage.setItem('recentSearch', JSON.stringify([this.state.recentSearch]));
         }
