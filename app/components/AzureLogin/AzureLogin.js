@@ -7,6 +7,12 @@ class AzureLogin extends React.Component {
     //this.props.history.push(`/usermanagement`);
   }
 
+  userAuthenticatedFunction = logout => {
+    return (
+        <button className="Logout-Button" onClick={logout}>Logout</button>
+    );
+  };
+
   userJustLoggedIn = receivedToken => {
     this.props.userInfo(receivedToken);
     this.getUserFacility(receivedToken);
@@ -111,10 +117,6 @@ class AzureLogin extends React.Component {
     })
   }
 
-  authenticatedFunction = logout => {
-    // this.props.logoutFunction(logout);
-  }
-
   render() {
     return (
       <AzureAD
@@ -130,7 +132,7 @@ class AzureLogin extends React.Component {
       })}
       unauthenticatedFunction={this.unauthenticatedFunction}
       userInfoCallback={this.userJustLoggedIn}
-      authenticatedFunction={this.authenticatedFunction}
+      authenticatedFunction={this.userAuthenticatedFunction}
       storeAuthStateInCookie={true}
       forceLogin={true}
     />

@@ -54,7 +54,6 @@ class SSTNav extends React.Component {
             <li><Link to="/usermanagement" className='text-link'>User Management</Link></li> 
           }
           <li><Link to="/my-profile" className='text-link'>My Profile</Link></li>
-          <li>Logout</li>
         </ul>
       </div>
     );
