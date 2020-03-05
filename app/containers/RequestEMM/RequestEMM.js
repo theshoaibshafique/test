@@ -1,4 +1,5 @@
 import React from 'react';
+import AsyncSelect from 'react-select/async';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -27,7 +28,6 @@ export default class RequestEMM extends React.PureComponent {
       selectedProcedure: '',
       selectedComplication: [],
       notes: '',
-      emails: [],
       options: '',
       operatingRooms: [],
       specialtyCheck: false,
@@ -37,7 +37,9 @@ export default class RequestEMM extends React.PureComponent {
       complicationsCheck: false,
       complicationValue: '',
       snackBarMsg: '',
-      snackBarOpen: false
+      snackBarOpen: false,
+      userList: [],
+      inputValue: ''
     };
 
     this.state.operatingRooms = OPERATING_ROOM.map((data, index) =>
@@ -68,10 +70,6 @@ export default class RequestEMM extends React.PureComponent {
   handleChangeComplication(e, values) {
     let value = values.map(comp => comp.value);
     this.setState({ selectedComplication: value });
-  };
-
-  handleChangeEmails(e) {
-    this.setState({ emails: e.target.value });
   };
 
   handleCloseSnackBar() {
@@ -150,6 +148,10 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   submit() {
+    let usersToNotify = this.state.inputValue.map((users) => {
+      return users.value;
+    });
+
     let jsonBody = {
       "operatingRoom": this.state.selectedOperatingRoom,
       "specialty": this.state.specialtyCheck ? this.state.specialtyValue : this.state.selectedSpecialty,
@@ -158,7 +160,7 @@ export default class RequestEMM extends React.PureComponent {
       "postOpDate": this.state.compDate,
       "operationDate": this.state.date,
       "notes": this.state.notes,
-      "usersToNotify": this.state.emails
+      "usersToNotify": usersToNotify
     }
 
     globalFuncs.genericFetch(process.env.EMMREQUEST_API, 'post', this.props.userToken, jsonBody)
@@ -187,18 +189,55 @@ export default class RequestEMM extends React.PureComponent {
       selectedProcedure: '',
       selectedComplication: [],
       notes: '',
-      emails: [],
       options: '',
       specialtyCheck: false,
       specialtyValue: '',
       procedureCheck: false,
       procedureValue: '',
       complicationsCheck: false,
-      complicationValue: ''
+      complicationValue: '',
+      inputValue: ''
     });
   }
 
+  async componentDidMount() {
+    await globalFuncs.genericFetch(process.env.USERSEARCH_API, 'get', this.props.userToken, {})
+    .then(result => {
+      if (result) {    
+        let users = [];
+        result.map((user) => {
+          users.push({ value: user.userName, label: user.firstName.concat(' ').concat(user.lastName) });
+        });
+        
+        this.setState({
+          userList: users
+        });
+      } else {
+        this.setState({
+          userList: []
+        });
+      }
+    });
+  }
+
+  handleInputChange = (inputValue) => {
+    this.setState({ inputValue: inputValue });
+  };
+
   render() {
+    const filterUsers = (inputValue) => {
+      return this.state.userList.filter(user =>
+        user.label.toLowerCase().includes(inputValue.toLowerCase())
+      );
+    };
+
+    const promiseOptions = inputValue =>
+      new Promise(resolve => {
+        setTimeout(() => {
+          resolve(filterUsers(inputValue));
+        }, 1000);
+      });
+
     return (
       <section>
         <div className="header">
@@ -364,15 +403,13 @@ export default class RequestEMM extends React.PureComponent {
             <div>Send email updates about eM&M to (optional):</div>  
           </div>
           <div>
-            <FormControl style={{minWidth: 800}}>
-              <InputLabel htmlFor='emails'></InputLabel>
-                <Select value={this.state.emails} displayEmpty onChange={(e) => this.handleChangeEmails(e)} inputProps={{ name: 'email', id: 'emails' }}>
-                  <MenuItem value=''>Select</MenuItem>
-                  <MenuItem value='DEB47645-C2A2-4F96-AD89-31FFBCF5F39F'>General Surgery</MenuItem>
-                  <MenuItem value='043FEBC8-CF5B-409C-8738-9C83A682DA71'>Urology</MenuItem>
-                  <MenuItem value='95F656BA-06BE-4BB5-994C-3AC17FBC6DCB'>Gynecology</MenuItem>
-                </Select>
-            </FormControl>
+            <AsyncSelect
+              isMulti
+              cacheOptions
+              defaultOptions
+              loadOptions={promiseOptions}
+              onChange={(e) => this.handleInputChange(e)}
+            />
           </div>                   
         </div>
         
