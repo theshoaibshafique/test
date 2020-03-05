@@ -26,7 +26,7 @@ export default class EMMCases extends React.PureComponent {
         operatingRoom: ''
       },
       snackBarOpen: false,
-      recentSearch: []
+      recentSearch: ''
     };
   }
 
@@ -92,7 +92,7 @@ export default class EMMCases extends React.PureComponent {
             this.setState({ recentSearch: search });
           }
           
-          localStorage.setItem('recentSearch', JSON.stringify([this.state.recentSearch]));
+          localStorage.setItem('recentSearch', JSON.stringify(this.state.recentSearch));
         }
       });
     }
