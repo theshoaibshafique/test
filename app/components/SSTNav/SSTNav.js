@@ -1,23 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './style.scss';
-import DistractionLogo from './img/distraction.svg';
+import logo from './img/SST-Product_Insights_sketch.png';
 
 class SSTNav extends React.Component {
   constructor(props) {
     super(props);
-
   }
 
   render() {
-    const PackageLogo = <div><img className="Package-Logo" src={DistractionLogo} /><span className="dark-green small"><em>Insights</em></span></div>;
-
     return (
       <div>
         <div className="Package-Location center-align">
-          {PackageLogo}
+          <div><img className="Package-Logo" src={logo} /></div>
         </div>
         <ul className="dark-blue">
+          <li><Link to="/maindashboard" className='text-link'>Dashboard</Link></li>
           {(this.props.emmAccess) &&
             <li><Link to="/emmcases" className='text-link'>eM&M Cases</Link></li>
           }
