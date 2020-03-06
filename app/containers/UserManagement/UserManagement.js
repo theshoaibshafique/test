@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import MaterialTable from 'material-table';
-import LoadingOverlay from 'react-loading-overlay';
 import globalFuncs from '../../utils/global-functions';
 import './style.scss';
 
@@ -55,14 +54,11 @@ export default class UserManagement extends React.PureComponent {
       snackBarOpen: false,
       deleteDialogOpen: false,
       errorMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
-      errorMsgVisible: false,
-      loading: false
+      errorMsgVisible: false
     }
   }
 
   async componentDidMount() {
-    this.loading();
-
     const departments = await globalFuncs.genericFetch(process.env.DEPARTMENTFACILITY_API + '/' + this.props.facilityName, 'get', this.props.userToken, {})
 
     await globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'get', this.props.userToken, {})
@@ -88,7 +84,7 @@ export default class UserManagement extends React.PureComponent {
       }
     });
 
-    this.notLoading();
+    this.props.notLoading();
   };
 
   openModal(e, view, rowData) {
@@ -164,7 +160,7 @@ export default class UserManagement extends React.PureComponent {
   };
 
   addUser(){
-    this.loading();
+    this.props.loading();
 
     let jsonBody = {
       "firstName": this.state.userValue.firstName,
@@ -229,7 +225,7 @@ export default class UserManagement extends React.PureComponent {
         }
       }
     })
-    this.notLoading();
+    this.props.notLoading();
   };
 
   refreshGrid() {
@@ -318,96 +314,78 @@ export default class UserManagement extends React.PureComponent {
     })
   };
 
-  loading() {
-    this.setState({
-      loading: true
-    });
-  }
-
-  notLoading() {
-    this.setState({
-      loading: false
-    });
-  }
-
   render() {
     return (
       <section>
-        <LoadingOverlay
-          active={this.state.loading}
-          spinner
-          text='Loading your content...'
-          >
-            <div>
-              <p>User Management <Button variant="contained" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </p>
-            </div>
+        <div>
+          <p>User Management <Button variant="contained" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </p>
+        </div>
 
-            <div>
-              <MaterialTable
-                title=""
-                columns={[
-                  { title: 'User Name', field: 'userName', hidden: true },
-                  { title: 'First Name', field: 'firstName' },
-                  { title: 'Last Name', field: 'lastName' },
-                  { title: 'Email', field: 'email' },
-                  { title: 'Department', field: 'departmentName' },
-                  { title: 'Title', field: 'title'}
-                ]}
-                options={{ 
-                  pageSize: 10,
-                  pageSizeOptions: [ 5, 10, 25 ,50, 75, 100 ],
-                  search: true,
-                  paging: true,
-                  searchFieldAlignment: 'left'
-                }}
-                data={this.state.userList}
-                icons={tableIcons}
-                onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
-              />
-            </div>
-            
-            <UserModal
-              open={this.state.open}
-              userValue={this.state.userValue}
-              closeModal={() => this.closeModal()}
-              addUser={() => this.addUser()}
-              handleFormChange={(e) => this.handleFormChange(e)}
-              handleClose={() => this.handleClose()}
-              currentView={this.state.currentView}
-              passwordResetLink={() => this.passwordResetLink()}
-              deleteUser={() => this.deleteUser()}
-              errorMsg={this.state.errorMsg}
-              errorMsgVisible={this.state.errorMsgVisible}
-              refreshGrid={() => this.refreshGrid()}
-              updateGridEdit={(id) => this.updateGridEdit(id)}
-            />
+        <div>
+          <MaterialTable
+            title=""
+            columns={[
+              { title: 'User Name', field: 'userName', hidden: true },
+              { title: 'First Name', field: 'firstName' },
+              { title: 'Last Name', field: 'lastName' },
+              { title: 'Email', field: 'email' },
+              { title: 'Department', field: 'departmentName' },
+              { title: 'Title', field: 'title'}
+            ]}
+            options={{ 
+              pageSize: 10,
+              pageSizeOptions: [ 5, 10, 25 ,50, 75, 100 ],
+              search: true,
+              paging: true,
+              searchFieldAlignment: 'left'
+            }}
+            data={this.state.userList}
+            icons={tableIcons}
+            onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
+          />
+        </div>
+        
+        <UserModal
+          open={this.state.open}
+          userValue={this.state.userValue}
+          closeModal={() => this.closeModal()}
+          addUser={() => this.addUser()}
+          handleFormChange={(e) => this.handleFormChange(e)}
+          handleClose={() => this.handleClose()}
+          currentView={this.state.currentView}
+          passwordResetLink={() => this.passwordResetLink()}
+          deleteUser={() => this.deleteUser()}
+          errorMsg={this.state.errorMsg}
+          errorMsgVisible={this.state.errorMsgVisible}
+          refreshGrid={() => this.refreshGrid()}
+          updateGridEdit={(id) => this.updateGridEdit(id)}
+        />
 
-            <DeleteModal
-              deleteDialogOpen={this.state.deleteDialogOpen}
-              handleClose={() => this.handleClose()}
-              userValue={this.state.userValue}
-              errorMsg={this.state.errorMsg}
-              updateGrid={(id) => this.updateGrid(id)}
-            />
+        <DeleteModal
+          deleteDialogOpen={this.state.deleteDialogOpen}
+          handleClose={() => this.handleClose()}
+          userValue={this.state.userValue}
+          errorMsg={this.state.errorMsg}
+          updateGrid={(id) => this.updateGrid(id)}
+        />
 
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-              open={this.state.snackBarOpen}
-              autoHideDuration={4000}
-              onClose={() => this.handleCloseSnackBar()}
-              message="Password Reset Email Sent"
-              action={
-                <React.Fragment>
-                  <IconButton size="small" aria-label="close" color="inherit" onClick={() => this.handleCloseSnackBar()}>
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                </React.Fragment>
-              }
-            />
-        </LoadingOverlay>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.snackBarOpen}
+          autoHideDuration={4000}
+          onClose={() => this.handleCloseSnackBar()}
+          message="Password Reset Email Sent"
+          action={
+            <React.Fragment>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={() => this.handleCloseSnackBar()}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
       </section>
     );
   }

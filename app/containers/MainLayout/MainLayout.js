@@ -2,6 +2,7 @@ import React from 'react';
 import './style.scss';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
+import LoadingOverlay from 'react-loading-overlay';
 
 import EMMCases from 'containers/EMMCases/Loadable';
 import EMM from 'containers/EMM/Loadable';
@@ -11,11 +12,11 @@ import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import NoAccess from 'containers/NoAccess/Loadable';
 import SSTNav from 'components/SSTNav';
+import AzureLogin from 'components/AzureLogin';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
-import AzureLogin from 'components/AzureLogin';
 
 export default class MainLayout extends React.PureComponent {
   constructor(props) {
@@ -25,7 +26,8 @@ export default class MainLayout extends React.PureComponent {
       authenticated: true,
       userManagementAccess: false,
       emmAccess: false,
-      emmRequestAccess: false
+      emmRequestAccess: false,
+      isLoading: true
     }
 
     this.logoutFunction = this.logoutFunction.bind(this);
@@ -39,26 +41,26 @@ export default class MainLayout extends React.PureComponent {
     this.getUserManagementAccess();
     this.getEMMRequestAccess();
     this.getEMMAccess();
-  }
+  };
 
   logoutFunction(logout) {
     if (logout != undefined) {
       this.getLogoutFunction(logout)
     }
-  }
+  };
 
   getLogoutFunction(logout) {
     // return logout;
     if (logout) {
     }
     return (() => logout)
-  }
+  };
 
   redirect() {
     this.setState({
       authenticated: false
     });
-  }
+  };
 
   getUserManagementAccess() {
     fetch(process.env.USERMANAGEMENTACCESS_API, {
@@ -77,7 +79,7 @@ export default class MainLayout extends React.PureComponent {
         });
       }
     })
-  }
+  };
 
   getEMMAccess() {
     fetch(process.env.EMMACCESS_API, {
@@ -96,7 +98,7 @@ export default class MainLayout extends React.PureComponent {
         });
       }
     })
-  }
+  };
 
   getEMMRequestAccess() {
     fetch(process.env.EMMREQUESTACCESS_API, {
@@ -115,6 +117,18 @@ export default class MainLayout extends React.PureComponent {
         });
       }
     })
+  };
+
+  loading() {
+    this.setState({
+      isLoading: true
+    });
+  }
+
+  notLoading() {
+    this.setState({
+      isLoading: false
+    });
   }
 
   getContainer() {
@@ -134,7 +148,7 @@ export default class MainLayout extends React.PureComponent {
                   <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} /> }/>
               }
               {(this.state.userManagementAccess) &&
-                  <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} /> }/>
+                  <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               }
               <Route path="/my-profile" component={() => <MyProfile userLoggedIn={this.state.userLoggedIn} />} />
               <Route path="" component={NotFoundPage} />
@@ -142,45 +156,53 @@ export default class MainLayout extends React.PureComponent {
     } else {
       return ''
     }
-  }
+  };
 
   render() {
     return (
-      <div className="app-wrapper">
-        <AzureLogin
-          resourcesGathered={() => this.resourcesGathered()}
-          logoutFunction={(logout) => this.logoutFunction(logout)}
-          redirect={() => this.redirect()}
-        />
-        <CssBaseline />
-        <Helmet
-          titleTemplate="%s - SST Insights"
-          defaultTitle="SST Insights"
-        >
-          <meta name="description" content="SST Insights web portal" />
-        </Helmet>
-        
-        <div className="APP-MAIN-WRAPPER">
+      <LoadingOverlay
+          active={this.state.isLoading}
+          spinner
+          text='Loading your content...'
+          >
 
-        <nav className="MAIN-NAVIGATION">
-            <Hidden xsDown implementation="css">
-              <Drawer
-                variant="permanent"
-                open
-              >
-                <SSTNav 
-                  userManagementAccess={this.state.userManagementAccess} 
-                  emmRequestAccess={this.state.emmRequestAccess}
-                  emmAccess={this.state.emmAccess}
-                />
-              </Drawer>
-            </Hidden>
-          </nav>
-          <div className="Content-Wrapper inline overflow-y">
-            {this.getContainer()}
+        <div className="app-wrapper">
+          <AzureLogin
+            resourcesGathered={() => this.resourcesGathered()}
+            logoutFunction={(logout) => this.logoutFunction(logout)}
+            redirect={() => this.redirect()}
+          />
+          <CssBaseline />
+          <Helmet
+            titleTemplate="%s - SST Insights"
+            defaultTitle="SST Insights"
+          >
+            <meta name="description" content="SST Insights web portal" />
+          </Helmet>
+          
+          <div className="APP-MAIN-WRAPPER">
+
+          <nav className="MAIN-NAVIGATION">
+              <Hidden xsDown implementation="css">
+                <Drawer
+                  variant="permanent"
+                  open
+                >
+                  <SSTNav 
+                    userManagementAccess={this.state.userManagementAccess} 
+                    emmRequestAccess={this.state.emmRequestAccess}
+                    emmAccess={this.state.emmAccess}
+                  />
+                </Drawer>
+              </Hidden>
+            </nav>
+            <div className="Content-Wrapper inline overflow-y">
+              {this.getContainer()}
+            </div>
           </div>
         </div>
-      </div>
+
+      </LoadingOverlay>
     );
   }
 }

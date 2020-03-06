@@ -195,7 +195,7 @@ export default class EMMCases extends React.PureComponent {
                 <TableBody>
                 
                 {this.state.recentSearch.map((cases, index) => {
-                    return <TableRow key={index}>
+                    return <TableRow key={index} onClick={() => this.redirect(cases.requestId)}>
                       <TableCell>{cases.requestId}</TableCell>
                       <TableCell align="left">{cases.procedureName}</TableCell>
                       <TableCell align="left">{cases.complicationNames}</TableCell>

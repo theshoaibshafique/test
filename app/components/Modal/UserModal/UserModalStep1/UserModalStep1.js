@@ -12,11 +12,14 @@ class UserModalStep1 extends React.Component {
     this.state = {
       errorMsgVisible: false,
       errorMsgEmailVisible: false,
-      errorMsg: 'Email exists, please enter another email address.'
+      errorMsg: 'Email exists, please enter another email address.',
+      isLoading: false
     }
   }
   
   save() {
+    this.setState({ errorMsgVisible: false, isLoading: true });
+
     let jsonBody = {
       "userName": this.props.userValue.currentUser,
       "firstName": this.props.userValue.firstName,
@@ -30,9 +33,9 @@ class UserModalStep1 extends React.Component {
     globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENT_API, 'PATCH', this.props.userToken, jsonBody)
     .then(result => {
       if (result === 'error') {
-        this.setState({ errorMsgVisible: true,  errorMsg: ''});
+        this.setState({ errorMsgVisible: true,  errorMsg: '', isLoading: false});
       } else if (result === 'conflict') {
-        this.setState({ errorMsgEmailVisible: true });
+        this.setState({ errorMsgEmailVisible: true, isLoading: false });
       } else {
         // update roles
         this.setState({ errorMsgVisible: false });
@@ -51,7 +54,7 @@ class UserModalStep1 extends React.Component {
           .then(result => {
             if (result === 'error' || result === 'conflict') {
               // send error to modal
-              this.setState({ errorMsgVisible: true });
+              this.setState({ errorMsgVisible: true, isLoading: false });
             }
           });
         }
@@ -74,12 +77,13 @@ class UserModalStep1 extends React.Component {
         .then(result => {
           if (result === 'error' || result === 'conflict') {
             // send error to modal
-            this.setState({ errorMsgVisible: true });
+            this.setState({ errorMsgVisible: true, isLoading: false });
           }
         })
         .then(result => {
           if (!this.state.errorMsgVisible) {
           this.props.updateGridEdit(this.props.userValue.id);
+          this.setState({ isLoading: false });
         }});
       }
     })
@@ -118,7 +122,9 @@ class UserModalStep1 extends React.Component {
             {this.props.currentView === 'add' ? (
               <Button variant="contained" className="primary" onClick={() => this.props.addUser()}>Add</Button>
             ) : (
-              <Button variant="contained" className="primary" onClick={() => this.save()}>Save</Button>
+              <Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
+                  {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}
+              </Button>
             )}
           </div>
         </div>
