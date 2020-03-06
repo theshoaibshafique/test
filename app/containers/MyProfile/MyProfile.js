@@ -3,6 +3,9 @@ import Button from '@material-ui/core/Button';
 import './style.scss';
 
 export default class MyProfile extends React.PureComponent {
+  componentDidMount() {
+    this.props.notLoading();
+  };
 
   render() {
     return (

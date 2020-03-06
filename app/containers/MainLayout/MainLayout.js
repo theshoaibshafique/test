@@ -139,18 +139,18 @@ export default class MainLayout extends React.PureComponent {
     if (this.state.userLoggedIn) {
       return <Switch>
               {(this.state.emmAccess) &&
-                  <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} /> }/>
+                  <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               }
               {(this.state.emmAccess) &&
-                  <Route path="/emm/:requestid" component={EMM}/>
+                  <Route path="/emm/:requestid" component={() => <EMM loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               }
               {(this.state.emmRequestAccess) &&
-                  <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} /> }/>
+                  <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               }
               {(this.state.userManagementAccess) &&
                   <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               }
-              <Route path="/my-profile" component={() => <MyProfile userLoggedIn={this.state.userLoggedIn} />} />
+              <Route path="/my-profile" component={() => <MyProfile userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               <Route path="" component={NotFoundPage} />
             </Switch> 
     } else {

@@ -201,6 +201,8 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   async componentDidMount() {
+    this.props.notLoading();
+
     await globalFuncs.genericFetch(process.env.USERSEARCH_API, 'get', this.props.userToken, {})
     .then(result => {
       if (result) {    
