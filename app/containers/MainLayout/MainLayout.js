@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
 import LoadingOverlay from 'react-loading-overlay';
 
+import MainDashboard from 'containers/MainDashboard/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
 import EMM from 'containers/EMM/Loadable';
 import RequestEMM from 'containers/RequestEMM/Loadable';
@@ -138,6 +139,7 @@ export default class MainLayout extends React.PureComponent {
 
     if (this.state.userLoggedIn) {
       return <Switch>
+              <Route path="/maindashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               {(this.state.emmAccess) &&
                   <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               }

@@ -33,87 +33,10 @@ class AzureLogin extends React.Component {
             this.props.setUserFacility(result);
             this.props.resourcesGathered(true);
           }
-          //this.getFacilityRooms(result.facilityName);
         });
       } else {
         this.props.redirect();
       }
-    })
-  }
-
-  getFacilityRooms(facilityName) {
-    fetch(process.env.ROOMS_API + facilityName, {
-      method: 'get',
-      headers: {
-        'Authorization': 'Bearer ' + this.props.userToken,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then((result) => {
-      let facilityRoomsList = result.reduce(function(map, obj) {
-        map[obj.roomName] = obj.roomTitle;
-        return map;
-      }, {});
-      this.props.setFacilityRooms(facilityRoomsList)
-      this.getProcedureList();
-    })
-  }
-
-  getProcedureList() {
-    fetch(process.env.PROCEDURE_API, {
-      method: 'get',
-      headers: {
-        'Authorization': 'Bearer ' + this.props.userToken,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then((result) => {
-      let procedureList = result.reduce(function(map, obj) {
-          map[obj.name] = obj.title;
-          return map;
-      }, {});
-      this.props.setProcedureList(procedureList)
-      this.getPublishedSurveys();
-    })
-  }
-
-  getPublishedSurveys() {
-    fetch(process.env.PUBLISHEDSURVEY_API, {
-      method: 'get',
-      headers: {
-        'Authorization': 'Bearer ' + this.props.userToken,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then((result) => {
-      let publishedSurveys = result.reduce(function(map, obj) {
-        map[obj.name] = obj.title;
-        return map;
-      }, {});
-      this.props.setPublishedSurveys(publishedSurveys)
-      this.getMostRecentPublishedSurvey()
-    })
-  }
-
-  getMostRecentPublishedSurvey() {
-    fetch(process.env.MOSTRECENTSURVEY_API, {
-      method: 'get',
-      headers: {
-        'Authorization': 'Bearer ' + this.props.userToken,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then((result) => {
-
-      this.props.setMostRecentPublishedSurvey(result)
-
-    })
-    .catch(() => {
-      // this.props.history.push(`/dashboard`);
     })
   }
 
