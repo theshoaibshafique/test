@@ -78,9 +78,9 @@ export default class EMM extends React.PureComponent {
       <section>
         <div className="header">
           <p>Enhanced M&M</p>
-          <div>
+{/*           <div>
             <Button variant="contained" className="primary">Open Report</Button>
-          </div>
+          </div> */}
         </div>
 
         <div className="table-row">
