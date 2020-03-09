@@ -10,7 +10,8 @@ export default class MainDashboard extends React.PureComponent {
       tileGroupList: [],
       month: moment(),
       minDate: null,
-      maxDate: null
+      maxDate: null,
+      container: ''
     }
   }
 
@@ -20,19 +21,37 @@ export default class MainDashboard extends React.PureComponent {
       if (result) {
         let tileGroupList = result.reports[0].tileGroup.map((tileGroup) => {
           return tileGroup
-        })       
+        });
 
         this.setState({
           tileGroupList: tileGroupList
         });
+
+        let test = this.loadTileShells(tileGroupList);
+        this.setState({ container: test })
+
       } else {
         this.setState({
           tileGroupList: []
         });
       }
+    }); 
+
+    
+    this.props.notLoading();
+  };
+
+  loadTileShells(tileGroupList) {
+    let container = '';
+    tileGroupList.map((tileRequests) => {
+      tileRequests.tileRequests.map((tile) => {
+        if (tile.tileType === 'InfographicParagraph') {
+          container = 'Numbers reflect data captured by {} Operating Rooms. A Case includes Setup and Patient Entry to Exit.';
+        }
+      });
     });
 
-    this.props.notLoading();
+    return container;
   };
 
   decrementMonth = () => {
@@ -56,6 +75,8 @@ export default class MainDashboard extends React.PureComponent {
   };
 
   render() {
+    const createMarkup = htmlString => ({ __html: htmlString });
+
     return (
       <section>
         <div className="Dashboard-Welcome">Welcome {this.props.firstName} {this.props.lastName}</div>
@@ -68,7 +89,7 @@ export default class MainDashboard extends React.PureComponent {
           </span>
         </div>
 
-        <div className="cases">Numbers reflect data captured by {} Operating Rooms. A Case includes Setup and Patient Entry to Exit.</div>
+        <div dangerouslySetInnerHTML={createMarkup(this.state.container)} className="cases"/>
 
         <div className="cases">
           <div className="cases-div center-align total">3,298</div><div className="cases-div center-align total">1,000</div><div className="cases-div center-align total">856</div>
