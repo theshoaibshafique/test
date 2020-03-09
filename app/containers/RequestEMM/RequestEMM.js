@@ -39,7 +39,8 @@ export default class RequestEMM extends React.PureComponent {
       snackBarMsg: '',
       snackBarOpen: false,
       userList: [],
-      inputValue: ''
+      inputValue: '',
+      isLoading: false
     };
 
     this.state.operatingRooms = OPERATING_ROOM.map((data, index) =>
@@ -148,6 +149,8 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   submit() {
+    this.setState({ isLoading: true });
+
     let usersToNotify = this.state.inputValue.map((users) => {
       return users.value;
     });
@@ -168,13 +171,15 @@ export default class RequestEMM extends React.PureComponent {
       if (result === 'error' || result === 'conflict') {
         this.setState({ 
           snackBarOpen: true,
-          snackBarMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.'
+          snackBarMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
+          isLoading: false
         });
       } else {
         this.reset();
         this.setState({
           snackBarOpen: true,
-          snackBarMsg: 'Request Submitted'
+          snackBarMsg: 'Request Submitted',
+          isLoading: false
         });
       }
     });
@@ -259,7 +264,7 @@ export default class RequestEMM extends React.PureComponent {
                     inputVariant="outlined"
                     margin="normal"
                     format="dd/MM/yyyy hh:mm"
-                    value={this.state.date || Date.now()}
+                    value={this.state.date}
                     onChange={this.handleDateChange}
                     id="date-picker-operation"
                   />
@@ -279,7 +284,7 @@ export default class RequestEMM extends React.PureComponent {
                     variant="outlined"
                     margin="normal"
                     format="dd/MM/yyyy"
-                    value={this.state.compDate || Date.now()}
+                    value={this.state.compDate}
                     onChange={this.handleCompDateChange}
                     id="date-picker-complication"
                   />
@@ -417,7 +422,8 @@ export default class RequestEMM extends React.PureComponent {
         
         <div className="user-info-buttons">
           <p className="button-padding"><Button style={{color : "#3db3e3"}} onClick={() => this.reset()}>Cancel</Button> </p>
-          <p><Button variant="contained" className="primary" onClick={() => this.submit()}>Submit</Button> </p>
+          <p><Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
+              {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> </p>
         </div>
 
         <Snackbar
