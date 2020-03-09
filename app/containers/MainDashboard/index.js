@@ -5,7 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { makeSelectToken, makeSelectFirstName, makeSelectLastName } from '../App/selectors';
 
 const mapStateToProps = createStructuredSelector({
-  usertoken: makeSelectToken(),
+  userToken: makeSelectToken(),
   firstName: makeSelectFirstName(),
   lastName: makeSelectLastName(),
 });
