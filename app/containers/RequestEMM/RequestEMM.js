@@ -252,7 +252,7 @@ export default class RequestEMM extends React.PureComponent {
           <div className="input">
             <div className="first-column">Estimated Date and Time of Operation</div><div></div>
           </div>
-          <div className="input">
+          <div className="input input-padding">
             <div className="first-column">
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <DateTimePicker
@@ -271,7 +271,7 @@ export default class RequestEMM extends React.PureComponent {
           <div className="input">
             <div className="first-column">Date of Complication</div> <div>Operating Room</div>
           </div>
-          <div className="input">
+          <div className="input input-padding">
             <div className="first-column">
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <DatePicker
@@ -310,7 +310,7 @@ export default class RequestEMM extends React.PureComponent {
                   </Select>
               </FormControl>
           </div>
-          <div>
+          <div className="input-padding">
             <div>
               <Checkbox onChange={(e) => this.handleCheckSpecialty(e)}/>Other
             </div>
@@ -336,7 +336,7 @@ export default class RequestEMM extends React.PureComponent {
                 </Select>
             </FormControl>
           </div>
-          <div>
+          <div className="input-padding">
             <div>
               <Checkbox onChange={(e) => this.handleCheckProcedure(e)}/>Other
             </div>
@@ -369,7 +369,7 @@ export default class RequestEMM extends React.PureComponent {
               )}
             />
           </div>
-          <div>
+          <div className="input-padding">
             <div>
               <Checkbox onChange={(e) => this.handleCheckComplications(e)}/>Other
             </div>
@@ -389,7 +389,7 @@ export default class RequestEMM extends React.PureComponent {
           <div>
             <div>Do not enter any Personal Health Information that can be used to identify the patient (e.g. patient’s name, age, etc.)</div>  
           </div>
-          <div>
+          <div className="input-padding">
             <div>
               <TextField
                 id="notes"
