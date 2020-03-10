@@ -59,23 +59,11 @@ export default class UserManagement extends React.PureComponent {
   }
 
   async componentDidMount() {
-    const departments = await globalFuncs.genericFetch(process.env.DEPARTMENTFACILITY_API + '/' + this.props.facilityName, 'get', this.props.userToken, {})
-
     await globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'get', this.props.userToken, {})
     .then(result => {
-      if (result) {
-        const users = [];
-        result.map((user) => {
-          departments.map((department) => {
-            if (department.departmentName === user.departmentName) {
-              user.departmentName = department.departmentTitle;
-              users.push(user);
-            }
-          });
-        });
-        
+      if (result) {       
         this.setState({
-          userList: users
+          userList: result
         });
       } else {
         this.setState({
@@ -113,7 +101,7 @@ export default class UserManagement extends React.PureComponent {
               lastName: rowData.lastName,
               email: rowData.email,
               title: rowData.title,
-              department: '',
+              department: rowData.departmentName,
               country: rowData.country,
               preferredLanguage: rowData.preferredLanguage,
               active: rowData.active,
@@ -167,6 +155,7 @@ export default class UserManagement extends React.PureComponent {
       "lastName": this.state.userValue.lastName,
       "email": this.state.userValue.email,
       "title": this.state.userValue.title,
+      "departmentName": this.state.userValue.department,
       "preferredLanguage": 'en-US',
       "active": true,
       "sendEmail": true
@@ -342,7 +331,6 @@ export default class UserManagement extends React.PureComponent {
               { title: 'First Name', field: 'firstName' },
               { title: 'Last Name', field: 'lastName' },
               { title: 'Email', field: 'email' },
-              { title: 'Department', field: 'departmentName' },
               { title: 'Title', field: 'title'}
             ]}
             options={{ 
