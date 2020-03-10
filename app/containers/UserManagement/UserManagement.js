@@ -48,7 +48,7 @@ export default class UserManagement extends React.PureComponent {
         country: '',
         preferredLanguage: 'en-US',
         active: true,
-        permissions: '',
+        permissions: [],
         id: ''
       },
       snackBarOpen: false,
@@ -152,7 +152,7 @@ export default class UserManagement extends React.PureComponent {
         country: '',
         preferredLanguage: 'en-US',
         active: true,
-        permissions: '',
+        permissions: [],
         id: ''
       },
       errorMsgVisible: false
