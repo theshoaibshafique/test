@@ -71,6 +71,20 @@ class UserModalStep1 extends React.Component {
               this.setState({ errorMsgVisible: true, isLoading: false });
             }
           });
+
+          jsonBody = {
+            "userName": this.props.userValue.currentUser,
+            "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
+            "roleNames": rolesNames
+          }
+
+          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+          .then(result => {
+            if (result === 'error' || result === 'conflict') {
+              // send error to modal
+              this.setState({ errorMsgVisible: true, isLoading: false });
+            }
+          });
         }
 
         if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0) {
