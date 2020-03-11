@@ -167,7 +167,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
                 />
               }
-              label="Enhanced M&M Edit"
+              label="Enhanced M&M Request"
             />
             <FormControlLabel
               control={
