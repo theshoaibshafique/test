@@ -7,7 +7,21 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
         'Authorization': 'Bearer ' + userToken,
         'Content-Type': 'application/json'
       }
-    }).then(response => response.json())
+    }).then(response => {
+      if (response) {
+        if ([200, 201, 202, 204].indexOf(response.status) >= 0) {
+          return response.json();
+        } else if (response.text.length) {
+            if ([200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
+              return response.json();
+            }
+        } else if ([409].indexOf(response.status) >= 0) {
+          return 'conflict';
+        } else {
+          return 'error';
+        }
+      }
+    })
   } else {
     return fetch(api, {
       method: fetchMethod,

@@ -60,7 +60,7 @@ class DeleteModal extends React.Component {
               <p className="Paragraph-Error">{this.props.errorMsg}</p>
             }
             <p className="Paragraph">Are you sure you want to {this.props.userValue.active ? 'disable' : 'enable'} this user {this.props.userValue.firstName} {this.props.userValue.lastName}?</p>
-            <p className="Paragraph">{this.props.userValue.active ? 'Disabled users will not be able to log into Insights' : ''}</p>
+            <p className="Paragraph">{this.props.userValue.active ? 'Disabled users will not be able to log into Insights.' : ''}</p>
             <div className="Button-Row right-align">
               <Button style={{color : "#3db3e3"}} onClick={() => { this.props.handleClose(); this.setState({ errorMsgVisible: false }); }}>Cancel</Button>
               <Button variant="contained" className="secondary" onClick={() => this.enableDisableUser()}>{this.props.userValue.active ? 'Disable' : 'Enable'}</Button>

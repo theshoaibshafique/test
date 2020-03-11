@@ -421,7 +421,7 @@ export default class RequestEMM extends React.PureComponent {
         </div>
         
         <div className="user-info-buttons">
-          <p className="button-padding"><Button style={{color : "#3db3e3"}} onClick={() => this.reset()}>Cancel</Button> </p>
+          <p className="button-padding"><Button style={{color : "#3db3e3"}} onClick={() => this.reset()}>Reset Form</Button> </p>
           <p><Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
               {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> </p>
         </div>
