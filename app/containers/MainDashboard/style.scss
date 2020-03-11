@@ -29,3 +29,23 @@
 .case-font {
     font-size: 18px;
 }
+
+.pointer {
+    cursor: pointer;
+}
+
+.chart-inner-text {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    padding-top: 25%;
+    text-align: center;
+}
+
+.chart-inner-value {
+    font-weight: bold;
+    color: $dark-blue;
+    font-size: 42px;
+}

@@ -3,6 +3,8 @@ import moment from 'moment/moment';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import InfographicParagraph from './InfographicParagraph';
+import InfographicText from './InfographicText';
+import InfographicCircle from './InfographicCircle';
 
 export default class MainDashboard extends React.PureComponent {
   constructor(props) {
@@ -62,18 +64,13 @@ export default class MainDashboard extends React.PureComponent {
 
   renderTileShells() {
     return this.state.tileRequests.map((line) => {
-
-        return  line.map((child, index) => {
-                  if (child.tileType === 'InfographicParagraph') {
-                    return <InfographicParagraph line={line}></InfographicParagraph>
-                  } else if (child.tileType === 'InfographicText') {
-                    return <div className="cases" key={index}>N/A</div> 
-                  } else if (child.tileType === 'InfographicCircle') {
-                    return <div className="cases" key={index}>N/A</div> 
-                  } 
-
-                });
-              
+        if (line[0].tileType === 'InfographicParagraph') {
+          return <InfographicParagraph line={line}></InfographicParagraph>
+        } else if (line[0].tileType === 'InfographicText') {
+          return <InfographicText line={line}></InfographicText>
+        } else if (line[0].tileType === 'InfographicCircle') {
+          return <InfographicCircle line={line}></InfographicCircle>
+        } 
     });
   };
 
@@ -104,39 +101,15 @@ export default class MainDashboard extends React.PureComponent {
         <div className="Dashboard-Welcome">Welcome {this.props.firstName} {this.props.lastName}</div>
 
         <div className="cases-date">
-          <span onClick={() => this.decrementMonth()}>{'< '}</span>
+          <span className="pointer" onClick={() => this.decrementMonth()}>{'< '}</span>
           <span>{this.state.month.format('MMMM YYYY')}</span>
-          <span onClick={() => this.incrementMonth()}>
+          <span className="pointer" onClick={() => this.incrementMonth()}>
             {this.state.month.clone().add(1, 'hour') > moment() ? '' : ' >'}
           </span>
         </div>
         
         {this.renderTileShells()}
 
-        <div className="cases">
-          <div className="cases-div center-align total"> 3,298</div>
-          <div className="cases-div center-align total">1,000</div>
-          <div className="cases-div center-align total">856</div>
-        </div>
-
-        <div className="cases">
-          <div className="cases-div center-align case-font">Total Hours</div>
-          <div className="cases-div center-align case-font">Total Cases</div>
-          <div className="cases-div center-align case-font">Total Case Hours</div>
-        </div>
-
-        <div className="cases">
-          <div className="cases-div center-align">graph</div><div className="cases-div center-align">graph</div>
-        </div>
-
-        <div className="cases">
-          <div className="cases-div center-align case-font"> 990 </div>
-          <div className="cases-div center-align case-font">10</div>
-        </div>
-
-        <div className="cases">
-          <div className="cases-div center-align case-font">Cases Processed</div><div className="cases-div center-align case-font">Cases Opted Out</div>
-        </div>
       </section>
     );
   }
