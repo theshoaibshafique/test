@@ -13,7 +13,7 @@ export default class InfographicParagraph extends React.PureComponent {
             return <div>
                         <div className="cases">
                         { this.props.line.map((tile) => {
-                            return <div className="cases"> {tile.reportName}</div>
+                            return <div className="cases" key={tile.tileOrder}> {tile.reportName}</div>
                             })
                         }
                         </div>

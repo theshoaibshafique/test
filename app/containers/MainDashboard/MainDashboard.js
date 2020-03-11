@@ -63,13 +63,13 @@ export default class MainDashboard extends React.PureComponent {
   };
 
   renderTileShells() {
-    return this.state.tileRequests.map((line) => {
+    return this.state.tileRequests.map((line, index) => {
         if (line[0].tileType === 'InfographicParagraph') {
-          return <InfographicParagraph line={line}></InfographicParagraph>
+          return <InfographicParagraph line={line} key={index}></InfographicParagraph>
         } else if (line[0].tileType === 'InfographicText') {
-          return <InfographicText line={line}></InfographicText>
+          return <InfographicText line={line} key={index}></InfographicText>
         } else if (line[0].tileType === 'InfographicCircle') {
-          return <InfographicCircle line={line}></InfographicCircle>
+          return <InfographicCircle line={line} key={index}></InfographicCircle>
         } 
     });
   };
@@ -108,7 +108,7 @@ export default class MainDashboard extends React.PureComponent {
           </span>
         </div>
         
-        {this.renderTileShells()}
+        {this.renderTileShells()} 
 
       </section>
     );

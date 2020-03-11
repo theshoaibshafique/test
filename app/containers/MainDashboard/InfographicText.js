@@ -20,13 +20,13 @@ export default class InfographicText extends React.PureComponent {
             return <div>
                         <div className="cases">
                         { this.props.line.map((tile) => {
-                            return <div className="cases-div center-align total"> {tile.reportName}</div>
+                            return <div className="cases-div center-align total" key={tile.reportName}> {tile.reportName}</div>
                             })
                         }
                         </div>
                         <div className="cases">
                         { this.props.line.map((tile) => {
-                            return <div className="cases-div center-align case-font"> {tile.tileOrder}</div>
+                            return <div className="cases-div center-align case-font" key={tile.reportName}> {tile.tileOrder}</div>
                             })
                         }
                         </div>

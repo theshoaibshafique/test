@@ -26,7 +26,7 @@ export default class InfographicCircle extends React.PureComponent {
             return <div>
                         <div className="cases">
                         { this.props.line.map((tile) => {
-                            return <div className="cases-div center-align">
+                            return <div className="cases-div center-align" key={tile.reportName} >
                                         <ReactMinimalPieChart
                                             data={[ { color: '#3db3e3', value: 90 },
                                                     { color: '#e6e6e6', value: 10 }
@@ -34,8 +34,8 @@ export default class InfographicCircle extends React.PureComponent {
                                             lineWidth={20}
                                             style={{ position: "relative" }}
                                         >
-                                            <div className="chart-inner-text">
-                                                <p className="chart-inner-value">99%</p>
+                                            <div className="chart-inner-text" key={tile.reportName}>
+                                                <p className="chart-inner-value" key={tile.reportName}>99%</p>
                                             </div> 
                                         </ReactMinimalPieChart>
                                     </div>
@@ -44,13 +44,13 @@ export default class InfographicCircle extends React.PureComponent {
                         </div>
                         <div className="cases">
                         { this.props.line.map((tile) => {
-                            return <div className="cases-div center-align case-font"> 990</div>
+                            return <div className="cases-div center-align case-font" key={tile.reportName}> 990</div>
                             })
                         }
                         </div>
                         <div className="cases">
                         { this.props.line.map((tile) => {
-                            return <div className="cases-div center-align case-font"> Cases Processed</div>
+                            return <div className="cases-div center-align case-font" key={tile.reportName}> Cases Processed</div>
                             })
                         }
                         </div>
