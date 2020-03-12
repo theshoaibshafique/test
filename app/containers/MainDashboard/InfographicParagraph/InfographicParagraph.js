@@ -4,8 +4,17 @@ import globalFuncs from '../../../utils/global-functions';
 export default class InfographicParagraph extends React.PureComponent {
     constructor(props) {
         super(props);
-        
+        this.state = {
+            dashboardData: {
+                footer: '',
+                description: '',
+                dataPoints: {
+                    valueX: ''
+                },
+                dataDate: null
+            }
         }
+    };
 
     componentDidMount() {
         let jsonBody = {
@@ -14,32 +23,31 @@ export default class InfographicParagraph extends React.PureComponent {
                 "reportName": this.props.line[0].reportName,
                 "startDate": this.props.line[0].startDate,
                 "tileType": this.props.line[0].tileType,
-                "reportName": this.props.line[0].reportName,
                 "dashboardName": this.props.line[0].dashboardName
             }
 
         globalFuncs.genericFetch(process.env.DASHBOARDTILE_API, 'post', this.props.userToken, jsonBody)
         .then(result => {
-        if (result === 'error' || result === 'conflict') {
-           
-        } else {
+            if (result === 'error' || result === 'conflict') {
             
-        }
+            } else {
+                this.setState ({ dashboardData: result });
+            }
         });
-    }
+    };
 
     render() {
-        if (this.props.line.length == 1) {
-            return <div className="cases">N/A</div> 
-        } else {
-            return <div>
-                        <div className="cases">
-                        { this.props.line.map((tile) => {
-                            return <div className="cases" key={tile.tileOrder}> {tile.reportName}</div>
-                            })
-                        }
-                        </div>
-                    </div>
+        let desc = '';
+        if (this.state.dashboardData.description) {
+            desc = this.state.dashboardData.description.replace('{0}', this.state.dashboardData.dataPoints[0].valueX);
         }
+        return <div>
+                    <div className="cases">
+                    { this.props.line.map((tile) => {
+                        return <div className="cases" key={tile.tileOrder}>{this.state.dashboardData.description ? desc : 'N/A'}</div>
+                        })
+                    }
+                    </div>
+                </div>
     }
 }

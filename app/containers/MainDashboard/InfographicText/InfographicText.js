@@ -1,36 +1,56 @@
 import React from 'react';
+import globalFuncs from '../../../utils/global-functions';
 
 export default class InfographicText extends React.PureComponent {
     constructor(props) {
         super(props);
-        
+        this.state = {
+            dashboardData: []
+        }
+    };
+
+    componentDidMount() {
+        this.props.line.map((tile) => {
+            this.getTile(tile);
+        });
+    };
+
+    getTile(tile) {
+        let jsonBody = {
+            "endDate": tile.endDate,
+            "facilityName": tile.facilityName,
+            "reportName": tile.reportName,
+            "startDate": tile.startDate,
+            "tileType": tile.tileType,
+            "dashboardName": tile.dashboardName
         }
 
+        globalFuncs.genericFetch(process.env.DASHBOARDTILE_API, 'post', this.props.userToken, jsonBody)
+        .then(result => {
+            if (result === 'error' || result === 'conflict') {
+            
+            } else {
+                const dashboardData = [...this.state.dashboardData, result];
+                this.setState ({ dashboardData: dashboardData });
+            }
+        });
+    };
+
     render() {
-        if (this.props.line.length == 1) {
-            return <div>
-                        <div className="cases">
-                            <div className="cases-div center-align total"> {line.reportName}</div>
-                        </div>
-                        <div className="cases">
-                            <div className="cases-div center-align case-font"> {line.tileOrder}</div>
-                        </div>
+        var d = new Date();
+        return <div>
+                    <div className="cases" key={d.getTime()}>
+                    { this.state.dashboardData.map((tile, index) => {
+                        return <div className="cases-div center-align total" key={index}> {tile.dataPoints ? tile.dataPoints[0].valueX : 'N/A'}</div>
+                        })
+                    }
                     </div>
-        } else {
-            return <div>
-                        <div className="cases">
-                        { this.props.line.map((tile) => {
-                            return <div className="cases-div center-align total" key={tile.reportName}> {tile.reportName}</div>
-                            })
-                        }
-                        </div>
-                        <div className="cases">
-                        { this.props.line.map((tile) => {
-                            return <div className="cases-div center-align case-font" key={tile.reportName}> {tile.tileOrder}</div>
-                            })
-                        }
-                        </div>
+                    <div className="cases" key={d.getDate()}>
+                    { this.state.dashboardData.map((tile, index) => {
+                        return <div className="cases-div center-align case-font" key={index}> {tile.footer ? tile.footer : 'N/A'}</div>
+                        })
+                    }
                     </div>
-        }
+                </div>
     }
 }

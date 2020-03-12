@@ -68,12 +68,11 @@ export default class MainDashboard extends React.PureComponent {
         if (line[0].tileType === 'InfographicParagraph') {
           return <InfographicParagraph line={line} userToken={this.props.userToken} key={index}></InfographicParagraph>
         } else if (line[0].tileType === 'InfographicText') {
-          return <InfographicText line={line} key={index}></InfographicText>
+          return <InfographicText line={line} userToken={this.props.userToken} key={index}></InfographicText>
         } else if (line[0].tileType === 'InfographicCircle') {
-          return <InfographicCircle line={line} key={index}></InfographicCircle>
+          return <InfographicCircle line={line} userToken={this.props.userToken} key={index}></InfographicCircle>
         } 
     });}
-    
   };
 
   decrementMonth = () => {
