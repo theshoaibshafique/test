@@ -2,9 +2,9 @@ import React from 'react';
 import moment from 'moment/moment';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import InfographicParagraph from './InfographicParagraph';
-import InfographicText from './InfographicText';
-import InfographicCircle from './InfographicCircle';
+import InfographicParagraph from './InfographicParagraph/InfographicParagraph';
+import InfographicText from './InfographicText/InfographicText';
+import InfographicCircle from './InfographicCircle/InfographicCircle';
 
 export default class MainDashboard extends React.PureComponent {
   constructor(props) {
@@ -25,7 +25,7 @@ export default class MainDashboard extends React.PureComponent {
     globalFuncs.genericFetch(process.env.USER_API, 'get', this.props.userToken, {})
     .then(result => {
       if (result) {
-        if (result.dashboard.reportName === 'DefaultDashboard') {
+        if (result.dashboard.name === 'DefaultDashboard') {
           this.compileTileShells(result.dashboard.tileRequest);
         }
 
@@ -63,15 +63,17 @@ export default class MainDashboard extends React.PureComponent {
   };
 
   renderTileShells() {
-    return this.state.tileRequests.map((line, index) => {
+    if (this.props.userToken)
+    {return this.state.tileRequests.map((line, index) => {
         if (line[0].tileType === 'InfographicParagraph') {
-          return <InfographicParagraph line={line} key={index}></InfographicParagraph>
+          return <InfographicParagraph line={line} userToken={this.props.userToken} key={index}></InfographicParagraph>
         } else if (line[0].tileType === 'InfographicText') {
           return <InfographicText line={line} key={index}></InfographicText>
         } else if (line[0].tileType === 'InfographicCircle') {
           return <InfographicCircle line={line} key={index}></InfographicCircle>
         } 
-    });
+    });}
+    
   };
 
   decrementMonth = () => {
