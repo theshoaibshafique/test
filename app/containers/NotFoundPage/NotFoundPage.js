@@ -9,6 +9,14 @@ import './style.scss';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
 export default class NotFoundPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  constructor(props) {
+    super(props);
+    
+  }
+
+  componentDidMount() {
+    this.props.notLoading();
+  };
 
   render() {
     return (

@@ -153,7 +153,7 @@ export default class MainLayout extends React.PureComponent {
                   <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               }
               <Route path="/my-profile" component={() => <MyProfile userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
-              <Route path="" component={NotFoundPage} />
+            <Route path="" component={() => <NotFoundPage notLoading={() => this.notLoading()}/> }/>
             </Switch> 
     } else {
       return ''

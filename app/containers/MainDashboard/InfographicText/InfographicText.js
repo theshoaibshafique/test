@@ -15,6 +15,14 @@ export default class InfographicText extends React.PureComponent {
         });
     };
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.line != this.props.line) {
+            this.props.line.map((tile) => {
+                this.getTile(tile);
+            });
+        }
+    }
+
     getTile(tile) {
         let jsonBody = {
             "endDate": tile.endDate,
@@ -41,7 +49,7 @@ export default class InfographicText extends React.PureComponent {
         return <div>
                     <div className="cases" key={d.getTime()}>
                     { this.state.dashboardData.map((tile, index) => {
-                        return <div className="cases-div center-align total" key={index}> {tile.dataPoints ? tile.dataPoints[0].valueX : 'N/A'}</div>
+                        return <div className="cases-div center-align total" key={index}> {tile.dataPoints.length ? tile.dataPoints[0].valueX : 'N/A'}</div>
                         })
                     }
                     </div>

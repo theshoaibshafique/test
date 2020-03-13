@@ -16,6 +16,14 @@ export default class InfographicCircle extends React.PureComponent {
         });
     };
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.line != this.props.line) {
+            this.props.line.map((tile) => {
+                this.getTile(tile);
+            });
+        }
+    }
+
     getTile(tile) {
         let jsonBody = {
             "endDate": tile.endDate,
@@ -38,7 +46,7 @@ export default class InfographicCircle extends React.PureComponent {
     };
 
     render() {
-        return <div>
+        return  <div>
                     <div className="cases">
                     { this.state.dashboardData.map((tile) => {
                         const val1 = parseInt(tile.dataPoints[0].valueX);
@@ -47,7 +55,7 @@ export default class InfographicCircle extends React.PureComponent {
                         return <div className="cases-div center-align" key={val1}>
                                     <ReactMinimalPieChart
                                         data={[ { color: '#3db3e3', value: val1 },
-                                                { color: '#e6e6e6', value: val2 }
+                                                { color: '#e6e6e6', value: val2-val1 }
                                             ]}
                                         lineWidth={20}
                                         style={{ position: "relative" }}

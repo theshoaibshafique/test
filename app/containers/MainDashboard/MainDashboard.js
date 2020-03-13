@@ -11,8 +11,8 @@ export default class MainDashboard extends React.PureComponent {
     super(props);
     this.state = {
       month: moment(),
-      minDate: null,
-      maxDate: null,
+      startDate: null,
+      endDate: null,
       tileRequests: []
     }
   }
@@ -64,18 +64,20 @@ export default class MainDashboard extends React.PureComponent {
 
   setTileRequestDates() {
     let tileRequestList = this.state.tileRequests;
+    
+    let newTileRequestList = tileRequestList.map((requests) => {
+      return requests.map((request) => {
+        return {...request, startDate: this.state.startDate, endDate: this.state.endDate}
 
-    tileRequestList.map((requests) => {
-      requests.map((request) => {
-        request.startDate = this.state.startDate;
-        request.endDate = this.state.endDate;
       });
     });
+    
+    this.setState({ tileRequests: newTileRequestList })
   };
 
   renderTileShells() {
-    if (this.props.userToken)
-    {return this.state.tileRequests.map((line, index) => {
+    if (this.props.userToken) {
+      return this.state.tileRequests.map((line, index) => {
         if (line[0].tileType === 'InfographicParagraph') {
           return <InfographicParagraph line={line} userToken={this.props.userToken} key={index}></InfographicParagraph>
         } else if (line[0].tileType === 'InfographicText') {
@@ -83,29 +85,33 @@ export default class MainDashboard extends React.PureComponent {
         } else if (line[0].tileType === 'InfographicCircle') {
           return <InfographicCircle line={line} userToken={this.props.userToken} key={index}></InfographicCircle>
         } 
-    });}
+      });
+    }
   };
 
   decrementMonth = () => {
     const month = this.state.month.clone();
     this.setState({ 
       month: month.subtract(1, 'month'),
-      minDate: month.startOf('month').format(),
-      maxDate: month.endOf('month').format()
-    })
+      startDate: month.startOf('month').format(),
+      endDate: month.endOf('month').format()
+    }, () => {
+          this.setTileRequestDates();
+      });
   };
 
   incrementMonth = () => {
     const month = this.state.month.clone();
     this.setState({ 
       month: month.add(1, 'month'),
-      minDate: month.startOf('month').format(),
-      maxDate: month.endOf('month').format()
-    })
+      startDate: month.startOf('month').format(),
+      endDate: month.endOf('month').format()
+    }, () => {
+          this.setTileRequestDates();
+    });
   };
 
   render() {
-
     return (
       <section>
         <div className="Dashboard-Welcome">Welcome {this.props.firstName} {this.props.lastName}</div>
