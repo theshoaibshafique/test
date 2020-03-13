@@ -62,6 +62,17 @@ export default class MainDashboard extends React.PureComponent {
     this.setState({ tileRequests: tileRequests });
   };
 
+  setTileRequestDates() {
+    let tileRequestList = this.state.tileRequests;
+
+    tileRequestList.map((requests) => {
+      requests.map((request) => {
+        request.startDate = this.state.startDate;
+        request.endDate = this.state.endDate;
+      });
+    });
+  };
+
   renderTileShells() {
     if (this.props.userToken)
     {return this.state.tileRequests.map((line, index) => {
@@ -76,23 +87,21 @@ export default class MainDashboard extends React.PureComponent {
   };
 
   decrementMonth = () => {
-    this.setState(
-      prevState => ({ month: prevState.month.subtract(1, 'month') }),
-      this.filterByMonth()
-    )
+    const month = this.state.month.clone();
+    this.setState({ 
+      month: month.subtract(1, 'month'),
+      minDate: month.startOf('month').format(),
+      maxDate: month.endOf('month').format()
+    })
   };
 
   incrementMonth = () => {
-    this.setState(prevState => ({ month: prevState.month.add(1, 'month') }), this.filterByMonth())
-  };
-
-  filterByMonth = () => {
     const month = this.state.month.clone();
-    this.runFilter(month.startOf('month').format(), month.endOf('month').format());
-  };
-
-  runFilter = (minDate, maxDate) => {
-    this.setState({ minDate: minDate, maxDate: maxDate })
+    this.setState({ 
+      month: month.add(1, 'month'),
+      minDate: month.startOf('month').format(),
+      maxDate: month.endOf('month').format()
+    })
   };
 
   render() {

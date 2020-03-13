@@ -42,7 +42,8 @@ export default class InfographicCircle extends React.PureComponent {
                     <div className="cases">
                     { this.state.dashboardData.map((tile) => {
                         const val1 = parseInt(tile.dataPoints[0].valueX);
-                        const val2 = parseInt(100 - tile.dataPoints[0].valueX);
+                        const val2 = parseInt(tile.dataPoints[0].valueY);
+                        const val3 = ((val1/val2)*100).toFixed(1);
                         return <div className="cases-div center-align" key={val1}>
                                     <ReactMinimalPieChart
                                         data={[ { color: '#3db3e3', value: val1 },
@@ -52,7 +53,7 @@ export default class InfographicCircle extends React.PureComponent {
                                         style={{ position: "relative" }}
                                     >
                                         <div className="chart-inner-text" key={val1}>
-                                            <p className="chart-inner-value" key={val1}>{tile.dataPoints[0].valueX}%</p>
+                                            <p className="chart-inner-value" key={val1}>{val3}%</p>
                                         </div> 
                                     </ReactMinimalPieChart>
                                 </div>

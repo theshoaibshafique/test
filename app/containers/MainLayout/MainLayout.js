@@ -134,7 +134,7 @@ export default class MainLayout extends React.PureComponent {
 
   getContainer() {
     if (!this.state.authenticated) {
-      return <NoAccess/>
+      return <NoAccess notLoading={() => this.notLoading()}/>
     }
 
     if (this.state.userLoggedIn) {

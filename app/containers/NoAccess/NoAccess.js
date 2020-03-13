@@ -6,9 +6,16 @@
 
 import React from 'react';
 import './style.scss';
-import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 
 export default class NoAccess extends React.PureComponent { 
+  constructor(props) {
+    super(props);
+    
+  }
+
+  componentDidMount() {
+    this.props.notLoading();
+  };
 
   render() {
     return (
