@@ -18,6 +18,7 @@ export default class InfographicCircle extends React.PureComponent {
 
     componentDidUpdate(prevProps) {
         if (prevProps.line != this.props.line) {
+            this.setState ({ dashboardData: [] });
             this.props.line.map((tile) => {
                 this.getTile(tile);
             });
@@ -48,35 +49,47 @@ export default class InfographicCircle extends React.PureComponent {
     render() {
         return  <div>
                     <div className="cases">
+                        { this.state.dashboardData.map((tile) => {
+                            if (tile.dataPoints.length) {
+                                const val1 = parseInt(tile.dataPoints[0].valueX);
+                                const val2 = parseInt(tile.dataPoints[0].valueY);
+                                const val3 = ((val1/val2)*100).toFixed(1);
+                                return <div className="cases-div center-align" key={val1}>
+                                            <ReactMinimalPieChart
+                                                data={[ { color: '#3db3e3', value: val1 },
+                                                        { color: '#e6e6e6', value: val2-val1 }
+                                                    ]}
+                                                lineWidth={20}
+                                                style={{ position: "relative" }}
+                                            >
+                                                <div className="chart-inner-text" key={val1}>
+                                                    <p className="chart-inner-value" key={val1}>{val3}%</p>
+                                                </div> 
+                                            </ReactMinimalPieChart>
+                                        </div>
+                                } else {
+                                    return <div className="cases-div center-align empty-space" key={Math.random()}>N/A</div>
+                                }
+                            })
+                        }
+                    </div>
+                    <div className="cases">
                     { this.state.dashboardData.map((tile) => {
-                        const val1 = parseInt(tile.dataPoints[0].valueX);
-                        const val2 = parseInt(tile.dataPoints[0].valueY);
-                        const val3 = ((val1/val2)*100).toFixed(1);
-                        return <div className="cases-div center-align" key={val1}>
-                                    <ReactMinimalPieChart
-                                        data={[ { color: '#3db3e3', value: val1 },
-                                                { color: '#e6e6e6', value: val2-val1 }
-                                            ]}
-                                        lineWidth={20}
-                                        style={{ position: "relative" }}
-                                    >
-                                        <div className="chart-inner-text" key={val1}>
-                                            <p className="chart-inner-value" key={val1}>{val3}%</p>
-                                        </div> 
-                                    </ReactMinimalPieChart>
-                                </div>
+                            if (tile.dataPoints.length) {
+                                return <div className="cases-div center-align case-font" key={tile.dataPoints[0].valueX}>{tile.dataPoints[0].valueX}</div>
+                            } else {
+                                return <div className="cases-div center-align" key={Math.random()}></div>
+                            }
                         })
                     }
                     </div>
                     <div className="cases">
                     { this.state.dashboardData.map((tile) => {
-                        return <div className="cases-div center-align case-font" key={tile.dataPoints[0].valueX}>{tile.dataPoints[0].valueX}</div>
-                        })
-                    }
-                    </div>
-                    <div className="cases">
-                    { this.state.dashboardData.map((tile) => {
-                        return <div className="cases-div center-align case-font" key={tile.footer}>{tile.footer}</div>
+                            if (tile.dataPoints.length) {
+                                return <div className="cases-div center-align case-font" key={tile.footer}>{tile.footer}</div>
+                            } else {
+                                return <div className="cases-div center-align" key={Math.random()}></div>
+                            }
                         })
                     }
                     </div>
