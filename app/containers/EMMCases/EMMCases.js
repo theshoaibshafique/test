@@ -18,7 +18,7 @@ export default class EMMCases extends React.PureComponent {
       requestID: '',
       report: {
         requestId: '',
-        procedureName: '',
+        procedureNames: [],
         complicationNames: [],
         operatingRoom: ''
       },
@@ -49,14 +49,16 @@ export default class EMMCases extends React.PureComponent {
           this.setState({ noMatch: true })
         } else {
           let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY);
-          let procedureName = '';
+          let procedureNames = [];
           let complicationList = [];
           let operatingRoom = '';
 
-          surgeryList.map((surgery) => {
-            if (surgery.value.toUpperCase() === result.procedure.toUpperCase()) {
-              procedureName = surgery.name;
-            }
+          result.procedure.map((procedure) => {
+            surgeryList.map((surgery) => {
+              if (surgery.value.toUpperCase() === procedure.toUpperCase()) {
+                procedureNames.push(surgery.name);
+              }
+            });
           });
 
           result.complications.map((complication) => {
@@ -75,7 +77,7 @@ export default class EMMCases extends React.PureComponent {
 
           let report = {
             requestId: result.name,
-            procedureName: procedureName,
+            procedureNames: procedureNames.join(', '),
             complicationNames: complicationList.join(', '),
             operatingRoom: operatingRoom
           }
@@ -92,6 +94,7 @@ export default class EMMCases extends React.PureComponent {
           }
           
           localStorage.setItem('recentSearch', JSON.stringify(this.state.recentSearch));
+          this.setState({ noMatch: false })
         }
       });
     }
@@ -105,7 +108,7 @@ export default class EMMCases extends React.PureComponent {
     this.setState({
       report: {
         requestId: '',
-        procedureName: '',
+        procedureNames: [],
         complicationNames: [],
         operatingRoom: ''
       }
@@ -155,10 +158,10 @@ export default class EMMCases extends React.PureComponent {
                       <TableCell align="left">Operating Room</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>
-                      <TableRow onClick={() => this.redirect(this.state.report.requestId)}>
+                  <TableBody className="pointer">
+                      <TableRow onClick={() => this.redirect(this.state.requestID)}>
                         <TableCell>{this.state.report.requestId}</TableCell>
-                        <TableCell align="left">{this.state.report.procedureName}</TableCell>
+                        <TableCell align="left">{this.state.report.procedureNames}</TableCell>
                         <TableCell align="left">{this.state.report.complicationNames}</TableCell>
                         <TableCell align="left">{this.state.report.operatingRoom}</TableCell>
                       </TableRow>
@@ -190,12 +193,12 @@ export default class EMMCases extends React.PureComponent {
                     <TableCell align="left">Operating Room</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody className="pointer">
                 
                 {this.state.recentSearch.map((cases, index) => {
                     return <TableRow key={index} onClick={() => this.redirect(cases.requestId)}>
                       <TableCell>{cases.requestId}</TableCell>
-                      <TableCell align="left">{cases.procedureName}</TableCell>
+                      <TableCell align="left">{cases.procedureNames}</TableCell>
                       <TableCell align="left">{cases.complicationNames}</TableCell>
                       <TableCell align="left">{cases.operatingRoom}</TableCell>
                     </TableRow>
