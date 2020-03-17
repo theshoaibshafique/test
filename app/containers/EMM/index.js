@@ -6,7 +6,7 @@ import { makeSelectToken } from '../App/selectors';
 
 const mapStateToProps = (state, ownProps) => createStructuredSelector({ 
   userToken: makeSelectToken(),
-  requestId: () => ownProps.match.params.requestId
+  requestId: () => ownProps.match.params.requestid
 });
 
 const mapDispatchToProps = (dispatch) => {
