@@ -10,12 +10,13 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
-import { MuiPickersUtilsProvider, DatePicker, DateTimePicker} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM } from '../../constants';
+import { Grid ,FormHelperText } from '@material-ui/core';
 
 export default class RequestEMM extends React.PureComponent {
   constructor(props) {
@@ -247,118 +248,150 @@ export default class RequestEMM extends React.PureComponent {
 
     return (
       <section>
-        <div className="header">
-          <p>Request for Enhanced M&M</p>
-        </div>
 
-        <div><p>Please fill in all the fields to submit a request for an Enhanced M&M.</p></div>
-        
-        <div className="requestBox">
-          <div className="input">
-            <div className="first-column">Estimated Date and Time of Operation</div><div></div>
-          </div>
-          <div className="input input-padding">
-            <div className="first-column">
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DateTimePicker
+
+        <Grid container spacing={2}>
+          <Grid item xs={12} className="header">
+          <p>Request for Enhanced M&M</p>
+          </Grid>
+          <Grid item xs={12} >
+          <p>Please fill in all the fields to submit a request for an Enhanced M&M.</p>
+          </Grid>
+
+          <Grid item xs={6} >
+            Date of Operation
+          </Grid>
+
+          <Grid item xs={6} >
+            Estimated Time(hh:mm)
+          </Grid>
+          <Grid item xs={6} >
+              <MuiPickersUtilsProvider utils={DateFnsUtils} >
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    id="date-picker-operation"
+                    placeholder="Select"
                     inputVariant="outlined"
-                    margin="normal"
-                    format="dd/MM/yyyy hh:mm"
+                    className="input-field"
+                    minDate={new Date().setDate(new Date().getDate()-30)}
+                    maxDate={new Date()}  
                     value={this.state.date}
                     onChange={this.handleDateChange}
-                    id="date-picker-operation"
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
                   />
               </MuiPickersUtilsProvider>
-            </div>
-            <div>
-            </div>
-          </div>
-          <div className="input">
-            <div className="first-column">Date of Complication</div> <div>Operating Room</div>
-          </div>
-          <div className="input input-padding">
-            <div className="first-column">
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DatePicker
-                    disableToolbar
-                    variant="outlined"
-                    margin="normal"
-                    format="dd/MM/yyyy"
-                    value={this.state.compDate}
-                    onChange={this.handleCompDateChange}
-                    id="date-picker-complication"
-                  />
-              </MuiPickersUtilsProvider>
-            </div>
-            {/* show conditional for duke!!!! dde247f8-fe3f-45d8-b69a-1c5966ff52b0 Duke University Hospital */}
-            <div>
-              <FormControl style={{minWidth: 250}}>
-                <InputLabel htmlFor='opRoom'></InputLabel>
-                  <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }}>
-                    <MenuItem value=''>Select</MenuItem>
-                    {this.state.operatingRooms}
+          </Grid>
+          {/* Estimated time */}
+          <Grid item spacing={2} xs={6}>
+            <Grid item xs={12}>
+              <FormControl variant="outlined" className="input-field">
+                  <Select displayEmpty>
+                    <MenuItem value='' className="placeholder" disabled>Select</MenuItem>
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
                   </Select>
               </FormControl>
-            </div>
-          </div>
-          <div>
-            <div>Specialty</div>
-          </div>
-          <div>
-            <FormControl style={{minWidth: 800}}>
-                <InputLabel htmlFor='specialty'></InputLabel>
-                  <Select value={this.state.selectedSpecialty} displayEmpty onChange={(e) => this.handleChangeSpecialty(e)} inputProps={{ name: 'specialty', id: 'specialty' }}>
-                    <MenuItem value=''>Select</MenuItem>
-                    <MenuItem value='DEB47645-C2A2-4F96-AD89-31FFBCF5F39F'>General Surgery</MenuItem>
-                    <MenuItem value='043FEBC8-CF5B-409C-8738-9C83A682DA71'>Urology</MenuItem>
-                    <MenuItem value='95F656BA-06BE-4BB5-994C-3AC17FBC6DCB'>Gynecology</MenuItem>
-                  </Select>
-              </FormControl>
-          </div>
-          <div className="input-padding">
-            <div>
-              <Checkbox onChange={(e) => this.handleCheckSpecialty(e)}/>Other
-            </div>
-            <div>
-              {(this.state.specialtyCheck) &&
+            </Grid>
+          </Grid>
+          
+          <Grid item xs={12} >
+            Operating Room
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl variant="outlined" className="input-field" >
+              <InputLabel htmlFor='opRoom'></InputLabel>
+              <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }}>
+                <MenuItem value='' disabled>Select</MenuItem>
+                {this.state.operatingRooms}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} >
+            Specialty
+          </Grid>
+          <Grid item xs={12} >
+            <FormControl variant="outlined" className="input-field">
+              <InputLabel htmlFor='specialty'></InputLabel>
+                <Select value={this.state.selectedSpecialty} displayEmpty onChange={(e) => this.handleChangeSpecialty(e)} inputProps={{ name: 'specialty', id: 'specialty' }}>
+                  <MenuItem value=''>Select</MenuItem>
+                  <MenuItem value='DEB47645-C2A2-4F96-AD89-31FFBCF5F39F'>General Surgery</MenuItem>
+                  <MenuItem value='043FEBC8-CF5B-409C-8738-9C83A682DA71'>Urology</MenuItem>
+                  <MenuItem value='95F656BA-06BE-4BB5-994C-3AC17FBC6DCB'>Gynecology</MenuItem>
+                </Select>
+            </FormControl>
+          </Grid>
+          {/* Other checkbox and field */}
+          <Grid item xs={12}>
+            <Checkbox onChange={(e) => this.handleCheckSpecialty(e)}/>Other
+          </Grid>
+          {(this.state.specialtyCheck) &&
+              <Grid item xs={12} >
                 <TextField
                     id="specialty-other"
                     variant="outlined"
                     onChange={(e) => this.fillSpecialty(e)}
                   />
-              }
-            </div>  
-          </div>
-          <div>
-            <div>Procedure</div>
-          </div>
-          <div>
-            <FormControl style={{minWidth: 800}}>
+              </Grid>
+          }
+
+          <Grid item xs={12} >
+            Procedure
+          </Grid>
+          <Grid item xs={12} >
+            <FormControl variant="outlined" className="input-field">
               <InputLabel htmlFor='procedure'></InputLabel>
                 <Select value={this.state.selectedProcedure} displayEmpty onChange={(e) => this.handleChangeProcedure(e)} inputProps={{ name: 'procedure', id: 'procedure' }}>
                   <MenuItem value=''>Select</MenuItem>
                   {this.state.options}
                 </Select>
             </FormControl>
-          </div>
-          <div className="input-padding">
-            <div>
-              <Checkbox onChange={(e) => this.handleCheckProcedure(e)}/>Other
-            </div>
-            <div>
-              {(this.state.procedureCheck) &&
+          </Grid>
+          {/* Other checkbox and field */}
+          <Grid item xs={12}>
+            <Checkbox onChange={(e) => this.handleCheckProcedure(e)}/>Other
+          </Grid>
+          {(this.state.procedureCheck) &&
+              <Grid item xs={12}>
                 <TextField
                     id="procedure-other"
                     variant="outlined"
                     onChange={(e) => this.fillProcedure(e)}
+                />
+              </Grid>
+          }
+
+          <Grid item xs={12} >
+            Date of Complication
+          </Grid>
+          <Grid item xs={6}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="outlined"
+                    format="MM/dd/yyyy"
+                    // margin="normal"
+                    placeholder="Select"
+                    inputVariant="outlined" 
+                    className="input-field"
+                    value={this.state.compDate}
+                    onChange={this.handleCompDateChange}
+                    id="date-picker-complication"
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
                   />
-              }
-            </div>  
-          </div>
-          <div>
-            <div>Complications</div>
-          </div> 
-          <div>
+            </MuiPickersUtilsProvider>
+          </Grid>
+
+          <Grid item xs={12} >
+            Complications
+          </Grid>
+          <Grid item xs={12} >
             <Autocomplete
               multiple
               id="complication"
@@ -368,48 +401,49 @@ export default class RequestEMM extends React.PureComponent {
               renderInput={params => (
                 <TextField
                   {...params}
-                  variant="standard"
                   placeholder="Select"
+                  variant="outlined" 
+                  
                 />
               )}
             />
-          </div>
-          <div className="input-padding">
-            <div>
-              <Checkbox onChange={(e) => this.handleCheckComplications(e)}/>Other
-            </div>
-            <div>
-              {(this.state.complicationsCheck) &&
+          </Grid>
+          <Grid item xs={12} >
+            <Checkbox onChange={(e) => this.handleCheckComplications(e)}/>Other
+          </Grid>
+          <Grid item xs={12} >
+            {(this.state.complicationsCheck) &&
+              <Grid item xs={12}>
                 <TextField
                     id="complications-other"
                     variant="outlined"
                     onChange={(e) => this.fillComplication(e)}
-                  />
-              }
-            </div>  
-          </div>          
-          <div>
-            <div>Notes (Optional)</div>  
-          </div>
-          <div>
-            <div>Do not enter any Personal Health Information that can be used to identify the patient (e.g. patient’s name, age, etc.)</div>  
-          </div>
-          <div className="input-padding">
-            <div>
-              <TextField
+                />
+              </Grid>
+            }
+          </Grid>
+
+          <Grid item xs={12} >
+            Notes (Optional)
+          </Grid>
+          <Grid item xs={12} >
+            Do not enter any Personal Health Information that can be used to identify the patient (e.g. patient’s name, age, etc.)
+          </Grid>
+          <Grid item xs={12} >
+            <TextField
                 id="notes"
                 multiline
                 fullWidth
                 rows="14"
                 variant="outlined"
                 onChange={(e) => this.fillNotes(e)}
-              />
-            </div>  
-          </div>
-          <div>
-            <div>Send email updates about eM&M to (optional):</div>  
-          </div>
-          <div>
+            />
+          </Grid>
+
+          <Grid item xs={12} >
+            Send email updates about eM&M to (optional):
+          </Grid>
+          <Grid item xs={12} >
             <AsyncSelect
               isMulti
               cacheOptions
@@ -417,8 +451,12 @@ export default class RequestEMM extends React.PureComponent {
               loadOptions={promiseOptions}
               onChange={(e) => this.handleInputChange(e)}
             />
-          </div>                   
-        </div>
+          </Grid>
+
+
+        </Grid>
+
+
         
         <div className="user-info-buttons">
           <p className="button-padding"><Button style={{color : "#3db3e3"}} onClick={() => this.reset()}>Reset Form</Button> </p>
