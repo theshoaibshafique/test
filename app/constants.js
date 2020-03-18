@@ -79,9 +79,9 @@ export const OPERATING_ROOM = [
 ]
 
 export const SPECIALTY = [
-    { value: 'DEB47645-C2A2-4F96-AD89-31FFBCF5F39F', name: 'General Surgery'},
-    { value: '95F656BA-06BE-4BB5-994C-3AC17FBC6DCB', name: 'Gynecology'},
-    { value: '043FEBC8-CF5B-409C-8738-9C83A682DA71', name: 'Urology'}
+    { ID: 'DEB47645-C2A2-4F96-AD89-31FFBCF5F39F', name: 'General Surgery', values:GENERAL_SURGERY},
+    { ID: '95F656BA-06BE-4BB5-994C-3AC17FBC6DCB', name: 'Gynecology', values:GYNECOLOGY},
+    { ID: '043FEBC8-CF5B-409C-8738-9C83A682DA71', name: 'Urology',values:UROLOGY}
 ]
 
 export const GENERAL_SURGERY_ID = 'DEB47645-C2A2-4F96-AD89-31FFBCF5F39F';

@@ -13,6 +13,13 @@
     display: flex;
 }
 
+.error svg,
+.Mui-error svg{
+    color: #f44336;
+}
+.MuiFormHelperText-contained.Mui-error{
+    margin-left: 0;
+}
 .input-field {
     width: 100%;
 }

@@ -10,7 +10,7 @@ class SSTNav extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="sstnav">
         <div className="Package-Location center-align">
           <div><img className="Package-Logo" src={logo} /></div>
         </div>

@@ -22,7 +22,7 @@ export default class RequestEMM extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      date: null,
+      operationDate: null,
       compDate: null,
       selectedOperatingRoom: '',
       selectedSpecialty: '',
@@ -33,7 +33,6 @@ export default class RequestEMM extends React.PureComponent {
       operatingRooms: [],
       specialtyCheck: false,
       specialtyValue: '',
-      procedureCheck: false,
       procedureValue: '',
       complicationsCheck: false,
       complicationValue: '',
@@ -41,25 +40,42 @@ export default class RequestEMM extends React.PureComponent {
       snackBarOpen: false,
       userList: [],
       inputValue: '',
-      isLoading: false
+      selectedHour: '',
+      selectedMinutes: '',
+      selectedAP: '',
+      isLoading: false,
+      specialtyProducedureOptions:[],
+      minOperationDate: new Date(),
+      maxOperationDate: new Date(),
+      errors: {}
     };
+
+    this.state.minOperationDate.setDate(new Date().getDate()-30);
+    this.state.minOperationDate.setHours(0,0,0,0);
 
     this.state.operatingRooms = CONSTANTS.OPERATING_ROOM.map((data, index) =>
             <MenuItem value={data.value} key={index}>{data.name}</MenuItem>);
+    
+    CONSTANTS.SPECIALTY.forEach((specialty) => {
+      specialty.values.forEach((procedure) => {
+        procedure.specialtyName = specialty.name;
+        procedure.ID = specialty.ID
+        this.state.specialtyProducedureOptions.push(procedure);
+      });
+    });
   }
 
   createDigitDropdown = (n,m,size,d) => {
     var result = [];
     for (var i=n; i<m; i++){
       var digit = i.toString().padStart(size,d);
-      result.push(<MenuItem value={digit}>{digit}</MenuItem>);
+      result.push(<MenuItem value={digit} >{digit}</MenuItem>);
     }
     return result;
   }
 
-  handleDateChange = (date) => {
-    debugger;
-    this.setState({ date })
+  handleOperationDateChange = (operationDate) => {
+    this.setState({ operationDate })
   };
 
   handleCompDateChange = (compDate) => {
@@ -70,14 +86,6 @@ export default class RequestEMM extends React.PureComponent {
     this.setState({ selectedOperatingRoom: e.target.value });
   };
 
-  handleChangeSpecialty(e) {
-    this.setState({ selectedSpecialty: e.target.value });
-    this.changeProcedureList(e.target.value);
-  };
-
-  handleChangeProcedure(e) {
-    this.setState({ selectedProcedure: e.target.value });
-  };
 
   handleChangeComplication(e, values) {
     let value = values.map(comp => comp.value);
@@ -90,33 +98,14 @@ export default class RequestEMM extends React.PureComponent {
     })
   };
 
-  changeProcedureList(value) {
-    switch (value) {
-      case CONSTANTS.GENERAL_SURGERY_ID:
-        let generalSurgeryData = CONSTANTS.GENERAL_SURGERY;
-        this.state.options = generalSurgeryData.map((data, index) =>
-                <MenuItem value={data.value} key={index}>{data.name}</MenuItem>
-            );
-        break;
+  changeProcedureList(e,values) {
+    var selectedProcedures = values.map(procedure => procedure.value);
+    var selectedSpecialties = values.map(procedure => procedure.ID);
+    this.setState({
+      selectedSpecialty: selectedSpecialties,
+      selectedProcedure: selectedProcedures
+    })
 
-      case CONSTANTS.UROLOGY_ID:
-        let urologyData = CONSTANTS.UROLOGY;
-        this.state.options = urologyData.map((data, index) =>
-                <MenuItem value={data.value} key={index}>{data.name}</MenuItem>
-            );
-        break;
-
-      case CONSTANTS.GYNECOLOGY_ID:
-        let gynecologyData = CONSTANTS.GYNECOLOGY;
-        this.state.options = gynecologyData.map((data, index) =>
-                <MenuItem value={data.value} key={index}>{data.name}</MenuItem>
-            );
-        break;
-
-      case '':
-        this.state.options = '';
-        break;
-    }
   };
 
   handleCheckSpecialty(e) {
@@ -127,20 +116,24 @@ export default class RequestEMM extends React.PureComponent {
     }
   };
 
-  handleCheckProcedure(e) {
-    this.setState({ procedureCheck: e.target.checked });
-
-    if (!e.target.checked) {
-      this.setState({ procedureValue: '' });
-    }
-  };
-
   handleCheckComplications(e) {
     this.setState({ complicationsCheck: e.target.checked });
 
     if (!e.target.checked) {
       this.setState({ complicationValue: '' });
     }
+  }
+
+  handleSelectedHourChange(e){
+    this.setState({selectedHour: e.target.value});
+  }
+
+  handleSelectedMinutesChange(e){
+    this.setState({selectedMinutes: e.target.value});
+  }
+
+  handleSelectedAPChange(e){
+    this.setState({selectedAP: e.target.value});
   }
 
   fillNotes(e) {
@@ -159,20 +152,108 @@ export default class RequestEMM extends React.PureComponent {
     this.setState({ complicationValue: e.target.value });
   }
 
+  setEstimatedhours(){
+    var currentDate = this.state.operationDate;
+    var hours =parseInt(this.state.selectedHour);
+    if (this.state.selectedAP == "AM" && hours == 12){
+      hours-=12;
+    } else if (this.state.selectedAP == "PM" && hours < 12){
+      hours+=12;
+    }
+    currentDate.setHours(hours);
+    currentDate.setMinutes(parseInt(this.state.selectedMinutes));
+    this.setState({operationDate:currentDate})
+  }
+
+  isFormValid() {
+    var errors = {};
+    var dateFormatOptions =  { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+    
+    if (!this.state.operationDate){
+      errors.operationDate = "Please select a valid operation date";
+    } else if (this.state.operationDate > this.state.maxOperationDate || this.state.operationDate < this.state.minOperationDate){
+      errors.operationDate = "Operation date must be between "+this.state.minOperationDate.toLocaleDateString("en-US", dateFormatOptions)+" and today";
+    } 
+
+    if (!this.state.selectedHour){
+      errors.hours = "Please select a valid estimated time";
+    }
+
+    if (!this.state.selectedMinutes){
+      errors.minutes = "Please select a valid estimated time";
+    }
+
+    if (!this.state.selectedAP || this.state.selectedAP == -1){
+      errors.ap = "Please select a valid estimated time";
+    }
+
+    if (!this.state.selectedOperatingRoom){
+      errors.operatingRoom = "Please select an operating room";
+    }
+
+    //If using the other field for Specialty/Procedure
+    if (this.state.specialtyCheck){
+      //Other fields
+      if (!this.state.specialtyValue){
+        errors.specialty = "Please enter a specialty";
+      }
+
+      if (!this.state.procedureValue){
+        errors.procedure = "Please enter a procedure";
+      }
+
+    } else if (!this.state.selectedSpecialty.length || !this.state.selectedProcedure.length){
+      errors.specialtyProducedures = "Please select a procedure";
+    }
+
+    var minCompDate = this.state.operationDate ? this.state.operationDate : this.state.minOperationDate;
+    if (!this.state.compDate){
+      errors.complicationDate = "Please select a date of complication";
+    }  else if (this.state.compDate > this.state.maxOperationDate || this.state.compDate < minCompDate){
+      errors.complicationDate = "Date must be between date of operation and today";
+    }
+
+    //Complications has other
+    if (this.state.complicationsCheck){
+      if (!this.state.complicationValue){
+        errors.complicationValue = "Please select a complication";
+      }
+    } else if (!this.state.selectedComplication.length) {
+      errors.complication = "Please select a complication";
+    }
+
+
+    this.setState({errors: errors});
+    return errors.length == 0;
+  }
+
   submit() {
     this.setState({ isLoading: true });
 
-    let usersToNotify = this.state.inputValue.map((users) => {
+    let usersToNotify = this.state.inputValue ? this.state.inputValue.map((users) => {
       return users.value;
-    });
+    }) : '';
+
+    if (!this.isFormValid()){
+      this.setState({ 
+        snackBarOpen: true,
+        snackBarMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
+        isLoading: false
+      });
+      return;
+    }
+
+    this.setEstimatedhours();
+
+    
 
     let jsonBody = {
       "operatingRoom": this.state.selectedOperatingRoom,
       "specialty": this.state.specialtyCheck ? this.state.specialtyValue : this.state.selectedSpecialty,
-      "procedure": this.state.procedureCheck ? this.state.procedureValue : this.state.selectedProcedure,
+      "procedure": this.state.specialtyCheck ? this.state.procedureValue : this.state.selectedProcedure,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
       "postOpDate": this.state.compDate,
-      "operationDate": this.state.date,
+      "operationDate": this.state.operationDate,
       "notes": this.state.notes,
       "usersToNotify": usersToNotify
     }
@@ -198,17 +279,16 @@ export default class RequestEMM extends React.PureComponent {
 
   reset() {
     this.setState({
-      date: null,
+      operationDate: null,
       compDate: null,
       selectedOperatingRoom: '',
-      selectedSpecialty: '',
-      selectedProcedure: '',
+      selectedSpecialty: [],
+      selectedProcedure: [],
       selectedComplication: [],
       notes: '',
       options: '',
       specialtyCheck: false,
       specialtyValue: '',
-      procedureCheck: false,
       procedureValue: '',
       complicationsCheck: false,
       complicationValue: '',
@@ -238,7 +318,7 @@ export default class RequestEMM extends React.PureComponent {
     });
   }
 
-  handleInputChange = (inputValue) => {
+  handleUserEmailChange = (inputValue) => {
     this.setState({ inputValue: inputValue });
   };
 
@@ -278,16 +358,18 @@ export default class RequestEMM extends React.PureComponent {
               <MuiPickersUtilsProvider utils={DateFnsUtils} >
                   <KeyboardDatePicker
                     disableToolbar
+                    error={this.state.errors.operationDate}
+                    helperText={this.state.errors.operationDate}
                     variant="inline"
                     format="MM/dd/yyyy"
                     id="date-picker-operation"
                     placeholder="Select"
                     inputVariant="outlined"
                     className="input-field"
-                    minDate={new Date().setDate(new Date().getDate()-30)}
-                    maxDate={new Date()}  
-                    value={this.state.date}
-                    onChange={this.handleDateChange}
+                    minDate={this.state.minOperationDate}
+                    maxDate={this.state.maxOperationDate}  
+                    value={this.state.operationDate}
+                    onChange={this.handleOperationDateChange}
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
                     }}
@@ -298,30 +380,33 @@ export default class RequestEMM extends React.PureComponent {
           <Grid item xs={6}>
             <Grid container spacing={2} xs={12}>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field">
-                    <Select value="00">
-                      <MenuItem value='00' disabled>Hours</MenuItem>
+                <FormControl variant="outlined" className="input-field" error={this.state.errors.hours}>
+                    <Select value={this.state.selectedHour || "-1"}  onChange={(e) => this.handleSelectedHourChange(e)}>
+                      <MenuItem value="-1" disabled>Hours</MenuItem>
                       {this.createDigitDropdown(1,13,2,0)}
                     </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field">
-                    <Select value="0">
-                      <MenuItem value="0" disabled>Minutes</MenuItem>
+                <FormControl variant="outlined" className="input-field" error={this.state.errors.minutes}>
+                    <Select value={this.state.selectedMinutes || "-1"} onChange={(e) => this.handleSelectedMinutesChange(e)}>
+                      <MenuItem value="-1" disabled>Minutes</MenuItem>
                       {this.createDigitDropdown(0,60,2,0)}
                     </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field">
-                    <Select value="0">
-                      <MenuItem value="0" disabled>A/P</MenuItem>
+                <FormControl variant="outlined" className="input-field" error={this.state.errors.ap}>
+                    <Select value={this.state.selectedAP || "-1"} onChange={(e) => this.handleSelectedAPChange(e)}>
+                      <MenuItem value="-1" disabled>A/P</MenuItem>
                       <MenuItem value="AM">AM</MenuItem>
                       <MenuItem value="PM">PM</MenuItem>
                     </Select>
                 </FormControl>
               </Grid>
+              {(this.state.errors.hours || this.state.errors.minutes || this.state.errors.ap) &&
+                <FormHelperText className="Mui-error" style={{marginLeft:10,marginTop:-5}}>{this.state.errors.hours || this.state.errors.minutes || this.state.errors.ap}</FormHelperText>
+              }
             </Grid>
           </Grid>
           
@@ -329,68 +414,77 @@ export default class RequestEMM extends React.PureComponent {
             Operating Room
           </Grid>
           <Grid item xs={6}>
-            <FormControl variant="outlined" className="input-field" >
+            <FormControl variant="outlined" className="input-field" error={this.state.errors.operatingRoom} >
               <InputLabel htmlFor='opRoom'></InputLabel>
               <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }}>
                 <MenuItem value='' disabled>Select</MenuItem>
                 {this.state.operatingRooms}
               </Select>
             </FormControl>
+            {(this.state.errors.operatingRoom) &&
+                <FormHelperText className="Mui-error" >{this.state.errors.operatingRoom}</FormHelperText>
+            }
           </Grid>
 
           <Grid item xs={12} >
-            Specialty
+            Specialty and Procedure
           </Grid>
           <Grid item xs={12} >
-            <FormControl variant="outlined" className="input-field">
-              <InputLabel htmlFor='specialty'></InputLabel>
-                <Select value={this.state.selectedSpecialty} displayEmpty onChange={(e) => this.handleChangeSpecialty(e)} inputProps={{ name: 'specialty', id: 'specialty' }}>
-                  <MenuItem value=''>Select</MenuItem>
-                  <MenuItem value={CONSTANTS.GENERAL_SURGERY_ID}>General Surgery</MenuItem>
-                  <MenuItem value={CONSTANTS.UROLOGY_ID}>Urology</MenuItem>
-                  <MenuItem value={CONSTANTS.GYNECOLOGY_ID}>Gynecology</MenuItem>
-                </Select>
-            </FormControl>
+            <Autocomplete
+              multiple
+              id="specialty"
+              options={this.state.specialtyProducedureOptions}
+              groupBy={option => option.specialtyName}
+              getOptionLabel={option => option.name}
+              onChange={(e, value) => this.changeProcedureList(e, value)}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  error={this.state.errors.specialtyProducedures}
+                  helperText={this.state.errors.specialtyProducedures}
+                  variant="outlined" 
+                  
+                />
+              )}
+            />
           </Grid>
           {/* Other checkbox and field */}
           <Grid item xs={12}>
             <Checkbox onChange={(e) => this.handleCheckSpecialty(e)}/>Other
           </Grid>
           {(this.state.specialtyCheck) &&
-              <Grid item xs={12} >
-                <TextField
-                    id="specialty-other"
-                    variant="outlined"
-                    onChange={(e) => this.fillSpecialty(e)}
-                  />
+              <Grid item xs={12}>
+                <Grid container spacing={2} xs={12}>
+                  <Grid item xs={6}>
+                    Specialty
+                  </Grid>
+                  <Grid item xs={6}>
+                    Procedure
+                  </Grid>
+                  <Grid item xs={6} >
+                    <TextField
+                        id="specialty-other"
+                        error={this.state.errors.specialty}
+                        helperText={this.state.errors.specialty}
+                        variant="outlined"
+                        className="input-field"
+                        onChange={(e) => this.fillSpecialty(e)}
+                      />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                        id="procedure-other"
+                        variant="outlined"
+                        error={this.state.errors.procedure}
+                        helperText={this.state.errors.procedure}
+                        className="input-field"
+                        onChange={(e) => this.fillProcedure(e)}
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
           }
 
-          <Grid item xs={12} >
-            Procedure
-          </Grid>
-          <Grid item xs={12} >
-            <FormControl variant="outlined" className="input-field">
-              <InputLabel htmlFor='procedure'></InputLabel>
-                <Select value={this.state.selectedProcedure} displayEmpty onChange={(e) => this.handleChangeProcedure(e)} inputProps={{ name: 'procedure', id: 'procedure' }}>
-                  <MenuItem value=''>Select</MenuItem>
-                  {this.state.options}
-                </Select>
-            </FormControl>
-          </Grid>
-          {/* Other checkbox and field */}
-          <Grid item xs={12}>
-            <Checkbox onChange={(e) => this.handleCheckProcedure(e)}/>Other
-          </Grid>
-          {(this.state.procedureCheck) &&
-              <Grid item xs={12}>
-                <TextField
-                    id="procedure-other"
-                    variant="outlined"
-                    onChange={(e) => this.fillProcedure(e)}
-                />
-              </Grid>
-          }
 
           <Grid item xs={12} >
             Date of Complication
@@ -401,7 +495,10 @@ export default class RequestEMM extends React.PureComponent {
                     disableToolbar
                     variant="outlined"
                     format="MM/dd/yyyy"
-                    // margin="normal"
+                    error={this.state.errors.complicationDate}
+                    helperText={this.state.errors.complicationDate}
+                    minDate={this.state.operationDate ? this.state.operationDate : this.state.minOperationDate}
+                    maxDate={this.state.maxOperationDate}
                     placeholder="Select"
                     inputVariant="outlined" 
                     className="input-field"
@@ -429,7 +526,8 @@ export default class RequestEMM extends React.PureComponent {
                 <TextField
                   {...params}
                   variant="outlined" 
-                  
+                  error={this.state.errors.complication}
+                  helperText={this.state.errors.complication}
                 />
               )}
             />
@@ -444,6 +542,8 @@ export default class RequestEMM extends React.PureComponent {
                     id="complications-other"
                     variant="outlined"
                     onChange={(e) => this.fillComplication(e)}
+                    error={this.state.errors.complicationValue}
+                    helperText={this.state.errors.complicationValue}
                 />
               </Grid>
             }
@@ -475,7 +575,7 @@ export default class RequestEMM extends React.PureComponent {
               cacheOptions
               defaultOptions
               loadOptions={promiseOptions}
-              onChange={(e) => this.handleInputChange(e)}
+              onChange={(e) => this.handleUserEmailChange(e)}
             />
           </Grid>
 
