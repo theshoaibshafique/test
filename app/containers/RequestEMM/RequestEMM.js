@@ -15,7 +15,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM } from '../../constants';
+import * as CONSTANTS from '../../constants';
 import { Grid ,FormHelperText } from '@material-ui/core';
 
 export default class RequestEMM extends React.PureComponent {
@@ -44,11 +44,21 @@ export default class RequestEMM extends React.PureComponent {
       isLoading: false
     };
 
-    this.state.operatingRooms = OPERATING_ROOM.map((data, index) =>
+    this.state.operatingRooms = CONSTANTS.OPERATING_ROOM.map((data, index) =>
             <MenuItem value={data.value} key={index}>{data.name}</MenuItem>);
   }
 
+  createDigitDropdown = (n,m,size,d) => {
+    var result = [];
+    for (var i=n; i<m; i++){
+      var digit = i.toString().padStart(size,d);
+      result.push(<MenuItem value={digit}>{digit}</MenuItem>);
+    }
+    return result;
+  }
+
   handleDateChange = (date) => {
+    debugger;
     this.setState({ date })
   };
 
@@ -82,22 +92,22 @@ export default class RequestEMM extends React.PureComponent {
 
   changeProcedureList(value) {
     switch (value) {
-      case 'DEB47645-C2A2-4F96-AD89-31FFBCF5F39F':
-        let generalSurgeryData = GENERAL_SURGERY;
+      case CONSTANTS.GENERAL_SURGERY_ID:
+        let generalSurgeryData = CONSTANTS.GENERAL_SURGERY;
         this.state.options = generalSurgeryData.map((data, index) =>
                 <MenuItem value={data.value} key={index}>{data.name}</MenuItem>
             );
         break;
 
-      case '043FEBC8-CF5B-409C-8738-9C83A682DA71':
-        let urologyData = UROLOGY;
+      case CONSTANTS.UROLOGY_ID:
+        let urologyData = CONSTANTS.UROLOGY;
         this.state.options = urologyData.map((data, index) =>
                 <MenuItem value={data.value} key={index}>{data.name}</MenuItem>
             );
         break;
 
-      case '95F656BA-06BE-4BB5-994C-3AC17FBC6DCB':
-        let gynecologyData = GYNECOLOGY;
+      case CONSTANTS.GYNECOLOGY_ID:
+        let gynecologyData = CONSTANTS.GYNECOLOGY;
         this.state.options = gynecologyData.map((data, index) =>
                 <MenuItem value={data.value} key={index}>{data.name}</MenuItem>
             );
@@ -249,7 +259,6 @@ export default class RequestEMM extends React.PureComponent {
     return (
       <section>
 
-
         <Grid container spacing={2}>
           <Grid item xs={12} className="header">
           <p>Request for Enhanced M&M</p>
@@ -286,15 +295,33 @@ export default class RequestEMM extends React.PureComponent {
               </MuiPickersUtilsProvider>
           </Grid>
           {/* Estimated time */}
-          <Grid item spacing={2} xs={6}>
-            <Grid item xs={12}>
-              <FormControl variant="outlined" className="input-field">
-                  <Select displayEmpty>
-                    <MenuItem value='' className="placeholder" disabled>Select</MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                  </Select>
-              </FormControl>
+          <Grid item xs={6}>
+            <Grid container spacing={2} xs={12}>
+              <Grid item xs={4}>
+                <FormControl variant="outlined" className="input-field">
+                    <Select value="00">
+                      <MenuItem value='00' disabled>Hours</MenuItem>
+                      {this.createDigitDropdown(1,13,2,0)}
+                    </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl variant="outlined" className="input-field">
+                    <Select value="0">
+                      <MenuItem value="0" disabled>Minutes</MenuItem>
+                      {this.createDigitDropdown(0,60,2,0)}
+                    </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl variant="outlined" className="input-field">
+                    <Select value="0">
+                      <MenuItem value="0" disabled>A/P</MenuItem>
+                      <MenuItem value="AM">AM</MenuItem>
+                      <MenuItem value="PM">PM</MenuItem>
+                    </Select>
+                </FormControl>
+              </Grid>
             </Grid>
           </Grid>
           
@@ -319,9 +346,9 @@ export default class RequestEMM extends React.PureComponent {
               <InputLabel htmlFor='specialty'></InputLabel>
                 <Select value={this.state.selectedSpecialty} displayEmpty onChange={(e) => this.handleChangeSpecialty(e)} inputProps={{ name: 'specialty', id: 'specialty' }}>
                   <MenuItem value=''>Select</MenuItem>
-                  <MenuItem value='DEB47645-C2A2-4F96-AD89-31FFBCF5F39F'>General Surgery</MenuItem>
-                  <MenuItem value='043FEBC8-CF5B-409C-8738-9C83A682DA71'>Urology</MenuItem>
-                  <MenuItem value='95F656BA-06BE-4BB5-994C-3AC17FBC6DCB'>Gynecology</MenuItem>
+                  <MenuItem value={CONSTANTS.GENERAL_SURGERY_ID}>General Surgery</MenuItem>
+                  <MenuItem value={CONSTANTS.UROLOGY_ID}>Urology</MenuItem>
+                  <MenuItem value={CONSTANTS.GYNECOLOGY_ID}>Gynecology</MenuItem>
                 </Select>
             </FormControl>
           </Grid>
@@ -395,13 +422,12 @@ export default class RequestEMM extends React.PureComponent {
             <Autocomplete
               multiple
               id="complication"
-              options={COMPLICATIONS}
+              options={CONSTANTS.COMPLICATIONS}
               getOptionLabel={option => option.name}
               onChange={(e, value) => this.handleChangeComplication(e, value)}
               renderInput={params => (
                 <TextField
                   {...params}
-                  placeholder="Select"
                   variant="outlined" 
                   
                 />
@@ -453,16 +479,18 @@ export default class RequestEMM extends React.PureComponent {
             />
           </Grid>
 
+          <Grid container xs={12} spacing={0}
+            justify="flex-end" >
+              <Grid item xs={2}>
+                <Button style={{color : "#3db3e3"}} onClick={() => this.reset()}>Reset Form</Button>
+              </Grid>
+              <Grid item xs={2}>
+              <Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
+              {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> 
+              </Grid>
+          </Grid>
 
         </Grid>
-
-
-        
-        <div className="user-info-buttons">
-          <p className="button-padding"><Button style={{color : "#3db3e3"}} onClick={() => this.reset()}>Reset Form</Button> </p>
-          <p><Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
-              {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> </p>
-        </div>
 
         <Snackbar
           anchorOrigin={{
