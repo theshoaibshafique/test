@@ -32,6 +32,9 @@ class SSTNav extends React.Component {
               <li className="link-border"><Link to="/usermanagement" className='text-link'>User Management</Link></li> 
             }
             <li className="link-border"><Link to="/my-profile" className='text-link'>My Profile</Link></li>
+            
+            <li className="link-border">{this.props.userLogin}</li>
+            
           </div>
         </ul>
       </div>

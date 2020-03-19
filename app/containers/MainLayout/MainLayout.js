@@ -170,11 +170,7 @@ export default class MainLayout extends React.PureComponent {
           >
 
         <div className="app-wrapper">
-          <AzureLogin
-            resourcesGathered={() => this.resourcesGathered()}
-            logoutFunction={(logout) => this.logoutFunction(logout)}
-            redirect={() => this.redirect()}
-          />
+          
           <CssBaseline />
           <Helmet
             titleTemplate="%s - SST Insights"
@@ -195,6 +191,11 @@ export default class MainLayout extends React.PureComponent {
                     userManagementAccess={this.state.userManagementAccess} 
                     emmRequestAccess={this.state.emmRequestAccess}
                     emmAccess={this.state.emmAccess}
+                    userLogin={<AzureLogin
+                      resourcesGathered={() => this.resourcesGathered()}
+                      logoutFunction={(logout) => this.logoutFunction(logout)}
+                      redirect={() => this.redirect()}
+                    />}
                   />
                 </Drawer>
               </Hidden>
