@@ -17,6 +17,8 @@ import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import * as CONSTANTS from '../../constants';
 import { Grid ,FormHelperText } from '@material-ui/core';
+import Icon from '@mdi/react'
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 
 export default class RequestEMM extends React.PureComponent {
   constructor(props) {
@@ -358,20 +360,20 @@ export default class RequestEMM extends React.PureComponent {
       });
 
     return (
-      <section>
+      <section className="request-emm-page">
         {this.state.emmID ? 
         //Submitted view
         <Grid container spacing={2}>
-          <Grid item xs={12} className="header">
+          <Grid item xs={8} className="header">
             <p>Thank you for submitting your request!</p>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={8}>
           Please note the Enhanced M&M ID for the report to be generated: {this.state.emmID}.
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={8}>
           We will notify you when the report is ready on Insights for viewing.
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={5}>
             <Button variant="contained" className="primary" onClick={() => this.reset()}>Go Back</Button> 
           </Grid>
         </Grid> 
@@ -379,21 +381,22 @@ export default class RequestEMM extends React.PureComponent {
         : //Default view
         
         <Grid container spacing={2}>
-          <Grid item xs={12} className="header">
-          <p>Request for Enhanced M&M</p>
+          <Grid item xs={12} className="header page-title">
+          Request for Enhanced M&M
           </Grid>
-          <Grid item xs={12} >
-          <p>Please fill in all the fields to submit a request for an Enhanced M&M.</p>
+          <Grid item xs={12} className="page-subtitle">
+          Please fill in all the fields to submit a request for an Enhanced M&M.
           </Grid>
 
-          <Grid item xs={6} >
+          <Grid item xs={4} className="input-title">
             Date of Operation
           </Grid>
 
-          <Grid item xs={6} >
+          <Grid item xs={4} className="input-title">
             Estimated Time(hh:mm)
           </Grid>
-          <Grid item xs={6} >
+          <Grid item xs={4}></Grid>
+          <Grid item xs={4} >
               <MuiPickersUtilsProvider utils={DateFnsUtils} >
                   <KeyboardDatePicker
                     disableToolbar
@@ -417,8 +420,8 @@ export default class RequestEMM extends React.PureComponent {
               </MuiPickersUtilsProvider>
           </Grid>
           {/* Estimated time */}
-          <Grid item xs={6}>
-            <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Grid container spacing={1}>
               <Grid item xs={4} >
                 <FormControl variant="outlined" className="input-field" error={this.state.errors.hours} >
                     <Select value={this.state.selectedHour || "-1"}  onChange={(e) => this.handleSelectedHourChange(e)} name="hours">
@@ -430,7 +433,7 @@ export default class RequestEMM extends React.PureComponent {
               <Grid item xs={4}>
                 <FormControl variant="outlined" className="input-field" error={this.state.errors.minutes}>
                     <Select value={this.state.selectedMinutes || "-1"} onChange={(e) => this.handleSelectedMinutesChange(e)} name="minutes">
-                      <MenuItem value="-1" disabled>Minutes</MenuItem>
+                      <MenuItem value="-1" disabled>Mins</MenuItem>
                       {this.createDigitDropdown(0,60,2,0)}
                     </Select>
                 </FormControl>
@@ -445,34 +448,38 @@ export default class RequestEMM extends React.PureComponent {
                 </FormControl>
               </Grid>
               {(this.state.errors.hours || this.state.errors.minutes || this.state.errors.ap) &&
-                <FormHelperText className="Mui-error" style={{marginLeft:10,marginTop:-5}}>{this.state.errors.hours || this.state.errors.minutes || this.state.errors.ap}</FormHelperText>
+                <FormHelperText className="Mui-error" style={{marginLeft:10,marginTop:-18}}>{this.state.errors.hours || this.state.errors.minutes || this.state.errors.ap}</FormHelperText>
               }
             </Grid>
           </Grid>
+
+          <Grid item xs={4}></Grid>
           
-          <Grid item xs={12} >
+          <Grid item xs={12} className="input-title">
             Operating Room
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <FormControl variant="outlined" className="input-field" error={this.state.errors.operatingRoom} >
               <InputLabel htmlFor='opRoom'></InputLabel>
               <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }} name="operatingRoom">
                 <MenuItem value='' disabled>Select</MenuItem>
                 {this.state.operatingRooms}
               </Select>
-            </FormControl>
-            {(this.state.errors.operatingRoom) &&
+              {(this.state.errors.operatingRoom) &&
                 <FormHelperText className="Mui-error" >{this.state.errors.operatingRoom}</FormHelperText>
-            }
+              }
+            </FormControl>
+            
           </Grid>
-
-          <Grid item xs={12} >
+          <Grid item xs={4}></Grid>
+          <Grid item xs={12} className="input-title" >
             Specialty and Procedure
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={8} >
             <Autocomplete
               multiple
               id="specialty"
+              className="autocomplete-field"
               options={this.state.specialtyProducedureOptions}
               groupBy={option => option.specialtyName}
               getOptionLabel={option => option.name}
@@ -490,19 +497,24 @@ export default class RequestEMM extends React.PureComponent {
             />
           </Grid>
           {/* Other checkbox and field */}
-          <Grid item xs={12}>
-            <Checkbox onChange={(e) => this.handleCheckSpecialty(e)}/>Other
+          <Grid item xs={12} className="other-checkbox" style={this.state.specialtyCheck ? {marginBottom:-8} : {}}>
+            <Checkbox 
+            disableRipple 
+            icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+            checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+            checked={this.state.specialtyCheck} onChange={(e) => this.handleCheckSpecialty(e)}/>Other
           </Grid>
           {(this.state.specialtyCheck) &&
               <Grid item xs={12}>
                 <Grid container spacing={2}>
-                  <Grid item xs={6}>
+                  <Grid item xs={4} className="input-title" >
                     Specialty
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={4} className="input-title" >
                     Procedure
                   </Grid>
-                  <Grid item xs={6} >
+                  <Grid item xs={4}></Grid>
+                  <Grid item xs={4} >
                     <TextField
                         id="specialty-other"
                         error={this.state.errors.specialty}
@@ -513,7 +525,7 @@ export default class RequestEMM extends React.PureComponent {
                         onChange={(e) => this.fillSpecialty(e)}
                       />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <TextField
                         id="procedure-other"
                         variant="outlined"
@@ -524,15 +536,16 @@ export default class RequestEMM extends React.PureComponent {
                         onChange={(e) => this.fillProcedure(e)}
                     />
                   </Grid>
+                  <Grid item xs={4}></Grid>
                 </Grid>
               </Grid>
           }
 
 
-          <Grid item xs={12} >
+          <Grid item xs={12} className="input-title">
             Date of Complication
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     disableToolbar
@@ -556,13 +569,14 @@ export default class RequestEMM extends React.PureComponent {
             </MuiPickersUtilsProvider>
           </Grid>
 
-          <Grid item xs={12} >
+          <Grid item xs={12} className="input-title">
             Complications
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={8} >
             <Autocomplete
               multiple
               id="complication"
+              className="autocomplete-field"
               options={CONSTANTS.COMPLICATIONS}
               getOptionLabel={option => option.name}
               value={this.state.complicationList}
@@ -571,6 +585,7 @@ export default class RequestEMM extends React.PureComponent {
                 <TextField
                   {...params}
                   variant="outlined" 
+                  placeholder="Select"
                   error={this.state.errors.complication}
                   helperText={this.state.errors.complication}
                   name="complication"
@@ -578,16 +593,21 @@ export default class RequestEMM extends React.PureComponent {
               )}
             />
           </Grid>
-          <Grid item xs={12} >
-            <Checkbox onChange={(e) => this.handleCheckComplications(e)}/>Other
+          <Grid item xs={12} className="other-checkbox" >
+            <Checkbox 
+            disableRipple 
+            icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+            checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+            checked={this.state.complicationsCheck} onChange={(e) => this.handleCheckComplications(e)}/>Other
           </Grid>
           <Grid item xs={12} >
             {(this.state.complicationsCheck) &&
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <TextField
                     id="complications-other"
                     variant="outlined"
                     className="input-field"
+                    style={{marginTop:-16}}
                     onChange={(e) => this.fillComplication(e)}
                     error={this.state.errors.complicationValue}
                     helperText={this.state.errors.complicationValue}
@@ -597,27 +617,28 @@ export default class RequestEMM extends React.PureComponent {
             }
           </Grid>
 
-          <Grid item xs={12} >
+          <Grid item xs={12} className="input-title">
             Notes (Optional)
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={8} className="input-subtitle">
             Do not enter any Personal Health Information that can be used to identify the patient (e.g. patient’s name, age, etc.)
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={8} >
             <TextField
                 id="notes"
                 multiline
                 fullWidth
-                rows="14"
+                className="input-field"
+                rows="8"
                 variant="outlined"
                 onChange={(e) => this.fillNotes(e)}
             />
           </Grid>
 
-          <Grid item xs={12} >
+          <Grid item xs={12} className="input-title">
             Send email updates about eM&M to (optional):
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={8} >
             <AsyncSelect
               isMulti
               cacheOptions
@@ -627,16 +648,22 @@ export default class RequestEMM extends React.PureComponent {
             />
           </Grid>
 
-          <Grid container spacing={0}
-            justify="flex-end" >
+          <Grid item xs={8}>
+            <Grid container justify="flex-end" spacing={0}>
+              <Grid item xs={7}></Grid>
               <Grid item xs={2}>
-                <Button style={{color : "#3db3e3"}} onClick={() => this.reset()}>Reset Form</Button>
+                <Button style={{color : "#3db3e3",height:40,width:115}} onClick={() => this.reset()}>Reset Form</Button>
               </Grid>
-              <Grid item xs={2}>
-              <Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
-              {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> 
+              <Grid item xs={3} >
+                <Grid container justify="flex-end">
+                <Button variant="contained" style={{height:40,width:96}} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
+                {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> 
+                </Grid>
               </Grid>
+            </Grid>
+
           </Grid>
+          
 
         </Grid>
         }

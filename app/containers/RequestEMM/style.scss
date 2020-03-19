@@ -5,8 +5,11 @@
     line-height: 36px;
 }
 
-.requestBox {
-    width: 900px;
+.app-wrapper .page-title {
+    margin-bottom: 30px;
+}
+.app-wrapper .page-subtitle{
+    margin-bottom: 20px;
 }
 
 .input {
@@ -20,8 +23,41 @@
 .MuiFormHelperText-contained.Mui-error{
     margin-left: 0;
 }
-.input-field {
+
+.app-wrapper .MuiGrid-item.input-title{
+    padding-bottom: 0;
+    padding-top: 0;
+}
+.app-wrapper .request-emm-page{
+    font-size: 14px;
+    line-height: 19px;
+}
+
+.app-wrapper .input-field {
     width: 100%;
+    margin-bottom: 18px;
+}
+.input-field .MuiOutlinedInput-input{
+    padding: 10.5px 14px;
+}
+
+.app-wrapper .autocomplete-field .MuiChip-root{
+    height: 26px;
+}
+.app-wrapper .autocomplete-field .MuiAutocomplete-inputRoot{
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+#complication, #specialty {
+    padding: 6.5px 4px;
+}
+
+.MuiCheckbox-colorSecondary:hover { 
+    background: none !important; 
+}
+.app-wrapper .other-checkbox{
+    margin: -20px 0 5px -10px;
+
 }
 
 .first-column {
