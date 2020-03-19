@@ -400,7 +400,7 @@ export default class RequestEMM extends React.PureComponent {
               <MuiPickersUtilsProvider utils={DateFnsUtils} >
                   <KeyboardDatePicker
                     disableToolbar
-                    error={this.state.errors.operationDate}
+                    error={Boolean(this.state.errors.operationDate)}
                     helperText={this.state.errors.operationDate}
                     variant="inline"
                     format="MM/dd/yyyy"
@@ -423,7 +423,7 @@ export default class RequestEMM extends React.PureComponent {
           <Grid item xs={4}>
             <Grid container spacing={1}>
               <Grid item xs={4} >
-                <FormControl variant="outlined" className="input-field" error={this.state.errors.hours} >
+                <FormControl variant="outlined" className="input-field" error={Boolean(this.state.errors.hours)} >
                     <Select value={this.state.selectedHour || "-1"}  onChange={(e) => this.handleSelectedHourChange(e)} name="hours">
                       <MenuItem value="-1" disabled >Hours</MenuItem>
                       {this.createDigitDropdown(1,13,2,0)}
@@ -431,7 +431,7 @@ export default class RequestEMM extends React.PureComponent {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field" error={this.state.errors.minutes}>
+                <FormControl variant="outlined" className="input-field" error={Boolean(this.state.errors.minutes)}>
                     <Select value={this.state.selectedMinutes || "-1"} onChange={(e) => this.handleSelectedMinutesChange(e)} name="minutes">
                       <MenuItem value="-1" disabled>Mins</MenuItem>
                       {this.createDigitDropdown(0,60,2,0)}
@@ -439,7 +439,7 @@ export default class RequestEMM extends React.PureComponent {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field" error={this.state.errors.ap} >
+                <FormControl variant="outlined" className="input-field" error={Boolean(this.state.errors.ap)} >
                     <Select value={this.state.selectedAP || "-1"} onChange={(e) => this.handleSelectedAPChange(e)} name="ap">
                       <MenuItem value="-1" disabled>A/P</MenuItem>
                       <MenuItem value="AM">AM</MenuItem>
@@ -459,7 +459,7 @@ export default class RequestEMM extends React.PureComponent {
             Operating Room
           </Grid>
           <Grid item xs={4}>
-            <FormControl variant="outlined" className="input-field" error={this.state.errors.operatingRoom} >
+            <FormControl variant="outlined" className="input-field" error={Boolean(this.state.errors.operatingRoom)} >
               <InputLabel htmlFor='opRoom'></InputLabel>
               <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }} name="operatingRoom">
                 <MenuItem value='' disabled>Select</MenuItem>
@@ -488,7 +488,7 @@ export default class RequestEMM extends React.PureComponent {
               renderInput={params => (
                 <TextField
                   {...params}
-                  error={this.state.errors.specialtyProducedures}
+                  error={Boolean(this.state.errors.specialtyProducedures)}
                   helperText={this.state.errors.specialtyProducedures}
                   variant="outlined" 
                   name="specialtyProducedures"
@@ -517,7 +517,7 @@ export default class RequestEMM extends React.PureComponent {
                   <Grid item xs={4} >
                     <TextField
                         id="specialty-other"
-                        error={this.state.errors.specialty}
+                        error={Boolean(this.state.errors.specialty)}
                         helperText={this.state.errors.specialty}
                         name="specialty"
                         variant="outlined"
@@ -530,7 +530,7 @@ export default class RequestEMM extends React.PureComponent {
                         id="procedure-other"
                         variant="outlined"
                         name="procedure"
-                        error={this.state.errors.procedure}
+                        error={Boolean(this.state.errors.procedure)}
                         helperText={this.state.errors.procedure}
                         className="input-field"
                         onChange={(e) => this.fillProcedure(e)}
@@ -552,7 +552,7 @@ export default class RequestEMM extends React.PureComponent {
                     variant="inline"
                     format="MM/dd/yyyy"
                     name="complicationDate"
-                    error={this.state.errors.complicationDate}
+                    error={Boolean(this.state.errors.complicationDate)}
                     helperText={this.state.errors.complicationDate}
                     minDate={this.state.operationDate ? this.state.operationDate : this.state.minOperationDate}
                     maxDate={this.state.maxOperationDate}
@@ -586,7 +586,7 @@ export default class RequestEMM extends React.PureComponent {
                   {...params}
                   variant="outlined" 
                   placeholder="Select"
-                  error={this.state.errors.complication}
+                  error={Boolean(this.state.errors.complication)}
                   helperText={this.state.errors.complication}
                   name="complication"
                 />
@@ -609,7 +609,7 @@ export default class RequestEMM extends React.PureComponent {
                     className="input-field"
                     style={{marginTop:-16}}
                     onChange={(e) => this.fillComplication(e)}
-                    error={this.state.errors.complicationValue}
+                    error={Boolean(this.state.errors.complicationValue)}
                     helperText={this.state.errors.complicationValue}
                     name="complicationValue"
                 />
