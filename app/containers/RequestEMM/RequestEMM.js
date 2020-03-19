@@ -25,9 +25,8 @@ export default class RequestEMM extends React.PureComponent {
       operationDate: null,
       compDate: null,
       selectedOperatingRoom: '',
-      selectedSpecialty: '',
-      selectedProcedure: '',
       selectedComplication: [],
+      specialtyProduceduresList: [],
       notes: '',
       options: '',
       operatingRooms: [],
@@ -36,6 +35,7 @@ export default class RequestEMM extends React.PureComponent {
       procedureValue: '',
       complicationsCheck: false,
       complicationValue: '',
+      complicationList: [],
       snackBarMsg: '',
       snackBarOpen: false,
       userList: [],
@@ -44,6 +44,7 @@ export default class RequestEMM extends React.PureComponent {
       selectedMinutes: '',
       selectedAP: '',
       isLoading: false,
+      emmID: '',
       specialtyProducedureOptions:[],
       minOperationDate: new Date(),
       maxOperationDate: new Date(),
@@ -89,7 +90,7 @@ export default class RequestEMM extends React.PureComponent {
 
   handleChangeComplication(e, values) {
     let value = values.map(comp => comp.value);
-    this.setState({ selectedComplication: value });
+    this.setState({ selectedComplication: value, complicationList: values });
   };
 
   handleCloseSnackBar() {
@@ -98,12 +99,9 @@ export default class RequestEMM extends React.PureComponent {
     })
   };
 
-  changeProcedureList(e,values) {
-    var selectedProcedures = values.map(procedure => procedure.value);
-    var selectedSpecialties = values.map(procedure => procedure.ID);
+  changeSpecialtyProcedureList(e,values) {
     this.setState({
-      selectedSpecialty: selectedSpecialties,
-      selectedProcedure: selectedProcedures
+      specialtyProduceduresList: values
     })
 
   };
@@ -202,7 +200,7 @@ export default class RequestEMM extends React.PureComponent {
         errors.procedure = "Please enter a procedure";
       }
 
-    } else if (!this.state.selectedSpecialty.length || !this.state.selectedProcedure.length){
+    } else if (!this.state.specialtyProduceduresList.length){
       errors.specialtyProducedures = "Please select a procedure";
     }
 
@@ -222,20 +220,22 @@ export default class RequestEMM extends React.PureComponent {
       errors.complication = "Please select a complication";
     }
 
+    if (Object.keys(errors).length >0){
+      const errorEl = document.querySelector(
+        Object.keys(errors).map(fieldName => `[name="${fieldName}"]`).join(',')
+      );
 
-    const errorEl = document.querySelector(
-      Object.keys(errors).map(fieldName => `[name="${fieldName}"]`).join(',')
-    );
-    // debugger;
-    if (errorEl && (errorEl.hidden || errorEl.type == "hidden") && errorEl.scrollIntoView){
-      errorEl.parentNode.scrollIntoView()
-    } else if (errorEl && errorEl.focus) { // npe
-      errorEl.focus(); // this scrolls without visible scroll
+      if (errorEl && (errorEl.hidden || errorEl.type == "hidden") && errorEl.scrollIntoView){
+        errorEl.parentNode.scrollIntoView()
+      } else if (errorEl && errorEl.focus) { // npe
+        errorEl.focus(); // this scrolls without visible scroll
+      }
     }
+    
 
 
     this.setState({errors: errors});
-    return errors.length == 0;
+    return Object.keys(errors).length === 0;
   }
 
   submit() {
@@ -247,21 +247,24 @@ export default class RequestEMM extends React.PureComponent {
 
     if (!this.isFormValid()){
       this.setState({ 
-        snackBarOpen: true,
-        snackBarMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
         isLoading: false
       });
       return;
     }
 
     this.setEstimatedhours();
-
+    var selectedProcedures = [];
+    var selectedSpecialties = [];
+    if (!this.state.specialtyCheck){
+      selectedProcedures = this.state.specialtyProduceduresList.map(procedure => procedure.value);
+      selectedSpecialties = this.state.specialtyProduceduresList.map(procedure => procedure.ID);
+    }
     
 
     let jsonBody = {
       "operatingRoom": this.state.selectedOperatingRoom,
-      "specialty": this.state.specialtyCheck ? this.state.specialtyValue : this.state.selectedSpecialty,
-      "procedure": this.state.specialtyCheck ? this.state.procedureValue : this.state.selectedProcedure,
+      "specialty": this.state.specialtyCheck ? this.state.specialtyValue : selectedSpecialties,
+      "procedure": this.state.specialtyCheck ? this.state.procedureValue : selectedProcedures,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
       "postOpDate": this.state.compDate,
       "operationDate": this.state.operationDate,
@@ -280,8 +283,7 @@ export default class RequestEMM extends React.PureComponent {
       } else {
         this.reset();
         this.setState({
-          snackBarOpen: true,
-          snackBarMsg: 'Request Submitted',
+          emmID: result,
           isLoading: false
         });
       }
@@ -293,9 +295,9 @@ export default class RequestEMM extends React.PureComponent {
       operationDate: null,
       compDate: null,
       selectedOperatingRoom: '',
-      selectedSpecialty: '',
-      selectedProcedure: '',
       selectedComplication: [],
+      specialtyProduceduresList: [],
+      complicationList: [],
       notes: '',
       options: '',
       specialtyCheck: false,
@@ -310,6 +312,7 @@ export default class RequestEMM extends React.PureComponent {
       selectedMinutes: '',
       selectedAP: '',
       isLoading: false,
+      emmID: false,
       errors: {}
     });
   }
@@ -356,7 +359,25 @@ export default class RequestEMM extends React.PureComponent {
 
     return (
       <section>
-
+        {this.state.emmID ? 
+        //Submitted view
+        <Grid container spacing={2}>
+          <Grid item xs={12} className="header">
+            <p>Thank you for submitting your request!</p>
+          </Grid>
+          <Grid item xs={12}>
+          Please note the Enhanced M&M ID for the report to be generated: {this.state.emmID}.
+          </Grid>
+          <Grid item xs={12}>
+          We will notify you when the report is ready on Insights for viewing.
+          </Grid>
+          <Grid item xs={2}>
+            <Button variant="contained" className="primary" onClick={() => this.reset()}>Go Back</Button> 
+          </Grid>
+        </Grid> 
+        
+        : //Default view
+        
         <Grid container spacing={2}>
           <Grid item xs={12} className="header">
           <p>Request for Enhanced M&M</p>
@@ -397,7 +418,7 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
           {/* Estimated time */}
           <Grid item xs={6}>
-            <Grid container spacing={2} xs={12}>
+            <Grid container spacing={2}>
               <Grid item xs={4} >
                 <FormControl variant="outlined" className="input-field" error={this.state.errors.hours} >
                     <Select value={this.state.selectedHour || "-1"}  onChange={(e) => this.handleSelectedHourChange(e)} name="hours">
@@ -455,7 +476,8 @@ export default class RequestEMM extends React.PureComponent {
               options={this.state.specialtyProducedureOptions}
               groupBy={option => option.specialtyName}
               getOptionLabel={option => option.name}
-              onChange={(e, value) => this.changeProcedureList(e, value)}
+              value={this.state.specialtyProduceduresList}
+              onChange={(e, value) => this.changeSpecialtyProcedureList(e, value)}
               renderInput={params => (
                 <TextField
                   {...params}
@@ -473,7 +495,7 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
           {(this.state.specialtyCheck) &&
               <Grid item xs={12}>
-                <Grid container spacing={2} xs={12}>
+                <Grid container spacing={2}>
                   <Grid item xs={6}>
                     Specialty
                   </Grid>
@@ -543,6 +565,7 @@ export default class RequestEMM extends React.PureComponent {
               id="complication"
               options={CONSTANTS.COMPLICATIONS}
               getOptionLabel={option => option.name}
+              value={this.state.complicationList}
               onChange={(e, value) => this.handleChangeComplication(e, value)}
               renderInput={params => (
                 <TextField
@@ -604,7 +627,7 @@ export default class RequestEMM extends React.PureComponent {
             />
           </Grid>
 
-          <Grid container xs={12} spacing={0}
+          <Grid container spacing={0}
             justify="flex-end" >
               <Grid item xs={2}>
                 <Button style={{color : "#3db3e3"}} onClick={() => this.reset()}>Reset Form</Button>
@@ -616,7 +639,7 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
 
         </Grid>
-
+        }
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',
