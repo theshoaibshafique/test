@@ -265,8 +265,8 @@ export default class RequestEMM extends React.PureComponent {
 
     let jsonBody = {
       "operatingRoom": this.state.selectedOperatingRoom,
-      "specialty": this.state.specialtyCheck ? this.state.specialtyValue : selectedSpecialties,
-      "procedure": this.state.specialtyCheck ? this.state.procedureValue : selectedProcedures,
+      "specialty": this.state.specialtyCheck ? [this.state.specialtyValue] : selectedSpecialties,
+      "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : selectedProcedures,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
       "postOpDate": this.state.compDate,
       "operationDate": this.state.operationDate,
