@@ -144,7 +144,7 @@ export default class MainLayout extends React.PureComponent {
                   <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               }
               {(this.state.emmAccess) &&
-                  <Route path="/emm/:requestid" component={() => <EMM loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
+                  <Route path="/emm/:requestid" component={EMM} />
               }
               {(this.state.emmRequestAccess) &&
                   <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>

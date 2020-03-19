@@ -293,6 +293,7 @@ export default class UserManagement extends React.PureComponent {
 
   handleClose = () => {
     this.setState({ open: false, deleteDialogOpen: false, errorMsgVisible: false });
+    this.resetModal();
   };
 
   passwordResetLink() {

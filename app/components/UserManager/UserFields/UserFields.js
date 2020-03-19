@@ -180,7 +180,7 @@ class UserFields extends React.Component {
                   value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
                 />
               }
-              label="User Management (Create and Edit)"
+              label="Admin"
             />            
           </FormControl>
       </form>

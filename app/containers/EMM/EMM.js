@@ -8,16 +8,15 @@ export default class EMM extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      procedureName: '',
+      procedureNames: [],
       complicationNames: [],
       operatingRoom: '',
       compDate: null,
-      specialty: ''
+      specialtyNames: []
     };
   }
 
   componentDidMount() {
-    this.props.notLoading();
     this.getCase();
   };
 
@@ -28,23 +27,31 @@ export default class EMM extends React.PureComponent {
         
       } else {
         let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY);
-        let procedureName = '';
+        let procedureNames = [];
         let complicationList = [];
         let operatingRoom = '';
-        let specialty = '';
+        let specialtyNames = [];
 
-        surgeryList.map((surgery) => {
-          if (surgery.value.toUpperCase() === result.procedure.toUpperCase()) {
-            procedureName = surgery.name;
-          }
+        result.procedure.map((procedure) => {
+          let match = false;
+          surgeryList.map((surgery) => {
+            if (surgery.value.toUpperCase() === procedure.toUpperCase()) {
+              procedureNames.push(surgery.name);
+              match = true;
+            }
+          });
+          if (!match) { procedureNames.push(procedure); }
         });
 
         result.complications.map((complication) => {
+          let match = false;
           COMPLICATIONS.map((comp) => {
             if (complication.toUpperCase() === comp.value.toUpperCase()) {
               complicationList.push(comp.name);
+              match = true;
             }
           });
+          if (!match) { complicationList.push(complication); }
         });
 
         OPERATING_ROOM.map((room) => {
@@ -53,26 +60,41 @@ export default class EMM extends React.PureComponent {
           }
         });
 
-        SPECIALTY.map((spec) => {
-          if (spec.value.toUpperCase() === result.specialty.toUpperCase()) {
-            specialty = spec.name;
-          }
+        result.specialty.map((specialty) => {
+          let match = false;
+          SPECIALTY.map((spec) => {
+            if (spec.value.toUpperCase() === specialty.toUpperCase()) {
+              specialtyNames.push(spec.name);
+              match = true;
+            }
+          });
+          if (!match) { specialtyNames.push(specialty); }
         });
 
         this.setState({ 
-          procedureName: procedureName,
+          procedureNames: procedureNames,
           complicationNames: complicationList.join(', '),
           operatingRoom: operatingRoom,
           compDate: new Date(result.postOpDate).toLocaleString(),
-          specialty: specialty
+          specialtyNames: specialtyNames
         });
       }
     });
   };
 
+  renderSpecialtiesProcedures() {
+    if (this.state.specialtyNames.length) {
+      return this.state.specialtyNames.map((specialty, index) => {
+        return  <div className="table-row row-font" key={index}>
+                  <div>{this.state.procedureNames[index]}</div><div>&nbsp;({specialty})</div>
+                </div>
+      });
+    }
+  }
+  
   goBack() {
     this.props.pushUrl('/emmcases');
-  }
+  };
 
   render() {
     return (
@@ -96,12 +118,10 @@ export default class EMM extends React.PureComponent {
           <div className="first-column">Specialties and Procedures</div>
         </div>
 
-        <div className="table-row-font">
-          <div>{this.state.procedureName} ({this.state.specialty})</div>
-        </div>
+        {this.renderSpecialtiesProcedures()}
 
         <div>
-          <div className="first-column">Complications</div>
+          <div className="first-column margin-top">Complications</div>
         </div>
 
         <div className="table-row-font">
