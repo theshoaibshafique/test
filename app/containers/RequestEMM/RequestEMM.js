@@ -223,6 +223,17 @@ export default class RequestEMM extends React.PureComponent {
     }
 
 
+    const errorEl = document.querySelector(
+      Object.keys(errors).map(fieldName => `[name="${fieldName}"]`).join(',')
+    );
+    // debugger;
+    if (errorEl && (errorEl.hidden || errorEl.type == "hidden") && errorEl.scrollIntoView){
+      errorEl.parentNode.scrollIntoView()
+    } else if (errorEl && errorEl.focus) { // npe
+      errorEl.focus(); // this scrolls without visible scroll
+    }
+
+
     this.setState({errors: errors});
     return errors.length == 0;
   }
@@ -282,8 +293,8 @@ export default class RequestEMM extends React.PureComponent {
       operationDate: null,
       compDate: null,
       selectedOperatingRoom: '',
-      selectedSpecialty: [],
-      selectedProcedure: [],
+      selectedSpecialty: '',
+      selectedProcedure: '',
       selectedComplication: [],
       notes: '',
       options: '',
@@ -292,7 +303,14 @@ export default class RequestEMM extends React.PureComponent {
       procedureValue: '',
       complicationsCheck: false,
       complicationValue: '',
-      inputValue: ''
+      snackBarMsg: '',
+      snackBarOpen: false,
+      inputValue: '',
+      selectedHour: '',
+      selectedMinutes: '',
+      selectedAP: '',
+      isLoading: false,
+      errors: {}
     });
   }
 
@@ -366,6 +384,7 @@ export default class RequestEMM extends React.PureComponent {
                     placeholder="Select"
                     inputVariant="outlined"
                     className="input-field"
+                    name="operationDate"
                     minDate={this.state.minOperationDate}
                     maxDate={this.state.maxOperationDate}  
                     value={this.state.operationDate}
@@ -379,25 +398,25 @@ export default class RequestEMM extends React.PureComponent {
           {/* Estimated time */}
           <Grid item xs={6}>
             <Grid container spacing={2} xs={12}>
-              <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field" error={this.state.errors.hours}>
-                    <Select value={this.state.selectedHour || "-1"}  onChange={(e) => this.handleSelectedHourChange(e)}>
-                      <MenuItem value="-1" disabled>Hours</MenuItem>
+              <Grid item xs={4} >
+                <FormControl variant="outlined" className="input-field" error={this.state.errors.hours} >
+                    <Select value={this.state.selectedHour || "-1"}  onChange={(e) => this.handleSelectedHourChange(e)} name="hours">
+                      <MenuItem value="-1" disabled >Hours</MenuItem>
                       {this.createDigitDropdown(1,13,2,0)}
                     </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
                 <FormControl variant="outlined" className="input-field" error={this.state.errors.minutes}>
-                    <Select value={this.state.selectedMinutes || "-1"} onChange={(e) => this.handleSelectedMinutesChange(e)}>
+                    <Select value={this.state.selectedMinutes || "-1"} onChange={(e) => this.handleSelectedMinutesChange(e)} name="minutes">
                       <MenuItem value="-1" disabled>Minutes</MenuItem>
                       {this.createDigitDropdown(0,60,2,0)}
                     </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field" error={this.state.errors.ap}>
-                    <Select value={this.state.selectedAP || "-1"} onChange={(e) => this.handleSelectedAPChange(e)}>
+                <FormControl variant="outlined" className="input-field" error={this.state.errors.ap} >
+                    <Select value={this.state.selectedAP || "-1"} onChange={(e) => this.handleSelectedAPChange(e)} name="ap">
                       <MenuItem value="-1" disabled>A/P</MenuItem>
                       <MenuItem value="AM">AM</MenuItem>
                       <MenuItem value="PM">PM</MenuItem>
@@ -416,7 +435,7 @@ export default class RequestEMM extends React.PureComponent {
           <Grid item xs={6}>
             <FormControl variant="outlined" className="input-field" error={this.state.errors.operatingRoom} >
               <InputLabel htmlFor='opRoom'></InputLabel>
-              <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }}>
+              <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }} name="operatingRoom">
                 <MenuItem value='' disabled>Select</MenuItem>
                 {this.state.operatingRooms}
               </Select>
@@ -443,7 +462,7 @@ export default class RequestEMM extends React.PureComponent {
                   error={this.state.errors.specialtyProducedures}
                   helperText={this.state.errors.specialtyProducedures}
                   variant="outlined" 
-                  
+                  name="specialtyProducedures"
                 />
               )}
             />
@@ -466,6 +485,7 @@ export default class RequestEMM extends React.PureComponent {
                         id="specialty-other"
                         error={this.state.errors.specialty}
                         helperText={this.state.errors.specialty}
+                        name="specialty"
                         variant="outlined"
                         className="input-field"
                         onChange={(e) => this.fillSpecialty(e)}
@@ -475,6 +495,7 @@ export default class RequestEMM extends React.PureComponent {
                     <TextField
                         id="procedure-other"
                         variant="outlined"
+                        name="procedure"
                         error={this.state.errors.procedure}
                         helperText={this.state.errors.procedure}
                         className="input-field"
@@ -493,8 +514,9 @@ export default class RequestEMM extends React.PureComponent {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     disableToolbar
-                    variant="outlined"
+                    variant="inline"
                     format="MM/dd/yyyy"
+                    name="complicationDate"
                     error={this.state.errors.complicationDate}
                     helperText={this.state.errors.complicationDate}
                     minDate={this.state.operationDate ? this.state.operationDate : this.state.minOperationDate}
@@ -528,6 +550,7 @@ export default class RequestEMM extends React.PureComponent {
                   variant="outlined" 
                   error={this.state.errors.complication}
                   helperText={this.state.errors.complication}
+                  name="complication"
                 />
               )}
             />
@@ -537,13 +560,15 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
           <Grid item xs={12} >
             {(this.state.complicationsCheck) &&
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                     id="complications-other"
                     variant="outlined"
+                    className="input-field"
                     onChange={(e) => this.fillComplication(e)}
                     error={this.state.errors.complicationValue}
                     helperText={this.state.errors.complicationValue}
+                    name="complicationValue"
                 />
               </Grid>
             }
