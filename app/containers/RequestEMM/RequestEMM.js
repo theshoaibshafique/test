@@ -172,21 +172,21 @@ export default class RequestEMM extends React.PureComponent {
     var dateFormatOptions =  { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
     
     if (!this.state.operationDate){
-      errors.operationDate = "Please select a valid operation date";
+      errors.operationDate = "Please select an operation date";
     } else if (this.state.operationDate > this.state.maxOperationDate || this.state.operationDate < this.state.minOperationDate){
       errors.operationDate = "Operation date must be between "+this.state.minOperationDate.toLocaleDateString("en-US", dateFormatOptions)+" and today";
     } 
 
     if (!this.state.selectedHour){
-      errors.hours = "Please select a valid estimated time";
+      errors.hours = "Please select an estimated time";
     }
 
     if (!this.state.selectedMinutes){
-      errors.minutes = "Please select a valid estimated time";
+      errors.minutes = "Please select an estimated time";
     }
 
     if (!this.state.selectedAP || this.state.selectedAP == -1){
-      errors.ap = "Please select a valid estimated time";
+      errors.ap = "Please select an estimated time";
     }
 
     if (!this.state.selectedOperatingRoom){
