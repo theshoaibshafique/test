@@ -5,5 +5,27 @@ tr:hover {
 }
 
 .pad {
-    padding-right: 20px;
+    padding: 0 16px;
 }
+
+.user-management-page .MuiPaper-elevation2 {
+    box-shadow: none;
+}
+
+.Modal .permissions-checkbox{
+    margin-top: 0;
+}
+.Modal .subtitle{
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 24px;
+    padding-bottom: 0 !important;
+}
+.Modal .link{
+    color: #4EA1DA;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 19px;
+    text-transform: none;
+    padding: 0;
+  }

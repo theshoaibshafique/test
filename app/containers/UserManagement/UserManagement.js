@@ -106,7 +106,8 @@ export default class UserManagement extends React.PureComponent {
               preferredLanguage: rowData.preferredLanguage,
               active: rowData.active,
               permissions: permission,
-              id: rowData.tableData.id
+              id: rowData.tableData.id,
+              isLoaded:true
             }
           });
         } else {
@@ -332,9 +333,9 @@ export default class UserManagement extends React.PureComponent {
 
   render() {
     return (
-      <section>
-        <div>
-          <p><span className="pad">User Management</span><Button variant="contained" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </p>
+      <section className="user-management-page">
+        <div className="header page-title">
+          <div><span className="pad">User Management</span><Button variant="contained" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </div>
         </div>
 
         <div>
@@ -352,7 +353,8 @@ export default class UserManagement extends React.PureComponent {
               pageSizeOptions: [ 5, 10, 25 ,50, 75, 100 ],
               search: true,
               paging: true,
-              searchFieldAlignment: 'left'
+              searchFieldAlignment: 'left',
+              searchFieldStyle:{marginLeft:-24}
             }}
             data={this.state.userList}
             icons={tableIcons}

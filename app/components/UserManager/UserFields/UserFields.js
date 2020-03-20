@@ -5,6 +5,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
+import { Grid } from '@material-ui/core';
 
 class UserFields extends React.Component {
   constructor(props) {
@@ -85,26 +86,31 @@ class UserFields extends React.Component {
 
   render() {
     return (
-      <form className="User-Info-Form" noValidate autoComplete="off">
+      <Grid container spacing={2}>
+        <Grid item xs={6} className="input-title">
+          First Name
+        </Grid>
+        <Grid item xs={6} className="input-title">
+          Last Name
+        </Grid>
+        <Grid item xs={6}>
           <TextField
-            id="firstName"
-            name="firstName"
-            label="First Name"
-            margin="normal"
-            className="User-Input"
-            value={this.props.userValue.firstName}
-            onChange={this.props.handleFormChange}
-            variant="outlined"
-            onBlur={(e) => this.validateField(e, 'first')}
-            error={!this.state.validFirstName}
-            helperText={!this.state.validFirstName ? 'Please enter a first name' : ' '}
-          />
-          <TextField
+              id="firstName"
+              name="firstName"
+              className="input-field"
+              value={this.props.userValue.firstName}
+              onChange={this.props.handleFormChange}
+              variant="outlined"
+              onBlur={(e) => this.validateField(e, 'first')}
+              error={!this.state.validFirstName}
+              helperText={!this.state.validFirstName ? 'Please enter a first name' : ' '}
+            />
+        </Grid>
+        <Grid item xs={6}>
+        <TextField
             id="lastName"
             name="lastName"
-            label="Last Name"
-            margin="normal"
-            className="User-Input"
+            className="input-field"
             value={this.props.userValue.lastName}
             onChange={this.props.handleFormChange}
             variant="outlined"
@@ -112,13 +118,34 @@ class UserFields extends React.Component {
             error={!this.state.validLastName}
             helperText={!this.state.validLastName ? 'Please enter a last name' : ' '}
           />
+        </Grid>
+        <Grid item xs={6} className="input-title">
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+            Email
+            </Grid>
+            {this.props.currentView === 'edit' &&
+            <Grid item xs={8}>
+              <Grid container justify="flex-end">
+              <Button className="link" onClick={() => this.props.passwordResetLink()}>Send password reset link</Button> 
+              </Grid>
+              
+            </Grid>
+            }
+            
+          </Grid>
+          
+          
+        </Grid>
+        <Grid item xs={6} className="input-title">
+          Title
+        </Grid>
+        <Grid item xs={6}>
           <TextField
             id="email"
             name="email"
-            label="E-Mail"
             type="email"
-            margin="normal"
-            className="User-Input"
+            className="input-field"
             value={this.props.userValue.email}
             onChange={this.props.handleFormChange}
             variant="outlined"
@@ -126,12 +153,12 @@ class UserFields extends React.Component {
             error={!this.state.validEmail}
             helperText={!this.state.validEmail ? 'Please enter a valid email address' : ' '}
           />
-          <TextField
+        </Grid>
+        <Grid item xs={6}>
+        <TextField
             id="title"
             name="title"
-            label="Title"
-            margin="normal"
-            className="User-Input"
+            className="input-field"
             value={this.props.userValue.title}
             onChange={this.props.handleFormChange}
             variant="outlined"
@@ -139,51 +166,55 @@ class UserFields extends React.Component {
             error={!this.state.validTitle}
             helperText={!this.state.validTitle ? 'Please enter a title' : ' '}    
           />
-          <div>{this.props.currentView === 'edit' &&
-            <Button style={{color : "#3db3e3"}} onClick={() => this.props.passwordResetLink()}>Send password reset link</Button> }</div>
-          <h5>Permissions (Optional)</h5>
-          <FormControl className="User-Input" margin="normal">
-            <FormControlLabel
-              control={
-                <Checkbox
-                  className="SST-Checkbox"
-                  id="mmView"
-                  name="mmView"
-                  onChange={this.props.handleFormChange}
-                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View")}
-                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View"
-                />
-              }
-              label="Enhanced M&M View"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  className="SST-Checkbox"
-                  id="mmEdit"
-                  name="mmEdit"
-                  onChange={this.props.handleFormChange}
-                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit")}
-                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
-                />
-              }
-              label="Enhanced M&M Request"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  className="SST-Checkbox"
-                  id="userManagement"
-                  name="userManagement"
-                  onChange={this.props.handleFormChange}
-                  checked={this.checkPermissions("6AD12264-46FA-8440-52AD1846BDF1_Admin")}
-                  value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
-                />
-              }
-              label="Admin"
-            />            
-          </FormControl>
-      </form>
+        </Grid>
+
+        <Grid item xs={12} className="subtitle">
+          Permissions (Optional)
+        </Grid>
+        <Grid item xs={12} style={{paddingTop:0}}>
+          <FormControl className="input-field permissions-checkbox" >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    className="SST-Checkbox"
+                    id="mmView"
+                    name="mmView"
+                    onChange={this.props.handleFormChange}
+                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View")}
+                    value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View"
+                  />
+                }
+                label="Enhanced M&M View"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    className="SST-Checkbox"
+                    id="mmEdit"
+                    name="mmEdit"
+                    onChange={this.props.handleFormChange}
+                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit")}
+                    value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
+                  />
+                }
+                label="Enhanced M&M Request"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    className="SST-Checkbox"
+                    id="userManagement"
+                    name="userManagement"
+                    onChange={this.props.handleFormChange}
+                    checked={this.checkPermissions("6AD12264-46FA-8440-52AD1846BDF1_Admin")}
+                    value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
+                  />
+                }
+                label="Admin"
+              />            
+            </FormControl>
+        </Grid>
+      </Grid>
     );
   }
 }

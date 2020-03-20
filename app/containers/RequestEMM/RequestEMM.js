@@ -685,10 +685,7 @@ export default class RequestEMM extends React.PureComponent {
                 </Grid>
               </Grid>
             </Grid>
-
           </Grid>
-          
-
         </Grid>
         }
         <Snackbar

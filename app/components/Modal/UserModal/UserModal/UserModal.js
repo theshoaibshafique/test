@@ -12,7 +12,7 @@ class UserModal extends React.Component {
         aria-describedby="simple-modal-description"
         open={this.props.open}
         onClose={this.props.handleClose}
-        disableBackdropClick={true}
+        // disableBackdropClick={true}
       >
         <DialogContent>
           <UserModalStep1

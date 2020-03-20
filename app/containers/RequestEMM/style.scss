@@ -1,9 +1,6 @@
 @import '../../styles/global-styles.scss';
 
-.header {
-    font-size: 26px;
-    line-height: 36px;
-}
+
 
 .app-wrapper .page-title {
     margin-bottom: 30px;
@@ -24,21 +21,9 @@
     margin-left: 0;
 }
 
-.app-wrapper .MuiGrid-item.input-title{
-    padding-bottom: 0;
-    padding-top: 0;
-}
 .app-wrapper .request-emm-page{
     font-size: 14px;
     line-height: 19px;
-}
-
-.app-wrapper .input-field {
-    width: 100%;
-    margin-bottom: 18px;
-}
-.input-field .MuiOutlinedInput-input{
-    padding: 10.5px 14px;
 }
 
 .MuiCheckbox-colorSecondary:hover { 
