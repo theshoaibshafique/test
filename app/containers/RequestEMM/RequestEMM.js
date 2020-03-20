@@ -50,6 +50,8 @@ export default class RequestEMM extends React.PureComponent {
       specialtyProducedureOptions:[],
       minOperationDate: new Date(),
       maxOperationDate: new Date(),
+      hoursOptions: this.createDigitDropdown(1,13,2,0),
+      minuteOptions: this.createDigitDropdown(0,60,2,0),
       errors: {}
     };
 
@@ -72,7 +74,7 @@ export default class RequestEMM extends React.PureComponent {
     var result = [];
     for (var i=n; i<m; i++){
       var digit = i.toString().padStart(size,d);
-      result.push(<MenuItem value={digit} >{digit}</MenuItem>);
+      result.push({time:digit})
     }
     return result;
   }
@@ -124,12 +126,12 @@ export default class RequestEMM extends React.PureComponent {
     }
   }
 
-  handleSelectedHourChange(e){
-    this.setState({selectedHour: e.target.value});
+  handleSelectedHourChange(e,value){
+    this.setState({selectedHour: value});
   }
 
-  handleSelectedMinutesChange(e){
-    this.setState({selectedMinutes: e.target.value});
+  handleSelectedMinutesChange(e,value){
+    this.setState({selectedMinutes: value});
   }
 
   handleSelectedAPChange(e){
@@ -154,14 +156,14 @@ export default class RequestEMM extends React.PureComponent {
 
   setEstimatedhours(){
     var currentDate = this.state.operationDate;
-    var hours =parseInt(this.state.selectedHour);
+    var hours =parseInt(this.state.selectedHour.time);
     if (this.state.selectedAP == "AM" && hours == 12){
       hours-=12;
     } else if (this.state.selectedAP == "PM" && hours < 12){
       hours+=12;
     }
     currentDate.setHours(hours);
-    currentDate.setMinutes(parseInt(this.state.selectedMinutes));
+    currentDate.setMinutes(parseInt(this.state.selectedMinutes.time));
     this.setState({operationDate:currentDate})
   }
 
@@ -393,7 +395,7 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
 
           <Grid item xs={4} className="input-title">
-            Estimated Time(hh:mm)
+            Estimated Time(Hour, Minutes, AM/PM)
           </Grid>
           <Grid item xs={4}></Grid>
           <Grid item xs={4} >
@@ -423,20 +425,42 @@ export default class RequestEMM extends React.PureComponent {
           <Grid item xs={4}>
             <Grid container spacing={1}>
               <Grid item xs={4} >
-                <FormControl variant="outlined" className="input-field" error={Boolean(this.state.errors.hours)} >
-                    <Select value={this.state.selectedHour || "-1"}  onChange={(e) => this.handleSelectedHourChange(e)} name="hours">
-                      <MenuItem value="-1" disabled >Hours</MenuItem>
-                      {this.createDigitDropdown(1,13,2,0)}
-                    </Select>
-                </FormControl>
+                <Autocomplete
+                  disableClearable
+                  size="small"
+                  options={this.state.hoursOptions}
+                  getOptionLabel={option => option.time ? option.time : ""}
+                  value={this.state.selectedHour}
+                  onChange={(e, value) => this.handleSelectedHourChange(e, value)}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      error={Boolean(this.state.errors.hours)}
+                      variant="outlined" 
+                      name="hours"
+                      placeholder="Hour"
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field" error={Boolean(this.state.errors.minutes)}>
-                    <Select value={this.state.selectedMinutes || "-1"} onChange={(e) => this.handleSelectedMinutesChange(e)} name="minutes">
-                      <MenuItem value="-1" disabled>Mins</MenuItem>
-                      {this.createDigitDropdown(0,60,2,0)}
-                    </Select>
-                </FormControl>
+                <Autocomplete
+                  disableClearable
+                  size="small"
+                  options={this.state.minuteOptions}
+                  getOptionLabel={option => option.time ? option.time : ""}
+                  value={this.state.selectedMinutes}
+                  onChange={(e, value) => this.handleSelectedMinutesChange(e, value)}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      error={Boolean(this.state.errors.minutes)}
+                      variant="outlined" 
+                      name="minutes"
+                      placeholder="Mins"
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={4}>
                 <FormControl variant="outlined" className="input-field" error={Boolean(this.state.errors.ap)} >
@@ -478,8 +502,8 @@ export default class RequestEMM extends React.PureComponent {
           <Grid item xs={8} >
             <Autocomplete
               multiple
+              size="small"
               id="specialty"
-              className="autocomplete-field"
               options={this.state.specialtyProducedureOptions}
               groupBy={option => option.specialtyName}
               getOptionLabel={option => option.name}
@@ -575,8 +599,8 @@ export default class RequestEMM extends React.PureComponent {
           <Grid item xs={8} >
             <Autocomplete
               multiple
+              size="small"
               id="complication"
-              className="autocomplete-field"
               options={CONSTANTS.COMPLICATIONS}
               getOptionLabel={option => option.name}
               value={this.state.complicationList}
