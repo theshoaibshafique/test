@@ -54,7 +54,8 @@ export default class UserManagement extends React.PureComponent {
       snackBarOpen: false,
       deleteDialogOpen: false,
       errorMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
-      errorMsgVisible: false
+      errorMsgVisible: false,
+      errorMsgEmailVisible: false
     }
   }
 
@@ -77,7 +78,8 @@ export default class UserManagement extends React.PureComponent {
 
   openModal(e, view, rowData) {
     this.setState({
-      errorMsgVisible: false
+      errorMsgVisible: false,
+      errorMsgEmailVisible: false
     })
 
     if (rowData) {
@@ -150,7 +152,8 @@ export default class UserManagement extends React.PureComponent {
         permissions: [],
         id: ''
       },
-      errorMsgVisible: false
+      errorMsgVisible: false,
+      errorMsgEmailVisible: false
     })
   };
 
@@ -170,8 +173,10 @@ export default class UserManagement extends React.PureComponent {
 
     globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'post', this.props.userToken, jsonBody)
     .then(result => {
-      if (result === 'error' || result === 'conflict') {
-        this.setState({ errorMsgVisible: true });
+      if (result === 'error') {
+        this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false });
+      } else if (result === 'conflict') {
+        this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false });
       } else {
         // add roles
         let jsonBody;
@@ -242,7 +247,7 @@ export default class UserManagement extends React.PureComponent {
           });
         }
 
-        if (!this.state.errorMsgVisible) {
+        if (!this.state.errorMsgVisible && !this.state.errorMsgEmailVisible) {
           this.refreshGrid();
         }
       }
@@ -299,7 +304,7 @@ export default class UserManagement extends React.PureComponent {
   };
 
   handleClose = () => {
-    this.setState({ open: false, deleteDialogOpen: false, errorMsgVisible: false });
+    this.setState({ open: false, deleteDialogOpen: false, errorMsgVisible: false, errorMsgEmailVisible: false });
     this.resetModal();
   };
 
@@ -308,7 +313,7 @@ export default class UserManagement extends React.PureComponent {
       "userName": this.state.userValue.currentUser
     }
 
-    globalFuncs.genericFetch(process.env.USERMANAGEMENTRESET_API, 'PATCH', this.props.userToken, jsonBody)
+    globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTRESET_API, 'PATCH', this.props.userToken, jsonBody)
     .then(result => {
       if (result === 'error' || result === 'conflict') {
         // send error to modal
@@ -333,7 +338,8 @@ export default class UserManagement extends React.PureComponent {
     this.setState({
       open: false,
       deleteDialogOpen: true, 
-      errorMsgVisible: false
+      errorMsgVisible: false,
+      errorMsgEmailVisible: false
     })
   };
 
@@ -380,6 +386,7 @@ export default class UserManagement extends React.PureComponent {
           deleteUser={() => this.deleteUser()}
           errorMsg={this.state.errorMsg}
           errorMsgVisible={this.state.errorMsgVisible}
+          errorMsgEmailVisible={this.state.errorMsgEmailVisible}
           refreshGrid={() => this.refreshGrid()}
           updateGridEdit={(id) => this.updateGridEdit(id)}
         />

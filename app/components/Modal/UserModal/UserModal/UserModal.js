@@ -25,6 +25,7 @@ class UserModal extends React.Component {
             deleteUser={this.props.deleteUser}
             errorMsg={this.props.errorMsg}
             errorMsgVisible={this.props.errorMsgVisible}
+            errorMsgEmailVisible={this.props.errorMsgEmailVisible}
             refreshGrid={this.props.refreshGrid}
             updateGridEdit={this.props.updateGridEdit}
           />

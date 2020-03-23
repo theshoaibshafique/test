@@ -14,7 +14,7 @@ class UserModalStep1 extends React.Component {
     this.state = {
       errorMsgVisible: false,
       errorMsgEmailVisible: false,
-      errorMsg: 'Email exists, please enter another email address.',
+      errorMsg: 'A user with this email address already exists. Please use a different email address.',
       isLoading: false
     }
   }
@@ -35,9 +35,9 @@ class UserModalStep1 extends React.Component {
     globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENT_API, 'PATCH', this.props.userToken, jsonBody)
     .then(result => {
       if (result === 'error') {
-        this.setState({ errorMsgVisible: true,  errorMsg: '', isLoading: false});
+        this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false, isLoading: false});
       } else if (result === 'conflict') {
-        this.setState({ errorMsgEmailVisible: true, isLoading: false });
+        this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, isLoading: false });
       } else {
         // update roles
         this.setState({ errorMsgVisible: false });
@@ -148,7 +148,7 @@ class UserModalStep1 extends React.Component {
             {(this.props.errorMsgVisible || this.state.errorMsgVisible) &&
               <Grid item xs={12}><p className="Paragraph-Error">{this.props.errorMsg}</p></Grid>
             }
-            {(this.state.errorMsgEmailVisible) &&
+            {(this.props.errorMsgEmailVisible || this.state.errorMsgEmailVisible) &&
               <Grid item xs={12}><p className="Paragraph-Error">{this.state.errorMsg}</p></Grid>
             }
             
