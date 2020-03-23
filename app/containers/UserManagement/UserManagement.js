@@ -81,6 +81,9 @@ export default class UserManagement extends React.PureComponent {
     })
 
     if (rowData) {
+      this.setState({
+        lastRequestedUserName: rowData.userName
+      })
       // get the user roles for edit
       globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API + rowData.userName, 'get', this.props.userToken, {})
       .then(result => {
@@ -93,23 +96,26 @@ export default class UserManagement extends React.PureComponent {
               })
             }
           });
-
-          this.setState({
-            userValue: {
-              currentUser: rowData.userName,
-              firstName: rowData.firstName,
-              lastName: rowData.lastName,
-              email: rowData.email,
-              title: rowData.title,
-              department: rowData.departmentName,
-              country: rowData.country,
-              preferredLanguage: rowData.preferredLanguage,
-              active: rowData.active,
-              permissions: permission,
-              id: rowData.tableData.id,
-              isLoaded:true
-            }
-          });
+          //Only set the state of the most recently retrieved user (fixes bug when of rapidly swapping between popups)
+          if (this.state.lastRequestedUserName == rowData.userName){
+            this.setState({
+              userValue: {
+                currentUser: rowData.userName,
+                firstName: rowData.firstName,
+                lastName: rowData.lastName,
+                email: rowData.email,
+                title: rowData.title,
+                department: rowData.departmentName,
+                country: rowData.country,
+                preferredLanguage: rowData.preferredLanguage,
+                active: rowData.active,
+                permissions: permission,
+                id: rowData.tableData.id,
+                isLoaded:true
+              }
+            });
+          }
+          
         } else {
           // send error to modal
           this.setState({ errorMsgVisible: true });

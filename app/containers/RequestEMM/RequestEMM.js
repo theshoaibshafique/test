@@ -395,7 +395,7 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
 
           <Grid item xs={4} className="input-title">
-            Estimated Time(Hour, Minutes, AM/PM)
+            Estimated Time (Hour, Minutes, AM/PM)
           </Grid>
           <Grid item xs={4}></Grid>
           <Grid item xs={4} >
