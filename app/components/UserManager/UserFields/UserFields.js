@@ -130,7 +130,7 @@ class UserFields extends React.Component {
             {this.props.currentView === 'edit' &&
             <Grid item xs={8}>
               <Grid container justify="flex-end">
-              <Button className="link" onClick={() => this.props.passwordResetLink()}>Send password reset link</Button> 
+              <a className="link" onClick={() => this.props.passwordResetLink()}>Send password reset link</a> 
               </Grid>
               
             </Grid>
