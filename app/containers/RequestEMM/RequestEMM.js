@@ -19,6 +19,7 @@ import * as CONSTANTS from '../../constants';
 import { Grid ,FormHelperText } from '@material-ui/core';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import moment from 'moment';
 
 export default class RequestEMM extends React.PureComponent {
   constructor(props) {
@@ -88,6 +89,7 @@ export default class RequestEMM extends React.PureComponent {
   handleCompDateChange = (compDate) => {
     let errors = this.state.errors;
     errors.complicationDate = '';
+    compDate.setHours(23,59,59,999);
     this.setState({ compDate, errors})
   };
 
@@ -192,6 +194,12 @@ export default class RequestEMM extends React.PureComponent {
     this.setState({operationDate:currentDate})
   }
 
+  formatDateTime(date){
+    let newDate = moment(date);
+
+    return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+  }
+
   isFormValid() {
     var errors = {};
     var dateFormatOptions =  { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
@@ -232,7 +240,7 @@ export default class RequestEMM extends React.PureComponent {
     } else if (!this.state.specialtyProduceduresList.length){
       errors.specialtyProducedures = "Please select a procedure";
     }
-
+    
     var minCompDate = this.state.operationDate ? this.state.operationDate : this.state.minOperationDate;
     if (!this.state.compDate){
       errors.complicationDate = "Please select a date of complication";
@@ -273,7 +281,7 @@ export default class RequestEMM extends React.PureComponent {
     let usersToNotify = this.state.inputValue ? this.state.inputValue.map((users) => {
       return users.value;
     }) : '';
-
+    
     if (!this.isFormValid()){
       this.setState({ 
         isLoading: false
@@ -288,15 +296,14 @@ export default class RequestEMM extends React.PureComponent {
       selectedProcedures = this.state.specialtyProduceduresList.map(procedure => procedure.value);
       selectedSpecialties = this.state.specialtyProduceduresList.map(procedure => procedure.ID);
     }
-    
 
     let jsonBody = {
       "operatingRoom": this.state.selectedOperatingRoom,
       "specialty": this.state.specialtyCheck ? [this.state.specialtyValue] : selectedSpecialties,
       "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : selectedProcedures,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
-      "postOpDate": this.state.compDate,
-      "operationDate": this.state.operationDate,
+      "postOpDate": this.formatDateTime(this.state.compDate),
+      "operationDate": this.formatDateTime(this.state.operationDate),
       "notes": this.state.notes,
       "usersToNotify": usersToNotify
     }
