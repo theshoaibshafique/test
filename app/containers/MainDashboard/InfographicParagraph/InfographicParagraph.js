@@ -1,5 +1,6 @@
 import React from 'react';
 import globalFuncs from '../../../utils/global-functions';
+import { Grid } from '@material-ui/core';
 
 export default class InfographicParagraph extends React.PureComponent {
     constructor(props) {
@@ -51,13 +52,14 @@ export default class InfographicParagraph extends React.PureComponent {
         if (this.state.dashboardData.description) {
             desc = this.state.dashboardData.description.replace('{0}', this.state.dashboardData.dataPoints[0].valueX);
         }
-        return <div>
-                    <div className="cases">
+        return <div style={{marginBottom:24}}>
                     { this.props.line.map((tile) => {
-                        return <div className="cases" key={tile.tileOrder}>{this.state.dashboardData.description ? desc : 'N/A'}</div>
+                        return <Grid container spacing={2} justify="center" key={tile.tileOrder}>
+                                 <Grid item xs={12} className="cases" >{this.state.dashboardData.description ? desc : 'N/A'}</Grid>
+                                 <div className="title-break"></div>
+                               </Grid>
                         })
                     }
-                    </div>
                 </div>
     }
 }

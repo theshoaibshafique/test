@@ -5,6 +5,7 @@ import globalFuncs from '../../utils/global-functions';
 import InfographicParagraph from './InfographicParagraph/InfographicParagraph';
 import InfographicText from './InfographicText/InfographicText';
 import InfographicCircle from './InfographicCircle/InfographicCircle';
+import { Grid } from '@material-ui/core';
 
 export default class MainDashboard extends React.PureComponent {
   constructor(props) {
@@ -114,18 +115,21 @@ export default class MainDashboard extends React.PureComponent {
   render() {
     return (
       <section>
-        <div className="Dashboard-Welcome">Welcome {this.props.firstName} {this.props.lastName}</div>
-
-        <div className="cases-date">
-          <span className="pointer" onClick={() => this.decrementMonth()}>{'< '}</span>
-          <span>{this.state.month.format('MMMM YYYY')}</span>
-          <span className="pointer" onClick={() => this.incrementMonth()}>
-            {this.state.month.clone().add(1, 'hour') > moment() ? '' : ' >'}
-          </span>
-        </div>
-        
-        {this.renderTileShells()} 
-
+        <Grid container spacing={2} justify="center">
+          <Grid item xs={12} className="header">
+            Welcome {this.props.firstName} {this.props.lastName}
+          </Grid>
+          <Grid item xs={5} className="cases-date">
+            <span className="pointer left-arrow" onClick={() => this.decrementMonth()}></span>
+            <span>{this.state.month.format('MMMM YYYY')}</span>
+            <span className={this.state.month.clone().add(1, 'hour') > moment() ? 'pointer' : 'pointer right-arrow'} onClick={() => this.incrementMonth()}>
+            </span>
+          </Grid>
+          <Grid item xs={12}>
+          {this.renderTileShells()}   
+          </Grid>
+          
+        </Grid>
       </section>
     );
   }

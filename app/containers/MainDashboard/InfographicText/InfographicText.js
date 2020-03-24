@@ -45,11 +45,15 @@ export default class InfographicText extends React.PureComponent {
         });
     };
 
+    addCommas(x){
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
     render() {
-        return <div>
+        return <div style={{marginBottom:80}}>
                     <div className="cases" key={Math.random()}>
                     { this.state.dashboardData.map((tile, index) => {
-                        return <div className="cases-div center-align total" key={index}> {tile.dataPoints.length ? tile.dataPoints[0].valueX : 'N/A'}</div>
+                        return <div className="cases-div center-align total" key={index}> {tile.dataPoints.length ? this.addCommas(tile.dataPoints[0].valueX) : 'N/A'}</div>
                         })
                     }
                     </div>
