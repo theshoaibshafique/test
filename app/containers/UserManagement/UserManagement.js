@@ -180,7 +180,7 @@ export default class UserManagement extends React.PureComponent {
       } else {
         // add roles
         let jsonBody;
-        let rolesNames = [];
+        
         if (this.state.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
           jsonBody = {
             "userName": result,
@@ -188,9 +188,7 @@ export default class UserManagement extends React.PureComponent {
             "roleNames": ['Admin']
           }
 
-          rolesNames.push('Admin');
-
-          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // User management
           .then(result => {
             if (result === 'error' || result === 'conflict') {
               this.setState({ errorMsgVisible: true });
@@ -198,12 +196,12 @@ export default class UserManagement extends React.PureComponent {
           });
 
           jsonBody = {
-            "userName": this.props.userValue.currentUser,
+            "userName": result,
             "appName": '5E451021-9E5B-4C5D-AC60-53109DAE7853',
-            "roleNames": rolesNames
+            "roleNames": ['Admin']
           }
 
-          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // Location
           .then(result => {
             if (result === 'error' || result === 'conflict') {
               this.setState({ errorMsgVisible: true });
@@ -211,12 +209,12 @@ export default class UserManagement extends React.PureComponent {
           });
 
           jsonBody = {
-            "userName": this.props.userValue.currentUser,
+            "userName": result,
             "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-            "roleNames": rolesNames
+            "roleNames": ['Admin']
           }
 
-          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // Insights
           .then(result => {
             if (result === 'error' || result === 'conflict') {
               this.setState({ errorMsgVisible: true });
@@ -224,12 +222,15 @@ export default class UserManagement extends React.PureComponent {
           });
         }
 
-        if (this.state.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0) {
-          rolesNames.push('Enhanced M&M View');
+        let rolesNames = [];
+        if (this.state.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0 || 
+            this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
+                rolesNames.push('Enhanced M&M View');
         }
 
-        if (this.state.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
-          rolesNames.push('Enhanced M&M Edit');
+        if (this.state.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0 || 
+            this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
+                rolesNames.push('Enhanced M&M Edit');
         }
 
         if (rolesNames.length > 0) {

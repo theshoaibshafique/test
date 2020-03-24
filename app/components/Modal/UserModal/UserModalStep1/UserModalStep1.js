@@ -42,7 +42,7 @@ class UserModalStep1 extends React.Component {
         // update roles
         this.setState({ errorMsgVisible: false });
         let jsonBody;
-        let rolesNames = [];
+        
         if (this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
           jsonBody = {
             "userName": this.props.userValue.currentUser,
@@ -50,9 +50,7 @@ class UserModalStep1 extends React.Component {
             "roleNames": ['Admin']
           }
 
-          rolesNames.push('Admin');
-
-          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // User management
           .then(result => {
             if (result === 'error' || result === 'conflict') {
               // send error to modal
@@ -63,10 +61,10 @@ class UserModalStep1 extends React.Component {
           jsonBody = {
             "userName": this.props.userValue.currentUser,
             "appName": '5E451021-9E5B-4C5D-AC60-53109DAE7853',
-            "roleNames": rolesNames
+            "roleNames": ['Admin']
           }
 
-          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // Location
           .then(result => {
             if (result === 'error' || result === 'conflict') {
               // send error to modal
@@ -77,10 +75,10 @@ class UserModalStep1 extends React.Component {
           jsonBody = {
             "userName": this.props.userValue.currentUser,
             "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-            "roleNames": rolesNames
+            "roleNames": ['Admin']
           }
 
-          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // Insights
           .then(result => {
             if (result === 'error' || result === 'conflict') {
               // send error to modal
@@ -89,12 +87,15 @@ class UserModalStep1 extends React.Component {
           });
         }
 
-        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0) {
-          rolesNames.push('Enhanced M&M View');
+        let rolesNames = [];
+        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0 || 
+            this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
+                rolesNames.push('Enhanced M&M View');
         }
 
-        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
-          rolesNames.push('Enhanced M&M Edit');
+        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0 ||
+            this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
+                rolesNames.push('Enhanced M&M Edit');
         }
 
         jsonBody = {

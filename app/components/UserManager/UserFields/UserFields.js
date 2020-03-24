@@ -4,7 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
 import { Grid } from '@material-ui/core';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
@@ -135,10 +134,7 @@ class UserFields extends React.Component {
               
             </Grid>
             }
-            
           </Grid>
-          
-          
         </Grid>
         <Grid item xs={6} className="input-title">
           Title
@@ -170,7 +166,6 @@ class UserFields extends React.Component {
             helperText={!this.state.validTitle ? 'Please enter a title' : ' '}    
           />
         </Grid>
-
         <Grid item xs={12} className="subtitle">
           Permissions (Optional)
         </Grid>
