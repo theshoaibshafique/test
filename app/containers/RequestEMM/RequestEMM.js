@@ -19,7 +19,7 @@ import * as CONSTANTS from '../../constants';
 import { Grid ,FormHelperText } from '@material-ui/core';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
-import moment from 'moment';
+import moment from 'moment/moment';
 
 export default class RequestEMM extends React.PureComponent {
   constructor(props) {
@@ -99,7 +99,6 @@ export default class RequestEMM extends React.PureComponent {
     this.setState({ selectedOperatingRoom: e.target.value, errors});
   };
 
-
   handleChangeComplication(e, values) {
     let value = values.map(comp => comp.value);
     let errors = this.state.errors;
@@ -119,7 +118,6 @@ export default class RequestEMM extends React.PureComponent {
     this.setState({
       specialtyProduceduresList: values, errors
     })
-
   };
 
   handleCheckSpecialty(e) {
@@ -268,8 +266,6 @@ export default class RequestEMM extends React.PureComponent {
         errorEl.focus(); // this scrolls without visible scroll
       }
     }
-    
-
 
     this.setState({errors: errors});
     return Object.keys(errors).length === 0;
@@ -597,7 +593,6 @@ export default class RequestEMM extends React.PureComponent {
                 </Grid>
               </Grid>
           }
-
 
           <Grid item xs={12} className="input-title">
             Date of Complication
