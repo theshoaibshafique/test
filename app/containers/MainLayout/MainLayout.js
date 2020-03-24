@@ -166,7 +166,7 @@ export default class MainLayout extends React.PureComponent {
           active={this.state.isLoading}
           spinner
           text='Loading your content...'
-          className="Overlay">
+          className="Overlay"
           >
 
         <div className="app-wrapper">
