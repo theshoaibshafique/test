@@ -6,6 +6,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import { Grid } from '@material-ui/core';
+import Icon from '@mdi/react'
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 
 class UserFields extends React.Component {
   constructor(props) {
@@ -85,6 +87,7 @@ class UserFields extends React.Component {
   }
 
   render() {
+    const isAdmin = this.checkPermissions("6AD12264-46FA-8440-52AD1846BDF1_Admin");
     return (
       <Grid container spacing={2}>
         <Grid item xs={6} className="input-title">
@@ -127,7 +130,7 @@ class UserFields extends React.Component {
             {this.props.currentView === 'edit' &&
             <Grid item xs={8}>
               <Grid container justify="flex-end">
-              <Button className="link" onClick={() => this.props.passwordResetLink()}>Send password reset link</Button> 
+              <a className="link" onClick={() => this.props.passwordResetLink()}>Send password reset link</a> 
               </Grid>
               
             </Grid>
@@ -176,11 +179,31 @@ class UserFields extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
+                  disableRipple 
+                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                    className="SST-Checkbox"
+                    id="userManagement"
+                    name="userManagement"
+                    onChange={this.props.handleFormChange}
+                    checked={isAdmin}
+                    value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
+                  />
+                }
+                label="Admin"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    disableRipple 
+                    icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                    checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                     className="SST-Checkbox"
                     id="mmView"
                     name="mmView"
+                    disabled={isAdmin}
                     onChange={this.props.handleFormChange}
-                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View")}
+                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") || isAdmin}
                     value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View"
                   />
                 }
@@ -189,29 +212,20 @@ class UserFields extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
+                    disableRipple 
+                    icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                    checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                     className="SST-Checkbox"
                     id="mmEdit"
                     name="mmEdit"
+                    disabled={isAdmin}
                     onChange={this.props.handleFormChange}
-                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit")}
+                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") || isAdmin}
                     value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
                   />
                 }
                 label="Enhanced M&M Request"
               />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    className="SST-Checkbox"
-                    id="userManagement"
-                    name="userManagement"
-                    onChange={this.props.handleFormChange}
-                    checked={this.checkPermissions("6AD12264-46FA-8440-52AD1846BDF1_Admin")}
-                    value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
-                  />
-                }
-                label="Admin"
-              />            
             </FormControl>
         </Grid>
       </Grid>

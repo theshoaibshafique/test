@@ -26,6 +26,9 @@ tr:hover {
     font-size: 14px;
     letter-spacing: 0;
     line-height: 19px;
-    text-transform: none;
     padding: 0;
-  }
+    cursor: pointer;
+}
+.MuiDialogContent-root {
+    padding: 0;
+}

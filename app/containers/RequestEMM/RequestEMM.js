@@ -19,6 +19,7 @@ import * as CONSTANTS from '../../constants';
 import { Grid ,FormHelperText } from '@material-ui/core';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import moment from 'moment';
 
 export default class RequestEMM extends React.PureComponent {
   constructor(props) {
@@ -80,21 +81,30 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   handleOperationDateChange = (operationDate) => {
-    this.setState({ operationDate })
+    let errors = this.state.errors;
+    errors.operationDate = '';
+    this.setState({ operationDate, errors })
   };
 
   handleCompDateChange = (compDate) => {
-    this.setState({ compDate })
+    let errors = this.state.errors;
+    errors.complicationDate = '';
+    compDate.setHours(23,59,59,999);
+    this.setState({ compDate, errors})
   };
 
   handleChange(e) {
-    this.setState({ selectedOperatingRoom: e.target.value });
+    let errors = this.state.errors;
+    errors.operatingRoom = '';
+    this.setState({ selectedOperatingRoom: e.target.value, errors});
   };
 
 
   handleChangeComplication(e, values) {
     let value = values.map(comp => comp.value);
-    this.setState({ selectedComplication: value, complicationList: values });
+    let errors = this.state.errors;
+    errors.complication = '';
+    this.setState({ selectedComplication: value, complicationList: values ,errors});
   };
 
   handleCloseSnackBar() {
@@ -104,14 +114,18 @@ export default class RequestEMM extends React.PureComponent {
   };
 
   changeSpecialtyProcedureList(e,values) {
+    let errors = this.state.errors;
+    errors.specialtyProducedures = '';
     this.setState({
-      specialtyProduceduresList: values
+      specialtyProduceduresList: values, errors
     })
 
   };
 
   handleCheckSpecialty(e) {
-    this.setState({ specialtyCheck: e.target.checked, specialtyValue: '' });
+    let errors = this.state.errors;
+    errors.specialtyProducedures = '';
+    this.setState({ specialtyCheck: e.target.checked, specialtyValue: '' ,errors});
 
     if (!e.target.checked) {
       this.setState({ specialtyValue: '' });
@@ -119,6 +133,8 @@ export default class RequestEMM extends React.PureComponent {
   };
 
   handleCheckComplications(e) {
+    let errors = this.state.errors;
+    errors.complication = '';
     this.setState({ complicationsCheck: e.target.checked });
 
     if (!e.target.checked) {
@@ -127,15 +143,21 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   handleSelectedHourChange(e,value){
-    this.setState({selectedHour: value});
+    let errors = this.state.errors;
+    errors.hours = '';
+    this.setState({selectedHour: value, errors});
   }
 
   handleSelectedMinutesChange(e,value){
-    this.setState({selectedMinutes: value});
+    let errors = this.state.errors;
+    errors.minutes = '';
+    this.setState({selectedMinutes: value, errors});
   }
 
   handleSelectedAPChange(e){
-    this.setState({selectedAP: e.target.value});
+    let errors = this.state.errors;
+    errors.ap = '';
+    this.setState({selectedAP: e.target.value,errors});
   }
 
   fillNotes(e) {
@@ -143,14 +165,19 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   fillSpecialty(e) {
-    this.setState({ specialtyValue: e.target.value });
+    let errors = this.state.errors;
+    errors.specialty = '';
+    this.setState({ specialtyValue: e.target.value ,errors});
   }
 
   fillProcedure(e) {
-    this.setState({ procedureValue: e.target.value });
+    let errors = this.state.errors;
+    errors.procedure = '';
+    this.setState({ procedureValue: e.target.value, errors });
   }
 
   fillComplication(e) {
+    let errors = this.state.errors;
     this.setState({ complicationValue: e.target.value });
   }
 
@@ -165,6 +192,12 @@ export default class RequestEMM extends React.PureComponent {
     currentDate.setHours(hours);
     currentDate.setMinutes(parseInt(this.state.selectedMinutes.time));
     this.setState({operationDate:currentDate})
+  }
+
+  formatDateTime(date){
+    let newDate = moment(date);
+
+    return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
   }
 
   isFormValid() {
@@ -207,7 +240,7 @@ export default class RequestEMM extends React.PureComponent {
     } else if (!this.state.specialtyProduceduresList.length){
       errors.specialtyProducedures = "Please select a procedure";
     }
-
+    
     var minCompDate = this.state.operationDate ? this.state.operationDate : this.state.minOperationDate;
     if (!this.state.compDate){
       errors.complicationDate = "Please select a date of complication";
@@ -248,7 +281,7 @@ export default class RequestEMM extends React.PureComponent {
     let usersToNotify = this.state.inputValue ? this.state.inputValue.map((users) => {
       return users.value;
     }) : '';
-
+    
     if (!this.isFormValid()){
       this.setState({ 
         isLoading: false
@@ -263,15 +296,14 @@ export default class RequestEMM extends React.PureComponent {
       selectedProcedures = this.state.specialtyProduceduresList.map(procedure => procedure.value);
       selectedSpecialties = this.state.specialtyProduceduresList.map(procedure => procedure.ID);
     }
-    
 
     let jsonBody = {
       "operatingRoom": this.state.selectedOperatingRoom,
       "specialty": this.state.specialtyCheck ? [this.state.specialtyValue] : selectedSpecialties,
       "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : selectedProcedures,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
-      "postOpDate": this.state.compDate,
-      "operationDate": this.state.operationDate,
+      "postOpDate": this.formatDateTime(this.state.compDate),
+      "operationDate": this.formatDateTime(this.state.operationDate),
       "notes": this.state.notes,
       "usersToNotify": usersToNotify
     }
@@ -395,7 +427,7 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
 
           <Grid item xs={4} className="input-title">
-            Estimated Time (Hour, Minutes, AM/PM)
+          Estimated Operation Start Time (hh:mm)
           </Grid>
           <Grid item xs={4}></Grid>
           <Grid item xs={4} >
@@ -497,7 +529,7 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
           <Grid item xs={4}></Grid>
           <Grid item xs={12} className="input-title" >
-            Specialty and Procedure
+            Specialty and Procedure (Select 1 or more)
           </Grid>
           <Grid item xs={8} >
             <Autocomplete
@@ -515,6 +547,7 @@ export default class RequestEMM extends React.PureComponent {
                   error={Boolean(this.state.errors.specialtyProducedures)}
                   helperText={this.state.errors.specialtyProducedures}
                   variant="outlined" 
+                  placeholder="Start typing to filter and select from the list"
                   name="specialtyProducedures"
                 />
               )}
@@ -594,7 +627,7 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
 
           <Grid item xs={12} className="input-title">
-            Complications
+            Complications (Select 1 or more)
           </Grid>
           <Grid item xs={8} >
             <Autocomplete
@@ -609,7 +642,7 @@ export default class RequestEMM extends React.PureComponent {
                 <TextField
                   {...params}
                   variant="outlined" 
-                  placeholder="Select"
+                  placeholder="Start typing to filter and select from the list"
                   error={Boolean(this.state.errors.complication)}
                   helperText={this.state.errors.complication}
                   name="complication"
@@ -651,7 +684,6 @@ export default class RequestEMM extends React.PureComponent {
             <TextField
                 id="notes"
                 multiline
-                fullWidth
                 className="input-field"
                 rows="8"
                 variant="outlined"
@@ -660,7 +692,7 @@ export default class RequestEMM extends React.PureComponent {
           </Grid>
 
           <Grid item xs={12} className="input-title">
-            Send email updates about eM&M to (optional):
+            Send email updates about eM&M to (Optional):
           </Grid>
           <Grid item xs={8} >
             <AsyncSelect
@@ -668,6 +700,7 @@ export default class RequestEMM extends React.PureComponent {
               cacheOptions
               defaultOptions
               loadOptions={promiseOptions}
+              value={this.state.inputValue}
               onChange={(e) => this.handleUserEmailChange(e)}
             />
           </Grid>
