@@ -197,6 +197,11 @@ a hr { border-bottom: none; }
 /**                        TITLE/INPUT STYLES                           **/
 /**                                                                     **/
 /*************************************************************************/
+
+tbody tr:hover:not(.MuiTableRow-footer) {
+  background: $light-grey !important;
+}
+
 .header {
   font-size: 26px;
   line-height: 36px;
