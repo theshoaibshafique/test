@@ -41,7 +41,9 @@ export default class InfographicCircle extends React.PureComponent {
             if (result === 'error' || result === 'conflict') {
             
             } else {
+                result.tileOrder = tile.tileOrder;
                 const dashboardData = [...this.state.dashboardData, result];
+                dashboardData.sort((a, b) => a.tileOrder - b.tileOrder);
                 this.setState ({ dashboardData: dashboardData });
             }
         });
@@ -57,10 +59,11 @@ export default class InfographicCircle extends React.PureComponent {
                                 const val3 = ((val1/val2)*100).toFixed(1);
                                 return <Grid item xs={3} className="cases-div cases-chart center-align" style={{maxWidth:240}} key={val1}>
                                             <ReactMinimalPieChart
-                                                data={[ { color: '#3db3e3', value: val1 },
+                                                data={[ { color: tile.tileOrder == 2 ? '#121212' : '#3db3e3', value: val1 },
                                                         { color: '#e6e6e6', value: val2-val1 }
                                                     ]}
                                                 lineWidth={20}
+                                                startAngle={-90}
                                                 style={{ position: "relative" }}
                                             >
                                                 <div className="chart-inner-text" key={val1}>

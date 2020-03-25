@@ -33,13 +33,14 @@ export default class InfographicText extends React.PureComponent {
             "tileType": tile.tileType,
             "dashboardName": tile.dashboardName
         }
-
         globalFuncs.genericFetch(process.env.DASHBOARDTILE_API, 'post', this.props.userToken, jsonBody)
         .then(result => {
             if (result === 'error' || result === 'conflict') {
             
             } else {
+                result.tileOrder = tile.tileOrder;
                 const dashboardData = [...this.state.dashboardData, result];
+                dashboardData.sort((a, b) => a.tileOrder - b.tileOrder);
                 this.setState ({ dashboardData: dashboardData });
             }
         });
