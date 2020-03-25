@@ -166,7 +166,7 @@ class UserModalStep1 extends React.Component {
               <Grid container spacing={0}>
                 <Grid item xs={9}>
                   {this.props.currentView === 'edit' &&
-                    <Button variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.props.deleteUser()}>{this.props.userValue.active ? 'Disable User' : 'Enable User'}</Button>
+                    <Button disableElevation disableRipple variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.props.deleteUser()}>{this.props.userValue.active ? 'Disable User' : 'Enable User'}</Button>
                   }
                 </Grid>
                 <Grid item xs={3}>

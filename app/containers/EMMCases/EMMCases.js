@@ -144,6 +144,7 @@ export default class EMMCases extends React.PureComponent {
                   name="requestID"
                   placeholder="Request ID"
                   variant="outlined"
+                  size="small"
                   className="input-field"
                   onChange={(e) => this.handleFormChange(e)}
                 />

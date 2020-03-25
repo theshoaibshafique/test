@@ -20,7 +20,7 @@ $pink: #cf0ab2;
 $grey: #A2A2A2;
 $red: #C1272D;
 
-$header-height: 55px;
+$header-height: 2.5em;
 $nav-width: 240px;
 
 html,
@@ -197,6 +197,11 @@ a hr { border-bottom: none; }
 /**                        TITLE/INPUT STYLES                           **/
 /**                                                                     **/
 /*************************************************************************/
+
+tbody tr:hover:not(.MuiTableRow-footer) {
+  background: $light-grey !important;
+}
+
 .header {
   font-size: 26px;
   line-height: 36px;
@@ -206,6 +211,9 @@ a hr { border-bottom: none; }
 }
 .app-wrapper .page-subtitle{
   margin-bottom: 20px;
+}
+.secondary {
+  background-color: #DCDCDC;
 }
 
 .Modal .MuiGrid-item.input-title,
@@ -229,13 +237,6 @@ a hr { border-bottom: none; }
   margin-bottom: 18px;
 }
 
-.input-field .MuiOutlinedInput-input{
-  padding: 10.5px 14px;
-}
-.input-field .MuiOutlinedInput-inputMultiline{
-  padding: 0;
-}
-
 .app-wrapper section{
-  padding: 1em 2em 0 2em;
+  padding: 2.5em 2em;
 }

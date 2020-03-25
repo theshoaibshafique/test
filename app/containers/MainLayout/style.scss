@@ -1,7 +1,8 @@
 @import '../../styles/global-styles';
 
 .APP-MAIN-WRAPPER {
-  height: calc(100% - #{$header-height} )
+  // height: calc(100% - #{$header-height} )
+  height: calc(100% )
 }
 
 .MAIN-NAVIGATION [class*="AnchorLeft"] {

@@ -404,7 +404,7 @@ export default class RequestEMM extends React.PureComponent {
           We will notify you when the report is ready on Insights for viewing.
           </Grid>
           <Grid item xs={5}>
-            <Button variant="contained" className="primary" onClick={() => this.reset()}>Go Back</Button> 
+            <Button variant="contained" className="primary" style={{marginTop:26}} onClick={() => this.reset()}>Go Back</Button> 
           </Grid>
         </Grid> 
         
@@ -442,6 +442,8 @@ export default class RequestEMM extends React.PureComponent {
                     minDate={this.state.minOperationDate}
                     maxDate={this.state.maxOperationDate}  
                     value={this.state.operationDate}
+                    autoOk
+                    size="small"
                     onChange={this.handleOperationDateChange}
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
@@ -491,7 +493,7 @@ export default class RequestEMM extends React.PureComponent {
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field" error={Boolean(this.state.errors.ap)} >
+                <FormControl variant="outlined" className="input-field" size="small" error={Boolean(this.state.errors.ap)} >
                     <Select value={this.state.selectedAP || "-1"} onChange={(e) => this.handleSelectedAPChange(e)} name="ap">
                       <MenuItem value="-1" disabled>A/P</MenuItem>
                       <MenuItem value="AM">AM</MenuItem>
@@ -511,7 +513,7 @@ export default class RequestEMM extends React.PureComponent {
             Operating Room
           </Grid>
           <Grid item xs={4}>
-            <FormControl variant="outlined" className="input-field" error={Boolean(this.state.errors.operatingRoom)} >
+            <FormControl variant="outlined" className="input-field" size="small" error={Boolean(this.state.errors.operatingRoom)} >
               <InputLabel htmlFor='opRoom'></InputLabel>
               <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }} name="operatingRoom">
                 <MenuItem value='' disabled>Select</MenuItem>
@@ -573,6 +575,7 @@ export default class RequestEMM extends React.PureComponent {
                         error={Boolean(this.state.errors.specialty)}
                         helperText={this.state.errors.specialty}
                         name="specialty"
+                        size="small"
                         variant="outlined"
                         className="input-field"
                         onChange={(e) => this.fillSpecialty(e)}
@@ -582,6 +585,7 @@ export default class RequestEMM extends React.PureComponent {
                     <TextField
                         id="procedure-other"
                         variant="outlined"
+                        size="small"
                         name="procedure"
                         error={Boolean(this.state.errors.procedure)}
                         helperText={this.state.errors.procedure}
@@ -601,6 +605,7 @@ export default class RequestEMM extends React.PureComponent {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     disableToolbar
+                    size="small"
                     variant="inline"
                     format="MM/dd/yyyy"
                     name="complicationDate"
@@ -611,6 +616,7 @@ export default class RequestEMM extends React.PureComponent {
                     placeholder="Select"
                     inputVariant="outlined" 
                     className="input-field"
+                    autoOk
                     value={this.state.compDate}
                     onChange={this.handleCompDateChange}
                     id="date-picker-complication"
