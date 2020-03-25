@@ -10,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM } from '../../constants';
+import { Grid } from '@material-ui/core';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -128,32 +129,70 @@ export default class EMMCases extends React.PureComponent {
   render() {
     return (
       <section>
-        <div className="header">
-          <p>Enhanced M&M Cases</p>
-        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={12} className="header">
+          Enhanced M&M Cases
+          </Grid>
+          <Grid item xs={12} className="page-subtitle">
+          Please enter your eM&M Request ID below and click Search to retrieve your report or open a recently accessed report.
+          </Grid>
+          <Grid item xs={8}>
+            <Grid container spacing={2}>
+              <Grid item xs={8}>
+                <TextField
+                  id="requestID"
+                  name="requestID"
+                  placeholder="Request ID"
+                  variant="outlined"
+                  className="input-field"
+                  onChange={(e) => this.handleFormChange(e)}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Button variant="contained" className="primary" style={{height:40}} onClick={() => this.search()}>Search</Button>  
+              </Grid>
+            </Grid>
+          </Grid>
 
-        <div><p>Please enter your eM&M Request ID below and click Search to retrieve your report or open a recently accessed report.</p></div>
+          {(this.state.report.requestId || this.state.noMatch) &&
+          <Grid item xs={12} className="search">Search Result</Grid>
+          }
+          <Grid item xs={12}>
+            {(this.state.report.requestId) &&
+              <div>
+                <TableContainer>  
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Request ID</TableCell>
+                        <TableCell align="left">Procedure</TableCell>
+                        <TableCell align="left">Complications</TableCell>
+                        <TableCell align="left">Operating Room</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody className="pointer">
+                        <TableRow onClick={() => this.redirect(this.state.requestID)}>
+                          <TableCell>{this.state.report.requestId}</TableCell>
+                          <TableCell align="left">{this.state.report.procedureNames}</TableCell>
+                          <TableCell align="left">{this.state.report.complicationNames}</TableCell>
+                          <TableCell align="left">{this.state.report.operatingRoom}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+            }
 
-        <div className="request-buttons">
-          <TextField
-              id="requestID"
-              name="requestID"
-              label="Request ID"
-              margin="normal"
-              variant="outlined"
-              onChange={(e) => this.handleFormChange(e)}
-              fullWidth
-            />
-          <Button variant="contained" className="primary" onClick={() => this.search()}>Search</Button>  
-        </div>
+          {(this.state.noMatch) &&
+            <Grid item xs={12}>No report matches your Request ID</Grid>
+          }
+          </Grid>
 
-        {(this.state.report.requestId || this.state.noMatch) &&
-          <div className="search">Search Result</div>
-        }
-
-        <div>
-          {(this.state.report.requestId) &&
-            <div>
+          {(this.state.recentSearch.length > 0) &&
+          <Grid item xs={12}><p className="recent">Recently accessed cases</p></Grid>
+          }
+          <Grid item xs={12}>
+            {(this.state.recentSearch.length > 0) &&
               <TableContainer>  
                 <Table>
                   <TableHead>
@@ -165,57 +204,24 @@ export default class EMMCases extends React.PureComponent {
                     </TableRow>
                   </TableHead>
                   <TableBody className="pointer">
-                      <TableRow onClick={() => this.redirect(this.state.requestID)}>
-                        <TableCell>{this.state.report.requestId}</TableCell>
-                        <TableCell align="left">{this.state.report.procedureNames}</TableCell>
-                        <TableCell align="left">{this.state.report.complicationNames}</TableCell>
-                        <TableCell align="left">{this.state.report.operatingRoom}</TableCell>
+                  
+                  {this.state.recentSearch.map((cases, index) => {
+                      return <TableRow key={index} onClick={() => this.redirect(cases.requestId)}>
+                        <TableCell>{cases.requestId}</TableCell>
+                        <TableCell align="left">{cases.procedureNames}</TableCell>
+                        <TableCell align="left">{cases.complicationNames}</TableCell>
+                        <TableCell align="left">{cases.operatingRoom}</TableCell>
                       </TableRow>
+                    })
+                  }
+
                   </TableBody>
                 </Table>
               </TableContainer>
-            </div>
-          }
+            }
+          </Grid>
 
-          {(this.state.noMatch) &&
-            <p>No report matches your Request ID</p>
-          }
-           
-        </div>
-        
-        {(this.state.recentSearch.length > 0) &&
-          <div><p className="recent">Recently accessed cases</p></div>
-        }
-            
-        <div>
-          {(this.state.recentSearch.length > 0) &&
-            <TableContainer>  
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Request ID</TableCell>
-                    <TableCell align="left">Procedure</TableCell>
-                    <TableCell align="left">Complications</TableCell>
-                    <TableCell align="left">Operating Room</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody className="pointer">
-                
-                {this.state.recentSearch.map((cases, index) => {
-                    return <TableRow key={index} onClick={() => this.redirect(cases.requestId)}>
-                      <TableCell>{cases.requestId}</TableCell>
-                      <TableCell align="left">{cases.procedureNames}</TableCell>
-                      <TableCell align="left">{cases.complicationNames}</TableCell>
-                      <TableCell align="left">{cases.operatingRoom}</TableCell>
-                    </TableRow>
-                  })
-                }
-
-                </TableBody>
-              </Table>
-            </TableContainer>
-          }
-        </div>
+        </Grid>
       </section>
     );
   }

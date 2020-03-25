@@ -1,17 +1,31 @@
 import React from 'react';
 import './style.scss';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
-
+import IdleTimer from 'react-idle-timer';
+import * as CONSTANTS from '../../constants';
 class AzureLogin extends React.Component {
+  constructor(props) {
+    super(props);
+    this.logoutFunc = null;
+    this.onIdle = this._onIdle.bind(this)
+  }
+
   unauthenticatedFunction = loginFunction => {
     //this.props.history.push(`/usermanagement`);
   }
 
   userAuthenticatedFunction = logout => {
+    if (!this.logoutFunc){
+      this.logoutFunc = logout;
+    }
     return (
         <button className="Logout-Button" onClick={logout}>Logout</button>
     );
   };
+
+  _onIdle(e){
+    this.logoutFunc();
+  }
 
   userJustLoggedIn = receivedToken => {
     this.props.userInfo(receivedToken);
@@ -42,6 +56,11 @@ class AzureLogin extends React.Component {
 
   render() {
     return (
+      <span>
+      <IdleTimer
+          element={document}
+          onIdle={this.onIdle}
+          timeout={CONSTANTS.idleTimeout} />
       <AzureAD
       // reduxStore={store}
       provider={new MsalAuthProviderFactory({
@@ -59,6 +78,7 @@ class AzureLogin extends React.Component {
       storeAuthStateInCookie={true}
       forceLogin={true}
     />
+    </span>
     );
   }
 }

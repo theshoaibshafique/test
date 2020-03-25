@@ -64,6 +64,7 @@
     "react-aad-msal": "^0.4.7",
     "react-dom": "^16.8.4",
     "react-helmet": "5.2.0",
+    "react-idle-timer": "^4.2.12",
     "react-loadable": "^5.4.0",
     "react-loading-overlay": "^1.0.1",
     "react-minimal-pie-chart": "^6.0.1",
