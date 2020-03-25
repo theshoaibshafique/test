@@ -207,6 +207,9 @@ a hr { border-bottom: none; }
 .app-wrapper .page-subtitle{
   margin-bottom: 20px;
 }
+.secondary {
+  background-color: #DCDCDC;
+}
 
 .Modal .MuiGrid-item.input-title,
 .app-wrapper .MuiGrid-item.input-title{
@@ -230,5 +233,5 @@ a hr { border-bottom: none; }
 }
 
 .app-wrapper section{
-  padding: 2.5em 2em 0 2em;
+  padding: 2.5em 2em;
 }

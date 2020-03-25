@@ -408,7 +408,7 @@ export default class RequestEMM extends React.PureComponent {
           We will notify you when the report is ready on Insights for viewing.
           </Grid>
           <Grid item xs={5}>
-            <Button variant="contained" className="primary" onClick={() => this.reset()}>Go Back</Button> 
+            <Button variant="contained" className="primary" style={{marginTop:26}} onClick={() => this.reset()}>Go Back</Button> 
           </Grid>
         </Grid> 
         

@@ -11,3 +11,6 @@
 .SST-Checkbox:not([class*="disabled"]) {
     svg { color: $dark-grey; }
 }
+.MuiCheckbox-colorSecondary.Mui-disabled{
+    opacity: .3;
+}

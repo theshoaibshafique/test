@@ -29,12 +29,6 @@
     width: 50%;
 }
 
-.user-info-buttons {
-    display: flex;
-    justify-content: flex-end;
-    width: 60%
-}
-
 .button-padding {
     margin-right: 40px;
 }
@@ -56,3 +50,7 @@
 0% { transform: rotate(0deg); }
 100% { transform: rotate(360deg); }
 } 
+
+.MuiAutocomplete-option{
+    padding-left: 30px;
+}
