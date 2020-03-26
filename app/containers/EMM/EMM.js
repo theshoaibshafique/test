@@ -129,7 +129,7 @@ export default class EMM extends React.PureComponent {
         </div>
 
         <div>
-            <Button variant="contained" className="secondary" onClick={() => this.goBack()}>Back</Button>
+            <Button variant="outlined" className="secondary" onClick={() => this.goBack()}>Back</Button>
           </div>
 
       </section>

@@ -180,6 +180,9 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   setEstimatedhours(){
+    if (!this.state.selectedHour || !this.state.selectedMinutes || !this.state.selectedAP){
+      return;
+    }
     var currentDate = this.state.operationDate;
     var hours =parseInt(this.state.selectedHour.time);
     if (this.state.selectedAP == "AM" && hours == 12){
@@ -194,8 +197,14 @@ export default class RequestEMM extends React.PureComponent {
 
   formatDateTime(date){
     let newDate = moment(date);
-
     return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+  }
+
+  isToday(date){
+    const today = new Date();
+    return date.getDate() == today.getDate() &&
+    date.getMonth() == today.getMonth() &&
+    date.getFullYear() == today.getFullYear();
   }
 
   isFormValid() {
@@ -204,6 +213,9 @@ export default class RequestEMM extends React.PureComponent {
     
     if (!this.state.operationDate){
       errors.operationDate = "Please select an operation date";
+    } else if (this.isToday(this.state.operationDate) && this.state.operationDate > this.state.maxOperationDate){
+      //If its today at a later time
+      errors.hours = errors.minutes = errors.ap = "Please select a time in the past";
     } else if (this.state.operationDate > this.state.maxOperationDate || this.state.operationDate < this.state.minOperationDate){
       errors.operationDate = "Operation date must be between "+this.state.minOperationDate.toLocaleDateString("en-US", dateFormatOptions)+" and today";
     } 
@@ -242,7 +254,7 @@ export default class RequestEMM extends React.PureComponent {
     var minCompDate = this.state.operationDate ? this.state.operationDate : this.state.minOperationDate;
     if (!this.state.compDate){
       errors.complicationDate = "Please select a date of complication";
-    }  else if (this.state.compDate > this.state.maxOperationDate || this.state.compDate < minCompDate){
+    }  else if (!this.isToday(this.state.compDate) && (this.state.compDate > this.state.maxOperationDate || this.state.compDate < minCompDate)){
       errors.complicationDate = "Date must be between date of operation and today";
     }
 
@@ -277,7 +289,8 @@ export default class RequestEMM extends React.PureComponent {
     let usersToNotify = this.state.inputValue ? this.state.inputValue.map((users) => {
       return users.value;
     }) : '';
-    
+
+    this.setEstimatedhours();
     if (!this.isFormValid()){
       this.setState({ 
         isLoading: false
@@ -285,7 +298,6 @@ export default class RequestEMM extends React.PureComponent {
       return;
     }
 
-    this.setEstimatedhours();
     var selectedProcedures = [];
     var selectedSpecialties = [];
     if (!this.state.specialtyCheck){
@@ -404,7 +416,7 @@ export default class RequestEMM extends React.PureComponent {
           We will notify you when the report is ready on Insights for viewing.
           </Grid>
           <Grid item xs={5}>
-            <Button variant="contained" className="primary" style={{marginTop:26}} onClick={() => this.reset()}>Go Back</Button> 
+            <Button variant="outlined" className="primary" style={{marginTop:26}} onClick={() => this.reset()}>Go Back</Button> 
           </Grid>
         </Grid> 
         
@@ -664,6 +676,7 @@ export default class RequestEMM extends React.PureComponent {
                 <TextField
                     id="complications-other"
                     variant="outlined"
+                    size="small"
                     className="input-field"
                     style={{marginTop:-16}}
                     onChange={(e) => this.fillComplication(e)}
@@ -714,7 +727,7 @@ export default class RequestEMM extends React.PureComponent {
               </Grid>
               <Grid item xs={3} >
                 <Grid container justify="flex-end">
-                <Button variant="contained" style={{height:40,width:96}} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
+                <Button variant="outlined" style={{height:40,width:96}} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
                 {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> 
                 </Grid>
               </Grid>
