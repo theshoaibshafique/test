@@ -1,4 +1,5 @@
 export const idleTimeout = 1000 * 60 * 45; // in Milliseconds
+
 export const GENERAL_SURGERY = [
     { value: '7CDB7CA7-F31F-4BFE-AD5B-357244FD2255', name: 'Adrenalectomy'},
     { value: 'E4E332CA-4908-4469-9F89-47895E54034D', name: 'Appendectomy'},

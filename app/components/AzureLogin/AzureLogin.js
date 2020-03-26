@@ -3,6 +3,7 @@ import './style.scss';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 import IdleTimer from 'react-idle-timer';
 import * as CONSTANTS from '../../constants';
+
 class AzureLogin extends React.Component {
   constructor(props) {
     super(props);

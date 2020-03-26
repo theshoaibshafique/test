@@ -198,7 +198,7 @@ class UserFields extends React.Component {
                     name="mmView"
                     disabled={isAdmin}
                     onChange={this.props.handleFormChange}
-                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") || isAdmin}
+                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View")}
                     value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View"
                   />
                 }
@@ -215,7 +215,7 @@ class UserFields extends React.Component {
                     name="mmEdit"
                     disabled={isAdmin}
                     onChange={this.props.handleFormChange}
-                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") || isAdmin}
+                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit")}
                     value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
                   />
                 }

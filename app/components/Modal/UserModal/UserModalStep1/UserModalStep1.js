@@ -40,7 +40,7 @@ class UserModalStep1 extends React.Component {
         this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, isLoading: false });
       } else {
         // update roles
-        this.setState({ errorMsgVisible: false });
+        this.setState({ errorMsgVisible: false, errorMsgEmailVisible: false });
         let jsonBody;
         
         if (this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
@@ -75,7 +75,7 @@ class UserModalStep1 extends React.Component {
           jsonBody = {
             "userName": this.props.userValue.currentUser,
             "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-            "roleNames": ['Admin']
+            "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit']
           }
 
           globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // Insights
@@ -84,38 +84,71 @@ class UserModalStep1 extends React.Component {
               // send error to modal
               this.setState({ errorMsgVisible: true, isLoading: false });
             }
+          })
+          .then(result => {
+            if (!this.state.errorMsgVisible || !this.state.errorMsgEmailVisible) {
+              this.props.updateGridEdit(this.props.userValue.id);
+              this.setState({ isLoading: false });
+            }
+          });
+        } else { // remove roles
+          jsonBody = {
+            "userName": this.props.userValue.currentUser,
+            "appName": '6AD12264-46FA-8440-52AD1846BDF1',
+            "roleNames": []
+          }
+
+          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // User management
+          .then(result => {
+            if (result === 'error' || result === 'conflict') {
+              // send error to modal
+              this.setState({ errorMsgVisible: true, isLoading: false });
+            }
+          });
+
+          jsonBody = {
+            "userName": this.props.userValue.currentUser,
+            "appName": '5E451021-9E5B-4C5D-AC60-53109DAE7853',
+            "roleNames": []
+          }
+
+          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // Location
+          .then(result => {
+            if (result === 'error' || result === 'conflict') {
+              // send error to modal
+              this.setState({ errorMsgVisible: true, isLoading: false });
+            }
+          });
+
+          let rolesNames = [];  // will add in the selected insights role and remove Admin
+          if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0) {
+            rolesNames.push('Enhanced M&M View');
+          }
+  
+          if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
+            rolesNames.push('Enhanced M&M Edit');
+          }
+  
+          jsonBody = {
+            "userName": this.props.userValue.currentUser,
+            "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
+            "roleNames": rolesNames
+          }
+  
+          globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
+          .then(result => {
+            if (result === 'error' || result === 'conflict') {
+              // send error to modal
+              this.setState({ errorMsgVisible: true, isLoading: false });
+            }
+          })
+          .then(result => {
+            if (!this.state.errorMsgVisible || !this.state.errorMsgEmailVisible) {
+              this.props.updateGridEdit(this.props.userValue.id);
+              this.setState({ isLoading: false });
+            }
           });
         }
-
-        let rolesNames = [];
-        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0 || 
-            this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
-                rolesNames.push('Enhanced M&M View');
-        }
-
-        if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0 ||
-            this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
-                rolesNames.push('Enhanced M&M Edit');
-        }
-
-        jsonBody = {
-          "userName": this.props.userValue.currentUser,
-          "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-          "roleNames": rolesNames
-        }
-
-        globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody)
-        .then(result => {
-          if (result === 'error' || result === 'conflict') {
-            // send error to modal
-            this.setState({ errorMsgVisible: true, isLoading: false });
-          }
-        })
-        .then(result => {
-          if (!this.state.errorMsgVisible) {
-          this.props.updateGridEdit(this.props.userValue.id);
-          this.setState({ isLoading: false });
-        }});
       }
     })
   }
