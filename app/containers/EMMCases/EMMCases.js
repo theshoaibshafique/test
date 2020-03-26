@@ -150,7 +150,7 @@ export default class EMMCases extends React.PureComponent {
                 />
               </Grid>
               <Grid item xs={2}>
-                <Button variant="contained" className="primary" style={{height:40}} onClick={() => this.search()}>Search</Button>  
+                <Button variant="outlined" className="primary" style={{height:40}} onClick={() => this.search()}>Search</Button>  
               </Grid>
             </Grid>
           </Grid>

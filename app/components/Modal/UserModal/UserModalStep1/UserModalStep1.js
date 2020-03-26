@@ -176,9 +176,9 @@ class UserModalStep1 extends React.Component {
                     <Grid item xs={6}>
                       <Grid container justify="flex-end">
                         {this.props.currentView === 'add' ? (
-                          <Button variant="contained" className="primary" onClick={() => this.props.addUser()}>Add</Button>
+                          <Button variant="outlined" className="primary" onClick={() => this.props.addUser()}>Add</Button>
                         ) : (
-                          <Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
+                          <Button variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
                               {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}
                           </Button>
                         )}
