@@ -152,6 +152,7 @@ export default class UserManagement extends React.PureComponent {
         permissions: [],
         id: ''
       },
+      lastRequestedUserName: '',
       errorMsgVisible: false,
       errorMsgEmailVisible: false
     })
@@ -281,7 +282,7 @@ export default class UserManagement extends React.PureComponent {
     newState.userList[id].email = this.state.userValue.email;
     newState.userList[id].title = this.state.userValue.title;
     newState.userList[id].permissions = this.state.userValue.permissions;
-
+    newState.userValue.isLoaded = false;
     this.setState({
       newState,
       currentView: 'add',
