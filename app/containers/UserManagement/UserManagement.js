@@ -348,7 +348,7 @@ export default class UserManagement extends React.PureComponent {
     return (
       <section className="user-management-page">
         <div className="header page-title">
-          <div><span className="pad">User Management</span><Button variant="contained" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </div>
+          <div><span className="pad">User Management</span><Button variant="outlined" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </div>
         </div>
 
         <div>
