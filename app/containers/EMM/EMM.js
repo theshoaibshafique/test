@@ -63,7 +63,7 @@ export default class EMM extends React.PureComponent {
         result.specialty.map((specialty) => {
           let match = false;
           SPECIALTY.map((spec) => {
-            if (spec.value.toUpperCase() === specialty.toUpperCase()) {
+            if (spec.ID.toUpperCase() === specialty.toUpperCase()) {
               specialtyNames.push(spec.name);
               match = true;
             }
@@ -129,7 +129,7 @@ export default class EMM extends React.PureComponent {
         </div>
 
         <div>
-            <Button variant="outlined" className="secondary" onClick={() => this.goBack()}>Back</Button>
+            <Button disableElevation disableRipple variant="contained" className="secondary" onClick={() => this.goBack()}>Back</Button>
           </div>
 
       </section>
