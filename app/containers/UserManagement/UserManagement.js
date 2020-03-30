@@ -206,7 +206,7 @@ export default class UserManagement extends React.PureComponent {
         this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false });
       } else if (result === 'conflict') {
         let fieldErrors = this.state.fieldErrors;
-        fieldErrors.email = 'A user with this email address already exists. Please use a different email address'
+        fieldErrors.email = 'A user with this email address already exists. Please use a different email address.'
         this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false ,fieldErrors});
       } else {
         // add roles
