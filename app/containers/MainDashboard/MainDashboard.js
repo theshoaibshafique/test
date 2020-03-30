@@ -78,6 +78,13 @@ export default class MainDashboard extends React.PureComponent {
   renderTileShells() {
     if (this.props.userToken) {
       return this.state.tileRequests.map((line, index) => {
+        //Only render the views for the current month (spamming between months can cause the linelist to be out of sync)
+        line = line.filter((tile) => {
+          return moment(tile.startDate).isSame(this.state.month,'month');
+        });
+        if (!line || !line[0]){
+          return '';
+        }
         if (line[0].tileType === 'InfographicParagraph') {
           return <InfographicParagraph line={line} userToken={this.props.userToken} key={index}></InfographicParagraph>
         } else if (line[0].tileType === 'InfographicText') {
