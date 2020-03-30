@@ -374,6 +374,9 @@ export default class UserManagement extends React.PureComponent {
   };
 
   render() {
+    let allPageSizeOptions = [ 5, 10, 25 ,50, 75, 100 ];
+    let pageSizeOptions = [];
+    allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a,this.state.userList.length)), a > this.state.userList.length));
     return (
       <section className="user-management-page">
         <div className="header page-title">
@@ -392,7 +395,7 @@ export default class UserManagement extends React.PureComponent {
             ]}
             options={{ 
               pageSize: 10,
-              pageSizeOptions: [ 5, 10, 25 ,50, 75, 100 ],
+              pageSizeOptions: pageSizeOptions,
               search: true,
               paging: true,
               searchFieldAlignment: 'left',
