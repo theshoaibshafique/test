@@ -1,12 +1,13 @@
 import React from 'react';
 import './style.scss';
 import { Helmet } from 'react-helmet';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route} from 'react-router-dom';
 import LoadingOverlay from 'react-loading-overlay';
 
 import MainDashboard from 'containers/MainDashboard/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
 import EMM from 'containers/EMM/Loadable';
+import EMMReport from 'containers/EMMReport/Loadable';
 import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
@@ -132,6 +133,37 @@ export default class MainLayout extends React.PureComponent {
     });
   }
 
+  getNav(){
+    return <Switch>
+              <Route path="/emmreport/:requestId" component={() => <AzureLogin
+                          resourcesGathered={() => this.resourcesGathered()}
+                          logoutFunction={(logout) => this.logoutFunction(logout)}
+                          redirect={() => this.redirect()}
+                          />}/>
+              
+              <Route path="" component={() => 
+                <nav className="MAIN-NAVIGATION">
+                  <Hidden xsDown implementation="css">
+                    <Drawer
+                      variant="permanent"
+                      open
+                    >
+                      <SSTNav 
+                        userManagementAccess={this.state.userManagementAccess} 
+                        emmRequestAccess={this.state.emmRequestAccess}
+                        emmAccess={this.state.emmAccess}
+                        userLogin={<AzureLogin
+                          resourcesGathered={() => this.resourcesGathered()}
+                          logoutFunction={(logout) => this.logoutFunction(logout)}
+                          redirect={() => this.redirect()}
+                          />}
+                        />
+                    </Drawer>
+                  </Hidden>
+                </nav> }/>
+            </Switch> 
+  }
+
   getContainer() {
     if (!this.state.authenticated) {
       return <NoAccess notLoading={() => this.notLoading()}/>
@@ -145,6 +177,9 @@ export default class MainLayout extends React.PureComponent {
               }
               {(this.state.emmAccess) &&
                   <Route path="/emm/:requestid" component={EMM} />
+              }
+              {(this.state.emmAccess) &&
+                  <Route path="/emmreport/:requestid" component={EMMReport} />
               }
               {(this.state.emmRequestAccess) &&
                   <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
@@ -161,6 +196,7 @@ export default class MainLayout extends React.PureComponent {
   };
 
   render() {
+    const isEmmReport = this.props.location.pathname.indexOf('/emmreport')>=0
     return (
       <LoadingOverlay
           active={this.state.isLoading}
@@ -180,19 +216,21 @@ export default class MainLayout extends React.PureComponent {
           </Helmet>
           
           <div className="APP-MAIN-WRAPPER">
-
-          <nav className="MAIN-NAVIGATION">
+            
+            <nav className={"MAIN-NAVIGATION " + (isEmmReport ? 'hidden' : '')}>
               <Hidden xsDown implementation="css">
                 <Drawer
                   variant="permanent"
                   open
-                >
+                  >
                   <SSTNav 
                     userManagementAccess={this.state.userManagementAccess} 
                     emmRequestAccess={this.state.emmRequestAccess}
                     emmAccess={this.state.emmAccess}
-                    userLogin={<AzureLogin
-                      resourcesGathered={() => this.resourcesGathered()}
+                    userLogin={
+                    <AzureLogin
+                      resourcesGathered={() =>
+                      this.resourcesGathered()}
                       logoutFunction={(logout) => this.logoutFunction(logout)}
                       redirect={() => this.redirect()}
                     />}
@@ -200,7 +238,9 @@ export default class MainLayout extends React.PureComponent {
                 </Drawer>
               </Hidden>
             </nav>
-            <div className="Content-Wrapper inline overflow-y">
+            {/* {this.getNav()} */}
+
+            <div className={"inline overflow-y " + (isEmmReport ? '' : 'Content-Wrapper')}>
               {this.getContainer()}
             </div>
           </div>

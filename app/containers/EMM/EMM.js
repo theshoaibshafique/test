@@ -96,14 +96,15 @@ export default class EMM extends React.PureComponent {
     this.props.pushUrl('/emmcases');
   };
 
+  openReport() {
+    this.props.pushUrl('/emmreport/' + this.props.requestId);
+  }
+
   render() {
     return (
       <section>
-        <div className="header">
-          <p>Enhanced M&M</p>
-{/*           <div>
-            <Button variant="contained" className="primary">Open Report</Button>
-          </div> */}
+        <div className="header page-title">
+          <div><span className="pad">Enhanced M&M</span><Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button> </div>
         </div>
 
         <div className="table-row">
