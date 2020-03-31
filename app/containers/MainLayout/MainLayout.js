@@ -2,7 +2,6 @@ import React from 'react';
 import './style.scss';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
-import LoadingOverlay from 'react-loading-overlay';
 
 import MainDashboard from 'containers/MainDashboard/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
@@ -120,40 +119,28 @@ export default class MainLayout extends React.PureComponent {
     })
   };
 
-  loading() {
-    this.setState({
-      isLoading: true
-    });
-  }
-
-  notLoading() {
-    this.setState({
-      isLoading: false
-    });
-  }
-
   getContainer() {
     if (!this.state.authenticated) {
-      return <NoAccess notLoading={() => this.notLoading()}/>
+      return <NoAccess />
     }
 
     if (this.state.userLoggedIn) {
       return <Switch>
               <Route path="/maindashboard" component={MainDashboard}/> }/>
               {(this.state.emmAccess) &&
-                  <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
+                  <Route path="/emmcases" component={EMMCases}/>
               }
               {(this.state.emmAccess) &&
                   <Route path="/emm/:requestid" component={EMM} />
               }
               {(this.state.emmRequestAccess) &&
-                  <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
+                  <Route path="/requestemm" component={RequestEMM}/>
               }
               {(this.state.userManagementAccess) &&
-                  <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
+                  <Route path="/usermanagement" component={UserManagement}/>
               }
-              <Route path="/my-profile" component={() => <MyProfile userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
-            <Route path="" component={() => <NotFoundPage notLoading={() => this.notLoading()}/> }/>
+              <Route path="/my-profile" component={MyProfile}/>
+            <Route path="" component={NotFoundPage}/>
             </Switch> 
     } else {
       return ''

@@ -4,7 +4,7 @@ import './style.scss';
 
 export default class MyProfile extends React.PureComponent {
   componentDidMount() {
-    this.props.notLoading();
+    
   };
 
   render() {

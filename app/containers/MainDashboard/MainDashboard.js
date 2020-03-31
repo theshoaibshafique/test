@@ -35,8 +35,6 @@ export default class MainDashboard extends React.Component {
           // error
         }
       });
-
-    // this.props.notLoading();
   };
 
   compileTileShells(tileRequestList) {

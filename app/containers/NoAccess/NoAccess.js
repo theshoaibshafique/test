@@ -14,7 +14,7 @@ export default class NoAccess extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.notLoading();
+    
   };
 
   render() {
