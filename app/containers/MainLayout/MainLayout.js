@@ -139,7 +139,7 @@ export default class MainLayout extends React.PureComponent {
 
     if (this.state.userLoggedIn) {
       return <Switch>
-              <Route path="/maindashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
+              <Route path="/maindashboard" component={MainDashboard}/> }/>
               {(this.state.emmAccess) &&
                   <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
               }
@@ -162,12 +162,7 @@ export default class MainLayout extends React.PureComponent {
 
   render() {
     return (
-      <LoadingOverlay
-          active={this.state.isLoading}
-          spinner
-          text='Loading your content...'
-          className="Overlay"
-          >
+
 
         <div className="app-wrapper">
           
@@ -206,7 +201,6 @@ export default class MainLayout extends React.PureComponent {
           </div>
         </div>
 
-      </LoadingOverlay>
     );
   }
 }

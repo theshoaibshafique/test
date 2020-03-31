@@ -6,7 +6,7 @@ export default class InfographicParagraph extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            dashboardData: {
+            dashboardData: this.props.dashboardData[0] ||  {
                 footer: '',
                 description: '',
                 dataPoints: {
@@ -17,35 +17,35 @@ export default class InfographicParagraph extends React.PureComponent {
         }
     };
 
-    componentDidMount() {
-        this.loadParagraph();
-    };
+    // componentDidMount() {
+    //     this.loadParagraph();
+    // };
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.line != this.props.line) {
-            this.loadParagraph();
-        }
-    }
+    // componentDidUpdate(prevProps) {
+    //     if (prevProps.line != this.props.line) {
+    //         this.loadParagraph();
+    //     }
+    // }
 
-    loadParagraph() {
-        let jsonBody = {
-            "endDate": this.props.line[0].endDate,
-            "facilityName": this.props.line[0].facilityName,
-            "reportName": this.props.line[0].reportName,
-            "startDate": this.props.line[0].startDate,
-            "tileType": this.props.line[0].tileType,
-            "dashboardName": this.props.line[0].dashboardName
-        }
+    // loadParagraph() {
+    //     let jsonBody = {
+    //         "endDate": this.props.line[0].endDate,
+    //         "facilityName": this.props.line[0].facilityName,
+    //         "reportName": this.props.line[0].reportName,
+    //         "startDate": this.props.line[0].startDate,
+    //         "tileType": this.props.line[0].tileType,
+    //         "dashboardName": this.props.line[0].dashboardName
+    //     }
         
-        globalFuncs.genericFetch(process.env.DASHBOARDTILE_API, 'post', this.props.userToken, jsonBody)
-        .then(result => {
-            if (result === 'error' || result === 'conflict') {
+    //     globalFuncs.genericFetch(process.env.DASHBOARDTILE_API, 'post', this.props.userToken, jsonBody)
+    //     .then(result => {
+    //         if (result === 'error' || result === 'conflict') {
             
-            } else {
-                this.setState ({ dashboardData: result });
-            }
-        });
-    }
+    //         } else {
+    //             this.setState ({ dashboardData: result });
+    //         }
+    //     });
+    // }
 
     render() {
         let desc = '';
@@ -53,7 +53,7 @@ export default class InfographicParagraph extends React.PureComponent {
             desc = this.state.dashboardData.description.replace('{0}', this.state.dashboardData.dataPoints[0].valueX);
         }
         return <div style={{marginBottom:24}}>
-                    { this.props.line.map((tile) => {
+                    { this.props.dashboardData.map((tile) => {
                         return <Grid container spacing={2} justify="center" key={tile.tileOrder}>
                                  <Grid item xs={12} className="cases" >{this.state.dashboardData.description ? desc : 'N/A'}</Grid>
                                  <div className="title-break"></div>
