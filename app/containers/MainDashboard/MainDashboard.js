@@ -242,10 +242,12 @@ export default class MainDashboard extends React.Component {
                 overlay: (base) => ({
                   ...base,
                   background: 'none',
-                  color:'#000',
-                  
+                  color:'#000'
+                }),
+                spinner: (base) => ({
+                  ...base,
                   '& svg circle': {
-                    stroke: '#000'
+                    stroke: 'rgba(0, 0, 0, 0.5)'
                   }
                 })
               }}
