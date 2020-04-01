@@ -322,7 +322,7 @@ class UserModalStep1 extends React.Component {
                             {(this.state.isLoading) ? <div className="loader"></div> : 'Add'}
                           </Button>
                         ) : (
-                          <Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
+                          <Button variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
                               {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}
                           </Button>
                         )}
