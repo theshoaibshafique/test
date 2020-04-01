@@ -9,11 +9,13 @@ class DeleteModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      errorMsgVisible: false
+      errorMsgVisible: false,
+      isLoading: false
     }
   }
 
   enableDisableUser() {
+    this.setState({isLoading:true})
     let jsonBody = {
       "userName": this.props.userValue.currentUser
     };
@@ -29,6 +31,7 @@ class DeleteModal extends React.Component {
           this.props.handleClose();
           this.setState({ errorMsgVisible: false });
         }
+        this.setState({isLoading:false})
       });
     } else {
       globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGMENTACTIVATE_API + '/' + this.props.userValue.currentUser, 'PATCH', this.props.userToken, {})
@@ -41,6 +44,7 @@ class DeleteModal extends React.Component {
           this.props.handleClose();
           this.setState({ errorMsgVisible: false });
         }
+        this.setState({isLoading:false})
       });
     }
   }
@@ -63,7 +67,7 @@ class DeleteModal extends React.Component {
             <p className="Paragraph">{this.props.userValue.active ? 'Disabled users will not be able to access Insights.' : ''}</p>
             <div className="Button-Row right-align">
               <Button style={{color : "#3db3e3",marginRight:25}} onClick={() => { this.props.handleClose(); this.setState({ errorMsgVisible: false }); }}>Cancel</Button>
-              <Button variant="contained" className="secondary" onClick={() => this.enableDisableUser()}>{this.props.userValue.active ? 'Disable' : 'Enable'}</Button>
+              <Button variant="contained" className="secondary" disabled={(this.state.isLoading)} onClick={() => this.enableDisableUser()}>{ (this.state.isLoading) ? <div className="secondary-loader"></div> : (this.props.userValue.active ? 'Disable' : 'Enable')}</Button>
             </div>
           </div>
         </DialogContent>
