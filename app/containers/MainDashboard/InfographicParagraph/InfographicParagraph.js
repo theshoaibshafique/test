@@ -17,36 +17,6 @@ export default class InfographicParagraph extends React.PureComponent {
         }
     };
 
-    // componentDidMount() {
-    //     this.loadParagraph();
-    // };
-
-    // componentDidUpdate(prevProps) {
-    //     if (prevProps.line != this.props.line) {
-    //         this.loadParagraph();
-    //     }
-    // }
-
-    // loadParagraph() {
-    //     let jsonBody = {
-    //         "endDate": this.props.line[0].endDate,
-    //         "facilityName": this.props.line[0].facilityName,
-    //         "reportName": this.props.line[0].reportName,
-    //         "startDate": this.props.line[0].startDate,
-    //         "tileType": this.props.line[0].tileType,
-    //         "dashboardName": this.props.line[0].dashboardName
-    //     }
-        
-    //     globalFuncs.genericFetch(process.env.DASHBOARDTILE_API, 'post', this.props.userToken, jsonBody)
-    //     .then(result => {
-    //         if (result === 'error' || result === 'conflict') {
-            
-    //         } else {
-    //             this.setState ({ dashboardData: result });
-    //         }
-    //     });
-    // }
-
     render() {
         let desc = '';
         if (this.state.dashboardData.description) {

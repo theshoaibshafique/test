@@ -123,8 +123,7 @@ export default class MainDashboard extends React.Component {
     }
   }
 
-  renderTileShells() {
-    const yo = this.state.dashboardData;
+  renderTileShells(isDataEmpty) {
     return this.state.dashboardData.map((line, index) => {
       line = line.filter((tile) => {
         return moment(tile.startDate).isSame(this.state.month, 'month');
@@ -134,6 +133,8 @@ export default class MainDashboard extends React.Component {
       }
       if (line[0].tileType === 'InfographicParagraph') {
         return <InfographicParagraph dashboardData={line} userToken={this.props.userToken} key={index}></InfographicParagraph>
+      } else if (isDataEmpty){
+        return ''
       } else if (line[0].tileType === 'InfographicText') {
         return <InfographicText dashboardData={line} userToken={this.props.userToken} key={index}></InfographicText>
       } else if (line[0].tileType === 'InfographicCircle') {
@@ -165,6 +166,14 @@ export default class MainDashboard extends React.Component {
   };
 
   render() {
+    //Skip the first element because its the paragraph
+    const flatList = [].concat(...this.state.dashboardData.slice(1)).filter((tile) => {
+      return tile && moment(tile.startDate).isSame(this.state.month, 'month');
+    });
+    let isDataEmpty = (flatList).every((tile) => {
+      return tile && tile.dataPoints.length == 0;
+    });
+
     return (
       <section>
         <Grid container spacing={2} justify="center" alignItems="center">
@@ -201,8 +210,15 @@ export default class MainDashboard extends React.Component {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            {this.renderTileShells()}
+            {this.renderTileShells(isDataEmpty)}
           </Grid>
+          {isDataEmpty 
+            ? <Grid item xs={12} style={{marginTop:40}}>
+                <Grid container justify="center">
+                  No data available this month
+                </Grid>
+              </Grid> 
+            : ''}
 
         </Grid>
       </section>
