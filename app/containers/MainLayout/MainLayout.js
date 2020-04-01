@@ -121,7 +121,10 @@ export default class MainLayout extends React.PureComponent {
 
   getContainer() {
     if (!this.state.authenticated) {
-      return <NoAccess />
+      return <Switch>
+                <Route path="/my-profile" component={MyProfile}/>
+                <NoAccess />
+             </Switch>
     }
 
     if (this.state.userLoggedIn) {
@@ -140,7 +143,7 @@ export default class MainLayout extends React.PureComponent {
                   <Route path="/usermanagement" component={UserManagement}/>
               }
               <Route path="/my-profile" component={MyProfile}/>
-            <Route path="" component={NotFoundPage}/>
+              <Route path="" component={NotFoundPage}/>
             </Switch> 
     } else {
       return ''
@@ -149,8 +152,6 @@ export default class MainLayout extends React.PureComponent {
 
   render() {
     return (
-
-
         <div className="app-wrapper">
           
           <CssBaseline />
@@ -187,7 +188,6 @@ export default class MainLayout extends React.PureComponent {
             </div>
           </div>
         </div>
-
     );
   }
 }
