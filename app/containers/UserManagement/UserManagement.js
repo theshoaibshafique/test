@@ -285,7 +285,6 @@ export default class UserManagement extends React.PureComponent {
       errorMsgVisible: false,
       errorMsgEmailVisible: false
     })
-    this.handleClose()
   };
 
   render() {
