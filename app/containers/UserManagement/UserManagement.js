@@ -203,6 +203,7 @@ export default class UserManagement extends React.PureComponent {
       currentView: 'add',
       open: false
     })
+    this.handleClose()
   };
 
   updateGrid(id) {
@@ -228,6 +229,7 @@ export default class UserManagement extends React.PureComponent {
       currentView: 'add',
       open: false
     })
+    this.handleClose()
   };
 
   handleFormChange(e) {
@@ -283,6 +285,7 @@ export default class UserManagement extends React.PureComponent {
       errorMsgVisible: false,
       errorMsgEmailVisible: false
     })
+    this.handleClose()
   };
 
   render() {
