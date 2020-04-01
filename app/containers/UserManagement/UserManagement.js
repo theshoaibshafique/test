@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import MaterialTable from 'material-table';
+import LoadingOverlay from 'react-loading-overlay';
 import globalFuncs from '../../utils/global-functions';
 import './style.scss';
 
@@ -35,6 +36,7 @@ export default class UserManagement extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       userList: [],
       open: false,
       currentView: 'add',
@@ -72,9 +74,8 @@ export default class UserManagement extends React.PureComponent {
           userList: []
         });
       }
+      this.notLoading();
     });
-
-    this.props.notLoading();
   };
 
   openModal(e, view, rowData) {
@@ -183,11 +184,24 @@ export default class UserManagement extends React.PureComponent {
     return Object.keys(errors).length === 0;
   }
 
+  
+  loading() {
+    this.setState({
+      isLoading: true
+    });
+  }
+
+  notLoading() {
+    this.setState({
+      isLoading: false
+    });
+  }
+
   addUser(){
     if (!this.isFormValid()){
       return; 
     }
-    this.props.loading();
+    this.loading();
 
     let jsonBody = {
       "firstName": this.state.userValue.firstName,
@@ -281,8 +295,9 @@ export default class UserManagement extends React.PureComponent {
           this.refreshGrid();
         }
       }
+      this.notLoading();
     })
-    this.props.notLoading();
+    
   };
 
   refreshGrid() {
@@ -378,6 +393,12 @@ export default class UserManagement extends React.PureComponent {
     let pageSizeOptions = [];
     allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a,this.state.userList.length)), a > this.state.userList.length));
     return (
+      <LoadingOverlay
+      active={this.state.isLoading}
+      spinner
+      text='Loading your content...'
+      className="Overlay"
+      >
       <section className="user-management-page">
         <div className="header page-title">
           <div><span className="pad">User Management</span><Button variant="outlined" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </div>
@@ -452,6 +473,7 @@ export default class UserManagement extends React.PureComponent {
           }
         />
       </section>
+      </LoadingOverlay>
     );
   }
 }

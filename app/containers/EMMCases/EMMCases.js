@@ -29,8 +29,6 @@ export default class EMMCases extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.notLoading();
-
     if (localStorage.getItem('recentSearch')) {
       const recentSearchCache = JSON.parse(localStorage.getItem('recentSearch'));
 
