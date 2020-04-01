@@ -29,8 +29,6 @@ export default class EMMCases extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.notLoading();
-
     if (localStorage.getItem('recentSearch')) {
       const recentSearchCache = JSON.parse(localStorage.getItem('recentSearch'));
 
@@ -40,7 +38,11 @@ export default class EMMCases extends React.PureComponent {
     }
   };
 
-  search() {
+  search(e) {
+    if (e){
+      e.preventDefault();
+    }
+
     if (this.state.requestID) {
       this.reset();
       
@@ -129,6 +131,7 @@ export default class EMMCases extends React.PureComponent {
   render() {
     return (
       <section>
+        <form onSubmit={this.search}>
         <Grid container spacing={2}>
           <Grid item xs={12} className="header">
           Enhanced M&M Cases
@@ -150,7 +153,7 @@ export default class EMMCases extends React.PureComponent {
                 />
               </Grid>
               <Grid item xs={2}>
-                <Button variant="outlined" className="primary" style={{height:40}} onClick={() => this.search()}>Search</Button>  
+                <Button type="submit" variant="outlined" className="primary" style={{height:40}} onClick={(e) => this.search(e)}>Search</Button>  
               </Grid>
             </Grid>
           </Grid>
@@ -165,18 +168,18 @@ export default class EMMCases extends React.PureComponent {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Request ID</TableCell>
-                        <TableCell align="left">Procedure</TableCell>
-                        <TableCell align="left">Complications</TableCell>
-                        <TableCell align="left">Operating Room</TableCell>
+                        <TableCell style={{width:"20%"}}>Request ID</TableCell>
+                        <TableCell style={{width:"35%"}} align="left">Procedure</TableCell>
+                        <TableCell style={{width:"35%"}} align="left">Complications</TableCell>
+                        <TableCell style={{width:"10%"}} align="left">Operating Room</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody className="pointer">
                         <TableRow onClick={() => this.redirect(this.state.requestID)}>
-                          <TableCell>{this.state.report.requestId}</TableCell>
-                          <TableCell align="left">{this.state.report.procedureNames}</TableCell>
-                          <TableCell align="left">{this.state.report.complicationNames}</TableCell>
-                          <TableCell align="left">{this.state.report.operatingRoom}</TableCell>
+                          <TableCell style={{width:"20%"}}>{this.state.report.requestId}</TableCell>
+                          <TableCell style={{width:"35%"}} align="left">{this.state.report.procedureNames}</TableCell>
+                          <TableCell style={{width:"35%"}} align="left">{this.state.report.complicationNames}</TableCell>
+                          <TableCell style={{width:"10%"}} align="left">{this.state.report.operatingRoom}</TableCell>
                         </TableRow>
                     </TableBody>
                   </Table>
@@ -198,20 +201,20 @@ export default class EMMCases extends React.PureComponent {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Request ID</TableCell>
-                      <TableCell align="left">Procedure</TableCell>
-                      <TableCell align="left">Complications</TableCell>
-                      <TableCell align="left">Operating Room</TableCell>
+                      <TableCell style={{width:"20%"}}>Request ID</TableCell>
+                      <TableCell style={{width:"35%"}} align="left">Procedure</TableCell>
+                      <TableCell style={{width:"35%"}} align="left">Complications</TableCell>
+                      <TableCell style={{width:"10%"}} align="left">Operating Room</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody className="pointer">
                   
                   {this.state.recentSearch.map((cases, index) => {
                       return <TableRow key={index} onClick={() => this.redirect(cases.requestId)}>
-                        <TableCell>{cases.requestId}</TableCell>
-                        <TableCell align="left">{cases.procedureNames}</TableCell>
-                        <TableCell align="left">{cases.complicationNames}</TableCell>
-                        <TableCell align="left">{cases.operatingRoom}</TableCell>
+                        <TableCell style={{width:"20%"}}>{cases.requestId}</TableCell>
+                        <TableCell style={{width:"35%"}} align="left">{cases.procedureNames}</TableCell>
+                        <TableCell style={{width:"35%"}} align="left">{cases.complicationNames}</TableCell>
+                        <TableCell style={{width:"10%"}} align="left">{cases.operatingRoom}</TableCell>
                       </TableRow>
                     })
                   }
@@ -223,6 +226,7 @@ export default class EMMCases extends React.PureComponent {
           </Grid>
 
         </Grid>
+        </form>
       </section>
     );
   }

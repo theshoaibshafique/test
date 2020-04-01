@@ -20,6 +20,11 @@ class UserModalStep1 extends React.Component {
   }
   
   save() {
+
+    if (!this.props.isFormValid()){
+      return;
+    }
+
     this.setState({ errorMsgVisible: false, isLoading: true });
 
     let jsonBody = {
@@ -159,7 +164,7 @@ class UserModalStep1 extends React.Component {
       <LoadingOverlay
           active={!isLoaded && this.props.currentView === 'edit'}
           spinner
-          text='Loading your content...'
+          text='Loading...'
           className="Modal User-Modal User-Modal-Step-1 ">
           <Grid container spacing={2} className="" >
             <Grid item xs={12} className="">
@@ -182,9 +187,9 @@ class UserModalStep1 extends React.Component {
             {(this.props.errorMsgVisible || this.state.errorMsgVisible) &&
               <Grid item xs={12}><p className="Paragraph-Error">{this.props.errorMsg}</p></Grid>
             }
-            {(this.props.errorMsgEmailVisible || this.state.errorMsgEmailVisible) &&
+            {/* {(this.props.errorMsgEmailVisible || this.state.errorMsgEmailVisible) &&
               <Grid item xs={12}><p className="Paragraph-Error">{this.state.errorMsg}</p></Grid>
-            }
+            } */}
             
             <Grid item xs={10} >
               <UserFields
@@ -192,27 +197,26 @@ class UserModalStep1 extends React.Component {
                 handleFormChange={this.props.handleFormChange}
                 currentView={this.props.currentView}
                 passwordResetLink={this.props.passwordResetLink}
+                fieldErrors={this.props.fieldErrors}
               />
             </Grid>
 
             <Grid item xs={12}>
               <Grid container spacing={0}>
-                <Grid item xs={9}>
+                <Grid item xs={6}>
                   {this.props.currentView === 'edit' &&
                     <Button disableElevation disableRipple variant="contained" className="secondary" style={{float: "left"}} onClick={() => this.props.deleteUser()}>{this.props.userValue.active ? 'Disable User' : 'Enable User'}</Button>
                   }
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6}>
                   <Grid container justify="flex-end">
-                    <Grid item xs={6}>
-                      <Button style={{color : "#3db3e3"}} onClick={() => this.props.closeModal()}>Cancel</Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Grid container justify="flex-end">
+                    <Grid item xs={12}>
+                      <Grid container justify="flex-end" >
+                      <Button style={{color : "#3db3e3",marginRight:40}} onClick={() => this.props.closeModal()}>Cancel</Button>
                         {this.props.currentView === 'add' ? (
                           <Button variant="outlined" className="primary" onClick={() => this.props.addUser()}>Add</Button>
                         ) : (
-                          <Button variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
+                          <Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
                               {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}
                           </Button>
                         )}

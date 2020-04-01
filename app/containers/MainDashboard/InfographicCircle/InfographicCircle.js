@@ -6,53 +6,14 @@ import { Grid } from '@material-ui/core';
 export default class InfographicCircle extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.state = {
-            dashboardData: []
-        }
+
     };
 
-    componentDidMount() {
-        this.props.line.map((tile) => {
-            this.getTile(tile);
-        });
-    };
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.line != this.props.line) {
-            this.setState ({ dashboardData: [] });
-            this.props.line.map((tile) => {
-                this.getTile(tile);
-            });
-        }
-    }
-
-    getTile(tile) {
-        let jsonBody = {
-            "endDate": tile.endDate,
-            "facilityName": tile.facilityName,
-            "reportName": tile.reportName,
-            "startDate": tile.startDate,
-            "tileType": tile.tileType,
-            "dashboardName": tile.dashboardName
-        }
-
-        globalFuncs.genericFetch(process.env.DASHBOARDTILE_API, 'post', this.props.userToken, jsonBody)
-        .then(result => {
-            if (result === 'error' || result === 'conflict') {
-            
-            } else {
-                result.tileOrder = tile.tileOrder;
-                const dashboardData = [...this.state.dashboardData, result];
-                dashboardData.sort((a, b) => a.tileOrder - b.tileOrder);
-                this.setState ({ dashboardData: dashboardData });
-            }
-        });
-    };
 
     render() {
         return  <Grid container spacing={4} justify="center" style={{marginBottom:80}}>
                     <Grid container spacing={4} justify="center">
-                        { this.state.dashboardData.map((tile) => {
+                        { this.props.dashboardData.map((tile) => {
                             if (tile.dataPoints.length) {
                                 const val1 = parseInt(tile.dataPoints[0].valueX);
                                 const val2 = parseInt(tile.dataPoints[0].valueY);
@@ -78,7 +39,7 @@ export default class InfographicCircle extends React.PureComponent {
                         }
                     </Grid>
                     <Grid container spacing={0} justify="center">
-                    { this.state.dashboardData.map((tile) => {
+                    { this.props.dashboardData.map((tile) => {
                             if (tile.dataPoints.length) {
                                 return <Grid item xs={3} className="cases-div center-align case-font" style={{maxWidth:240}} key={tile.dataPoints[0].valueX}>{tile.dataPoints[0].valueX}</Grid>
                             } else {
@@ -88,7 +49,7 @@ export default class InfographicCircle extends React.PureComponent {
                     }
                     </Grid>
                     <Grid container spacing={0} justify="center">
-                    { this.state.dashboardData.map((tile) => {
+                    { this.props.dashboardData.map((tile) => {
                             if (tile.dataPoints.length) {
                                 return <Grid item xs={3} className="cases-div center-align case-font" style={{maxWidth:240}} key={tile.footer}>{tile.footer}</Grid>
                             } else {

@@ -180,7 +180,7 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   setEstimatedhours(){
-    if (!this.state.selectedHour || !this.state.selectedMinutes || !this.state.selectedAP){
+    if (!this.state.operationDate || !this.state.selectedHour || !this.state.selectedMinutes || !this.state.selectedAP){
       return;
     }
     var currentDate = this.state.operationDate;
@@ -271,8 +271,8 @@ export default class RequestEMM extends React.PureComponent {
       const errorEl = document.querySelector(
         Object.keys(errors).map(fieldName => `[name="${fieldName}"]`).join(',')
       );
-
-      if (errorEl && (errorEl.hidden || errorEl.type == "hidden") && errorEl.scrollIntoView){
+      if (errorEl && errorEl.scrollIntoView){
+      // if (errorEl && (errorEl.hidden || errorEl.type == "hidden") && errorEl.scrollIntoView){
         errorEl.parentNode.scrollIntoView()
       } else if (errorEl && errorEl.focus) { // npe
         errorEl.focus(); // this scrolls without visible scroll
@@ -362,7 +362,6 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   async componentDidMount() {
-    this.props.notLoading();
 
     await globalFuncs.genericFetch(process.env.USERSEARCH_API, 'get', this.props.userToken, {})
     .then(result => {
@@ -721,14 +720,11 @@ export default class RequestEMM extends React.PureComponent {
 
           <Grid item xs={8}>
             <Grid container justify="flex-end" spacing={0}>
-              <Grid item xs={7}></Grid>
-              <Grid item xs={2}>
-                <Button style={{color : "#3db3e3",height:40,width:115}} onClick={() => this.reset()}>Reset Form</Button>
-              </Grid>
-              <Grid item xs={3} >
-                <Grid container justify="flex-end">
-                <Button variant="outlined" style={{height:40,width:96}} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
-                {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> 
+              <Grid item xs={12}>
+                <Grid container justify="flex-end" spacing={0}>
+                  <Button style={{color : "#3db3e3",height:40,width:115,marginRight:40}} onClick={() => this.reset()}>Reset Form</Button>
+                  <Button variant="outlined" style={{height:40,width:96}} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
+                  {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> 
                 </Grid>
               </Grid>
             </Grid>

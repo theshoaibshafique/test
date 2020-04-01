@@ -1,8 +1,7 @@
 import React from 'react';
 import './style.scss';
 import { Helmet } from 'react-helmet';
-import { Switch, Route} from 'react-router-dom';
-import LoadingOverlay from 'react-loading-overlay';
+import { Switch, Route } from 'react-router-dom';
 
 import MainDashboard from 'containers/MainDashboard/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
@@ -121,59 +120,16 @@ export default class MainLayout extends React.PureComponent {
     })
   };
 
-  loading() {
-    this.setState({
-      isLoading: true
-    });
-  }
-
-  notLoading() {
-    this.setState({
-      isLoading: false
-    });
-  }
-
-  getNav(){
-    return <Switch>
-              <Route path="/emmreport/:requestId" component={() => <AzureLogin
-                          resourcesGathered={() => this.resourcesGathered()}
-                          logoutFunction={(logout) => this.logoutFunction(logout)}
-                          redirect={() => this.redirect()}
-                          />}/>
-              
-              <Route path="" component={() => 
-                <nav className="MAIN-NAVIGATION">
-                  <Hidden xsDown implementation="css">
-                    <Drawer
-                      variant="permanent"
-                      open
-                    >
-                      <SSTNav 
-                        userManagementAccess={this.state.userManagementAccess} 
-                        emmRequestAccess={this.state.emmRequestAccess}
-                        emmAccess={this.state.emmAccess}
-                        userLogin={<AzureLogin
-                          resourcesGathered={() => this.resourcesGathered()}
-                          logoutFunction={(logout) => this.logoutFunction(logout)}
-                          redirect={() => this.redirect()}
-                          />}
-                        />
-                    </Drawer>
-                  </Hidden>
-                </nav> }/>
-            </Switch> 
-  }
-
   getContainer() {
     if (!this.state.authenticated) {
-      return <NoAccess notLoading={() => this.notLoading()}/>
+      return <NoAccess />
     }
 
     if (this.state.userLoggedIn) {
       return <Switch>
-              <Route path="/maindashboard" component={() => <MainDashboard userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
+              <Route path="/maindashboard" component={MainDashboard}/> }/>
               {(this.state.emmAccess) &&
-                  <Route path="/emmcases" component={() => <EMMCases userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
+                  <Route path="/emmcases" component={EMMCases}/>
               }
               {(this.state.emmAccess) &&
                   <Route path="/emm/:requestid" component={EMM} />
@@ -182,13 +138,13 @@ export default class MainLayout extends React.PureComponent {
                   <Route path="/emmreport/:requestid" component={EMMReport} />
               }
               {(this.state.emmRequestAccess) &&
-                  <Route path="/requestemm" component={() => <RequestEMM userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
+                  <Route path="/requestemm" component={RequestEMM}/>
               }
               {(this.state.userManagementAccess) &&
-                  <Route path="/usermanagement" component={() => <UserManagement userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
+                  <Route path="/usermanagement" component={UserManagement}/>
               }
-              <Route path="/my-profile" component={() => <MyProfile userLoggedIn={this.state.userLoggedIn} loading={() => this.loading()} notLoading={() => this.notLoading()}/> }/>
-            <Route path="" component={() => <NotFoundPage notLoading={() => this.notLoading()}/> }/>
+              <Route path="/my-profile" component={MyProfile}/>
+            <Route path="" component={NotFoundPage}/>
             </Switch> 
     } else {
       return ''
@@ -198,12 +154,7 @@ export default class MainLayout extends React.PureComponent {
   render() {
     const isEmmReport = this.props.location.pathname.indexOf('/emmreport')>=0
     return (
-      <LoadingOverlay
-          active={this.state.isLoading}
-          spinner
-          text='Loading your content...'
-          className="Overlay"
-          >
+
 
         <div className="app-wrapper">
           
@@ -238,7 +189,6 @@ export default class MainLayout extends React.PureComponent {
                 </Drawer>
               </Hidden>
             </nav>
-            {/* {this.getNav()} */}
 
             <div className={"inline overflow-y " + (isEmmReport ? '' : 'Content-Wrapper')}>
               {this.getContainer()}
@@ -246,7 +196,6 @@ export default class MainLayout extends React.PureComponent {
           </div>
         </div>
 
-      </LoadingOverlay>
     );
   }
 }

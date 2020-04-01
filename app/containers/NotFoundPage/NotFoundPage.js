@@ -15,7 +15,7 @@ export default class NotFoundPage extends React.PureComponent { // eslint-disabl
   }
 
   componentDidMount() {
-    this.props.notLoading();
+    
   };
 
   render() {

@@ -99,26 +99,28 @@ class UserFields extends React.Component {
           <TextField
               id="firstName"
               name="firstName"
+              size="small"
               className="input-field"
               value={this.props.userValue.firstName}
               onChange={this.props.handleFormChange}
               variant="outlined"
               onBlur={(e) => this.validateField(e, 'first')}
-              error={!this.state.validFirstName}
-              helperText={!this.state.validFirstName ? 'Please enter a first name' : ' '}
+              error={!this.state.validFirstName || Boolean(this.props.fieldErrors.firstName)}
+              helperText={!this.state.validFirstName ? 'Please enter a first name' : this.props.fieldErrors.firstName}
             />
         </Grid>
         <Grid item xs={6}>
         <TextField
             id="lastName"
             name="lastName"
+            size="small"
             className="input-field"
             value={this.props.userValue.lastName}
             onChange={this.props.handleFormChange}
             variant="outlined"
             onBlur={(e) => this.validateField(e, 'last')}
-            error={!this.state.validLastName}
-            helperText={!this.state.validLastName ? 'Please enter a last name' : ' '}
+            error={!this.state.validLastName || Boolean(this.props.fieldErrors.lastName)}
+            helperText={!this.state.validLastName ? 'Please enter a last name' : this.props.fieldErrors.lastName}
           />
         </Grid>
         <Grid item xs={6} className="input-title">
@@ -143,27 +145,29 @@ class UserFields extends React.Component {
           <TextField
             id="email"
             name="email"
+            size="small"
             type="email"
             className="input-field"
             value={this.props.userValue.email}
             onChange={this.props.handleFormChange}
             variant="outlined"
             onBlur={(e) => this.validateEmail(e)}
-            error={!this.state.validEmail}
-            helperText={!this.state.validEmail ? 'Please enter a valid email address' : ' '}
+            error={!this.state.validEmail || Boolean(this.props.fieldErrors.email)}
+            helperText={!this.state.validEmail ? 'Please enter a valid email address' : this.props.fieldErrors.email}
           />
         </Grid>
         <Grid item xs={6}>
         <TextField
             id="title"
             name="title"
+            size="small"
             className="input-field"
             value={this.props.userValue.title}
             onChange={this.props.handleFormChange}
             variant="outlined"
             onBlur={(e) => this.validateField(e, 'title')}
-            error={!this.state.validTitle}
-            helperText={!this.state.validTitle ? 'Please enter a title' : ' '}    
+            error={!this.state.validTitle || Boolean(this.props.fieldErrors.title)}
+            helperText={!this.state.validTitle ? 'Please enter a title' : this.props.fieldErrors.title}
           />
         </Grid>
         <Grid item xs={12} className="subtitle">

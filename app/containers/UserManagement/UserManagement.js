@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import MaterialTable from 'material-table';
+import LoadingOverlay from 'react-loading-overlay';
 import globalFuncs from '../../utils/global-functions';
 import './style.scss';
 
@@ -35,6 +36,7 @@ export default class UserManagement extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       userList: [],
       open: false,
       currentView: 'add',
@@ -55,7 +57,8 @@ export default class UserManagement extends React.PureComponent {
       deleteDialogOpen: false,
       errorMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
       errorMsgVisible: false,
-      errorMsgEmailVisible: false
+      errorMsgEmailVisible: false,
+      fieldErrors:{}
     }
   }
 
@@ -71,9 +74,8 @@ export default class UserManagement extends React.PureComponent {
           userList: []
         });
       }
+      this.notLoading();
     });
-
-    this.props.notLoading();
   };
 
   openModal(e, view, rowData) {
@@ -154,12 +156,52 @@ export default class UserManagement extends React.PureComponent {
       },
       lastRequestedUserName: '',
       errorMsgVisible: false,
-      errorMsgEmailVisible: false
+      errorMsgEmailVisible: false,
+      fieldErrors:{}
     })
   };
 
+  isFormValid(){
+    var errors = {};
+
+    if (!this.state.userValue.firstName){
+      errors.firstName = 'Please enter a first name'
+    }
+
+    if (!this.state.userValue.lastName){
+      errors.lastName = 'Please enter a last name'
+    }
+
+    if (!this.state.userValue.email){
+      errors.email = 'Please enter a valid email address'
+    }
+    
+    if (!this.state.userValue.title){
+      errors.title = 'Please enter a title'
+    }
+
+    this.setState({fieldErrors: errors});
+    return Object.keys(errors).length === 0;
+  }
+
+  
+  loading() {
+    this.setState({
+      isLoading: true
+    });
+  }
+
+  notLoading() {
+    this.setState({
+      isLoading: false
+    });
+  }
+
   addUser(){
-    this.props.loading();
+    if (!this.isFormValid()){
+      return; 
+    }
+    this.loading();
 
     let jsonBody = {
       "firstName": this.state.userValue.firstName,
@@ -177,7 +219,9 @@ export default class UserManagement extends React.PureComponent {
       if (result === 'error') {
         this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false });
       } else if (result === 'conflict') {
-        this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false });
+        let fieldErrors = this.state.fieldErrors;
+        fieldErrors.email = 'A user with this email address already exists. Please use a different email address.'
+        this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false ,fieldErrors});
       } else {
         // add roles
         let jsonBody;
@@ -251,8 +295,9 @@ export default class UserManagement extends React.PureComponent {
           this.refreshGrid();
         }
       }
+      this.notLoading();
     })
-    this.props.notLoading();
+    
   };
 
   refreshGrid() {
@@ -344,7 +389,16 @@ export default class UserManagement extends React.PureComponent {
   };
 
   render() {
+    let allPageSizeOptions = [ 5, 10, 25 ,50, 75, 100 ];
+    let pageSizeOptions = [];
+    allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a,this.state.userList.length)), a > this.state.userList.length));
     return (
+      <LoadingOverlay
+      active={this.state.isLoading}
+      spinner
+      text='Loading your content...'
+      className="Overlay"
+      >
       <section className="user-management-page">
         <div className="header page-title">
           <div><span className="pad">User Management</span><Button variant="outlined" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </div>
@@ -362,7 +416,7 @@ export default class UserManagement extends React.PureComponent {
             ]}
             options={{ 
               pageSize: 10,
-              pageSizeOptions: [ 5, 10, 25 ,50, 75, 100 ],
+              pageSizeOptions: pageSizeOptions,
               search: true,
               paging: true,
               searchFieldAlignment: 'left',
@@ -384,11 +438,13 @@ export default class UserManagement extends React.PureComponent {
           currentView={this.state.currentView}
           passwordResetLink={() => this.passwordResetLink()}
           deleteUser={() => this.deleteUser()}
+          fieldErrors={this.state.fieldErrors}
           errorMsg={this.state.errorMsg}
           errorMsgVisible={this.state.errorMsgVisible}
           errorMsgEmailVisible={this.state.errorMsgEmailVisible}
           refreshGrid={() => this.refreshGrid()}
           updateGridEdit={(id) => this.updateGridEdit(id)}
+          isFormValid={() => this.isFormValid()}
         />
 
         <DeleteModal
@@ -417,6 +473,7 @@ export default class UserManagement extends React.PureComponent {
           }
         />
       </section>
+      </LoadingOverlay>
     );
   }
 }
