@@ -6,6 +6,7 @@ import InfographicParagraph from './InfographicParagraph/InfographicParagraph';
 import InfographicText from './InfographicText/InfographicText';
 import InfographicCircle from './InfographicCircle/InfographicCircle';
 import { Grid } from '@material-ui/core';
+import LoadingOverlay from 'react-loading-overlay';
 
 export default class MainDashboard extends React.Component {
   constructor(props) {
@@ -15,7 +16,9 @@ export default class MainDashboard extends React.Component {
       startDate: null,
       endDate: null,
       tileRequests: [],
-      dashboardData: []
+      dashboardData: [],
+      pendingTileCount: 0,
+      isLoading: true
     }
   }
 
@@ -76,7 +79,7 @@ export default class MainDashboard extends React.Component {
   };
 
 
-  getTile(tile,index) {
+  getTile(tile, index) {
     let jsonBody = {
       "endDate": tile.endDate,
       "facilityName": tile.facilityName,
@@ -85,7 +88,6 @@ export default class MainDashboard extends React.Component {
       "tileType": tile.tileType,
       "dashboardName": tile.dashboardName
     }
-
     globalFuncs.genericFetch(process.env.DASHBOARDTILE_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {
@@ -94,19 +96,25 @@ export default class MainDashboard extends React.Component {
           result.tileOrder = tile.tileOrder;
           result.tileType = tile.tileType;
           result.startDate = tile.startDate;
-          
           let db = this.state.dashboardData[index] || []
-          db.push(result)
-          db.sort((a, b) => a.tileOrder - b.tileOrder);
-          let dashboardData = this.state.dashboardData
-          dashboardData[index] = db;
-          this.setState({ dashboardData });
+          if (moment(tile.startDate).isSame(this.state.month, 'month') && db.findIndex((t) => (t.tileOrder == result.tileOrder) < 0)) {
+            
+            db.push(result)
+            db.sort((a, b) => a.tileOrder - b.tileOrder);
+            let dashboardData = this.state.dashboardData
+            dashboardData[index] = db;
+            this.setState({ dashboardData });
+          }
         }
+        if (this.state.pendingTileCount - 1 <= 0) {
+          this.notLoading()
+        }
+        this.setState({ pendingTileCount: this.state.pendingTileCount - 1 });
       });
   };
 
   compileTileRequest(tileRequests) {
-    this.setState({dashboardData:[]});
+    this.setState({ dashboardData: [], pendingTileCount: this.state.pendingTileCount + ([].concat(...tileRequests).length) });
     if (this.props.userToken) {
       tileRequests.map((line, index) => {
         //Only render the views for the current month (spamming between months can cause the linelist to be out of sync)
@@ -117,7 +125,7 @@ export default class MainDashboard extends React.Component {
           return '';
         }
         line.map((tile) => {
-          this.getTile(tile,index);
+          this.getTile(tile, index);
         });
       });
     }
@@ -125,16 +133,19 @@ export default class MainDashboard extends React.Component {
 
   renderTileShells(isDataEmpty) {
     return this.state.dashboardData.map((line, index) => {
-      line = line.filter((tile) => {
+      line = line.filter((tile, index, self) => {
         return moment(tile.startDate).isSame(this.state.month, 'month');
+      });
+      line = line.filter((tile, index, self) => {
+        return index === self.findIndex((t) => (t.tileOrder === tile.tileOrder));
       });
       if (!line || !line[0]) {
         return '';
       }
-      if (line[0].tileType === 'InfographicParagraph') {
-        return <InfographicParagraph dashboardData={line} userToken={this.props.userToken} key={index}></InfographicParagraph>
-      } else if (isDataEmpty){
+      if (isDataEmpty) {
         return ''
+      } else if (line[0].tileType === 'InfographicParagraph') {
+        return <InfographicParagraph dashboardData={line} userToken={this.props.userToken} key={index}></InfographicParagraph>
       } else if (line[0].tileType === 'InfographicText') {
         return <InfographicText dashboardData={line} userToken={this.props.userToken} key={index}></InfographicText>
       } else if (line[0].tileType === 'InfographicCircle') {
@@ -148,7 +159,8 @@ export default class MainDashboard extends React.Component {
     this.setState({
       month: month.subtract(1, 'month'),
       startDate: month.startOf('month').format(),
-      endDate: month.endOf('month').format()
+      endDate: month.endOf('month').format(),
+      isLoading: true
     }, () => {
       this.setTileRequestDates();
     });
@@ -159,15 +171,27 @@ export default class MainDashboard extends React.Component {
     this.setState({
       month: month.add(1, 'month'),
       startDate: month.startOf('month').format(),
-      endDate: month.endOf('month').format()
+      endDate: month.endOf('month').format(),
+      isLoading: true
     }, () => {
       this.setTileRequestDates();
     });
   };
 
+  loading() {
+    this.setState({
+      isLoading: true
+    });
+  }
+
+  notLoading() {
+    this.setState({
+      isLoading: false
+    });
+  }
+
   render() {
-    //Skip the first element because its the paragraph
-    const flatList = [].concat(...this.state.dashboardData.slice(1)).filter((tile) => {
+    const flatList = [].concat(...this.state.dashboardData).filter((tile) => {
       return tile && moment(tile.startDate).isSame(this.state.month, 'month');
     });
     let isDataEmpty = (flatList).every((tile) => {
@@ -175,7 +199,7 @@ export default class MainDashboard extends React.Component {
     });
 
     return (
-      <section>
+      <section className="main-dashboard">
         <Grid container spacing={2} justify="center" alignItems="center">
           <Grid item xs={12} className="header">
             Welcome {this.props.firstName} {this.props.lastName}
@@ -209,17 +233,32 @@ export default class MainDashboard extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            {this.renderTileShells(isDataEmpty)}
-          </Grid>
-          {isDataEmpty 
-            ? <Grid item xs={12} style={{marginTop:40}}>
-                <Grid container justify="center">
-                  No data available this month
-                </Grid>
-              </Grid> 
-            : ''}
-
+          <LoadingOverlay
+              active={this.state.isLoading}
+              spinner
+              text='Loading your content...'
+              className="Overlay"
+              styles={{
+                overlay: (base) => ({
+                  ...base,
+                  background: 'none',
+                  color:'#000',
+                  
+                  '& svg circle': {
+                    stroke: '#000'
+                  }
+                })
+              }}
+            >
+          
+          {isDataEmpty && !this.state.isLoading
+            ? <Grid item xs={12} style={{ marginTop: 40,width:1000,height:600}}>
+              <Grid container justify="center">
+                No data available this month
+                  </Grid>
+            </Grid>
+            : <Grid item xs={12}style={{width:1000,height:600}}>{this.renderTileShells(isDataEmpty)}</Grid>}
+          </LoadingOverlay>
         </Grid>
       </section>
     );
