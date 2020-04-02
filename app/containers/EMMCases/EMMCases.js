@@ -29,8 +29,8 @@ export default class EMMCases extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (localStorage.getItem('recentSearch')) {
-      const recentSearchCache = JSON.parse(localStorage.getItem('recentSearch'));
+    if (localStorage.getItem('recentSearch-'+this.props.userEmail)) {
+      const recentSearchCache = JSON.parse(localStorage.getItem('recentSearch-'+this.props.userEmail));
 
       this.setState({ 
         recentSearch: recentSearchCache
@@ -102,7 +102,7 @@ export default class EMMCases extends React.PureComponent {
             this.setState({ recentSearch: search });
           }
           
-          localStorage.setItem('recentSearch', JSON.stringify(this.state.recentSearch));
+          localStorage.setItem('recentSearch-'+this.props.userEmail, JSON.stringify(this.state.recentSearch));
           this.setState({ noMatch: false })
         }
       });
