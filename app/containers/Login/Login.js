@@ -1,5 +1,6 @@
 import React from 'react';
 import './style.scss';
+
 import { Helmet } from 'react-helmet';
 import SSTLogo from './img/SST_logo.svg';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
@@ -17,7 +18,7 @@ export default class Login extends React.PureComponent {
 
   userJustLoggedIn = receivedToken => {
     this.props.userInfo(receivedToken);
-    this.props.history.push(`/maindashboard`);
+    this.props.pushUrl('/maindashboard');
   }
 
   render() {

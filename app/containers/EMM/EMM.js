@@ -70,13 +70,13 @@ export default class EMM extends React.PureComponent {
           });
           if (!match) { specialtyNames.push(specialty); }
         });
-
         this.setState({ 
           procedureNames: procedureNames,
           complicationNames: complicationList.join(', '),
           operatingRoom: operatingRoom,
-          compDate: new Date(result.postOpDate).toLocaleString(),
-          specialtyNames: specialtyNames
+          compDate: new Date(result.postOpDate).toLocaleDateString(),
+          specialtyNames: specialtyNames,
+          notes: result.notes ? result.notes : "No Notes"
         });
       }
     });
@@ -98,7 +98,7 @@ export default class EMM extends React.PureComponent {
 
   render() {
     return (
-      <section>
+      <section className="emm-page">
         <div className="header">
           <p>Enhanced M&M</p>
 {/*           <div>
@@ -106,7 +106,7 @@ export default class EMM extends React.PureComponent {
           </div> */}
         </div>
 
-        <div className="table-row">
+        <div className="table-row info-title">
           <div className="first-column">Date of Complications</div> <div>Operating Room</div>
         </div>
 
@@ -115,17 +115,24 @@ export default class EMM extends React.PureComponent {
         </div>
 
         <div>
-          <div className="first-column">Specialties and Procedures</div>
+          <div className="first-column info-title">Specialties and Procedures</div>
         </div>
 
         {this.renderSpecialtiesProcedures()}
 
         <div>
-          <div className="first-column margin-top">Complications</div>
+          <div className="first-column margin-top info-title">Complications</div>
         </div>
 
         <div className="table-row-font">
           <div className="first-column">{this.state.complicationNames}</div>
+        </div>
+
+        <div>
+          <div className="first-column margin-top info-title">Notes</div>
+        </div>
+        <div className="table-row-font">
+          <div className="first-column">{this.state.notes}</div>
         </div>
 
         <div>
