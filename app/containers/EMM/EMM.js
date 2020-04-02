@@ -75,8 +75,7 @@ export default class EMM extends React.PureComponent {
           complicationNames: complicationList.join(', '),
           operatingRoom: operatingRoom,
           compDate: new Date(result.postOpDate).toLocaleDateString(),
-          specialtyNames: specialtyNames,
-          notes: result.notes ? result.notes : "No Notes"
+          specialtyNames: specialtyNames
         });
       }
     });
@@ -126,13 +125,6 @@ export default class EMM extends React.PureComponent {
 
         <div className="table-row-font">
           <div className="first-column">{this.state.complicationNames}</div>
-        </div>
-
-        <div>
-          <div className="first-column margin-top info-title">Notes</div>
-        </div>
-        <div className="table-row-font">
-          <div className="first-column">{this.state.notes}</div>
         </div>
 
         <div>
