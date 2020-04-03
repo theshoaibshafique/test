@@ -122,9 +122,6 @@ export default class UserManagement extends React.PureComponent {
               }
             });
           }
-        } else {
-          // send error to modal
-          this.setState({ errorMsgVisible: true });
         }
       });
     }
