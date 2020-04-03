@@ -179,7 +179,7 @@ export default class UserManagement extends React.PureComponent {
     }
 
     this.setState({fieldErrors: errors});
-    return Object.keys(errors).length === 0;
+    return errors; //Object.keys(errors).length === 0;
   }
 
   

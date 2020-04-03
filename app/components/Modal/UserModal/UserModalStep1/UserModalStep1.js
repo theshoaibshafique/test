@@ -21,7 +21,9 @@ class UserModalStep1 extends React.Component {
   }
 
   addUser() {
-    if (!this.props.isFormValid()) {
+    let fieldErrors = this.props.isFormValid();
+    this.setState({ fieldErrors });
+    if (Object.keys(fieldErrors).length !== 0) {
       return;
     }
 
@@ -46,6 +48,16 @@ class UserModalStep1 extends React.Component {
           let fieldErrors = this.state.fieldErrors;
           fieldErrors.email = 'A user with this email address already exists. Please use a different email address.'
           this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, fieldErrors, isLoading: false });
+        } else if (result && result.conflict){
+          result.conflict.then( message => {
+            if (message && message.toLowerCase().indexOf("email")>=0){
+              let fieldErrors = this.state.fieldErrors;
+              fieldErrors.email = message
+              this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, fieldErrors, isLoading: false });
+            } else {
+              this.setState({ errorMsgVisible: true, errorMsg:message , isLoading: false });
+            }
+          });
         } else {
           // add roles
           let jsonBody;
@@ -124,8 +136,9 @@ class UserModalStep1 extends React.Component {
   };
 
   save() {
-
-    if (!this.props.isFormValid()) {
+    let fieldErrors = this.props.isFormValid();
+    this.setState({ fieldErrors });
+    if (Object.keys(fieldErrors).length !== 0) {
       return;
     }
 
@@ -147,7 +160,15 @@ class UserModalStep1 extends React.Component {
           this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false, isLoading: false });
         } else if (result === 'conflict') {
           this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, isLoading: false });
-        } else {
+        }  else if (result && result.conflict){
+          if (result.conflict.toLowerCase().indexOf("email")>=0){
+            let fieldErrors = this.state.fieldErrors;
+            fieldErrors.email = result.conflict
+            this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, fieldErrors, isLoading: false });
+          } else {
+            this.setState({ errorMsgVisible: true, errorMsg:result.conflict , isLoading: false });
+          }
+        }  else {
           // update roles
           this.setState({ errorMsgVisible: false, errorMsgEmailVisible: false });
           let jsonBody;
@@ -328,7 +349,7 @@ class UserModalStep1 extends React.Component {
             </Grid>
 
             {(this.props.errorMsgVisible || this.state.errorMsgVisible) &&
-              <Grid item xs={12}><p className="Paragraph-Error">{this.props.errorMsg}</p></Grid>
+              <Grid item xs={12}><p className="Paragraph-Error">{this.state.errorMsg || this.props.errorMsg}</p></Grid>
             }
             {/* {(this.props.errorMsgEmailVisible || this.state.errorMsgEmailVisible) &&
               <Grid item xs={12}><p className="Paragraph-Error">{this.state.errorMsg}</p></Grid>
@@ -340,7 +361,7 @@ class UserModalStep1 extends React.Component {
                 handleFormChange={this.props.handleFormChange}
                 currentView={this.props.currentView}
                 passwordResetLink={this.props.passwordResetLink}
-                fieldErrors={this.props.fieldErrors}
+                fieldErrors={this.state.fieldErrors}
               />
             </Grid>
 

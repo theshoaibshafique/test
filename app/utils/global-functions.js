@@ -40,7 +40,7 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
               return response.json();
             }
         } else if ([409].indexOf(response.status) >= 0) {
-          return 'conflict';
+          return {"conflict":response.json()};
         } else {
           return 'error';
         }
@@ -66,7 +66,7 @@ function genericFetchWithNoReturnMessage(api, fetchMethod, userToken, fetchBodyJ
       if ([200, 201, 202, 204].indexOf(response.status) >= 0 || [200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
         return JSON.parse(response);
       } else if ([409].indexOf(response.status) >= 0 || response === '"Email Exists"') {
-        return 'conflict';
+        return {"conflict":JSON.parse(response)};
       } else {
         return 'error';
       }
