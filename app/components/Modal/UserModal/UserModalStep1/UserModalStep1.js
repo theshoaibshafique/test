@@ -14,11 +14,33 @@ class UserModalStep1 extends React.Component {
     this.state = {
       errorMsgVisible: false,
       errorMsgEmailVisible: false,
-      errorMsg: 'A user with this email address already exists. Please use a different email address.',
+      errorMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
       isLoading: false,
+      isEmailSent: false,
+      isEmailLoading: false,
       fieldErrors: this.props.fieldErrors
     }
   }
+
+  passwordResetLink() {
+    let jsonBody = {
+      "userName": this.props.userValue.currentUser
+    }
+    this.setState({isEmailLoading:true})
+    globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTRESET_API, 'PATCH', this.props.userToken, jsonBody)
+    .then(result => {
+      if (result === 'error' || result === 'conflict') {
+        // send error to modal
+        this.setState({ errorMsgVisible: true });
+      } else {
+        // show toast for success
+        this.setState({
+          isEmailSent: true
+        })
+      }
+      this.setState({isEmailLoading:false})
+    })
+  };
 
   addUser() {
     let fieldErrors = this.props.isFormValid();
@@ -360,8 +382,11 @@ class UserModalStep1 extends React.Component {
                 userValue={this.props.userValue}
                 handleFormChange={this.props.handleFormChange}
                 currentView={this.props.currentView}
-                passwordResetLink={this.props.passwordResetLink}
+                passwordResetLink={() => this.passwordResetLink()}
                 fieldErrors={this.state.fieldErrors}
+                isEmailLoading={this.state.isEmailLoading}
+                isEmailSent={this.state.isEmailSent}
+
               />
             </Grid>
 

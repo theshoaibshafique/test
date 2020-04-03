@@ -8,6 +8,7 @@ import { Grid } from '@material-ui/core';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 
+
 class UserFields extends React.Component {
   constructor(props) {
     super(props);
@@ -131,7 +132,12 @@ class UserFields extends React.Component {
             {this.props.currentView === 'edit' &&
             <Grid item xs={8}>
               <Grid container justify="flex-end">
-              <a className="link" onClick={() => this.props.passwordResetLink()}>Send password reset link</a> 
+                {this.props.isEmailLoading 
+                ? <div className="loader" ></div> 
+                : (this.props.isEmailSent 
+                    ? <div className="input-title">Email Sent!</div> 
+                    : <a className="link" onClick={this.props.passwordResetLink}>Send password reset link</a> )}
+              
               </Grid>
               
             </Grid>
