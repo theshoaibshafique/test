@@ -91,7 +91,10 @@ export default class UserManagement extends React.PureComponent {
       // get the user roles for edit
       globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API + rowData.userName, 'get', this.props.userToken, {})
       .then(result => {
-        if (result != null) {
+        if (result === 'error' || result === 'conflict') {
+          // send error to modal
+          this.setState({ errorMsgVisible: true });
+        } else {
           const permission = []
           result.map(userRole => {
             if (userRole.roleNames && userRole.roleNames.length) {
@@ -119,10 +122,6 @@ export default class UserManagement extends React.PureComponent {
               }
             });
           }
-          
-        } else {
-          // send error to modal
-          this.setState({ errorMsgVisible: true });
         }
       });
     }
