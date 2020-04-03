@@ -216,13 +216,13 @@ export default class UserManagement extends React.PureComponent {
     })
   };
 
-  updateGridEdit(id) {
+  updateGridEdit(id,userValue) {
     let newState = Object.assign({}, this.state);
-    newState.userList[id].firstName = this.state.userValue.firstName;
-    newState.userList[id].lastName = this.state.userValue.lastName;
-    newState.userList[id].email = this.state.userValue.email;
-    newState.userList[id].title = this.state.userValue.title;
-    newState.userList[id].permissions = this.state.userValue.permissions;
+    newState.userList[id].firstName = userValue.firstName;
+    newState.userList[id].lastName = userValue.lastName;
+    newState.userList[id].email = userValue.email;
+    newState.userList[id].title = userValue.title;
+    newState.userList[id].permissions = userValue.permissions;
     newState.userValue.isLoaded = false;
     this.setState({
       newState,
@@ -341,7 +341,7 @@ export default class UserManagement extends React.PureComponent {
           errorMsgVisible={this.state.errorMsgVisible}
           errorMsgEmailVisible={this.state.errorMsgEmailVisible}
           refreshGrid={(userName) => this.refreshGrid(userName)}
-          updateGridEdit={(id) => this.updateGridEdit(id)}
+          updateGridEdit={(id,userValue) => this.updateGridEdit(id,userValue)}
           isFormValid={() => this.isFormValid()}
         />
 

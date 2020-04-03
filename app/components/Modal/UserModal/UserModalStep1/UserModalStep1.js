@@ -220,7 +220,7 @@ class UserModalStep1 extends React.Component {
               })
               .then(result => {
                 if (!this.state.errorMsgVisible || !this.state.errorMsgEmailVisible) {
-                  this.props.updateGridEdit(this.props.userValue.id);
+                  this.props.updateGridEdit(this.props.userValue.id, this.props.userValue);
                 }
                 this.setState({ isLoading: false });
               });
@@ -280,7 +280,8 @@ class UserModalStep1 extends React.Component {
               })
               .then(result => {
                 if (!this.state.errorMsgVisible || !this.state.errorMsgEmailVisible) {
-                  this.props.updateGridEdit(this.props.userValue.id);
+                  debugger;
+                  this.props.updateGridEdit(this.props.userValue.id, this.props.userValue);
                 }
                 this.setState({ isLoading: false });
               });
