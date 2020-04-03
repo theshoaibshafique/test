@@ -280,7 +280,6 @@ class UserModalStep1 extends React.Component {
               })
               .then(result => {
                 if (!this.state.errorMsgVisible || !this.state.errorMsgEmailVisible) {
-                  debugger;
                   this.props.updateGridEdit(this.props.userValue.id, this.props.userValue);
                 }
                 this.setState({ isLoading: false });
