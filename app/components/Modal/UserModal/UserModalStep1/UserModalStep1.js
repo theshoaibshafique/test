@@ -34,7 +34,7 @@ class UserModalStep1 extends React.Component {
       "lastName": this.props.userValue.lastName,
       "email": this.props.userValue.email,
       "title": this.props.userValue.title,
-      "facilityName": this.props.userValue.facilityName,
+      "facilityName": this.props.facilityName,
       "preferredLanguage": 'en-US',
       "active": true,
       "sendEmail": true
