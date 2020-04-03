@@ -197,9 +197,11 @@ export default class UserManagement extends React.PureComponent {
     });
   }
 
-  refreshGrid() {
+  refreshGrid(userName) {
+    let newUser = this.state.userValue;
+    newUser.userName = userName;
     this.setState({
-      userList: [...this.state.userList, this.state.userValue],
+      userList: [...this.state.userList, newUser],
       currentView: 'add',
       open: false
     })
@@ -340,7 +342,7 @@ export default class UserManagement extends React.PureComponent {
           errorMsg={this.state.errorMsg}
           errorMsgVisible={this.state.errorMsgVisible}
           errorMsgEmailVisible={this.state.errorMsgEmailVisible}
-          refreshGrid={() => this.refreshGrid()}
+          refreshGrid={(userName) => this.refreshGrid(userName)}
           updateGridEdit={(id) => this.updateGridEdit(id)}
           isFormValid={() => this.isFormValid()}
         />
