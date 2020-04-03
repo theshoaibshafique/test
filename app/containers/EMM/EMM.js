@@ -70,12 +70,11 @@ export default class EMM extends React.PureComponent {
           });
           if (!match) { specialtyNames.push(specialty); }
         });
-
         this.setState({ 
           procedureNames: procedureNames,
           complicationNames: complicationList.join(', '),
           operatingRoom: operatingRoom,
-          compDate: new Date(result.postOpDate).toLocaleString(),
+          compDate: new Date(result.postOpDate).toLocaleDateString(),
           specialtyNames: specialtyNames
         });
       }
@@ -107,7 +106,7 @@ export default class EMM extends React.PureComponent {
           <div><span className="pad">Enhanced M&M</span><Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button> </div>
         </div>
 
-        <div className="table-row">
+        <div className="table-row info-title">
           <div className="first-column">Date of Complications</div> <div>Operating Room</div>
         </div>
 
@@ -116,13 +115,13 @@ export default class EMM extends React.PureComponent {
         </div>
 
         <div>
-          <div className="first-column">Specialties and Procedures</div>
+          <div className="first-column info-title">Specialties and Procedures</div>
         </div>
 
         {this.renderSpecialtiesProcedures()}
 
         <div>
-          <div className="first-column margin-top">Complications</div>
+          <div className="first-column margin-top info-title">Complications</div>
         </div>
 
         <div className="table-row-font">

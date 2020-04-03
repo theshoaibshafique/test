@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { setUserInfo, setUserFacility, setFacilityRooms, setProcedures, setPublishedSurveys, setMostRecentPublishedSurvey } from '../../containers/App/actions';
-
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { makeSelectID, makeSelectToken } from '../../containers/App/selectors';
 
@@ -30,6 +30,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setMostRecentPublishedSurvey: (publishedSurvey) => {
       dispatch(setMostRecentPublishedSurvey(publishedSurvey))
+    },
+    pushUrl: (url) => {
+      dispatch(push(url));
     }
   };
 };

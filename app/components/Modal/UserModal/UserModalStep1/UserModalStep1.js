@@ -15,9 +15,113 @@ class UserModalStep1 extends React.Component {
       errorMsgVisible: false,
       errorMsgEmailVisible: false,
       errorMsg: 'A user with this email address already exists. Please use a different email address.',
-      isLoading: false
+      isLoading: false,
+      fieldErrors: this.props.fieldErrors
     }
   }
+
+  addUser(){
+    if (!this.props.isFormValid()){
+      return; 
+    }
+
+    this.setState({ errorMsgVisible: false, isLoading: true });
+
+    let jsonBody = {
+      "firstName": this.props.userValue.firstName,
+      "lastName": this.props.userValue.lastName,
+      "email": this.props.userValue.email,
+      "title": this.props.userValue.title,
+      "facilityName": this.props.userValue.facilityName,
+      "preferredLanguage": 'en-US',
+      "active": true,
+      "sendEmail": true
+    }
+
+    globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'post', this.props.userToken, jsonBody)
+    .then(result => {
+      if (result === 'error') {
+        this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false, isLoading: false });
+      } else if (result === 'conflict') {
+        let fieldErrors = this.state.fieldErrors;
+        fieldErrors.email = 'A user with this email address already exists. Please use a different email address.'
+        this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false ,fieldErrors, isLoading: false});
+      } else {
+        // add roles
+        let jsonBody;
+        
+        if (this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
+          jsonBody = {
+            "userName": result,
+            "appName": '6AD12264-46FA-8440-52AD1846BDF1',
+            "roleNames": ['Admin']
+          }
+
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // User management
+          .then(result => {
+            if (result === 'error' || result === 'conflict') {
+              this.setState({ errorMsgVisible: true });
+            }
+          });
+
+          jsonBody = {
+            "userName": result,
+            "appName": '5E451021-9E5B-4C5D-AC60-53109DAE7853',
+            "roleNames": ['Admin']
+          }
+
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // Location
+          .then(result => {
+            if (result === 'error' || result === 'conflict') {
+              this.setState({ errorMsgVisible: true });
+            }
+          });
+
+          jsonBody = {
+            "userName": result,
+            "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
+            "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit']
+          }
+
+          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // Insights
+          .then(result => {
+            if (result === 'error' || result === 'conflict') {
+              this.setState({ errorMsgVisible: true });
+            }
+          });
+        } else {
+          let rolesNames = [];
+          if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0) {
+            rolesNames.push('Enhanced M&M View');
+          }
+
+          if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
+            rolesNames.push('Enhanced M&M Edit');
+          }
+
+          if (rolesNames.length > 0) {
+            jsonBody = {
+              "userName": result,
+              "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
+              "roleNames": rolesNames
+            }
+
+            globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
+            .then(result => {
+              if (result === 'error' || result === 'conflict') {
+                this.setState({ errorMsgVisible: true });
+              }
+            });
+          }
+        }
+
+        if (!this.state.errorMsgVisible && !this.state.errorMsgEmailVisible) {
+          this.props.refreshGrid(result);
+        }
+      }
+    })
+    
+  };
   
   save() {
 
@@ -45,7 +149,7 @@ class UserModalStep1 extends React.Component {
         this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, isLoading: false });
       } else {
         // update roles
-        this.setState({ errorMsgVisible: false, errorMsgEmailVisible: false });
+        this.setState({ errorMsgVisible: false, errorMsgEmailVisible: false, isLoading: false });
         let jsonBody;
         
         if (this.props.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
@@ -214,9 +318,11 @@ class UserModalStep1 extends React.Component {
                       <Grid container justify="flex-end" >
                       <Button style={{color : "#3db3e3",marginRight:40}} onClick={() => this.props.closeModal()}>Cancel</Button>
                         {this.props.currentView === 'add' ? (
-                          <Button variant="outlined" className="primary" onClick={() => this.props.addUser()}>Add</Button>
+                          <Button variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.addUser()}>
+                            {(this.state.isLoading) ? <div className="loader"></div> : 'Add'}
+                          </Button>
                         ) : (
-                          <Button variant="contained" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
+                          <Button variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
                               {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}
                           </Button>
                         )}

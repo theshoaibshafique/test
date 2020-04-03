@@ -707,7 +707,7 @@ export default class RequestEMM extends React.PureComponent {
           <Grid item xs={12} className="input-title">
             Send email updates about eM&M to (Optional):
           </Grid>
-          <Grid item xs={8} >
+          <Grid item xs={8} style={{marginBottom:24}}>
             <AsyncSelect
               isMulti
               cacheOptions
@@ -715,6 +715,7 @@ export default class RequestEMM extends React.PureComponent {
               loadOptions={promiseOptions}
               value={this.state.inputValue}
               onChange={(e) => this.handleUserEmailChange(e)}
+              
             />
           </Grid>
 

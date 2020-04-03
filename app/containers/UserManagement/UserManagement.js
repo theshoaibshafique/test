@@ -46,7 +46,7 @@ export default class UserManagement extends React.PureComponent {
         lastName: '',
         email: '',
         title: '',
-        department: '',
+        facilityName: this.props.facilityName,
         country: '',
         preferredLanguage: 'en-US',
         active: true,
@@ -109,7 +109,7 @@ export default class UserManagement extends React.PureComponent {
                 lastName: rowData.lastName,
                 email: rowData.email,
                 title: rowData.title,
-                department: rowData.departmentName,
+                facilityName: rowData.facilityName,
                 country: rowData.country,
                 preferredLanguage: rowData.preferredLanguage,
                 active: rowData.active,
@@ -147,7 +147,6 @@ export default class UserManagement extends React.PureComponent {
         lastName: '',
         email: '',
         title: '',
-        department: '',
         country: '',
         preferredLanguage: 'en-US',
         active: true,
@@ -197,115 +196,15 @@ export default class UserManagement extends React.PureComponent {
     });
   }
 
-  addUser(){
-    if (!this.isFormValid()){
-      return; 
-    }
-    this.loading();
-
-    let jsonBody = {
-      "firstName": this.state.userValue.firstName,
-      "lastName": this.state.userValue.lastName,
-      "email": this.state.userValue.email,
-      "title": this.state.userValue.title,
-      "departmentName": this.state.userValue.department,
-      "preferredLanguage": 'en-US',
-      "active": true,
-      "sendEmail": true
-    }
-
-    globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'post', this.props.userToken, jsonBody)
-    .then(result => {
-      if (result === 'error') {
-        this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false });
-      } else if (result === 'conflict') {
-        let fieldErrors = this.state.fieldErrors;
-        fieldErrors.email = 'A user with this email address already exists. Please use a different email address.'
-        this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false ,fieldErrors});
-      } else {
-        // add roles
-        let jsonBody;
-        
-        if (this.state.userValue.permissions.indexOf("6AD12264-46FA-8440-52AD1846BDF1_Admin") >= 0) {
-          jsonBody = {
-            "userName": result,
-            "appName": '6AD12264-46FA-8440-52AD1846BDF1',
-            "roleNames": ['Admin']
-          }
-
-          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // User management
-          .then(result => {
-            if (result === 'error' || result === 'conflict') {
-              this.setState({ errorMsgVisible: true });
-            }
-          });
-
-          jsonBody = {
-            "userName": result,
-            "appName": '5E451021-9E5B-4C5D-AC60-53109DAE7853',
-            "roleNames": ['Admin']
-          }
-
-          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // Location
-          .then(result => {
-            if (result === 'error' || result === 'conflict') {
-              this.setState({ errorMsgVisible: true });
-            }
-          });
-
-          jsonBody = {
-            "userName": result,
-            "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-            "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit']
-          }
-
-          globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // Insights
-          .then(result => {
-            if (result === 'error' || result === 'conflict') {
-              this.setState({ errorMsgVisible: true });
-            }
-          });
-        } else {
-          let rolesNames = [];
-          if (this.state.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0) {
-            rolesNames.push('Enhanced M&M View');
-          }
-
-          if (this.state.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
-            rolesNames.push('Enhanced M&M Edit');
-          }
-
-          if (rolesNames.length > 0) {
-            jsonBody = {
-              "userName": result,
-              "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-              "roleNames": rolesNames
-            }
-
-            globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody)
-            .then(result => {
-              if (result === 'error' || result === 'conflict') {
-                this.setState({ errorMsgVisible: true });
-              }
-            });
-          }
-        }
-
-        if (!this.state.errorMsgVisible && !this.state.errorMsgEmailVisible) {
-          this.refreshGrid();
-        }
-      }
-      this.notLoading();
-    })
-    
-  };
-
-  refreshGrid() {
+  refreshGrid(userName) {
+    let newUser = this.state.userValue;
+    newUser.userName = userName;
     this.setState({
-      userList: [...this.state.userList, this.state.userValue],
+      userList: [...this.state.userList, newUser],
       currentView: 'add',
       open: false
     })
+    this.handleClose()
   };
 
   updateGrid(id) {
@@ -331,6 +230,7 @@ export default class UserManagement extends React.PureComponent {
       currentView: 'add',
       open: false
     })
+    this.handleClose()
   };
 
   handleFormChange(e) {
@@ -432,7 +332,6 @@ export default class UserManagement extends React.PureComponent {
           open={this.state.open}
           userValue={this.state.userValue}
           closeModal={() => this.closeModal()}
-          addUser={() => this.addUser()}
           handleFormChange={(e) => this.handleFormChange(e)}
           handleClose={() => this.handleClose()}
           currentView={this.state.currentView}
@@ -442,7 +341,7 @@ export default class UserManagement extends React.PureComponent {
           errorMsg={this.state.errorMsg}
           errorMsgVisible={this.state.errorMsgVisible}
           errorMsgEmailVisible={this.state.errorMsgEmailVisible}
-          refreshGrid={() => this.refreshGrid()}
+          refreshGrid={(userName) => this.refreshGrid(userName)}
           updateGridEdit={(id) => this.updateGridEdit(id)}
           isFormValid={() => this.isFormValid()}
         />
