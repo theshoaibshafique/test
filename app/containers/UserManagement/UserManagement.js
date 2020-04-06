@@ -19,7 +19,6 @@ import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
-import Snackbar from '@material-ui/core/Snackbar';
 
 const tableIcons = {
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
@@ -53,7 +52,6 @@ export default class UserManagement extends React.PureComponent {
         permissions: [],
         id: ''
       },
-      snackBarOpen: false,
       deleteDialogOpen: false,
       errorMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
       errorMsgVisible: false,
@@ -91,7 +89,10 @@ export default class UserManagement extends React.PureComponent {
       // get the user roles for edit
       globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API + rowData.userName, 'get', this.props.userToken, {})
       .then(result => {
-        if (result != null) {
+        if (result === 'error' || result === 'conflict') {
+          // send error to modal
+          this.setState({ errorMsgVisible: true });
+        } else {
           const permission = []
           result.map(userRole => {
             if (userRole.roleNames && userRole.roleNames.length) {
@@ -119,10 +120,6 @@ export default class UserManagement extends React.PureComponent {
               }
             });
           }
-          
-        } else {
-          // send error to modal
-          this.setState({ errorMsgVisible: true });
         }
       });
     }
@@ -180,7 +177,7 @@ export default class UserManagement extends React.PureComponent {
     }
 
     this.setState({fieldErrors: errors});
-    return Object.keys(errors).length === 0;
+    return errors; //Object.keys(errors).length === 0;
   }
 
   
@@ -217,13 +214,13 @@ export default class UserManagement extends React.PureComponent {
     })
   };
 
-  updateGridEdit(id) {
+  updateGridEdit(id,userValue) {
     let newState = Object.assign({}, this.state);
-    newState.userList[id].firstName = this.state.userValue.firstName;
-    newState.userList[id].lastName = this.state.userValue.lastName;
-    newState.userList[id].email = this.state.userValue.email;
-    newState.userList[id].title = this.state.userValue.title;
-    newState.userList[id].permissions = this.state.userValue.permissions;
+    newState.userList[id].firstName = userValue.firstName;
+    newState.userList[id].lastName = userValue.lastName;
+    newState.userList[id].email = userValue.email;
+    newState.userList[id].title = userValue.title;
+    newState.userList[id].permissions = userValue.permissions;
     newState.userValue.isLoaded = false;
     this.setState({
       newState,
@@ -251,31 +248,6 @@ export default class UserManagement extends React.PureComponent {
   handleClose = () => {
     this.setState({ open: false, deleteDialogOpen: false, errorMsgVisible: false, errorMsgEmailVisible: false });
     this.resetModal();
-  };
-
-  passwordResetLink() {
-    let jsonBody = {
-      "userName": this.state.userValue.currentUser
-    }
-
-    globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTRESET_API, 'PATCH', this.props.userToken, jsonBody)
-    .then(result => {
-      if (result === 'error' || result === 'conflict') {
-        // send error to modal
-        this.setState({ errorMsgVisible: true });
-      } else {
-        // show toast for success
-        this.setState({
-          snackBarOpen: true
-        })
-      }
-    })
-  };
-
-  handleCloseSnackBar() {
-    this.setState({
-      snackBarOpen: false
-    })
   };
 
   deleteUser() {
@@ -335,14 +307,13 @@ export default class UserManagement extends React.PureComponent {
           handleFormChange={(e) => this.handleFormChange(e)}
           handleClose={() => this.handleClose()}
           currentView={this.state.currentView}
-          passwordResetLink={() => this.passwordResetLink()}
           deleteUser={() => this.deleteUser()}
           fieldErrors={this.state.fieldErrors}
           errorMsg={this.state.errorMsg}
           errorMsgVisible={this.state.errorMsgVisible}
           errorMsgEmailVisible={this.state.errorMsgEmailVisible}
           refreshGrid={(userName) => this.refreshGrid(userName)}
-          updateGridEdit={(id) => this.updateGridEdit(id)}
+          updateGridEdit={(id,userValue) => this.updateGridEdit(id,userValue)}
           isFormValid={() => this.isFormValid()}
         />
 
@@ -354,23 +325,6 @@ export default class UserManagement extends React.PureComponent {
           updateGrid={(id) => this.updateGrid(id)}
         />
 
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          open={this.state.snackBarOpen}
-          autoHideDuration={4000}
-          onClose={() => this.handleCloseSnackBar()}
-          message="Password Reset Email Sent"
-          action={
-            <React.Fragment>
-              <IconButton size="small" aria-label="close" color="inherit" onClick={() => this.handleCloseSnackBar()}>
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </React.Fragment>
-          }
-        />
       </section>
       </LoadingOverlay>
     );

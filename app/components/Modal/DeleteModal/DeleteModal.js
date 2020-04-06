@@ -67,7 +67,7 @@ class DeleteModal extends React.Component {
             <p className="Paragraph">{this.props.userValue.active ? 'Disabled users will not be able to access Insights.' : ''}</p>
             <div className="Button-Row right-align">
               <Button style={{color : "#3db3e3",marginRight:25}} onClick={() => { this.props.handleClose(); this.setState({ errorMsgVisible: false }); }}>Cancel</Button>
-              <Button variant="contained" className="secondary" disabled={(this.state.isLoading)} onClick={() => this.enableDisableUser()}>{ (this.state.isLoading) ? <div className="secondary-loader"></div> : (this.props.userValue.active ? 'Disable' : 'Enable')}</Button>
+              <Button disableElevation variant="contained" className="secondary" disabled={(this.state.isLoading)} onClick={() => this.enableDisableUser()}>{ (this.state.isLoading) ? <div className="secondary-loader"></div> : (this.props.userValue.active ? 'Disable' : 'Enable')}</Button>
             </div>
           </div>
         </DialogContent>
