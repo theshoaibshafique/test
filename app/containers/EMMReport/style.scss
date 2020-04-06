@@ -12,8 +12,8 @@
 }
 .MuiListItem-root.Mui-selected, .MuiListItem-root.Mui-selected:hover,
 .MuiListItem-button:hover {
-    color:  #028CC8 ;
-    background-color: #D8F0F9;
+    color:  #028CC8 !important;
+    background-color: #D8F0F9 !important;
 }
 .MuiListItem-button:hover .MuiTypography-body1{
     font-weight: bold;

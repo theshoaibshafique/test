@@ -6,6 +6,7 @@ import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM, SPECIALTY, TEST_DATA } from '../../constants';
 import { Hidden, Drawer, List, ListItem, ListItemText, Grid } from '@material-ui/core';
 import AzureVideo from './AzureVideo/AzureVideo';
+import MultiVideo from './MultiVideo/MultiVideo';
 
 export default class EMMReport extends React.PureComponent {
   constructor(props) {
@@ -123,10 +124,10 @@ export default class EMMReport extends React.PureComponent {
                   <Grid item xs={12} className="overview-procedures">
                     {this.getFormattedProcedures(event.procedures)}
                   </Grid>
-                  <Grid item xs={12} style={{marginTop:40}}>
+                  <Grid item xs={12} style={{marginTop:40, marginLeft:140,marginRight:140, textAlign:"left"}} >
                     Case Duration: {this.getFormattedCaseDuration(event.caseDuration)}
                   </Grid>
-                  <Grid item xs={12} style={{marginBottom:40}}>
+                  <Grid item xs={12} style={{marginBottom:40,marginLeft:140,marginRight:140 , textAlign:"left"}} >
                     Complications: {this.getFormattedComplications(event.complications)}
                   </Grid>
                   <Grid item xs={12}>
@@ -135,10 +136,11 @@ export default class EMMReport extends React.PureComponent {
                   
                 </Grid>
               : <Grid container spacing={2} >
-                  <Grid item xs={12} >
-                    Hello yes I am video
-                    {/* <AzureVideo></AzureVideo> */}
+                  <Grid item xs={12} className="header">
                     {event.title}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <MultiVideo assets={event.enhancedMMData[0].assets}></MultiVideo>
                   </Grid>
                 </Grid>
               }
