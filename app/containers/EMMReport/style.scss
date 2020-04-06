@@ -1,4 +1,11 @@
 @import '../../styles/global-styles.scss';
+.emm-report {
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 24px;
+}
 
 .list-item{
     padding: 16px 40px;
@@ -12,7 +19,28 @@
     font-weight: bold;
 }
 
-.header .MuiTypography-body1 {
+.emm-report-nav .header .MuiTypography-body1 {
   font-size: 26px;
   line-height: 36px;
 }
+
+.overview-logo{
+    margin: 140px 0 80px 0;
+}
+.emm-report-nav .MuiTypography-body1 {
+    opacity: 0.8;
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 19px;
+}
+
+.overview-procedures {
+    opacity: 0.8;
+    color: #000000;
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 36px;
+}
+

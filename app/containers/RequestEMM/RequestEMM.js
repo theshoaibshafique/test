@@ -65,7 +65,7 @@ export default class RequestEMM extends React.PureComponent {
     CONSTANTS.SPECIALTY.forEach((specialty) => {
       specialty.values.forEach((procedure) => {
         procedure.specialtyName = specialty.name;
-        procedure.ID = specialty.ID
+        procedure.ID = specialty.value
         this.state.specialtyProducedureOptions.push(procedure);
       });
     });

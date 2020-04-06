@@ -190,10 +190,12 @@ export default class MainLayout extends React.PureComponent {
                 </Drawer>
               </Hidden>
             </nav>
-
-            <div className={"inline overflow-y " + (isEmmReport ? '' : 'Content-Wrapper')}>
-              {this.getContainer()}
-            </div>
+            {isEmmReport 
+              ? this.getContainer() 
+              : <div className="inline overflow-y Content-Wrapper">
+                  {this.getContainer()}
+                </div>}
+            
           </div>
         </div>
     );

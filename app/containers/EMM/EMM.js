@@ -63,7 +63,7 @@ export default class EMM extends React.PureComponent {
         result.specialty.map((specialty) => {
           let match = false;
           SPECIALTY.map((spec) => {
-            if (spec.ID.toUpperCase() === specialty.toUpperCase()) {
+            if (spec.value.toUpperCase() === specialty.toUpperCase()) {
               specialtyNames.push(spec.name);
               match = true;
             }

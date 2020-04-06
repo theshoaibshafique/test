@@ -1,102 +1,86 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.scss';
+import logo from './images/emmLogo.png';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM, SPECIALTY } from '../../constants';
-import { Hidden, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM, SPECIALTY, TEST_DATA } from '../../constants';
+import { Hidden, Drawer, List, ListItem, ListItemText, Grid } from '@material-ui/core';
+import AzureVideo from './AzureVideo/AzureVideo';
 
 export default class EMMReport extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const event = {
-      name:'Event 1'
-
-    }
-
     this.state = {
-      events: Array(5).fill(event), //Probably a list of dicts that 
-      procedureNames: [],
-      complicationNames: [],
-      operatingRoom: '',
-      compDate: null,
-      specialtyNames: []
+      events: [],
+      currentEvent: 0, // index of current viewed Event
+      isPublished: false
     };
   }
 
   componentDidMount() {
-    this.getCase();
+    let caseData = this.getCase() || {};
+    let events = [];
+    if (caseData.name) {
+      events = [{
+        title: "Overview",
+        procedures: caseData.procedures,
+        complications: caseData.complicationNames,
+        caseDuration: caseData.caseDuration
+      }, ...caseData.enhancedMMPages]
+    } else {
+      //TODO: error flow
+    }
+    this.setState({ isPublished: caseData.isPublished, events });
   };
 
   getCase() {
-    globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/' + this.props.requestId, 'get', this.props.userToken, {})
-      .then(result => {
-        if (result === 'error' || result === 'conflict') {
-
-        } else {
-          let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY);
-          let procedureNames = [];
-          let complicationList = [];
-          let operatingRoom = '';
-          let specialtyNames = [];
-          result.procedure.map((procedure) => {
-            let match = false;
-            surgeryList.map((surgery) => {
-              if (surgery.value.toUpperCase() === procedure.toUpperCase()) {
-                procedureNames.push(surgery.name);
-                match = true;
-              }
-            });
-            if (!match) { procedureNames.push(procedure); }
-          });
-
-          result.complications.map((complication) => {
-            let match = false;
-            COMPLICATIONS.map((comp) => {
-              if (complication.toUpperCase() === comp.value.toUpperCase()) {
-                complicationList.push(comp.name);
-                match = true;
-              }
-            });
-            if (!match) { complicationList.push(complication); }
-          });
-
-          OPERATING_ROOM.map((room) => {
-            if (room.value.toUpperCase() === result.operatingRoom.toUpperCase()) {
-              operatingRoom = room.name;
-            }
-          });
-
-          result.specialty.map((specialty) => {
-            let match = false;
-            SPECIALTY.map((spec) => {
-              if (spec.ID.toUpperCase() === specialty.toUpperCase()) {
-                specialtyNames.push(spec.name);
-                match = true;
-              }
-            });
-            if (!match) { specialtyNames.push(specialty); }
-          });
-
-          this.setState({
-            procedureNames: procedureNames,
-            complicationNames: complicationList.join(', '),
-            operatingRoom: operatingRoom,
-            compDate: new Date(result.postOpDate).toLocaleString(),
-            specialtyNames: specialtyNames
-          });
-        }
-      });
+    return TEST_DATA;
   };
 
-  renderSpecialtiesProcedures() {
-    if (this.state.specialtyNames.length) {
-      return this.state.specialtyNames.map((specialty, index) => {
-        return <div className="table-row row-font" key={index}>
-          <div>{this.state.procedureNames[index]}</div><div>&nbsp;({specialty})</div>
-        </div>
-      });
+  getOverviewEvent(rawCaseData) {
+    let overViewEvent = {};
+
+
+    return overViewEvent;
+  }
+
+  getName(searchList, key){
+    let index = searchList.findIndex( specialty => specialty.value == key);
+    if (index >= 0){
+      return searchList[index].name;
     }
+  }
+
+  getFormattedCaseDuration(caseDuration){
+    if (!caseDuration){
+      return
+    }
+    let hour = Math.floor(caseDuration / 3600);
+    let minutes = Math.floor(caseDuration % 3600 / 60)
+    return `${hour} ${hour == 1 ? 'hour ' : 'hours '} ${minutes} ${minutes == 1 ? 'minute ': 'minutes'}`
+  }
+
+  getFormattedComplications(complications){
+    if (!complications){
+      return;
+    }
+    return complications.map((complication,index) => (
+      `${this.getName(COMPLICATIONS,complication)}${index+1 < complications.length ? ', ' : ' '}`
+    ));
+  }
+
+  getFormattedProcedures(procedures){
+    if (!procedures){
+      return;
+    }
+    return procedures.map((procedure,index) => (
+      `${this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY),procedure.procedureName)} (${this.getName(SPECIALTY,procedure.specialtyName)})${index+1 < procedures.length ? ', ' : ' '}`
+    ));
+  }
+
+  handleChange(currentEvent){
+    this.setState({currentEvent})
   }
 
   goBack() {
@@ -105,30 +89,65 @@ export default class EMMReport extends React.PureComponent {
 
   render() {
     return (
-      <section>
+      <main className="emm-report">
         <Drawer
           variant="permanent"
           component="nav"
           open
-          className="MAIN-NAVIGATION"
+          className="MAIN-NAVIGATION emm-report-nav"
         >
           <List>
-            <ListItem style={{marginBottom:40}} className="header">
-              <ListItemText primary={"This is a title"}/>
+            <ListItem style={{ marginBottom: 40 }} className="header">
+              <ListItemText primary={"This is a title"} />
             </ListItem>
 
             {this.state.events.map((event, index) => (
-              <ListItem component="ul" className="list-item" button key={index}>
-                <ListItemText primary={event.name} />
+              <ListItem component="ul" className="list-item" button key={index} index={index} onClick={() => this.handleChange(index)} selected={this.state.currentEvent == index}>
+                <ListItemText primary={event.title} />
               </ListItem>
             ))}
-            
-            <ListItem component="ul" className="list-item" style={{marginTop:40}}>
-              <Button disableElevation variant="contained" fullWidth className="secondary"onClick={(e) => this.goBack()} >Exit</Button>
+
+            <ListItem component="ul" className="list-item" style={{ marginTop: 40 }}>
+              <Button disableElevation variant="contained" fullWidth className="secondary" onClick={(e) => this.goBack()} >Exit</Button>
             </ListItem>
           </List>
         </Drawer>
-      </section>
+        <section className="inline overflow-y Content-Wrapper">
+          {this.state.events.map((event, index) => (
+            <div hidden={this.state.currentEvent !== index} key={index}>
+              {index == 0 
+              ? <Grid container spacing={0} justify="center" style={{textAlign:"center"}}>
+                  <Grid item xs={12}>
+                    <img className="overview-logo" src={logo} style={{maxWidth:"80%"}}></img>
+                  </Grid>
+                  <Grid item xs={12} className="overview-procedures">
+                    {this.getFormattedProcedures(event.procedures)}
+                  </Grid>
+                  <Grid item xs={12} style={{marginTop:40}}>
+                    Case Duration: {this.getFormattedCaseDuration(event.caseDuration)}
+                  </Grid>
+                  <Grid item xs={12} style={{marginBottom:40}}>
+                    Complications: {this.getFormattedComplications(event.complications)}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(1)}>Start</Button>
+                  </Grid>
+                  
+                </Grid>
+              : <Grid container spacing={2} >
+                  <Grid item xs={12} >
+                    Hello yes I am video
+                    {/* <AzureVideo></AzureVideo> */}
+                    {event.title}
+                  </Grid>
+                </Grid>
+              }
+              
+            </div>
+          ))}
+        </section>
+
+      </main>
     );
   }
 }
