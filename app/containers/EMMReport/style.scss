@@ -24,6 +24,26 @@
   line-height: 36px;
 }
 
+.emm-report .MuiTabs-indicator{
+    min-width: 80px;
+    height: 5px;
+}
+
+.video-tabs{
+    border: 1px solid #C8C8C8;
+    border-bottom: 0;
+    border-radius: 4px 4px 0 0;
+    min-height: 40px;
+}
+
+.video-tab {
+    // padding: 0;
+    max-height: 40px;
+    min-height: 40px;
+    text-transform: none;
+    max-width: 80px;
+    min-width: 80px;
+}
 .overview-logo{
     margin: 140px 0 80px 0;
 }
