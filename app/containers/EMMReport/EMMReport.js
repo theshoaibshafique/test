@@ -39,42 +39,42 @@ export default class EMMReport extends React.PureComponent {
     return TEST_DATA;
   };
 
-  getName(searchList, key){
-    let index = searchList.findIndex( specialty => specialty.value == key);
-    if (index >= 0){
+  getName(searchList, key) {
+    let index = searchList.findIndex(specialty => specialty.value == key);
+    if (index >= 0) {
       return searchList[index].name;
     }
   }
 
-  getFormattedCaseDuration(caseDuration){
-    if (!caseDuration){
+  getFormattedCaseDuration(caseDuration) {
+    if (!caseDuration) {
       return
     }
     let hour = Math.floor(caseDuration / 3600);
     let minutes = Math.floor(caseDuration % 3600 / 60)
-    return `${hour} ${hour == 1 ? 'hour ' : 'hours '} ${minutes} ${minutes == 1 ? 'minute ': 'minutes'}`
+    return `${hour} ${hour == 1 ? 'hour ' : 'hours '} ${minutes} ${minutes == 1 ? 'minute ' : 'minutes'}`
   }
 
-  getFormattedComplications(complications){
-    if (!complications){
+  getFormattedComplications(complications) {
+    if (!complications) {
       return;
     }
-    return complications.map((complication,index) => (
-      `${this.getName(COMPLICATIONS,complication)}${index+1 < complications.length ? ', ' : ' '}`
+    return complications.map((complication, index) => (
+      `${this.getName(COMPLICATIONS, complication)}${index + 1 < complications.length ? ', ' : ' '}`
     ));
   }
 
-  getFormattedProcedures(procedures){
-    if (!procedures){
+  getFormattedProcedures(procedures) {
+    if (!procedures) {
       return;
     }
-    return procedures.map((procedure,index) => (
-      `${this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY),procedure.procedureName)} (${this.getName(SPECIALTY,procedure.specialtyName)})${index+1 < procedures.length ? ', ' : ' '}`
+    return procedures.map((procedure, index) => (
+      `${this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY), procedure.procedureName)} (${this.getName(SPECIALTY, procedure.specialtyName)})${index + 1 < procedures.length ? ', ' : ' '}`
     ));
   }
 
-  handleChange(currentEvent){
-    this.setState({currentEvent})
+  handleChange(currentEvent) {
+    this.setState({ currentEvent })
   }
 
   goBack() {
@@ -109,45 +109,41 @@ export default class EMMReport extends React.PureComponent {
         <section className="">
           {this.state.events.map((event, index) => (
             <div hidden={this.state.currentEvent !== index} key={index}>
-              {index == 0 
-              ? <Grid container spacing={0} justify="center" style={{textAlign:"center"}}>
+              {index == 0
+                ? <Grid container spacing={0} justify="center" style={{ textAlign: "center" }}>
                   <Grid item xs={12}>
-                    <img className="overview-logo" src={logo} style={{maxWidth:"80%"}}></img>
+                    <img className="overview-logo" src={logo} style={{ maxWidth: "80%" }}></img>
                   </Grid>
                   <Grid item xs={12} className="overview-procedures">
                     {this.getFormattedProcedures(event.procedures)}
                   </Grid>
-                  <Grid item xs={12} style={{marginTop:40, marginLeft:140,marginRight:140, textAlign:"left"}} >
+                  <Grid item xs={12} style={{ marginTop: 40, marginLeft: 140, marginRight: 140, textAlign: "left" }} >
                     Case Duration: {this.getFormattedCaseDuration(event.caseDuration)}
                   </Grid>
-                  <Grid item xs={12} style={{marginBottom:40,marginLeft:140,marginRight:140 , textAlign:"left"}} >
+                  <Grid item xs={12} style={{ marginBottom: 40, marginLeft: 140, marginRight: 140, textAlign: "left" }} >
                     Complications: {this.getFormattedComplications(event.complications)}
                   </Grid>
                   <Grid item xs={12}>
                     <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(1)}>Start</Button>
                   </Grid>
-                  
+
                 </Grid>
-              : <Grid container spacing={2} >
+                : <Grid container spacing={2} >
                   <Grid item xs={12} className="header">
                     {event.title}
                   </Grid>
-                  <Grid item xs={12} >
+                  <Grid item xs={12} style={{ maxHeight: 600, overflow: 'hidden' }}>
                     <MultiVideo assets={event.enhancedMMData[0].assets}></MultiVideo>
                   </Grid>
-                  <Grid item xs={12}>
-                    <Grid container spacing={0} justify="space-between">
-                      <Grid item xs={6}>
-                        <Button disableElevation variant="contained" className="secondary" onClick={(e) => this.handleChange(index-1)} >Back</Button>
-                      </Grid>
-                      <Grid item xs={6} style={{textAlign:'right'}}>
-                        <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(index+1)}>Next</Button>
-                      </Grid>
-                    </Grid>
+                  <Grid item xs={6}>
+                    <Button disableElevation variant="contained" className="secondary" onClick={(e) => this.handleChange(index - 1)} >Back</Button>
+                  </Grid>
+                  <Grid item xs={6} style={{ textAlign: 'right' }}>
+                    <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(index + 1)}>Next</Button>
                   </Grid>
                 </Grid>
               }
-              
+
             </div>
           ))}
         </section>
