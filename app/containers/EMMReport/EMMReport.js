@@ -106,6 +106,10 @@ export default class EMMReport extends React.PureComponent {
     this.props.pushUrl('/emmcases');
   };
 
+  publish(){
+
+  }
+
   render() {
     return (
       <main className="emm-report inline overflow-y Content-Wrapper">
@@ -125,8 +129,13 @@ export default class EMMReport extends React.PureComponent {
                 <ListItemText primary={event.title} />
               </ListItem>
             ))}
-
+            { this.state.currentEvent == this.state.events.length-1
+            ? 
             <ListItem component="ul" className="list-item" style={{ marginTop: 40 }}>
+              <Button disableElevation variant="contained" fullWidth className={this.state.isPublished ? "is-published" : "secondary"} disabled={this.state.isPublished} onClick={(e) => this.publish()} >{this.state.isPublished ? "Published":'Publish'}</Button>
+            </ListItem> 
+            : ''}
+            <ListItem component="ul" className="list-item" style={this.state.currentEvent == this.state.events.length-1 ? { marginTop: 20 } : { marginTop: 40 }}>
               <Button disableElevation variant="contained" fullWidth className="secondary" onClick={(e) => this.goBack()} >Exit</Button>
             </ListItem>
           </List>
