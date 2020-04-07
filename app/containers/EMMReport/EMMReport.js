@@ -4,8 +4,7 @@ import './style.scss';
 import logo from './images/emmLogo.png';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM, SPECIALTY, TEST_DATA } from '../../constants';
-import { Hidden, Drawer, List, ListItem, ListItemText, Grid } from '@material-ui/core';
-import AzureVideo from './AzureVideo/AzureVideo';
+import { Drawer, List, ListItem, ListItemText, Grid, Typography } from '@material-ui/core';
 import MultiVideo from './MultiVideo/MultiVideo';
 import EmmNote from './EmmNote/EmmNote';
 import EmmAnnotation from './EmmAnnotation/EmmAnnotation';
@@ -127,42 +126,51 @@ export default class EMMReport extends React.PureComponent {
             <div hidden={this.state.currentEvent !== index} key={index}>
               {index == 0
                 ? <Grid container spacing={0} justify="center" style={{ textAlign: "center" }}>
-                  <Grid item xs={12}>
+                  <Grid item xs={10}>
                     <img className="overview-logo" src={logo} style={{ maxWidth: "80%" }}></img>
                   </Grid>
-                  <Grid item xs={12} className="overview-procedures">
+                  <Grid item xs={10} className="overview-procedures">
                     {this.getFormattedProcedures(event.procedures)}
                   </Grid>
-                  <Grid item xs={12} style={{ marginTop: 40, marginLeft: 140, marginRight: 140, textAlign: "left" }} >
+                  <Grid item xs={10} style={{ marginTop: 40, marginLeft: '25%', marginRight: 140, textAlign: "left" }} >
                     Case Duration: {this.getFormattedCaseDuration(event.caseDuration)}
                   </Grid>
-                  <Grid item xs={12} style={{ marginBottom: 40, marginLeft: 140, marginRight: 140, textAlign: "left" }} >
+                  <Grid item xs={10} style={{ marginBottom: 40, marginLeft: '25%', marginRight: 140, textAlign: "left" }} >
                     Complications: {this.getFormattedComplications(event.complications)}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={10}>
                     <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(1)}>Start</Button>
                   </Grid>
 
                 </Grid>
-                : <Grid container spacing={3} >
-                  <Grid item xs={12} className="header">
+                : <Grid container spacing={3} justify="center">
+                  <Grid item xs={10} className="header">
                     {event.title}
                   </Grid>
-                  <Grid item xs={12} style={{ maxHeight: 610, overflow: 'hidden' }}>
-                    <MultiVideo assets={event.enhancedMMData[0].assets}></MultiVideo>
+                  <Grid item xs={10} style={{ maxHeight: 610, overflow: 'hidden', marginBottom:10 }}>
+                    <Typography color="textSecondary">
+                      {event.enhancedMMData[0].header}
+                    </Typography>
+                    <MultiVideo  assets={event.enhancedMMData[0].assets}></MultiVideo>
                   </Grid>
 
-                  {event.enhancedMMData.map((annotation, index) => (
-                    this.renderAnnotation(annotation)
-                  ))}
 
-                  {event.enhancedMMData.length % 2 == 0 ? <Grid item xs={6}></Grid> : ''}
-
-                  <Grid item xs={6}>
-                    <Button disableElevation variant="contained" className="secondary" onClick={(e) => this.handleChange(index - 1)} >Back</Button>
+                  <Grid item xs={10}>
+                    <Grid container spacing={3}>
+                      {event.enhancedMMData.map((annotation, index) => (
+                        this.renderAnnotation(annotation)
+                      ))}
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6} style={{ textAlign: 'right' }} hidden={index + 1 >= this.state.events.length}>
-                    <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(index + 1)}>Next</Button>
+                  <Grid item xs={10}>
+                    <Grid container spacing={0}>
+                      <Grid item xs={6}>
+                        <Button disableElevation variant="contained" className="secondary" onClick={(e) => this.handleChange(index - 1)} >Back</Button>
+                      </Grid>
+                      <Grid item xs={6} style={{ textAlign: 'right' }} hidden={index + 1 >= this.state.events.length}>
+                        <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(index + 1)}>Next</Button>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               }

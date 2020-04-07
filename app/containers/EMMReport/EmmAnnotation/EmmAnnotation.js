@@ -11,9 +11,9 @@ export default class EmmAnnotation extends React.PureComponent { // eslint-disab
   }
   render() {
     return (
-      <Card variant="outlined">
+      <Card variant="outlined" className="annotation-card">
         <CardContent>
-          <Typography color="textSecondary">
+          <Typography color="textSecondary" className="annotation-secondary">
             {this.props.annotation.header}
           </Typography>
           <Typography color="textPrimary" style={{fontWeight:'bold',margin:"8px 0"}}>
