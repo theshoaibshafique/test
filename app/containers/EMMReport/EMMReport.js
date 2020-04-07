@@ -39,13 +39,6 @@ export default class EMMReport extends React.PureComponent {
     return TEST_DATA;
   };
 
-  getOverviewEvent(rawCaseData) {
-    let overViewEvent = {};
-
-
-    return overViewEvent;
-  }
-
   getName(searchList, key){
     let index = searchList.findIndex( specialty => specialty.value == key);
     if (index >= 0){
@@ -90,7 +83,7 @@ export default class EMMReport extends React.PureComponent {
 
   render() {
     return (
-      <main className="emm-report">
+      <main className="emm-report inline overflow-y Content-Wrapper">
         <Drawer
           variant="permanent"
           component="nav"
@@ -113,7 +106,7 @@ export default class EMMReport extends React.PureComponent {
             </ListItem>
           </List>
         </Drawer>
-        <section className="inline overflow-y Content-Wrapper">
+        <section className="">
           {this.state.events.map((event, index) => (
             <div hidden={this.state.currentEvent !== index} key={index}>
               {index == 0 
@@ -139,8 +132,18 @@ export default class EMMReport extends React.PureComponent {
                   <Grid item xs={12} className="header">
                     {event.title}
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} style={{maxHeight:540}}>
                     <MultiVideo assets={event.enhancedMMData[0].assets}></MultiVideo>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid container spacing={0} justify="space-between">
+                      <Grid item xs={6}>
+                        <Button disableElevation variant="contained" className="secondary" onClick={(e) => this.handleChange(index-1)} >Back</Button>
+                      </Grid>
+                      <Grid item xs={6} style={{textAlign:'right'}}>
+                        <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(index+1)}>Next</Button>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               }

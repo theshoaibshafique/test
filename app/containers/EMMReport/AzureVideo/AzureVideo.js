@@ -20,10 +20,11 @@ export default class AzureVideo extends React.PureComponent { // eslint-disable-
     // });
   }
   render() {
-    let myToken = 'Bearer=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiIxNGJkNzEyOC1lOTI2LTQ0ZTEtYjE3ZC0yMDBmZDE4MjcyZjUiLCJuYmYiOjE1ODYyNjQ4MDYsImV4cCI6MTU4NjI2ODcwNiwiaXNzIjoiU3VyZ2ljYWwgU2FmZXR5IFRlY2hub2xvZ2llcyIsImF1ZCI6Imluc2lnaHRzLnN1cmdpY2Fsc2FmZXR5LmNvbSJ9.C2i3AE9RrMOVNXZgfwNIzJtlnwxFSTcbgDtiQKU0pZw'
+    let myToken = 'Bearer=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cm46bWljcm9zb2Z0OmF6dXJlOm1lZGlhc2VydmljZXM6Y29udGVudGtleWlkZW50aWZpZXIiOiIxNGJkNzEyOC1lOTI2LTQ0ZTEtYjE3ZC0yMDBmZDE4MjcyZjUiLCJuYmYiOjE1ODYyNzMwNTIsImV4cCI6MTU4NjI3Njk1MiwiaXNzIjoiU3VyZ2ljYWwgU2FmZXR5IFRlY2hub2xvZ2llcyIsImF1ZCI6Imluc2lnaHRzLnN1cmdpY2Fsc2FmZXR5LmNvbSJ9.RLrN3SW7Oyn7_4NE6M63VhfPSyWeEhjUDycd2UVc8Bw'
     return (
       <AzureMP
       skin="amp-flush"
+      options={{width: "640",height: "500"}}
       src={[{
         src: "https://sstmediaservice-usct.streaming.media.azure.net/8509b561-a0fc-4022-a997-b0f1a724edeb/test.ism/manifest(format=mpd-time-csf,encryption=cenc)",
         type: "application/vnd.ms-sstr+xml",
