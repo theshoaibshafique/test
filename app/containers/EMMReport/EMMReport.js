@@ -7,6 +7,8 @@ import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM, SP
 import { Hidden, Drawer, List, ListItem, ListItemText, Grid } from '@material-ui/core';
 import AzureVideo from './AzureVideo/AzureVideo';
 import MultiVideo from './MultiVideo/MultiVideo';
+import EmmNote from './EmmNote/EmmNote';
+import EmmAnnotation from './EmmAnnotation/EmmAnnotation';
 
 export default class EMMReport extends React.PureComponent {
   constructor(props) {
@@ -73,6 +75,20 @@ export default class EMMReport extends React.PureComponent {
     ));
   }
 
+  renderAnnotation(annotation) {
+    if (!annotation) {
+      return;
+    }
+    switch (annotation.tileType) {
+      case 'EmmAnnotation':
+        return <Grid item xs={6} key={annotation.order}><EmmAnnotation annotation={annotation} /></Grid>
+      case 'EmmNote':
+        return <Grid item xs={6} key={annotation.order}><EmmNote annotation={annotation} /></Grid>
+      default:
+        break;
+    }
+  }
+
   handleChange(currentEvent) {
     this.setState({ currentEvent })
   }
@@ -128,17 +144,24 @@ export default class EMMReport extends React.PureComponent {
                   </Grid>
 
                 </Grid>
-                : <Grid container spacing={2} >
+                : <Grid container spacing={3} >
                   <Grid item xs={12} className="header">
                     {event.title}
                   </Grid>
-                  <Grid item xs={12} style={{ maxHeight: 600, overflow: 'hidden' }}>
+                  <Grid item xs={12} style={{ maxHeight: 610, overflow: 'hidden' }}>
                     <MultiVideo assets={event.enhancedMMData[0].assets}></MultiVideo>
                   </Grid>
+
+                  {event.enhancedMMData.map((annotation, index) => (
+                    this.renderAnnotation(annotation)
+                  ))}
+
+                  {event.enhancedMMData.length % 2 == 0 ? <Grid item xs={6}></Grid> : ''}
+
                   <Grid item xs={6}>
                     <Button disableElevation variant="contained" className="secondary" onClick={(e) => this.handleChange(index - 1)} >Back</Button>
                   </Grid>
-                  <Grid item xs={6} style={{ textAlign: 'right' }}>
+                  <Grid item xs={6} style={{ textAlign: 'right' }} hidden={index + 1 >= this.state.events.length}>
                     <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(index + 1)}>Next</Button>
                   </Grid>
                 </Grid>
