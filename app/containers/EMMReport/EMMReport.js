@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import './style.scss';
 import logo from './images/emmLogo.png';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM, SPECIALTY, TEST_DATA } from '../../constants';
+import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, SPECIALTY } from '../../constants';
 import { Drawer, List, ListItem, ListItemText, Grid, Typography } from '@material-ui/core';
 import MultiVideo from './MultiVideo/MultiVideo';
 import EmmNote from './EmmNote/EmmNote';
@@ -21,23 +21,33 @@ export default class EMMReport extends React.PureComponent {
   }
 
   componentDidMount() {
-    let caseData = this.getCase() || {};
-    let events = [];
-    if (caseData.name) {
-      events = [{
-        title: "Overview",
-        procedures: caseData.procedures,
-        complications: caseData.complicationNames,
-        caseDuration: caseData.caseDuration
-      }, ...caseData.enhancedMMPages]
-    } else {
-      //TODO: error flow
-    }
-    this.setState({ isPublished: caseData.isPublished, events });
+    this.getCase()
+
   };
 
   getCase() {
-    return TEST_DATA;
+    let reportId = '096E7268-6A19-4FE1-B707-EB57C8385416' || this.props.requestId
+    globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + reportId, 'get', this.props.userToken, {})
+      .then(caseData => {
+        if (caseData) {
+          let events = [];
+          if (caseData.name) {
+            events = [{
+              title: "Overview",
+              procedures: caseData.procedures,
+              complications: caseData.complicationNames,
+              caseDuration: caseData.caseDuration
+            }, ...caseData.enhancedMMPages]
+          } else {
+            //TODO: error flow
+          }
+          this.setState({ isPublished: caseData.isPublished, events });
+
+        } else {
+
+          // error
+        }
+      });
   };
 
   getName(searchList, key) {
@@ -147,11 +157,11 @@ export default class EMMReport extends React.PureComponent {
                   <Grid item xs={10} className="header">
                     {event.title}
                   </Grid>
-                  <Grid item xs={10} style={{ maxHeight: 610, overflow: 'hidden', marginBottom:10 }}>
+                  <Grid item xs={10} style={{ maxHeight: 610, overflow: 'hidden', marginBottom: 10 }}>
                     <Typography color="textSecondary">
                       {event.enhancedMMData[0].header}
                     </Typography>
-                    <MultiVideo  assets={event.enhancedMMData[0].assets}></MultiVideo>
+                    <MultiVideo assets={event.enhancedMMData[0].assets}></MultiVideo>
                   </Grid>
 
 

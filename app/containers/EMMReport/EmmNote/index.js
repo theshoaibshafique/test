@@ -1,10 +1,20 @@
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import EmmNote from './EmmNote';
-import { makeSelectToken } from '../../App/selectors';
+import EMMReport from './EMMReport';
+import { makeSelectToken } from '../App/selectors';
 
-const mapStateToProps = createStructuredSelector({
-  userToken: makeSelectToken()
+const mapStateToProps = (state, ownProps) => createStructuredSelector({ 
+  userToken: makeSelectToken(),
+  requestId: () => ownProps.match.params.requestid
 });
 
-export default connect(mapStateToProps, null)(EmmNote);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    pushUrl: (url) => {
+      dispatch(push(url));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EMMReport);
