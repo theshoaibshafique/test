@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM, SPECIALTY } from '../../constants';
+import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, SPECIALTY } from '../../constants';
 
 export default class EMM extends React.PureComponent {
   constructor(props) {
@@ -12,13 +12,27 @@ export default class EMM extends React.PureComponent {
       complicationNames: [],
       operatingRoom: '',
       compDate: null,
-      specialtyNames: []
+      specialtyNames: [],
+      operatingRoomList: []
     };
   }
 
   componentDidMount() {
-    this.getCase();
+    this.getOperatingRooms();
   };
+
+  getOperatingRooms(){
+    globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+      .then(result => {
+        let operatingRoomList = [];
+        if (result) {
+          result.map((room) => {
+            operatingRoomList.push({ value: room.roomName, label: room.roomTitle })
+          });
+        }
+        this.setState({ operatingRoomList },this.getCase());
+      });
+  }
 
   getCase() {     
     globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/' + this.props.requestId, 'get', this.props.userToken, {})
@@ -54,9 +68,9 @@ export default class EMM extends React.PureComponent {
           if (!match) { complicationList.push(complication); }
         });
 
-        OPERATING_ROOM.map((room) => {
+        this.state.operatingRoomList.map((room) => {
           if (room.value.toUpperCase() === result.operatingRoom.toUpperCase()) {
-            operatingRoom = room.name;
+            operatingRoom = room.label;
           }
         });
 

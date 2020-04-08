@@ -9,7 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, OPERATING_ROOM } from '../../constants';
+import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS } from '../../constants';
 import { Grid } from '@material-ui/core';
 
 export default class EMMCases extends React.PureComponent {
@@ -36,7 +36,21 @@ export default class EMMCases extends React.PureComponent {
         recentSearch: recentSearchCache
       });  
     }
+    this.getOperatingRooms();
   };
+
+  getOperatingRooms(){
+    globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+      .then(result => {
+        let operatingRoomList = [];
+        if (result) {
+          result.map((room) => {
+            operatingRoomList.push({ value: room.roomName, label: room.roomTitle })
+          });
+        }
+        this.setState({ operatingRoomList });
+      });
+  }
 
   search(e) {
     if (e){
@@ -78,9 +92,9 @@ export default class EMMCases extends React.PureComponent {
             if (!match) { complicationList.push(complication); }
           });
 
-          OPERATING_ROOM.map((room) => {
+          this.state.operatingRoomList.map((room) => {
             if (room.value.toUpperCase() === result.operatingRoom.toUpperCase()) {
-              operatingRoom = room.name;
+              operatingRoom = room.label;
             }
           });
 
