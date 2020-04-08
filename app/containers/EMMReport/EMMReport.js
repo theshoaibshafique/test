@@ -16,14 +16,32 @@ export default class EMMReport extends React.PureComponent {
     this.state = {
       events: [],
       currentEvent: 0, // index of current viewed Event
-      isPublished: false
+      isPublished: false,
+      isScriptReady: false
     };
   }
 
   componentDidMount() {
     this.getCase()
-
+    this.loadAMPScript()
   };
+
+  loadAMPScript() {
+    if (document.querySelector('#amp-azure')) {
+      this.setState({ isScriptReady: true });
+    };
+    var scriptTag = document.createElement('script');
+    var linkTag = document.createElement('link');
+    linkTag.rel = 'stylesheet';
+    scriptTag.id = 'amp-azure';
+    scriptTag.src = '//amp.azure.net/libs/amp/2.1.5/azuremediaplayer.min.js';
+    linkTag.href = '//amp.azure.net/libs/amp/2.1.5/skins/' + "amp-flush" + '/azuremediaplayer.min.css';
+    document.body.appendChild(scriptTag);
+    document.head.insertBefore(linkTag, document.head.firstChild);
+    scriptTag.onload = () => {
+      this.setState({ isScriptReady: true });
+    };
+  }
 
   getCase() {
     let reportId = '096E7268-6A19-4FE1-B707-EB57C8385416' || this.props.requestId
@@ -106,7 +124,7 @@ export default class EMMReport extends React.PureComponent {
     this.props.pushUrl('/emmcases');
   };
 
-  publish(){
+  publish() {
 
   }
 
@@ -129,13 +147,13 @@ export default class EMMReport extends React.PureComponent {
                 <ListItemText primary={event.title} />
               </ListItem>
             ))}
-            { this.state.currentEvent == this.state.events.length-1
-            ? 
-            <ListItem component="ul" className="list-item" style={{ marginTop: 40 }}>
-              <Button disableElevation variant="contained" fullWidth className={this.state.isPublished ? "is-published" : "secondary"} disabled={this.state.isPublished} onClick={(e) => this.publish()} >{this.state.isPublished ? "Published":'Publish'}</Button>
-            </ListItem> 
-            : ''}
-            <ListItem component="ul" className="list-item" style={this.state.currentEvent == this.state.events.length-1 ? { marginTop: 20 } : { marginTop: 40 }}>
+            {this.state.currentEvent == this.state.events.length - 1
+              ?
+              <ListItem component="ul" className="list-item" style={{ marginTop: 40 }}>
+                <Button disableElevation variant="contained" fullWidth className={this.state.isPublished ? "is-published" : "secondary"} disabled={this.state.isPublished} onClick={(e) => this.publish()} >{this.state.isPublished ? "Published" : 'Publish'}</Button>
+              </ListItem>
+              : ''}
+            <ListItem component="ul" className="list-item" style={this.state.currentEvent == this.state.events.length - 1 ? { marginTop: 20 } : { marginTop: 40 }}>
               <Button disableElevation variant="contained" fullWidth className="secondary" onClick={(e) => this.goBack()} >Exit</Button>
             </ListItem>
           </List>
@@ -170,7 +188,7 @@ export default class EMMReport extends React.PureComponent {
                     <Typography color="textSecondary">
                       {event.enhancedMMData[0].header}
                     </Typography>
-                    <MultiVideo assets={event.enhancedMMData[0].assets}></MultiVideo>
+                    {this.state.isScriptReady && <MultiVideo assets={event.enhancedMMData[0].assets}></MultiVideo>}
                   </Grid>
 
 
