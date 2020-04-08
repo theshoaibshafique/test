@@ -166,7 +166,7 @@ export default class EMMReport extends React.PureComponent {
                   <Grid item xs={10} className="header">
                     {event.title}
                   </Grid>
-                  <Grid item xs={10} style={{ maxHeight: 610, overflow: 'hidden', marginBottom: 10 }}>
+                  <Grid item xs={10} style={{ maxHeight: 628, overflow: 'hidden', marginBottom: 10 }}>
                     <Typography color="textSecondary">
                       {event.enhancedMMData[0].header}
                     </Typography>
