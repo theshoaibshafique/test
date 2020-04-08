@@ -121,7 +121,7 @@ export default class EMMReport extends React.PureComponent {
         >
           <List>
             <ListItem style={{ marginBottom: 40 }} className="header">
-              <ListItemText primary={"This is a title"} />
+              <ListItemText primary={"EM&M Report"} />
             </ListItem>
 
             {this.state.events.map((event, index) => (
