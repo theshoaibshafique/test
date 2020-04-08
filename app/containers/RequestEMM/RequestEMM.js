@@ -10,13 +10,13 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
-import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import * as CONSTANTS from '../../constants';
-import { Grid ,FormHelperText } from '@material-ui/core';
+import { Grid, FormHelperText } from '@material-ui/core';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import moment from 'moment/moment';
@@ -48,20 +48,18 @@ export default class RequestEMM extends React.PureComponent {
       selectedAP: '',
       isLoading: false,
       emmID: '',
-      specialtyProducedureOptions:[],
+      specialtyProducedureOptions: [],
       minOperationDate: new Date(),
       maxOperationDate: new Date(),
-      hoursOptions: this.createDigitDropdown(1,13,2,0),
-      minuteOptions: this.createDigitDropdown(0,60,2,0),
+      hoursOptions: this.createDigitDropdown(1, 13, 2, 0),
+      minuteOptions: this.createDigitDropdown(0, 60, 2, 0),
       errors: {}
     };
 
-    this.state.minOperationDate.setDate(new Date().getDate()-30);
-    this.state.minOperationDate.setHours(0,0,0,0);
+    this.state.minOperationDate.setDate(new Date().getDate() - 30);
+    this.state.minOperationDate.setHours(0, 0, 0, 0);
 
-    this.state.operatingRooms = CONSTANTS.OPERATING_ROOM.map((data, index) =>
-            <MenuItem value={data.value} key={index}>{data.name}</MenuItem>);
-    
+
     CONSTANTS.SPECIALTY.forEach((specialty) => {
       specialty.values.forEach((procedure) => {
         procedure.specialtyName = specialty.name;
@@ -71,11 +69,11 @@ export default class RequestEMM extends React.PureComponent {
     });
   }
 
-  createDigitDropdown = (n,m,size,d) => {
+  createDigitDropdown = (n, m, size, d) => {
     var result = [];
-    for (var i=n; i<m; i++){
-      var digit = i.toString().padStart(size,d);
-      result.push({time:digit})
+    for (var i = n; i < m; i++) {
+      var digit = i.toString().padStart(size, d);
+      result.push({ time: digit })
     }
     return result;
   }
@@ -89,21 +87,21 @@ export default class RequestEMM extends React.PureComponent {
   handleCompDateChange = (compDate) => {
     let errors = this.state.errors;
     errors.complicationDate = '';
-    compDate.setHours(23,59,59,999);
-    this.setState({ compDate, errors})
+    compDate.setHours(23, 59, 59, 999);
+    this.setState({ compDate, errors })
   };
 
   handleChange(e) {
     let errors = this.state.errors;
     errors.operatingRoom = '';
-    this.setState({ selectedOperatingRoom: e.target.value, errors});
+    this.setState({ selectedOperatingRoom: e, errors });
   };
 
   handleChangeComplication(e, values) {
     let value = values.map(comp => comp.value);
     let errors = this.state.errors;
     errors.complication = '';
-    this.setState({ selectedComplication: value, complicationList: values ,errors});
+    this.setState({ selectedComplication: value, complicationList: values, errors });
   };
 
   handleCloseSnackBar() {
@@ -112,7 +110,7 @@ export default class RequestEMM extends React.PureComponent {
     })
   };
 
-  changeSpecialtyProcedureList(e,values) {
+  changeSpecialtyProcedureList(e, values) {
     let errors = this.state.errors;
     errors.specialtyProducedures = '';
     this.setState({
@@ -123,7 +121,7 @@ export default class RequestEMM extends React.PureComponent {
   handleCheckSpecialty(e) {
     let errors = this.state.errors;
     errors.specialtyProducedures = '';
-    this.setState({ specialtyCheck: e.target.checked, specialtyValue: '' ,errors});
+    this.setState({ specialtyCheck: e.target.checked, specialtyValue: '', errors });
 
     if (!e.target.checked) {
       this.setState({ specialtyValue: '' });
@@ -140,22 +138,22 @@ export default class RequestEMM extends React.PureComponent {
     }
   }
 
-  handleSelectedHourChange(e,value){
+  handleSelectedHourChange(e, value) {
     let errors = this.state.errors;
     errors.hours = '';
-    this.setState({selectedHour: value, errors});
+    this.setState({ selectedHour: value, errors });
   }
 
-  handleSelectedMinutesChange(e,value){
+  handleSelectedMinutesChange(e, value) {
     let errors = this.state.errors;
     errors.minutes = '';
-    this.setState({selectedMinutes: value, errors});
+    this.setState({ selectedMinutes: value, errors });
   }
 
-  handleSelectedAPChange(e){
+  handleSelectedAPChange(e) {
     let errors = this.state.errors;
     errors.ap = '';
-    this.setState({selectedAP: e.target.value,errors});
+    this.setState({ selectedAP: e.target.value, errors });
   }
 
   fillNotes(e) {
@@ -165,7 +163,7 @@ export default class RequestEMM extends React.PureComponent {
   fillSpecialty(e) {
     let errors = this.state.errors;
     errors.specialty = '';
-    this.setState({ specialtyValue: e.target.value ,errors});
+    this.setState({ specialtyValue: e.target.value, errors });
   }
 
   fillProcedure(e) {
@@ -179,107 +177,107 @@ export default class RequestEMM extends React.PureComponent {
     this.setState({ complicationValue: e.target.value });
   }
 
-  setEstimatedhours(){
-    if (!this.state.operationDate || !this.state.selectedHour || !this.state.selectedMinutes || !this.state.selectedAP){
+  setEstimatedhours() {
+    if (!this.state.operationDate || !this.state.selectedHour || !this.state.selectedMinutes || !this.state.selectedAP) {
       return;
     }
     var currentDate = this.state.operationDate;
-    var hours =parseInt(this.state.selectedHour.time);
-    if (this.state.selectedAP == "AM" && hours == 12){
-      hours-=12;
-    } else if (this.state.selectedAP == "PM" && hours < 12){
-      hours+=12;
+    var hours = parseInt(this.state.selectedHour.time);
+    if (this.state.selectedAP == "AM" && hours == 12) {
+      hours -= 12;
+    } else if (this.state.selectedAP == "PM" && hours < 12) {
+      hours += 12;
     }
     currentDate.setHours(hours);
     currentDate.setMinutes(parseInt(this.state.selectedMinutes.time));
-    this.setState({operationDate:currentDate})
+    this.setState({ operationDate: currentDate })
   }
 
-  formatDateTime(date){
+  formatDateTime(date) {
     let newDate = moment(date);
     return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
   }
 
-  isToday(date){
+  isToday(date) {
     const today = new Date();
     return date.getDate() == today.getDate() &&
-    date.getMonth() == today.getMonth() &&
-    date.getFullYear() == today.getFullYear();
+      date.getMonth() == today.getMonth() &&
+      date.getFullYear() == today.getFullYear();
   }
 
   isFormValid() {
     var errors = {};
-    var dateFormatOptions =  { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-    
-    if (!this.state.operationDate){
+    var dateFormatOptions = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+
+    if (!this.state.operationDate) {
       errors.operationDate = "Please select an operation date";
-    } else if (this.isToday(this.state.operationDate) && this.state.operationDate > this.state.maxOperationDate){
+    } else if (this.isToday(this.state.operationDate) && this.state.operationDate > this.state.maxOperationDate) {
       //If its today at a later time
       errors.hours = errors.minutes = errors.ap = "Please select a time in the past";
-    } else if (this.state.operationDate > this.state.maxOperationDate || this.state.operationDate < this.state.minOperationDate){
-      errors.operationDate = "Operation date must be between "+this.state.minOperationDate.toLocaleDateString("en-US", dateFormatOptions)+" and today";
-    } 
+    } else if (this.state.operationDate > this.state.maxOperationDate || this.state.operationDate < this.state.minOperationDate) {
+      errors.operationDate = "Operation date must be between " + this.state.minOperationDate.toLocaleDateString("en-US", dateFormatOptions) + " and today";
+    }
 
-    if (!this.state.selectedHour){
+    if (!this.state.selectedHour) {
       errors.hours = "Please select an estimated time";
     }
 
-    if (!this.state.selectedMinutes){
+    if (!this.state.selectedMinutes) {
       errors.minutes = "Please select an estimated time";
     }
 
-    if (!this.state.selectedAP || this.state.selectedAP == -1){
+    if (!this.state.selectedAP || this.state.selectedAP == -1) {
       errors.ap = "Please select an estimated time";
     }
 
-    if (!this.state.selectedOperatingRoom){
+    if (!this.state.selectedOperatingRoom) {
       errors.operatingRoom = "Please select an operating room";
     }
 
     //If using the other field for Specialty/Procedure
-    if (this.state.specialtyCheck){
+    if (this.state.specialtyCheck) {
       //Other fields
-      if (!this.state.specialtyValue){
+      if (!this.state.specialtyValue) {
         errors.specialty = "Please enter a specialty";
       }
 
-      if (!this.state.procedureValue){
+      if (!this.state.procedureValue) {
         errors.procedure = "Please enter a procedure";
       }
 
-    } else if (!this.state.specialtyProduceduresList.length){
+    } else if (!this.state.specialtyProduceduresList.length) {
       errors.specialtyProducedures = "Please select a procedure";
     }
-    
+
     var minCompDate = this.state.operationDate ? this.state.operationDate : this.state.minOperationDate;
-    if (!this.state.compDate){
+    if (!this.state.compDate) {
       errors.complicationDate = "Please select a date of complication";
-    }  else if (!this.isToday(this.state.compDate) && (this.state.compDate > this.state.maxOperationDate || this.state.compDate < minCompDate)){
+    } else if (!this.isToday(this.state.compDate) && (this.state.compDate > this.state.maxOperationDate || this.state.compDate < minCompDate)) {
       errors.complicationDate = "Date must be between date of operation and today";
     }
 
     //Complications has other
-    if (this.state.complicationsCheck){
-      if (!this.state.complicationValue){
+    if (this.state.complicationsCheck) {
+      if (!this.state.complicationValue) {
         errors.complicationValue = "Please select a complication";
       }
     } else if (!this.state.selectedComplication.length) {
       errors.complication = "Please select a complication";
     }
 
-    if (Object.keys(errors).length >0){
+    if (Object.keys(errors).length > 0) {
       const errorEl = document.querySelector(
         Object.keys(errors).map(fieldName => `[name="${fieldName}"]`).join(',')
       );
-      if (errorEl && errorEl.scrollIntoView){
-      // if (errorEl && (errorEl.hidden || errorEl.type == "hidden") && errorEl.scrollIntoView){
+      if (errorEl && errorEl.scrollIntoView) {
+        // if (errorEl && (errorEl.hidden || errorEl.type == "hidden") && errorEl.scrollIntoView){
         errorEl.parentNode.scrollIntoView()
       } else if (errorEl && errorEl.focus) { // npe
         errorEl.focus(); // this scrolls without visible scroll
       }
     }
 
-    this.setState({errors: errors});
+    this.setState({ errors: errors });
     return Object.keys(errors).length === 0;
   }
 
@@ -291,8 +289,8 @@ export default class RequestEMM extends React.PureComponent {
     }) : '';
 
     this.setEstimatedhours();
-    if (!this.isFormValid()){
-      this.setState({ 
+    if (!this.isFormValid()) {
+      this.setState({
         isLoading: false
       });
       return;
@@ -300,13 +298,13 @@ export default class RequestEMM extends React.PureComponent {
 
     var selectedProcedures = [];
     var selectedSpecialties = [];
-    if (!this.state.specialtyCheck){
+    if (!this.state.specialtyCheck) {
       selectedProcedures = this.state.specialtyProduceduresList.map(procedure => procedure.value);
       selectedSpecialties = this.state.specialtyProduceduresList.map(procedure => procedure.ID);
     }
 
     let jsonBody = {
-      "operatingRoom": this.state.selectedOperatingRoom,
+      "operatingRoom": this.state.selectedOperatingRoom.value,
       "specialty": this.state.specialtyCheck ? [this.state.specialtyValue] : selectedSpecialties,
       "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : selectedProcedures,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
@@ -317,21 +315,21 @@ export default class RequestEMM extends React.PureComponent {
     }
 
     globalFuncs.genericFetch(process.env.EMMREQUEST_API, 'post', this.props.userToken, jsonBody)
-    .then(result => {
-      if (result === 'error' || result === 'conflict') {
-        this.setState({ 
-          snackBarOpen: true,
-          snackBarMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
-          isLoading: false
-        });
-      } else {
-        this.reset();
-        this.setState({
-          emmID: result,
-          isLoading: false
-        });
-      }
-    });
+      .then(result => {
+        if (result === 'error' || result === 'conflict') {
+          this.setState({
+            snackBarOpen: true,
+            snackBarMsg: 'A problem has occurred while completing your action. Please try again or contact the administrator.',
+            isLoading: false
+          });
+        } else {
+          this.reset();
+          this.setState({
+            emmID: result,
+            isLoading: false
+          });
+        }
+      });
   }
 
   reset() {
@@ -364,22 +362,33 @@ export default class RequestEMM extends React.PureComponent {
   async componentDidMount() {
 
     await globalFuncs.genericFetch(process.env.USERSEARCH_API, 'get', this.props.userToken, {})
-    .then(result => {
-      if (result) {    
-        let users = [];
-        result.map((user) => {
-          users.push({ value: user.userName, label: user.firstName.concat(' ').concat(user.lastName) });
-        });
-        
-        this.setState({
-          userList: users
-        });
-      } else {
-        this.setState({
-          userList: []
-        });
-      }
-    });
+      .then(result => {
+        if (result) {
+          let users = [];
+          result.map((user) => {
+            users.push({ value: user.userName, label: user.firstName.concat(' ').concat(user.lastName) });
+          });
+
+          this.setState({
+            userList: users
+          });
+        } else {
+          this.setState({
+            userList: []
+          });
+        }
+      });
+
+    await globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+      .then(result => {
+        let operatingRooms = [];
+        if (result) {
+          result.map((room) => {
+            operatingRooms.push({ value: room.roomName, label: room.roomTitle })
+          });
+        }
+        this.setState({ operatingRooms });
+      });
   }
 
   handleUserEmailChange = (inputValue) => {
@@ -387,6 +396,19 @@ export default class RequestEMM extends React.PureComponent {
   };
 
   render() {
+    const filterRoom = (inputValue) => {
+      return this.state.operatingRooms.filter(room =>
+        room.label.toLowerCase().includes(inputValue.toLowerCase())
+      );
+    };
+
+    const operatingRoomPromiseOptions = inputValue =>
+      new Promise(resolve => {
+        setTimeout(() => {
+          resolve(filterRoom(inputValue));
+        }, 1000);
+      });
+
     const filterUsers = (inputValue) => {
       return this.state.userList.filter(user =>
         user.label.toLowerCase().includes(inputValue.toLowerCase())
@@ -402,175 +424,177 @@ export default class RequestEMM extends React.PureComponent {
 
     return (
       <section className="request-emm-page">
-        {this.state.emmID ? 
-        //Submitted view
-        <Grid container spacing={2}>
-          <Grid item xs={8} className="header">
-            <p>Thank you for submitting your request!</p>
+        {this.state.emmID ?
+          //Submitted view
+          <Grid container spacing={2}>
+            <Grid item xs={8} className="header">
+              <p>Thank you for submitting your request!</p>
+            </Grid>
+            <Grid item xs={8}>
+              Please note the Enhanced M&M ID for the report to be generated: {this.state.emmID}.
           </Grid>
-          <Grid item xs={8}>
-          Please note the Enhanced M&M ID for the report to be generated: {this.state.emmID}.
+            <Grid item xs={8}>
+              We will notify you when the report is ready on Insights for viewing.
           </Grid>
-          <Grid item xs={8}>
-          We will notify you when the report is ready on Insights for viewing.
-          </Grid>
-          <Grid item xs={5}>
-            <Button variant="outlined" className="primary" style={{marginTop:26}} onClick={() => this.reset()}>Go Back</Button> 
-          </Grid>
-        </Grid> 
-        
-        : //Default view
-        
-        <Grid container spacing={2}>
-          <Grid item xs={12} className="header page-title">
-          Request for Enhanced M&M
-          </Grid>
-          <Grid item xs={12} className="page-subtitle">
-          Please fill in all the fields to submit a request for an Enhanced M&M.
+            <Grid item xs={5}>
+              <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => this.reset()}>Go Back</Button>
+            </Grid>
           </Grid>
 
-          <Grid item xs={4} className="input-title">
-            Date of Operation
+          : //Default view
+
+          <Grid container spacing={2}>
+            <Grid item xs={12} className="header page-title">
+              Request for Enhanced M&M
+          </Grid>
+            <Grid item xs={12} className="page-subtitle">
+              Please fill in all the fields to submit a request for an Enhanced M&M.
           </Grid>
 
-          <Grid item xs={4} className="input-title">
-          Estimated Operation Start Time (hh:mm)
+            <Grid item xs={4} className="input-title">
+              Date of Operation
           </Grid>
-          <Grid item xs={4}></Grid>
-          <Grid item xs={4} >
+
+            <Grid item xs={4} className="input-title">
+              Estimated Operation Start Time (hh:mm)
+          </Grid>
+            <Grid item xs={4}></Grid>
+            <Grid item xs={4} >
               <MuiPickersUtilsProvider utils={DateFnsUtils} >
-                  <KeyboardDatePicker
-                    disableToolbar
-                    error={Boolean(this.state.errors.operationDate)}
-                    helperText={this.state.errors.operationDate}
-                    variant="inline"
-                    format="MM/dd/yyyy"
-                    id="date-picker-operation"
-                    placeholder="Select"
-                    inputVariant="outlined"
-                    className="input-field"
-                    name="operationDate"
-                    minDate={this.state.minOperationDate}
-                    maxDate={this.state.maxOperationDate}  
-                    value={this.state.operationDate}
-                    autoOk
-                    size="small"
-                    onChange={this.handleOperationDateChange}
-                    KeyboardButtonProps={{
-                      'aria-label': 'change date',
-                    }}
-                  />
+                <KeyboardDatePicker
+                  disableToolbar
+                  error={Boolean(this.state.errors.operationDate)}
+                  helperText={this.state.errors.operationDate}
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  id="date-picker-operation"
+                  placeholder="Select"
+                  inputVariant="outlined"
+                  className="input-field"
+                  name="operationDate"
+                  minDate={this.state.minOperationDate}
+                  maxDate={this.state.maxOperationDate}
+                  value={this.state.operationDate}
+                  autoOk
+                  size="small"
+                  onChange={this.handleOperationDateChange}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
               </MuiPickersUtilsProvider>
-          </Grid>
-          {/* Estimated time */}
-          <Grid item xs={4}>
-            <Grid container spacing={1}>
-              <Grid item xs={4} >
-                <Autocomplete
-                  disableClearable
-                  size="small"
-                  options={this.state.hoursOptions}
-                  getOptionLabel={option => option.time ? option.time : ""}
-                  value={this.state.selectedHour}
-                  onChange={(e, value) => this.handleSelectedHourChange(e, value)}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      error={Boolean(this.state.errors.hours)}
-                      variant="outlined" 
-                      name="hours"
-                      placeholder="Hour"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <Autocomplete
-                  disableClearable
-                  size="small"
-                  options={this.state.minuteOptions}
-                  getOptionLabel={option => option.time ? option.time : ""}
-                  value={this.state.selectedMinutes}
-                  onChange={(e, value) => this.handleSelectedMinutesChange(e, value)}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      error={Boolean(this.state.errors.minutes)}
-                      variant="outlined" 
-                      name="minutes"
-                      placeholder="Mins"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl variant="outlined" className="input-field" size="small" error={Boolean(this.state.errors.ap)} >
+            </Grid>
+            {/* Estimated time */}
+            <Grid item xs={4}>
+              <Grid container spacing={1}>
+                <Grid item xs={4} >
+                  <Autocomplete
+                    disableClearable
+                    size="small"
+                    options={this.state.hoursOptions}
+                    getOptionLabel={option => option.time ? option.time : ""}
+                    value={this.state.selectedHour}
+                    onChange={(e, value) => this.handleSelectedHourChange(e, value)}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        error={Boolean(this.state.errors.hours)}
+                        variant="outlined"
+                        name="hours"
+                        placeholder="Hour"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Autocomplete
+                    disableClearable
+                    size="small"
+                    options={this.state.minuteOptions}
+                    getOptionLabel={option => option.time ? option.time : ""}
+                    value={this.state.selectedMinutes}
+                    onChange={(e, value) => this.handleSelectedMinutesChange(e, value)}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        error={Boolean(this.state.errors.minutes)}
+                        variant="outlined"
+                        name="minutes"
+                        placeholder="Mins"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl variant="outlined" className="input-field" size="small" error={Boolean(this.state.errors.ap)} >
                     <Select value={this.state.selectedAP || "-1"} onChange={(e) => this.handleSelectedAPChange(e)} name="ap">
                       <MenuItem value="-1" disabled>A/P</MenuItem>
                       <MenuItem value="AM">AM</MenuItem>
                       <MenuItem value="PM">PM</MenuItem>
                     </Select>
-                </FormControl>
+                  </FormControl>
+                </Grid>
+                {(this.state.errors.hours || this.state.errors.minutes || this.state.errors.ap) &&
+                  <FormHelperText className="Mui-error" style={{ marginLeft: 10, marginTop: -18 }}>{this.state.errors.hours || this.state.errors.minutes || this.state.errors.ap}</FormHelperText>
+                }
               </Grid>
-              {(this.state.errors.hours || this.state.errors.minutes || this.state.errors.ap) &&
-                <FormHelperText className="Mui-error" style={{marginLeft:10,marginTop:-18}}>{this.state.errors.hours || this.state.errors.minutes || this.state.errors.ap}</FormHelperText>
-              }
             </Grid>
-          </Grid>
 
-          <Grid item xs={4}></Grid>
-          
-          <Grid item xs={12} className="input-title">
-            Operating Room
+            <Grid item xs={4}></Grid>
+
+            <Grid item xs={12} className="input-title">
+              Operating Room
           </Grid>
-          <Grid item xs={4}>
-            <FormControl variant="outlined" className="input-field" size="small" error={Boolean(this.state.errors.operatingRoom)} >
-              <InputLabel htmlFor='opRoom'></InputLabel>
-              <Select value={this.state.selectedOperatingRoom} displayEmpty onChange={(e) => this.handleChange(e)} inputProps={{ name: 'operatingRoom', id: 'opRoom' }} name="operatingRoom">
-                <MenuItem value='' disabled>Select</MenuItem>
-                {this.state.operatingRooms}
-              </Select>
+            <Grid item xs={4} style={{marginBottom:18}}>
+              <AsyncSelect
+                cacheOptions
+                defaultOptions
+                loadOptions={operatingRoomPromiseOptions}
+                value={this.state.selectedOperatingRoom}
+                onChange={(e) => this.handleChange(e)}
+                name="operatingRoom"
+                error={Boolean(this.state.errors.operatingRoom)}
+              />
               {(this.state.errors.operatingRoom) &&
                 <FormHelperText className="Mui-error" >{this.state.errors.operatingRoom}</FormHelperText>
               }
-            </FormControl>
-            
+
+            </Grid>
+            <Grid item xs={4}></Grid>
+            <Grid item xs={12} className="input-title" >
+              Specialty and Procedure (Select 1 or more)
           </Grid>
-          <Grid item xs={4}></Grid>
-          <Grid item xs={12} className="input-title" >
-            Specialty and Procedure (Select 1 or more)
+            <Grid item xs={8} >
+              <Autocomplete
+                multiple
+                size="small"
+                id="specialty"
+                options={this.state.specialtyProducedureOptions}
+                groupBy={option => option.specialtyName}
+                getOptionLabel={option => option.name}
+                value={this.state.specialtyProduceduresList}
+                onChange={(e, value) => this.changeSpecialtyProcedureList(e, value)}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    error={Boolean(this.state.errors.specialtyProducedures)}
+                    helperText={this.state.errors.specialtyProducedures}
+                    variant="outlined"
+                    placeholder="Start typing to filter and select from the list"
+                    name="specialtyProducedures"
+                  />
+                )}
+              />
+            </Grid>
+            {/* Other checkbox and field */}
+            <Grid item xs={12} className="other-checkbox" style={this.state.specialtyCheck ? { marginBottom: -8 } : {}}>
+              <Checkbox
+                disableRipple
+                icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checked={this.state.specialtyCheck} onChange={(e) => this.handleCheckSpecialty(e)} />Other
           </Grid>
-          <Grid item xs={8} >
-            <Autocomplete
-              multiple
-              size="small"
-              id="specialty"
-              options={this.state.specialtyProducedureOptions}
-              groupBy={option => option.specialtyName}
-              getOptionLabel={option => option.name}
-              value={this.state.specialtyProduceduresList}
-              onChange={(e, value) => this.changeSpecialtyProcedureList(e, value)}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  error={Boolean(this.state.errors.specialtyProducedures)}
-                  helperText={this.state.errors.specialtyProducedures}
-                  variant="outlined" 
-                  placeholder="Start typing to filter and select from the list"
-                  name="specialtyProducedures"
-                />
-              )}
-            />
-          </Grid>
-          {/* Other checkbox and field */}
-          <Grid item xs={12} className="other-checkbox" style={this.state.specialtyCheck ? {marginBottom:-8} : {}}>
-            <Checkbox 
-            disableRipple 
-            icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-            checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-            checked={this.state.specialtyCheck} onChange={(e) => this.handleCheckSpecialty(e)}/>Other
-          </Grid>
-          {(this.state.specialtyCheck) &&
+            {(this.state.specialtyCheck) &&
               <Grid item xs={12}>
                 <Grid container spacing={2}>
                   <Grid item xs={4} className="input-title" >
@@ -582,155 +606,155 @@ export default class RequestEMM extends React.PureComponent {
                   <Grid item xs={4}></Grid>
                   <Grid item xs={4} >
                     <TextField
-                        id="specialty-other"
-                        error={Boolean(this.state.errors.specialty)}
-                        helperText={this.state.errors.specialty}
-                        name="specialty"
-                        size="small"
-                        variant="outlined"
-                        className="input-field"
-                        onChange={(e) => this.fillSpecialty(e)}
-                      />
+                      id="specialty-other"
+                      error={Boolean(this.state.errors.specialty)}
+                      helperText={this.state.errors.specialty}
+                      name="specialty"
+                      size="small"
+                      variant="outlined"
+                      className="input-field"
+                      onChange={(e) => this.fillSpecialty(e)}
+                    />
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
-                        id="procedure-other"
-                        variant="outlined"
-                        size="small"
-                        name="procedure"
-                        error={Boolean(this.state.errors.procedure)}
-                        helperText={this.state.errors.procedure}
-                        className="input-field"
-                        onChange={(e) => this.fillProcedure(e)}
+                      id="procedure-other"
+                      variant="outlined"
+                      size="small"
+                      name="procedure"
+                      error={Boolean(this.state.errors.procedure)}
+                      helperText={this.state.errors.procedure}
+                      className="input-field"
+                      onChange={(e) => this.fillProcedure(e)}
                     />
                   </Grid>
                   <Grid item xs={4}></Grid>
                 </Grid>
               </Grid>
-          }
+            }
 
-          <Grid item xs={12} className="input-title">
-            Date of Complication
+            <Grid item xs={12} className="input-title">
+              Date of Complication
           </Grid>
-          <Grid item xs={4}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    disableToolbar
-                    size="small"
-                    variant="inline"
-                    format="MM/dd/yyyy"
-                    name="complicationDate"
-                    error={Boolean(this.state.errors.complicationDate)}
-                    helperText={this.state.errors.complicationDate}
-                    minDate={this.state.operationDate ? this.state.operationDate : this.state.minOperationDate}
-                    maxDate={this.state.maxOperationDate}
-                    placeholder="Select"
-                    inputVariant="outlined" 
-                    className="input-field"
-                    autoOk
-                    value={this.state.compDate}
-                    onChange={this.handleCompDateChange}
-                    id="date-picker-complication"
-                    KeyboardButtonProps={{
-                      'aria-label': 'change date',
-                    }}
-                  />
-            </MuiPickersUtilsProvider>
-          </Grid>
-
-          <Grid item xs={12} className="input-title">
-            Complications (Select 1 or more)
-          </Grid>
-          <Grid item xs={8} >
-            <Autocomplete
-              multiple
-              size="small"
-              id="complication"
-              options={CONSTANTS.COMPLICATIONS}
-              getOptionLabel={option => option.name}
-              value={this.state.complicationList}
-              onChange={(e, value) => this.handleChangeComplication(e, value)}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  variant="outlined" 
-                  placeholder="Start typing to filter and select from the list"
-                  error={Boolean(this.state.errors.complication)}
-                  helperText={this.state.errors.complication}
-                  name="complication"
+            <Grid item xs={4}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  size="small"
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  name="complicationDate"
+                  error={Boolean(this.state.errors.complicationDate)}
+                  helperText={this.state.errors.complicationDate}
+                  minDate={this.state.operationDate ? this.state.operationDate : this.state.minOperationDate}
+                  maxDate={this.state.maxOperationDate}
+                  placeholder="Select"
+                  inputVariant="outlined"
+                  className="input-field"
+                  autoOk
+                  value={this.state.compDate}
+                  onChange={this.handleCompDateChange}
+                  id="date-picker-complication"
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
                 />
-              )}
-            />
+              </MuiPickersUtilsProvider>
+            </Grid>
+
+            <Grid item xs={12} className="input-title">
+              Complications (Select 1 or more)
           </Grid>
-          <Grid item xs={12} className="other-checkbox" >
-            <Checkbox 
-            disableRipple 
-            icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-            checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-            checked={this.state.complicationsCheck} onChange={(e) => this.handleCheckComplications(e)}/>Other
+            <Grid item xs={8} >
+              <Autocomplete
+                multiple
+                size="small"
+                id="complication"
+                options={CONSTANTS.COMPLICATIONS}
+                getOptionLabel={option => option.name}
+                value={this.state.complicationList}
+                onChange={(e, value) => this.handleChangeComplication(e, value)}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    placeholder="Start typing to filter and select from the list"
+                    error={Boolean(this.state.errors.complication)}
+                    helperText={this.state.errors.complication}
+                    name="complication"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} className="other-checkbox" >
+              <Checkbox
+                disableRipple
+                icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checked={this.state.complicationsCheck} onChange={(e) => this.handleCheckComplications(e)} />Other
           </Grid>
-          <Grid item xs={12} >
-            {(this.state.complicationsCheck) &&
-              <Grid item xs={4}>
-                <TextField
+            <Grid item xs={12} >
+              {(this.state.complicationsCheck) &&
+                <Grid item xs={4}>
+                  <TextField
                     id="complications-other"
                     variant="outlined"
                     size="small"
                     className="input-field"
-                    style={{marginTop:-16}}
+                    style={{ marginTop: -16 }}
                     onChange={(e) => this.fillComplication(e)}
                     error={Boolean(this.state.errors.complicationValue)}
                     helperText={this.state.errors.complicationValue}
                     name="complicationValue"
-                />
-              </Grid>
-            }
-          </Grid>
+                  />
+                </Grid>
+              }
+            </Grid>
 
-          <Grid item xs={12} className="input-title">
-            Notes (Optional)
+            <Grid item xs={12} className="input-title">
+              Notes (Optional)
           </Grid>
-          <Grid item xs={8} className="input-subtitle">
-            Do not enter any Personal Health Information that can be used to identify the patient (e.g. patient’s name, age, etc.)
+            <Grid item xs={8} className="input-subtitle">
+              Do not enter any Personal Health Information that can be used to identify the patient (e.g. patient’s name, age, etc.)
           </Grid>
-          <Grid item xs={8} >
-            <TextField
+            <Grid item xs={8} >
+              <TextField
                 id="notes"
                 multiline
                 className="input-field"
                 rows="8"
                 variant="outlined"
                 onChange={(e) => this.fillNotes(e)}
-            />
-          </Grid>
+              />
+            </Grid>
 
-          <Grid item xs={12} className="input-title">
-            Send email updates about eM&M to (Optional):
+            <Grid item xs={12} className="input-title">
+              Send email updates about eM&M to (Optional):
           </Grid>
-          <Grid item xs={8} style={{marginBottom:24}}>
-            <AsyncSelect
-              isMulti
-              cacheOptions
-              defaultOptions
-              loadOptions={promiseOptions}
-              value={this.state.inputValue}
-              onChange={(e) => this.handleUserEmailChange(e)}
-              
-            />
-          </Grid>
+            <Grid item xs={8} style={{ marginBottom: 24 }}>
+              <AsyncSelect
+                isMulti
+                cacheOptions
+                defaultOptions
+                loadOptions={promiseOptions}
+                value={this.state.inputValue}
+                onChange={(e) => this.handleUserEmailChange(e)}
 
-          <Grid item xs={8}>
-            <Grid container justify="flex-end" spacing={0}>
-              <Grid item xs={12}>
-                <Grid container justify="flex-end" spacing={0}>
-                  <Button style={{color : "#3db3e3",height:40,width:115,marginRight:40}} onClick={() => this.reset()}>Reset Form</Button>
-                  <Button variant="outlined" style={{height:40,width:96}} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
-                  {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button> 
+              />
+            </Grid>
+
+            <Grid item xs={8}>
+              <Grid container justify="flex-end" spacing={0}>
+                <Grid item xs={12}>
+                  <Grid container justify="flex-end" spacing={0}>
+                    <Button style={{ color: "#3db3e3", height: 40, width: 115, marginRight: 40 }} onClick={() => this.reset()}>Reset Form</Button>
+                    <Button variant="outlined" style={{ height: 40, width: 96 }} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
+                      {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
         }
         <Snackbar
           anchorOrigin={{
