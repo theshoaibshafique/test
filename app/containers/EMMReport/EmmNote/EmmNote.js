@@ -11,7 +11,6 @@ export default class EmmNote extends React.PureComponent { // eslint-disable-lin
   render() {
     
     return (
-      <Card variant="outlined" className="annotation-card">
         <CardContent>
           <Typography color="textSecondary" className="annotation-secondary">
             {this.props.annotation.header}
@@ -20,7 +19,6 @@ export default class EmmNote extends React.PureComponent { // eslint-disable-lin
             {this.props.annotation.body}
           </Typography>
         </CardContent>
-      </Card>
     );
   }
 }

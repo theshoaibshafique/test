@@ -7,9 +7,7 @@
     line-height: 24px;
 }
 
-.list-item{
-    padding: 16px 40px;
-}
+
 .MuiListItem-root.Mui-selected, .MuiListItem-root.Mui-selected:hover,
 .MuiListItem-button:hover {
     color:  #028CC8 !important;
@@ -17,6 +15,19 @@
 }
 .MuiListItem-button:hover .MuiTypography-body1{
     font-weight: bold;
+}
+.MAIN-NAVIGATION.emm-report-nav [class*="AnchorLeft"] {
+    box-shadow: inset -2px 0 3px 0 rgba(0,0,0,0.1) ;
+    border-right: 0 ;
+    background-color: #F3F3F3;
+    padding-top: 32px;
+}
+
+.MuiListItem-root.list-item{
+    padding: 11px 40px;
+    margin: 8px 0;
+    background-color: #FFFFFF ;
+    box-shadow: inset -2px 0 1px 0 rgba(0,0,0,0.1) ;
 }
 
 .emm-report-nav .header .MuiTypography-body1 {
@@ -71,6 +82,13 @@
     font-size: 14px;
     letter-spacing: 0;
     line-height: 19px;
+    color: #004F6E;
+}
+.MuiTypography-body1.annotation-title{
+    font-weight:'bold';
+    margin:8px 0;
+    color: #004F6E;
+    font-weight: bold;
 }
 .annotation-card{
     min-height: 200px;

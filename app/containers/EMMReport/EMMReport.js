@@ -6,8 +6,7 @@ import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, SPECIALTY } from '../../constants';
 import { Drawer, List, ListItem, ListItemText, Grid, Typography } from '@material-ui/core';
 import MultiVideo from './MultiVideo/MultiVideo';
-import EmmNote from './EmmNote/EmmNote';
-import EmmAnnotation from './EmmAnnotation/EmmAnnotation';
+import AnnotationGroup from './AnnotationGroup/AnnotationGroup';
 
 export default class EMMReport extends React.PureComponent {
   constructor(props) {
@@ -102,20 +101,6 @@ export default class EMMReport extends React.PureComponent {
     ));
   }
 
-  renderAnnotation(annotation) {
-    if (!annotation) {
-      return;
-    }
-    switch (annotation.tileType) {
-      case 'EmmAnnotation':
-        return <Grid item xs={6} key={annotation.order}><EmmAnnotation annotation={annotation} /></Grid>
-      case 'EmmNote':
-        return <Grid item xs={6} key={annotation.order}><EmmNote annotation={annotation} /></Grid>
-      default:
-        break;
-    }
-  }
-
   handleChange(currentEvent) {
     this.setState({ currentEvent })
   }
@@ -126,6 +111,25 @@ export default class EMMReport extends React.PureComponent {
 
   publish() {
 
+  }
+  renderAnnotationGroup(annotationGroup,index){
+  
+    switch (annotationGroup.tileType) {
+      case 'EmmVideo':
+        return ''
+      default:
+        return <Grid item xs={annotationGroup.group.length > 1 ? 12 : 6} key={annotationGroup.tileType+index}><AnnotationGroup annotationGroup={annotationGroup.group} /></Grid>;
+    }
+    
+  }
+
+  groupAnnotations(enhancedMMData){
+    //Group emm data by "Group"
+    return [...enhancedMMData.reduce((hash, data) => {
+      const current = hash.get(data.group) || {tileType:data.tileType,group:[]}
+      current.group.push(data)
+      return hash.set(data.group,current);
+    }, new Map).values()];
   }
 
   render() {
@@ -138,22 +142,17 @@ export default class EMMReport extends React.PureComponent {
           className="MAIN-NAVIGATION emm-report-nav"
         >
           <List>
-            <ListItem style={{ marginBottom: 40 }} className="header">
-              <ListItemText primary={"EM&M Report"} />
-            </ListItem>
-
             {this.state.events.map((event, index) => (
               <ListItem component="ul" className="list-item" button key={index} index={index} onClick={() => this.handleChange(index)} selected={this.state.currentEvent == index}>
                 <ListItemText primary={event.title} />
               </ListItem>
             ))}
-            {this.state.currentEvent == this.state.events.length - 1
-              ?
-              <ListItem component="ul" className="list-item" style={{ marginTop: 40 }}>
-                <Button disableElevation variant="contained" fullWidth className={this.state.isPublished ? "is-published" : "secondary"} disabled={this.state.isPublished} onClick={(e) => this.publish()} >{this.state.isPublished ? "Published" : 'Publish'}</Button>
-              </ListItem>
-              : ''}
-            <ListItem component="ul" className="list-item" style={this.state.currentEvent == this.state.events.length - 1 ? { marginTop: 20 } : { marginTop: 40 }}>
+
+            <ListItem component="ul"  style={{ marginTop: 40 }}>
+              <Button disableElevation variant="contained" fullWidth className={this.state.isPublished ? "is-published" : "secondary"} disabled={this.state.isPublished} onClick={(e) => this.publish()} >{this.state.isPublished ? "Published" : 'Publish'}</Button>
+            </ListItem>
+
+            <ListItem component="ul"  style={{ marginTop: 20 }}>
               <Button disableElevation variant="contained" fullWidth className="secondary" onClick={(e) => this.goBack()} >Exit</Button>
             </ListItem>
           </List>
@@ -185,17 +184,14 @@ export default class EMMReport extends React.PureComponent {
                     {event.title}
                   </Grid>
                   <Grid item xs={10} style={{ maxHeight: 628, overflow: 'hidden', marginBottom: 10 }}>
-                    <Typography color="textSecondary">
-                      {event.enhancedMMData[0].header}
-                    </Typography>
-                    {this.state.isScriptReady && <MultiVideo assets={event.enhancedMMData[0].assets}></MultiVideo>}
+                    {this.state.isScriptReady && <MultiVideo header={event.enhancedMMData[0].header} assets={event.enhancedMMData[0].assets}></MultiVideo>}
                   </Grid>
 
 
                   <Grid item xs={10}>
                     <Grid container spacing={3}>
-                      {event.enhancedMMData.map((annotation, index) => (
-                        this.renderAnnotation(annotation)
+                      {this.groupAnnotations(event.enhancedMMData).map((annotationGroup, index) => (
+                        this.renderAnnotationGroup(annotationGroup,index)
                       ))}
                     </Grid>
                   </Grid>
