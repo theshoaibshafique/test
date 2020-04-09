@@ -4,7 +4,7 @@ import './style.scss';
 import logo from './images/emmLogo.png';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, SPECIALTY } from '../../constants';
-import { Drawer, List, ListItem, ListItemText, Grid, Typography } from '@material-ui/core';
+import { Drawer, List, ListItem, ListItemText, Grid, Typography, Card, CardContent } from '@material-ui/core';
 import MultiVideo from './MultiVideo/MultiVideo';
 import AnnotationGroup from './AnnotationGroup/AnnotationGroup';
 
@@ -80,7 +80,7 @@ export default class EMMReport extends React.PureComponent {
     }
     let hour = Math.floor(caseDuration / 3600);
     let minutes = Math.floor(caseDuration % 3600 / 60)
-    return `${hour} ${hour == 1 ? 'hour ' : 'hours '} ${minutes} ${minutes == 1 ? 'minute ' : 'minutes'}`
+    return <Typography className="overview-text">{`${hour} ${hour == 1 ? 'hour ' : 'hours '} ${minutes} ${minutes == 1 ? 'minute ' : 'minutes'}`}</Typography>
   }
 
   getFormattedComplications(complications) {
@@ -88,7 +88,7 @@ export default class EMMReport extends React.PureComponent {
       return;
     }
     return complications.map((complication, index) => (
-      `${this.getName(COMPLICATIONS, complication)}${index + 1 < complications.length ? ', ' : ' '}`
+      <Typography key={complication} className="overview-text">{this.getName(COMPLICATIONS, complication)}</Typography>
     ));
   }
 
@@ -97,7 +97,7 @@ export default class EMMReport extends React.PureComponent {
       return;
     }
     return procedures.map((procedure, index) => (
-      `${this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY), procedure.procedureName)} (${this.getName(SPECIALTY, procedure.specialtyName)})${index + 1 < procedures.length ? ', ' : ' '}`
+      <Typography key={procedure.procedureName} className="overview-text">{`${this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY), procedure.procedureName)} - ${this.getName(SPECIALTY, procedure.specialtyName)}`}</Typography>
     ));
   }
 
@@ -112,23 +112,23 @@ export default class EMMReport extends React.PureComponent {
   publish() {
 
   }
-  renderAnnotationGroup(annotationGroup,index){
-  
+  renderAnnotationGroup(annotationGroup, index) {
+
     switch (annotationGroup.tileType) {
       case 'EmmVideo':
         return ''
       default:
-        return <Grid item xs={annotationGroup.group.length > 1 ? 12 : 6} key={annotationGroup.tileType+index}><AnnotationGroup annotationGroup={annotationGroup.group} /></Grid>;
+        return <Grid item xs={annotationGroup.group.length > 1 ? 12 : 6} key={annotationGroup.tileType + index}><AnnotationGroup annotationGroup={annotationGroup.group} /></Grid>;
     }
-    
+
   }
 
-  groupAnnotations(enhancedMMData){
+  groupAnnotations(enhancedMMData) {
     //Group emm data by "Group"
     return [...enhancedMMData.reduce((hash, data) => {
-      const current = hash.get(data.group) || {tileType:data.tileType,group:[]}
+      const current = hash.get(data.group) || { tileType: data.tileType, group: [] }
       current.group.push(data)
-      return hash.set(data.group,current);
+      return hash.set(data.group, current);
     }, new Map).values()];
   }
 
@@ -148,11 +148,11 @@ export default class EMMReport extends React.PureComponent {
               </ListItem>
             ))}
 
-            <ListItem component="ul"  style={{ marginTop: 40 }}>
+            <ListItem component="ul" style={{ marginTop: 40 }}>
               <Button disableElevation variant="contained" fullWidth className={this.state.isPublished ? "is-published" : "secondary"} disabled={this.state.isPublished} onClick={(e) => this.publish()} >{this.state.isPublished ? "Published" : 'Publish'}</Button>
             </ListItem>
 
-            <ListItem component="ul"  style={{ marginTop: 20 }}>
+            <ListItem component="ul" style={{ marginTop: 20 }}>
               <Button disableElevation variant="contained" fullWidth className="secondary" onClick={(e) => this.goBack()} >Exit</Button>
             </ListItem>
           </List>
@@ -161,21 +161,33 @@ export default class EMMReport extends React.PureComponent {
           {this.state.events.map((event, index) => (
             <div hidden={this.state.currentEvent !== index} key={index}>
               {index == 0
-                ? <Grid container spacing={0} justify="center" style={{ textAlign: "center" }}>
-                  <Grid item xs={10}>
-                    <img className="overview-logo" src={logo} style={{ maxWidth: "80%" }}></img>
+                ? <Grid container spacing={2} justify="center" style={{ textAlign: "center" }}>
+                  <Grid item xs={8}>
+                    <img className="overview-logo" src={logo} style={{ maxWidth: "100%" }}></img>
                   </Grid>
-                  <Grid item xs={10} className="overview-procedures">
-                    {this.getFormattedProcedures(event.procedures)}
+                  <Grid item xs={8} >
+                    <Card variant="outlined" className="overview-card" style={{ textAlign: "left" }}>
+                      <CardContent>
+                        <Typography color="textPrimary" variant="body1" className="overview-subtitle" component="div">
+                          Case
+                        </Typography>
+                        {this.getFormattedCaseDuration(event.caseDuration)}
+                        {this.getFormattedProcedures(event.procedures)}
+                      </CardContent>
+                    </Card>
                   </Grid>
-                  <Grid item xs={10} style={{ marginTop: 40, marginLeft: '25%', marginRight: 140, textAlign: "left" }} >
-                    Case Duration: {this.getFormattedCaseDuration(event.caseDuration)}
+                  <Grid item xs={8} >
+                    <Card variant="outlined" className="overview-card" style={{ textAlign: "left" }}>
+                      <CardContent>
+                        <Typography color="textPrimary" variant="body1" className="overview-subtitle" component="div">
+                          Case
+                        </Typography>
+                        {this.getFormattedComplications(event.complications)}
+                      </CardContent>
+                    </Card>
                   </Grid>
-                  <Grid item xs={10} style={{ marginBottom: 40, marginLeft: '25%', marginRight: 140, textAlign: "left" }} >
-                    Complications: {this.getFormattedComplications(event.complications)}
-                  </Grid>
-                  <Grid item xs={10}>
-                    <Button variant="outlined" className="primary" onClick={(e) => this.handleChange(1)}>Start</Button>
+                  <Grid item xs={8}>
+                    <Button variant="outlined" className="primary" style={{width:"60%"}} onClick={(e) => this.handleChange(1)}>Start</Button>
                   </Grid>
 
                 </Grid>
@@ -191,7 +203,7 @@ export default class EMMReport extends React.PureComponent {
                   <Grid item xs={10}>
                     <Grid container spacing={3}>
                       {this.groupAnnotations(event.enhancedMMData).map((annotationGroup, index) => (
-                        this.renderAnnotationGroup(annotationGroup,index)
+                        this.renderAnnotationGroup(annotationGroup, index)
                       ))}
                     </Grid>
                   </Grid>

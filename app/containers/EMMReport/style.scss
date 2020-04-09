@@ -59,23 +59,29 @@
     min-width: 80px;
 }
 .overview-logo{
-    margin: 140px 0 80px 0;
+    margin: 60px 0 20px 0;
+}
+.overview-subtitle{
+    color: #000000;
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+.MuiTypography-body1.overview-text {
+    color: #004F6E;
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 36px;
+}
+.overview-card{
+    padding:20px;
 }
 .emm-report-nav .MuiTypography-body1 {
     opacity: 0.8;
     color: #000000;
-    font-family: "Noto Sans";
     font-size: 14px;
     letter-spacing: 0;
     line-height: 19px;
-}
-
-.overview-procedures {
-    opacity: 0.8;
-    color: #000000;
-    font-size: 26px;
-    letter-spacing: 0;
-    line-height: 36px;
 }
 
 .MuiTypography-body1.annotation-secondary{
