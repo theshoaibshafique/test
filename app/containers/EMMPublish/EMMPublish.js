@@ -17,14 +17,14 @@ import Search from '@material-ui/icons/Search';
 import MaterialTable from 'material-table';
 
 const tableIcons = {
-    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
+  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
 };
 
 export default class EMMPublish extends React.PureComponent {
@@ -34,7 +34,7 @@ export default class EMMPublish extends React.PureComponent {
       requestID: '',
       isLoading: false,
       emmCases: [],
-      operatingRoomList:[]
+      operatingRoomList: []
     };
   }
 
@@ -46,38 +46,48 @@ export default class EMMPublish extends React.PureComponent {
   }
 
   async componentDidMount() {
-    this.getOperatingRooms();
-    
+    // this.getOperatingRooms();
+    this.getEMMCases();
   };
 
-  getEMMCases(){
-    globalFuncs.genericFetch(process.env.EMMCASESREQUEST_API+"/", 'get', this.props.userToken, {})
-    .then(result => {
-      if (result === 'error' || result === 'conflict') {
-        this.setState({
-          emmCases: []
-        });
-      } else {
-        let emmCases = []
-        result.map((emmCase) => {
-          emmCases.push({
-            requestID: emmCase.name,
-            facilityName: emmCase.facilityName,
-            roomName: this.getName(this.state.operatingRoomList,emmCase.roomName),
-            procedures: emmCase.procedure.map((procedure) => {return this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY),procedure)}).join(', '),
-            complications: emmCase.complications.map((complication) => {return this.getName(COMPLICATIONS, complication)}).join(', '),
-            enhancedMMPublished: emmCase.enhancedMMPublished ? 'True' : 'False'
-          })
-        });
-        this.setState({
-          emmCases
-        });
-      }
-      this.notLoading();
-    });
+  getEMMCases() {
+    globalFuncs.genericFetch(process.env.EMMCASESREQUEST_API + "/", 'get', this.props.userToken, {})
+      .then(result => {
+        if (result === 'error' || result === 'conflict') {
+          this.setState({
+            emmCases: []
+          });
+        } else {
+          let facilityNames = result.map((emmCase) => { return { 'facilityName': emmCase.facilityName } });
+          globalFuncs.genericFetch(process.env.FACILITYLIST_API + "/", 'post', this.props.userToken, facilityNames)
+            .then(facilityResult => {
+              if (facilityResult === 'error' || facilityResult === 'conflict') {
+              } else {
+                
+                this.setState({
+
+                  emmCases: result.map((emmCase) => {
+                    let facility = facilityResult.find(facility => facility.facilityName == emmCase.facilityName) || {'departments':[]};
+                    let department = facility.departments.find(department => department.departmentName == emmCase.departmentName) || {'rooms':[]};
+                    let room = department.rooms.find(room => room.roomName == emmCase.roomName) || {'roomTitle':''};
+                    return {
+                      requestID: emmCase.name,
+                      facilityName: facility.facilityTitle,
+                      roomName: room.roomTitle,
+                      procedures: emmCase.procedure.map((procedure) => { return this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY), procedure) }).join(', '),
+                      complications: emmCase.complications.map((complication) => { return this.getName(COMPLICATIONS, complication) }).join(', '),
+                      enhancedMMPublished: emmCase.enhancedMMPublished ? 'True' : 'False'
+                    }
+                  })
+                })
+              }
+            });
+        }
+        this.notLoading();
+      });
   }
 
-  getOperatingRooms(){
+  getOperatingRooms() {
     globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.facilityName, 'get', this.props.userToken, {})
       .then(result => {
         let operatingRoomList = [];
@@ -86,7 +96,7 @@ export default class EMMPublish extends React.PureComponent {
             operatingRoomList.push({ value: room.roomName, name: room.roomTitle })
           });
         }
-        this.setState({ operatingRoomList },this.getEMMCases());
+        this.setState({ operatingRoomList }, this.getEMMCases());
       });
   }
 
@@ -102,52 +112,52 @@ export default class EMMPublish extends React.PureComponent {
     });
   }
 
-  redirect(e,emmCase) {
+  redirect(e, emmCase) {
     this.props.pushUrl('/emm/' + emmCase.requestID);
   }
 
   render() {
-    let allPageSizeOptions = [ 5, 10, 25 ,50, 75, 100 ];
+    let allPageSizeOptions = [5, 10, 25, 50, 75, 100];
     let pageSizeOptions = [];
-    allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a,this.state.emmCases.length)), a > this.state.emmCases.length));
+    allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a, this.state.emmCases.length)), a > this.state.emmCases.length));
     return (
       <LoadingOverlay
-      active={this.state.isLoading}
-      spinner
-      text='Loading your content...'
-      className="Overlay"
+        active={this.state.isLoading}
+        spinner
+        text='Loading your content...'
+        className="Overlay"
       >
-      <section className="emm-publish-page">
-        <div className="header page-title">
-          <div><span className="pad">Enhanced M&M Cases</span> </div>
-        </div>
+        <section className="emm-publish-page">
+          <div className="header page-title">
+            <div><span className="pad">Enhanced M&M Cases</span> </div>
+          </div>
 
-        <div>
-          <MaterialTable
-            title=""
-            columns={[
-              { title: 'Facility', field: 'facilityName'},
-              { title: 'OR', field: 'roomName' },
-              { title: 'Procedure', field: 'procedures' },
-              { title: 'Complication', field: 'complications' },
-              { title: 'Published', field: 'enhancedMMPublished'},
-              { title: 'requestID', field: 'requestID', hidden: true },
-            ]}
-            options={{ 
-              pageSize: 10,
-              pageSizeOptions: pageSizeOptions,
-              search: true,
-              paging: true,
-              searchFieldAlignment: 'left',
-              searchFieldStyle:{marginLeft:-24}
-            }}
-            data={this.state.emmCases}
-            icons={tableIcons}
-            onRowClick={(e, rowData) => this.redirect(e, rowData)}
-          />
-        </div>
+          <div>
+            <MaterialTable
+              title=""
+              columns={[
+                { title: 'Facility', field: 'facilityName' },
+                { title: 'OR', field: 'roomName' },
+                { title: 'Procedure', field: 'procedures' },
+                { title: 'Complication', field: 'complications' },
+                { title: 'Published', field: 'enhancedMMPublished' },
+                { title: 'requestID', field: 'requestID', hidden: true },
+              ]}
+              options={{
+                pageSize: 10,
+                pageSizeOptions: pageSizeOptions,
+                search: true,
+                paging: true,
+                searchFieldAlignment: 'left',
+                searchFieldStyle: { marginLeft: -24 }
+              }}
+              data={this.state.emmCases}
+              icons={tableIcons}
+              onRowClick={(e, rowData) => this.redirect(e, rowData)}
+            />
+          </div>
 
-      </section>
+        </section>
       </LoadingOverlay>
     );
   }
