@@ -12,6 +12,7 @@
 .MuiListItem-button:hover {
     color:  #028CC8 !important;
     background-color: #D8F0F9 !important;
+    font-weight: bold;
 }
 .MuiListItem-button:hover .MuiTypography-body1{
     font-weight: bold;
@@ -24,20 +25,28 @@
 }
 
 .MuiListItem-root.list-item{
-    padding: 11px 40px;
+    padding: 11px 16px;
     margin: 8px 0;
     background-color: #FFFFFF ;
     box-shadow: inset -2px 0 1px 0 rgba(0,0,0,0.1) ;
 }
-
+.list-item.Mui-selected .MuiTypography-body1{
+    font-weight: bold;
+}
 .emm-report-nav .header .MuiTypography-body1 {
   font-size: 26px;
   line-height: 36px;
 }
+.emm-report-main .header {
+    font-size: 42px !important;
+    letter-spacing: 0;
+    line-height: 57px !important;
+  }
 
 .emm-report .MuiTabs-indicator{
     min-width: 80px;
     height: 5px;
+    background-color: #028CC8;
 }
 .azuremediaplayer.amp-flush-skin.amp-big-play-centered{
     max-height: 550px;
@@ -66,38 +75,43 @@
     font-size: 18px;
     letter-spacing: 0;
     line-height: 24px;
+    margin: 8px 0 !important;
   }
 .MuiTypography-body1.overview-text {
     color: #004F6E;
     font-size: 26px;
     letter-spacing: 0;
     line-height: 36px;
+    margin: 4px 0;
 }
 .overview-card{
     padding:20px;
 }
 .emm-report-nav .MuiTypography-body1 {
     opacity: 0.8;
-    color: #000000;
     font-size: 14px;
     letter-spacing: 0;
     line-height: 19px;
+    color: #004F6E;
+
 }
 
 .MuiTypography-body1.annotation-secondary{
-    font-size: 14px;
+    font-size: 18px;
     letter-spacing: 0;
     line-height: 19px;
     color: #004F6E;
 }
 .MuiTypography-body1.annotation-title{
-    font-weight:'bold';
     margin:8px 0;
     color: #004F6E;
-    font-weight: bold;
+    font-size: 22px;
 }
 .annotation-card{
     min-height: 200px;
+}
+.annotation-card .MuiCardContent-root{
+    padding: 24px 40px;
 }
 .MuiButton-root.is-published{
     border-radius: 20px;

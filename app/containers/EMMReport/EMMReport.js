@@ -43,7 +43,7 @@ export default class EMMReport extends React.PureComponent {
   }
 
   getCase() {
-    let reportId = '096E7268-6A19-4FE1-B707-EB57C8385416' || this.props.requestId
+    let reportId = '9D763918-7B88-4751-8194-173FDB60C1BE' //|| this.props.requestId
     globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + reportId, 'get', this.props.userToken, {})
       .then(caseData => {
         if (caseData) {
@@ -143,7 +143,8 @@ export default class EMMReport extends React.PureComponent {
         >
           <List>
             {this.state.events.map((event, index) => (
-              <ListItem component="ul" className="list-item" button key={index} index={index} onClick={() => this.handleChange(index)} selected={this.state.currentEvent == index}>
+              <ListItem component="ul" className="list-item" button key={index} index={index} onClick={() => this.handleChange(index)} selected={this.state.currentEvent == index} 
+              >
                 <ListItemText primary={event.title} />
               </ListItem>
             ))}
@@ -157,7 +158,7 @@ export default class EMMReport extends React.PureComponent {
             </ListItem>
           </List>
         </Drawer>
-        <section className="">
+        <section className="emm-report-main">
           {this.state.events.map((event, index) => (
             <div hidden={this.state.currentEvent !== index} key={index}>
               {index == 0
@@ -180,14 +181,14 @@ export default class EMMReport extends React.PureComponent {
                     <Card variant="outlined" className="overview-card" style={{ textAlign: "left" }}>
                       <CardContent>
                         <Typography color="textPrimary" variant="body1" className="overview-subtitle" component="div">
-                          Case
+                          Complications
                         </Typography>
                         {this.getFormattedComplications(event.complications)}
                       </CardContent>
                     </Card>
                   </Grid>
                   <Grid item xs={8}>
-                    <Button variant="outlined" className="primary" style={{width:"60%"}} onClick={(e) => this.handleChange(1)}>Start</Button>
+                    <Button variant="outlined" className="primary" style={{width:"60%",marginTop:20}} onClick={(e) => this.handleChange(1)}>Start</Button>
                   </Grid>
 
                 </Grid>
@@ -196,7 +197,7 @@ export default class EMMReport extends React.PureComponent {
                     {event.title}
                   </Grid>
                   <Grid item xs={10} style={{ maxHeight: 628, overflow: 'hidden', marginBottom: 10 }}>
-                    {this.state.isScriptReady && <MultiVideo header={event.enhancedMMData[0].header} assets={event.enhancedMMData[0].assets}></MultiVideo>}
+                    {this.state.isScriptReady && <MultiVideo header={event.enhancedMMVideo[0].header} assets={event.enhancedMMVideo[0].assets}></MultiVideo>}
                   </Grid>
 
 
