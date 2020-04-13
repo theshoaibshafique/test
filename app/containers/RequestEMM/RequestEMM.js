@@ -304,14 +304,16 @@ export default class RequestEMM extends React.PureComponent {
     }
 
     let jsonBody = {
-      "operatingRoom": this.state.selectedOperatingRoom.value,
+      "roomName": this.state.selectedOperatingRoom.value,
       "specialty": this.state.specialtyCheck ? [this.state.specialtyValue] : selectedSpecialties,
       "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : selectedProcedures,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
       "postOpDate": this.formatDateTime(this.state.compDate),
       "operationDate": this.formatDateTime(this.state.operationDate),
       "notes": this.state.notes,
-      "usersToNotify": usersToNotify
+      "usersToNotify": usersToNotify,
+      "departmentName": '65030598-218F-4B0F-83FC-48C2EADA02CE', //TODO: swap out with real department
+      "facilityName":this.props.userFacility
     }
 
     globalFuncs.genericFetch(process.env.EMMREQUEST_API, 'post', this.props.userToken, jsonBody)

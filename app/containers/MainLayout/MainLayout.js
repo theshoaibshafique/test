@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import MainDashboard from 'containers/MainDashboard/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
+import EMMPublish from 'containers/EMMPublish/Loadable';
 import EMM from 'containers/EMM/Loadable';
 import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
@@ -27,6 +28,7 @@ export default class MainLayout extends React.PureComponent {
       userManagementAccess: false,
       emmAccess: false,
       emmRequestAccess: false,
+      emmPublishAccess: false,
       isLoading: true
     }
 
@@ -41,6 +43,7 @@ export default class MainLayout extends React.PureComponent {
     this.getUserManagementAccess();
     this.getEMMRequestAccess();
     this.getEMMAccess();
+    this.getEMMPublishAccess();
   };
 
   logoutFunction(logout) {
@@ -100,6 +103,25 @@ export default class MainLayout extends React.PureComponent {
     })
   };
 
+  getEMMPublishAccess() {
+    fetch(process.env.EMMACCESS_API, {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + this.props.userToken,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.status === 200) {
+        response.json().then((result) => {
+          if (result) {
+            this.setState ({ emmPublishAccess: true })
+          }
+        });
+      }
+    })
+  };
+
   getEMMRequestAccess() {
     fetch(process.env.EMMREQUESTACCESS_API, {
       method: 'get',
@@ -132,6 +154,9 @@ export default class MainLayout extends React.PureComponent {
               <Route path="/maindashboard" component={MainDashboard}/> }/>
               {(this.state.emmAccess) &&
                   <Route path="/emmcases" component={EMMCases}/>
+              }
+              {(this.state.emmPublishAccess) &&
+                  <Route path="/emmpublish" component={EMMPublish}/>
               }
               {(this.state.emmAccess) &&
                   <Route path="/emm/:requestid" component={EMM} />
@@ -174,6 +199,7 @@ export default class MainLayout extends React.PureComponent {
                     userManagementAccess={this.state.userManagementAccess} 
                     emmRequestAccess={this.state.emmRequestAccess}
                     emmAccess={this.state.emmAccess}
+                    emmPublishAccess={this.state.emmPublishAccess}
                     userLogin={<AzureLogin
                       resourcesGathered={() => this.resourcesGathered()}
                       logoutFunction={(logout) => this.logoutFunction(logout)}
