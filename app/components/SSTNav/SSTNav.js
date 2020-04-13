@@ -16,11 +16,11 @@ class SSTNav extends React.Component {
         </div>
         <ul className="dark-blue">
           <li className="link-border"><Link to="/maindashboard" className='text-link'>Dashboard</Link></li>
-          {(this.props.emmAccess && !this.props.emmPublishAccess) &&
+          {(this.props.emmAccess) &&
             <li className="link-border"><Link to="/emmcases" className='text-link'>eM&M Cases</Link></li>
           }
           {(this.props.emmPublishAccess) &&
-            <li className="link-border"><Link to="/emmpublish" className='text-link'>eM&M Cases</Link></li>
+            <li className="link-border"><Link to="/emmpublish" className='text-link'>eM&M Publisher</Link></li>
           }
           {/* 
             <li>Efficiency</li>
