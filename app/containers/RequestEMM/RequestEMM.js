@@ -361,27 +361,32 @@ export default class RequestEMM extends React.PureComponent {
     });
   }
 
-  async componentDidMount() {
+  async populateUserEmail(e,callback){
+    return await globalFuncs.genericFetch(process.env.USERSEARCH_API, 'get', this.props.userToken, {})
+    .then(result => {
+      if (result) {
+        let users = [];
+        result.map((user) => {
+          users.push({ value: user.userName, label: user.firstName.concat(' ').concat(user.lastName) });
+        });
 
-    await globalFuncs.genericFetch(process.env.USERSEARCH_API, 'get', this.props.userToken, {})
-      .then(result => {
-        if (result) {
-          let users = [];
-          result.map((user) => {
-            users.push({ value: user.userName, label: user.firstName.concat(' ').concat(user.lastName) });
-          });
+        this.setState({
+          userList: users
+        });
+        callback(users);
+        return users;
+      } else {
+        callback([]);
+        this.setState({
+          userList: []
+        });
+      }
+      return [];
+    });
+  }
 
-          this.setState({
-            userList: users
-          });
-        } else {
-          this.setState({
-            userList: []
-          });
-        }
-      });
-
-    await globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+  async populateOperatingRooms(e,callback){
+    return await globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
         let operatingRooms = [];
         if (result) {
@@ -389,8 +394,16 @@ export default class RequestEMM extends React.PureComponent {
             operatingRooms.push({ value: room.roomName, label: room.roomTitle })
           });
         }
+        callback(operatingRooms)
+        
         this.setState({ operatingRooms });
+        return operatingRooms
       });
+    
+  }
+
+  componentDidMount() {
+
   }
 
   handleUserEmailChange = (inputValue) => {
@@ -398,31 +411,6 @@ export default class RequestEMM extends React.PureComponent {
   };
 
   render() {
-    const filterRoom = (inputValue) => {
-      return this.state.operatingRooms.filter(room =>
-        room.label.toLowerCase().includes(inputValue.toLowerCase())
-      );
-    };
-
-    const operatingRoomPromiseOptions = inputValue =>
-      new Promise(resolve => {
-        setTimeout(() => {
-          resolve(filterRoom(inputValue));
-        }, 1000);
-      });
-
-    const filterUsers = (inputValue) => {
-      return this.state.userList.filter(user =>
-        user.label.toLowerCase().includes(inputValue.toLowerCase())
-      );
-    };
-
-    const promiseOptions = inputValue =>
-      new Promise(resolve => {
-        setTimeout(() => {
-          resolve(filterUsers(inputValue));
-        }, 1000);
-      });
 
     return (
       <section className="request-emm-page">
@@ -551,7 +539,8 @@ export default class RequestEMM extends React.PureComponent {
               <AsyncSelect
                 cacheOptions
                 defaultOptions
-                loadOptions={operatingRoomPromiseOptions}
+                options={this.state.operatingRooms}
+                loadOptions={(e,v) => this.populateOperatingRooms(e,v)}
                 value={this.state.selectedOperatingRoom}
                 onChange={(e) => this.handleChange(e)}
                 name="operatingRoom"
@@ -738,7 +727,8 @@ export default class RequestEMM extends React.PureComponent {
                 isMulti
                 cacheOptions
                 defaultOptions
-                loadOptions={promiseOptions}
+                options={this.state.userList}
+                loadOptions={(e,callback) => this.populateUserEmail(e,callback)}
                 value={this.state.inputValue}
                 onChange={(e) => this.handleUserEmailChange(e)}
 

@@ -93,7 +93,7 @@ export default class EMMCases extends React.PureComponent {
           });
 
           this.state.operatingRoomList.map((room) => {
-            if (room.value.toUpperCase() === result.operatingRoom.toUpperCase()) {
+            if (room.value.toUpperCase() === result.roomName.toUpperCase()) {
               operatingRoom = room.label;
             }
           });
