@@ -78,7 +78,7 @@ export default class EMMPublish extends React.PureComponent {
                       roomName: room.roomTitle,
                       procedures: emmCase.procedure.map((procedure) => { return this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY), procedure) }).join(', '),
                       complications: emmCase.complications.map((complication) => { return this.getName(COMPLICATIONS, complication) }).join(', '),
-                      enhancedMMPublished: emmCase.enhancedMMPublished ? 'True' : 'False'
+                      enhancedMMPublished: emmCase.enhancedMMPublished 
                     }
                   })
                 }, this.notLoading())
@@ -137,7 +137,7 @@ export default class EMMPublish extends React.PureComponent {
                 { title: 'OR', field: 'roomName' },
                 { title: 'Procedure', field: 'procedures' },
                 { title: 'Complication', field: 'complications' },
-                { title: 'Published', field: 'enhancedMMPublished' },
+                { title: 'Published', field: 'enhancedMMPublished', lookup:{'true': 'True', 'false': 'False'} },
                 { title: 'requestID', field: 'requestID', hidden: true },
               ]}
               options={{
@@ -148,7 +148,7 @@ export default class EMMPublish extends React.PureComponent {
                 searchFieldAlignment: 'left',
                 searchFieldStyle: { marginLeft: -24 }
               }}
-              data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => emmCase.enhancedMMPublished) : this.state.emmCases}
+              data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => !emmCase.enhancedMMPublished) : this.state.emmCases}
               icons={tableIcons}
               onRowClick={(e, rowData) => this.redirect(e, rowData)}
             />
