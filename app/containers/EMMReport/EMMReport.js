@@ -213,7 +213,7 @@ export default class EMMReport extends React.PureComponent {
                     {event.title}
                   </Grid>
                   <Grid item xs={10} style={{ maxHeight: 628, overflow: 'hidden', marginBottom: 10 }}>
-                    {this.state.isScriptReady && <MultiVideo header={event.enhancedMMVideo[0].header} assets={event.enhancedMMVideo[0].assets}></MultiVideo>}
+                    {this.state.isScriptReady && <MultiVideo header={event.enhancedMMVideo[0].header} assets={event.enhancedMMVideo[0].assets} currentEvent={this.state.currentEvent}></MultiVideo>}
                   </Grid>
 
 
