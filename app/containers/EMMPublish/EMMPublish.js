@@ -59,15 +59,18 @@ export default class EMMPublish extends React.PureComponent {
           this.setState({
             emmCases: []
           });
+          this.notLoading();
         } else {
           let facilityNames = result.map((emmCase) => { return { 'facilityName': emmCase.facilityName } });
           globalFuncs.genericFetch(process.env.FACILITYLIST_API + "/", 'post', this.props.userToken, facilityNames)
             .then(facilityResult => {
               if (facilityResult === 'error' || facilityResult === 'conflict') {
-              } else {
-                
                 this.setState({
-
+                  emmCases: []
+                });
+                this.notLoading()
+              } else {
+                this.setState({
                   emmCases: result.map((emmCase) => {
                     let facility = facilityResult.find(facility => facility.facilityName == emmCase.facilityName) || {'departments':[]};
                     let department = facility.departments.find(department => department.departmentName == emmCase.departmentName) || {'rooms':[]};
