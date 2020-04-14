@@ -58,7 +58,7 @@ export default class EMMReport extends React.PureComponent {
           } else {
             //TODO: error flow
           }
-          this.setState({ isPublished: caseData.isPublished, events });
+          this.setState({ isPublished: caseData.published, events });
 
         } else {
 
@@ -110,7 +110,23 @@ export default class EMMReport extends React.PureComponent {
   };
 
   publish() {
-
+    const jsonBody = {
+      "name":"9D763918-7B88-4751-8194-173FDB60C1BE",
+      "published":!this.state.isPublished,
+      // "procedures" : [],
+      // "complicationNames" : [],
+      // "enhancedMMPages":
+      //   [
+      //   ]
+    }
+    globalFuncs.genericFetch(process.env.EMMPUBLISH_API, 'PATCH', this.props.userToken, jsonBody)
+      .then(result => { 
+        if (result === 'error' || result === 'conflict') {
+        
+        } else {
+          this.setState({isPublished:!isPublished})
+        }
+      });
   }
   renderAnnotationGroup(annotationGroup, index) {
 
