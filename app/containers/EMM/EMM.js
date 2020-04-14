@@ -67,9 +67,8 @@ export default class EMM extends React.PureComponent {
           });
           if (!match) { complicationList.push(complication); }
         });
-
         this.state.operatingRoomList.map((room) => {
-          if (room.value.toUpperCase() === result.operatingRoom.toUpperCase()) {
+          if (room.value.toUpperCase() === result.roomName.toUpperCase()) {
             operatingRoom = room.label;
           }
         });
