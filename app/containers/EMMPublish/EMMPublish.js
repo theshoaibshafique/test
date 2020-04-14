@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS } from '../../constants';
-import { Grid } from '@material-ui/core';
+import { Grid, Checkbox } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -15,6 +15,8 @@ import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
 import MaterialTable from 'material-table';
+import Icon from '@mdi/react'
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 
 const tableIcons = {
   Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
@@ -32,9 +34,10 @@ export default class EMMPublish extends React.PureComponent {
     super(props);
     this.state = {
       requestID: '',
-      isLoading: false,
+      isLoading: true,
       emmCases: [],
-      operatingRoomList: []
+      operatingRoomList: [],
+      filterPublished: false
     };
   }
 
@@ -46,7 +49,6 @@ export default class EMMPublish extends React.PureComponent {
   }
 
   async componentDidMount() {
-    // this.getOperatingRooms();
     this.getEMMCases();
   };
 
@@ -79,24 +81,10 @@ export default class EMMPublish extends React.PureComponent {
                       enhancedMMPublished: emmCase.enhancedMMPublished ? 'True' : 'False'
                     }
                   })
-                })
+                }, this.notLoading())
               }
             });
         }
-        this.notLoading();
-      });
-  }
-
-  getOperatingRooms() {
-    globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.facilityName, 'get', this.props.userToken, {})
-      .then(result => {
-        let operatingRoomList = [];
-        if (result) {
-          result.map((room) => {
-            operatingRoomList.push({ value: room.roomName, name: room.roomTitle })
-          });
-        }
-        this.setState({ operatingRoomList }, this.getEMMCases());
       });
   }
 
@@ -115,6 +103,9 @@ export default class EMMPublish extends React.PureComponent {
   redirect(e, emmCase) {
     this.props.pushUrl('/emm/' + emmCase.requestID);
   }
+  handleCheckFilterPublished(e){
+    this.setState({ filterPublished: e.target.checked});
+  }
 
   render() {
     let allPageSizeOptions = [5, 10, 25, 50, 75, 100];
@@ -131,7 +122,13 @@ export default class EMMPublish extends React.PureComponent {
           <div className="header page-title">
             <div><span className="pad">Enhanced M&M Cases</span> </div>
           </div>
-
+          <div>
+          <Checkbox
+                disableRipple
+                icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checked={this.state.filterPublished} onChange={(e) => this.handleCheckFilterPublished(e)} />Show requests with unpublished reports only
+          </div>
           <div>
             <MaterialTable
               title=""
@@ -151,7 +148,7 @@ export default class EMMPublish extends React.PureComponent {
                 searchFieldAlignment: 'left',
                 searchFieldStyle: { marginLeft: -24 }
               }}
-              data={this.state.emmCases}
+              data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => emmCase.enhancedMMPublished) : this.state.emmCases}
               icons={tableIcons}
               onRowClick={(e, rowData) => this.redirect(e, rowData)}
             />
