@@ -312,7 +312,7 @@ export default class RequestEMM extends React.PureComponent {
       "operationDate": this.formatDateTime(this.state.operationDate),
       "notes": this.state.notes,
       "usersToNotify": usersToNotify,
-      "departmentName": '65030598-218F-4B0F-83FC-48C2EADA02CE', //TODO: swap out with real department
+      "departmentName": this.state.departmentName,
       "facilityName":this.props.userFacility
     }
 
@@ -386,16 +386,20 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   async populateOperatingRooms(e,callback){
-    return await globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+    
+    return await globalFuncs.genericFetch(process.env.FACILITYDEPARTMENT_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
         let operatingRooms = [];
-        if (result) {
-          result.map((room) => {
+        if (result === 'error' || result === 'conflict') {
+
+        }else if (result && result.length > 0) {
+          //TODO: change from using just the first department
+          result[0].rooms.map((room) => {
             operatingRooms.push({ value: room.roomName, label: room.roomTitle })
           });
+          this.setState({departmentName:result[0].departmentName})
         }
         callback(operatingRooms)
-        
         this.setState({ operatingRooms });
         return operatingRooms
       });
