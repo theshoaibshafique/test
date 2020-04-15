@@ -45,8 +45,8 @@
 
 .emm-report .MuiTabs-indicator{
     min-width: 80px;
-    height: 5px;
-    background-color: #004F6E;
+    height: 6px;
+    background-color: #005979;
 }
 .azuremediaplayer.amp-flush-skin.amp-big-play-centered{
     max-height: 550px;
@@ -66,16 +66,27 @@
     text-transform: none;
     max-width: 80px;
     min-width: 80px;
+    padding-top: 12px;
+    font-weight: bold;
 }
-
-.video-tab.disabled{
+.MuiTab-textColorPrimary.Mui-selected{
+    color: #005979;
+}
+.video-tab.title{
     max-width: none;
     width:150px;
     font-size: 18px;
     letter-spacing: 0;
     line-height: 19px;
-    color: #004F6E !important;
+    color: #005979 !important;
     padding-top: 16px;
+    font-weight: normal;
+}
+.video-tab.divider{
+    min-width: 0;
+    width: 16px;
+    padding: 0 12px 0 0;
+    font-size: 24px;
 }
 .overview-logo{
     margin: 60px 0 20px 0;
@@ -88,7 +99,7 @@
     margin: 8px 0 !important;
   }
 .MuiTypography-body1.overview-text {
-    color: #004F6E;
+    color: #005979;
     font-size: 26px;
     letter-spacing: 0;
     line-height: 36px;
@@ -102,7 +113,7 @@
     font-size: 14px;
     letter-spacing: 0;
     line-height: 19px;
-    color: #004F6E;
+    color: #005979;
 
 }
 
@@ -110,11 +121,11 @@
     font-size: 18px;
     letter-spacing: 0;
     line-height: 19px;
-    color: #004F6E;
+    color: #005979;
 }
 .MuiTypography-body1.annotation-title{
     margin:8px 0;
-    color: #004F6E;
+    color: #005979;
     font-size: 22px;
 }
 .annotation-card{
