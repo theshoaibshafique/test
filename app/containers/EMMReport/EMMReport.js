@@ -124,7 +124,7 @@ export default class EMMReport extends React.PureComponent {
         if (result === 'error' || result === 'conflict') {
         
         } else {
-          this.setState({isPublished:!isPublished})
+          this.setState({isPublished:!this.state.isPublished})
         }
       });
   }
