@@ -209,10 +209,13 @@ export default class EMMReport extends React.PureComponent {
 
                 </Grid>
                 : <Grid container spacing={3} justify="center">
-                  <Grid item xs={10} className="header">
+                  <Grid item xs={5} className="header">
                     {event.title}
                   </Grid>
-                  <Grid item xs={10} style={{ maxHeight: 628, overflow: 'hidden', marginBottom: 10 }}>
+                  <Grid item xs={5}>
+                    <img className="" src={logo} style={{ maxWidth: "165px",float:'right' }}></img>
+                  </Grid>
+                  <Grid item xs={10} style={{ maxHeight: 612, overflow: 'hidden', marginBottom: 10 }}>
                     {this.state.isScriptReady && <MultiVideo header={event.enhancedMMVideo[0].header} assets={event.enhancedMMVideo[0].assets} currentEvent={this.state.currentEvent}></MultiVideo>}
                   </Grid>
 
