@@ -104,7 +104,7 @@ export default class EMMPublish extends React.PureComponent {
   }
 
   redirect(e, emmCase) {
-    this.props.pushUrl('/emm/' + emmCase.requestID);
+    this.props.pushUrl('/emmreport/' + emmCase.requestID);
   }
   handleCheckFilterPublished(e){
     this.setState({ filterPublished: e.target.checked});

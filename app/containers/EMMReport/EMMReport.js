@@ -106,7 +106,7 @@ export default class EMMReport extends React.PureComponent {
   }
 
   goBack() {
-    this.props.pushUrl('/emmcases');
+    this.props.goBack();
   };
 
   publish() {
