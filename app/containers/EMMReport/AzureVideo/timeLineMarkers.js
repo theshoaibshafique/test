@@ -51,12 +51,5 @@ export let createTimelineMarkerPlugin = (videoID) => {amp.plugin(`${videoID}`, f
     }
 });
 
-
-
-    
-
-
-   
-
 });
 };

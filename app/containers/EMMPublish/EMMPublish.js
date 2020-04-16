@@ -82,7 +82,10 @@ export default class EMMPublish extends React.PureComponent {
                       procedures: emmCase.procedure.map((procedure) => { return this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY), procedure) }).join(', '),
                       complications: emmCase.complications.map((complication) => { return this.getName(COMPLICATIONS, complication) }).join(', '),
                       enhancedMMPublished: emmCase.enhancedMMPublished,
-                      enhancedMMReferenceName: emmCase.enhancedMMReferenceName
+                      enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
+                      report:!emmCase.enhancedMMReferenceName 
+                        ?'Report not available'
+                        : <Button disableElevation variant="contained" className="secondary" onClick={() => this.redirect(emmCase.enhancedMMReferenceName)} >Open Report</Button>
                     }
                   })
                 }, this.notLoading())
@@ -104,8 +107,8 @@ export default class EMMPublish extends React.PureComponent {
     });
   }
 
-  redirect(e, emmCase) {
-    this.props.pushUrl('/emmreport/' + emmCase.enhancedMMReferenceName);
+  redirect(enhancedMMReferenceName) {
+    this.props.pushUrl('/emmreport/' +enhancedMMReferenceName);
   }
   handleCheckFilterPublished(e){
     this.setState({ filterPublished: e.target.checked});
@@ -143,8 +146,9 @@ export default class EMMPublish extends React.PureComponent {
                 { title: 'OR', field: 'roomName' },
                 { title: 'Procedure', field: 'procedures' },
                 { title: 'Complication', field: 'complications' },
-                { title: 'Published', field: 'enhancedMMPublished', lookup:{'true': 'True', 'false': 'False'} },
+                { title: 'Published', field: 'enhancedMMPublished', lookup:{'true': 'Yes', 'false': 'No'} },
                 { title: 'requestID', field: 'requestID', hidden: true, searchable: true },
+                { title: 'Report', field: 'report', searchable: false },
                 { title: 'enhancedMMReferenceName', field: 'enhancedMMReferenceName', hidden: true},
               ]}
               options={{
@@ -156,14 +160,7 @@ export default class EMMPublish extends React.PureComponent {
                 searchFieldStyle: { marginLeft: -24 },
                 actionsColumnIndex: -1
               }}
-              actions={[
-                rowData => ({
-                  iconProps: { component:"span"},
-                  icon: () => <a variant="outlined" className="button primary" >Open Report</a>,
-                  onClick: (e,rowData) => this.redirect(e,rowData),
-                  hidden: !rowData.enhancedMMReferenceName
-                })
-              ]}
+
               data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => !emmCase.enhancedMMPublished) : this.state.emmCases}
               icons={tableIcons}
             />
