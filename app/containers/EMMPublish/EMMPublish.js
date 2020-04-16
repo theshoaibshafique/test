@@ -143,12 +143,12 @@ export default class EMMPublish extends React.PureComponent {
               title=""
               columns={[
                 { title: 'Facility', field: 'facilityName' },
-                { title: 'OR', field: 'roomName' },
+                { title: 'OR', field: 'roomName' ,width:20},
                 { title: 'Procedure', field: 'procedures' },
                 { title: 'Complication', field: 'complications' },
-                { title: 'Published', field: 'enhancedMMPublished', lookup:{'true': 'Yes', 'false': 'No'} },
+                { title: 'Published', field: 'enhancedMMPublished', lookup:{'true': 'Yes', 'false': 'No'},width:20 },
                 { title: 'requestID', field: 'requestID', hidden: true, searchable: true },
-                { title: 'Report', field: 'report', searchable: false },
+                { title: 'Report', field: 'report', searchable: false ,width:150},
                 { title: 'enhancedMMReferenceName', field: 'enhancedMMReferenceName', hidden: true},
               ]}
               options={{
