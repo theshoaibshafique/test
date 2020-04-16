@@ -1,5 +1,5 @@
 let duration = 0;
-export let createPlugin = (videoID) => {amp.plugin(`${videoID}`, function (options) {
+export let createTimelineMarkerPlugin = (videoID) => {amp.plugin(`${videoID}`, function (options) {
     var player = this;
     player.addEventListener(amp.eventName.durationchange, function () {
     duration  = player.duration();
@@ -37,7 +37,7 @@ export let createPlugin = (videoID) => {amp.plugin(`${videoID}`, function (optio
         for (var index = 0; index < options.markertime.length; index++) {
             var marker = options.markertime[index];               
             if (marker) {
-                var secs = convertTimeFormatToSecs(marker);
+                var secs = marker;
                 if (secs >= 0 && secs <= duration) {
                     var markerLeftPosition = (secs / duration * 100);
                     var div = document.createElement('div');
@@ -53,24 +53,7 @@ export let createPlugin = (videoID) => {amp.plugin(`${videoID}`, function (optio
 
 
 
-    function convertTimeFormatToSecs(timeFormat) {
-        if (timeFormat) {
-            var timeFragments = timeFormat.split(":");
-            if (timeFragments.length > 0) {
-                switch (timeFragments.length) {
-                    case 4: return (parseInt(timeFragments[0], 10) * 60 * 60) + (parseInt(timeFragments[1], 10) * 60) + parseInt(timeFragments[2], 10) + (timeFragments[3] / 100);
-                    case 3: return (parseInt(timeFragments[0], 10) * 60 * 60) + (parseInt(timeFragments[1], 10) * 60) + parseInt(timeFragments[2], 10);
-                    case 2: return parseInt(timeFragments[0], 10) * 60 + parseInt(timeFragments[1], 10);
-                    case 1: return parseInt(timeFragments[0], 10);
-                    default: return parseInt(timeFragments[0], 10);
-                }
-            }
-            else
-                return parseInt(timeFormat, 10);
-        }
-
-        return 0;
-    }
+    
 
 
    

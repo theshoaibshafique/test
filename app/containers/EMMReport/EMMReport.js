@@ -17,7 +17,7 @@ export default class EMMReport extends React.PureComponent {
       currentEvent: 0, // index of current viewed Event
       isPublished: false,
       isScriptReady: false,
-      emmPublishAccess:false
+      emmPublishAccess: false
     };
   }
 
@@ -35,15 +35,15 @@ export default class EMMReport extends React.PureComponent {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => {
-      if (response.status === 200) {
-        response.json().then((result) => {
-          if (result) {
-            this.setState ({ emmPublishAccess: true })
-          }
-        });
-      }
-    })
+      .then(response => {
+        if (response.status === 200) {
+          response.json().then((result) => {
+            if (result) {
+              this.setState({ emmPublishAccess: true })
+            }
+          });
+        }
+      })
   };
 
   loadAMPScript() {
@@ -132,20 +132,15 @@ export default class EMMReport extends React.PureComponent {
 
   publish() {
     const jsonBody = {
-      "name":this.props.requestId,
-      "published":!this.state.isPublished,
-      // "procedures" : [],
-      // "complicationNames" : [],
-      // "enhancedMMPages":
-      //   [
-      //   ]
+      "name": this.props.requestId,
+      "published": !this.state.isPublished
     }
     globalFuncs.genericFetch(process.env.EMMPUBLISH_API, 'PATCH', this.props.userToken, jsonBody)
-      .then(result => { 
+      .then(result => {
         if (result === 'error' || result === 'conflict') {
-        
+
         } else {
-          this.setState({isPublished:!this.state.isPublished})
+          this.setState({ isPublished: !this.state.isPublished })
         }
       });
   }
@@ -169,6 +164,7 @@ export default class EMMReport extends React.PureComponent {
     }, new Map).values()];
   }
 
+
   render() {
     return (
       <main className="emm-report inline overflow-y Content-Wrapper">
@@ -180,7 +176,7 @@ export default class EMMReport extends React.PureComponent {
         >
           <List>
             {this.state.events.map((event, index) => (
-              <ListItem component="ul" className="list-item" button key={index} index={index} onClick={() => this.handleChange(index)} selected={this.state.currentEvent == index} 
+              <ListItem component="ul" className="list-item" button key={index} index={index} onClick={() => this.handleChange(index)} selected={this.state.currentEvent == index}
               >
                 <ListItemText primary={event.title} />
               </ListItem>
@@ -190,9 +186,9 @@ export default class EMMReport extends React.PureComponent {
               <Button disableElevation variant="contained" fullWidth className={this.state.isPublished ? "is-published" : "secondary"} disabled={this.state.isPublished} onClick={(e) => this.publish()} >{this.state.isPublished ? "Published" : 'Publish'}</Button>
             </ListItem>
             {this.state.emmPublishAccess &&
-            <ListItem component="ul" style={{ marginTop: 20 }}>
-              <Button disableElevation variant="contained" fullWidth className="secondary" onClick={(e) => this.goBack()} >Exit</Button>
-            </ListItem>}
+              <ListItem component="ul" style={{ marginTop: 20 }}>
+                <Button disableElevation variant="contained" fullWidth className="secondary" onClick={(e) => this.goBack()} >Exit</Button>
+              </ListItem>}
           </List>
         </Drawer>
         <section className="emm-report-main">
@@ -225,7 +221,7 @@ export default class EMMReport extends React.PureComponent {
                     </Card>
                   </Grid>
                   <Grid item xs={8}>
-                    <Button variant="outlined" className="primary" style={{width:"60%",marginTop:20}} onClick={(e) => this.handleChange(1)}>Start</Button>
+                    <Button variant="outlined" className="primary" style={{ width: "60%", marginTop: 20 }} onClick={(e) => this.handleChange(1)}>Start</Button>
                   </Grid>
 
                 </Grid>
@@ -234,10 +230,10 @@ export default class EMMReport extends React.PureComponent {
                     {event.title}
                   </Grid>
                   <Grid item xs={5}>
-                    <img className="" src={logo} style={{ maxWidth: "165px",float:'right' }}></img>
+                    <img className="" src={logo} style={{ maxWidth: "200px", float: 'right' }}></img>
                   </Grid>
-                  <Grid item xs={10} style={{} || { maxHeight: 612, overflow: 'hidden', marginBottom: 10 }}>
-                    {this.state.isScriptReady && <MultiVideo header={event.enhancedMMVideo[0].header} assets={event.enhancedMMVideo[0].assets} currentEvent={this.state.currentEvent}></MultiVideo>}
+                  <Grid item xs={10} >
+                    {this.state.isScriptReady && <MultiVideo header={event.enhancedMMVideo[0].header} annoationTimes={event.enhancedMMData.map((annotation) => { return annotation.header })} assets={event.enhancedMMVideo[0].assets} currentEvent={this.state.currentEvent}></MultiVideo>}
                   </Grid>
 
 

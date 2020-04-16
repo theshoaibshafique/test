@@ -1,7 +1,7 @@
 import React from 'react';
 import { AzureMP } from 'react-azure-mp'
 import globalFunctions from '../../../utils/global-functions';
-import { createPlugin } from './timeLineMarkers';
+import { createTimelineMarkerPlugin } from './timeLineMarkers';
 export default class AzureVideo extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
@@ -15,9 +15,11 @@ export default class AzureVideo extends React.PureComponent { // eslint-disable-
   }
 
   componentDidMount() {
+    createTimelineMarkerPlugin(this.state.videoID);
+
     let plugins = {};
     plugins[this.state.videoID] = {
-      markertime: ["0:00", "1:30", "1:48"]
+      markertime: this.props.annoationTimes
 
     };
     let myOptions = {
@@ -26,7 +28,6 @@ export default class AzureVideo extends React.PureComponent { // eslint-disable-
       fuild: true,
       plugins: plugins
     }
-    createPlugin(this.state.videoID);
     globalFunctions.genericFetch(process.env.MEDIA_API + "/" + this.state.title, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
