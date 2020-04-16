@@ -12,7 +12,6 @@ export default class MultiVideo extends React.PureComponent { // eslint-disable-
       selected: 2,
       currentEvent: this.props.currentEvent //This is only here to trigger re-render of tab indicator (Visual bug when indicator is loaded off screen)
     }
-
   }
   
   componentDidMount() {
@@ -41,7 +40,9 @@ export default class MultiVideo extends React.PureComponent { // eslint-disable-
           ))}
         </Tabs>
         {this.state.assets.map((asset, index) => (
-          <div key={index+2} hidden={this.state.selected !== index+2}><AzureVideo title={asset} /></div>
+          <div key={index+2} hidden={this.state.selected !== index+2}>
+            <AzureVideo index={index+2} selected={this.state.selected} currentEvent={this.props.currentEvent} title={asset} />
+          </div>
         ))}
       </Paper>
     );

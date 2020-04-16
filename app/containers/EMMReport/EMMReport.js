@@ -55,7 +55,7 @@ export default class EMMReport extends React.PureComponent {
     linkTag.rel = 'stylesheet';
     scriptTag.id = 'amp-azure';
     scriptTag.src = '//amp.azure.net/libs/amp/2.1.5/azuremediaplayer.min.js';
-    linkTag.href = '//amp.azure.net/libs/amp/2.1.5/skins/' + "amp-flush" + '/azuremediaplayer.min.css';
+    linkTag.href = '//amp.azure.net/libs/amp/2.1.5/skins/' + "amp-default" + '/azuremediaplayer.min.css';
     document.body.appendChild(scriptTag);
     document.head.insertBefore(linkTag, document.head.firstChild);
     scriptTag.onload = () => {
@@ -236,7 +236,7 @@ export default class EMMReport extends React.PureComponent {
                   <Grid item xs={5}>
                     <img className="" src={logo} style={{ maxWidth: "165px",float:'right' }}></img>
                   </Grid>
-                  <Grid item xs={10} style={{ maxHeight: 612, overflow: 'hidden', marginBottom: 10 }}>
+                  <Grid item xs={10} style={{} || { maxHeight: 612, overflow: 'hidden', marginBottom: 10 }}>
                     {this.state.isScriptReady && <MultiVideo header={event.enhancedMMVideo[0].header} assets={event.enhancedMMVideo[0].assets} currentEvent={this.state.currentEvent}></MultiVideo>}
                   </Grid>
 
