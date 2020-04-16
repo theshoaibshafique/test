@@ -18,3 +18,21 @@
 .emm-publish-page .MuiTouchRipple-root{
     display: none;
 }
+
+.emm-publish-page .button{
+    color: #fff;
+    background: #004f6e !important;
+    padding: 6px 16px;
+    min-width: 64px;
+    box-sizing: border-box;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    border-radius: 4px;
+    letter-spacing: 0.02857em;
+    text-transform: uppercase;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 24px;
+    text-align: center;
+    text-transform: none;
+}

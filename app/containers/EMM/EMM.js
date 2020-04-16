@@ -13,12 +13,34 @@ export default class EMM extends React.PureComponent {
       operatingRoom: '',
       compDate: null,
       specialtyNames: [],
-      operatingRoomList: []
+      operatingRoomList: [],
+      emmPublishAccess: false,
+      enhancedMMReferenceName: '',
+      enhancedMMPublished: false
     };
   }
 
   componentDidMount() {
     this.getOperatingRooms();
+    this.getEMMPublishAccess();
+  };
+  getEMMPublishAccess() {
+    fetch(process.env.EMMACCESS_API, {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + this.props.userToken,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.status === 200) {
+        response.json().then((result) => {
+          if (result) {
+            this.setState ({ emmPublishAccess: true })
+          }
+        });
+      }
+    })
   };
 
   getOperatingRooms(){
@@ -45,7 +67,6 @@ export default class EMM extends React.PureComponent {
         let complicationList = [];
         let operatingRoom = '';
         let specialtyNames = [];
-
         result.procedure.map((procedure) => {
           let match = false;
           surgeryList.map((surgery) => {
@@ -88,7 +109,9 @@ export default class EMM extends React.PureComponent {
           complicationNames: complicationList.join(', '),
           operatingRoom: operatingRoom,
           compDate: new Date(result.postOpDate).toLocaleDateString(),
-          specialtyNames: specialtyNames
+          specialtyNames: specialtyNames,
+          enhancedMMReferenceName: result.enhancedMMReferenceName,
+          enhancedMMPublished: result.enhancedMMPublished
         });
       }
     });
@@ -116,7 +139,7 @@ export default class EMM extends React.PureComponent {
     return (
       <section>
         <div className="header page-title">
-          <div><span className="pad">Enhanced M&M</span><Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button> </div>
+    <div><span className="pad">Enhanced M&M</span> {(this.state.enhancedMMReferenceName && (this.state.emmPublishAccess || this.state.enhancedMMPublished) ) && <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button>} </div>
         </div>
 
         <div className="table-row info-title">

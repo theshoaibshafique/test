@@ -16,13 +16,34 @@ export default class EMMReport extends React.PureComponent {
       events: [],
       currentEvent: 0, // index of current viewed Event
       isPublished: false,
-      isScriptReady: false
+      isScriptReady: false,
+      emmPublishAccess:false
     };
   }
 
   componentDidMount() {
-    this.getCase()
-    this.loadAMPScript()
+    this.getCase();
+    this.loadAMPScript();
+    this.getEMMPublishAccess();
+  };
+
+  getEMMPublishAccess() {
+    fetch(process.env.EMMACCESS_API, {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + this.props.userToken,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.status === 200) {
+        response.json().then((result) => {
+          if (result) {
+            this.setState ({ emmPublishAccess: true })
+          }
+        });
+      }
+    })
   };
 
   loadAMPScript() {
@@ -43,7 +64,7 @@ export default class EMMReport extends React.PureComponent {
   }
 
   getCase() {
-    let reportId = '9D763918-7B88-4751-8194-173FDB60C1BE' //|| this.props.requestId
+    let reportId = this.props.requestId
     globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + reportId, 'get', this.props.userToken, {})
       .then(caseData => {
         if (caseData) {
@@ -111,7 +132,7 @@ export default class EMMReport extends React.PureComponent {
 
   publish() {
     const jsonBody = {
-      "name":"9D763918-7B88-4751-8194-173FDB60C1BE",
+      "name":this.props.requestId,
       "published":!this.state.isPublished,
       // "procedures" : [],
       // "complicationNames" : [],
@@ -168,10 +189,10 @@ export default class EMMReport extends React.PureComponent {
             <ListItem component="ul" style={{ marginTop: 40 }}>
               <Button disableElevation variant="contained" fullWidth className={this.state.isPublished ? "is-published" : "secondary"} disabled={this.state.isPublished} onClick={(e) => this.publish()} >{this.state.isPublished ? "Published" : 'Publish'}</Button>
             </ListItem>
-
+            {this.state.emmPublishAccess &&
             <ListItem component="ul" style={{ marginTop: 20 }}>
               <Button disableElevation variant="contained" fullWidth className="secondary" onClick={(e) => this.goBack()} >Exit</Button>
-            </ListItem>
+            </ListItem>}
           </List>
         </Drawer>
         <section className="emm-report-main">

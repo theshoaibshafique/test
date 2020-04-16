@@ -105,7 +105,7 @@ export default class EMMPublish extends React.PureComponent {
   }
 
   redirect(e, emmCase) {
-    this.props.pushUrl('/emmreport/' + emmCase.requestID);
+    this.props.pushUrl('/emmreport/' + emmCase.enhancedMMReferenceName);
   }
   handleCheckFilterPublished(e){
     this.setState({ filterPublished: e.target.checked});
@@ -158,7 +158,8 @@ export default class EMMPublish extends React.PureComponent {
               }}
               actions={[
                 rowData => ({
-                  icon: () => <Button variant="outlined"  disableRipple className="primary" >Open Report</Button>,
+                  iconProps: { component:"span"},
+                  icon: () => <a variant="outlined" className="button primary" >Open Report</a>,
                   onClick: (e,rowData) => this.redirect(e,rowData),
                   hidden: !rowData.enhancedMMReferenceName
                 })
