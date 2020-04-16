@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS } from '../../constants';
-import { Grid, Checkbox } from '@material-ui/core';
+import { Checkbox } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -81,7 +81,8 @@ export default class EMMPublish extends React.PureComponent {
                       roomName: room.roomTitle,
                       procedures: emmCase.procedure.map((procedure) => { return this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY), procedure) }).join(', '),
                       complications: emmCase.complications.map((complication) => { return this.getName(COMPLICATIONS, complication) }).join(', '),
-                      enhancedMMPublished: emmCase.enhancedMMPublished 
+                      enhancedMMPublished: emmCase.enhancedMMPublished,
+                      enhancedMMReferenceName: emmCase.enhancedMMReferenceName
                     }
                   })
                 }, this.notLoading())
@@ -109,6 +110,7 @@ export default class EMMPublish extends React.PureComponent {
   handleCheckFilterPublished(e){
     this.setState({ filterPublished: e.target.checked});
   }
+  
 
   render() {
     let allPageSizeOptions = [5, 10, 25, 50, 75, 100];
@@ -132,6 +134,7 @@ export default class EMMPublish extends React.PureComponent {
                 checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                 checked={this.state.filterPublished} onChange={(e) => this.handleCheckFilterPublished(e)} />Show requests with unpublished reports only
           </div>
+          
           <div>
             <MaterialTable
               title=""
@@ -141,7 +144,8 @@ export default class EMMPublish extends React.PureComponent {
                 { title: 'Procedure', field: 'procedures' },
                 { title: 'Complication', field: 'complications' },
                 { title: 'Published', field: 'enhancedMMPublished', lookup:{'true': 'True', 'false': 'False'} },
-                { title: 'requestID', field: 'requestID', hidden: true },
+                { title: 'requestID', field: 'requestID', hidden: true, searchable: true },
+                { title: 'enhancedMMReferenceName', field: 'enhancedMMReferenceName', hidden: true},
               ]}
               options={{
                 pageSize: 10,
@@ -149,11 +153,18 @@ export default class EMMPublish extends React.PureComponent {
                 search: true,
                 paging: true,
                 searchFieldAlignment: 'left',
-                searchFieldStyle: { marginLeft: -24 }
+                searchFieldStyle: { marginLeft: -24 },
+                actionsColumnIndex: -1
               }}
+              actions={[
+                rowData => ({
+                  icon: () => <Button variant="outlined"  disableRipple className="primary" >Open Report</Button>,
+                  onClick: (e,rowData) => this.redirect(e,rowData),
+                  hidden: !rowData.enhancedMMReferenceName
+                })
+              ]}
               data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => !emmCase.enhancedMMPublished) : this.state.emmCases}
               icons={tableIcons}
-              onRowClick={(e, rowData) => this.redirect(e, rowData)}
             />
           </div>
 
