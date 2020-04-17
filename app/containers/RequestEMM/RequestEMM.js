@@ -313,7 +313,7 @@ export default class RequestEMM extends React.PureComponent {
       "notes": this.state.notes,
       "usersToNotify": usersToNotify,
       "departmentName": this.state.departmentName,
-      "facilityName":this.props.userFacility
+      "facilityName": this.props.userFacility
     }
 
     globalFuncs.genericFetch(process.env.EMMREQUEST_API, 'post', this.props.userToken, jsonBody)
@@ -361,49 +361,49 @@ export default class RequestEMM extends React.PureComponent {
     });
   }
 
-  async populateUserEmail(e,callback){
+  async populateUserEmail(e, callback) {
     return await globalFuncs.genericFetch(process.env.USERSEARCH_API, 'get', this.props.userToken, {})
-    .then(result => {
-      if (result) {
-        let users = [];
-        result.map((user) => {
-          users.push({ value: user.userName, label: user.firstName.concat(' ').concat(user.lastName) });
-        });
+      .then(result => {
+        if (result) {
+          let users = [];
+          result.map((user) => {
+            users.push({ value: user.userName, label: user.firstName.concat(' ').concat(user.lastName) });
+          });
 
-        this.setState({
-          userList: users
-        });
-        callback(users);
-        return users;
-      } else {
-        callback([]);
-        this.setState({
-          userList: []
-        });
-      }
-      return [];
-    });
+          this.setState({
+            userList: users
+          });
+          callback(users);
+          return users;
+        } else {
+          callback([]);
+          this.setState({
+            userList: []
+          });
+        }
+        return [];
+      });
   }
 
-  async populateOperatingRooms(e,callback){
-    
+  async populateOperatingRooms(e, callback) {
+
     return await globalFuncs.genericFetch(process.env.FACILITYDEPARTMENT_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
         let operatingRooms = [];
         if (result === 'error' || result === 'conflict') {
 
-        }else if (result && result.length > 0) {
+        } else if (result && result.length > 0) {
           //TODO: change from using just the first department
           result[0].rooms.map((room) => {
             operatingRooms.push({ value: room.roomName, label: room.roomTitle })
           });
-          this.setState({departmentName:result[0].departmentName})
+          this.setState({ departmentName: result[0].departmentName })
         }
         callback(operatingRooms)
         this.setState({ operatingRooms });
         return operatingRooms
       });
-    
+
   }
 
   componentDidMount() {
@@ -440,18 +440,18 @@ export default class RequestEMM extends React.PureComponent {
           <Grid container spacing={2}>
             <Grid item xs={12} className="header page-title">
               Request for Enhanced M&M
-          </Grid>
+            </Grid>
             <Grid item xs={12} className="page-subtitle">
               Please fill in all the fields to submit a request for an Enhanced M&M.
-          </Grid>
+            </Grid>
 
             <Grid item xs={4} className="input-title">
               Date of Operation
-          </Grid>
+            </Grid>
 
             <Grid item xs={4} className="input-title">
               Estimated Operation Start Time (hh:mm)
-          </Grid>
+            </Grid>
             <Grid item xs={4}></Grid>
             <Grid item xs={4} >
               <MuiPickersUtilsProvider utils={DateFnsUtils} >
@@ -538,13 +538,13 @@ export default class RequestEMM extends React.PureComponent {
 
             <Grid item xs={12} className="input-title">
               Operating Room
-          </Grid>
-            <Grid item xs={4} style={{marginBottom:18}}>
+            </Grid>
+            <Grid item xs={4} style={{ marginBottom: 18 }}>
               <AsyncSelect
                 cacheOptions
                 defaultOptions
                 options={this.state.operatingRooms}
-                loadOptions={(e,v) => this.populateOperatingRooms(e,v)}
+                loadOptions={(e, v) => this.populateOperatingRooms(e, v)}
                 value={this.state.selectedOperatingRoom}
                 onChange={(e) => this.handleChange(e)}
                 name="operatingRoom"
@@ -558,7 +558,7 @@ export default class RequestEMM extends React.PureComponent {
             <Grid item xs={4}></Grid>
             <Grid item xs={12} className="input-title" >
               Specialty and Procedure (Select 1 or more)
-          </Grid>
+            </Grid>
             <Grid item xs={8} >
               <Autocomplete
                 multiple
@@ -588,7 +588,7 @@ export default class RequestEMM extends React.PureComponent {
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
                 checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                 checked={this.state.specialtyCheck} onChange={(e) => this.handleCheckSpecialty(e)} />Other
-          </Grid>
+            </Grid>
             {(this.state.specialtyCheck) &&
               <Grid item xs={12}>
                 <Grid container spacing={2}>
@@ -630,7 +630,7 @@ export default class RequestEMM extends React.PureComponent {
 
             <Grid item xs={12} className="input-title">
               Date of Complication
-          </Grid>
+            </Grid>
             <Grid item xs={4}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
@@ -659,7 +659,7 @@ export default class RequestEMM extends React.PureComponent {
 
             <Grid item xs={12} className="input-title">
               Complications (Select 1 or more)
-          </Grid>
+            </Grid>
             <Grid item xs={8} >
               <Autocomplete
                 multiple
@@ -687,7 +687,7 @@ export default class RequestEMM extends React.PureComponent {
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
                 checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                 checked={this.state.complicationsCheck} onChange={(e) => this.handleCheckComplications(e)} />Other
-          </Grid>
+            </Grid>
             <Grid item xs={12} >
               {(this.state.complicationsCheck) &&
                 <Grid item xs={4}>
@@ -708,10 +708,10 @@ export default class RequestEMM extends React.PureComponent {
 
             <Grid item xs={12} className="input-title">
               Notes (Optional)
-          </Grid>
+            </Grid>
             <Grid item xs={8} className="input-subtitle">
               Do not enter any Personal Health Information that can be used to identify the patient (e.g. patient’s name, age, etc.)
-          </Grid>
+            </Grid>
             <Grid item xs={8} >
               <TextField
                 id="notes"
@@ -725,14 +725,14 @@ export default class RequestEMM extends React.PureComponent {
 
             <Grid item xs={12} className="input-title">
               Send email updates about eM&M to (Optional):
-          </Grid>
+            </Grid>
             <Grid item xs={8} style={{ marginBottom: 24 }}>
               <AsyncSelect
                 isMulti
                 cacheOptions
                 defaultOptions
                 options={this.state.userList}
-                loadOptions={(e,callback) => this.populateUserEmail(e,callback)}
+                loadOptions={(e, callback) => this.populateUserEmail(e, callback)}
                 value={this.state.inputValue}
                 onChange={(e) => this.handleUserEmailChange(e)}
 
