@@ -45,7 +45,6 @@ export default class AzureVideo extends React.PureComponent { // eslint-disable-
               }
             ]
           }]);
-          // this.setState({src:result.url, token: result.token});
         }
       });
 
