@@ -1,5 +1,4 @@
 import React from 'react';
-import { AzureMP } from 'react-azure-mp'
 import globalFunctions from '../../../utils/global-functions';
 import { createTimelineMarkerPlugin } from './timeLineMarkers';
 export default class AzureVideo extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function

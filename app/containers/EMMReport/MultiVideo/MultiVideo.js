@@ -1,7 +1,5 @@
 import React from 'react';
-import { AzureMP } from 'react-azure-mp'
-import globalFunctions from '../../../utils/global-functions';
-import { Paper, Tabs, Tab, Typography } from '@material-ui/core';
+import { Paper, Tabs, Tab } from '@material-ui/core';
 import AzureVideo from '../AzureVideo/AzureVideo';
 export default class MultiVideo extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -61,7 +59,7 @@ export default class MultiVideo extends React.PureComponent { // eslint-disable-
         {this.state.assets.map((asset, index) => (
           <div key={index+2} hidden={this.state.selected !== index+2}>
             <AzureVideo index={index+2} selected={this.state.selected} currentEvent={this.props.currentEvent} title={asset} 
-            annoationTimes={this.state.annoationTimes.map((time) => { let offset = this.convertTimeFormatToSecs(this.props.header.split(" - ")[0]); return this.convertTimeFormatToSecs(time) -offset })} />
+            annoationTimes={this.state.annoationTimes.map((time) => { let offset = this.convertTimeFormatToSecs(this.props.header.split("-")[0]); return this.convertTimeFormatToSecs(time.split("-")[0]) -offset })} />
           </div>
         ))}
       </Paper>
