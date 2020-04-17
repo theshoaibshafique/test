@@ -394,7 +394,6 @@ export default class RequestEMM extends React.PureComponent {
         if (result === 'error' || result === 'conflict') {
 
         } else if (result && result.length > 0) {
-          //TODO: change from using just the first department
           result.map((department) => {
             let rooms = department.rooms.map((room) => {return {value: room.roomName, label: room.roomTitle ,departmentName:department.departmentName}});
             operatingRooms.push({label: department.departmentTitle, options:rooms});
