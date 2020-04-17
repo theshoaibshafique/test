@@ -94,7 +94,8 @@ export default class RequestEMM extends React.PureComponent {
   handleChange(e) {
     let errors = this.state.errors;
     errors.operatingRoom = '';
-    this.setState({ selectedOperatingRoom: e, errors });
+    
+    this.setState({ selectedOperatingRoom: e, departmentName: e.departmentName, errors });
   };
 
   handleChangeComplication(e, values) {
@@ -394,10 +395,11 @@ export default class RequestEMM extends React.PureComponent {
 
         } else if (result && result.length > 0) {
           //TODO: change from using just the first department
-          result[0].rooms.map((room) => {
-            operatingRooms.push({ value: room.roomName, label: room.roomTitle })
+          result.map((department) => {
+            let rooms = department.rooms.map((room) => {return {value: room.roomName, label: room.roomTitle ,departmentName:department.departmentName}});
+            operatingRooms.push({label: department.departmentTitle, options:rooms});
           });
-          this.setState({ departmentName: result[0].departmentName })
+
         }
         callback(operatingRooms)
         this.setState({ operatingRooms });
