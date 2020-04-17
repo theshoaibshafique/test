@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.scss';
 import logo from './images/emmLogo.png';
+import overviewImage from './images/overviewImage.png';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, SPECIALTY } from '../../constants';
 import { Drawer, List, ListItem, ListItemText, Grid, Typography, Card, CardContent } from '@material-ui/core';
@@ -195,30 +196,39 @@ export default class EMMReport extends React.PureComponent {
           {this.state.events.map((event, index) => (
             <div hidden={this.state.currentEvent !== index} key={index}>
               {index == 0
-                ? <Grid container spacing={2} justify="center" style={{ textAlign: "center" }}>
-                  <Grid item xs={8}>
-                    <img className="overview-logo" src={logo} style={{ maxWidth: "100%" }}></img>
+                ? <Grid container spacing={0} justify="center" justify="center" alignItems="center" style={{ textAlign: "center" }}>
+                  <Grid item xs={6} className="header">
                   </Grid>
-                  <Grid item xs={8} >
-                    <Card variant="outlined" className="overview-card" style={{ textAlign: "left" }}>
-                      <CardContent>
-                        <Typography color="textPrimary" variant="body1" className="overview-subtitle" component="div">
-                          Case
-                        </Typography>
-                        {this.getFormattedCaseDuration(event.caseDuration)}
-                        {this.getFormattedProcedures(event.procedures)}
-                      </CardContent>
-                    </Card>
+                  <Grid item xs={6}>
+                    <img className="" src={logo} style={{ maxWidth: "200px", float: 'right' }} />
                   </Grid>
-                  <Grid item xs={8} >
-                    <Card variant="outlined" className="overview-card" style={{ textAlign: "left" }}>
-                      <CardContent>
-                        <Typography color="textPrimary" variant="body1" className="overview-subtitle" component="div">
-                          Complications
-                        </Typography>
-                        {this.getFormattedComplications(event.complications)}
-                      </CardContent>
-                    </Card>
+                  <Grid item xs={6}>
+                    <img className="" src={overviewImage} style={{ maxWidth: "90%" }} />
+                  </Grid>
+                  <Grid item xs={6} >
+                    <Grid container spacing={0} justify="center" alignItems="center">
+                      <Grid item xs={12}>
+                        <Card variant="outlined" className="overview-card" style={{ textAlign: "left", border:'none'}}>
+                          <CardContent>
+                            <Typography color="textPrimary" variant="body1" className="overview-subtitle" style={{ fontWeight: 'bold' }} component="div">
+                              Case
+                            </Typography>
+                            {this.getFormattedCaseDuration(event.caseDuration)}
+                            {this.getFormattedProcedures(event.procedures)}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Card variant="outlined" className="overview-card" style={{ textAlign: "left", border:'none' }}>
+                          <CardContent>
+                            <Typography color="textPrimary" variant="body1" className="overview-subtitle" style={{ fontWeight: 'bold' }} component="div">
+                              Complications
+                            </Typography>
+                            {this.getFormattedComplications(event.complications)}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid item xs={8}>
                     <Button variant="outlined" className="primary" style={{ width: "60%", marginTop: 20 }} onClick={(e) => this.handleChange(1)}>Start</Button>
