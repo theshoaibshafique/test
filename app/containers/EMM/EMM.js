@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, SPECIALTY } from '../../constants';
+import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS, SPECIALTY } from '../../constants';
 
 export default class EMM extends React.PureComponent {
   constructor(props) {
@@ -40,7 +40,7 @@ export default class EMM extends React.PureComponent {
       if (result === 'error' || result === 'conflict') {
         
       } else {
-        let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY);
+        let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY).concat(PLASTIC_SURGERY).concat(ORTHOPAEDICS).concat(VASCULAR_SURGERY).concat(ENT);
         let procedureNames = [];
         let complicationList = [];
         let operatingRoom = '';

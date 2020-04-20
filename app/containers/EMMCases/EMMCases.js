@@ -9,7 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS } from '../../constants';
+import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS } from '../../constants';
 import { Grid } from '@material-ui/core';
 
 export default class EMMCases extends React.PureComponent {
@@ -65,7 +65,7 @@ export default class EMMCases extends React.PureComponent {
         if (result === 'error' || result === 'conflict') {
           this.setState({ noMatch: true })
         } else {
-          let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY);
+          let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY).concat(PLASTIC_SURGERY).concat(ORTHOPAEDICS).concat(VASCULAR_SURGERY).concat(ENT);
           let procedureNames = [];
           let complicationList = [];
           let operatingRoom = '';

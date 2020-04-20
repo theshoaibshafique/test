@@ -1,9 +1,8 @@
 import React, { forwardRef } from 'react';
-import Button from '@material-ui/core/Button';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS } from '../../constants';
-import { Grid, Checkbox } from '@material-ui/core';
+import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS } from '../../constants';
+import { Checkbox } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -79,7 +78,7 @@ export default class EMMPublish extends React.PureComponent {
                       requestID: emmCase.name,
                       facilityName: facility.facilityTitle,
                       roomName: room.roomTitle,
-                      procedures: emmCase.procedure.map((procedure) => { return this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY), procedure) }).join(', '),
+                      procedures: emmCase.procedure.map((procedure) => { return this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY).concat(PLASTIC_SURGERY).concat(ORTHOPAEDICS).concat(VASCULAR_SURGERY).concat(ENT), procedure) }).join(', '),
                       complications: emmCase.complications.map((complication) => { return this.getName(COMPLICATIONS, complication) }).join(', '),
                       enhancedMMPublished: emmCase.enhancedMMPublished 
                     }
