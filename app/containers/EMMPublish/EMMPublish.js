@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS } from '../../constants';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox, Button } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
