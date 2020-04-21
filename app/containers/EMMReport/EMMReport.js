@@ -145,16 +145,6 @@ export default class EMMReport extends React.PureComponent {
         }
       });
   }
-  renderAnnotationGroup(annotationGroup, index) {
-
-    switch (annotationGroup.tileType) {
-      case 'EmmVideo':
-        return ''
-      default:
-        return <Grid item xs={annotationGroup.group.length > 1 ? 12 : 6} key={annotationGroup.tileType + index}><AnnotationGroup annotationGroup={annotationGroup.group} /></Grid>;
-    }
-
-  }
 
   groupAnnotations(enhancedMMData) {
     //Group emm data by "Group"
@@ -250,7 +240,9 @@ export default class EMMReport extends React.PureComponent {
                   <Grid item xs={10}>
                     <Grid container spacing={3}>
                       {this.groupAnnotations(event.enhancedMMData).map((annotationGroup, index) => (
-                        this.renderAnnotationGroup(annotationGroup, index)
+                        <Grid item xs={annotationGroup.group.length > 1 ? 12 : 6} key={annotationGroup.tileType + index}>
+                          <AnnotationGroup annotationGroup={annotationGroup.group} />
+                        </Grid>
                       ))}
                     </Grid>
                   </Grid>
