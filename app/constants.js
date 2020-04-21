@@ -34,7 +34,7 @@ export const GENERAL_SURGERY = [
     { value: 'C2E279F9-34DC-46DA-A9F5-E72427CF262A', name: 'Left Hemi-Colectomy'},
     { value: 'D204F731-49BA-432C-9F53-D6BEA192A14F', name: 'Loop Colostomy'},
     { value: 'C1AB0CA9-E354-42D7-8898-02870ED8935A', name: 'Loop Ileostomy'},
-    { value: 'A106D106-15D8-4620-89C3-8989491CFCE1', name: 'Low Anterior Resection'},
+    { value: '2AFA3045-A79C-4103-8904-07022116C413', name: 'Low Anterior Resection'},
     { value: 'B993972C-0853-4436-B1D4-586A7C7929EC', name: 'Liver Resection'},
     { value: '3E26B54B-BE7E-4F30-B6AE-4C3A18A8205E', name: 'Pelvic Lymphadecectomy'},
     { value: '31143443-C7D5-49D4-8EA4-9054F540B46F', name: 'Removal of Peritoneal Catheter'},
