@@ -156,6 +156,7 @@ class UserFields extends React.Component {
             className="input-field"
             value={this.props.userValue.email}
             onChange={this.props.handleFormChange}
+            disabled={this.props.currentView === 'edit'}
             variant="outlined"
             onBlur={(e) => this.validateEmail(e)}
             error={!this.state.validEmail || Boolean(this.props.fieldErrors.email)}
