@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './style.scss';
 import logo from './img/SST-Product_Insights_sketch.png';
+import { List, ListItem } from '@material-ui/core';
 
 class SSTNav extends React.Component {
   constructor(props) {
@@ -10,36 +11,38 @@ class SSTNav extends React.Component {
 
   render() {
     return (
-      <div className="sstnav">
-        <div className="Package-Location center-align">
-          <div><img className="Package-Logo" src={logo} /></div>
-        </div>
-        <ul className="dark-blue">
-          <li className="link-border"><Link to="/maindashboard" className='text-link'>Dashboard</Link></li>
+      <div className="sstnav dark-blue" >
+        <List>
+          <ListItem className="Package-Location center-align" disableGutters>
+            <img className="Package-Logo" src={logo} />
+          </ListItem>
+
+          <NavLink to="/maindashboard" className='text-link ' ><ListItem >Dashboard</ListItem></NavLink>
           {(this.props.emmAccess) &&
-            <li className="link-border"><Link to="/emmcases" className='text-link'>eM&M Cases</Link></li>
+            <NavLink to="/emmcases" className='text-link' ><ListItem >eM&M Cases</ListItem></NavLink>
           }
           {(this.props.emmPublishAccess) &&
-            <li className="link-border"><Link to="/emmpublish" className='text-link'>eM&M Publisher</Link></li>
+            <NavLink to="/emmpublish" className='text-link' ><ListItem >eM&M Publisher</ListItem></NavLink>
           }
           {/* 
             <li>Efficiency</li>
             <li>Surgical Safety Checklist</li>
           */}
+        </List>
 
-          <div className="bottom-left">
-            {(this.props.emmRequestAccess) && 
-              <li className="link-border"><Link to="/requestemm" className='text-link'>Request for eM&M</Link></li>
-            }
-            {(this.props.userManagementAccess) &&
-              <li className="link-border"><Link to="/usermanagement" className='text-link'>User Management</Link></li> 
-            }
-            <li className="link-border"><Link to="/my-profile" className='text-link'>My Profile</Link></li>
-            
-            <li className="link-border">{this.props.userLogin}</li>
-            
-          </div>
-        </ul>
+        <List className="bottom-left">
+          {(this.props.emmRequestAccess) &&
+            <NavLink to="/requestemm" className='text-link' ><ListItem className="link-border">Request for eM&M</ListItem></NavLink>
+          }
+          {(this.props.userManagementAccess) &&
+            <NavLink to="/usermanagement" className='text-link' ><ListItem >User Management</ListItem></NavLink>
+          }
+          <NavLink to="/my-profile" className='text-link' ><ListItem >My Profile</ListItem></NavLink>
+
+          <NavLink to="/" className='text-link' isActive={()=>false} ><ListItem className="link-border text-link">{this.props.userLogin}</ListItem></NavLink>
+        </List>
+
+
       </div>
     );
   }
