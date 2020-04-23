@@ -14,7 +14,11 @@
     text-decoration: inherit;
     display: list-item;
     text-align: -webkit-match-parent;
-    padding: 8px;
+    padding: 16px;
+    width: 100%;
+}
+.sstnav .sub-item{
+    padding: 8px 24px;
 }
 .text-link.active{
     background-color: #D8F0F9;
@@ -23,6 +27,9 @@
 
 .sstnav {
     font-size: 14px;
+}
+.sstnav .MuiListItem-root{
+    padding: 0;
 }
 
 .bottom-left {
