@@ -25,10 +25,13 @@
 }
 
 
-.cases-date {
+.cases-date input{
     font-size: 42px;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    font-family: "Noto Sans";
 }

@@ -1,7 +1,10 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Input } from '@material-ui/core';
 import moment from 'moment';
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+
 import './style.scss';
+import DateFnsUtils from '@date-io/date-fns';
 
 class MonthPicker extends React.Component {
   constructor(props) {
@@ -30,6 +33,15 @@ class MonthPicker extends React.Component {
     });
   };
 
+  updateMonth(month) {
+    month = moment(month)
+    this.setState({
+      month: month,
+    }, () => {
+      this.props.updateMonth(month);
+    });
+  }
+
   render() {
     return (
       <Grid container justify="center" alignItems="center">
@@ -42,7 +54,23 @@ class MonthPicker extends React.Component {
           </Grid>
         </Grid>
         <Grid item xs={4} style={{ maxWidth: 325 }}>
-          <span className="cases-date">{this.state.month.format('MMMM YYYY')}</span>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} >
+            <DatePicker
+              variant="inline"
+              openTo="year"
+              className="cases-date"
+              InputProps={{
+                disableUnderline: true,
+               }}
+              views={["year", "month"]}
+              disableFuture
+              error={false}
+              helperText={null}
+              value={this.state.month}
+              onChange={(month) => this.updateMonth(month)}
+              autoOk
+            /> 
+          </MuiPickersUtilsProvider>
         </Grid>
         <Grid item xs={2}>
           {this.state.month.clone().add(1, 'hour') > moment()
