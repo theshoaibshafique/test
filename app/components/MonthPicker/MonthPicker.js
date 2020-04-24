@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Input } from '@material-ui/core';
-import moment from 'moment';
+import moment from 'moment/moment';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 import './style.scss';
