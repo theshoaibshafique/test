@@ -40,8 +40,8 @@ export default class MyProfile extends React.PureComponent {
         </div>
         
         <div className="user-info-buttons">
-          <p><Button disableRipple disableElevation variant="contained" className="secondary" target="_blank" href="https://SSTapps.b2clogin.com/SSTapps.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_default_password_change&client_id=99ed3764-67fc-4549-9458-626c0d92f228&nonce=defaultNonce&redirect_uri=https%3A%2F%2Finsights.surgicalsafety.com&scope=openid&response_type=id_token&prompt=login">Change Password</Button> </p>
-          <p><Button disableRipple disableElevation variant="contained" className="secondary" target="_blank" href="https://SSTapps.b2clogin.com/SSTapps.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_Edit_MFA&client_id=99ed3764-67fc-4549-9458-626c0d92f228&nonce=defaultNonce&redirect_uri=https%3A%2F%2Finsights.surgicalsafety.com&scope=openid&response_type=id_token&prompt=login">Change Phone Number</Button> </p>
+          <p><Button disableRipple disableElevation variant="contained" className="secondary" target="_blank" href={`https://${process.env.B2C_ACCOUNT}/${process.env.TENANT}/oauth2/v2.0/authorize?p=${process.env.CHANGE_PASSWORD_POLICY}&client_id=${process.env.REACT_APP_AAD_APP_CLIENT_ID}&nonce=defaultNonce&redirect_uri=${encodeURIComponent(process.env.REACT_APP_AAD_CALLback)}&scope=openid&response_type=id_token&prompt=login`}>Change Password</Button> </p>
+          <p><Button disableRipple disableElevation variant="contained" className="secondary" target="_blank" href={`https://${process.env.B2C_ACCOUNT}/${process.env.TENANT}/oauth2/v2.0/authorize?p=${process.env.CHANGE_PHONENUMBER_POLICY}&client_id=${process.env.REACT_APP_AAD_APP_CLIENT_ID}&nonce=defaultNonce&redirect_uri=${encodeURIComponent(process.env.REACT_APP_AAD_CALLback)}&scope=openid&response_type=id_token&prompt=login`}>Change Phone Number</Button> </p>
         </div>
       </section>
     );
