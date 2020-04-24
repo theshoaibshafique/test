@@ -69,7 +69,7 @@ class SSTNav extends React.Component {
           </List>
         </Grid>
         <Grid item xs={12} style={{display:'flex', alignItems:'flex-end'}}>
-          <List disablePadding >
+          <List disablePadding style={{width:'100%'}}>
             {(this.props.emmRequestAccess) &&
               <ListItem disableGutters><NavLink to="/requestemm" className='text-link' >Request for eM&M</NavLink></ListItem>
             }
