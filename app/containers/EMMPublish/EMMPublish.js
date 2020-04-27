@@ -60,6 +60,13 @@ export default class EMMPublish extends React.PureComponent {
           });
           this.notLoading();
         } else {
+          if (result === 'error' || result === 'conflict' || !result || !result.length){
+            this.setState({
+              emmCases: []
+            });
+            this.notLoading();
+            return;
+          }
           let facilityNames = result.map((emmCase) => { return { 'facilityName': emmCase.facilityName } });
           globalFuncs.genericFetch(process.env.FACILITYLIST_API + "/", 'post', this.props.userToken, facilityNames)
             .then(facilityResult => {

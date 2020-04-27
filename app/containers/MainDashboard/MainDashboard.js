@@ -7,6 +7,7 @@ import InfographicText from './InfographicText/InfographicText';
 import InfographicCircle from './InfographicCircle/InfographicCircle';
 import { Grid } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
+import MonthPicker from '../../components/MonthPicker/MonthPicker';
 
 export default class MainDashboard extends React.Component {
   constructor(props) {
@@ -154,29 +155,16 @@ export default class MainDashboard extends React.Component {
     });
   };
 
-  decrementMonth = () => {
-    const month = this.state.month.clone();
+  updateMonth (month){
     this.setState({
-      month: month.subtract(1, 'month'),
+      month: month,
       startDate: month.startOf('month').format(),
       endDate: month.endOf('month').format(),
       isLoading: true
     }, () => {
       this.setTileRequestDates();
     });
-  };
-
-  incrementMonth = () => {
-    const month = this.state.month.clone();
-    this.setState({
-      month: month.add(1, 'month'),
-      startDate: month.startOf('month').format(),
-      endDate: month.endOf('month').format(),
-      isLoading: true
-    }, () => {
-      this.setTileRequestDates();
-    });
-  };
+  }
 
   loading() {
     this.setState({
@@ -205,33 +193,7 @@ export default class MainDashboard extends React.Component {
             Welcome {this.props.firstName} {this.props.lastName}
           </Grid>
           <Grid item xs={12} >
-            <Grid container justify="center" alignItems="center">
-              <Grid item xs={2}>
-                <Grid container style={{ marginBottom: 10 }} className="pointer" onClick={() => this.decrementMonth()}>
-                  <Grid item xs={4} className="left-arrow" ></Grid>
-                  <Grid item xs={4}>
-                    Previous
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={4} style={{ maxWidth: 325 }}>
-                <span className="cases-date">{this.state.month.format('MMMM YYYY')}</span>
-              </Grid>
-              <Grid item xs={2}>
-                {this.state.month.clone().add(1, 'hour') > moment()
-                  ? ''
-                  :
-                  <Grid container justify="center" alignItems="center" style={{ marginBottom: 10, marginLeft: 24 }} className="pointer" onClick={() => this.incrementMonth()}>
-                    <Grid item xs={3} style={{ maxWidth: 44 }}>
-                      Next
-                      </Grid>
-                    <Grid item xs={4} className="right-arrow" ></Grid>
-
-                  </Grid>
-                }
-
-              </Grid>
-            </Grid>
+            <MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)}/>
           </Grid>
           <LoadingOverlay
               active={this.state.isLoading}
