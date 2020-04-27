@@ -10,14 +10,6 @@
     justify-content: center;
 }
 
-.cases-date {
-    font-size: 42px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .cases-div {
     width: 240px;
     margin: 0 25px;
@@ -38,10 +30,6 @@
 
 .case-font {
     font-size: 18px;
-}
-
-.pointer {
-    cursor: pointer;
 }
 
 .chart-inner-text {
@@ -65,25 +53,7 @@
     margin-top: 40px;
 }
 
-.left-arrow{
-    width: 0;
-    height: 0;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-right: 8px solid rgba(51,51,51,.6);
-    margin-right: 10px !important;
-    margin-top: 3px !important;
-}
 
-.right-arrow{
-    width: 0;
-    height: 0;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-left: 8px solid rgba(51,51,51,.6);
-    
-    margin-top: 3px !important;
-}
 
 .title-break{
   height: 1px;
