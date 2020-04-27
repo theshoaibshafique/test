@@ -77,7 +77,7 @@ class MonthPicker extends React.Component {
             ? ''
             :
             <Grid container justify="center" alignItems="center" style={{ marginLeft: 24 }} className="pointer" onClick={() => this.incrementMonth()}>
-              <Grid item xs={3} style={{ maxWidth: 44 }} className="next">
+              <Grid item xs={3} style={{ maxWidth: 44,marginRight:8}} className="next">
                 Next
                       </Grid>
               <Grid item xs={4} className="right-arrow" ></Grid>

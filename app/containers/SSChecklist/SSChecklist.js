@@ -113,9 +113,9 @@ export default class EMMCases extends React.PureComponent {
 
   render() {
     return (
-      <Grid container spacing={0} className="ssc-page">
-        <Grid item xs={12} style={{backgroundColor: '#E8E8E8', padding: 24}}>
-          <MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)}/>
+      <Grid container spacing={0} className="ssc-page" >
+        <Grid item xs={12} style={{backgroundColor: '#E8E8E8', padding: 16}}>
+          <div style={{maxWidth:800, margin:'auto'}}><MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)}/></div>
         </Grid>
         <Grid item xs={12}>
           <Divider light={false}/>
