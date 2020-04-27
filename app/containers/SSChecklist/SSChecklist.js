@@ -8,6 +8,7 @@ import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VA
 import { Grid, Divider } from '@material-ui/core';
 import MonthPicker from '../../components/MonthPicker/MonthPicker';
 import moment from 'moment/moment';
+import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -117,10 +118,10 @@ export default class EMMCases extends React.PureComponent {
           <MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)}/>
         </Grid>
         <Grid item xs={12}>
-          <Divider/>
+          <Divider light={false}/>
         </Grid>
         <Grid item xs={12} style={{backgroundColor: '#E8E8E8', padding: 16}}>
-          <MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)}/>
+          <UniversalPicker userFacility={this.props.userFacility} userToken={this.props.userToken} />
         </Grid>
         <Grid item xs={6}>
           <C3Chart {...this.barData} />

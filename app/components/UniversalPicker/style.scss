@@ -1,0 +1,24 @@
+@import '../../styles/global-styles';
+.universal-picker .link{
+    color: #4EA1DA;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 19px;
+    padding: 0;
+    cursor: pointer;    
+}
+
+.universal-picker .link:hover{
+    text-decoration: underline;
+}
+.universal-picker .MuiInputBase-root{
+    background-color: white;
+}
+.universal-picker .MuiOutlinedInput-notchedOutline{
+    border: none;
+}
+
+.MuiListSubheader-root{
+    font-size: 14px;
+    line-height: 19px;
+}
