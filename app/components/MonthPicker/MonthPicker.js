@@ -46,9 +46,9 @@ class MonthPicker extends React.Component {
     return (
       <Grid container justify="center" alignItems="center">
         <Grid item xs={2}>
-          <Grid container style={{ marginBottom: 10 }} className="pointer" onClick={() => this.decrementMonth()}>
+          <Grid container className="pointer" onClick={() => this.decrementMonth()}>
             <Grid item xs={4} className="left-arrow" ></Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} className="previous">
               Previous
                   </Grid>
           </Grid>
@@ -76,8 +76,8 @@ class MonthPicker extends React.Component {
           {this.state.month.clone().add(1, 'hour') > moment()
             ? ''
             :
-            <Grid container justify="center" alignItems="center" style={{ marginBottom: 10, marginLeft: 24 }} className="pointer" onClick={() => this.incrementMonth()}>
-              <Grid item xs={3} style={{ maxWidth: 44 }}>
+            <Grid container justify="center" alignItems="center" style={{ marginLeft: 24 }} className="pointer" onClick={() => this.incrementMonth()}>
+              <Grid item xs={3} style={{ maxWidth: 44 }} className="next">
                 Next
                       </Grid>
               <Grid item xs={4} className="right-arrow" ></Grid>

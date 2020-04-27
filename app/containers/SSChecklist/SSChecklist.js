@@ -5,11 +5,18 @@ import './style.scss';
 import ReactDOMServer from 'react-dom/server';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS } from '../../constants';
-import { Grid } from '@material-ui/core';
+import { Grid, Divider } from '@material-ui/core';
+import MonthPicker from '../../components/MonthPicker/MonthPicker';
+import moment from 'moment/moment';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    this.state = {
+      month: moment()
+    }
+
     this.barData = {
       data: {
         columns: [
@@ -71,21 +78,6 @@ export default class EMMCases extends React.PureComponent {
       return;
     }
     let chart = this.refs.myChart.chart;
-    // d3.select(chartClass).insert('div').attr('class', 'legend').selectAll('div')
-    //     .data(['data1', 'data2', 'data3'])
-    //     .enter().append('div')
-    //     .attr('data-id', function (id) { return id; })
-    //     .html(function (id) { return id; })
-    //     .each(function (id) {
-    //       d3.select(this).style('background-color', chart.color(id));
-    //       d3.select(this).html(ReactDOMServer.renderToString(<h1 className="wow" style={{ color: 'blue', backgroundColor: 'white' }}>{id}</h1>))
-    //     })
-    //     .on('mouseover', function (id) {
-    //       chart.focus(id);
-    //     })
-    //     .on('mouseout', function (id) {
-    //       chart.revert();
-    //     });
     d3.select(chartClass).insert('div').attr('class', 'legend')
     .html(ReactDOMServer.renderToString(
     <Grid container spacing={0} justify="center">
@@ -105,13 +97,31 @@ export default class EMMCases extends React.PureComponent {
 
   };
 
+  updateMonth (month){
+    this.setState({
+      month: month,
+      // isLoading: true
+    }, () => {
+      // this.setTileRequestDates();
+    });
+  }
+
   redirect(requestId) {
     this.props.pushUrl('/emm/' + requestId);
   }
 
   render() {
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={0} className="ssc-page">
+        <Grid item xs={12} style={{backgroundColor: '#E8E8E8', padding: 24}}>
+          <MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)}/>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider/>
+        </Grid>
+        <Grid item xs={12} style={{backgroundColor: '#E8E8E8', padding: 16}}>
+          <MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)}/>
+        </Grid>
         <Grid item xs={6}>
           <C3Chart {...this.barData} />
         </Grid>
