@@ -2,6 +2,7 @@
 
 .ssc-page{
     background-color: #F5F5F5;
+    height: 100%;
 }
 
 .ssc-page .next,
@@ -21,4 +22,9 @@
 .ssc-picker {
     background-color: #E8E8E8;
     padding: 16px;
+}
+
+.ssc-card.MuiCard-root{
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    border-radius: 8px !important;
 }
