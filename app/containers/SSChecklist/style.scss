@@ -34,7 +34,7 @@ $ssc-picker-height: 150px;
 .ssc-picker-container{
     position: absolute;
     width: calc(100% - #{$nav-width});
-    z-index: 9990;
+    z-index: 1400;
 }
 .ssc-main{
     padding: 40px;
@@ -42,4 +42,13 @@ $ssc-picker-height: 150px;
     margin: auto;
     top: $ssc-picker-height;
     position: relative;
+}
+
+.ssc-info{
+    opacity: 0.8;
+    color: #000000;
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 0;
+    line-height: 24px;
 }

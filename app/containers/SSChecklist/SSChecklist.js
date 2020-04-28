@@ -59,6 +59,20 @@ export default class EMMCases extends React.PureComponent {
       },
       point: {
         show: false
+      },
+      axis: {
+        x: {
+          label:{
+            text:'What',
+            position: 'outer-center'
+          }
+        },
+        y:{
+          label:{
+            text:'Who',
+            position: 'outer-middle'
+          }
+        }
       }
     }
 
@@ -74,7 +88,7 @@ export default class EMMCases extends React.PureComponent {
       legend: {
         show: false
       },
-      onrendered: () => this.createCustomLegend('.piechart')
+      onrendered: () => this.createCustomLegend('.piechart'),
     }
 
   }
@@ -173,8 +187,8 @@ export default class EMMCases extends React.PureComponent {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12}>
-            <span>Each score above is out of 100 based on current month’s data</span>
+          <Grid item xs={12} style={{paddingTop:0}}>
+            <span className="ssc-info">Each score above is out of 100 based on current month’s data</span>
           </Grid>
           <Grid item xs={8}>
             <Card className="ssc-card">
@@ -183,7 +197,7 @@ export default class EMMCases extends React.PureComponent {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={4} >
             <Card className="ssc-card">
               <CardContent>
                 <C3Chart className="piechart" ref="myChart" {...this.pieData} />
