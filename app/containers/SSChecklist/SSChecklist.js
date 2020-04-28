@@ -5,7 +5,7 @@ import './style.scss';
 import ReactDOMServer from 'react-dom/server';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS } from '../../constants';
-import { Grid, Divider, CardContent, Card} from '@material-ui/core';
+import { Grid, Divider, CardContent, Card } from '@material-ui/core';
 import MonthPicker from '../../components/MonthPicker/MonthPicker';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
@@ -119,7 +119,7 @@ export default class EMMCases extends React.PureComponent {
   render() {
     return (
       <div className="ssc-page">
-        <Grid container spacing={0}>
+        <Grid container spacing={0} className="ssc-picker-container" >
           <Grid item xs={12} className="ssc-picker">
             <div style={{ maxWidth: 800, margin: 'auto' }}><MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)} /></div>
           </Grid>
@@ -133,7 +133,7 @@ export default class EMMCases extends React.PureComponent {
             <Divider className="ssc-divider" />
           </Grid>
         </Grid>
-        <Grid container spacing={3} style={{padding:40, maxWidth:1116, margin:'auto'}}>
+        <Grid container spacing={3} className="ssc-main">
           <Grid item xs={4} >
             <Card className="ssc-card">
               <CardContent>
@@ -173,14 +173,23 @@ export default class EMMCases extends React.PureComponent {
               </CardContent>
             </Card>
           </Grid>
-
-
-          {/* <Grid item xs={6}>
-          <C3Chart {...this.barData} />
-        </Grid>
-        <Grid item xs={6}>
-          <C3Chart className="piechart" ref="myChart" {...this.pieData} />
-        </Grid> */}
+          <Grid item xs={12}>
+            <span>Each score above is out of 100 based on current month’s data</span>
+          </Grid>
+          <Grid item xs={8}>
+            <Card className="ssc-card">
+              <CardContent>
+                <C3Chart {...this.barData} />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={4}>
+            <Card className="ssc-card">
+              <CardContent>
+                <C3Chart className="piechart" ref="myChart" {...this.pieData} />
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       </div>
     );
