@@ -6,18 +6,12 @@ import './style.scss';
 
 const LightTooltip = withStyles((theme) => ({
     tooltip: {
-        // backgroundColor: theme.palette.common.white,
-        // color: 'rgba(0, 0, 0, 0.87)',
         boxShadow: theme.shadows[1],
-        fontSize: 11,
         padding:'24px 16px',
         fontSize:'14px',
         lineHeight:'19px',
         font:'Noto Sans'
-    },
-    arrow: {
-        // color: theme.palette.common.white,
-    },
+    }
 }))(Tooltip);
 
 export default class ReportScore extends React.PureComponent {
@@ -35,7 +29,7 @@ export default class ReportScore extends React.PureComponent {
                 <Grid item xs={12} className="score-title">
                     <span >
                         {this.props.title}
-                        <LightTooltip open={true} arrow title={this.props.tooltipText} placement="top" fontSize="small">
+                        <LightTooltip arrow title={this.props.tooltipText} placement="top" fontSize="small">
                             <InfoOutlinedIcon style={{ fontSize: 16, margin: 'auto 0 ' }} />
                         </LightTooltip>
                     </span>
