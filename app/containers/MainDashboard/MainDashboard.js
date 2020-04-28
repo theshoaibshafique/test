@@ -192,7 +192,7 @@ export default class MainDashboard extends React.Component {
           <Grid item xs={12} className="header">
             Welcome {this.props.firstName} {this.props.lastName}
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={12} style={{marginBottom:24}}>
             <MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)}/>
           </Grid>
           <LoadingOverlay

@@ -42,6 +42,9 @@ body {
 body.fontLoaded {
   font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+body.fontLoaded .MuiInputBase-input{
+  font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}
 
 #app {
 }

@@ -12,6 +12,7 @@ import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import SSChecklist from 'containers/SSChecklist/Loadable';
 import NoAccess from 'containers/NoAccess/Loadable';
 import SSTNav from 'components/SSTNav';
 import AzureLogin from 'components/AzureLogin';
@@ -171,6 +172,9 @@ export default class MainLayout extends React.PureComponent {
               {(this.state.userManagementAccess) &&
                   <Route path="/usermanagement" component={UserManagement}/>
               }
+              {(this.state.userManagementAccess || true) &&
+                  <Route path="/sschecklist" component={SSChecklist}/>
+              }
               <Route path="/my-profile" component={MyProfile}/>
               <Route path="" component={NotFoundPage}/>
             </Switch> 
@@ -205,6 +209,7 @@ export default class MainLayout extends React.PureComponent {
                     emmRequestAccess={this.state.emmRequestAccess}
                     emmAccess={this.state.emmAccess}
                     emmPublishAccess={this.state.emmPublishAccess}
+                    pathname={this.props.location.pathname}
                     userLogin={<AzureLogin
                       resourcesGathered={() => this.resourcesGathered()}
                       logoutFunction={(logout) => this.logoutFunction(logout)}

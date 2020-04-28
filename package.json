@@ -62,6 +62,7 @@
     "prop-types": "15.6.1",
     "react": "^16.8.5",
     "react-aad-msal": "^0.4.7",
+    "react-c3js": "^0.1.20",
     "react-dom": "^16.8.4",
     "react-helmet": "5.2.0",
     "react-idle-timer": "^4.2.12",
