@@ -54,6 +54,9 @@ export default class EMMCases extends React.PureComponent {
       },
       onrendered: () => {
         // d3.select here
+      },
+      point: {
+        show: false
       }
     }
 
@@ -118,7 +121,7 @@ export default class EMMCases extends React.PureComponent {
           <div style={{maxWidth:800, margin:'auto'}}><MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)}/></div>
         </Grid>
         <Grid item xs={12}>
-          <Divider light={false}/>
+          <Divider style={{backgroundColor:'#C8C8C8'}}/>
         </Grid>
         <Grid item xs={12} style={{backgroundColor: '#E8E8E8', padding: 16}}>
           <UniversalPicker userFacility={this.props.userFacility} userToken={this.props.userToken} />
