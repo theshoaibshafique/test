@@ -104,7 +104,7 @@ export default class MainLayout extends React.PureComponent {
   };
 
   getEMMPublishAccess() {
-    fetch(process.env.EMMACCESS_API, {
+    fetch(process.env.EMMPUBLISHACCESS_API, {
       method: 'get',
       headers: {
         'Authorization': 'Bearer ' + this.props.userToken,
