@@ -30,7 +30,7 @@ export default class ReportScore extends React.PureComponent {
                     <span >
                         {this.props.title}
                         <LightTooltip arrow title={this.props.tooltipText} placement="top" fontSize="small">
-                            <InfoOutlinedIcon style={{ fontSize: 16, margin: 'auto 0 ' }} />
+                            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px' }} />
                         </LightTooltip>
                     </span>
                 </Grid>
