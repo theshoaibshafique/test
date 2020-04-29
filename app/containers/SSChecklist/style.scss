@@ -34,7 +34,7 @@ $ssc-picker-height: 150px;
 .ssc-picker-container{
     position: absolute;
     width: calc(100% - #{$nav-width});
-    z-index: 1400;
+    z-index: 1300;
 }
 .ssc-main{
     padding: 40px;
