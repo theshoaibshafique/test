@@ -13,7 +13,7 @@ class AzureLogin extends React.Component {
 
   unauthenticatedFunction = loginFunction => {
     //this.props.history.push(`/usermanagement`);
-    this.props.pushUrl('/maindashboard');
+    this.props.pushUrl('/dashboard');
   }
 
   userAuthenticatedFunction = logout => {
