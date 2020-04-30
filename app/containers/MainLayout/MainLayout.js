@@ -164,17 +164,15 @@ export default class MainLayout extends React.PureComponent {
               }
               <Route path="/my-profile" component={MyProfile}/>
               <Route path="" component={NotFoundPage}/>
-            </Switch> 
+            </Switch>
     } else {
       return ''
     }
   };
 
   render() {
-    const isEmmReport = this.props.location.pathname.indexOf('/emmreport')>=0
     return (
         <div className="app-wrapper">
-          
           <CssBaseline />
           <Helmet
             titleTemplate="%s - SST Insights"
@@ -182,17 +180,21 @@ export default class MainLayout extends React.PureComponent {
           >
             <meta name="description" content="SST Insights web portal" />
           </Helmet>
-          
+
           <div className="APP-MAIN-WRAPPER">
-            
-            <nav className={"MAIN-NAVIGATION " + (isEmmReport ? 'hidden' : '')}>
+            {(this.props.emmReportID) &&
+              <div className="EMM-Report-Overlay">
+
+              </div>
+            }
+            <nav className={"MAIN-NAVIGATION " + (this.props.emmReportID && 'hidden')}>
               <Hidden xsDown implementation="css">
                 <Drawer
                   variant="permanent"
                   open
                   >
-                  <SSTNav 
-                    userManagementAccess={this.state.userManagementAccess} 
+                  <SSTNav
+                    userManagementAccess={this.state.userManagementAccess}
                     emmRequestAccess={this.state.emmRequestAccess}
                     emmAccess={this.state.emmAccess}
                     emmPublishAccess={this.state.emmPublishAccess}
@@ -207,12 +209,9 @@ export default class MainLayout extends React.PureComponent {
                 </Drawer>
               </Hidden>
             </nav>
-            {isEmmReport 
-              ? this.getContainer() 
-              : <div className="inline overflow-y Content-Wrapper">
-                  {this.getContainer()}
-                </div>}
-            
+            <div className="inline overflow-y Content-Wrapper">
+              {this.getContainer()}
+            </div>
           </div>
         </div>
     );
