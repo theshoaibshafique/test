@@ -80,9 +80,15 @@ export function setProcedures(procedures) {
   };
 }
 
-export function setMostRecentPublishedSurvey(mostRecentSurvey) {
+export function showEMMReport(reportID) {
   return {
-    type: RECENTPUBLISHEDSURVEYS,
-    mostRecentSurvey
+    type: SHOWEMMREPORT,
+    reportID
   };
+}
+
+export function hideEMMReport() {
+  return {
+    type: HIDEEMMREPORT
+  }
 }

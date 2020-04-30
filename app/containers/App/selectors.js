@@ -68,6 +68,11 @@ const makeSelectJobTitle = () => createSelector(
   (globalState) => globalState.get('jobTitle')
 );
 
+const makeSelectEMMReportID = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('emmReportID')
+);
+
 export {
   selectGlobal,
   makeSelectToken,
@@ -81,5 +86,6 @@ export {
   makeSelectFirstName,
   makeSelectLastName,
   makeSelectEmail,
-  makeSelectJobTitle
+  makeSelectJobTitle,
+  makeSelectEMMReportID
 };
