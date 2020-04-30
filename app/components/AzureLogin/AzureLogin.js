@@ -21,7 +21,7 @@ class AzureLogin extends React.Component {
       this.logoutFunc = logout;
     }
     return (
-        <button className="Logout-Button" onClick={logout}>Logout</button>
+        <button className="Logout-Button" onClick={logout} ref={this.props.logoutRef}>Logout</button>
     );
   };
 
