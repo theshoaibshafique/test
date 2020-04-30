@@ -151,7 +151,7 @@ export default class MainLayout extends React.PureComponent {
 
     if (this.state.userLoggedIn) {
       return <Switch>
-              <Route path="/maindashboard" component={MainDashboard}/> }/>
+              <Route path="/dashboard" component={MainDashboard}/> }/>
               {(this.state.emmAccess) &&
                   <Route path="/emmcases" component={EMMCases}/>
               }
