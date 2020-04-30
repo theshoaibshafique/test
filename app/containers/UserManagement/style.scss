@@ -17,13 +17,8 @@
     line-height: 24px;
     padding-bottom: 0 !important;
 }
-.Modal .link{
-    color: #4EA1DA;
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 19px;
-    padding: 0;
-    cursor: pointer;
+.Modal .link:hover{
+    text-decoration: none;
 }
 .MuiDialogContent-root {
     padding: 0 !important;

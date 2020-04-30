@@ -34,7 +34,7 @@ export default class MainLayout extends React.PureComponent {
       isLoading: true
     }
 
-    this.logoutFunction = this.logoutFunction.bind(this);
+    this.logoutRef = React.createRef();
   }
 
   resourcesGathered() {
@@ -46,19 +46,6 @@ export default class MainLayout extends React.PureComponent {
     this.getEMMRequestAccess();
     this.getEMMAccess();
     this.getEMMPublishAccess();
-  };
-
-  logoutFunction(logout) {
-    if (logout != undefined) {
-      this.getLogoutFunction(logout)
-    }
-  };
-
-  getLogoutFunction(logout) {
-    // return logout;
-    if (logout) {
-    }
-    return (() => logout)
   };
 
   redirect() {
@@ -210,10 +197,11 @@ export default class MainLayout extends React.PureComponent {
                     emmAccess={this.state.emmAccess}
                     emmPublishAccess={this.state.emmPublishAccess}
                     pathname={this.props.location.pathname}
+                    logoutRef={this.logoutRef}
                     userLogin={<AzureLogin
                       resourcesGathered={() => this.resourcesGathered()}
-                      logoutFunction={(logout) => this.logoutFunction(logout)}
                       redirect={() => this.redirect()}
+                      logoutRef={this.logoutRef}
                     />}
                   />
                 </Drawer>

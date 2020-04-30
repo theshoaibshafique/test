@@ -1,7 +1,10 @@
 @import '../../styles/global-styles.scss';
 
+$ssc-picker-height: 150px;
+
 .ssc-page{
     background-color: #F5F5F5;
+    height: calc(100% + #{$ssc-picker-height});
 }
 
 .ssc-page .next,
@@ -21,4 +24,31 @@
 .ssc-picker {
     background-color: #E8E8E8;
     padding: 16px;
+}
+
+.ssc-card.MuiCard-root{
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    border-radius: 8px !important;
+    padding: 10px 0;
+}
+.ssc-picker-container{
+    position: absolute;
+    width: calc(100% - #{$nav-width});
+    z-index: 1300;
+}
+.ssc-main{
+    padding: 40px;
+    max-width: 1116px;
+    margin: auto;
+    top: $ssc-picker-height;
+    position: relative;
+}
+
+.ssc-info{
+    opacity: 0.8;
+    color: #000000;
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 0;
+    line-height: 24px;
 }
