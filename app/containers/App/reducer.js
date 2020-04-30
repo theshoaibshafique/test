@@ -59,10 +59,10 @@ function appReducer(state = initialState, action) {
         .set('procedures', action.procedures)
     case SHOWEMMREPORT:
       return state
-        .set(emmReportID, action.reportID)
+        .set('emmReportID', action.reportID)
     case HIDEEMMREPORT:
       return state
-        .set(emmReportID, null)
+        .set('emmReportID', null)
     default:
       return state;
   }

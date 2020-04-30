@@ -133,18 +133,13 @@ export default class EMM extends React.PureComponent {
   };
 
   openReport() {
-    this.setState({ showReport: true })
+    this.props.setEMMReport(this.state.enhancedMMReferenceName)
     // this.props.pushUrl('/emmreport/' + this.state.enhancedMMReferenceName);
   }
 
-  render() {
+render() {
     return (
       <section className="full-height">
-        {(this.state.showReport) &&
-          <div className="dereklo fixed">
-
-          </div>
-        }
         <div className="header page-title">
           <div>
             <span className="pad">Enhanced M&M</span>
