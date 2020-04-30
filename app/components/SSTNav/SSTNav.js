@@ -17,7 +17,7 @@ class SSTNav extends React.Component {
             <img className="Package-Logo" src={logo} />
           </ListItem>
 
-          <NavLink to="/maindashboard" className='text-link ' ><ListItem >Dashboard</ListItem></NavLink>
+          <NavLink to="/dashboard" className='text-link ' ><ListItem >Dashboard</ListItem></NavLink>
           {(this.props.emmAccess) &&
             <NavLink to="/emmcases" className='text-link' ><ListItem >eM&M Cases</ListItem></NavLink>
           }

@@ -18,7 +18,7 @@ export default class Login extends React.PureComponent {
 
   userJustLoggedIn = receivedToken => {
     this.props.userInfo(receivedToken);
-    this.props.pushUrl('/maindashboard');
+    this.props.pushUrl('/dashboard');
   }
 
   render() {

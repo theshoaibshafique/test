@@ -2,15 +2,17 @@ import React from 'react';
 import './style.scss';
 
 const LoadingIndicator = () => (
-  <div className="loading-indicator">
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
+  <div className="full-height flex vertical-center">
+    <div className="loading-indicator">
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+    </div>
   </div>
 );
 
