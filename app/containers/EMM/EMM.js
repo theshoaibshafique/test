@@ -16,7 +16,8 @@ export default class EMM extends React.PureComponent {
       operatingRoomList: [],
       emmPublishAccess: false,
       enhancedMMReferenceName: '',
-      enhancedMMPublished: false
+      enhancedMMPublished: false,
+      showReport: false
     };
   }
 
@@ -56,11 +57,11 @@ export default class EMM extends React.PureComponent {
       });
   }
 
-  getCase() {     
+  getCase() {
     globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/' + this.props.requestId, 'get', this.props.userToken, {})
     .then(result => {
       if (result === 'error' || result === 'conflict') {
-        
+
       } else {
         let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY).concat(PLASTIC_SURGERY).concat(ORTHOPAEDICS).concat(VASCULAR_SURGERY).concat(ENT);
         let procedureNames = [];
@@ -104,7 +105,7 @@ export default class EMM extends React.PureComponent {
           });
           if (!match) { specialtyNames.push(specialty); }
         });
-        this.setState({ 
+        this.setState({
           procedureNames: procedureNames,
           complicationNames: complicationList.join(', '),
           operatingRoom: operatingRoom,
@@ -126,20 +127,29 @@ export default class EMM extends React.PureComponent {
       });
     }
   }
-  
+
   goBack() {
     this.props.pushUrl('/emmcases');
   };
 
   openReport() {
-    this.props.pushUrl('/emmreport/' + this.props.requestId);
+    this.setState({ showReport: true })
+    // this.props.pushUrl('/emmreport/' + this.state.enhancedMMReferenceName);
   }
 
   render() {
     return (
-      <section>
+      <section className="full-height">
+        {(this.state.showReport) &&
+          <div className="dereklo fixed">
+
+          </div>
+        }
         <div className="header page-title">
-    <div><span className="pad">Enhanced M&M</span> {(this.state.enhancedMMReferenceName && (this.state.emmPublishAccess || this.state.enhancedMMPublished) ) && <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button>} </div>
+          <div>
+            <span className="pad">Enhanced M&M</span>
+            {(this.state.enhancedMMReferenceName && (this.state.emmPublishAccess || this.state.enhancedMMPublished) ) &&
+              <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button>} </div>
         </div>
 
         <div className="table-row info-title">
@@ -165,9 +175,8 @@ export default class EMM extends React.PureComponent {
         </div>
 
         <div>
-            <Button disableElevation disableRipple variant="contained" className="secondary" onClick={() => this.goBack()}>Back</Button>
-          </div>
-
+          <Button disableElevation disableRipple variant="contained" className="secondary" onClick={() => this.goBack()}>Back</Button>
+        </div>
       </section>
     );
   }

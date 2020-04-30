@@ -9,13 +9,10 @@
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
 
-export const LOAD_REPOS = 'boilerplate/App/LOAD_REPOS';
-export const LOAD_REPOS_SUCCESS = 'boilerplate/App/LOAD_REPOS_SUCCESS';
-export const LOAD_REPOS_ERROR = 'boilerplate/App/LOAD_REPOS_ERROR';
 export const USER_TOKEN = 'insight/App/USER_TOKEN';
 export const USER_FACILITY = 'insight/App/USER_FACILITY';
 export const FACILITY_ROOMS = 'insight/App/FACILITY_ROOMS';
 export const PROCEDURES = 'insight/App/PROCEDURES';
-export const PUBLISHEDSURVEYS = 'insight/App/PUBLISHEDSURVEYS';
-export const RECENTPUBLISHEDSURVEYS = 'insight/App/RECENTPUBLISHEDSURVEYS';
+export const SHOWEMMREPORT = 'insights - showing emm reports';
+export const HIDEEMMREPORT = 'insights - hiding emm reports';
 export const DEFAULT_LOCALE = 'en';

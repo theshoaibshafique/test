@@ -20,8 +20,8 @@ import {
   USER_FACILITY,
   FACILITY_ROOMS,
   PROCEDURES,
-  PUBLISHEDSURVEYS,
-  RECENTPUBLISHEDSURVEYS
+  SHOWEMMREPORT,
+  HIDEEMMREPORT
 } from './constants';
 
 /**
@@ -80,27 +80,6 @@ export function setProcedures(procedures) {
   };
 }
 
-/**
- * Save published surveys list
- *
- * @param  {array} publishedSurveys list of published surveys
- *
- * @return {object}    An action object with a type of PUBLISHEDSURVEYS
- */
-export function setPublishedSurveys(publishedSurveys) {
-  return {
-    type: PUBLISHEDSURVEYS,
-    publishedSurveys
-  };
-}
-
-/**
- * Save most recent published survey
- *
- * @param  {object} mostRecentSurvey most recent published survey
- *
- * @return {object}    An action object with a type of RECENTPUBLISHEDSURVEYS
- */
 export function setMostRecentPublishedSurvey(mostRecentSurvey) {
   return {
     type: RECENTPUBLISHEDSURVEYS,

@@ -16,9 +16,7 @@ import {
   USER_TOKEN,
   USER_FACILITY,
   FACILITY_ROOMS,
-  PROCEDURES,
-  PUBLISHEDSURVEYS,
-  RECENTPUBLISHEDSURVEYS
+  PROCEDURES
 } from './constants';
 
 // The initial state of the App
@@ -33,8 +31,6 @@ const initialState = fromJS({
   userFacility: null,
   facilityRooms: [],
   procedures: [],
-  publishedSurveys: [],
-  mostRecentSurvey: null
 });
 
 function appReducer(state = initialState, action) {
@@ -58,12 +54,6 @@ function appReducer(state = initialState, action) {
     case PROCEDURES:
       return state
         .set('procedures', action.procedures)
-    case PUBLISHEDSURVEYS:
-      return state
-        .set('publishedSurveys', action.publishedSurveys)
-    case RECENTPUBLISHEDSURVEYS:
-      return state
-        .set('mostRecentSurvey', action.mostRecentSurvey)
     default:
       return state;
   }
