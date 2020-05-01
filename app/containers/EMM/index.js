@@ -13,7 +13,7 @@ const mapStateToProps = (state, ownProps) => createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setEMMReport: (reportID) => { dispatch(showEMMReport(reportID)) },
+    showEMMReport: (reportID) => { dispatch(showEMMReport(reportID)) },
     pushUrl: (url) => { dispatch(push(url)) }
   };
 };
