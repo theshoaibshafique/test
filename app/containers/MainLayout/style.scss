@@ -42,4 +42,10 @@
   width: 100%;
   background: #F5F5F5;
   z-index: 999;
+  .close-emm {
+    cursor: pointer;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
 }

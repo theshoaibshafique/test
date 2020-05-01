@@ -184,7 +184,7 @@ export default class MainLayout extends React.PureComponent {
           <div className="APP-MAIN-WRAPPER">
             {(this.props.emmReportID) &&
               <div className="EMM-Report-Overlay">
-
+                <div className="close-emm" onClick={()=>this.props.hideEMMReport()}>X</div>
               </div>
             }
             <nav className={"MAIN-NAVIGATION " + (this.props.emmReportID && 'hidden')}>
