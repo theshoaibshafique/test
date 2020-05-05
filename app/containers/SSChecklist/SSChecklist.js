@@ -3,8 +3,6 @@ import C3Chart from 'react-c3js';
 import 'c3/c3.css';
 import './style.scss';
 import ReactDOMServer from 'react-dom/server';
-import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS } from '../../constants';
 import { Grid, Divider, CardContent, Card } from '@material-ui/core';
 import MonthPicker from '../../components/MonthPicker/MonthPicker';
 import moment from 'moment/moment';
@@ -156,7 +154,7 @@ export default class EMMCases extends React.PureComponent {
             <Divider className="ssc-divider" />
           </Grid>
           <Grid item xs={12} className="ssc-picker">
-            <UniversalPicker userFacility={this.props.userFacility} userToken={this.props.userToken} />
+            <UniversalPicker specialties={this.props.specialties} userFacility={this.props.userFacility} userToken={this.props.userToken} />
           </Grid>
           <Grid item xs={12}>
             <Divider className="ssc-divider" />

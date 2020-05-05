@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setUserInfo, setUserFacility, setFacilityRooms, setProcedures, setPublishedSurveys, setMostRecentPublishedSurvey } from '../App/actions';
+import { setUserInfo, setUserFacility, setFacilityRooms, setPublishedSurveys, setMostRecentPublishedSurvey } from '../App/actions';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { makeSelectID, makeSelectToken } from '../App/selectors';
@@ -21,9 +21,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     setFacilityRooms: (rooms) => {
       dispatch(setFacilityRooms(rooms))
-    },
-    setProcedureList: (procedures) => {
-      dispatch(setProcedures(procedures))
     },
     setPublishedSurveys: (publishedSurveys) => {
       dispatch(setPublishedSurveys(publishedSurveys))

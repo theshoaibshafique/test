@@ -5,7 +5,6 @@ import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import moment from 'moment/moment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { SPECIALTY } from '../../constants';
 
 
 
@@ -69,7 +68,7 @@ class UniversalPicker extends React.Component {
 
   handleSelectedSpecialtyChange(e,selectedSpecialty){
     this.setState({selectedSpecialty,
-      procedureOptions:selectedSpecialty && selectedSpecialty.values || [],
+      procedureOptions:selectedSpecialty && selectedSpecialty.procedures || [],
       selectedProcedure:""});
   }
   handleSelectedProcedureChange(e,selectedProcedure){
@@ -133,7 +132,7 @@ class UniversalPicker extends React.Component {
         <Grid item xs={3} style={{maxWidth:200}}>
           <Autocomplete
             size="small"
-            options={SPECIALTY}
+            options={this.props.specialties}
             clearOnEscape
             getOptionLabel={option => option.name ? option.name : ''}
             value={this.state.selectedSpecialty}
