@@ -3,6 +3,7 @@ import './style.scss';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 import IdleTimer from 'react-idle-timer';
 import * as CONSTANTS from '../../constants';
+import globalFunctions from '../../utils/global-functions';
 
 class AzureLogin extends React.Component {
   constructor(props) {
@@ -32,6 +33,8 @@ class AzureLogin extends React.Component {
   userJustLoggedIn = receivedToken => {
     this.props.userInfo(receivedToken);
     this.getUserFacility(receivedToken);
+    this.getSpecialty();
+    this.getComplications();
   }
 
   getUserFacility() {
@@ -55,6 +58,38 @@ class AzureLogin extends React.Component {
       }
     })
   }
+
+  
+  getSpecialty() {
+    if (this.props.specialties && this.props.specialties.length > 0){
+      return;
+    }
+    globalFunctions.genericFetch(process.env.SPECIALTY_API, 'get', this.props.userToken, {})
+      .then(result => {
+        if (result) {
+          this.props.setSpecialtyList(result);
+        } else {
+
+          // error
+        }
+      });
+  };
+
+  getComplications() {
+    if (this.props.complications && this.props.complications.length > 0){
+      return;
+    }
+    globalFunctions.genericFetch(process.env.COMPLICATION_API, 'get', this.props.userToken, {})
+      .then(result => {
+
+        if (result) {
+          this.props.setComplicationList(result);
+        } else {
+
+          // error
+        }
+      });
+  };
 
   render() {
     return (

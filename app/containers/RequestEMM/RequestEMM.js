@@ -15,7 +15,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import * as CONSTANTS from '../../constants';
 import { Grid, FormHelperText } from '@material-ui/core';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
@@ -60,8 +59,8 @@ export default class RequestEMM extends React.PureComponent {
     this.state.minOperationDate.setHours(0, 0, 0, 0);
 
 
-    CONSTANTS.SPECIALTY.forEach((specialty) => {
-      specialty.values.forEach((procedure) => {
+    this.props.specialties && this.props.specialties.forEach((specialty) => {
+      specialty.procedures.forEach((procedure) => {
         procedure.specialtyName = specialty.name;
         procedure.ID = specialty.value
         this.state.specialtyProducedureOptions.push(procedure);
@@ -666,7 +665,7 @@ export default class RequestEMM extends React.PureComponent {
                 multiple
                 size="small"
                 id="complication"
-                options={CONSTANTS.COMPLICATIONS}
+                options={this.props.complications}
                 getOptionLabel={option => option.name}
                 value={this.state.complicationList}
                 onChange={(e, value) => this.handleChangeComplication(e, value)}
