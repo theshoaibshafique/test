@@ -5,12 +5,21 @@ import './style.scss';
 import ReactDOMServer from 'react-dom/server';
 import globalFuncs from '../../utils/global-functions';
 import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS } from '../../constants';
-import { Grid, Divider, CardContent, Card } from '@material-ui/core';
+import { Grid, Divider, CardContent, Card, LinearProgress, withStyles, lighten } from '@material-ui/core';
 import MonthPicker from '../../components/MonthPicker/MonthPicker';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import ReportScore from './ReportScore/ReportScore';
 
+const BorderLinearProgress = withStyles({
+  root: {
+    height: 32,
+    backgroundColor: 'white',
+  },
+  bar: {
+    backgroundColor: '#FFDB8C',
+  },
+})(LinearProgress);
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -73,28 +82,19 @@ export default class EMMCases extends React.PureComponent {
             position: 'outer-middle'
           }
         }
-      }
-    }
-
-    this.pieData = {
-      data: {
-        columns: [
-          ['data1', 100],
-          ['data2', 300],
-          ['data3', 200]
-        ],
-        type: 'pie'
       },
       legend: {
         show: false
       },
-      onrendered: () => this.createCustomLegend('.piechart'),
+      onrendered: () => this.createCustomLegend('.barchart'),
     }
+
+
 
   }
 
   createCustomLegend(chartClass) {
-    if (!this.refs.myChart || !d3.select('.piechart').select('.legend').empty()) {
+    if (!this.refs.myChart || !d3.select(chartClass).select('.legend').empty()) {
       return;
     }
     let chart = this.refs.myChart.chart;
@@ -103,8 +103,8 @@ export default class EMMCases extends React.PureComponent {
         <Grid container spacing={0} justify="center">
           {['data1', 'data2', 'data3'].map((id, index) => {
             return (
-              <Grid item xs={1} key={index} style={{ backgroundColor: chart.color(id) }}>
-                {id}
+              <Grid item xs={1} key={index} style={{ display: 'flex', margin: '0 24px 0 24px' }}>
+                <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
               </Grid>)
           })}
         </Grid>
@@ -137,7 +137,7 @@ export default class EMMCases extends React.PureComponent {
     localStorage.setItem('sscFilter-' + this.props.userEmail,
       JSON.stringify({
         month: this.state.month,
-        
+
       }));
   }
 
@@ -208,16 +208,33 @@ export default class EMMCases extends React.PureComponent {
           <Grid item xs={8}>
             <Card className="ssc-card">
               <CardContent>
-                <C3Chart {...this.barData} />
+                <C3Chart className="barchart" ref="myChart" {...this.barData} />
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={4} >
             <Card className="ssc-card">
               <CardContent>
-                <C3Chart className="piechart" ref="myChart" {...this.pieData} />
+                <Grid container spacing={0} justify='space-between' style={{textAlign:'justify'}}>
+                  <Grid item xs={6}>
+                    General Surgery
+                  </Grid>
+                  <Grid item xs={6}>
+                    89
+                  </Grid>
+                  <Grid item xs={12}>
+                    <BorderLinearProgress
+                      variant="determinate"
+                      value={89}
+                    />
+                  </Grid>
+
+                </Grid>
               </CardContent>
             </Card>
+          </Grid>
+          <Grid item xs={12} style={{ paddingTop: 0 }}>
+            <span className="ssc-info">1,000 Case Data based on filter criteria</span>
           </Grid>
         </Grid>
       </div>
