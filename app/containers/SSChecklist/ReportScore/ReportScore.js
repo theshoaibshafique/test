@@ -34,8 +34,8 @@ export default class ReportScore extends React.PureComponent {
                         </LightTooltip>
                     </span>
                 </Grid>
-                <Grid item xs={12} className="score-display">
-                    {this.props.score}
+                <Grid item xs={12} >
+                    <span className="score-display">{this.props.score}</span><span className="score-display-percentage">%</span>
                 </Grid>
                 {this.props.redirectLink &&
                     <Grid item xs={12} className="link">

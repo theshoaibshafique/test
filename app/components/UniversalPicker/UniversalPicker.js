@@ -132,7 +132,7 @@ class UniversalPicker extends React.Component {
         <Grid item xs={3} style={{maxWidth:200}}>
           <Autocomplete
             size="small"
-            options={this.props.specialties}
+            options={this.props.specialties.length && this.props.specialties || []}
             clearOnEscape
             getOptionLabel={option => option.name ? option.name : ''}
             value={this.state.selectedSpecialty}

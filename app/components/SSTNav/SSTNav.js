@@ -8,7 +8,7 @@ import IconExpandMore from '@material-ui/icons/ExpandMore'
 class SSTNav extends React.Component {
   constructor(props) {
     super(props);
-    this.sscLinks = ["/sschecklist", "/checklistScore", "/engagementScore", "/qualityScore"]
+    this.sscLinks = ["/sschecklist", "/complianceScore", "/engagementScore", "/qualityScore"]
     this.state = {
       pathname: this.props.pathname,
       isSSCOpen: this.isSSCNav(this.props.pathname),
@@ -70,7 +70,7 @@ class SSTNav extends React.Component {
             }
             {(this.props.emmPublishAccess) && 
               <Collapse in={this.state.isSSCOpen} timeout="auto" unmountOnExit>
-                <ListItem disableGutters><NavLink to="/checklistScore" className='text-link sub-item' >Checklist Score</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/complianceScore" className='text-link sub-item' >Compliance Score</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/engagementScore" className='text-link sub-item' >Engagement Score</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/qualityScore" className='text-link sub-item' >Quality Score</NavLink></ListItem>
               </Collapse>

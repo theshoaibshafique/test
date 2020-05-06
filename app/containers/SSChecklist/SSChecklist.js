@@ -4,21 +4,13 @@ import 'c3/c3.css';
 import './style.scss';
 import ReactDOMServer from 'react-dom/server';
 import globalFuncs from '../../utils/global-functions';
-import { Grid, Divider, CardContent, Card, LinearProgress, withStyles, lighten } from '@material-ui/core';
+import { Grid, Divider, CardContent, Card } from '@material-ui/core';
 import MonthPicker from '../../components/MonthPicker/MonthPicker';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import ReportScore from './ReportScore/ReportScore';
-
-const BorderLinearProgress = withStyles({
-  root: {
-    height: 32,
-    backgroundColor: 'white',
-  },
-  bar: {
-    backgroundColor: '#FFDB8C',
-  },
-})(LinearProgress);
+import globalFunctions from '../../utils/global-functions';
+import HorizontalBarChart from './HorizontalBarChart/HorizantalBarChart';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -113,9 +105,25 @@ export default class EMMCases extends React.PureComponent {
 
 
   componentDidMount() {
-
+    this.setLayout();
   };
 
+  setLayout() {
+    globalFunctions.genericFetch(process.env.SSC_API, 'get', this.props.userToken, {})
+      .then(result => {
+        if (result === 'error' || result === 'conflict') {
+
+        } else if (result) {
+          if (result.tileRequest && result.tileRequest.length > 0) {
+
+          } else {
+            //report does not exist
+          }
+        } else {
+          
+        }
+      });
+  };
   updateMonth(month) {
     this.setState({
       month: month,
@@ -167,9 +175,9 @@ export default class EMMCases extends React.PureComponent {
               <CardContent>
                 <ReportScore
                   pushUrl={this.props.pushUrl}
-                  title="Checklist Score"
-                  redirectDisplay="View Checklist Details"
-                  redirectLink="/checklistScore"
+                  title="Compliance Score"
+                  redirectDisplay="View Compliance Details"
+                  redirectLink="/complianceScore"
                   score="70"
                   tooltipText="Checklist Score is scored out of 100 using current month data. It is calculated based on how each phase of the checklist is conducted." />
               </CardContent>
@@ -201,9 +209,6 @@ export default class EMMCases extends React.PureComponent {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} style={{ paddingTop: 0 }}>
-            <span className="ssc-info">Each score above is out of 100 based on current month’s data</span>
-          </Grid>
           <Grid item xs={8}>
             <Card className="ssc-card">
               <CardContent>
@@ -214,21 +219,7 @@ export default class EMMCases extends React.PureComponent {
           <Grid item xs={4} >
             <Card className="ssc-card">
               <CardContent>
-                <Grid container spacing={0} justify='space-between' style={{textAlign:'justify'}}>
-                  <Grid item xs={6}>
-                    General Surgery
-                  </Grid>
-                  <Grid item xs={6}>
-                    89
-                  </Grid>
-                  <Grid item xs={12}>
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={89}
-                    />
-                  </Grid>
-
-                </Grid>
+                <HorizontalBarChart/>
               </CardContent>
             </Card>
           </Grid>
