@@ -8,9 +8,9 @@ import { Grid, Divider, CardContent, Card } from '@material-ui/core';
 import MonthPicker from '../../components/MonthPicker/MonthPicker';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
-import ReportScore from './ReportScore/ReportScore';
+import ReportScore from '../../components/Report/ReportScore/ReportScore';
 import globalFunctions from '../../utils/global-functions';
-import HorizontalBarChart from './HorizontalBarChart/HorizantalBarChart';
+import HorizontalBarChart from '../../components/Report/HorizontalBarChart/HorizantalBarChart';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
