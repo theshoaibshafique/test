@@ -1,27 +1,24 @@
 @import '../../../styles/global-styles';
 
-.score-title {
-    opacity: 0.8;
-    color: #000000;
-    font-size: 26px;
-    letter-spacing: 0;
-    line-height: 36px;
-    margin: auto;
-  }
+.chart-title{
+  font-size: 26px;
+  letter-spacing: 0;
+  line-height: 36px;
+}
 
-
-.score-display {
-    color: #004F6E;
-    font-size: 138px;
-    letter-spacing: 0;
-    line-height: 138px;
-    text-align: center;
-  }
-
-  .report-score .link {
-    color: #00B3DE;
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 19px;
-    margin-top: 26px;
-  }
+.chart-subtitle{
+  font-size: 14px;
+  font-style: italic;
+  letter-spacing: 0;
+  line-height: 19px;
+  margin-bottom: 32px;
+}
+.chart-score{
+  color: #005979;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 24px;
+  text-align: right;
+}

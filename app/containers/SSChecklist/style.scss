@@ -29,7 +29,9 @@ $ssc-picker-height: 150px;
 .ssc-card.MuiCard-root{
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
     border-radius: 8px !important;
-    padding: 10px 0;
+}
+.ssc-card .MuiCardContent-root{
+    margin: 10px 0px;
 }
 .ssc-picker-container{
     position: absolute;
@@ -57,5 +59,4 @@ $ssc-picker-height: 150px;
     content: ' \25CF';
     font-size: 32px;
     line-height: 0;
-    // margin-left: 8px;
   }

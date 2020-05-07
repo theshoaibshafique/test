@@ -22,20 +22,23 @@ export default class EMMCases extends React.PureComponent {
 
     this.barData = {
       data: {
+        x: 'x',
         columns: [
-          ['data1', 30, 20, 50, 40, 60],
-          ['data2', 200, 130, 90, 240, 130],
-          ['data3', 300, 200, 160, 400, 250],
-          ['data4', 176, 116, 90, 100, 146]
+          ['x', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
+          ['Compliance Score', 30, 20, 50, 40, 60],
+          ['Engagement Score', 10, 40, 60, 25, 45],
+          ['Quality Score', 50, 60, 70, 65, 55],
+          ['Average', 15, 25, 45, 65, 55]
         ],
+        // groups:['data1','data2','data3','data4'],
         type: 'bar',
         colors: {
-          data1: '#A7E5FD',
-          data2: '#97E7B3',
-          data3: '#CFB9E4'
+          'Compliance Score': '#A7E5FD',
+          'Engagement Score': '#97E7B3',
+          'Quality Score': '#CFB9E4'
         },
         types: {
-          data4: 'line'
+          'Average': 'line'
         },
         color: function (color, d) {
           // d will be 'id' when called for legends
@@ -47,11 +50,12 @@ export default class EMMCases extends React.PureComponent {
         width: {
           ratio: 0.9
         },
-        space: .2
+        space: .3
       },
       tooltip: {
+        grouped: false,
         contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
-          return ReactDOMServer.renderToString(<h1 className="wow" style={{ color: 'blue', backgroundColor: 'white' }}>This is a Blue Heading</h1>);
+          return ReactDOMServer.renderToString(<div className="MuiTooltip-tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>{`${d[0].id}:${d[0].value}`}</div>);
         }
       },
       onrendered: () => {
@@ -63,14 +67,22 @@ export default class EMMCases extends React.PureComponent {
       axis: {
         x: {
           label: {
-            text: 'What',
+            text: 'Month',
             position: 'outer-center'
-          }
+          },
+          type: 'category',
+          
         },
         y: {
           label: {
-            text: 'Who',
+            text: 'Score (%)',
             position: 'outer-middle'
+          },
+          max: 100,
+          min: 0,
+          padding: { top: 0, bottom: 0 },
+          tick: {
+            count:6
           }
         }
       },
@@ -78,6 +90,11 @@ export default class EMMCases extends React.PureComponent {
         show: false
       },
       onrendered: () => this.createCustomLegend('.barchart'),
+      grid: {
+        y: {
+          // show: true
+        }
+      }
     }
 
 
@@ -91,10 +108,10 @@ export default class EMMCases extends React.PureComponent {
     let chart = this.refs.myChart.chart;
     d3.select(chartClass).insert('div').attr('class', 'legend')
       .html(ReactDOMServer.renderToString(
-        <Grid container spacing={0} justify="center">
-          {['data1', 'data2', 'data3'].map((id, index) => {
+        <Grid container spacing={0} justify="center" style={{textAlign:'center'}}>
+          {['Compliance Score', 'Engagement Score', 'Quality Score'].map((id, index) => {
             return (
-              <Grid item xs={1} key={index} style={{ display: 'flex', margin: '0 24px 0 24px' }}>
+              <Grid item xs={4} key={index} style={{ display: 'flex', margin:'auto', justifyContent:'center'}}>
                 <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
               </Grid>)
           })}
@@ -120,7 +137,7 @@ export default class EMMCases extends React.PureComponent {
             //report does not exist
           }
         } else {
-          
+
         }
       });
   };
@@ -219,12 +236,12 @@ export default class EMMCases extends React.PureComponent {
           <Grid item xs={4} >
             <Card className="ssc-card">
               <CardContent>
-                <HorizontalBarChart/>
+                <HorizontalBarChart />
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} style={{ paddingTop: 0 }}>
-            <span className="ssc-info">1,000 Case Data based on filter criteria</span>
+          <Grid item xs={12}>
+            <span className="ssc-info"><span style={{ fontWeight: 'bold' }}>1,000</span> Case Data based on filter criteria</span>
           </Grid>
         </Grid>
       </div>
