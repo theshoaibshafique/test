@@ -110,7 +110,7 @@ export default class BarChartDetail extends React.PureComponent {
 
   render() {
     return (
-      <Grid container spacing={0} justify='center' style={{ textAlign: 'center' }}>
+      <Grid container spacing={0} justify='center' style={{ textAlign: 'center',marginBottom:24 }}>
         <Grid item xs={12}>
           <span className="chart-title">Monthly Trend</span>
         </Grid>

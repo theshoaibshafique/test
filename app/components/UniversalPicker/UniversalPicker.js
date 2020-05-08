@@ -22,12 +22,14 @@ class UniversalPicker extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps){
-    if (prevProps.defaultState != this.props.defaultState){
-      this.setState({...this.props.defaultState});
+  componentDidUpdate(prevProps) {
+    if (prevProps.defaultState != this.props.defaultState) {
+      let selectedSpecialty = this.props.defaultState.selectedSpecialty;
+      this.setState({ ...this.props.defaultState, procedureOptions: selectedSpecialty && selectedSpecialty.procedures || [] });
+
     }
   }
-  
+
 
   componentDidMount() {
     this.populateOperatingRooms();
@@ -56,7 +58,7 @@ class UniversalPicker extends React.Component {
       selectedOperatingRoom: value,
       departmentName: value && value.departmentName
     }, () => {
-      this.props.updateState('selectedOperatingRoom',value);
+      this.props.updateState('selectedOperatingRoom', value);
     });
   };
 
@@ -64,7 +66,7 @@ class UniversalPicker extends React.Component {
     this.setState({
       selectedWeekday: e.target.value
     }, () => {
-      this.props.updateState('selectedWeekday',e.target.value);
+      this.props.updateState('selectedWeekday', e.target.value);
     });
   }
 
@@ -74,14 +76,15 @@ class UniversalPicker extends React.Component {
       procedureOptions: selectedSpecialty && selectedSpecialty.procedures || [],
       selectedProcedure: ""
     }, () => {
-      this.props.updateState('selectedSpecialty',selectedSpecialty);
+      this.props.updateState('selectedSpecialty', selectedSpecialty);
+      this.props.updateState('selectedProcedure', "");
     });
   }
   handleSelectedProcedureChange(e, selectedProcedure) {
     this.setState({
       selectedProcedure
     }, () => {
-      this.props.updateState('selectedProcedure',selectedProcedure);
+      this.props.updateState('selectedProcedure', selectedProcedure);
     });
   }
   resetFilters() {
@@ -92,10 +95,10 @@ class UniversalPicker extends React.Component {
       procedureOptions: [],
       selectedProcedure: ""
     }, () => {
-      this.props.updateState('selectedOperatingRoom',"");
-      this.props.updateState('selectedWeekday',"");
-      this.props.updateState('selectedSpecialty',"");
-      this.props.updateState('selectedProcedure',"");
+      this.props.updateState('selectedOperatingRoom', "");
+      this.props.updateState('selectedWeekday', "");
+      this.props.updateState('selectedSpecialty', "");
+      this.props.updateState('selectedProcedure', "");
     })
   }
 
