@@ -35,10 +35,11 @@ export default class BarChartDetail extends React.PureComponent {
         },
       }, // End data
       bar: {
-        width: {
-          ratio: 0.9
-        },
-        space: .3
+        // width: {
+        //   ratio: 0.9
+        // },
+        width:30,
+        space: .2
       },
       tooltip: {
         grouped: false,
@@ -50,7 +51,7 @@ export default class BarChartDetail extends React.PureComponent {
         // d3.select here
       },
       point: {
-        show: false
+        // show: false
       },
       axis: {
         x: {
