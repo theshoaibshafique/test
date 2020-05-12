@@ -49,7 +49,7 @@ export default class HorizontalBarChart extends React.PureComponent {
             <Grid item xs={12} style={{ marginBottom: 40 }}>
               <BorderLinearProgress
                 variant="determinate"
-                value={point.valueX}
+                value={parseInt(point.valueX)}
               />
             </Grid>
           </Grid>)

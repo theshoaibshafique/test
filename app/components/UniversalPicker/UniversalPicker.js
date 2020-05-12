@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, TextField, FormControl, MenuItem, Select } from '@material-ui/core';
+import { Grid, TextField, FormControl, MenuItem, Select, Button } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import './style.scss';
 import globalFunctions from '../../utils/global-functions';
@@ -104,9 +104,9 @@ class UniversalPicker extends React.Component {
 
   render() {
     return (
-      <Grid container spacing={1} justify="center" className="universal-picker">
+      <Grid container spacing={2} justify="center" className="universal-picker">
         <span style={{ display: 'flex', alignItems: 'center', marginRight: 16 }}><SearchIcon /></span>
-        <Grid item xs={2} style={{ maxWidth: 150 }}>
+        <Grid item xs={1} style={{ minWidth: 150 }}>
           <Autocomplete
             size="small"
             options={this.state.operatingRooms}
@@ -127,7 +127,7 @@ class UniversalPicker extends React.Component {
             )}
           />
         </Grid>
-        <Grid item xs={2} style={{ maxWidth: 150 }}>
+        <Grid item xs={1} style={{ minWidth: 150 }}>
           <FormControl variant="outlined" size="small" style={{ width: '100%' }}>
             <Select
               displayEmpty
@@ -166,7 +166,7 @@ class UniversalPicker extends React.Component {
             )}
           />
         </Grid>
-        <Grid item xs={3} style={{ maxWidth: 200 }}>
+        <Grid item xs={3} style={{ maxWidth: 210 }}>
           <Autocomplete
             size="small"
             options={this.state.procedureOptions}
@@ -186,8 +186,10 @@ class UniversalPicker extends React.Component {
             )}
           />
         </Grid>
-
-        <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', marginLeft: 8, maxWidth: 100 }}>
+        <Grid item xs={2} style={{maxWidth:100}}>
+          <Button variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{height:40}}>Apply</Button>
+        </Grid>
+        <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', maxWidth: 100 }}>
           <a className="link" onClick={e => this.resetFilters()}>Reset Filters</a>
         </Grid>
 

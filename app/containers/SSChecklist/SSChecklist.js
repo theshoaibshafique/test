@@ -109,207 +109,207 @@ export default class EMMCases extends React.PureComponent {
       "specialtyName": null
     },
     {
-    "name": null,
-    "reportName": "SSC_MT",
-    "title": "Monthly Trend",
-    "subTitle": "Score (%)",
-    "body": null,
-    "footer": "Month",
-    "description": null,
-    "total": null,
-    "assets": null,
-    "dataPoints": [
+      "name": null,
+      "reportName": "SSC_MT",
+      "title": "Monthly Trend",
+      "subTitle": "Score (%)",
+      "body": null,
+      "footer": "Month",
+      "description": null,
+      "total": null,
+      "assets": null,
+      "dataPoints": [
         {
-            "title": "Compliance Score",
-            "subTitle": "/complianceScore",
-            "description": null,
-            "valueX": "73",
-            "valueY": "5",
-            "valueZ": null,
-            "note": null
+          "title": "Compliance Score",
+          "subTitle": "/complianceScore",
+          "description": null,
+          "valueX": "73",
+          "valueY": "5",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Engagement Score",
-            "subTitle": "/engagementScore",
-            "description": null,
-            "valueX": "83",
-            "valueY": "5",
-            "valueZ": null,
-            "note": null
+          "title": "Engagement Score",
+          "subTitle": "/engagementScore",
+          "description": null,
+          "valueX": "83",
+          "valueY": "5",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Quality Score",
-            "subTitle": "/qualityScore",
-            "description": null,
-            "valueX": "79",
-            "valueY": "5",
-            "valueZ": null,
-            "note": null
+          "title": "Quality Score",
+          "subTitle": "/qualityScore",
+          "description": null,
+          "valueX": "79",
+          "valueY": "5",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Average",
-            "subTitle": null,
-            "description": null,
-            "valueX": "78",
-            "valueY": "5",
-            "valueZ": null,
-            "note": null
+          "title": "Average",
+          "subTitle": null,
+          "description": null,
+          "valueX": "78",
+          "valueY": "5",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Compliance Score",
-            "subTitle": "/complianceScore",
-            "description": null,
-            "valueX": "83",
-            "valueY": "4",
-            "valueZ": null,
-            "note": null
+          "title": "Compliance Score",
+          "subTitle": "/complianceScore",
+          "description": null,
+          "valueX": "83",
+          "valueY": "4",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Engagement Score",
-            "subTitle": "/engagementScore",
-            "description": null,
-            "valueX": "87",
-            "valueY": "4",
-            "valueZ": null,
-            "note": null
+          "title": "Engagement Score",
+          "subTitle": "/engagementScore",
+          "description": null,
+          "valueX": "87",
+          "valueY": "4",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Quality Score",
-            "subTitle": "/qualityScore",
-            "description": null,
-            "valueX": "47",
-            "valueY": "4",
-            "valueZ": null,
-            "note": null
+          "title": "Quality Score",
+          "subTitle": "/qualityScore",
+          "description": null,
+          "valueX": "47",
+          "valueY": "4",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Average",
-            "subTitle": null,
-            "description": null,
-            "valueX": "72",
-            "valueY": "4",
-            "valueZ": null,
-            "note": null
+          "title": "Average",
+          "subTitle": null,
+          "description": null,
+          "valueX": "72",
+          "valueY": "4",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Compliance Score",
-            "subTitle": "/complianceScore",
-            "description": null,
-            "valueX": "91",
-            "valueY": "3",
-            "valueZ": null,
-            "note": null
+          "title": "Compliance Score",
+          "subTitle": "/complianceScore",
+          "description": null,
+          "valueX": "91",
+          "valueY": "3",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Engagement Score",
-            "subTitle": "/engagementScore",
-            "description": null,
-            "valueX": "77",
-            "valueY": "3",
-            "valueZ": null,
-            "note": null
+          "title": "Engagement Score",
+          "subTitle": "/engagementScore",
+          "description": null,
+          "valueX": "77",
+          "valueY": "3",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Quality Score",
-            "subTitle": "/qualityScore",
-            "description": null,
-            "valueX": "86",
-            "valueY": "3",
-            "valueZ": null,
-            "note": null
+          "title": "Quality Score",
+          "subTitle": "/qualityScore",
+          "description": null,
+          "valueX": "86",
+          "valueY": "3",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Average",
-            "subTitle": null,
-            "description": null,
-            "valueX": "84",
-            "valueY": "3",
-            "valueZ": null,
-            "note": null
+          "title": "Average",
+          "subTitle": null,
+          "description": null,
+          "valueX": "84",
+          "valueY": "3",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Compliance Score",
-            "subTitle": "/complianceScore",
-            "description": null,
-            "valueX": "71",
-            "valueY": "2",
-            "valueZ": null,
-            "note": null
+          "title": "Compliance Score",
+          "subTitle": "/complianceScore",
+          "description": null,
+          "valueX": "71",
+          "valueY": "2",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Engagement Score",
-            "subTitle": "/engagementScore",
-            "description": null,
-            "valueX": "67",
-            "valueY": "2",
-            "valueZ": null,
-            "note": null
+          "title": "Engagement Score",
+          "subTitle": "/engagementScore",
+          "description": null,
+          "valueX": "67",
+          "valueY": "2",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Quality Score",
-            "subTitle": "/qualityScore",
-            "description": null,
-            "valueX": "89",
-            "valueY": "2",
-            "valueZ": null,
-            "note": null
+          "title": "Quality Score",
+          "subTitle": "/qualityScore",
+          "description": null,
+          "valueX": "89",
+          "valueY": "2",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Average",
-            "subTitle": null,
-            "description": null,
-            "valueX": "75",
-            "valueY": "2",
-            "valueZ": null,
-            "note": null
+          "title": "Average",
+          "subTitle": null,
+          "description": null,
+          "valueX": "75",
+          "valueY": "2",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Compliance Score",
-            "subTitle": "/complianceScore",
-            "description": null,
-            "valueX": "92",
-            "valueY": "1",
-            "valueZ": null,
-            "note": null
+          "title": "Compliance Score",
+          "subTitle": "/complianceScore",
+          "description": null,
+          "valueX": "92",
+          "valueY": "1",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Engagement Score",
-            "subTitle": "/engagementScore",
-            "description": null,
-            "valueX": "78",
-            "valueY": "1",
-            "valueZ": null,
-            "note": null
+          "title": "Engagement Score",
+          "subTitle": "/engagementScore",
+          "description": null,
+          "valueX": "78",
+          "valueY": "1",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Quality Score",
-            "subTitle": "/qualityScore",
-            "description": null,
-            "valueX": "93",
-            "valueY": "1",
-            "valueZ": null,
-            "note": null
+          "title": "Quality Score",
+          "subTitle": "/qualityScore",
+          "description": null,
+          "valueX": "93",
+          "valueY": "1",
+          "valueZ": null,
+          "note": null
         },
         {
-            "title": "Average",
-            "subTitle": null,
-            "description": null,
-            "valueX": "87",
-            "valueY": "1",
-            "valueZ": null,
-            "note": null
+          "title": "Average",
+          "subTitle": null,
+          "description": null,
+          "valueX": "87",
+          "valueY": "1",
+          "valueZ": null,
+          "note": null
         }
-    ],
-    "active": true,
-    "dataDate": "2020-05-01T00:00:00-04:00",
-    "monthly": false,
-    "hospitalName": null,
-    "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-    "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-    "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-    "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-    "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-},
+      ],
+      "active": true,
+      "dataDate": "2020-05-01T00:00:00-04:00",
+      "monthly": false,
+      "hospitalName": null,
+      "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+      "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+      "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+      "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+      "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+    },
 
     {
       "name": null,
@@ -416,28 +416,31 @@ export default class EMMCases extends React.PureComponent {
   };
 
   getReportLayout() {
-    globalFunctions.genericFetch(process.env.SSC_API, 'get', this.props.userToken, {})
-      .then(result => {
-        if (result === 'error' || result === 'conflict') {
+    this.setState({ isLoading: true, rawData:[] },
+      () => {
+        globalFunctions.genericFetch(process.env.SSC_API, 'get', this.props.userToken, {})
+          .then(result => {
+            if (result === 'error' || result === 'conflict') {
 
-        } else if (result) {
-          if (result.tileRequest && result.tileRequest.length > 0) {
-            // result.tileRequest.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
-            this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, tileRequest: result.tileRequest },
-              () => {
-                // let x = this.groupTiles(result.tileRequest)
-                result.tileRequest.map((tile, index) => {
-                  this.getTile(tile, index);
-                });
+            } else if (result) {
+              if (result.tileRequest && result.tileRequest.length > 0) {
+                // result.tileRequest.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
+                this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, tileRequest: result.tileRequest },
+                  () => {
+                    // let x = this.groupTiles(result.tileRequest)
+                    result.tileRequest.map((tile, index) => {
+                      this.getTile(tile, index);
+                    });
 
-              });
-          } else {
-            //report does not exist
-            this.notLoading();
-          }
-        } else {
+                  });
+              } else {
+                //report does not exist
+                this.notLoading();
+              }
+            } else {
 
-        }
+            }
+          });
       });
   };
 
@@ -470,7 +473,7 @@ export default class EMMCases extends React.PureComponent {
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
           let rawData = this.state.rawData || [];
-          if (true || moment(tileRequest.startDate).isSame(this.state.month, 'month') && rawData.findIndex((t) => (t.tileOrder == result.tileOrder && result.groupOrder == t.groupOrder) < 0)) {
+          if (moment(tileRequest.startDate).isSame(this.state.month, 'month') && rawData.findIndex((t) => (t.tileOrder == result.tileOrder && result.groupOrder == t.groupOrder) < 0)) {
             rawData.push(result);
           }
           this.setState({ rawData, pendingTileCount: this.state.pendingTileCount - 1 },
@@ -508,11 +511,9 @@ export default class EMMCases extends React.PureComponent {
 
   updateState(key, value) {
     this.setState({
-      [key]: value,
-      isLoading: true
+      [key]: value
     }, () => {
       this.saveFilter();
-      // this.getReportLayout();
     });
   }
 
@@ -565,7 +566,7 @@ export default class EMMCases extends React.PureComponent {
   renderTile(tile) {
     switch (tile.tileType) {
       case 'List':
-        return <HorizontalBarChart {...tile} specialties={this.props.specialties}/>
+        return <HorizontalBarChart {...tile} specialties={this.props.specialties} />
       case 'InfographicText':
         return <ReportScore
           pushUrl={this.props.pushUrl}
@@ -615,6 +616,7 @@ export default class EMMCases extends React.PureComponent {
               userFacility={this.props.userFacility}
               userToken={this.props.userToken}
               defaultState={this.state}
+              apply={() => this.getReportLayout()}
               updateState={(key, value) => this.updateState(key, value)}
             />
           </Grid>
@@ -642,7 +644,7 @@ export default class EMMCases extends React.PureComponent {
           }}
         >
           <Grid container spacing={3} className="ssc-main">
-            {!this.state.tileRequest.length || this.state.loading ?
+            {!this.state.tileRequest.length || this.state.loading || !this.state.rawData.length ?
               <Grid item xs={12} className="ssc-message">
                 No data available this month
             </Grid> :
