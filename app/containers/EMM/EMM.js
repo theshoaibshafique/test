@@ -2,7 +2,6 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS, SPECIALTY } from '../../constants';
 
 export default class EMM extends React.PureComponent {
   constructor(props) {
@@ -63,7 +62,7 @@ export default class EMM extends React.PureComponent {
       if (result === 'error' || result === 'conflict') {
 
       } else {
-        let surgeryList = GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY).concat(PLASTIC_SURGERY).concat(ORTHOPAEDICS).concat(VASCULAR_SURGERY).concat(ENT);
+        let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
         let procedureNames = [];
         let complicationList = [];
         let operatingRoom = '';
@@ -81,7 +80,7 @@ export default class EMM extends React.PureComponent {
 
         result.complications.map((complication) => {
           let match = false;
-          COMPLICATIONS.map((comp) => {
+          this.props.complications && this.props.complications.map((comp) => {
             if (complication.toUpperCase() === comp.value.toUpperCase()) {
               complicationList.push(comp.name);
               match = true;
@@ -97,7 +96,7 @@ export default class EMM extends React.PureComponent {
 
         result.specialty.map((specialty) => {
           let match = false;
-          SPECIALTY.map((spec) => {
+          this.props.specialties && this.props.specialties.map((spec) => {
             if (spec.value.toUpperCase() === specialty.toUpperCase()) {
               specialtyNames.push(spec.name);
               match = true;

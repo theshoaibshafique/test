@@ -30,12 +30,12 @@ export default class ReportScore extends React.PureComponent {
                     <span >
                         {this.props.title}
                         <LightTooltip arrow title={this.props.tooltipText} placement="top" fontSize="small">
-                            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px' }} />
+                            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
                         </LightTooltip>
                     </span>
                 </Grid>
-                <Grid item xs={12} className="score-display">
-                    {this.props.score}
+                <Grid item xs={12} >
+                    <span className="score-display">{this.props.score}</span><span className="score-display-percentage">%</span>
                 </Grid>
                 {this.props.redirectLink &&
                     <Grid item xs={12} className="link">

@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, PLASTIC_SURGERY, ORTHOPAEDICS, VASCULAR_SURGERY, ENT, COMPLICATIONS } from '../../constants';
 import { Checkbox, Button } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 
@@ -41,7 +40,7 @@ export default class EMMPublish extends React.PureComponent {
   }
 
   getName(searchList, key) {
-    let index = searchList.findIndex(specialty => specialty.value == key);
+    let index = searchList.findIndex(specialty => specialty.value.toLowerCase() == key.toLowerCase());
     if (index >= 0) {
       return searchList[index].name;
     }
@@ -81,12 +80,13 @@ export default class EMMPublish extends React.PureComponent {
                     let facility = facilityResult.find(facility => facility.facilityName == emmCase.facilityName) || {'departments':[]};
                     let department = facility.departments.find(department => department.departmentName == emmCase.departmentName) || {'rooms':[]};
                     let room = department.rooms.find(room => room.roomName == emmCase.roomName) || {'roomTitle':''};
+                    let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
                     return {
                       requestID: emmCase.name,
                       facilityName: facility.facilityTitle,
                       roomName: room.roomTitle,
-                      procedures: emmCase.procedure.map((procedure) => { return this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY).concat(PLASTIC_SURGERY).concat(ORTHOPAEDICS).concat(VASCULAR_SURGERY).concat(ENT), procedure) }).join(', '),
-                      complications: emmCase.complications.map((complication) => { return this.getName(COMPLICATIONS, complication) }).join(', '),
+                      procedures: emmCase.procedure.map((procedure) => { return this.getName(surgeryList, procedure) }).join(', '),
+                      complications: emmCase.complications.map((complication) => { return this.getName(this.props.complications || [], complication) }).join(', '),
                       enhancedMMPublished: emmCase.enhancedMMPublished,
                       enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
                       report:!emmCase.enhancedMMReferenceName

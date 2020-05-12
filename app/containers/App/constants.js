@@ -12,7 +12,8 @@
 export const USER_TOKEN = 'insight/App/USER_TOKEN';
 export const USER_FACILITY = 'insight/App/USER_FACILITY';
 export const FACILITY_ROOMS = 'insight/App/FACILITY_ROOMS';
-export const PROCEDURES = 'insight/App/PROCEDURES';
 export const SHOWEMMREPORT = 'insights - showing emm reports';
 export const HIDEEMMREPORT = 'insights - hiding emm reports';
+export const SPECIALTIES = 'insight/App/SPECIALTIES';
+export const COMPLICATIONS = 'insight/App/COMPLICATIONS';
 export const DEFAULT_LOCALE = 'en';

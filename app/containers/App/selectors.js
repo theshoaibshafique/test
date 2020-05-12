@@ -33,9 +33,14 @@ const makeSelectLocation = () => createSelector(
   (routeState) => routeState.get('location').toJS()
 );
 
-const makeSelectProcedures = () => createSelector(
+const makeSelectSpecialties = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('procedures')
+  (globalState) => globalState.get('specialties')
+);
+
+const makeSelectComplications = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('complications')
 );
 
 const makeSelectFacilityRooms = () => createSelector(
@@ -80,7 +85,8 @@ export {
   makeSelectID,
   makeSelectRepos,
   makeSelectLocation,
-  makeSelectProcedures,
+  makeSelectSpecialties,
+  makeSelectComplications,
   makeSelectFacilityRooms,
   makeSelectUserFacility,
   makeSelectFirstName,

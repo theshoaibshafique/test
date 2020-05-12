@@ -16,9 +16,10 @@ import {
   USER_TOKEN,
   USER_FACILITY,
   FACILITY_ROOMS,
-  PROCEDURES,
   SHOWEMMREPORT,
-  HIDEEMMREPORT
+  HIDEEMMREPORT,
+  SPECIALTIES,
+  COMPLICATIONS,
 } from './constants';
 
 // The initial state of the App
@@ -32,8 +33,8 @@ const initialState = fromJS({
   jobTitle: null,
   userFacility: null,
   facilityRooms: [],
-  procedures: [],
-  emmReportID: null
+  specialties: [],
+  complications: [],
 });
 
 function appReducer(state = initialState, action) {
@@ -54,9 +55,12 @@ function appReducer(state = initialState, action) {
     case FACILITY_ROOMS:
       return state
         .set('facilityRooms', action.rooms)
-    case PROCEDURES:
+    case SPECIALTIES:
       return state
-        .set('procedures', action.procedures)
+        .set('specialties', action.specialties)
+    case COMPLICATIONS:
+      return state
+        .set('complications', action.complications)
     case SHOWEMMREPORT:
       return state
         .set('emmReportID', action.reportID)

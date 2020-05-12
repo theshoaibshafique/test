@@ -14,6 +14,12 @@ class MonthPicker extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps){
+    if (prevProps.month != this.props.month){
+      this.setState({month:this.props.month})
+    }
+  }
+
 
   decrementMonth = () => {
     const month = this.state.month.clone();
@@ -73,7 +79,7 @@ class MonthPicker extends React.Component {
           </MuiPickersUtilsProvider>
         </Grid>
         <Grid item xs={2}>
-          {this.state.month.clone().add(1, 'hour') > moment()
+          {moment().isSameOrBefore(this.state.month.clone(),'month')
             ? ''
             :
             <Grid container justify="center" alignItems="center" style={{ marginLeft: 24 }} className="pointer" onClick={() => this.incrementMonth()}>

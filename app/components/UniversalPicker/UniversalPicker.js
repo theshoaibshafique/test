@@ -5,7 +5,6 @@ import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import moment from 'moment/moment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { SPECIALTY } from '../../constants';
 
 
 
@@ -13,17 +12,26 @@ class UniversalPicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isORLoading:true,
+      isORLoading: true,
       operatingRooms: [],
       selectedOperatingRoom: "",
       selectedWeekday: "",
-      selectedSpecialty:"",
+      selectedSpecialty: "",
       procedureOptions: [],
       selectedProcedure: ""
     }
-
   }
-  componentDidMount(){
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.defaultState != this.props.defaultState) {
+      let selectedSpecialty = this.props.defaultState.selectedSpecialty;
+      this.setState({ ...this.props.defaultState, procedureOptions: selectedSpecialty && selectedSpecialty.procedures || [] });
+
+    }
+  }
+
+
+  componentDidMount() {
     this.populateOperatingRooms();
   }
 
@@ -35,53 +43,62 @@ class UniversalPicker extends React.Component {
 
         } else if (result && result.length > 0) {
           result.map((department) => {
-            department.rooms.map((room) => { operatingRooms.push({ departmentTitle:department.departmentTitle,value: room.roomName, label: room.roomTitle, departmentName: department.departmentName }) });
+            department.rooms.map((room) => { operatingRooms.push({ departmentTitle: department.departmentTitle, value: room.roomName, label: room.roomTitle, departmentName: department.departmentName }) });
           });
 
         }
-        this.setState({ operatingRooms,isORLoading:false });
+        this.setState({ operatingRooms, isORLoading: false });
         return operatingRooms
       });
 
   }
 
-  handleORChange(e,value) {
+  handleORChange(e, value) {
     this.setState({
       selectedOperatingRoom: value,
       departmentName: value && value.departmentName
     }, () => {
-
+      this.props.updateState('selectedOperatingRoom', value);
     });
   };
 
-  updateMonth(month) {
-    month = moment(month)
+  handleSelectedWeekdayChange(e) {
     this.setState({
-      month: month,
+      selectedWeekday: e.target.value
     }, () => {
-      this.props.updateMonth(month);
+      this.props.updateState('selectedWeekday', e.target.value);
     });
   }
 
-  handleSelectedWeekdayChange(e) {
-    this.setState({ selectedWeekday: e.target.value });
+  handleSelectedSpecialtyChange(e, selectedSpecialty) {
+    this.setState({
+      selectedSpecialty,
+      procedureOptions: selectedSpecialty && selectedSpecialty.procedures || [],
+      selectedProcedure: ""
+    }, () => {
+      this.props.updateState('selectedSpecialty', selectedSpecialty);
+      this.props.updateState('selectedProcedure', "");
+    });
   }
-
-  handleSelectedSpecialtyChange(e,selectedSpecialty){
-    this.setState({selectedSpecialty,
-      procedureOptions:selectedSpecialty && selectedSpecialty.values || [],
-      selectedProcedure:""});
+  handleSelectedProcedureChange(e, selectedProcedure) {
+    this.setState({
+      selectedProcedure
+    }, () => {
+      this.props.updateState('selectedProcedure', selectedProcedure);
+    });
   }
-  handleSelectedProcedureChange(e,selectedProcedure){
-    this.setState({selectedProcedure});
-  }
-  resetFilters(){
+  resetFilters() {
     this.setState({
       selectedOperatingRoom: "",
       selectedWeekday: "",
-      selectedSpecialty:"",
+      selectedSpecialty: "",
       procedureOptions: [],
       selectedProcedure: ""
+    }, () => {
+      this.props.updateState('selectedOperatingRoom', "");
+      this.props.updateState('selectedWeekday', "");
+      this.props.updateState('selectedSpecialty', "");
+      this.props.updateState('selectedProcedure', "");
     })
   }
 
@@ -89,7 +106,7 @@ class UniversalPicker extends React.Component {
     return (
       <Grid container spacing={1} justify="center" className="universal-picker">
         <span style={{ display: 'flex', alignItems: 'center', marginRight: 16 }}><SearchIcon /></span>
-        <Grid item xs={2} style={{maxWidth:150}}>
+        <Grid item xs={2} style={{ maxWidth: 150 }}>
           <Autocomplete
             size="small"
             options={this.state.operatingRooms}
@@ -110,13 +127,13 @@ class UniversalPicker extends React.Component {
             )}
           />
         </Grid>
-        <Grid item xs={2} style={{maxWidth:150}}>
-          <FormControl variant="outlined" size="small" style={{width:'100%'}}>
+        <Grid item xs={2} style={{ maxWidth: 150 }}>
+          <FormControl variant="outlined" size="small" style={{ width: '100%' }}>
             <Select
               displayEmpty
               value={this.state.selectedWeekday}
               onChange={(e, v) => this.handleSelectedWeekdayChange(e, v)}
-              style={{ backgroundColor: 'white'}}
+              style={{ backgroundColor: 'white' }}
             >
               <MenuItem key={-1} value="">
                 <div style={{ opacity: .4 }}>All Days</div>
@@ -130,10 +147,10 @@ class UniversalPicker extends React.Component {
           </FormControl>
         </Grid>
 
-        <Grid item xs={3} style={{maxWidth:200}}>
+        <Grid item xs={3} style={{ maxWidth: 200 }}>
           <Autocomplete
             size="small"
-            options={SPECIALTY}
+            options={this.props.specialties.length && this.props.specialties || []}
             clearOnEscape
             getOptionLabel={option => option.name ? option.name : ''}
             value={this.state.selectedSpecialty}
@@ -149,7 +166,7 @@ class UniversalPicker extends React.Component {
             )}
           />
         </Grid>
-        <Grid item xs={3} style={{maxWidth:200}}>
+        <Grid item xs={3} style={{ maxWidth: 200 }}>
           <Autocomplete
             size="small"
             options={this.state.procedureOptions}
@@ -170,8 +187,8 @@ class UniversalPicker extends React.Component {
           />
         </Grid>
 
-        <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', marginLeft:8, maxWidth:100}}>
-          <a className="link" onClick={ e => this.resetFilters()}>Reset Filters</a>
+        <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', marginLeft: 8, maxWidth: 100 }}>
+          <a className="link" onClick={e => this.resetFilters()}>Reset Filters</a>
         </Grid>
 
       </Grid>

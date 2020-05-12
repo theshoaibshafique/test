@@ -19,9 +19,10 @@ import {
   USER_TOKEN,
   USER_FACILITY,
   FACILITY_ROOMS,
-  PROCEDURES,
   SHOWEMMREPORT,
-  HIDEEMMREPORT
+  HIDEEMMREPORT,
+  SPECIALTIES,
+  COMPLICATIONS,
 } from './constants';
 
 /**
@@ -67,16 +68,30 @@ export function setFacilityRooms(rooms) {
 }
 
 /**
- * Save procedure list
+ * Save specialties list
  *
- * @param  {array} procedures list of procedures
+ * @param  {array} specialties list of specialties
  *
- * @return {object}    An action object with a type of PROCEDURES
+ * @return {object}    An action object with a type of SPECIALTIES
  */
-export function setProcedures(procedures) {
+export function setSpecialties(specialties) {
   return {
-    type: PROCEDURES,
-    procedures
+    type: SPECIALTIES,
+    specialties
+  };
+}
+
+/**
+ * Save complications list
+ *
+ * @param  {array} complications list of complications
+ *
+ * @return {object}    An action object with a type of SPECIALTIES
+ */
+export function setComplications(complications) {
+  return {
+    type: COMPLICATIONS,
+    complications
   };
 }
 

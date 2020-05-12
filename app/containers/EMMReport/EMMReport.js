@@ -4,7 +4,6 @@ import './style.scss';
 import logo from './images/emmLogo.png';
 import overviewImage from './images/overviewImage.png';
 import globalFuncs from '../../utils/global-functions';
-import { GENERAL_SURGERY, UROLOGY, GYNECOLOGY, COMPLICATIONS, SPECIALTY } from '../../constants';
 import { Drawer, List, ListItem, ListItemText, Grid, Typography, Card, CardContent } from '@material-ui/core';
 import MultiVideo from './MultiVideo/MultiVideo';
 import AnnotationGroup from './AnnotationGroup/AnnotationGroup';
@@ -90,7 +89,7 @@ export default class EMMReport extends React.PureComponent {
   };
 
   getName(searchList, key) {
-    let index = searchList.findIndex(specialty => specialty.value == key);
+    let index = searchList.findIndex(specialty => specialty.value.toLowerCase() == key.toLowerCase());
     if (index >= 0) {
       return searchList[index].name;
     }
@@ -110,7 +109,7 @@ export default class EMMReport extends React.PureComponent {
       return;
     }
     return complications.map((complication, index) => (
-      <Typography key={complication} className="overview-text">{this.getName(COMPLICATIONS, complication)}</Typography>
+      <Typography key={complication} className="overview-text">{this.getName(this.props.complications || [], complication)}</Typography>
     ));
   }
 
@@ -118,8 +117,9 @@ export default class EMMReport extends React.PureComponent {
     if (!procedures) {
       return;
     }
+    let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
     return procedures.map((procedure, index) => (
-      <Typography key={procedure.procedureName} className="overview-text">{`${this.getName(GENERAL_SURGERY.concat(UROLOGY).concat(GYNECOLOGY), procedure.procedureName)} - ${this.getName(SPECIALTY, procedure.specialtyName)}`}</Typography>
+      <Typography key={procedure.procedureName} className="overview-text">{`${this.getName(surgeryList, procedure.procedureName)} - ${this.getName(this.props.specialties, procedure.specialtyName)}`}</Typography>
     ));
   }
 
