@@ -34,6 +34,12 @@ $ssc-picker-height: 150px;
     margin: 0;
     padding: 24px 16px;
 }
+.ssc-card.InfographicParagraph .MuiCardContent-root,
+.ssc-card.MuiCard-root.InfographicParagraph{
+    box-shadow: none;
+    background-color: unset;
+    padding-left: 0;
+}
 .ssc-picker-container{
     position: absolute;
     width: calc(100% - #{$nav-width});

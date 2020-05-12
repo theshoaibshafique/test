@@ -109,34 +109,207 @@ export default class EMMCases extends React.PureComponent {
       "specialtyName": null
     },
     {
-      "name": null,
-      "reportName": null,
-      "title": "Monthly Trend",
-      "subTitle": "",
-      "body": null,
-      "footer": "",
-      "description": "",
-      "total": null,
-      "assets": null,
-      "dataPoints": [
+    "name": null,
+    "reportName": "SSC_MT",
+    "title": "Monthly Trend",
+    "subTitle": "Score (%)",
+    "body": null,
+    "footer": "Month",
+    "description": null,
+    "total": null,
+    "assets": null,
+    "dataPoints": [
         {
-          "title": "Compliance Score",
-          "subTitle": "",
-          "description": "",
-          "valueX": "85",
-          "valueY": "5",
-          "note": ""
+            "title": "Compliance Score",
+            "subTitle": "/complianceScore",
+            "description": null,
+            "valueX": "73",
+            "valueY": "5",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Engagement Score",
+            "subTitle": "/engagementScore",
+            "description": null,
+            "valueX": "83",
+            "valueY": "5",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Quality Score",
+            "subTitle": "/qualityScore",
+            "description": null,
+            "valueX": "79",
+            "valueY": "5",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Average",
+            "subTitle": null,
+            "description": null,
+            "valueX": "78",
+            "valueY": "5",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Compliance Score",
+            "subTitle": "/complianceScore",
+            "description": null,
+            "valueX": "83",
+            "valueY": "4",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Engagement Score",
+            "subTitle": "/engagementScore",
+            "description": null,
+            "valueX": "87",
+            "valueY": "4",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Quality Score",
+            "subTitle": "/qualityScore",
+            "description": null,
+            "valueX": "47",
+            "valueY": "4",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Average",
+            "subTitle": null,
+            "description": null,
+            "valueX": "72",
+            "valueY": "4",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Compliance Score",
+            "subTitle": "/complianceScore",
+            "description": null,
+            "valueX": "91",
+            "valueY": "3",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Engagement Score",
+            "subTitle": "/engagementScore",
+            "description": null,
+            "valueX": "77",
+            "valueY": "3",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Quality Score",
+            "subTitle": "/qualityScore",
+            "description": null,
+            "valueX": "86",
+            "valueY": "3",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Average",
+            "subTitle": null,
+            "description": null,
+            "valueX": "84",
+            "valueY": "3",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Compliance Score",
+            "subTitle": "/complianceScore",
+            "description": null,
+            "valueX": "71",
+            "valueY": "2",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Engagement Score",
+            "subTitle": "/engagementScore",
+            "description": null,
+            "valueX": "67",
+            "valueY": "2",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Quality Score",
+            "subTitle": "/qualityScore",
+            "description": null,
+            "valueX": "89",
+            "valueY": "2",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Average",
+            "subTitle": null,
+            "description": null,
+            "valueX": "75",
+            "valueY": "2",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Compliance Score",
+            "subTitle": "/complianceScore",
+            "description": null,
+            "valueX": "92",
+            "valueY": "1",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Engagement Score",
+            "subTitle": "/engagementScore",
+            "description": null,
+            "valueX": "78",
+            "valueY": "1",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Quality Score",
+            "subTitle": "/qualityScore",
+            "description": null,
+            "valueX": "93",
+            "valueY": "1",
+            "valueZ": null,
+            "note": null
+        },
+        {
+            "title": "Average",
+            "subTitle": null,
+            "description": null,
+            "valueX": "87",
+            "valueY": "1",
+            "valueZ": null,
+            "note": null
         }
-      ],
-      "active": true,
-      "dataDate": "0001-01-01T00:00:00",
-      "hospitalName": null,
-      "facilityName": null,
-      "departmentName": null,
-      "roomName": null,
-      "procedureName": null,
-      "specialtyName": null
-    },
+    ],
+    "active": true,
+    "dataDate": "2020-05-01T00:00:00-04:00",
+    "monthly": false,
+    "hospitalName": null,
+    "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+    "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+    "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+    "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+    "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+},
 
     {
       "name": null,
@@ -303,9 +476,11 @@ export default class EMMCases extends React.PureComponent {
           this.setState({ rawData, pendingTileCount: this.state.pendingTileCount - 1 },
             () => {
               if (this.state.pendingTileCount <= 0) {
-                this.notLoading();
                 let reportData = this.state.rawData.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
-                this.setState({ reportData: this.groupTiles(reportData) });
+                this.setState({ reportData: this.groupTiles(reportData) },
+                  () => {
+                    this.notLoading();
+                  });
               }
             });
         }
@@ -324,20 +499,20 @@ export default class EMMCases extends React.PureComponent {
   updateMonth(month) {
     this.setState({
       month: month,
-      // isLoading: true
+      isLoading: true
     }, () => {
-      // this.setTileRequestDates();
       this.saveFilter();
+      this.getReportLayout();
     });
   }
 
   updateState(key, value) {
     this.setState({
       [key]: value,
-      // isLoading: true
+      isLoading: true
     }, () => {
       this.saveFilter();
-      // this.setTileRequestDates();
+      // this.getReportLayout();
     });
   }
 
@@ -380,7 +555,7 @@ export default class EMMCases extends React.PureComponent {
           </Card>
         </Grid>
       ) : <Grid item xs={this.getTileSize(tileGroup.group[0].tileType)} key={index}>
-          <Card className="ssc-card">
+          <Card className={`ssc-card ${tileGroup.group[0].tileType}`}>
             <CardContent>{this.renderTile(tileGroup.group[0])}</CardContent>
           </Card>
         </Grid>
@@ -390,15 +565,15 @@ export default class EMMCases extends React.PureComponent {
   renderTile(tile) {
     switch (tile.tileType) {
       case 'List':
-        return <HorizontalBarChart />
+        return <HorizontalBarChart {...tile} specialties={this.props.specialties}/>
       case 'InfographicText':
         return <ReportScore
           pushUrl={this.props.pushUrl}
-          title="Quality Score"
-          redirectDisplay="View Quality Details"
-          redirectLink="/qualityScore"
-          score="58"
-          tooltipText="Checklist Score is scored out of 100 using current month data. It is calculated based on how each phase of the checklist is conducted." />
+          title={tile.title}
+          redirectDisplay={tile.subTitle}
+          redirectLink={tile.footer}
+          score={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].valueX}
+          tooltipText={tile.description} />
       case 'BarChartDetailed':
         return <BarChartDetail />
       case 'InfographicParagraph':
@@ -416,12 +591,6 @@ export default class EMMCases extends React.PureComponent {
       case 'InfographicParagraph':
         return 12;
     }
-  }
-
-  loading() {
-    this.setState({
-      isLoading: true
-    });
   }
 
   notLoading() {
@@ -473,87 +642,11 @@ export default class EMMCases extends React.PureComponent {
           }}
         >
           <Grid container spacing={3} className="ssc-main">
-            {!this.state.tileRequest.length ?
+            {!this.state.tileRequest.length || this.state.loading ?
               <Grid item xs={12} className="ssc-message">
                 No data available this month
             </Grid> :
               this.renderTiles()}
-            {/* <Grid item xs={4} >
-              <Card className="ssc-card">
-                <CardContent>
-                  <ReportScore
-                    pushUrl={this.props.pushUrl}
-                    title="Compliance Score"
-                    redirectDisplay="View Compliance Details"
-                    redirectLink="/complianceScore"
-                    score="70"
-                    tooltipText="Checklist Score is scored out of 100 using current month data. It is calculated based on how each phase of the checklist is conducted." />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={4} >
-              <Card className="ssc-card">
-                <CardContent>
-                  <ReportScore
-                    pushUrl={this.props.pushUrl}
-                    title="Engagement Score"
-                    redirectDisplay="View Engagement Details"
-                    redirectLink="/engagementScore"
-                    score="52"
-                    tooltipText="Checklist Score is scored out of 100 using current month data. It is calculated based on how each phase of the checklist is conducted." />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={4} >
-              <Card className="ssc-card">
-                <CardContent>
-                  <ReportScore
-                    pushUrl={this.props.pushUrl}
-                    title="Quality Score"
-                    redirectDisplay="View Quality Details"
-                    redirectLink="/qualityScore"
-                    score="58"
-                    tooltipText="Checklist Score is scored out of 100 using current month data. It is calculated based on how each phase of the checklist is conducted." />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={8}>
-              <Card className="ssc-card">
-                <CardContent>
-                  <BarChartDetail />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={4} >
-              <Card className="ssc-card">
-                <CardContent>
-                  <HorizontalBarChart />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12}>
-              <span className="ssc-info"><span style={{ fontWeight: 'bold' }}>1,000</span> Case Data based on filter criteria</span>
-            </Grid>
-            <Grid item xs={12} >
-              <Card className="ssc-card">
-                <CardContent>
-                  <Grid container spacing={0} alignItems="center">
-                    <Grid item xs={4}>
-                      <ReportScore
-                        pushUrl={this.props.pushUrl}
-                        title="Quality Score"
-                        redirectDisplay="View Quality Details"
-                        redirectLink="/qualityScore"
-                        score="58"
-                        tooltipText="Checklist Score is scored out of 100 using current month data. It is calculated based on how each phase of the checklist is conducted." />
-                    </Grid>
-                    <Grid item xs={8}>
-                      <BarChartDetail />
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid> */}
           </Grid>
         </LoadingOverlay>
       </div>

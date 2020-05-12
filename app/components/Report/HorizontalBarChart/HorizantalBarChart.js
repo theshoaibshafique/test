@@ -19,54 +19,41 @@ export default class HorizontalBarChart extends React.PureComponent {
     super(props);
   };
 
+  getName(searchList, key) {
+    let index = searchList.findIndex(item => item.value.toLowerCase() == key.toLowerCase());
+    if (index >= 0) {
+      return searchList[index].name;
+    }
+  }
+
 
   render() {
     return (
       <Grid container spacing={0} justify='center' >
         <Grid item xs={12} style={{ textAlign: 'center' }}>
-          <StarsIcon style={{ color: '#FFB71B',fontSize:26, marginBottom:8 }} /> <span className="chart-title">Top 3 Specialties</span>
+          <StarsIcon style={{ color: '#FFB71B', fontSize: 26, marginBottom: 8 }} />
+          <span className="chart-title">{this.props.title}</span>
         </Grid>
         <Grid item xs={12} className="chart-subtitle" style={{ textAlign: 'center' }}>
-          by Average Score
+          {this.props.subTitle}
         </Grid>
-        <Grid item xs={6}>
-          General Surgery
-        </Grid>
-        <Grid item xs={6} className="chart-score">
-          89%
-        </Grid>
-        <Grid item xs={12} style={{marginBottom:40}}>
-          <BorderLinearProgress
-            variant="determinate"
-            value={89}
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          Gynecology
-        </Grid>
-        <Grid item xs={6} className="chart-score" >
-          86%
-        </Grid>
-        <Grid item xs={12} style={{marginBottom:40}}>
-          <BorderLinearProgress
-            variant="determinate"
-            value={86}
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-          Urology
-        </Grid>
-        <Grid item xs={6} className="chart-score">
-          70%
-        </Grid>
-        <Grid item xs={12} style={{marginBottom:40}}>
-          <BorderLinearProgress
-            variant="determinate"
-            value={70}
-          />
-        </Grid>
+        {this.props.dataPoints.map((point) => {
+          return (
+          <Grid container justify='center' key={point.title}>
+            <Grid item xs={6}>
+              {this.getName(this.props.specialties, point.title)}
+            </Grid>
+            <Grid item xs={6} className="chart-score">
+              {point.valueX}%
+          </Grid>
+            <Grid item xs={12} style={{ marginBottom: 40 }}>
+              <BorderLinearProgress
+                variant="determinate"
+                value={point.valueX}
+              />
+            </Grid>
+          </Grid>)
+        })}
 
       </Grid>
     );
