@@ -8,6 +8,7 @@ import EMMCases from 'containers/EMMCases/Loadable';
 import EMMPublish from 'containers/EMMPublish/Loadable';
 import EMM from 'containers/EMM/Loadable';
 import EMMReport from 'containers/EMMReport/Loadable';
+import EMMReports from 'containers/EMMReports';
 import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
@@ -184,7 +185,7 @@ export default class MainLayout extends React.PureComponent {
           <div className="APP-MAIN-WRAPPER">
             {(this.props.emmReportID) &&
               <div className="EMM-Report-Overlay">
-                <div className="close-emm" onClick={()=>this.props.hideEMMReport()}>X</div>
+                <EMMReports />
               </div>
             }
             <nav className={"MAIN-NAVIGATION " + (this.props.emmReportID && 'hidden')}>

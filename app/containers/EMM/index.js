@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import EMM from './EMM';
-import { makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { showEMMReport } from '../App/actions';
 import { makeSelectToken, makeSelectUserFacility, makeSelectSpecialties, makeSelectComplications } from '../App/selectors';
 
