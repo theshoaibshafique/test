@@ -1,9 +1,10 @@
 @import '../../../styles/global-styles';
 
-.chart-title{
+.bar-chart-detailed .chart-title{
   font-size: 26px;
   letter-spacing: 0;
   line-height: 36px;
+  margin-bottom: 16px !important;
 }
 
 .chart-subtitle{
@@ -49,6 +50,7 @@
   opacity: 0;
 }
 
+
 .bar-chart-detailed-legend{
   display: flex;
   justify-content: space-evenly;
@@ -56,15 +58,20 @@
 }
 .bar-chart-detailed .legend-title{
   display: flex;
-  font-family: "Noto Sans";
-  font-size: 14px;
-  letter-spacing: 0;
-  line-height: 19px;
 }
 
+.bar-chart-detailed .legend-title,
+.bar-chart-detailed .c3-axis,
 .c3-axis-y-label,.c3-axis-x-label {
   font-family: "Noto Sans";
   font-size: 14px;
   letter-spacing: 0;
   line-height: 19px;
+}
+.bar-chart-detailed .c3 path, 
+.bar-chart-detailed .c3 line,
+.bar-chart-detailed .c3-xgrid,
+.bar-chart-detailed .c3-ygrid{
+  stroke-dasharray: unset;
+  stroke: #EAEAEA;
 }

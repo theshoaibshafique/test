@@ -29,7 +29,7 @@ export default class HorizontalBarChart extends React.PureComponent {
 
   render() {
     return (
-      <Grid container spacing={0} justify='center' style={{marginBottom:8}}>
+      <Grid container spacing={0} justify='center' style={{marginBottom:34}}>
         <Grid item xs={12} style={{ textAlign: 'center' }}>
           <StarsIcon style={{ color: '#FFB71B', fontSize: 26, marginBottom: 8 }} />
           <span className="chart-title">{this.props.title}</span>
@@ -40,11 +40,11 @@ export default class HorizontalBarChart extends React.PureComponent {
         {this.props.dataPoints.map((point) => {
           return (
           <Grid container justify='center' key={point.title}>
-            <Grid item xs={6}>
+            <Grid item xs={8}>
               {this.getName(this.props.specialties, point.title)}
             </Grid>
-            <Grid item xs={6} className="chart-score">
-              {point.valueX}%
+            <Grid item xs={4} className="chart-score">
+              {point.valueX}
           </Grid>
             <Grid item xs={12} style={{ marginBottom: 40 }}>
               <BorderLinearProgress

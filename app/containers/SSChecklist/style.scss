@@ -30,10 +30,15 @@ $ssc-picker-height: 150px;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
     border-radius: 8px !important;
 }
-.ssc-card .MuiCardContent-root{
+.ssc-card.InfographicText .MuiCardContent-root{
     margin: 0;
     padding: 24px 16px;
 }
+.ssc-card .MuiCardContent-root{
+    margin: 0;
+    padding: 24px 35px;
+}
+
 .ssc-card.InfographicParagraph .MuiCardContent-root,
 .ssc-card.MuiCard-root.InfographicParagraph{
     box-shadow: none;
@@ -47,7 +52,7 @@ $ssc-picker-height: 150px;
 }
 .ssc-main{
     padding: 40px;
-    max-width: 1116px;
+    max-width: 1198px;
     margin: auto;
     top: $ssc-picker-height;
     position: relative;

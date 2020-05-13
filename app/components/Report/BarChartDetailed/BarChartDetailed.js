@@ -23,7 +23,7 @@ export default class BarChartDetailed extends React.PureComponent {
           pattern: ['#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
         },
         bar: {
-          width: 30,
+          width: 25,
           space: .2
         },
         tooltip: {
@@ -51,7 +51,12 @@ export default class BarChartDetailed extends React.PureComponent {
             }
           }
         },
-        padding: { top: 0, bottom: 8 },
+        grid :{
+          y:{
+            show:true
+          }
+        },
+        padding: { top: 8, bottom: 8 },
         legend: {
           show: false
         },
@@ -87,7 +92,7 @@ export default class BarChartDetailed extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
-    this.setState({ chartData, legendData,xLabels:formattedData.x, isLoaded: true })
+    this.setState({ chartData, legendData, isLoaded: true })
   }
 
   redirect(redirectURL) {
@@ -95,7 +100,7 @@ export default class BarChartDetailed extends React.PureComponent {
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    return ReactDOMServer.renderToString(<div className="MuiTooltip-tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>{`${d[0].value}% ${this.state.xLabels[d[0].x]}`}</div>);
+    return ReactDOMServer.renderToString(<div className="MuiTooltip-tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>{`${d[0].value}`}</div>);
   }
 
   createCustomLegend(chartClass) {
@@ -141,9 +146,9 @@ export default class BarChartDetailed extends React.PureComponent {
 
   render() {
     return (
-      <Grid container spacing={0} justify='center' className="bar-chart-detailed" style={{ textAlign: 'center', marginBottom: 40 }}>
-        <Grid item xs={12}>
-          <span className="chart-title">{this.props.title}</span>
+      <Grid container spacing={0} justify='center' className="bar-chart-detailed" style={{ textAlign: 'center', marginBottom: 50 }}>
+        <Grid item xs={12} className="chart-title">
+          {this.props.title}
         </Grid>
 
         <Grid item xs={12}>
