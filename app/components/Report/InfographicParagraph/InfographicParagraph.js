@@ -15,11 +15,13 @@ export default class InfographicParagraph extends React.PureComponent {
         if (!this.props.description){
             return '';
         } 
-        return this.props.description.split(" ").map((word) => {
+        return this.props.description.split(" ").map((word,index) => {
+            //Matches {0}, {1}, ... etc
+            //Replace placeholders with datapoints
             const pattern = /{(\d+)}/g;
             if (pattern.test(word)){
                 word = this.props.dataPoints[parseInt(word.replace("{","").replace("}",""))].valueX;
-                return <span style={{fontWeight:'bold'}}>{`${word} `}</span>
+                return <span style={{fontWeight:'bold'}} key={index}>{`${word} `}</span>
             } else {
                 return `${word} `
             }
