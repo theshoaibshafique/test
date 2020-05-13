@@ -1,3 +1,18 @@
 @import '../../../styles/global-styles.scss';
 
 $paddingSize: 40px;
+
+.Emm-Phases {
+  padding-top: $paddingSize;
+  h1, h2 {
+    font-size: 42px;
+    color: #000000;
+    opacity: 0.8;
+    margin: 0px 0px 8px;
+    font-weight: normal;
+  }
+  h2 {
+    font-size: 26px;
+    margin-bottom: 16px;
+  }
+}
