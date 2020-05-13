@@ -29,12 +29,12 @@ export default class HorizontalBarChart extends React.PureComponent {
 
   render() {
     return (
-      <Grid container spacing={0} justify='center' >
+      <Grid container spacing={0} justify='center' style={{marginBottom:8}}>
         <Grid item xs={12} style={{ textAlign: 'center' }}>
           <StarsIcon style={{ color: '#FFB71B', fontSize: 26, marginBottom: 8 }} />
           <span className="chart-title">{this.props.title}</span>
         </Grid>
-        <Grid item xs={12} className="chart-subtitle" style={{ textAlign: 'center' }}>
+        <Grid item xs={12} className="chart-subtitle" style={{ textAlign: 'center' ,marginBottom:40 }}>
           {this.props.subTitle}
         </Grid>
         {this.props.dataPoints.map((point) => {

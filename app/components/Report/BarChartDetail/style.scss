@@ -23,6 +23,48 @@
   text-align: right;
 }
 
-.ssc-page .c3-axis .tick line{
+.bar-chart-detailed .link{
+  color: #028CC8;
+  font-family: "Noto Sans";
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 17px;
+  text-align: left;
+  margin-left: 24px;
+}
+
+.circle:before {
+  content: ' \25CF';
+  font-size: 32px;
+  line-height: 0;
+}
+
+.line:before {
+  content: ' \2212';
+  font-size: 32px;
+  line-height: 0;
+}
+
+.bar-chart-detailed .c3-axis .tick line{
   opacity: 0;
+}
+
+.bar-chart-detailed-legend{
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 16px;
+}
+.bar-chart-detailed .legend-title{
+  display: flex;
+  font-family: "Noto Sans";
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 19px;
+}
+
+.c3-axis-y-label,.c3-axis-x-label {
+  font-family: "Noto Sans";
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 19px;
 }

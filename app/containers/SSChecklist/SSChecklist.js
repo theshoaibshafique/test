@@ -13,6 +13,7 @@ import globalFunctions from '../../utils/global-functions';
 import HorizontalBarChart from '../../components/Report/HorizontalBarChart/HorizantalBarChart';
 import BarChartDetail from '../../components/Report/BarChartDetail/BarChartDetail';
 import LoadingOverlay from 'react-loading-overlay';
+import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -123,8 +124,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Compliance Score",
           "subTitle": "/complianceScore",
           "description": null,
-          "valueX": "73",
-          "valueY": "5",
+          "valueY": "73",
+          "valueX": "5",
           "valueZ": null,
           "note": null
         },
@@ -132,8 +133,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Engagement Score",
           "subTitle": "/engagementScore",
           "description": null,
-          "valueX": "83",
-          "valueY": "5",
+          "valueY": "83",
+          "valueX": "5",
           "valueZ": null,
           "note": null
         },
@@ -141,8 +142,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Quality Score",
           "subTitle": "/qualityScore",
           "description": null,
-          "valueX": "79",
-          "valueY": "5",
+          "valueY": "79",
+          "valueX": "5",
           "valueZ": null,
           "note": null
         },
@@ -150,8 +151,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Average",
           "subTitle": null,
           "description": null,
-          "valueX": "78",
-          "valueY": "5",
+          "valueY": "78",
+          "valueX": "5",
           "valueZ": null,
           "note": null
         },
@@ -159,8 +160,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Compliance Score",
           "subTitle": "/complianceScore",
           "description": null,
-          "valueX": "83",
-          "valueY": "4",
+          "valueY": "83",
+          "valueX": "4",
           "valueZ": null,
           "note": null
         },
@@ -168,8 +169,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Engagement Score",
           "subTitle": "/engagementScore",
           "description": null,
-          "valueX": "87",
-          "valueY": "4",
+          "valueY": "87",
+          "valueX": "4",
           "valueZ": null,
           "note": null
         },
@@ -177,8 +178,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Quality Score",
           "subTitle": "/qualityScore",
           "description": null,
-          "valueX": "47",
-          "valueY": "4",
+          "valueY": "47",
+          "valueX": "4",
           "valueZ": null,
           "note": null
         },
@@ -186,8 +187,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Average",
           "subTitle": null,
           "description": null,
-          "valueX": "72",
-          "valueY": "4",
+          "valueY": "72",
+          "valueX": "4",
           "valueZ": null,
           "note": null
         },
@@ -195,8 +196,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Compliance Score",
           "subTitle": "/complianceScore",
           "description": null,
-          "valueX": "91",
-          "valueY": "3",
+          "valueY": "91",
+          "valueX": "3",
           "valueZ": null,
           "note": null
         },
@@ -204,8 +205,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Engagement Score",
           "subTitle": "/engagementScore",
           "description": null,
-          "valueX": "77",
-          "valueY": "3",
+          "valueY": "77",
+          "valueX": "3",
           "valueZ": null,
           "note": null
         },
@@ -213,8 +214,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Quality Score",
           "subTitle": "/qualityScore",
           "description": null,
-          "valueX": "86",
-          "valueY": "3",
+          "valueY": "86",
+          "valueX": "3",
           "valueZ": null,
           "note": null
         },
@@ -222,8 +223,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Average",
           "subTitle": null,
           "description": null,
-          "valueX": "84",
-          "valueY": "3",
+          "valueY": "84",
+          "valueX": "3",
           "valueZ": null,
           "note": null
         },
@@ -231,8 +232,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Compliance Score",
           "subTitle": "/complianceScore",
           "description": null,
-          "valueX": "71",
-          "valueY": "2",
+          "valueY": "71",
+          "valueX": "2",
           "valueZ": null,
           "note": null
         },
@@ -240,8 +241,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Engagement Score",
           "subTitle": "/engagementScore",
           "description": null,
-          "valueX": "67",
-          "valueY": "2",
+          "valueY": "67",
+          "valueX": "2",
           "valueZ": null,
           "note": null
         },
@@ -249,8 +250,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Quality Score",
           "subTitle": "/qualityScore",
           "description": null,
-          "valueX": "89",
-          "valueY": "2",
+          "valueY": "89",
+          "valueX": "2",
           "valueZ": null,
           "note": null
         },
@@ -258,8 +259,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Average",
           "subTitle": null,
           "description": null,
-          "valueX": "75",
-          "valueY": "2",
+          "valueY": "75",
+          "valueX": "2",
           "valueZ": null,
           "note": null
         },
@@ -267,8 +268,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Compliance Score",
           "subTitle": "/complianceScore",
           "description": null,
-          "valueX": "92",
-          "valueY": "1",
+          "valueY": "92",
+          "valueX": "1",
           "valueZ": null,
           "note": null
         },
@@ -276,8 +277,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Engagement Score",
           "subTitle": "/engagementScore",
           "description": null,
-          "valueX": "78",
-          "valueY": "1",
+          "valueY": "78",
+          "valueX": "1",
           "valueZ": null,
           "note": null
         },
@@ -285,8 +286,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Quality Score",
           "subTitle": "/qualityScore",
           "description": null,
-          "valueX": "93",
-          "valueY": "1",
+          "valueY": "93",
+          "valueX": "1",
           "valueZ": null,
           "note": null
         },
@@ -294,8 +295,8 @@ export default class EMMCases extends React.PureComponent {
           "title": "Average",
           "subTitle": null,
           "description": null,
-          "valueX": "87",
-          "valueY": "1",
+          "valueY": "87",
+          "valueX": "1",
           "valueZ": null,
           "note": null
         }
@@ -416,7 +417,7 @@ export default class EMMCases extends React.PureComponent {
   };
 
   getReportLayout() {
-    this.setState({ isLoading: true, rawData:[] },
+    this.setState({ isLoading: true, rawData: [] },
       () => {
         globalFunctions.genericFetch(process.env.SSC_API, 'get', this.props.userToken, {})
           .then(result => {
@@ -576,9 +577,9 @@ export default class EMMCases extends React.PureComponent {
           score={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].valueX}
           tooltipText={tile.description} />
       case 'BarChartDetailed':
-        return <BarChartDetail />
+        return <BarChartDetail {...tile} pushUrl={this.props.pushUrl} />
       case 'InfographicParagraph':
-        return <span className="ssc-info"><span style={{ fontWeight: 'bold' }}>1,000</span> Case Data based on filter criteria</span>
+        return <InfographicParagraph {...tile}/>
     }
   }
 

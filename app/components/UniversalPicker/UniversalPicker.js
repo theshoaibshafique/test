@@ -187,9 +187,9 @@ class UniversalPicker extends React.Component {
           />
         </Grid>
         <Grid item xs={2} style={{maxWidth:100}}>
-          <Button variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{height:40}}>Apply</Button>
+          <Button variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{height:40, width:96}}>Apply</Button>
         </Grid>
-        <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', maxWidth: 100 }}>
+        <Grid item xs={2} style={{ display: 'flex', alignItems: 'center',marginLeft:16, maxWidth: 100 }}>
           <a className="link" onClick={e => this.resetFilters()}>Reset Filters</a>
         </Grid>
 

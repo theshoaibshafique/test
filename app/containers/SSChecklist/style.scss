@@ -53,15 +53,6 @@ $ssc-picker-height: 150px;
     position: relative;
 }
 
-.ssc-info{
-    opacity: 0.8;
-    color: #000000;
-    font-size: 18px;
-    font-style: italic;
-    letter-spacing: 0;
-    line-height: 24px;
-}
-
 .ssc-message{
   font-family: "Noto Sans";
   font-size: 26px;
@@ -69,9 +60,3 @@ $ssc-picker-height: 150px;
   line-height: 36px;
   text-align: center;
 }
-
-.circle:before {
-    content: ' \25CF';
-    font-size: 32px;
-    line-height: 0;
-  }
