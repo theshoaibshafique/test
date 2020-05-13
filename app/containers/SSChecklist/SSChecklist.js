@@ -11,7 +11,7 @@ import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import ReportScore from '../../components/Report/ReportScore/ReportScore';
 import globalFunctions from '../../utils/global-functions';
 import HorizontalBarChart from '../../components/Report/HorizontalBarChart/HorizantalBarChart';
-import BarChartDetail from '../../components/Report/BarChartDetail/BarChartDetail';
+import BarChartDetailed from '../../components/Report/BarChartDetailed/BarChartDetailed';
 import LoadingOverlay from 'react-loading-overlay';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 
@@ -577,7 +577,7 @@ export default class EMMCases extends React.PureComponent {
           score={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].valueX}
           tooltipText={tile.description} />
       case 'BarChartDetailed':
-        return <BarChartDetail {...tile} pushUrl={this.props.pushUrl} />
+        return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
       case 'InfographicParagraph':
         return <InfographicParagraph {...tile}/>
     }

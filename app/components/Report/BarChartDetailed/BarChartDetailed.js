@@ -5,11 +5,11 @@ import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import moment from 'moment';
 
-export default class BarChartDetail extends React.PureComponent {
+export default class BarChartDetailed extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      chartID: 'barChartDetail',
+      chartID: 'barChartDetailed',
       chartData: {
         data: {
           x: 'x',
