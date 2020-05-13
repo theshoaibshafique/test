@@ -5,6 +5,8 @@ import './style.scss';
 import Icon from '@mdi/react'
 import { mdiClose, mdiInformationOutline  } from '@mdi/js';
 import globalFuncs from '../../utils/global-functions';
+import EMMOverview from './EMMOverview'
+import EMMPhase from './EMMPhase'
 import { Drawer, List, ListItem, ListItemText, Grid, Typography, Card, Paper } from '@material-ui/core';
 
 export default class EMMReports extends React.PureComponent {
@@ -49,19 +51,7 @@ export default class EMMReports extends React.PureComponent {
             </div>
           </div>
         </div>
-        <div className="Emm-Reports-Overview">
-          <Grid container spacing={3}>
-            <Grid item xs={4}>
-              <Paper className="Emm-Paper">xs=12</Paper>
-            </Grid>
-            <Grid item xs={4}>
-              <Paper className="Emm-Paper">xs=12</Paper>
-            </Grid>
-            <Grid item xs={4}>
-              <Paper className="Emm-Paper">xs=12</Paper>
-            </Grid>
-          </Grid>
-        </div>
+        {selectedEMMTab == 'overview' ? <EMMOverview /> : <EMMPhase />}
       </div>
     );
   }
