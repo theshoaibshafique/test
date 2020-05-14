@@ -1,6 +1,7 @@
 import React from 'react';
 import './style.scss';
-import { Grid, Paper } from '@material-ui/core';
+import { Grid, Paper, Card, CardContent } from '@material-ui/core';
+import ReportScore from '../../../components/Report/ReportScore/ReportScore';
 
 export default class EMMOverview extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -17,7 +18,12 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
           <Grid item xs={4}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Paper className="Emm-Paper">xs=12</Paper>
+                <Paper className="Emm-Paper">
+                  <ReportScore
+                      title="Distraction"
+                      score="44"
+                      tooltipText="Distraction tooltip" />
+                </Paper>
               </Grid>
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">
@@ -29,10 +35,20 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
           <Grid item xs={8}>
             <Grid container spacing={3}>
               <Grid item xs={6}>
-                <Paper className="Emm-Paper">xs=12</Paper>
+                <Paper className="Emm-Paper">
+                  <ReportScore
+                    title="Technical Performance"
+                    score="76"
+                    tooltipText="Technical performance tooltip" />
+                </Paper>
               </Grid>
               <Grid item xs={6}>
-                <Paper className="Emm-Paper">xs=12</Paper>
+                <Paper className="Emm-Paper">
+                  <ReportScore
+                    pushUrl={this.props.pushUrl}
+                    title="Number of Events"
+                    score="7" />
+                </Paper>
               </Grid>
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">SSC</Paper>
