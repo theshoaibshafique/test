@@ -62,7 +62,7 @@ class UserFields extends React.Component {
           this.setState({
             validTitle: true,
           });
-        }   
+        }
     }
   }
 
@@ -98,20 +98,20 @@ class UserFields extends React.Component {
         </Grid>
         <Grid item xs={6}>
           <TextField
-              id="firstName"
-              name="firstName"
-              size="small"
-              className="input-field"
-              value={this.props.userValue.firstName}
-              onChange={this.props.handleFormChange}
-              variant="outlined"
-              onBlur={(e) => this.validateField(e, 'first')}
-              error={!this.state.validFirstName || Boolean(this.props.fieldErrors.firstName)}
-              helperText={!this.state.validFirstName ? 'Please enter a first name' : this.props.fieldErrors.firstName}
-            />
+            id="firstName"
+            name="firstName"
+            size="small"
+            className="input-field"
+            value={this.props.userValue.firstName}
+            onChange={this.props.handleFormChange}
+            variant="outlined"
+            onBlur={(e) => this.validateField(e, 'first')}
+            error={!this.state.validFirstName || Boolean(this.props.fieldErrors.firstName)}
+            helperText={!this.state.validFirstName ? 'Please enter a first name' : this.props.fieldErrors.firstName}
+          />
         </Grid>
         <Grid item xs={6}>
-        <TextField
+          <TextField
             id="lastName"
             name="lastName"
             size="small"
@@ -127,20 +127,20 @@ class UserFields extends React.Component {
         <Grid item xs={6} className="input-title">
           <Grid container spacing={2}>
             <Grid item xs={4}>
-            Email
+              Email
             </Grid>
             {this.props.currentView === 'edit' &&
-            <Grid item xs={8}>
-              <Grid container justify="flex-end">
-                {this.props.isEmailLoading 
-                ? <div className="loader" ></div> 
-                : (this.props.isEmailSent 
-                    ? <div className="input-title">Email Sent!</div> 
-                    : <a className="link" onClick={this.props.passwordResetLink}>Send password reset link</a> )}
-              
+              <Grid item xs={8}>
+                <Grid container justify="flex-end">
+                  {this.props.isEmailLoading
+                    ? <div className="loader" ></div>
+                    : (this.props.isEmailSent
+                      ? <div className="input-title">Email Sent!</div>
+                      : <a className="link" onClick={this.props.passwordResetLink}>Send password reset link</a>)}
+
+                </Grid>
+
               </Grid>
-              
-            </Grid>
             }
           </Grid>
         </Grid>
@@ -164,7 +164,7 @@ class UserFields extends React.Component {
           />
         </Grid>
         <Grid item xs={6}>
-        <TextField
+          <TextField
             id="title"
             name="title"
             size="small"
@@ -180,59 +180,76 @@ class UserFields extends React.Component {
         <Grid item xs={12} className="subtitle">
           Permissions (Optional)
         </Grid>
-        <Grid item xs={12} style={{paddingTop:0}}>
+        <Grid item xs={12} style={{ paddingTop: 0 }}>
           <FormControl className="input-field permissions-checkbox" >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                  disableRipple 
+            <FormControlLabel
+              control={
+                <Checkbox
+                  disableRipple
                   icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
                   checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-                    className="SST-Checkbox"
-                    id="userManagement"
-                    name="userManagement"
-                    onChange={this.props.handleFormChange}
-                    checked={isAdmin}
-                    value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
-                  />
-                }
-                label="Admin"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    disableRipple 
-                    icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                    checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-                    className="SST-Checkbox"
-                    id="mmView"
-                    name="mmView"
-                    disabled={isAdmin}
-                    onChange={this.props.handleFormChange}
-                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View")}
-                    value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View"
-                  />
-                }
-                label="Enhanced M&M View"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    disableRipple 
-                    icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                    checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-                    className="SST-Checkbox"
-                    id="mmEdit"
-                    name="mmEdit"
-                    disabled={isAdmin}
-                    onChange={this.props.handleFormChange}
-                    checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit")}
-                    value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
-                  />
-                }
-                label="Enhanced M&M Request"
-              />
-            </FormControl>
+                  className="SST-Checkbox"
+                  id="userManagement"
+                  name="userManagement"
+                  onChange={this.props.handleFormChange}
+                  checked={isAdmin}
+                  value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
+                />
+              }
+              label="Admin"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  disableRipple
+                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  className="SST-Checkbox"
+                  id="mmView"
+                  name="mmView"
+                  disabled={isAdmin}
+                  onChange={this.props.handleFormChange}
+                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View")}
+                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View"
+                />
+              }
+              label="Enhanced M&M View"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  disableRipple
+                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  className="SST-Checkbox"
+                  id="mmEdit"
+                  name="mmEdit"
+                  disabled={isAdmin}
+                  onChange={this.props.handleFormChange}
+                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit")}
+                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
+                />
+              }
+              label="Enhanced M&M Request"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  disableRipple
+                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  className="SST-Checkbox"
+                  id="sscAccess"
+                  name="sscAccess"
+                  disabled={isAdmin}
+                  onChange={this.props.handleFormChange}
+                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist")}
+                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist"
+                />
+              }
+              label="Surgical Checklist"
+            />
+          </FormControl>
         </Grid>
       </Grid>
     );
