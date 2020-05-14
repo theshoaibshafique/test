@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import BarChartDetail from './HorizantalBarChart';
+import InfographicParagraph from './InfographicParagraph';
 import { makeSelectToken } from '../../App/selectors';
 
 const mapStateToProps = createStructuredSelector({
   userToken: makeSelectToken()
 });
 
-export default connect(mapStateToProps, null)(BarChartDetail);
+export default connect(mapStateToProps, null)(InfographicParagraph);

@@ -7,10 +7,10 @@ import './style.scss';
 const LightTooltip = withStyles((theme) => ({
     tooltip: {
         boxShadow: theme.shadows[1],
-        padding:'24px 16px',
-        fontSize:'14px',
-        lineHeight:'19px',
-        font:'Noto Sans'
+        padding: '24px 16px',
+        fontSize: '14px',
+        lineHeight: '19px',
+        font: 'Noto Sans'
     }
 }))(Tooltip);
 
@@ -35,7 +35,7 @@ export default class ReportScore extends React.PureComponent {
                     </span>
                 </Grid>
                 <Grid item xs={12} >
-                    <span className="score-display">{this.props.score}</span><span className="score-display-percentage">%</span>
+                    <span className="score-display">{this.props.score}</span>
                 </Grid>
                 {this.props.redirectLink &&
                     <Grid item xs={12} className="link">

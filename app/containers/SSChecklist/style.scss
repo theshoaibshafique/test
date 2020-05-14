@@ -30,9 +30,20 @@ $ssc-picker-height: 150px;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
     border-radius: 8px !important;
 }
-.ssc-card .MuiCardContent-root{
+.ssc-card.InfographicText .MuiCardContent-root{
     margin: 0;
     padding: 24px 16px;
+}
+.ssc-card .MuiCardContent-root{
+    margin: 0;
+    padding: 24px 35px;
+}
+
+.ssc-card.InfographicParagraph .MuiCardContent-root,
+.ssc-card.MuiCard-root.InfographicParagraph{
+    box-shadow: none;
+    background-color: unset;
+    padding-left: 0;
 }
 .ssc-picker-container{
     position: absolute;
@@ -41,23 +52,16 @@ $ssc-picker-height: 150px;
 }
 .ssc-main{
     padding: 40px;
-    max-width: 1116px;
+    max-width: 1198px;
     margin: auto;
     top: $ssc-picker-height;
     position: relative;
 }
 
-.ssc-info{
-    opacity: 0.8;
-    color: #000000;
-    font-size: 18px;
-    font-style: italic;
-    letter-spacing: 0;
-    line-height: 24px;
+.ssc-message{
+  font-family: "Noto Sans";
+  font-size: 26px;
+  letter-spacing: 0;
+  line-height: 36px;
+  text-align: center;
 }
-
-.circle:before {
-    content: ' \25CF';
-    font-size: 32px;
-    line-height: 0;
-  }

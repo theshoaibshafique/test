@@ -32,6 +32,7 @@ export default class MainLayout extends React.PureComponent {
       emmAccess: false,
       emmRequestAccess: false,
       emmPublishAccess: false,
+      sscAccess:false,
       isLoading: true
     }
 
@@ -47,6 +48,7 @@ export default class MainLayout extends React.PureComponent {
     this.getEMMRequestAccess();
     this.getEMMAccess();
     this.getEMMPublishAccess();
+    this.getSSCRequestAccess()
   };
 
   redirect() {
@@ -130,6 +132,24 @@ export default class MainLayout extends React.PureComponent {
       }
     })
   };
+  getSSCRequestAccess() {
+    fetch(process.env.SSC_ACCESS_API, {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + this.props.userToken,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.status === 200) {
+        response.json().then((result) => {
+          if (result) {
+            this.setState ({ sscAccess: true })
+          }
+        });
+      }
+    })
+  };
 
   getContainer() {
     if (!this.state.authenticated) {
@@ -160,7 +180,7 @@ export default class MainLayout extends React.PureComponent {
               {(this.state.userManagementAccess) &&
                   <Route path="/usermanagement" component={UserManagement}/>
               }
-              {(this.state.userManagementAccess || true) &&
+              {(this.state.sscAccess) &&
                   <Route path="/sschecklist" component={SSChecklist}/>
               }
               <Route path="/my-profile" component={MyProfile}/>

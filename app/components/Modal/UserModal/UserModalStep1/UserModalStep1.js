@@ -114,7 +114,7 @@ class UserModalStep1 extends React.Component {
             jsonBody = {
               "userName": result,
               "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit']
+              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit', 'Surgical Checklist']
             }
 
             globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // Insights
@@ -131,6 +131,10 @@ class UserModalStep1 extends React.Component {
 
             if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
               rolesNames.push('Enhanced M&M Edit');
+            }
+
+            if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist") >= 0) {
+              rolesNames.push('Surgical Checklist');
             }
 
             if (rolesNames.length > 0) {
@@ -229,7 +233,7 @@ class UserModalStep1 extends React.Component {
             jsonBody = {
               "userName": this.props.userValue.currentUser,
               "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit']
+              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit', 'Surgical Checklist']
             }
 
             globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // Insights
@@ -284,6 +288,10 @@ class UserModalStep1 extends React.Component {
 
             if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit") >= 0) {
               rolesNames.push('Enhanced M&M Edit');
+            }
+
+            if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist") >= 0) {
+              rolesNames.push('Surgical Checklist');
             }
 
             jsonBody = {
