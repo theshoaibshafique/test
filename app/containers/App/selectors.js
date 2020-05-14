@@ -48,16 +48,6 @@ const makeSelectFacilityRooms = () => createSelector(
   (globalState) => globalState.get('facilityRooms')
 );
 
-const makeSelectPublishedSurveys = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('publishedSurveys')
-);
-
-const makeSelectMostRecentSurvey = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('mostRecentSurvey')
-);
-
 const makeSelectUserFacility = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('userFacility')
@@ -83,9 +73,13 @@ const makeSelectJobTitle = () => createSelector(
   (globalState) => globalState.get('jobTitle')
 );
 
+const makeSelectEMMReportID = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('emmReportID')
+);
+
 export {
   selectGlobal,
-  makeSelectCurrentUser,
   makeSelectToken,
   makeSelectUserLoggedIn,
   makeSelectID,
@@ -94,11 +88,10 @@ export {
   makeSelectSpecialties,
   makeSelectComplications,
   makeSelectFacilityRooms,
-  makeSelectPublishedSurveys,
-  makeSelectMostRecentSurvey,
   makeSelectUserFacility,
   makeSelectFirstName,
   makeSelectLastName,
   makeSelectEmail,
-  makeSelectJobTitle
+  makeSelectJobTitle,
+  makeSelectEMMReportID
 };

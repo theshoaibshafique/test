@@ -35,3 +35,11 @@
 .Overlay {
   height: 100%;
 }
+
+.EMM-Report-Overlay {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: #F5F5F5;
+  z-index: 999;
+}

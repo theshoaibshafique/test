@@ -1,0 +1,52 @@
+@import '../../styles/global-styles.scss';
+
+$selectorHeight: 40px;
+
+.EMM-REPORTS {
+    padding: 24px 120px;
+    max-width: 1920px;
+    margin: 0px auto;
+    .close-emm {
+        cursor: pointer;
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        font-size: 14px;
+        color: #000
+    }
+}
+
+.EMM-Reports-Header {
+    height: 68px;
+    overflow: hidden;
+    img {
+        width: 200px;
+        left: 0px;
+    }
+}
+
+.EMM-Tab-Selector {
+    display: flex;
+    width: 410px;
+    height: $selectorHeight;
+    margin: 14px auto 0px;
+    .EMM-Tab {
+        width: 50%;
+        color: $blue;
+        border: 1px solid $blue;
+        background: $white;
+        line-height: $selectorHeight;
+        cursor: pointer;
+        &:first-child {
+            border-radius: 30px 0px 0px 30px;
+        }
+        &:last-child {
+            border-radius: 0px 30px 30px 0px;
+        }
+        &.selected {
+            color: $white;
+            background: $blue;
+            font-weight: bold;
+        }
+    }
+}

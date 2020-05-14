@@ -29,9 +29,11 @@ export default class ReportScore extends React.PureComponent {
                 <Grid item xs={12} className="score-title">
                     <span >
                         {this.props.title}
-                        <LightTooltip arrow title={this.props.tooltipText} placement="top" fontSize="small">
-                            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
-                        </LightTooltip>
+                        {this.props.tooltipText &&
+                            <LightTooltip arrow title={this.props.tooltipText} placement="top" fontSize="small">
+                                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                            </LightTooltip>
+                        }
                     </span>
                 </Grid>
                 <Grid item xs={12} >
