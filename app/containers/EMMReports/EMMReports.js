@@ -18,9 +18,26 @@ export default class EMMReports extends React.PureComponent {
     };
   }
 
-  goBack() {
-    this.props.goBack();
+  componentDidMount() {
+    this.loadAMPScript();
   };
+
+  loadAMPScript() {
+    if (document.querySelector('#amp-azure')) {
+      this.setState({ isScriptReady: true });
+    };
+    var scriptTag = document.createElement('script');
+    var linkTag = document.createElement('link');
+    linkTag.rel = 'stylesheet';
+    scriptTag.id = 'amp-azure';
+    scriptTag.src = '//amp.azure.net/libs/amp/2.1.5/azuremediaplayer.min.js';
+    linkTag.href = '//amp.azure.net/libs/amp/2.1.5/skins/' + "amp-default" + '/azuremediaplayer.min.css';
+    document.body.appendChild(scriptTag);
+    document.head.insertBefore(linkTag, document.head.firstChild);
+    scriptTag.onload = () => {
+      this.setState({ isScriptReady: true });
+    };
+  }
 
   switchTab(currentTab) {
     let { selectedEMMTab } = this.state;
@@ -51,7 +68,7 @@ export default class EMMReports extends React.PureComponent {
             </div>
           </div>
         </div>
-        {selectedEMMTab == 'overview' ? <EMMOverview /> : <EMMPhase />}
+        {selectedEMMTab == 'overview' ? <EMMOverview /> : <EMMPhase scriptReady={this.state.isScriptReady} />}
       </div>
     );
   }

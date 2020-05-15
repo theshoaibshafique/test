@@ -1,6 +1,7 @@
 import React from 'react';
 import './style.scss';
 import EMMPhaseSelector from '../EMMPhaseSelector';
+import AzureVideo from '../AzureVideo'
 import { Grid, Paper } from '@material-ui/core';
 
 export default class EMMPhase extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -18,6 +19,7 @@ export default class EMMPhase extends React.PureComponent { // eslint-disable-li
 
   render() {
     let { currentPhase, phases } = this.state;
+    let { scriptReady } = this.props;
     return (
       <div className="Emm-Phases">
         <h1>Case Timeline</h1>
@@ -26,7 +28,16 @@ export default class EMMPhase extends React.PureComponent { // eslint-disable-li
           phases={phases}
           changePhase={(phaseIndex)=>this.changePhase(phaseIndex)}
         />
-        <h2>{phases[currentPhase]}</h2>
+        <h2>{phases[currentPhase]}{scriptReady}</h2>
+          {(scriptReady) &&
+        <div className="flex phase-video-container">
+            <div className="phase-video"><AzureVideo
+              title={'testvideo'} /></div>
+            <div className="phase-events">
+
+            </div>
+        </div>
+          }
       </div>
     );
   }

@@ -12,6 +12,7 @@ export default class EMMPhaseSelector extends React.PureComponent { // eslint-di
   componentDidMount() {
 
   }
+
   render() {
     let { selectedPhase, phases } = this.props
     return (

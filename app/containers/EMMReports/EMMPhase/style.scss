@@ -15,4 +15,11 @@ $paddingSize: 40px;
     font-size: 26px;
     margin-bottom: 16px;
   }
+  .phase-video {
+    width: 975px;
+  }
+  .phase-events {
+    background: #FFFFFF;
+    width: calc(100% - 975px);
+  }
 }
