@@ -14,6 +14,7 @@ import HorizontalBarChart from '../../components/Report/HorizontalBarChart/Horiz
 import BarChartDetailed from '../../components/Report/BarChartDetailed/BarChartDetailed';
 import LoadingOverlay from 'react-loading-overlay';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
+import AreaChart from '../../components/Report/AreaChart/AreaChart';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -52,11 +53,11 @@ export default class EMMCases extends React.PureComponent {
     {
       "name": null,
       "reportName": null,
-      "title": "Engagement Score",
-      "subTitle": "View Engagement Details",
+      "title": "Monthly Trend",
+      "subTitle": "Score",
       "body": null,
-      "footer": "/engagementScore",
-      "description": "Checklist Score is scored out of 100 using current month data. It is calculated based on how each phase of the checklist is conducted.",
+      "footer": "Month",
+      "description": null,
       "total": null,
       "assets": null,
       "dataPoints": [
@@ -64,38 +65,44 @@ export default class EMMCases extends React.PureComponent {
           "title": null,
           "subTitle": null,
           "description": null,
-          "valueX": 52,
-          "valueY": null,
+          "valueX": 8,
+          "valueY": 29,
           "valueZ": null,
           "note": null
-        }
-      ],
-      "active": true,
-      "dataDate": "0001-01-01T00:00:00",
-      "hospitalName": null,
-      "facilityName": null,
-      "departmentName": null,
-      "roomName": null,
-      "procedureName": null,
-      "specialtyName": null
-    },
-    {
-      "name": null,
-      "reportName": null,
-      "title": "Quality Score",
-      "subTitle": "View Quality Details",
-      "body": null,
-      "footer": "/qualityScore",
-      "description": "Checklist Score is scored out of 100 using current month data. It is calculated based on how each phase of the checklist is conducted.",
-      "total": null,
-      "assets": null,
-      "dataPoints": [
+        },
         {
           "title": null,
           "subTitle": null,
           "description": null,
-          "valueX": 58,
-          "valueY": null,
+          "valueX": 9,
+          "valueY": 37,
+          "valueZ": null,
+          "note": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "valueX": 10,
+          "valueY": 41,
+          "valueZ": null,
+          "note": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "valueX": 11,
+          "valueY": 68,
+          "valueZ": null,
+          "note": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "valueX": 12,
+          "valueY": 70,
           "valueZ": null,
           "note": null
         }
@@ -466,7 +473,7 @@ export default class EMMCases extends React.PureComponent {
     globalFuncs.genericFetch(process.env.SSCTILE_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {
-
+          this.notLoading();
         } else {
           //TODO: remove hardcoded values
           result = this.temp[index];
@@ -543,13 +550,13 @@ export default class EMMCases extends React.PureComponent {
   renderTiles() {
     return this.state.reportData.map((tileGroup, index) => {
       return tileGroup.group.length > 1 ? (
-        <Grid item xs={12} >
+        <Grid item xs={12} key={`-${index}`}>
           <Card className="ssc-card">
             <CardContent>
               <Grid container spacing={0} alignItems="center">
                 {
-                  tileGroup.group.map((tile, index) => {
-                    return <Grid item xs={this.getTileSize(tile.tileType)}>{this.renderTile(tile)}</Grid>
+                  tileGroup.group.map((tile, i) => {
+                    return <Grid item xs={this.getTileSize(tile.tileType)} key={`${tile.tileType}${i}`}>{this.renderTile(tile)}</Grid>
                   })
                 }
               </Grid>
@@ -579,7 +586,9 @@ export default class EMMCases extends React.PureComponent {
       case 'BarChartDetailed':
         return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
       case 'InfographicParagraph':
-        return <InfographicParagraph {...tile}/>
+        return <InfographicParagraph {...tile} />
+      case 'AreaChart':
+        return <AreaChart {...tile} />
     }
   }
 
@@ -588,6 +597,7 @@ export default class EMMCases extends React.PureComponent {
       case 'List':
       case 'InfographicText':
         return 4;
+      case 'AreaChart':
       case 'BarChartDetailed':
         return 8;
       case 'InfographicParagraph':

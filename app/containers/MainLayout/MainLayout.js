@@ -182,6 +182,9 @@ export default class MainLayout extends React.PureComponent {
               {(this.state.sscAccess) &&
                   <Route path="/sschecklist" component={SSChecklist}/>
               }
+              {(this.state.sscAccess) &&
+                  <Route path="/complianceScore" render={(props) => <SSChecklist {...props} isAuthed={true} />}/>
+              }
               <Route path="/my-profile" component={MyProfile}/>
               <Route path="" component={NotFoundPage}/>
             </Switch> 
