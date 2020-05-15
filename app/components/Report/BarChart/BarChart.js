@@ -5,42 +5,30 @@ import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import moment from 'moment';
 
-export default class AreaChart extends React.PureComponent {
+export default class BarChart extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      chartID: 'areaChartDetailed',
+      chartID: 'barChart',
       chartData: {
         data: {
           x: 'x',
           columns: [], //Dynamically populated
-          type: 'area-spline',
-          labels: true
+          type: 'bar',
+          labels: {
+            format: (v, id, i, j) => this.createCustomLabel(v, id, i, j)
+          }
         }, // End data
-        oninit: () => {
-          const gradient = d3.select('.areaChartDetailed svg')
-            .append("linearGradient")
-            .attr('id', 'gradient')
-            .attr('x1', '40%').attr('y1', '0%')
-            .attr('x2', '50%').attr('y2', '100%');
-
-          gradient
-            .append('stop')
-            .attr('offset', '0%')
-            .attr('stop-color', '#A7E5FD')
-            .attr('stop-opacity', '1');
-
-          gradient
-            .append('stop')
-            .attr('offset', '100%')
-            .attr('stop-color', '#ffffff')
-            .attr('stop-opacity', '1');
-        },
         color: {
-          pattern: ['#004F6E', '#97E7B3', '#CFB9E4', '#004F6E']
+          pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C','#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
+        },
+        bar: {
+          width: 40,
+          space: .2
         },
         tooltip: {
-          show: false,
+          grouped: false,
+          contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
         },
         axis: {
           x: {
@@ -48,16 +36,17 @@ export default class AreaChart extends React.PureComponent {
               text: this.props.footer, //Dynamically populated
               position: 'outer-center'
             },
-            type: 'category'
+            type: 'category',
+            height:70
           },
           y: {
             label: {
               text: this.props.subTitle, //Dynamically populated
               position: 'outer-middle'
             },
-            max: 110,
+            max: 100,
             min: 0,
-            padding: { top: 0, bottom: 0 },
+            padding: { top: 10, bottom: 0 },
             tick: {
               format: function (d) { if (d % 20 == 0) return d }
             }
@@ -80,12 +69,6 @@ export default class AreaChart extends React.PureComponent {
         padding: { top: 8, bottom: 8 },
         legend: {
           show: false
-        },
-        size: {
-          height: 200
-        },
-        point: {
-          // show: false
         }
       }
     }
@@ -101,16 +84,15 @@ export default class AreaChart extends React.PureComponent {
       return;
     }
     let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
-    let legendData = {}
+    let zData = [];
+    let xData = []
     let formattedData = { x: [] };
-    dataPoints.map((point) => {
-      let month = moment().month(parseInt(point.valueX) - 1).format('MMM');
-      if (!formattedData.x.includes(month)) {
-        formattedData.x.push(month);
-      }
+    dataPoints.map((point, index) => {
+      formattedData.x.push(point.valueX);
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueY);
-      legendData[point.title] = point.subTitle;
+      zData.push(point.valueZ);
+      xData.push(point.valueX);
     });
     let columns = [];
     Object.entries(formattedData).map(([key, value]) => {
@@ -118,18 +100,32 @@ export default class AreaChart extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
-    this.setState({ chartData, legendData, isLoaded: true })
+    this.setState({ chartData, zData, xData, isLoaded: true })
+  }
+
+  createCustomLabel(v, id, i, j) {
+    return id && this.state.zData[i];
+  }
+
+  createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
+    let x = this.state.xData[d[0].x];
+    let z = this.state.zData[d[0].x];
+    return ReactDOMServer.renderToString(
+      <div className="MuiTooltip-tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div>{`${d[0].value}% ${x}`}</div>
+        <div>{`${z} occurences`}</div>
+      </div>);
   }
 
   render() {
     return (
-      <Grid container spacing={0} justify='center' className="area-chart" style={{ textAlign: 'center' }}>
+      <Grid container spacing={0} justify='center' className="bar-chart" style={{ textAlign: 'center' }}>
         <Grid item xs={12} className="chart-title">
           {this.props.title}
         </Grid>
 
         <Grid item xs={12}>
-          {<C3Chart className={this.state.chartID} {...this.state.chartData} />}
+          {this.state.isLoaded && <C3Chart className={this.state.chartID} ref="myChart" {...this.state.chartData} />}
         </Grid>
 
       </Grid>

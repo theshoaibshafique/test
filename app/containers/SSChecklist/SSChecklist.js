@@ -15,6 +15,7 @@ import BarChartDetailed from '../../components/Report/BarChartDetailed/BarChartD
 import LoadingOverlay from 'react-loading-overlay';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import AreaChart from '../../components/Report/AreaChart/AreaChart';
+import BarChart from '../../components/Report/BarChart/BarChart';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -118,205 +119,51 @@ export default class EMMCases extends React.PureComponent {
     },
     {
       "name": null,
-      "reportName": "SSC_MT",
-      "title": "Monthly Trend",
-      "subTitle": "Score (%)",
+      "reportName": null,
+      "title": "Missed Phases",
+      "subTitle": "% of Cases",
       "body": null,
-      "footer": "Month",
+      "footer": "Phases",
       "description": null,
       "total": null,
       "assets": null,
       "dataPoints": [
         {
-          "title": "Compliance Score",
-          "subTitle": "/complianceScore",
-          "description": null,
-          "valueY": "73",
-          "valueX": "5",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Engagement Score",
-          "subTitle": "/engagementScore",
-          "description": null,
-          "valueY": "83",
-          "valueX": "5",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Quality Score",
-          "subTitle": "/qualityScore",
-          "description": null,
-          "valueY": "79",
-          "valueX": "5",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Average",
+          "title": null,
           "subTitle": null,
           "description": null,
-          "valueY": "78",
-          "valueX": "5",
-          "valueZ": null,
+          "valueX": "Briefing",
+          "valueY": 20,
+          "valueZ": 200,
           "note": null
         },
         {
-          "title": "Compliance Score",
-          "subTitle": "/complianceScore",
-          "description": null,
-          "valueY": "83",
-          "valueX": "4",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Engagement Score",
-          "subTitle": "/engagementScore",
-          "description": null,
-          "valueY": "87",
-          "valueX": "4",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Quality Score",
-          "subTitle": "/qualityScore",
-          "description": null,
-          "valueY": "47",
-          "valueX": "4",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Average",
+          "title": null,
           "subTitle": null,
           "description": null,
-          "valueY": "72",
-          "valueX": "4",
-          "valueZ": null,
+          "valueX": "Time Out",
+          "valueY": 34,
+          "valueZ": 340,
           "note": null
         },
         {
-          "title": "Compliance Score",
-          "subTitle": "/complianceScore",
-          "description": null,
-          "valueY": "91",
-          "valueX": "3",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Engagement Score",
-          "subTitle": "/engagementScore",
-          "description": null,
-          "valueY": "77",
-          "valueX": "3",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Quality Score",
-          "subTitle": "/qualityScore",
-          "description": null,
-          "valueY": "86",
-          "valueX": "3",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Average",
+          "title": null,
           "subTitle": null,
           "description": null,
-          "valueY": "84",
-          "valueX": "3",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Compliance Score",
-          "subTitle": "/complianceScore",
-          "description": null,
-          "valueY": "71",
-          "valueX": "2",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Engagement Score",
-          "subTitle": "/engagementScore",
-          "description": null,
-          "valueY": "67",
-          "valueX": "2",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Quality Score",
-          "subTitle": "/qualityScore",
-          "description": null,
-          "valueY": "89",
-          "valueX": "2",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Average",
-          "subTitle": null,
-          "description": null,
-          "valueY": "75",
-          "valueX": "2",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Compliance Score",
-          "subTitle": "/complianceScore",
-          "description": null,
-          "valueY": "92",
-          "valueX": "1",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Engagement Score",
-          "subTitle": "/engagementScore",
-          "description": null,
-          "valueY": "78",
-          "valueX": "1",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Quality Score",
-          "subTitle": "/qualityScore",
-          "description": null,
-          "valueY": "93",
-          "valueX": "1",
-          "valueZ": null,
-          "note": null
-        },
-        {
-          "title": "Average",
-          "subTitle": null,
-          "description": null,
-          "valueY": "87",
-          "valueX": "1",
-          "valueZ": null,
+          "valueX": "Postop Debrief",
+          "valueY": 36,
+          "valueZ": 360,
           "note": null
         }
       ],
       "active": true,
-      "dataDate": "2020-05-01T00:00:00-04:00",
-      "monthly": false,
+      "dataDate": "0001-01-01T00:00:00",
       "hospitalName": null,
-      "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-      "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-      "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-      "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-      "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+      "facilityName": null,
+      "departmentName": null,
+      "roomName": null,
+      "procedureName": null,
+      "specialtyName": null
     },
 
     {
@@ -370,6 +217,54 @@ export default class EMMCases extends React.PureComponent {
     },
     {
       "name": null,
+      "reportName": null,
+      "title": "Missed Timing",
+      "subTitle": "% of Cases",
+      "body": null,
+      "footer": "Phases",
+      "description": null,
+      "total": null,
+      "assets": null,
+      "dataPoints": [
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "valueX": "Briefing After Skin Incision",
+          "valueY": 30,
+          "valueZ": 300,
+          "note": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "valueX": "Time Out After Skin Incision",
+          "valueY": 34,
+          "valueZ": 340,
+          "note": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "valueX": "Postop Debrief Before/During Skin Closing",
+          "valueY": 30,
+          "valueZ": 300,
+          "note": null
+        }
+      ],
+      "active": true,
+      "dataDate": "0001-01-01T00:00:00",
+      "hospitalName": null,
+      "facilityName": null,
+      "departmentName": null,
+      "roomName": null,
+      "procedureName": null,
+      "specialtyName": null
+    },
+    {
+      "name": null,
       "reportName": "SSC_CC",
       "title": null,
       "subTitle": null,
@@ -406,7 +301,7 @@ export default class EMMCases extends React.PureComponent {
       pendingTileCount: 0,
       tileRequest: [],
       reportData: [],
-
+      chartColours: ['#FFDB8C', '#FF7D7D','#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E'],
 
       month: moment(),
       selectedOperatingRoom: "",
@@ -484,7 +379,7 @@ export default class EMMCases extends React.PureComponent {
           if (moment(tileRequest.startDate).isSame(this.state.month, 'month') && rawData.findIndex((t) => (t.tileOrder == result.tileOrder && result.groupOrder == t.groupOrder) < 0)) {
             rawData.push(result);
           }
-          this.setState({ rawData, pendingTileCount: this.state.pendingTileCount - 1 },
+          this.setState({ rawData, pendingTileCount: this.state.pendingTileCount - 1, [result.tileType]: (this.state[result.tileType] ? this.state[result.tileType] + 1 : 1) },
             () => {
               if (this.state.pendingTileCount <= 0) {
                 let reportData = this.state.rawData.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
@@ -589,6 +484,8 @@ export default class EMMCases extends React.PureComponent {
         return <InfographicParagraph {...tile} />
       case 'AreaChart':
         return <AreaChart {...tile} />
+      case 'BarChart':
+        return <BarChart pattern={this.state.chartColours.splice((this.state[tile.tileType]-1) % this.state.chartColours.length)} {...tile} />
     }
   }
 
@@ -597,6 +494,7 @@ export default class EMMCases extends React.PureComponent {
       case 'List':
       case 'InfographicText':
         return 4;
+      case 'BarChart':
       case 'AreaChart':
       case 'BarChartDetailed':
         return 8;
