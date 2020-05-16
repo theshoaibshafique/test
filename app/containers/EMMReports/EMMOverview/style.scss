@@ -7,8 +7,20 @@ $paddingSize: 40px;
 }
 
 .Emm-Paper {
-  @include flex-center;
   text-align: center;
   padding: $paddingSize;
   border-radius: 8px;
+  h2 {
+    margin: 0px;
+    font-size: 26px;
+    color: #000;
+    opacity: 0.8;
+  }
+}
+
+.SSC-Circles {
+  @include flex-center;
+  & > div {
+    width: calc(100% / 3);
+  }
 }

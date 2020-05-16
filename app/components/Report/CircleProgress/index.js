@@ -51,13 +51,13 @@ export default function CircleProgress(props) {
           variant="static"
           value={100}
           className={classes.topcircle}
-          size={175}
+          size={props.size}
           thickness={5}
         />
         <CircularProgress
           variant="static"
           className={classes.bottomcircle}
-          size={175}
+          size={props.size}
           thickness={5}
           {...props}
         />
