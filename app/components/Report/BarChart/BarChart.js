@@ -20,7 +20,7 @@ export default class BarChart extends React.PureComponent {
           }
         }, // End data
         color: {
-          pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C','#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
+          pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
         },
         bar: {
           width: 40,
@@ -37,7 +37,7 @@ export default class BarChart extends React.PureComponent {
               position: 'outer-center'
             },
             type: 'category',
-            height:70
+            height: 70
           },
           y: {
             label: {
@@ -111,7 +111,7 @@ export default class BarChart extends React.PureComponent {
     let x = this.state.xData[d[0].x];
     let z = this.state.zData[d[0].x];
     return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{`${d[0].value}% ${x}`}</div>
         <div>{`${z} occurences`}</div>
       </div>);
@@ -127,7 +127,6 @@ export default class BarChart extends React.PureComponent {
         <Grid item xs={12}>
           {this.state.isLoaded && <C3Chart className={this.state.chartID} ref="myChart" {...this.state.chartData} />}
         </Grid>
-
       </Grid>
     );
   }
