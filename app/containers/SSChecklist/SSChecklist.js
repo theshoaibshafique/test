@@ -16,6 +16,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import AreaChart from '../../components/Report/AreaChart/AreaChart';
 import BarChart from '../../components/Report/BarChart/BarChart';
+import ListDetailed from '../../components/Report/ListDetailed/ListDetailed';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -169,8 +170,8 @@ export default class EMMCases extends React.PureComponent {
     {
       "name": null,
       "reportName": "SSC_TS",
-      "title": "Top 3 Specialties",
-      "subTitle": "by Average Score",
+      "title": "Specialties of Interest",
+      "subTitle": "by total missed phases and timing",
       "body": null,
       "footer": null,
       "description": null,
@@ -181,7 +182,43 @@ export default class EMMCases extends React.PureComponent {
           "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
           "subTitle": "",
           "description": "",
-          "valueX": "89",
+          "valueX": "321",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+          "subTitle": "E4E332CA-4908-4469-9F89-47895E54034D",
+          "description": "",
+          "valueX": "100",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+          "subTitle": "823774C6-5583-47B0-8397-1B2EBDA40794",
+          "description": "",
+          "valueX": "67",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+          "subTitle": "02A56FCE-67AB-4DD5-A048-F9B34FCFE00A",
+          "description": "",
+          "valueX": "66",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+          "subTitle": "Other Procedures",
+          "description": "",
+          "valueX": "88",
           "valueY": "",
           "valueZ": "",
           "note": ""
@@ -190,16 +227,43 @@ export default class EMMCases extends React.PureComponent {
           "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
           "subTitle": "",
           "description": "",
-          "valueX": "86",
+          "valueX": "300",
           "valueY": "",
           "valueZ": "",
           "note": ""
         },
         {
-          "title": "1E84E235-220B-4296-8BA2-9D6EA0FCE370",
-          "subTitle": "",
+          "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
+          "subTitle": "02A56FCE-67AB-4DD5-A048-F9B34FCFE00A",
           "description": "",
-          "valueX": "80",
+          "valueX": "111",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
+          "subTitle": "A3D407ED-DDDB-4F92-849C-C4C84E05659A",
+          "description": "",
+          "valueX": "82",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
+          "subTitle": "C1294BFB-E752-443E-AEA0-3C886512A4CF",
+          "description": "",
+          "valueX": "75",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
+          "subTitle": "Other procedures",
+          "description": "",
+          "valueX": "32",
           "valueY": "",
           "valueZ": "",
           "note": ""
@@ -486,12 +550,15 @@ export default class EMMCases extends React.PureComponent {
         return <AreaChart {...tile} />
       case 'BarChart':
         return <BarChart pattern={this.state.chartColours.splice((this.state[tile.tileType]-1) % this.state.chartColours.length)} {...tile} />
+      case 'ListDetailed':
+        return <ListDetailed {...tile} specialties={this.props.specialties}/>
     }
   }
 
   getTileSize(tileType) {
     switch (tileType) {
       case 'List':
+      case 'ListDetailed':
       case 'InfographicText':
         return 4;
       case 'BarChart':
@@ -537,7 +604,7 @@ export default class EMMCases extends React.PureComponent {
           active={this.state.isLoading}
           spinner
           text='Loading your content...'
-          className="Overlay"
+          // className="Overlay"
           styles={{
             overlay: (base) => ({
               ...base,
