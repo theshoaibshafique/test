@@ -1,0 +1,59 @@
+@import '../../../styles/global-styles';
+
+.bar-chart .chart-title{
+  font-size: 26px;
+  letter-spacing: 0;
+  line-height: 36px;
+  margin-bottom: 16px !important;
+}
+
+.chart-subtitle{
+  font-size: 14px;
+  font-style: italic;
+  letter-spacing: 0;
+  line-height: 19px;
+  margin-bottom: 32px;
+}
+.chart-score{
+  color: #005979;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 24px;
+  text-align: right;
+}
+
+.bar-chart .c3-axis .tick line{
+  opacity: 0;
+}
+
+.bar-chart .c3-text{
+  fill: #004F6E !important;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 24px;
+}
+.bar-chart .c3-axis,
+.c3-axis-y-label,
+.c3-axis-x-label {
+  font-family: "Noto Sans";
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 19px;
+}
+.c3-axis-x .tick{
+  font-weight: bold;
+}
+.bar-chart .c3 path, 
+.bar-chart .c3 line,
+.bar-chart .c3-xgrid,
+.bar-chart .c3-ygrid{
+  stroke-dasharray: unset;
+  stroke: #EAEAEA;
+}
+.bar-chart .c3-xgrid-focus{
+  visibility: hidden !important;
+}

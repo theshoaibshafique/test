@@ -181,7 +181,10 @@ export default class MainLayout extends React.PureComponent {
                   <Route path="/usermanagement" component={UserManagement}/>
               }
               {(this.state.sscAccess) &&
-                  <Route path="/sschecklist" component={SSChecklist}/>
+                  <Route path="/sschecklist" render={(props) => <SSChecklist {...props} reportType={"SurgicalSafetyChecklistReport"} />}/>
+              }
+              {(this.state.sscAccess) &&
+                  <Route path="/complianceScore" render={(props) => <SSChecklist {...props} reportType={"ComplianceScoreReport"} />}/>
               }
               <Route path="/my-profile" component={MyProfile}/>
               <Route path="" component={NotFoundPage}/>

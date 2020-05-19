@@ -43,17 +43,26 @@ export default class BarChartDetailed extends React.PureComponent {
               text: this.props.subTitle, //Dynamically populated
               position: 'outer-middle'
             },
-            max: 100,
+            // max: 110,
             min: 0,
-            padding: { top: 0, bottom: 0 },
+            padding: { top: 10, bottom: 0 },
             tick: {
-              count: 6
+              format: function (d) { if (d % 20 == 0) return d }
             }
           }
         },
-        grid :{
-          y:{
-            show:true
+        grid: {
+          lines: {
+            front: false,
+          },
+          y: {
+            lines: [
+              {value:20},
+              {value:40},
+              {value:60},
+              {value:80},
+              {value:100},
+            ]
           }
         },
         padding: { top: 8, bottom: 8 },
