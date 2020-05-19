@@ -421,8 +421,8 @@ export default class EMMCases extends React.PureComponent {
         "title": "Compliance Score",
         "subTitle": "View Compliance Details",
         "body": null,
-        "footer": "/complianceScore",
-        "description": "Checklist Score is scored out of 100 using current month data. It is calculated based on how each phase of the checklist is conducted.",
+        "footer": null,
+        "description": null,
         "total": null,
         "assets": null,
         "dataPoints": [
