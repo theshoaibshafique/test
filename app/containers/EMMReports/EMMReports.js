@@ -6,12 +6,15 @@ import Icon from '@mdi/react'
 import { mdiClose, mdiInformationOutline  } from '@mdi/js';
 import globalFuncs from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
-import EMMPhase from './EMMPhase'
+import EMMPhaseAnalysis from './EMMPhaseAnalysis'
+import emmData from '../../src/emm.json';
 import { Drawer, List, ListItem, ListItemText, Grid, Typography, Card, Paper } from '@material-ui/core';
 
 export default class EMMReports extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    this.props.setEMMReport(emmData)
 
     this.state = {
       selectedEMMTab: 'overview'
@@ -50,25 +53,30 @@ export default class EMMReports extends React.PureComponent {
 
   render() {
     let { selectedEMMTab } = this.state;
+    let { emmReportData } = this.props;
     return (
       <div className="EMM-REPORTS full-height relative">
-        <div className="close-emm" onClick={()=>this.props.hideEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
-        <div className="EMM-Reports-Header relative center-align">
-          <img className="absolute" src={logo} />
-          <div className="EMM-Tab-Selector">
-            <div
-              className={`EMM-Tab center-align ${(selectedEMMTab == 'overview') && 'selected'}`}
-              onClick={()=>this.switchTab('overview')}>
-                Overview
+        {(emmReportData) &&
+          <div>
+            <div className="close-emm" onClick={()=>this.props.hideEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
+            <div className="EMM-Reports-Header relative center-align">
+              <img className="absolute" src={logo} />
+              <div className="EMM-Tab-Selector">
+                <div
+                  className={`EMM-Tab center-align ${(selectedEMMTab == 'overview') && 'selected'}`}
+                  onClick={()=>this.switchTab('overview')}>
+                    Overview
+                </div>
+                <div
+                  className={`EMM-Tab center-align ${(selectedEMMTab == 'phase') && 'selected'}`}
+                  onClick={()=>this.switchTab('phase')}>
+                    Phase Analysis
+                </div>
+              </div>
             </div>
-            <div
-              className={`EMM-Tab center-align ${(selectedEMMTab == 'phase') && 'selected'}`}
-              onClick={()=>this.switchTab('phase')}>
-                Phase Analysis
-            </div>
+            {selectedEMMTab == 'overview' ? <EMMOverview /> : <EMMPhaseAnalysis scriptReady={this.state.isScriptReady} />}
           </div>
-        </div>
-        {selectedEMMTab == 'overview' ? <EMMOverview /> : <EMMPhase scriptReady={this.state.isScriptReady} />}
+        }
       </div>
     );
   }

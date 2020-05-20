@@ -18,6 +18,7 @@ import {
   FACILITY_ROOMS,
   SHOWEMMREPORT,
   HIDEEMMREPORT,
+  SETEMMREPORT,
   SPECIALTIES,
   COMPLICATIONS,
 } from './constants';
@@ -32,6 +33,8 @@ const initialState = fromJS({
   email: null,
   jobTitle: null,
   userFacility: null,
+  emmReportID: null,
+  emmReportData: null,
   facilityRooms: [],
   specialties: [],
   complications: [],
@@ -67,6 +70,9 @@ function appReducer(state = initialState, action) {
     case HIDEEMMREPORT:
       return state
         .set('emmReportID', null)
+    case SETEMMREPORT:
+      return state
+        .set('emmReportData', action.reportData)
     default:
       return state;
   }

@@ -33,6 +33,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
   }
   render() {
     let { circleSize, sscCircles } = this.state;
+    let { emmReportData } = this.props;
     return (
       <div className="Emm-Reports-Overview">
         <Grid container spacing={3}>
@@ -67,7 +68,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                 <Paper className="Emm-Paper">
                   <ReportScore
                     title="Number of Events"
-                    score="7" />
+                    score={emmReportData.NumberOfEvents.DataPoints[0].ValueX} />
                 </Paper>
               </Grid>
               <Grid item xs={12}>

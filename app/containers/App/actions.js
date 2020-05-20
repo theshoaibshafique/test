@@ -23,6 +23,7 @@ import {
   HIDEEMMREPORT,
   SPECIALTIES,
   COMPLICATIONS,
+  SETEMMREPORT,
 } from './constants';
 
 /**
@@ -105,5 +106,12 @@ export function showEMMReport(reportID) {
 export function hideEMMReport() {
   return {
     type: HIDEEMMREPORT
+  }
+}
+
+export function setEMMReport(reportData) {
+  return {
+    type: SETEMMREPORT,
+    reportData
   }
 }
