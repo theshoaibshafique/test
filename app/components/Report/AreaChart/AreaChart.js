@@ -4,10 +4,14 @@ import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import moment from 'moment';
+import LoadingOverlay from 'react-loading-overlay';
 
 export default class AreaChart extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    this.chartRef = React.createRef();
+
     this.state = {
       chartID: 'areaChartDetailed',
       chartData: {
@@ -92,6 +96,12 @@ export default class AreaChart extends React.PureComponent {
 
   };
 
+  componentDidUpdate(prevProps) {
+    if (!prevProps.dataPoints && this.props.dataPoints) {
+      this.generateChartData();
+    }
+  }
+
   componentDidMount() {
     this.generateChartData();
   }
@@ -118,21 +128,46 @@ export default class AreaChart extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
+
+    chartData.axis.x.label.text = this.props.footer;
+    chartData.axis.y.label.text = this.props.subTitle;
+
+    let chart = this.chartRef.current && this.chartRef.current.chart;
+    chart && chart.load(chartData.data);
+
     this.setState({ chartData, legendData, isLoaded: true })
   }
 
   render() {
     return (
-      <Grid container spacing={0} justify='center' className="area-chart" style={{ textAlign: 'center' }}>
-        <Grid item xs={12} className="chart-title">
-          {this.props.title}
-        </Grid>
+      <LoadingOverlay
+        active={!this.props.dataPoints}
+        spinner
+        className="overlays"
+        styles={{
+          overlay: (base) => ({
+            ...base,
+            background: 'none',
+            color: '#000'
+          }),
+          spinner: (base) => ({
+            ...base,
+            '& svg circle': {
+              stroke: 'rgba(0, 0, 0, 0.5)'
+            }
+          })
+        }}
+      >
+        <Grid container spacing={0} justify='center' className="area-chart" style={{ textAlign: 'center' }}>
+          <Grid item xs={12} className="chart-title">
+            {this.props.title}
+          </Grid>
 
-        <Grid item xs={12}>
-          {<C3Chart className={this.state.chartID} {...this.state.chartData} />}
+          <Grid item xs={12}>
+            {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+          </Grid>
         </Grid>
-
-      </Grid>
+      </LoadingOverlay>
     );
   }
 }

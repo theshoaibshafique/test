@@ -4,10 +4,13 @@ import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import moment from 'moment';
+import LoadingOverlay from 'react-loading-overlay';
 
 export default class BarChartDetailed extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.chartRef = React.createRef();
+
     this.state = {
       chartID: 'barChartDetailed',
       chartData: {
@@ -57,11 +60,11 @@ export default class BarChartDetailed extends React.PureComponent {
           },
           y: {
             lines: [
-              {value:20},
-              {value:40},
-              {value:60},
-              {value:80},
-              {value:100},
+              { value: 20 },
+              { value: 40 },
+              { value: 60 },
+              { value: 80 },
+              { value: 100 },
             ]
           }
         },
@@ -69,12 +72,16 @@ export default class BarChartDetailed extends React.PureComponent {
         legend: {
           show: false
         },
-        onrendered: () => this.createCustomLegend(`.${this.state.chartID}`),
+        onrendered: () => this.state.legendData && this.createCustomLegend(`.${this.state.chartID}`),
       }
     }
 
   };
-
+  componentDidUpdate(prevProps) {
+    if (!prevProps.dataPoints && this.props.dataPoints) {
+      this.generateChartData();
+    }
+  }
   componentDidMount() {
     this.generateChartData();
   }
@@ -101,6 +108,12 @@ export default class BarChartDetailed extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
+
+    chartData.axis.x.label.text = this.props.footer;
+    chartData.axis.y.label.text = this.props.subTitle;
+
+    let chart = this.chartRef.current && this.chartRef.current.chart;
+    chart && chart.load(chartData.data);
     this.setState({ chartData, legendData, isLoaded: true })
   }
 
@@ -113,10 +126,10 @@ export default class BarChartDetailed extends React.PureComponent {
   }
 
   createCustomLegend(chartClass) {
-    if (!this.refs.myChart || !d3.select(chartClass).select('.legend').empty()) {
+    if (!this.chartRef.current || !d3.select(chartClass).select('.legend').empty()) {
       return;
     }
-    let chart = this.refs.myChart.chart;
+    let chart = this.chartRef.current.chart;
     d3.select(chartClass).insert('div').attr('class', 'legend')
       .html(ReactDOMServer.renderToString(
         <div className="bar-chart-detailed-legend">
@@ -132,7 +145,7 @@ export default class BarChartDetailed extends React.PureComponent {
                 <div className="legend-title">
                   <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
                 </div>
-                <div className={`link ${value.substring(1)}`} >
+                <div className={`link ${value && value.substring(1)}`} >
                   <a>Learn More</a>
                 </div>
               </div>)
@@ -143,7 +156,7 @@ export default class BarChartDetailed extends React.PureComponent {
         Object.entries(this.state.legendData).map(([id, value], index) => {
           if (!value) { return };
           d3.select(`.${value.substring(1)}`)
-            .on('click', (y)=> {
+            .on('click', (y) => {
               this.redirect(value);
             });
         })
@@ -155,16 +168,35 @@ export default class BarChartDetailed extends React.PureComponent {
 
   render() {
     return (
-      <Grid container spacing={0} justify='center' className="bar-chart-detailed" style={{ textAlign: 'center', marginBottom: 50 }}>
-        <Grid item xs={12} className="chart-title">
-          {this.props.title}
-        </Grid>
+      <LoadingOverlay
+        active={!this.props.dataPoints}
+        spinner
+        className="overlays"
+        styles={{
+          overlay: (base) => ({
+            ...base,
+            background: 'none',
+            color: '#000'
+          }),
+          spinner: (base) => ({
+            ...base,
+            '& svg circle': {
+              stroke: 'rgba(0, 0, 0, 0.5)'
+            }
+          })
+        }}
+      >
+        <Grid container spacing={0} justify='center' className="bar-chart-detailed" style={{ textAlign: 'center',minHeight:320, marginBottom: 50 }}>
+          <Grid item xs={12} className="chart-title">
+            {this.props.title}
+          </Grid>
 
-        <Grid item xs={12}>
-          {this.state.isLoaded && <C3Chart className={this.state.chartID} ref="myChart" {...this.state.chartData} />}
-        </Grid>
+          <Grid item xs={12}>
+            {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+          </Grid>
 
-      </Grid>
+        </Grid>
+      </LoadingOverlay>
     );
   }
 }

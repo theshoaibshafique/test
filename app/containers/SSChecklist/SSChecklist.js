@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import 'c3/c3.css';
 import './style.scss';
@@ -757,7 +758,7 @@ export default class EMMCases extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.reportType != this.props.reportType) {
       this.temp = this.getTemp();
-      this.setState({ reportType: this.props.reportType }, () => {
+      this.setState({ reportType: this.props.reportType, reportData: []}, () => {
         this.getReportLayout();
       })
     }
@@ -769,24 +770,33 @@ export default class EMMCases extends React.PureComponent {
   };
 
   getReportLayout() {
-    this.setState({ isLoading: true, rawData: [], tileTypeCount: {}, reportData: [] },
+    this.state.source && this.state.source.cancel('Cancel outdated report calls');
+    this.setState({ isLoading: true, tileTypeCount: {}, source:axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType
         };
-        globalFunctions.genericFetch(process.env.SSC_API, 'post', this.props.userToken, jsonBody)
+        globalFunctions.axiosFetch(process.env.SSC_API, this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
+            result = result.data;
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
               if (result.tileRequest && result.tileRequest.length > 0) {
-                // result.tileRequest.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
-                this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, tileRequest: result.tileRequest },
+                let reportData = this.groupTiles(result.tileRequest.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
+                let tileRequest = result.tileRequest.filter((tile)=>{
+                  return moment(tile.startDate).isSame(this.state.month, 'month');
+                });
+                this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, reportData, tileRequest },
                   () => {
-                    // let x = this.groupTiles(result.tileRequest)
-                    result.tileRequest.map((tile, index) => {
-                      this.getTile(tile, index);
-                    });
+                    //TODO: remove 'index' for hardcoded list 
+                    let index = 0;
+                    this.state.reportData.map((tileGroup, i) => {
+                      tileGroup.group.map((tile, j) => {
+                        index+=1;
+                        this.getTile(tile,i,j, index);
+                      });
+                    })
 
                   });
               } else {
@@ -796,11 +806,14 @@ export default class EMMCases extends React.PureComponent {
             } else {
               this.notLoading();
             }
+          }).catch((error) => {
+            this.state.source && this.state.source.cancel('Things have changed');
+            // console.error("ssc",error)
           });
       });
   };
 
-  getTile(tileRequest, index) {
+  getTile(tileRequest,i,j, index) {
     let jsonBody = {
       "facilityName": tileRequest.facilityName,
       "reportName": tileRequest.reportName,
@@ -818,13 +831,13 @@ export default class EMMCases extends React.PureComponent {
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
 
-    globalFuncs.genericFetch(process.env.SSCTILE_API, 'post', this.props.userToken, jsonBody)
+    globalFuncs.axiosFetch(process.env.SSCTILE_API, this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
         if (result === 'error' || result === 'conflict') {
           this.notLoading();
         } else {
           //TODO: remove hardcoded values
-          result = this.temp[index];
+          result = this.temp[index-1];
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
@@ -833,21 +846,21 @@ export default class EMMCases extends React.PureComponent {
           tileTypeCount[result.tileType] = tileTypeCount[result.tileType] ? tileTypeCount[result.tileType] + 1 : 1;
           result.tileTypeCount = tileTypeCount[result.tileType];
 
-          let rawData = this.state.rawData || [];
-          if (moment(tileRequest.startDate).isSame(this.state.month, 'month') && rawData.findIndex((t) => (t.tileOrder == result.tileOrder && result.groupOrder == t.groupOrder) < 0)) {
-            rawData.push(result);
+          let reportData = this.state.reportData;
+          if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
+            reportData[i].group[j] = result;
           }
-          this.setState({ rawData, pendingTileCount: this.state.pendingTileCount - 1, tileTypeCount },
+          this.setState({ reportData,  pendingTileCount: this.state.pendingTileCount - 1, tileTypeCount },
             () => {
               if (this.state.pendingTileCount <= 0) {
-                let reportData = this.state.rawData.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
-                this.setState({ reportData: this.groupTiles(reportData) },
-                  () => {
-                    this.notLoading();
-                  });
+                // let reportData = this.state.rawData.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
+                this.notLoading();
               }
             });
         }
+      }).catch((error) => {
+        this.setState({pendingTileCount:this.state.pendingTileCount-1})
+        // console.error("tile",error)
       });
   }
 
@@ -1019,7 +1032,7 @@ export default class EMMCases extends React.PureComponent {
           }}
         >
           <Grid container spacing={3} className="ssc-main">
-            {!this.state.tileRequest.length || this.state.loading || !this.state.rawData.length ?
+            {this.state.loading || !this.state.tileRequest.length ?
               <Grid item xs={12} className="ssc-message">
                 No data available this month
             </Grid> :

@@ -22,18 +22,18 @@ class MonthPicker extends React.Component {
 
 
   decrementMonth = () => {
-    const month = this.state.month.clone();
+    const month = this.state.month.clone().subtract(1, 'month');
     this.setState({
-      month: month.subtract(1, 'month')
+      month: month
     }, () => {
       this.props.updateMonth(month);
     });
   };
 
   incrementMonth = () => {
-    const month = this.state.month.clone();
+    const month = this.state.month.clone().add(1, 'month');
     this.setState({
-      month: month.add(1, 'month')
+      month: month
     }, () => {
       this.props.updateMonth(month);
     });

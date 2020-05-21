@@ -4,10 +4,14 @@ import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import moment from 'moment';
+import LoadingOverlay from 'react-loading-overlay';
 
 export default class BarChart extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    this.chartRef = React.createRef();
+
     this.state = {
       chartID: 'barChart',
       chartData: {
@@ -20,7 +24,7 @@ export default class BarChart extends React.PureComponent {
           }
         }, // End data
         color: {
-          pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C','#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
+          pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
         },
         bar: {
           width: 40,
@@ -37,7 +41,7 @@ export default class BarChart extends React.PureComponent {
               position: 'outer-center'
             },
             type: 'category',
-            height:70
+            height: 70
           },
           y: {
             label: {
@@ -75,8 +79,14 @@ export default class BarChart extends React.PureComponent {
 
   };
 
+  componentDidUpdate(prevProps) {
+    if (!prevProps.dataPoints && this.props.dataPoints) {
+      this.generateChartData();
+    }
+  }
+
   componentDidMount() {
-    this.generateChartData();
+    // this.generateChartData();
   }
 
   generateChartData() {
@@ -100,11 +110,17 @@ export default class BarChart extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
+
+    chartData.axis.x.label.text = this.props.footer;
+    chartData.axis.y.label.text = this.props.subTitle;
+    let chart = this.chartRef.current && this.chartRef.current.chart;
+    chart && chart.load(chartData);
+
     this.setState({ chartData, zData, xData, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
-    return id && this.state.zData[i];
+    return id && this.state.zData && this.state.zData[i];
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
@@ -119,16 +135,34 @@ export default class BarChart extends React.PureComponent {
 
   render() {
     return (
-      <Grid container spacing={0} justify='center' className="bar-chart" style={{ textAlign: 'center' }}>
-        <Grid item xs={12} className="chart-title">
-          {this.props.title}
-        </Grid>
+      <LoadingOverlay
+        active={!this.props.dataPoints}
+        spinner
+        className="overlays"
+        styles={{
+          overlay: (base) => ({
+            ...base,
+            background: 'none',
+            color: '#000'
+          }),
+          spinner: (base) => ({
+            ...base,
+            '& svg circle': {
+              stroke: 'rgba(0, 0, 0, 0.5)'
+            }
+          })
+        }}
+      >
+        <Grid container spacing={0} justify='center' className="bar-chart" style={{ textAlign: 'center',minHeight:320 }}>
+          <Grid item xs={12} className="chart-title">
+            {this.props.title}
+          </Grid>
 
-        <Grid item xs={12}>
-          {this.state.isLoaded && <C3Chart className={this.state.chartID} ref="myChart" {...this.state.chartData} />}
+          <Grid item xs={12}>
+            {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+          </Grid>
         </Grid>
-
-      </Grid>
+      </LoadingOverlay>
     );
   }
 }
