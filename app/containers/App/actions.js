@@ -19,10 +19,10 @@ import {
   USER_TOKEN,
   USER_FACILITY,
   FACILITY_ROOMS,
+  SHOWEMMREPORT,
+  HIDEEMMREPORT,
   SPECIALTIES,
   COMPLICATIONS,
-  PUBLISHEDSURVEYS,
-  RECENTPUBLISHEDSURVEYS
 } from './constants';
 
 /**
@@ -95,30 +95,15 @@ export function setComplications(complications) {
   };
 }
 
-/**
- * Save published surveys list
- *
- * @param  {array} publishedSurveys list of published surveys
- *
- * @return {object}    An action object with a type of PUBLISHEDSURVEYS
- */
-export function setPublishedSurveys(publishedSurveys) {
+export function showEMMReport(reportID) {
   return {
-    type: PUBLISHEDSURVEYS,
-    publishedSurveys
+    type: SHOWEMMREPORT,
+    reportID
   };
 }
 
-/**
- * Save most recent published survey
- *
- * @param  {object} mostRecentSurvey most recent published survey
- *
- * @return {object}    An action object with a type of RECENTPUBLISHEDSURVEYS
- */
-export function setMostRecentPublishedSurvey(mostRecentSurvey) {
+export function hideEMMReport() {
   return {
-    type: RECENTPUBLISHEDSURVEYS,
-    mostRecentSurvey
-  };
+    type: HIDEEMMREPORT
+  }
 }

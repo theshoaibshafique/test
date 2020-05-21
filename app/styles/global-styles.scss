@@ -6,6 +6,7 @@
 }
 
 $dark-blue : #004f6e;
+$blue: #028CC8;
 $light-blue : #3db3e3;
 $dark-green : #009483;
 $light-green : #65c7c7;
@@ -19,6 +20,7 @@ $brown: #70450d;
 $pink: #cf0ab2;
 $grey: #A2A2A2;
 $red: #C1272D;
+$white: #FFFFFF;
 
 $header-height: 2.5em;
 $nav-width: 240px;
@@ -117,6 +119,12 @@ label {
   &.flex-column { flex-direction: column }
 }
 
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .triangle {
     content: ' ';
     display: block;
@@ -179,7 +187,7 @@ a hr { border-bottom: none; }
   letter-spacing: 0;
   line-height: 19px;
   padding: 0;
-  cursor: pointer;    
+  cursor: pointer;
 }
 
 .link:hover{

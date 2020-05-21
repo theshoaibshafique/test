@@ -16,10 +16,10 @@ import {
   USER_TOKEN,
   USER_FACILITY,
   FACILITY_ROOMS,
+  SHOWEMMREPORT,
+  HIDEEMMREPORT,
   SPECIALTIES,
   COMPLICATIONS,
-  PUBLISHEDSURVEYS,
-  RECENTPUBLISHEDSURVEYS
 } from './constants';
 
 // The initial state of the App
@@ -35,8 +35,6 @@ const initialState = fromJS({
   facilityRooms: [],
   specialties: [],
   complications: [],
-  publishedSurveys: [],
-  mostRecentSurvey: null
 });
 
 function appReducer(state = initialState, action) {
@@ -63,12 +61,12 @@ function appReducer(state = initialState, action) {
     case COMPLICATIONS:
       return state
         .set('complications', action.complications)
-    case PUBLISHEDSURVEYS:
+    case SHOWEMMREPORT:
       return state
-        .set('publishedSurveys', action.publishedSurveys)
-    case RECENTPUBLISHEDSURVEYS:
+        .set('emmReportID', action.reportID)
+    case HIDEEMMREPORT:
       return state
-        .set('mostRecentSurvey', action.mostRecentSurvey)
+        .set('emmReportID', null)
     default:
       return state;
   }

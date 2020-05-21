@@ -1,0 +1,14 @@
+@import '../../../styles/global-styles.scss';
+
+$paddingSize: 40px;
+
+.Emm-Reports-Overview {
+  padding-top: $paddingSize;
+}
+
+.Emm-Paper {
+  @include flex-center;
+  text-align: center;
+  padding: $paddingSize;
+  border-radius: 8px;
+}

@@ -89,9 +89,9 @@ export default class EMMPublish extends React.PureComponent {
                       complications: emmCase.complications.map((complication) => { return this.getName(this.props.complications || [], complication) }).join(', '),
                       enhancedMMPublished: emmCase.enhancedMMPublished,
                       enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
-                      report:!emmCase.enhancedMMReferenceName 
+                      report:!emmCase.enhancedMMReferenceName
                         ?'Report not available'
-                        : <Button disableElevation variant="contained" className="secondary" onClick={() => this.redirect(emmCase.enhancedMMReferenceName)} >Open Report</Button>
+                        : <Button disableElevation variant="contained" className="secondary" onClick={() => this.props.showEMMReport(emmCase.enhancedMMReferenceName)} >Open Report</Button>
                     }
                   })
                 }, this.notLoading())
@@ -119,7 +119,7 @@ export default class EMMPublish extends React.PureComponent {
   handleCheckFilterPublished(e){
     this.setState({ filterPublished: e.target.checked});
   }
-  
+
 
   render() {
     let allPageSizeOptions = [5, 10, 25, 50, 75, 100];
@@ -143,7 +143,7 @@ export default class EMMPublish extends React.PureComponent {
                 checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                 checked={this.state.filterPublished} onChange={(e) => this.handleCheckFilterPublished(e)} />Show requests with unpublished reports only
           </div>
-          
+
           <div>
             <MaterialTable
               title=""
