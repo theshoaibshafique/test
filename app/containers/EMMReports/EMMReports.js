@@ -1,20 +1,15 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import logo from './images/emmLogo.png';
 import './style.scss';
 import Icon from '@mdi/react'
-import { mdiClose, mdiInformationOutline  } from '@mdi/js';
+import { mdiClose } from '@mdi/js';
 import globalFuncs from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
 import EMMPhaseAnalysis from './EMMPhaseAnalysis'
-import emmData from '../../src/emm.json';
-import { Drawer, List, ListItem, ListItemText, Grid, Typography, Card, Paper } from '@material-ui/core';
 
 export default class EMMReports extends React.PureComponent {
   constructor(props) {
     super(props);
-
-    this.props.setEMMReport(emmData)
 
     this.state = {
       selectedEMMTab: 'overview'
@@ -23,6 +18,15 @@ export default class EMMReports extends React.PureComponent {
 
   componentDidMount() {
     this.loadAMPScript();
+    this.getReport();
+  };
+
+  getReport() {
+    let { emmReportID } = this.props;
+    globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + emmReportID, 'get', this.props.userToken, {})
+      .then(caseData => {
+        this.props.setEMMReport(caseData)
+      });
   };
 
   loadAMPScript() {

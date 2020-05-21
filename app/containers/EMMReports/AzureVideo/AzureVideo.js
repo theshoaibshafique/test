@@ -25,8 +25,19 @@ export default class AzureVideo extends React.PureComponent { // eslint-disable-
     let myOptions = {
       "nativeControlsForTouch": false,
       controls: true,
-      fuild: true,
-      plugins: plugins
+      fluid: true,
+      playbackSpeed: {
+        enabled: true,
+        initialSpeed: 1.0,
+        speedLevels: [
+            { name: "x4.0", value: 4.0 },
+            { name: "x3.0", value: 3.0 },
+            { name: "x2.0", value: 2.0 },
+            { name: "x1.0", value: 1.0 },
+            { name: "x0.5", value: 0.5 },
+        ]
+      }
+      // plugins: plugins
     }
 
     globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/test/abcd-test.mp4', 'get', this.props.userToken, {})
@@ -51,6 +62,7 @@ export default class AzureVideo extends React.PureComponent { // eslint-disable-
         }
       });
   }
+
 
   componentDidUpdate() {
     if (this.state.currentEvent != this.props.currentEvent || this.state.index != this.props.index && this.state.selected != this.props.selected) {

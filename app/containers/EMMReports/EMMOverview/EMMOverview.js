@@ -28,9 +28,11 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
       ]
     }
   }
+
   componentDidMount() {
 
   }
+
   render() {
     let { circleSize, sscCircles } = this.state;
     let { emmReportData } = this.props;
@@ -68,7 +70,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                 <Paper className="Emm-Paper">
                   <ReportScore
                     title="Number of Events"
-                    score={emmReportData.NumberOfEvents.DataPoints[0].ValueX} />
+                    score={emmReportData.numberOfEvents.dataPoints[0].valueX} />
                 </Paper>
               </Grid>
               <Grid item xs={12}>
@@ -76,8 +78,8 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <h2>Surigcal Safety Checklist</h2>
                   <div className="SSC-Circles">
                     {
-                      sscCircles.map((sscCircle) => {
-                        return <div><div style={{width: '175px', margin: '0 auto'}}>
+                      sscCircles.map((sscCircle, index) => {
+                        return <div key={index}><div style={{width: '175px', margin: '0 auto'}}>
                                 <CircleProgress
                                   title={sscCircle.title}
                                   color={sscCircle.color}

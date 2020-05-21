@@ -1,6 +1,7 @@
 import React from 'react';
 import './style.scss';
 import EMMPhaseSelector from './EMMPhaseSelector';
+import EMMPhaseVideoContainer from './EMMPhaseVideoContainer';
 import AzureVideo from '../AzureVideo'
 import { Grid, Paper } from '@material-ui/core';
 
@@ -30,13 +31,7 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
         />
         <h2>{phases[currentPhase]}</h2>
           {(scriptReady) &&
-        <div className="flex phase-video-container">
-            <div className="phase-video"><AzureVideo
-              title={'testvideo'} /></div>
-            <div className="phase-events">
-
-            </div>
-        </div>
+            <EMMPhaseVideoContainer />
           }
       </div>
     );
