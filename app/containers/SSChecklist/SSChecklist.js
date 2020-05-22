@@ -758,7 +758,7 @@ export default class EMMCases extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.reportType != this.props.reportType) {
       this.temp = this.getTemp();
-      this.setState({ reportType: this.props.reportType, reportData: []}, () => {
+      this.setState({ reportType: this.props.reportType, reportData: [] }, () => {
         this.getReportLayout();
       })
     }
@@ -771,7 +771,7 @@ export default class EMMCases extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ isLoading: true, tileTypeCount: {}, source:axios.CancelToken.source() },
+    this.setState({ isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType
@@ -784,7 +784,7 @@ export default class EMMCases extends React.PureComponent {
             } else if (result) {
               if (result.tileRequest && result.tileRequest.length > 0) {
                 let reportData = this.groupTiles(result.tileRequest.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
-                let tileRequest = result.tileRequest.filter((tile)=>{
+                let tileRequest = result.tileRequest.filter((tile) => {
                   return moment(tile.startDate).isSame(this.state.month, 'month');
                 });
                 this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, reportData, tileRequest },
@@ -793,8 +793,8 @@ export default class EMMCases extends React.PureComponent {
                     let index = 0;
                     this.state.reportData.map((tileGroup, i) => {
                       tileGroup.group.map((tile, j) => {
-                        index+=1;
-                        this.getTile(tile,i,j, index);
+                        index += 1;
+                        this.getTile(tile, i, j, index);
                       });
                     })
 
@@ -813,7 +813,7 @@ export default class EMMCases extends React.PureComponent {
       });
   };
 
-  getTile(tileRequest,i,j, index) {
+  getTile(tileRequest, i, j, index) {
     let jsonBody = {
       "facilityName": tileRequest.facilityName,
       "reportName": tileRequest.reportName,
@@ -837,20 +837,16 @@ export default class EMMCases extends React.PureComponent {
           this.notLoading();
         } else {
           //TODO: remove hardcoded values
-          result = this.temp[index-1];
+          result = this.temp[index - 1];
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
-          //Tiles of the same type get a different colour
-          let tileTypeCount = this.state.tileTypeCount || {};
-          tileTypeCount[result.tileType] = tileTypeCount[result.tileType] ? tileTypeCount[result.tileType] + 1 : 1;
-          result.tileTypeCount = tileTypeCount[result.tileType];
 
           let reportData = this.state.reportData;
           if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
             reportData[i].group[j] = result;
           }
-          this.setState({ reportData,  pendingTileCount: this.state.pendingTileCount - 1, tileTypeCount },
+          this.setState({ reportData, pendingTileCount: this.state.pendingTileCount - 1 },
             () => {
               if (this.state.pendingTileCount <= 0) {
                 // let reportData = this.state.rawData.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
@@ -859,7 +855,7 @@ export default class EMMCases extends React.PureComponent {
             });
         }
       }).catch((error) => {
-        this.setState({pendingTileCount:this.state.pendingTileCount-1})
+        this.setState({ pendingTileCount: this.state.pendingTileCount - 1 })
         // console.error("tile",error)
       });
   }
@@ -914,27 +910,41 @@ export default class EMMCases extends React.PureComponent {
   }
 
   renderTiles() {
+    //Tiles of the same type get a different colour
+    let tileTypeCount = {};
+
     return this.state.reportData.map((tileGroup, index) => {
-      return tileGroup.group.length > 1 ? (
-        <Grid item xs={12} key={`-${index}`}>
-          <Card className="ssc-card">
-            <CardContent>
-              <Grid container spacing={0} alignItems="center">
-                {
-                  tileGroup.group.map((tile, i) => {
-                    return <Grid item xs={this.getTileSize(tile.tileType)} key={`${tile.tileType}${i}`}>{this.renderTile(tile)}</Grid>
-                  })
-                }
-              </Grid>
-            </CardContent>
+      //Tiles in the same group are displayed in 1 "Card"
+      if (tileGroup.group.length > 1) {
+        return (
+          <Grid item xs={12} key={`-${index}`}>
+            <Card className="ssc-card">
+              <CardContent>
+                <Grid container spacing={0} alignItems="center">
+                  {
+                    tileGroup.group.map((tile, i) => {
+                      tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
+                      tile.tileTypeCount = tileTypeCount[tile.tileType];
+                      return <Grid item xs={this.getTileSize(tile.tileType)} key={`${tile.tileType}${i}`}>{this.renderTile(tile)}</Grid>
+                    })
+                  }
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        )
+      }
+      let tile = tileGroup.group[0];
+      tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
+      tile.tileTypeCount = tileTypeCount[tile.tileType];
+      return (
+        <Grid item xs={this.getTileSize(tile.tileType)} key={index}>
+          <Card className={`ssc-card ${tile.tileType}`}>
+            <CardContent>{this.renderTile(tile)}</CardContent>
           </Card>
         </Grid>
-      ) : <Grid item xs={this.getTileSize(tileGroup.group[0].tileType)} key={index}>
-          <Card className={`ssc-card ${tileGroup.group[0].tileType}`}>
-            <CardContent>{this.renderTile(tileGroup.group[0])}</CardContent>
-          </Card>
-        </Grid>
-    });
+      )
+    })
   }
 
   renderTile(tile) {
