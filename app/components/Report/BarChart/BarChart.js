@@ -153,13 +153,16 @@ export default class BarChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='center' className="bar-chart" style={{ textAlign: 'center',minHeight:320 }}>
+        <Grid container spacing={0} direction="column" className="bar-chart" style={ {minHeight:210 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>
-
-          <Grid item xs={12}>
-            {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+          {this.props.body && <Grid item xs={12} className="chart-subtitle">
+            {this.props.subTitle}
+          </Grid>}
+          <Grid item xs={12} className="display-text">
+            {
+              this.props.body || <C3Chart style={{marginTop:20}} className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
         </Grid>
       </LoadingOverlay>

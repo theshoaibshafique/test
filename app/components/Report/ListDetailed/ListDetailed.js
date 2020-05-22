@@ -66,14 +66,19 @@ export default class ListDetailed extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} style={{ marginBottom: 24,minHeight:320 }}>
+        <Grid container className="list-detailed" direction="column" spacing={0} style={{minHeight: 210}}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>
           <Grid item xs={12} className="chart-subtitle">
             {this.props.subTitle}
           </Grid>
-          {this.renderList()}
+          <Grid item xs={12} className="display-text">
+            {this.props.body ?
+              <div style={{ marginTop: 32 }}>{this.props.body}</div>
+              : this.renderList()}
+          </Grid>
+
 
         </Grid>
       </LoadingOverlay>)

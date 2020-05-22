@@ -1,7 +1,6 @@
 @import '../../../styles/global-styles';
 
-
-.chart-title{
+.list-detailed .chart-title{
     font-size: 26px;
     letter-spacing: 0;
     line-height: 36px;
@@ -9,7 +8,7 @@
     text-align: center;
  }
   
-.chart-subtitle{
+.list-detailed .chart-subtitle{
     font-size: 14px;
     font-style: italic;
     letter-spacing: 0;
@@ -25,7 +24,7 @@
     font-size: 18px;
     letter-spacing: 0;
     line-height: 24px;
-    margin-top: 28px !important;
+    margin-top: 26px !important;
 }
 .list-title-value {
     color: #FF0201;
@@ -35,12 +34,10 @@
     letter-spacing: 0;
     line-height: 24px;
     text-align: right;
-    margin-top: 28px !important;
+    margin-top: 26px !important;
   }
 
 .list-subtitle {
-    opacity: 0.8;
-    color: #000000;
     font-family: "Noto Sans";
     font-size: 14px;
     letter-spacing: 0;
@@ -59,3 +56,12 @@
     text-align: right;
     margin-top: 4px !important;
   }
+
+.list-detailed .display-text{
+    color: #004F6E;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 0;
+    line-height: 24px;
+}
