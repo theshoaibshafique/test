@@ -15,13 +15,21 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
   }
 
   render() {
+    let { phaseData } = this.props;
     return (
       <div className="Emm-Phase-Video-Container flex">
           <div className="phase-video">
             <AzureVideo title={'testvideo'} />
           </div>
           <div className="phase-events">
+            {phaseData.enhancedMMData.map((data, index) =>{
+              return <div key={`data` + index}>
+                        <div>{data.title}</div>
+                        <div>{data.subTitle}</div>
+                      </div>
+            })
 
+            }
           </div>
       </div>
     );
