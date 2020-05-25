@@ -73,9 +73,9 @@ export default class ListDetailed extends React.PureComponent {
           <Grid item xs={12} className="chart-subtitle">
             {this.props.subTitle}
           </Grid>
-          <Grid item xs={12} className="display-text">
+          <Grid item xs={12} >
             {this.props.body ?
-              <div style={{ marginTop: 32 }}>{this.props.body}</div>
+              <div className="display-text" style={{ marginTop: 32 }}>{this.props.body}</div>
               : this.renderList()}
           </Grid>
 

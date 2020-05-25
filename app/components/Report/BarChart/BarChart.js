@@ -160,9 +160,9 @@ export default class BarChart extends React.PureComponent {
           {this.props.body && <Grid item xs={12} className="chart-subtitle">
             {this.props.subTitle}
           </Grid>}
-          <Grid item xs={12} className="display-text">
+          <Grid item xs={12} >
             {
-              this.props.body || <C3Chart style={{marginTop:20}} className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+              this.props.body ? <div className="display-text">{this.props.body}</div> : <C3Chart style={{marginTop:20}} className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
         </Grid>
       </LoadingOverlay>
