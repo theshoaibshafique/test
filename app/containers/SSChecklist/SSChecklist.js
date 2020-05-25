@@ -18,6 +18,7 @@ import InfographicParagraph from '../../components/Report/InfographicParagraph/I
 import AreaChart from '../../components/Report/AreaChart/AreaChart';
 import BarChart from '../../components/Report/BarChart/BarChart';
 import ListDetailed from '../../components/Report/ListDetailed/ListDetailed';
+import StackedBarChart from '../../components/Report/StackedBarChart';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -44,6 +45,354 @@ export default class EMMCases extends React.PureComponent {
   }
 
   getTemp() {
+    let x = this.props.reportType == "QualityScoreReport";
+    if (x) {
+      return [{
+        "name": null,
+        "reportName": null,
+        "title": "Quality Score",
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": null,
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 58,
+            "valueY": null,
+            "valueZ": null,
+            "note": null
+          }
+        ],
+        "active": true,
+        "dataDate": "0001-01-01T00:00:00",
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "roomName": null,
+        "procedureName": null,
+        "specialtyName": null
+      },
+      {
+        "name": null,
+        "reportName": null,
+        "title": "Monthly Trend",
+        "subTitle": "Score",
+        "body": null,
+        "footer": "Month",
+        "description": null,
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 8,
+            "valueY": 29,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 9,
+            "valueY": 37,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 10,
+            "valueY": 41,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 11,
+            "valueY": 68,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 12,
+            "valueY": 70,
+            "valueZ": null,
+            "note": null
+          }
+        ],
+        "active": true,
+        "dataDate": "0001-01-01T00:00:00",
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "roomName": null,
+        "procedureName": null,
+        "specialtyName": null
+      },
+      {
+        "name": null,
+        "reportName": null,
+        "title": "Missed Checklist Items",
+        "subTitle": "Occurences",
+        "body": null,
+        "footer": "Phases",
+        "description": "Missed Checklist Items by Phase",
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": "General Surgery",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Briefing",
+            "valueY": 50,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Gynecology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Briefing",
+            "valueY": 250,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Urology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Briefing",
+            "valueY": 100,
+            "valueZ": 400,
+            "note": null
+          },
+          {
+            "title": "General Surgery",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Time Out",
+            "valueY": 400,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Gynecology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Time Out",
+            "valueY": 150,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Urology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Time Out",
+            "valueY": 130,
+            "valueZ": 680,
+            "note": null
+          },
+          {
+            "title": "General Surgery",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Postop Debrief",
+            "valueY": 200,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Gynecology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Postop Debrief",
+            "valueY": 250,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Urology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Postop Debrief",
+            "valueY": 310,
+            "valueZ": 710,
+            "note": null
+          }
+
+        ],
+        "active": true,
+        "dataDate": "0001-01-01T00:00:00",
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "roomName": null,
+        "procedureName": null,
+        "specialtyName": null
+      },
+
+      {
+        "name": null,
+        "reportName": "SSC_TS",
+        "title": "Specialties of Interest",
+        "subTitle": "by total missed phases and timing",
+        "body": null,
+        "footer": null,
+        "description": null,
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+            "subTitle": "",
+            "description": "",
+            "valueX": "321",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+            "subTitle": "E4E332CA-4908-4469-9F89-47895E54034D",
+            "description": "",
+            "valueX": "100",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+            "subTitle": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "description": "",
+            "valueX": "67",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+            "subTitle": "02A56FCE-67AB-4DD5-A048-F9B34FCFE00A",
+            "description": "",
+            "valueX": "66",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+            "subTitle": "Other Procedures",
+            "description": "",
+            "valueX": "88",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
+            "subTitle": "",
+            "description": "",
+            "valueX": "300",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
+            "subTitle": "02A56FCE-67AB-4DD5-A048-F9B34FCFE00A",
+            "description": "",
+            "valueX": "111",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
+            "subTitle": "A3D407ED-DDDB-4F92-849C-C4C84E05659A",
+            "description": "",
+            "valueX": "82",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
+            "subTitle": "C1294BFB-E752-443E-AEA0-3C886512A4CF",
+            "description": "",
+            "valueX": "75",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
+            "subTitle": "Other procedures",
+            "description": "",
+            "valueX": "32",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          }
+        ],
+        "active": true,
+        "dataDate": "2020-05-01T00:00:00-04:00",
+        "monthly": true,
+        "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+        "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+        "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+        "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+        "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+        "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+      },
+      {
+        "name": null,
+        "reportName": "SSC_CC",
+        "title": null,
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": "{0} Case Data based on filter criteria",
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": "1000",
+            "valueY": null,
+            "valueZ": null,
+            "note": null
+          }
+        ],
+        "active": true,
+        "dataDate": "2020-05-01T00:00:00-04:00",
+        "monthly": false,
+        "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+        "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+        "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+        "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+        "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+        "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+      }
+      ];
+    }
+
     return this.props.reportType == "SurgicalSafetyChecklistReport" ?
       [{
         "name": null,
@@ -917,12 +1266,14 @@ export default class EMMCases extends React.PureComponent {
 
     return this.state.reportData.map((tileGroup, index) => {
       //Tiles in the same group are displayed in 1 "Card"
+      let tile = tileGroup.group[0];
       if (tileGroup.group.length > 1) {
         return (
           <Grid item xs={12} key={`-${index}`}>
             <Card className="ssc-card">
               <CardContent>
                 <Grid container spacing={0} alignItems="center">
+                  {tile.tileType == 'StackedBarChart' && <Grid className="chart-title" style={{textAlign:'center',marginBottom:24}} item xs={12}>{tile.title}</Grid>}
                   {
                     tileGroup.group.map((tile, i) => {
                       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
@@ -936,7 +1287,6 @@ export default class EMMCases extends React.PureComponent {
           </Grid>
         )
       }
-      let tile = tileGroup.group[0];
       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
       tile.tileTypeCount = tileTypeCount[tile.tileType];
       return (
@@ -972,7 +1322,10 @@ export default class EMMCases extends React.PureComponent {
         return <BarChart pattern={this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length)} {...tile} />
       case 'ListDetail':
       case 'ListDetailed':
+      case 'Checklist':
         return <ListDetailed {...tile} specialties={this.props.specialties} />
+      case 'StackedBarChart':
+        return <StackedBarChart {...tile} specialties={this.props.specialties} />
     }
   }
 
@@ -982,11 +1335,13 @@ export default class EMMCases extends React.PureComponent {
       case 'ListDetail':
       case 'ListDetailed':
       case 'InfographicText':
+      case 'Checklist':
         return 4;
       case 'BarChart':
       case 'AreaChart':
       case 'LineChart':
       case 'BarChartDetailed':
+      case 'StackedBarChart':
         return 8;
       case 'InfographicParagraph':
         return 12;
