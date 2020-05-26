@@ -49,6 +49,14 @@ export default class StackedBarChart extends React.PureComponent {
             },
           }
         },
+        grid: {
+          lines: {
+            front: false,
+          },
+          y: {
+            show:true
+          }
+        },
         padding: { top: 8, bottom: 8 },
         legend: {
           show: false
