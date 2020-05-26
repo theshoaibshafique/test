@@ -19,6 +19,7 @@ import AreaChart from '../../components/Report/AreaChart/AreaChart';
 import BarChart from '../../components/Report/BarChart/BarChart';
 import ListDetailed from '../../components/Report/ListDetailed/ListDetailed';
 import StackedBarChart from '../../components/Report/StackedBarChart';
+import Checklist from '../../components/Report/Checklist';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
@@ -250,62 +251,26 @@ export default class EMMCases extends React.PureComponent {
       {
         "name": null,
         "reportName": "SSC_TS",
-        "title": "Specialties of Interest",
-        "subTitle": "by total missed phases and timing",
+        "title": "Missed Checklist",
+        "subTitle": "Top 5 Missed Checklist Items",
         "body": null,
-        "footer": null,
-        "description": null,
+        "footer": "CheckListDetail",
+        "description": "View Full Lists of Items",
         "total": null,
         "assets": null,
         "dataPoints": [
           {
-            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
-            "subTitle": "",
+            "title": "Instruments",
+            "subTitle": "Postop Debrief",
             "description": "",
-            "valueX": "321",
+            "valueX": "710",
             "valueY": "",
             "valueZ": "",
             "note": ""
           },
           {
-            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
-            "subTitle": "E4E332CA-4908-4469-9F89-47895E54034D",
-            "description": "",
-            "valueX": "100",
-            "valueY": "",
-            "valueZ": "",
-            "note": ""
-          },
-          {
-            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
-            "subTitle": "823774C6-5583-47B0-8397-1B2EBDA40794",
-            "description": "",
-            "valueX": "67",
-            "valueY": "",
-            "valueZ": "",
-            "note": ""
-          },
-          {
-            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
-            "subTitle": "02A56FCE-67AB-4DD5-A048-F9B34FCFE00A",
-            "description": "",
-            "valueX": "66",
-            "valueY": "",
-            "valueZ": "",
-            "note": ""
-          },
-          {
-            "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
-            "subTitle": "Other Procedures",
-            "description": "",
-            "valueX": "88",
-            "valueY": "",
-            "valueZ": "",
-            "note": ""
-          },
-          {
-            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
-            "subTitle": "",
+            "title": "ASA",
+            "subTitle": "Briefing",
             "description": "",
             "valueX": "300",
             "valueY": "",
@@ -313,37 +278,28 @@ export default class EMMCases extends React.PureComponent {
             "note": ""
           },
           {
-            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
-            "subTitle": "02A56FCE-67AB-4DD5-A048-F9B34FCFE00A",
+            "title": "Antibiotic Prophylaxis",
+            "subTitle": "Time Out",
             "description": "",
-            "valueX": "111",
+            "valueX": "300",
             "valueY": "",
             "valueZ": "",
             "note": ""
           },
           {
-            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
-            "subTitle": "A3D407ED-DDDB-4F92-849C-C4C84E05659A",
+            "title": "Allergies",
+            "subTitle": "Time Out",
             "description": "",
-            "valueX": "82",
+            "valueX": "298",
             "valueY": "",
             "valueZ": "",
             "note": ""
           },
           {
-            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
-            "subTitle": "C1294BFB-E752-443E-AEA0-3C886512A4CF",
+            "title": "DVT Prophylaxis",
+            "subTitle": "Briefing",
             "description": "",
-            "valueX": "75",
-            "valueY": "",
-            "valueZ": "",
-            "note": ""
-          },
-          {
-            "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
-            "subTitle": "Other procedures",
-            "description": "",
-            "valueX": "32",
+            "valueX": "88",
             "valueY": "",
             "valueZ": "",
             "note": ""
@@ -1272,8 +1228,8 @@ export default class EMMCases extends React.PureComponent {
           <Grid item xs={12} key={`-${index}`}>
             <Card className="ssc-card">
               <CardContent>
-                <Grid container spacing={0} alignItems="center">
-                  {tile.tileType == 'StackedBarChart' && <Grid className="chart-title" style={{textAlign:'center',marginBottom:24}} item xs={12}>{tile.title}</Grid>}
+                <Grid container spacing={0} >
+                  {tile.tileType == 'StackedBarChart' && <Grid className="chart-title" style={{ textAlign: 'center', marginBottom: 24 }} item xs={12}>{tile.title}</Grid>}
                   {
                     tileGroup.group.map((tile, i) => {
                       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
@@ -1322,8 +1278,9 @@ export default class EMMCases extends React.PureComponent {
         return <BarChart pattern={this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length)} {...tile} />
       case 'ListDetail':
       case 'ListDetailed':
-      case 'Checklist':
         return <ListDetailed {...tile} specialties={this.props.specialties} />
+      case 'Checklist':
+        return <Checklist {...tile} />
       case 'StackedBarChart':
         return <StackedBarChart {...tile} specialties={this.props.specialties} />
     }

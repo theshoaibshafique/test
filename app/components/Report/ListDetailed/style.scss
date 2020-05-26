@@ -18,7 +18,7 @@
  }
 
 
-.list-title{
+.list-detailed .list-title{
     color: #004F6E;
     font-family: "Noto Sans";
     font-size: 18px;
@@ -26,7 +26,7 @@
     line-height: 24px;
     margin-top: 26px !important;
 }
-.list-title-value {
+.list-detailed .list-title-value {
     color: #FF0201;
     font-family: "Noto Sans";
     font-size: 18px;
@@ -37,7 +37,7 @@
     margin-top: 26px !important;
   }
 
-.list-subtitle {
+.list-detailed .list-subtitle {
     font-family: "Noto Sans";
     font-size: 14px;
     letter-spacing: 0;
@@ -46,9 +46,7 @@
     margin-top: 4px !important;
 }
 
-.list-subtitle-value {
-    opacity: 0.8;
-    color: #000000;
+.list-detailed .list-subtitle-value {
     font-family: "Noto Sans";
     font-size: 14px;
     letter-spacing: 0;
