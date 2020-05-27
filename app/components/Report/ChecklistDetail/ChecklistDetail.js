@@ -146,7 +146,7 @@ export default class ChecklistDetail extends React.PureComponent {
             {this.renderData()}
           </Grid>
           <Grid item xs={12} style={{textAlign:'right'}}>
-            <Button variant="outlined" className="primary" style={{marginRight:40,marginBottom:40}} onClick={(e) => this.props.closeModal()}>Close</Button>
+            <Button disableElevation disableRipple variant="contained" className="secondary" style={{marginRight:40,marginBottom:40}} onClick={(e) => this.props.closeModal()}>Close</Button>
           </Grid>
         </Grid>
       </LoadingOverlay >
