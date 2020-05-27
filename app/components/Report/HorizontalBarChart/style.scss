@@ -1,19 +1,19 @@
 @import '../../../styles/global-styles';
 
-.chart-title{
+.horizontal-chart .chart-title{
   font-size: 26px;
   letter-spacing: 0;
   line-height: 36px;
 }
 
-.chart-subtitle{
+.horizontal-chart .chart-subtitle{
   font-size: 14px;
   font-style: italic;
   letter-spacing: 0;
   line-height: 19px;
   margin-bottom: 32px;
 }
-.chart-score{
+.horizontal-chart .chart-score{
   color: #005979;
   font-family: "Noto Sans";
   font-size: 18px;

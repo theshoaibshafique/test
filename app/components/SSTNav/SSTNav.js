@@ -63,7 +63,7 @@ class SSTNav extends React.Component {
                 <NavLink to="/sschecklist" className='text-link'>
                   <div>Surgical Safety Checklist</div>
                 </NavLink>
-                <div style={{ marginRight: 8, position: 'absolute', right: 0 }} onClick={() => this.toggleSSC()}>
+                <div style={{ marginRight: 8, position: 'absolute', right: 0,cursor:'pointer' }} onClick={() => this.toggleSSC()}>
                   {this.state.isSSCOpen ? <IconExpandLess /> : <IconExpandMore />}
                 </div>
               </ListItem>

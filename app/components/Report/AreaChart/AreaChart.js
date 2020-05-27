@@ -6,32 +6,45 @@ import './style.scss';
 import moment from 'moment';
 import LoadingOverlay from 'react-loading-overlay';
 
-export default class BarChartDetailed extends React.PureComponent {
+export default class AreaChart extends React.PureComponent {
   constructor(props) {
     super(props);
+
     this.chartRef = React.createRef();
 
     this.state = {
-      chartID: 'barChartDetailed',
+      chartID: 'areaChartDetailed',
       chartData: {
         data: {
           x: 'x',
           columns: [], //Dynamically populated
-          type: 'bar',
-          types: {
-            'Average': 'line'
-          },
+          type: 'area-spline',
+          labels: true
         }, // End data
-        color: {
-          pattern: ['#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
+        oninit: () => {
+          const gradient = d3.select('.areaChartDetailed svg')
+            .append("linearGradient")
+            .attr('id', 'gradient')
+            .attr('x1', '40%').attr('y1', '0%')
+            .attr('x2', '50%').attr('y2', '100%');
+
+          gradient
+            .append('stop')
+            .attr('offset', '0%')
+            .attr('stop-color', '#A7E5FD')
+            .attr('stop-opacity', '1');
+
+          gradient
+            .append('stop')
+            .attr('offset', '100%')
+            .attr('stop-color', '#ffffff')
+            .attr('stop-opacity', '1');
         },
-        bar: {
-          width: 25,
-          space: .2
+        color: {
+          pattern: ['#004F6E', '#97E7B3', '#CFB9E4', '#004F6E']
         },
         tooltip: {
-          grouped: false,
-          contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
+          show: false,
         },
         axis: {
           x: {
@@ -39,16 +52,16 @@ export default class BarChartDetailed extends React.PureComponent {
               text: this.props.footer, //Dynamically populated
               position: 'outer-center'
             },
-            type: 'category',
+            type: 'category'
           },
           y: {
             label: {
               text: this.props.subTitle, //Dynamically populated
               position: 'outer-middle'
             },
-            // max: 110,
+            max: 110,
             min: 0,
-            padding: { top: 10, bottom: 0 },
+            padding: { top: 0, bottom: 0 },
             tick: {
               format: function (d) { if (d % 20 == 0) return d }
             }
@@ -72,16 +85,23 @@ export default class BarChartDetailed extends React.PureComponent {
         legend: {
           show: false
         },
-        onrendered: () => this.state.legendData && this.createCustomLegend(`.${this.state.chartID}`),
+        size: {
+          height: 200
+        },
+        point: {
+          // show: false
+        }
       }
     }
 
   };
+
   componentDidUpdate(prevProps) {
     if (!prevProps.dataPoints && this.props.dataPoints) {
       this.generateChartData();
     }
   }
+
   componentDidMount() {
     this.generateChartData();
   }
@@ -114,57 +134,9 @@ export default class BarChartDetailed extends React.PureComponent {
 
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData.data);
+
     this.setState({ chartData, legendData, isLoaded: true })
   }
-
-  redirect(redirectURL) {
-    this.props.pushUrl(redirectURL);
-  }
-
-  createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    return ReactDOMServer.renderToString(<div className="MuiTooltip-tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>{`${d[0].value}`}</div>);
-  }
-
-  createCustomLegend(chartClass) {
-    if (!this.chartRef.current || !d3.select(chartClass).select('.legend').empty()) {
-      return;
-    }
-    let chart = this.chartRef.current.chart;
-    d3.select(chartClass).insert('div').attr('class', 'legend')
-      .html(ReactDOMServer.renderToString(
-        <div className="bar-chart-detailed-legend">
-          {Object.entries(this.state.legendData).map(([id, value], index) => {
-
-            return id == 'Average'
-              ?
-              (<div className="legend-title" key={index}>
-                <span className="line" style={{ color: chart.color(id) }} /><div style={{ margin: '-5px 0px 0px 4px' }}> {id}</div>
-              </div>)
-              :
-              (<div key={index}>
-                <div className="legend-title">
-                  <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
-                </div>
-                <div className={`link ${value && value.substring(1)}`} >
-                  <a>Learn More</a>
-                </div>
-              </div>)
-          })}
-        </div>
-      )).each((x) => {
-        //Standard Onclicks dont work when you use renderToString on Graph
-        Object.entries(this.state.legendData).map(([id, value], index) => {
-          if (!value) { return };
-          d3.select(`.${value.substring(1)}`)
-            .on('click', (y) => {
-              this.redirect(value);
-            });
-        })
-      });
-
-  }
-
-
 
   render() {
     return (
@@ -186,7 +158,7 @@ export default class BarChartDetailed extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='center' className="bar-chart-detailed" style={{ textAlign: 'center',minHeight:320, marginBottom: 50 }}>
+        <Grid container spacing={0} justify='center' className="area-chart" style={{ textAlign: 'center' }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>
@@ -194,7 +166,6 @@ export default class BarChartDetailed extends React.PureComponent {
           <Grid item xs={12}>
             {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
-
         </Grid>
       </LoadingOverlay>
     );

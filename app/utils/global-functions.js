@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
   if (fetchMethod === 'get') {
     return fetch(api, {
@@ -76,7 +78,26 @@ function genericFetchWithNoReturnMessage(api, fetchMethod, userToken, fetchBodyJ
   })
 }
 
+function axiosFetch(url,userToken, fetchBodyJSON,cancelToken) {
+  if (!url){
+    return;
+  }
+  return axios({
+    method: "POST",
+    url: url,
+    headers: {
+      'Authorization': 'Bearer ' + userToken,
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(fetchBodyJSON),
+    mode: 'cors',
+    cancelToken: cancelToken || new axios.CancelToken(function (cancel) {
+    })
+  });
+}
+
 export default {
   genericFetch,
-  genericFetchWithNoReturnMessage
+  genericFetchWithNoReturnMessage,
+  axiosFetch
 };

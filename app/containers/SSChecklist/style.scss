@@ -6,6 +6,10 @@ $ssc-picker-height: 150px;
     background-color: #F5F5F5;
     height: calc(100% + #{$ssc-picker-height});
 }
+.ssc-page .overlay{
+    top: $ssc-picker-height;
+    background-color: #F5F5F5;
+}
 
 .ssc-page .next,
 .ssc-page .previous{
@@ -55,8 +59,9 @@ $ssc-picker-height: 150px;
     max-width: 1198px;
     margin: auto;
     top: $ssc-picker-height;
-    position: relative;
+    // position: relative;
 }
+
 
 .ssc-message{
   font-family: "Noto Sans";
@@ -64,4 +69,10 @@ $ssc-picker-height: 150px;
   letter-spacing: 0;
   line-height: 36px;
   text-align: center;
+}
+
+.chart-title{
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 36px;
 }
