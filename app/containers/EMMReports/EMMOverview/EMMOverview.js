@@ -9,23 +9,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
     super(props);
     this.state = {
       circleSize: 175,
-      sscCircles: [
-        {
-          title:"Checklist Score",
-          color:"#A7E5FD",
-          value:67
-        },
-        {
-          title:"Engagement Score",
-          color:"#97E7B3",
-          value:55
-        },
-        {
-          title:"Quality Score",
-          color:"#CFB9E4",
-          value:83
-        }
-      ]
+      sscCirclesColors: ["#A7E5FD", "#97E7B3", "#CFB9E4"]
     }
   }
 
@@ -34,7 +18,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
   }
 
   render() {
-    let { circleSize, sscCircles } = this.state;
+    let { circleSize, sscCirclesColors } = this.state;
     let { emmReportData } = this.props;
     return (
       <div className="Emm-Reports-Overview">
@@ -44,8 +28,8 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">
                   <ReportScore
-                      title="Distraction"
-                      score="44"
+                      title={emmReportData.distractionScore.title}
+                      score={emmReportData.distractionScore.dataPoints[0].valueX}
                       tooltipText="Distraction tooltip" />
                 </Paper>
               </Grid>
@@ -61,15 +45,14 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
               <Grid item xs={6}>
                 <Paper className="Emm-Paper">
                   <ReportScore
-                    title="Technical Performance"
-                    score="76"
-                    tooltipText="Technical performance tooltip" />
+                    title={emmReportData.technicalPerformanceScore.title}
+                    score={emmReportData.technicalPerformanceScore.dataPoints[0].valueX} />
                 </Paper>
               </Grid>
               <Grid item xs={6}>
                 <Paper className="Emm-Paper">
                   <ReportScore
-                    title="Number of Events"
+                    title={emmReportData.numberOfEvents.title}
                     score={emmReportData.numberOfEvents.dataPoints[0].valueX} />
                 </Paper>
               </Grid>
@@ -78,12 +61,12 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <h2>Surigcal Safety Checklist</h2>
                   <div className="SSC-Circles">
                     {
-                      sscCircles.map((sscCircle, index) => {
+                      emmReportData.checklistScore.dataPoints.map((sscCircle, index) => {
                         return <div key={index}><div style={{width: '175px', margin: '0 auto'}}>
                                 <CircleProgress
                                   title={sscCircle.title}
-                                  color={sscCircle.color}
-                                  value={sscCircle.value}
+                                  color={sscCirclesColors[index]}
+                                  value={sscCircle.valueX}
                                   size={circleSize}
                                 />
                               </div></div>
