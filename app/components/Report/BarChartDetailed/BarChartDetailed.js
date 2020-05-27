@@ -3,7 +3,7 @@ import { Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
-import moment from 'moment';
+import moment from 'moment/moment';
 import LoadingOverlay from 'react-loading-overlay';
 
 export default class BarChartDetailed extends React.PureComponent {
