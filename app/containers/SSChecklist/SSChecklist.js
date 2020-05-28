@@ -5,7 +5,7 @@ import 'c3/c3.css';
 import './style.scss';
 
 import globalFuncs from '../../utils/global-functions';
-import { Grid, Divider, CardContent, Card } from '@material-ui/core';
+import { Grid, Divider, CardContent, Card, Modal, DialogContent } from '@material-ui/core';
 import MonthPicker from '../../components/MonthPicker/MonthPicker';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
@@ -18,14 +18,194 @@ import InfographicParagraph from '../../components/Report/InfographicParagraph/I
 import AreaChart from '../../components/Report/AreaChart/AreaChart';
 import BarChart from '../../components/Report/BarChart/BarChart';
 import ListDetailed from '../../components/Report/ListDetailed/ListDetailed';
+import StackedBarChart from '../../components/Report/StackedBarChart';
+import Checklist from '../../components/Report/Checklist';
+import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDetail';
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.temp = this.getTemp();
+    this.tempModal = {
+      "name": null,
+      "reportName": "SSC_TS",
+      "title": "Missed Checklist Items by Phase",
+      "subTitle": null,
+      "body": null,
+      "footer": null,
+      "description": null,
+      "total": null,
+      "assets": null,
+      "dataPoints": [
+        {
+          "title": "Briefing",
+          "subTitle": "",
+          "description": "",
+          "valueX": "400",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Briefing",
+          "subTitle": "ASA",
+          "description": "",
+          "valueX": "300",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Briefing",
+          "subTitle": "DVT Prophylaxis",
+          "description": "",
+          "valueX": "88",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Briefing",
+          "subTitle": "Antibiotic Prophylaxis",
+          "description": "",
+          "valueX": "6",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Briefing",
+          "subTitle": "Site",
+          "description": "",
+          "valueX": "6",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Briefing",
+          "subTitle": "Patient Name/ID",
+          "description": "",
+          "valueX": "0",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Briefing",
+          "subTitle": "Procedure",
+          "description": "",
+          "valueX": "0",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Briefing",
+          "subTitle": "Allergies",
+          "description": "",
+          "valueX": "0",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Time Out",
+          "subTitle": "",
+          "description": "",
+          "valueX": "680",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Time Out",
+          "subTitle": "Antibiotic Prophylaxis",
+          "description": "",
+          "valueX": "300",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Time Out",
+          "subTitle": "Allergies",
+          "description": "",
+          "valueX": "298",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Time Out",
+          "subTitle": "Site",
+          "description": "",
+          "valueX": "75",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Time Out",
+          "subTitle": "DVT Prophylaxis",
+          "description": "",
+          "valueX": "25",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Time Out",
+          "subTitle": "Patient Name/ID",
+          "description": "",
+          "valueX": "0",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Time Out",
+          "subTitle": "Procedure",
+          "description": "",
+          "valueX": "0",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Postop Debrief",
+          "subTitle": "",
+          "description": "",
+          "valueX": "710",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        },
+        {
+          "title": "Postop Debrief",
+          "subTitle": "Instrunments/Sponge and Needle Count Correct?",
+          "description": "",
+          "valueX": "710",
+          "valueY": "",
+          "valueZ": "",
+          "note": ""
+        }
+      ],
+      "active": true,
+      "dataDate": "2020-05-01T00:00:00-04:00",
+      "monthly": true,
+      "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+      "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+      "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+      "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+      "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+      "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+    };
 
     this.state = {
+
+      isOpen: false,
       reportType: this.props.reportType,
       isLoading: true,
       pendingTileCount: 0,
@@ -44,6 +224,309 @@ export default class EMMCases extends React.PureComponent {
   }
 
   getTemp() {
+    let x = this.props.reportType == "QualityScoreReport";
+    if (x) {
+      return [{
+        "name": null,
+        "reportName": null,
+        "title": "Quality Score",
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": null,
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 58,
+            "valueY": null,
+            "valueZ": null,
+            "note": null
+          }
+        ],
+        "active": true,
+        "dataDate": "0001-01-01T00:00:00",
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "roomName": null,
+        "procedureName": null,
+        "specialtyName": null
+      },
+      {
+        "name": null,
+        "reportName": null,
+        "title": "Monthly Trend",
+        "subTitle": "Score",
+        "body": null,
+        "footer": "Month",
+        "description": null,
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 8,
+            "valueY": 29,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 9,
+            "valueY": 37,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 10,
+            "valueY": 41,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 11,
+            "valueY": 68,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": 12,
+            "valueY": 70,
+            "valueZ": null,
+            "note": null
+          }
+        ],
+        "active": true,
+        "dataDate": "0001-01-01T00:00:00",
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "roomName": null,
+        "procedureName": null,
+        "specialtyName": null
+      },
+      {
+        "name": null,
+        "reportName": null,
+        "title": "Missed Checklist Items",
+        "subTitle": "Occurences",
+        "body": null,
+        "footer": "Phases",
+        "description": "Missed Checklist Items by Phase",
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": "General Surgery",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Briefing",
+            "valueY": 50,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Gynecology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Briefing",
+            "valueY": 250,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Urology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Briefing",
+            "valueY": 100,
+            "valueZ": 400,
+            "note": null
+          },
+          {
+            "title": "General Surgery",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Time Out",
+            "valueY": 400,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Gynecology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Time Out",
+            "valueY": 150,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Urology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Time Out",
+            "valueY": 130,
+            "valueZ": 680,
+            "note": null
+          },
+          {
+            "title": "General Surgery",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Postop Debrief",
+            "valueY": 200,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Gynecology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Postop Debrief",
+            "valueY": 250,
+            "valueZ": null,
+            "note": null
+          },
+          {
+            "title": "Urology",
+            "subTitle": null,
+            "description": null,
+            "valueX": "Postop Debrief",
+            "valueY": 310,
+            "valueZ": 710,
+            "note": null
+          }
+
+        ],
+        "active": true,
+        "dataDate": "0001-01-01T00:00:00",
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "roomName": null,
+        "procedureName": null,
+        "specialtyName": null
+      },
+
+      {
+        "name": null,
+        "reportName": "SSC_TS",
+        "title": "Missed Checklist",
+        "subTitle": "Top 5 Missed Checklist Items",
+        "body": null,
+        "footer": "ChecklistDetail",
+        "description": "View Full Lists of Items",
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": "Instruments",
+            "subTitle": "Postop Debrief",
+            "description": "",
+            "valueX": "710",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "ASA",
+            "subTitle": "Briefing",
+            "description": "",
+            "valueX": "300",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "Antibiotic Prophylaxis",
+            "subTitle": "Time Out",
+            "description": "",
+            "valueX": "300",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "Allergies",
+            "subTitle": "Time Out",
+            "description": "",
+            "valueX": "298",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          },
+          {
+            "title": "DVT Prophylaxis",
+            "subTitle": "Briefing",
+            "description": "",
+            "valueX": "88",
+            "valueY": "",
+            "valueZ": "",
+            "note": ""
+          }
+        ],
+        "active": true,
+        "dataDate": "2020-05-01T00:00:00-04:00",
+        "monthly": true,
+        "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+        "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+        "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+        "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+        "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+        "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+      },
+      {
+        "name": null,
+        "reportName": "SSC_CC",
+        "title": null,
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": "{0} Case Data based on filter criteria",
+        "total": null,
+        "assets": null,
+        "dataPoints": [
+          {
+            "title": null,
+            "subTitle": null,
+            "description": null,
+            "valueX": "1000",
+            "valueY": null,
+            "valueZ": null,
+            "note": null
+          }
+        ],
+        "active": true,
+        "dataDate": "2020-05-01T00:00:00-04:00",
+        "monthly": false,
+        "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+        "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+        "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+        "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+        "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+        "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+      }
+      ];
+    }
+
     return this.props.reportType == "SurgicalSafetyChecklistReport" ?
       [{
         "name": null,
@@ -517,6 +1000,7 @@ export default class EMMCases extends React.PureComponent {
         "reportName": null,
         "title": "Missed Phases",
         "subTitle": "% of Cases",
+        // "body": "Congratulations! In the month of December, there were 0 missed phases, and all phases were conducted at an appropriate time!",
         "body": null,
         "footer": "Phases",
         "description": null,
@@ -566,6 +1050,7 @@ export default class EMMCases extends React.PureComponent {
         "reportName": "SSC_TS",
         "title": "Specialties of Interest",
         "subTitle": "by total missed phases and timing",
+        // "body": "Congratulations! There were no lost opportunities thanks to everyone’s efforts.",
         "body": null,
         "footer": null,
         "description": null,
@@ -758,7 +1243,7 @@ export default class EMMCases extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.reportType != this.props.reportType) {
       this.temp = this.getTemp();
-      this.setState({ reportType: this.props.reportType, reportData: []}, () => {
+      this.setState({ reportType: this.props.reportType, reportData: [] }, () => {
         this.getReportLayout();
       })
     }
@@ -771,7 +1256,7 @@ export default class EMMCases extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ isLoading: true, tileTypeCount: {}, source:axios.CancelToken.source() },
+    this.setState({ isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType
@@ -784,7 +1269,7 @@ export default class EMMCases extends React.PureComponent {
             } else if (result) {
               if (result.tileRequest && result.tileRequest.length > 0) {
                 let reportData = this.groupTiles(result.tileRequest.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
-                let tileRequest = result.tileRequest.filter((tile)=>{
+                let tileRequest = result.tileRequest.filter((tile) => {
                   return moment(tile.startDate).isSame(this.state.month, 'month');
                 });
                 this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, reportData, tileRequest },
@@ -793,8 +1278,8 @@ export default class EMMCases extends React.PureComponent {
                     let index = 0;
                     this.state.reportData.map((tileGroup, i) => {
                       tileGroup.group.map((tile, j) => {
-                        index+=1;
-                        this.getTile(tile,i,j, index);
+                        index += 1;
+                        this.getTile(tile, i, j, index);
                       });
                     })
 
@@ -813,7 +1298,7 @@ export default class EMMCases extends React.PureComponent {
       });
   };
 
-  getTile(tileRequest,i,j, index) {
+  getTile(tileRequest, i, j, index) {
     let jsonBody = {
       "facilityName": tileRequest.facilityName,
       "reportName": tileRequest.reportName,
@@ -837,20 +1322,16 @@ export default class EMMCases extends React.PureComponent {
           this.notLoading();
         } else {
           //TODO: remove hardcoded values
-          result = this.temp[index-1];
+          result = this.temp[index - 1];
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
-          //Tiles of the same type get a different colour
-          let tileTypeCount = this.state.tileTypeCount || {};
-          tileTypeCount[result.tileType] = tileTypeCount[result.tileType] ? tileTypeCount[result.tileType] + 1 : 1;
-          result.tileTypeCount = tileTypeCount[result.tileType];
 
           let reportData = this.state.reportData;
           if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
             reportData[i].group[j] = result;
           }
-          this.setState({ reportData,  pendingTileCount: this.state.pendingTileCount - 1, tileTypeCount },
+          this.setState({ reportData, pendingTileCount: this.state.pendingTileCount - 1 },
             () => {
               if (this.state.pendingTileCount <= 0) {
                 // let reportData = this.state.rawData.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
@@ -859,7 +1340,7 @@ export default class EMMCases extends React.PureComponent {
             });
         }
       }).catch((error) => {
-        this.setState({pendingTileCount:this.state.pendingTileCount-1})
+        this.setState({ pendingTileCount: this.state.pendingTileCount - 1 })
         // console.error("tile",error)
       });
   }
@@ -871,6 +1352,47 @@ export default class EMMCases extends React.PureComponent {
       current.group.push(data)
       return hash.set(data.groupOrder, current);
     }, new Map).values()];
+  }
+
+  closeModal() {
+    this.setState({ isOpen: false });
+  }
+
+  openModal(tileRequest) {
+    let jsonBody = {
+      "facilityName": tileRequest.facilityName,
+      "reportName": tileRequest.reportName,
+      "hospitalName": tileRequest.hospitalName,
+      "departmentName": tileRequest.departmentName,
+
+      "startDate": this.state.month.startOf('month').format(),
+      "endDate": this.state.month.endOf('month').format(),
+      "tileType": tileRequest.tileType,
+      "dashboardName": tileRequest.dashboardName,
+
+      "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
+      "day": this.state.selectedWeekday,
+      "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
+      "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
+    }
+
+    globalFuncs.axiosFetch(process.env.SSCTILE_API, this.props.userToken, jsonBody, this.state.source.token)
+      .then(result => {
+        if (result === 'error' || result === 'conflict') {
+          this.notLoading();
+        } else {
+          //TODO: remove hardcoded values
+          result = this.tempModal;
+          result.tileType = tileRequest.tileType;
+          console.log(result);
+          if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
+            this.setState({ isOpen: true, modalTile: result });
+          }
+
+        }
+      }).catch((error) => {
+
+      });
   }
 
   updateMonth(month) {
@@ -909,35 +1431,50 @@ export default class EMMCases extends React.PureComponent {
       }));
   }
 
-  redirect(requestId) {
-    this.props.pushUrl('/emm/' + requestId);
-  }
 
   renderTiles() {
+    //Tiles of the same type get a different colour
+    let tileTypeCount = {};
+
     return this.state.reportData.map((tileGroup, index) => {
-      return tileGroup.group.length > 1 ? (
-        <Grid item xs={12} key={`-${index}`}>
-          <Card className="ssc-card">
-            <CardContent>
-              <Grid container spacing={0} alignItems="center">
-                {
-                  tileGroup.group.map((tile, i) => {
-                    return <Grid item xs={this.getTileSize(tile.tileType)} key={`${tile.tileType}${i}`}>{this.renderTile(tile)}</Grid>
-                  })
-                }
-              </Grid>
-            </CardContent>
+      //Tiles in the same group are displayed in 1 "Card"
+      let tile = tileGroup.group[0];
+      if (tileGroup.group.length > 1) {
+        return (
+          <Grid item xs={12} key={`-${index}`}>
+            <Card className="ssc-card">
+              <CardContent>
+                <Grid container spacing={0} >
+                  {tile.tileType == 'StackedBarChart' && <Grid className="chart-title" style={{ textAlign: 'center', marginBottom: 24 }} item xs={12}>{tile.title}</Grid>}
+                  {
+                    tileGroup.group.map((tile, i) => {
+                      tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
+                      tile.tileTypeCount = tileTypeCount[tile.tileType];
+                      return <Grid item xs={this.getTileSize(tile.tileType)} key={`${tile.tileType}${i}`}>{this.renderTile(tile)}</Grid>
+                    })
+                  }
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        )
+      }
+      tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
+      tile.tileTypeCount = tileTypeCount[tile.tileType];
+      return (
+        <Grid item xs={this.getTileSize(tile.tileType)} key={index}>
+          <Card className={`ssc-card ${tile.tileType}`}>
+            <CardContent>{this.renderTile(tile)}</CardContent>
           </Card>
         </Grid>
-      ) : <Grid item xs={this.getTileSize(tileGroup.group[0].tileType)} key={index}>
-          <Card className={`ssc-card ${tileGroup.group[0].tileType}`}>
-            <CardContent>{this.renderTile(tileGroup.group[0])}</CardContent>
-          </Card>
-        </Grid>
-    });
+      )
+    })
   }
 
   renderTile(tile) {
+    if (!tile) {
+      return <div></div>;
+    }
     switch (tile.tileType) {
       case 'List':
         return <HorizontalBarChart {...tile} specialties={this.props.specialties} />
@@ -961,6 +1498,12 @@ export default class EMMCases extends React.PureComponent {
       case 'ListDetail':
       case 'ListDetailed':
         return <ListDetailed {...tile} specialties={this.props.specialties} />
+      case 'Checklist':
+        return <Checklist {...tile} openModal={(tileRequest) => this.openModal(tileRequest)}/>
+      case 'ChecklistDetail':
+        return <ChecklistDetail {...tile} closeModal={() => this.closeModal()}/>
+      case 'StackedBarChart':
+        return <StackedBarChart {...tile} specialties={this.props.specialties} />
     }
   }
 
@@ -970,11 +1513,13 @@ export default class EMMCases extends React.PureComponent {
       case 'ListDetail':
       case 'ListDetailed':
       case 'InfographicText':
+      case 'Checklist':
         return 4;
       case 'BarChart':
       case 'AreaChart':
       case 'LineChart':
       case 'BarChartDetailed':
+      case 'StackedBarChart':
         return 8;
       case 'InfographicParagraph':
         return 12;
@@ -1038,6 +1583,15 @@ export default class EMMCases extends React.PureComponent {
             </Grid> :
               this.renderTiles()}
           </Grid>
+
+          <Modal
+            open={this.state.isOpen}
+            onClose={() => this.closeModal()}
+          >
+            <DialogContent className="ssc Modal">
+              {this.renderTile(this.state.modalTile)}
+            </DialogContent>
+          </Modal>
         </LoadingOverlay>
       </div>
     );

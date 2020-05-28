@@ -3,16 +3,16 @@ import { Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
+import moment from 'moment';
 import LoadingOverlay from 'react-loading-overlay';
 
-export default class BarChart extends React.PureComponent {
+export default class StackedBarChart extends React.PureComponent {
   constructor(props) {
     super(props);
-
     this.chartRef = React.createRef();
 
     this.state = {
-      chartID: 'barChart',
+      chartID: 'stackedBarChartDetailed',
       chartData: {
         data: {
           x: 'x',
@@ -20,13 +20,14 @@ export default class BarChart extends React.PureComponent {
           type: 'bar',
           labels: {
             format: (v, id, i, j) => this.createCustomLabel(v, id, i, j)
-          }
+          },
+          order: 'asc'
         }, // End data
         color: {
-          pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
+          pattern: ['#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
         },
         bar: {
-          width: 40,
+          width: 50,
           space: .2
         },
         tooltip: {
@@ -40,19 +41,12 @@ export default class BarChart extends React.PureComponent {
               position: 'outer-center'
             },
             type: 'category',
-            height: 70
           },
           y: {
             label: {
               text: this.props.subTitle, //Dynamically populated
               position: 'outer-middle'
             },
-            max: 100,
-            min: 0,
-            padding: { top: 10, bottom: 0 },
-            tick: {
-              format: function (d) { if (d % 20 == 0) return d }
-            }
           }
         },
         grid: {
@@ -60,32 +54,28 @@ export default class BarChart extends React.PureComponent {
             front: false,
           },
           y: {
-            lines: [
-              { value: 20 },
-              { value: 40 },
-              { value: 60 },
-              { value: 80 },
-              { value: 100 },
-            ]
+            show:true
           }
         },
         padding: { top: 8, bottom: 8 },
         legend: {
           show: false
-        }
+        },
+        size: {
+          width: 440
+        },
+        onrendered: () => this.state.legendData && this.createCustomLegend(`.${this.state.chartID}`),
       }
     }
 
   };
-
   componentDidUpdate(prevProps) {
     if (!prevProps.dataPoints && this.props.dataPoints) {
       this.generateChartData();
     }
   }
-
   componentDidMount() {
-    // this.generateChartData();
+    this.generateChartData();
   }
 
   generateChartData() {
@@ -93,15 +83,18 @@ export default class BarChart extends React.PureComponent {
       return;
     }
     let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
+    let legendData = {};
     let zData = [];
-    let xData = []
     let formattedData = { x: [] };
-    dataPoints.map((point, index) => {
-      formattedData.x.push(point.valueX);
+    dataPoints.map((point) => {
+      if (!formattedData.x.includes(point.valueX)) {
+        formattedData.x.push(point.valueX);
+      }
+
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueY);
-      zData.push(point.valueZ);
-      xData.push(point.valueX);
+      legendData[point.title] = point.subTitle;
+      point.valueZ && zData.push(point.valueZ);
     });
     let columns = [];
     Object.entries(formattedData).map(([key, value]) => {
@@ -109,28 +102,53 @@ export default class BarChart extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
-
     chartData.axis.x.label.text = this.props.footer;
     chartData.axis.y.label.text = this.props.subTitle;
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData);
 
-    this.setState({ chartData, zData, xData, isLoaded: true })
+    let chart = this.chartRef.current && this.chartRef.current.chart;
+    chart && chart.load(chartData.data);
+    chart && chart.groups([Object.keys(formattedData)]);
+
+    this.setState({ chartData, legendData, xData: formattedData.x, zData, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
-    return id && this.state.zData && this.state.zData[i];
+    if (id && this.state.zData && j == this.state.zData.length - 1) {
+      return this.state.zData[i]
+    }
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
     let x = this.state.xData[d[0].x];
-    let z = this.state.zData[d[0].x];
     return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${d[0].value}% ${x}`}</div>
-        <div>{`${z} occurences`}</div>
-      </div>);
+      <div className="chartTooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div>{`${d[0].id}`}</div>
+        <div>{`${d[0].value} ${x}`}</div>
+      </div>
+    );
   }
+
+  createCustomLegend(chartClass) {
+    if (!this.chartRef.current || !d3.select(chartClass).select('.legend').empty()) {
+      return;
+    }
+    let chart = this.chartRef.current.chart;
+    d3.select(chartClass).insert('div').attr('class', 'legend')
+      .html(ReactDOMServer.renderToString(
+        <div className="bar-chart-detailed-legend">
+          {Object.entries(this.state.legendData).map(([id, value], index) => {
+            return (<div style={{ margin: '4px 0' }} key={index}>
+              <div className="legend-title">
+                <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
+              </div>
+            </div>)
+          })}
+        </div>
+      ));
+
+  }
+
+
 
   render() {
     return (
@@ -152,17 +170,18 @@ export default class BarChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} direction="column" className="bar-chart" style={ {minHeight:210 }}>
-          <Grid item xs={12} className="chart-title">
-            {this.props.title}
+        <Grid container spacing={0} justify='center' className="stacked-barchart-detailed" style={{ textAlign: 'center', minHeight: 320, marginBottom: 50 }}>
+          <Grid item xs={9} className="chart-title">
+            {this.props.description}
           </Grid>
-          {this.props.body && <Grid item xs={12} className="chart-subtitle">
-            {this.props.subTitle}
-          </Grid>}
-          <Grid item xs={12} >
-            {
-              this.props.body ? <div className="display-text">{this.props.body}</div> : <C3Chart style={{marginTop:20}} className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+          <Grid item xs={3}></Grid>
+          <Grid item xs={9} >
+            {<C3Chart ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
+          <Grid item xs={3} className={this.state.chartID}>
+
+          </Grid>
+
         </Grid>
       </LoadingOverlay>
     );

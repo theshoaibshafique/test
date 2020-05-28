@@ -3,7 +3,7 @@ import './style.scss';
 import { Grid } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 
-export default class ListDetailed extends React.PureComponent {
+export default class Checklist extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,11 +35,14 @@ export default class ListDetailed extends React.PureComponent {
 
     return this.props.dataPoints && this.props.dataPoints.map((point, index) => {
       return (<Grid container spacing={0} key={index}>
-        <Grid item xs={10} className={point.subTitle ? "list-subtitle" : "list-title"}>
-          {(point.subTitle ? this.getName(this.state.procedures, point.subTitle) : this.getName(this.props.specialties, point.title)) || point.subTitle}
+        <Grid item xs={10} className="list-title">
+          {point.title}
         </Grid>
-        <Grid item xs={2} className={point.subTitle ? "list-subtitle-value" : "list-title-value"}>
+        <Grid item xs={2} className="list-title-value">
           {point.valueX}
+        </Grid>
+        <Grid item xs={12} className="list-subtitle">
+          {point.subTitle}
         </Grid>
       </Grid>)
     })
@@ -66,11 +69,8 @@ export default class ListDetailed extends React.PureComponent {
           })
         }}
       >
-        <Grid container className="list-detailed" direction="column" spacing={0} style={{minHeight: 210}}>
+        <Grid container className="checklist" direction="column" spacing={0} style={{minHeight: 210}}>
           <Grid item xs={12} className="chart-title">
-            {this.props.title}
-          </Grid>
-          <Grid item xs={12} className="chart-subtitle">
             {this.props.subTitle}
           </Grid>
           <Grid item xs={12} >
@@ -78,7 +78,9 @@ export default class ListDetailed extends React.PureComponent {
               <div className="display-text" style={{ marginTop: 32 }}>{this.props.body}</div>
               : this.renderList()}
           </Grid>
-
+          <Grid item xs={12} className="link" onClick={() => this.props.openModal({...this.props,tileType:this.props.footer})}>
+              {this.props.description}
+          </Grid>
 
         </Grid>
       </LoadingOverlay>)

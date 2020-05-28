@@ -1,10 +1,11 @@
 @import '../../../styles/global-styles';
 
 .area-chart .chart-title{
-  font-size: 26px;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  font-weight: bold;
   letter-spacing: 0;
-  line-height: 36px;
-  margin-bottom: 16px !important;
+  line-height: 24px;
 }
 
 .chart-subtitle{

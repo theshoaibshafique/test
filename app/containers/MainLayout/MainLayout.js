@@ -186,6 +186,12 @@ export default class MainLayout extends React.PureComponent {
               {(this.state.sscAccess) &&
                   <Route path="/complianceScore" render={(props) => <SSChecklist {...props} reportType={"ComplianceScoreReport"} />}/>
               }
+              {(this.state.sscAccess) &&
+                  <Route path="/engagementScore" render={(props) => <SSChecklist {...props} reportType={"ComplianceScoreReport"} />}/>
+              }
+              {(this.state.sscAccess) &&
+                  <Route path="/qualityScore" render={(props) => <SSChecklist {...props} reportType={"QualityScoreReport"} />}/>
+              }
               <Route path="/my-profile" component={MyProfile}/>
               <Route path="" component={NotFoundPage}/>
             </Switch>
@@ -222,6 +228,7 @@ export default class MainLayout extends React.PureComponent {
                     emmRequestAccess={this.state.emmRequestAccess}
                     emmAccess={this.state.emmAccess}
                     emmPublishAccess={this.state.emmPublishAccess}
+                    sscAccess={this.state.sscAccess}
                     pathname={this.props.location.pathname}
                     logoutRef={this.logoutRef}
                     userLogin={<AzureLogin
