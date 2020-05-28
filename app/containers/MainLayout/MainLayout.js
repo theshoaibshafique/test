@@ -228,6 +228,7 @@ export default class MainLayout extends React.PureComponent {
                     emmRequestAccess={this.state.emmRequestAccess}
                     emmAccess={this.state.emmAccess}
                     emmPublishAccess={this.state.emmPublishAccess}
+                    sscAccess={this.state.sscAccess}
                     pathname={this.props.location.pathname}
                     logoutRef={this.logoutRef}
                     userLogin={<AzureLogin

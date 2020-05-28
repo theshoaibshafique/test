@@ -58,7 +58,7 @@ class SSTNav extends React.Component {
             <li>Efficiency</li>
             <li>Surgical Safety Checklist</li>
           */}
-            {(this.props.emmPublishAccess) && 
+            {(this.props.sscAccess) && 
               <ListItem disableGutters>
                 <NavLink to="/sschecklist" className='text-link'>
                   <div>Surgical Safety Checklist</div>
@@ -68,7 +68,7 @@ class SSTNav extends React.Component {
                 </div>
               </ListItem>
             }
-            {(this.props.emmPublishAccess) && 
+            {(this.props.sscAccess) && 
               <Collapse in={this.state.isSSCOpen} timeout="auto" unmountOnExit>
                 <ListItem disableGutters><NavLink to="/complianceScore" className='text-link sub-item' >Compliance Score</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/engagementScore" className='text-link sub-item' >Engagement Score</NavLink></ListItem>
