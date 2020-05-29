@@ -328,6 +328,7 @@ export default class EMMCases extends React.PureComponent {
         "title": "Missed Checklist Items",
         "subTitle": "Occurences",
         "body": null,
+        // "body": "Congratulations! In the month of December, there were no missed checklist items!",
         "footer": "Phases",
         "description": "Missed Checklist Items by Phase",
         "total": null,
@@ -432,6 +433,7 @@ export default class EMMCases extends React.PureComponent {
         "title": "Missed Checklist",
         "subTitle": "Top 5 Missed Checklist Items",
         "body": null,
+        // "body": "Congratulations! In the month of December, there were no missed checklist items!",
         "footer": "ChecklistDetail",
         "description": "View Full Lists of Items",
         "total": null,
@@ -1450,7 +1452,13 @@ export default class EMMCases extends React.PureComponent {
                     tileGroup.group.map((tile, i) => {
                       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
                       tile.tileTypeCount = tileTypeCount[tile.tileType];
-                      return <Grid item xs={this.getTileSize(tile.tileType)} key={`${tile.tileType}${i}`}>{this.renderTile(tile)}</Grid>
+                      let xs = this.getTileSize(tile.tileType);
+                      if (tile.tileType == 'StackedBarChart' && tile.body){
+                        return <div key={`${tile.tileType}${i}`}></div>
+                      } else if (tile.tileType == 'Checklist' && tile.body){
+                        xs = 12;
+                      }
+                      return <Grid item xs={xs} key={`${tile.tileType}${i}`}>{this.renderTile(tile)}</Grid>
                     })
                   }
                 </Grid>
