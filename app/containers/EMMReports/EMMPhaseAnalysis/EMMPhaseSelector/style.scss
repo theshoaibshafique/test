@@ -4,8 +4,8 @@
   display: flex;
   margin-bottom: 24px;
   .Emm-Phase-Select {
-    width: 193px;
-    padding: 16px;
+    width: 200px;
+    padding: 16px 32px 16px 16px;
     margin-right: 8px;
     cursor: pointer;
     color: #028CC8;
@@ -19,6 +19,18 @@
         bottom: 8px;
         left: calc(50% - 7px);
       }
+    }
+    .phase-events-counter {
+      width: 24px;
+      height: 24px;
+      right: 8px;
+      top: 8px;
+      border-radius: 50%;
+      background: #FF0000;
+      text-align: center;
+      font-size: 14px;
+      line-height: 24px;;
+      color: #FFFFFF;
     }
   }
 }

@@ -6,9 +6,21 @@ import EMMPhaseVideoContainer from './EMMPhaseVideoContainer';
 export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
+    let { phases } = this.props;
     this.state = {
       currentPhase: 0,
-      phaseTitles: this.props.phases.map(phase => phase.title)
+      phaseTitles: phases.map(phase => phase.title),
+      phaseEvents: phases.map((phase) => {
+        if (phase.name=="SurgicalProcedure") {
+          let eventsCounter = 0;
+          phase.enhancedMMData.forEach((procedureStep) => {
+            eventsCounter += procedureStep.dataPoints.length
+          })
+          return eventsCounter;
+        } else {
+          return phase.enhancedMMData.length
+        }
+      })
     }
   }
 
@@ -35,9 +47,8 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
     return ('0' + string).slice(-2)
   }
 
-
   render() {
-    let { currentPhase, phaseTitles } = this.state;
+    let { currentPhase, phaseTitles, phaseEvents } = this.state;
     let { scriptReady, phases } = this.props;
     let selectedPhase = phases[currentPhase];
     return (
@@ -46,6 +57,7 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
         <EMMPhaseSelector
           selectedPhase={currentPhase}
           phases={phaseTitles}
+          phaseEvents={phaseEvents}
           changePhase={(phaseIndex)=>this.changePhase(phaseIndex)}
         />
         <h2>{phaseTitles[currentPhase]}</h2>
