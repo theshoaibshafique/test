@@ -1,12 +1,13 @@
 @import '../../../../styles/global-styles.scss';
 
 .Emm-Phase-Video-Container {
-  background: pink;
   .phase-video {
     width: 975px;
   }
-  .phase-events {
+  .Phase-Events-Container {
     background: #FFFFFF;
     width: calc(100% - 975px);
+    height: 548px;
+    overflow-y: auto;
   }
 }

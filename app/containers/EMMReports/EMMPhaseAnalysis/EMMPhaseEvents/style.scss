@@ -1,0 +1,13 @@
+@import '../../../../styles/global-styles';
+
+.phase-events {
+  padding: 32px 16px;
+  border-bottom: 1px solid #F3F3F3;
+  .main-text {
+    opacity: 0.8;
+  }
+  .time-select {
+    color: #028CC8;
+    font-size: 14px;
+  }
+}

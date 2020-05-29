@@ -1,957 +1,1051 @@
 {
-  "Name": "096E7268-6A19-4FE1-B707-EB57C8385416",
-  "DisplayName": null,
-  "Description": null,
-  "RequestId": "684BC46C-E7A9-4785-93F5-E6376F378A62",
-  "Procedures": [
-      {
-          "SpecialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
-          "ProcedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-          "IsPrimary": true
-      }
-  ],
-  "ComplicationNames" : [
-      "6E3391D7-AD83-4060-8D65-77C8F8AC294D",
-      "FBB927FE-7549-43D6-9B2D-6EDD4E5970AB",
-      "840A54CA-5D77-4615-ACFE-C1987622017D",
-      "56C4E921-CCB6-41E5-B607-0B1187B47621"
-  ],
-  "HospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-  "FacilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-  "DepartmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-  "RoomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-  "CaseDuration": 46188,
-  "Published": false,
-  "EnhancedMMPages": [
-      {
-          "Name": "RoomSetup",
-          "Title": "Room Setup",
-          "SubTitle": null,
-          "Description": "All Non routine events up to Patient Entry",
-          "Order": 1,
-          "StartTime": 0,
-          "EndTime": 60,
-          "EnhancedMMVideo": [],
-          "EnhancedMMData": [],
-          "ChecklistData": null
-      },
-      {
-          "Name": "AnesthesiaSetup",
-          "Title": "Anesthesia Setup",
-          "SubTitle": null,
-          "Description": "All Non routine events from end of Patient Entry to start of Induction",
-          "Order": 2,
-          "StartTime": 60,
-          "EndTime": 180,
-          "EnhancedMMVideo": [],
-          "EnhancedMMData": [
-              {
-                  "Header": null,
-                  "Title": "Video Clip 1",
-                  "SubTitle": "Patient Injury",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 1,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 155,
-                  "EndTime": 188,
-                  "Assets": [
-                      "54DA222E-317F-4DD8-BC26-BBACE35E586D-F624B368-6681-47DE-8452-8A64CCEA0728"
-                  ],
-                  "DataPoints": [],
-                  "TileType": "EmmVideoClipAnnotation"
-              }
-          ],
-          "ChecklistData": {
-              "Name": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-              "Title": "Checklist: Timeout",
-              "SubTitle": "Surgical Safety Checklist",
-              "Description": null,
-              "Order": 0,
-              "StartTime": null,
-              "EndTime": null,
-              "EnhancedMMVideo": null,
-              "EnhancedMMData": [
-                  {
-                      "Header": null,
-                      "Title": "Phase",
-                      "SubTitle": "",
-                      "Body": null,
-                      "Footer": null,
-                      "Description": null,
-                      "Order": 1,
-                      "Group": null,
-                      "GroupOrder": 0,
-                      "Total": null,
-                      "StartTime": 92,
-                      "EndTime": 178,
-                      "Assets": [],
-                      "DataPoints": [
-                          {
-                              "Title": null,
-                              "SubTitle": null,
-                              "Description": null,
-                              "ValueX": "Before skin incision",
-                              "ValueY": null,
-                              "ValueZ": null,
-                              "Note": null
-                          }
-                      ],
-                      "TileType": "EmmChecklistData"
-                  },
-                  {
-                      "Header": null,
-                      "Title": "# of People Present",
-                      "SubTitle": "",
-                      "Body": null,
-                      "Footer": null,
-                      "Description": null,
-                      "Order": 2,
-                      "Group": null,
-                      "GroupOrder": 0,
-                      "Total": null,
-                      "StartTime": 92,
-                      "EndTime": 178,
-                      "Assets": [],
-                      "DataPoints": [
-                          {
-                              "Title": null,
-                              "SubTitle": null,
-                              "Description": null,
-                              "ValueX": "8",
-                              "ValueY": null,
-                              "ValueZ": null,
-                              "Note": null
-                          }
-                      ],
-                      "TileType": "EmmChecklistData"
-                  },
-                  {
-                      "Header": null,
-                      "Title": "# of People Paused",
-                      "SubTitle": "",
-                      "Body": null,
-                      "Footer": null,
-                      "Description": null,
-                      "Order": 3,
-                      "Group": null,
-                      "GroupOrder": 0,
-                      "Total": null,
-                      "StartTime": 92,
-                      "EndTime": 178,
-                      "Assets": [],
-                      "DataPoints": [
-                          {
-                              "Title": null,
-                              "SubTitle": null,
-                              "Description": null,
-                              "ValueX": "8",
-                              "ValueY": null,
-                              "ValueZ": null,
-                              "Note": null
-                          }
-                      ],
-                      "TileType": "EmmChecklistData"
-                  },
-                  {
-                      "Header": null,
-                      "Title": "Missed Items",
-                      "SubTitle": "",
-                      "Body": null,
-                      "Footer": null,
-                      "Description": null,
-                      "Order": 4,
-                      "Group": null,
-                      "GroupOrder": 0,
-                      "Total": null,
-                      "StartTime": 92,
-                      "EndTime": 178,
-                      "Assets": [],
-                      "DataPoints": [
-                          {
-                              "Title": null,
-                              "SubTitle": null,
-                              "Description": null,
-                              "ValueX": "Allergies",
-                              "ValueY": null,
-                              "ValueZ": null,
-                              "Note": null
-                          },
-                          {
-                              "Title": null,
-                              "SubTitle": null,
-                              "Description": null,
-                              "ValueX": "DVT prophylaxis",
-                              "ValueY": null,
-                              "ValueZ": null,
-                              "Note": null
-                          },
-                          {
-                              "Title": null,
-                              "SubTitle": null,
-                              "Description": null,
-                              "ValueX": "Site",
-                              "ValueY": null,
-                              "ValueZ": null,
-                              "Note": null
-                          }
-                      ],
-                      "TileType": "EmmChecklistData"
-                  }
-              ],
-              "ChecklistData": null
-          }
-      },
-      {
-          "Name": "IntubationAndPatientPrep",
-          "Title": "Intubation And Patient Prep",
-          "SubTitle": null,
-          "Description": "All Non routine events from end of Induction to start of Surgical Procedure",
-          "Order": 3,
-          "StartTime": 180,
-          "EndTime": 388,
-          "EnhancedMMVideo": [],
-          "EnhancedMMData": [],
-          "ChecklistData": null
-      },
-      {
-          "Name": "SurgicalProcedure",
-          "Title": "Surgical Procedure",
-          "SubTitle": null,
-          "Description": "All Intraoperative adverse events during Surgical Procedure",
-          "Order": 4,
-          "StartTime": 388,
-          "EndTime": 2875,
-          "EnhancedMMVideo": [
-              {
-                  "Header": null,
-                  "Title": "",
-                  "SubTitle": "",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 1,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 388,
-                  "EndTime": 2875,
-                  "Assets": [
-                      "54DA222E-317F-4DD8-BC26-BBACE35E586D-DE11E686-EDE9-4DD0-9B47-6B693C893C99"
-                  ],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureVideo"
-              }
-          ],
-          "EnhancedMMData": [
-              {
-                  "Header": null,
-                  "Title": "00:00:00 - 00:07:21",
-                  "SubTitle": "Access",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 1,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 0,
-                  "EndTime": 441,
-                  "Assets": [],
-                  "DataPoints": [
-                      {
-                          "Title": "Bleeding",
-                          "SubTitle": null,
-                          "Description": null,
-                          "ValueX": null,
-                          "ValueY": null,
-                          "ValueZ": null,
-                          "Note": null
-                      }
-                  ],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:01:32 - 00:02:59",
-                  "SubTitle": "No Progress",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 2,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 92,
-                  "EndTime": 179,
-                  "Assets": [],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:07:21 - 00:08:29",
-                  "SubTitle": "Gallbladder retraction",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 3,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 441,
-                  "EndTime": 509,
-                  "Assets": [],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:08:29 - 00:20:36",
-                  "SubTitle": "Dissection of Gallbladder and Calot's triangle",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 4,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 509,
-                  "EndTime": 1236,
-                  "Assets": [],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:18:43",
-                  "SubTitle": "Cystic Duct Control",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 5,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 1123,
-                  "EndTime": 1123,
-                  "Assets": [],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:19:23",
-                  "SubTitle": "Cystic Artery Control",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 6,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 1163,
-                  "EndTime": 1163,
-                  "Assets": [],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:20:36 - 00:25:41",
-                  "SubTitle": "Dissection of Gallbladder off Liver",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 7,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 1236,
-                  "EndTime": 1541,
-                  "Assets": [],
-                  "DataPoints": [
-                      {
-                          "Title": "Mechanical Injury",
-                          "SubTitle": null,
-                          "Description": null,
-                          "ValueX": null,
-                          "ValueY": null,
-                          "ValueZ": null,
-                          "Note": null
-                      },
-                      {
-                          "Title": "Bleeding",
-                          "SubTitle": null,
-                          "Description": null,
-                          "ValueX": null,
-                          "ValueY": null,
-                          "ValueZ": null,
-                          "Note": null
-                      }
-                  ],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:25:41 - 00:34:53",
-                  "SubTitle": "Removal of Specimen",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 8,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 1541,
-                  "EndTime": 2093,
-                  "Assets": [],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:27:03",
-                  "SubTitle": "Specimen in Bag",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 9,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 1623,
-                  "EndTime": 1623,
-                  "Assets": [],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:28:09 - 00:41:28",
-                  "SubTitle": "Closure",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 10,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 1689,
-                  "EndTime": 2488,
-                  "Assets": [],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "00:34:53",
-                  "SubTitle": "Specimen Removed",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 11,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 2093,
-                  "EndTime": 2093,
-                  "Assets": [],
-                  "DataPoints": [],
-                  "TileType": "EmmSurgicalProcedureAnnotation"
-              }
-          ],
-          "ChecklistData": null
-      },
-      {
-          "Name": "Emergence",
-          "Title": "Emergence",
-          "SubTitle": null,
-          "Description": "All Non routine events from end of Surgical Procedure to start of Emergence and Extubation",
-          "Order": 5,
-          "StartTime": 2875,
-          "EndTime": 2925,
-          "EnhancedMMVideo": [],
-          "EnhancedMMData": [],
-          "ChecklistData": null
-      },
-      {
-          "Name": "PatientTransfer",
-          "Title": "Extubation And Patient Transfer",
-          "SubTitle": null,
-          "Description": "All Non routine events from start of Emergence and Extubation to end of Patient Exit",
-          "Order": 6,
-          "StartTime": 2925,
-          "EndTime": 3085,
-          "EnhancedMMVideo": [],
-          "EnhancedMMData": [
-              {
-                  "Header": null,
-                  "Title": "Video Clip 1",
-                  "SubTitle": "Incorrect Count",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 1,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 2947,
-                  "EndTime": 2957,
-                  "Assets": [
-                      "54DA222E-317F-4DD8-BC26-BBACE35E586D-E0C2E496-2807-4206-8B9D-8D49690E4323"
-                  ],
-                  "DataPoints": [],
-                  "TileType": "EmmVideoClipAnnotation"
-              },
-              {
-                  "Header": null,
-                  "Title": "Video Clip 2",
-                  "SubTitle": "Patient Injury",
-                  "Body": null,
-                  "Footer": null,
-                  "Description": null,
-                  "Order": 2,
-                  "Group": null,
-                  "GroupOrder": 0,
-                  "Total": null,
-                  "StartTime": 2986,
-                  "EndTime": 2996,
-                  "Assets": [
-                      "54DA222E-317F-4DD8-BC26-BBACE35E586D-C624B368-6681-47DE-8452-8A64CCEA0728"
-                  ],
-                  "DataPoints": [],
-                  "TileType": "EmmVideoClipAnnotation"
-              }
-          ],
-          "ChecklistData": null
-      }
-  ],
-  "DistractionScore": null,
-  "TechnicalPerformanceScore": null,
-  "NumberOfEvents": {
-      "Header": null,
-      "Title": "Number of Events",
-      "SubTitle": null,
-      "Body": null,
-      "Footer": null,
-      "Description": null,
-      "Order": 3,
-      "Group": null,
-      "GroupOrder": 0,
-      "Total": null,
-      "StartTime": 0,
-      "EndTime": 0,
-      "Assets": [],
-      "DataPoints": [
+    "name": "CDFB1039-7A67-4F39-9573-0C433A2E7C34",
+    "displayName": "Enhanced M&M",
+    "description": null,
+    "requestId": "BCF917A1-DC7E-4BA3-AE20-0D25BF64BB4C",
+    "procedures": [
+        {
+            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
+            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "isPrimary": true
+        }
+    ],
+    "complicationNames": [
+        "840A54CA-5D77-4615-ACFE-C1987622017D",
+        "1529799C-C4D9-4034-ABDD-2FAA21047904"
+    ],
+    "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+    "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+    "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+    "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+    "caseDuration": 46188,
+    "published": true,
+    "enhancedMMPages": [
+        {
+            "name": "RoomSetup",
+            "title": "Room Setup",
+            "subTitle": null,
+            "description": "All Non routine events up to Patient Entry",
+            "order": 1,
+            "startTime": 0,
+            "endTime": 60,
+            "enhancedMMVideo": [],
+            "enhancedMMData": [],
+            "checklistData": null
+        },
+        {
+            "name": "AnesthesiaSetup",
+            "title": "Anesthesia Setup",
+            "subTitle": null,
+            "description": "All Non routine events from end of Patient Entry to start of Induction",
+            "order": 2,
+            "startTime": 60,
+            "endTime": 180,
+            "enhancedMMVideo": [],
+            "enhancedMMData": [
+                {
+                    "header": null,
+                    "title": "Video Clip 1",
+                    "subTitle": "Patient Injury",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 1,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 155,
+                    "endTime": 188,
+                    "assets": [
+                        "54DA222E-317F-4DD8-BC26-BBACE35E586D-F624B368-6681-47DE-8452-8A64CCEA0728"
+                    ],
+                    "dataPoints": [],
+                    "tileType": "EmmVideoClipAnnotation"
+                }
+            ],
+            "checklistData": {
+                "name": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
+                "title": "Checklist: Timeout",
+                "subTitle": "Surgical Safety Checklist",
+                "description": null,
+                "order": 0,
+                "startTime": null,
+                "endTime": null,
+                "enhancedMMVideo": [],
+                "enhancedMMData": [
+                    {
+                        "header": null,
+                        "title": "Phase",
+                        "subTitle": "",
+                        "body": null,
+                        "footer": null,
+                        "description": null,
+                        "order": 1,
+                        "group": null,
+                        "groupOrder": 0,
+                        "total": null,
+                        "startTime": 92,
+                        "endTime": 178,
+                        "assets": [],
+                        "dataPoints": [
+                            {
+                                "title": null,
+                                "subTitle": null,
+                                "description": null,
+                                "valueX": "Before skin incision",
+                                "valueY": null,
+                                "valueZ": null,
+                                "note": null
+                            }
+                        ],
+                        "tileType": "EmmChecklistData"
+                    },
+                    {
+                        "header": null,
+                        "title": "# of People Present",
+                        "subTitle": "",
+                        "body": null,
+                        "footer": null,
+                        "description": null,
+                        "order": 2,
+                        "group": null,
+                        "groupOrder": 0,
+                        "total": null,
+                        "startTime": 92,
+                        "endTime": 178,
+                        "assets": [],
+                        "dataPoints": [
+                            {
+                                "title": null,
+                                "subTitle": null,
+                                "description": null,
+                                "valueX": "8",
+                                "valueY": null,
+                                "valueZ": null,
+                                "note": null
+                            }
+                        ],
+                        "tileType": "EmmChecklistData"
+                    },
+                    {
+                        "header": null,
+                        "title": "# of People Paused",
+                        "subTitle": "",
+                        "body": null,
+                        "footer": null,
+                        "description": null,
+                        "order": 3,
+                        "group": null,
+                        "groupOrder": 0,
+                        "total": null,
+                        "startTime": 92,
+                        "endTime": 178,
+                        "assets": [],
+                        "dataPoints": [
+                            {
+                                "title": null,
+                                "subTitle": null,
+                                "description": null,
+                                "valueX": "8",
+                                "valueY": null,
+                                "valueZ": null,
+                                "note": null
+                            }
+                        ],
+                        "tileType": "EmmChecklistData"
+                    },
+                    {
+                        "header": null,
+                        "title": "Missed Items",
+                        "subTitle": "",
+                        "body": null,
+                        "footer": null,
+                        "description": null,
+                        "order": 4,
+                        "group": null,
+                        "groupOrder": 0,
+                        "total": null,
+                        "startTime": 92,
+                        "endTime": 178,
+                        "assets": [],
+                        "dataPoints": [
+                            {
+                                "title": null,
+                                "subTitle": null,
+                                "description": null,
+                                "valueX": "Allergies",
+                                "valueY": null,
+                                "valueZ": null,
+                                "note": null
+                            },
+                            {
+                                "title": null,
+                                "subTitle": null,
+                                "description": null,
+                                "valueX": "DVT prophylaxis",
+                                "valueY": null,
+                                "valueZ": null,
+                                "note": null
+                            },
+                            {
+                                "title": null,
+                                "subTitle": null,
+                                "description": null,
+                                "valueX": "Site",
+                                "valueY": null,
+                                "valueZ": null,
+                                "note": null
+                            }
+                        ],
+                        "tileType": "EmmChecklistData"
+                    }
+                ],
+                "checklistData": null
+            }
+        },
+        {
+            "name": "IntubationAndPatientPrep",
+            "title": "Intubation And Patient Prep",
+            "subTitle": null,
+            "description": "All Non routine events from end of Induction to start of Surgical Procedure",
+            "order": 3,
+            "startTime": 180,
+            "endTime": 388,
+            "enhancedMMVideo": [],
+            "enhancedMMData": [],
+            "checklistData": null
+        },
+        {
+            "name": "SurgicalProcedure",
+            "title": "Surgical Procedure",
+            "subTitle": null,
+            "description": "All Intraoperative adverse events during Surgical Procedure",
+            "order": 4,
+            "startTime": 388,
+            "endTime": 2875,
+            "enhancedMMVideo": [
+                {
+                    "header": null,
+                    "title": "",
+                    "subTitle": "",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 1,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 388,
+                    "endTime": 2875,
+                    "assets": [
+                        "54DA222E-317F-4DD8-BC26-BBACE35E586D-DE11E686-EDE9-4DD0-9B47-6B693C893C99"
+                    ],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureVideo"
+                }
+            ],
+            "enhancedMMData": [
+                {
+                    "header": null,
+                    "title": "00:00:00 - 00:07:21",
+                    "subTitle": "Access",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 1,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 0,
+                    "endTime": 441,
+                    "assets": [],
+                    "dataPoints": [
+                        {
+                            "title": "Bleeding",
+                            "subTitle": null,
+                            "description": null,
+                            "valueX": null,
+                            "valueY": null,
+                            "valueZ": null,
+                            "note": null
+                        }
+                    ],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:01:32 - 00:02:59",
+                    "subTitle": "No Progress",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 2,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 92,
+                    "endTime": 179,
+                    "assets": [],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:07:21 - 00:08:29",
+                    "subTitle": "Gallbladder retraction",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 3,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 441,
+                    "endTime": 509,
+                    "assets": [],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:08:29 - 00:20:36",
+                    "subTitle": "Dissection of Gallbladder and Calot's triangle",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 4,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 509,
+                    "endTime": 1236,
+                    "assets": [],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:18:43",
+                    "subTitle": "Cystic Duct Control",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 5,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 1123,
+                    "endTime": 1123,
+                    "assets": [],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:19:23",
+                    "subTitle": "Cystic Artery Control",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 6,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 1163,
+                    "endTime": 1163,
+                    "assets": [],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:20:36 - 00:25:41",
+                    "subTitle": "Dissection of Gallbladder off Liver",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 7,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 1236,
+                    "endTime": 1541,
+                    "assets": [],
+                    "dataPoints": [
+                        {
+                            "title": "Mechanical Injury",
+                            "subTitle": null,
+                            "description": null,
+                            "valueX": null,
+                            "valueY": null,
+                            "valueZ": null,
+                            "note": null
+                        },
+                        {
+                            "title": "Bleeding",
+                            "subTitle": null,
+                            "description": null,
+                            "valueX": null,
+                            "valueY": null,
+                            "valueZ": null,
+                            "note": null
+                        }
+                    ],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:25:41 - 00:34:53",
+                    "subTitle": "Removal of Specimen",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 8,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 1541,
+                    "endTime": 2093,
+                    "assets": [],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:27:03",
+                    "subTitle": "Specimen in Bag",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 9,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 1623,
+                    "endTime": 1623,
+                    "assets": [],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:28:09 - 00:41:28",
+                    "subTitle": "Closure",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 10,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 1689,
+                    "endTime": 2488,
+                    "assets": [],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "00:34:53",
+                    "subTitle": "Specimen Removed",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 11,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 2093,
+                    "endTime": 2093,
+                    "assets": [],
+                    "dataPoints": [],
+                    "tileType": "EmmSurgicalProcedureAnnotation"
+                }
+            ],
+            "checklistData": null
+        },
+        {
+            "name": "Emergence",
+            "title": "Emergence",
+            "subTitle": null,
+            "description": "All Non routine events from end of Surgical Procedure to start of Emergence and Extubation",
+            "order": 5,
+            "startTime": 2875,
+            "endTime": 2925,
+            "enhancedMMVideo": [],
+            "enhancedMMData": [],
+            "checklistData": null
+        },
+        {
+            "name": "PatientTransfer",
+            "title": "Extubation And Patient Transfer",
+            "subTitle": null,
+            "description": "All Non routine events from start of Emergence and Extubation to end of Patient Exit",
+            "order": 6,
+            "startTime": 2925,
+            "endTime": 3085,
+            "enhancedMMVideo": [],
+            "enhancedMMData": [
+                {
+                    "header": null,
+                    "title": "Video Clip 1",
+                    "subTitle": "Incorrect Count",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 1,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 2947,
+                    "endTime": 2957,
+                    "assets": [
+                        "54DA222E-317F-4DD8-BC26-BBACE35E586D-E0C2E496-2807-4206-8B9D-8D49690E4323"
+                    ],
+                    "dataPoints": [],
+                    "tileType": "EmmVideoClipAnnotation"
+                },
+                {
+                    "header": null,
+                    "title": "Video Clip 2",
+                    "subTitle": "Patient Injury",
+                    "body": null,
+                    "footer": null,
+                    "description": null,
+                    "order": 2,
+                    "group": null,
+                    "groupOrder": 0,
+                    "total": null,
+                    "startTime": 2986,
+                    "endTime": 2996,
+                    "assets": [
+                        "54DA222E-317F-4DD8-BC26-BBACE35E586D-C624B368-6681-47DE-8452-8A64CCEA0728"
+                    ],
+                    "dataPoints": [],
+                    "tileType": "EmmVideoClipAnnotation"
+                }
+            ],
+            "checklistData": null
+        }
+    ],
+    "distractionScore": {
+        "header": null,
+        "title": "Distraction",
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": null,
+        "order": 3,
+        "group": null,
+        "groupOrder": 0,
+        "total": null,
+        "startTime": 0,
+        "endTime": 0,
+        "assets": [],
+        "dataPoints": [
+            {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": "99",
+                "valueY": null,
+                "valueZ": null,
+                "note": null
+            }
+        ],
+        "tileType": "EmmScore"
+    },
+    "technicalPerformanceScore": {
+        "header": null,
+        "title": "Technical Performance",
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": null,
+        "order": 3,
+        "group": null,
+        "groupOrder": 0,
+        "total": null,
+        "startTime": 0,
+        "endTime": 0,
+        "assets": [],
+        "dataPoints": [
+            {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": "77",
+                "valueY": null,
+                "valueZ": null,
+                "note": null
+            }
+        ],
+        "tileType": "EmmScore"
+    },
+    "numberOfEvents": {
+        "header": null,
+        "title": "Number of Events",
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": null,
+        "order": 3,
+        "group": null,
+        "groupOrder": 0,
+        "total": null,
+        "startTime": 0,
+        "endTime": 0,
+        "assets": [],
+        "dataPoints": [
+            {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": "6",
+                "valueY": null,
+                "valueZ": null,
+                "note": null
+            }
+        ],
+        "tileType": "EmmScore"
+    },
+    "checklistScoreData": [
+        {
+            "name": null,
+            "reportName": "SSCCOUNT",
+            "title": "Surgical Safety Checklist Count",
+            "subTitle": null,
+            "body": null,
+            "footer": null,
+            "description": null,
+            "total": "1",
+            "assets": [],
+            "dataPoints": [
+                {
+                    "title": "Checklist: Timeout",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
+                    "valueY": "1",
+                    "valueZ": null,
+                    "note": null
+                }
+            ],
+            "active": true,
+            "dataDate": "2020-05-07T04:00:00Z",
+            "monthly": false,
+            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+        },
+        {
+            "name": null,
+            "reportName": "SSCWHENDONECORRECTLYCOUNT",
+            "title": "Surgical Safety Checklist When Was Checklist Done Correctly Count",
+            "subTitle": null,
+            "body": null,
+            "footer": null,
+            "description": null,
+            "total": "1",
+            "assets": [],
+            "dataPoints": [
+                {
+                    "title": "Checklist: Timeout",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
+                    "valueY": "1",
+                    "valueZ": "1",
+                    "note": null
+                }
+            ],
+            "active": true,
+            "dataDate": "2020-05-07T04:00:00Z",
+            "monthly": false,
+            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+        },
+        {
+            "name": null,
+            "reportName": "SSCHOWMANYMEMBERSPRESENTSUM",
+            "title": "Surgical Safety Checklist How Many Members Present Sum",
+            "subTitle": null,
+            "body": null,
+            "footer": null,
+            "description": null,
+            "total": "1",
+            "assets": [],
+            "dataPoints": [
+                {
+                    "title": "Checklist: Timeout",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
+                    "valueY": "8",
+                    "valueZ": null,
+                    "note": null
+                }
+            ],
+            "active": true,
+            "dataDate": "2020-05-07T04:00:00Z",
+            "monthly": false,
+            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+        },
+        {
+            "name": null,
+            "reportName": "SSCHOWMANYMEMBERSPAUSEDSUM",
+            "title": "Surgical Safety Checklist How Many Members Paused Sum",
+            "subTitle": null,
+            "body": null,
+            "footer": null,
+            "description": null,
+            "total": "1",
+            "assets": [],
+            "dataPoints": [
+                {
+                    "title": "Checklist: Timeout",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
+                    "valueY": "8",
+                    "valueZ": null,
+                    "note": null
+                }
+            ],
+            "active": true,
+            "dataDate": "2020-05-07T04:00:00Z",
+            "monthly": false,
+            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+        },
+        {
+            "name": null,
+            "reportName": "SSCLESSTHAN5MEMBERSPRESENTCOUNT",
+            "title": "Surgical Safety Checklist Less Than 5 Members Present Count",
+            "subTitle": null,
+            "body": null,
+            "footer": null,
+            "description": null,
+            "total": "1",
+            "assets": [],
+            "dataPoints": [
+                {
+                    "title": "Checklist: Timeout",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
+                    "valueY": "0",
+                    "valueZ": "1",
+                    "note": null
+                }
+            ],
+            "active": true,
+            "dataDate": "2020-05-07T04:00:00Z",
+            "monthly": false,
+            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+        },
+        {
+            "name": null,
+            "reportName": "SSCNOTALLMEMBERSPAUSEDCOUNT",
+            "title": "Surgical Safety Checklist Not All Members Paused Count",
+            "subTitle": null,
+            "body": null,
+            "footer": null,
+            "description": null,
+            "total": "1",
+            "assets": [],
+            "dataPoints": [
+                {
+                    "title": "Checklist: Timeout",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
+                    "valueY": "0",
+                    "valueZ": "1",
+                    "note": null
+                }
+            ],
+            "active": true,
+            "dataDate": "2020-05-07T04:00:00Z",
+            "monthly": false,
+            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+        },
+        {
+            "name": null,
+            "reportName": "SSCPRIORITYITEMVERBALCHECKCOUNT",
+            "title": "Surgical Safety Checklist Priority Item Verbal Check Count",
+            "subTitle": null,
+            "body": null,
+            "footer": null,
+            "description": null,
+            "total": "1",
+            "assets": [],
+            "dataPoints": [
+                {
+                    "title": "Checklist: Timeout",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
+                    "valueY": "3",
+                    "valueZ": "6",
+                    "note": null
+                }
+            ],
+            "active": true,
+            "dataDate": "2020-05-07T04:00:00Z",
+            "monthly": false,
+            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+        },
+        {
+            "name": null,
+            "reportName": "SSCMISSEDTIMEOUTPRIORITYITEM",
+            "title": "Surgical Safety Checklist Timeout Missed Priority Items",
+            "subTitle": null,
+            "body": null,
+            "footer": null,
+            "description": null,
+            "total": "1",
+            "assets": [],
+            "dataPoints": [
+                {
+                    "title": "Patient ID",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "7834F12C-7CD0-48BD-ACA0-C83C98A59446",
+                    "valueY": "0",
+                    "valueZ": null,
+                    "note": null
+                },
+                {
+                    "title": "Procedure",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "449BFC11-5988-47F9-B3AF-06443242027C",
+                    "valueY": "0",
+                    "valueZ": null,
+                    "note": null
+                },
+                {
+                    "title": "Site",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "D3DBBE2A-194A-4CB8-AFFF-DFC9561C9584",
+                    "valueY": "1",
+                    "valueZ": null,
+                    "note": null
+                },
+                {
+                    "title": "Antibiotic prophylaxis",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "15D58C95-8C77-458B-8330-E0B44BAB7BF4",
+                    "valueY": "0",
+                    "valueZ": null,
+                    "note": null
+                },
+                {
+                    "title": "DVT prophylaxis",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "A356E060-46EC-4F50-8AC6-4088CA5A6CD4",
+                    "valueY": "1",
+                    "valueZ": null,
+                    "note": null
+                },
+                {
+                    "title": "Allergies",
+                    "subTitle": null,
+                    "description": null,
+                    "valueX": "6DD5EB0A-4FF1-4059-89C6-37B991388498",
+                    "valueY": "1",
+                    "valueZ": null,
+                    "note": null
+                }
+            ],
+            "active": true,
+            "dataDate": "2020-05-07T04:00:00Z",
+            "monthly": false,
+            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
+            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
+            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
+        }
+    ],
+    "checklistScore": {
+      "header": null,
+      "title": "Surgical Safety Checklist",
+      "subTitle": null,
+      "body": null,
+      "footer": null,
+      "description": null,
+      "order": 3,
+      "group": null,
+      "groupOrder": 0,
+      "total": null,
+      "startTime": 0,
+      "endTime": 0,
+      "assets": [],
+      "dataPoints": [
           {
-              "Title": null,
-              "SubTitle": null,
-              "Description": null,
-              "ValueX": "6",
-              "ValueY": null,
-              "ValueZ": null,
-              "Note": null
-          }
+              "title": "Checklist Score",
+              "subTitle": null,
+              "description": null,
+              "valueX": "35",
+              "valueY": null,
+              "valueZ": null,
+              "note": null
+          },
+          {
+            "title": "Engagement Score",
+            "subTitle": null,
+            "description": null,
+            "valueX": "67",
+            "valueY": null,
+            "valueZ": null,
+            "note": null
+        },
+        {
+          "title": "Quality Score",
+          "subTitle": null,
+          "description": null,
+          "valueX": "69",
+          "valueY": null,
+          "valueZ": null,
+          "note": null
+      }
       ],
-      "TileType": "EmmScore"
+      "tileType": "EmmScore"
   },
-  "ChecklistScoreData": [
-      {
-          "Name": null,
-          "ReportName": "SSCCount",
-          "Title": "Surgical Safety Checklist Count",
-          "SubTitle": null,
-          "Body": null,
-          "Footer": null,
-          "Description": null,
-          "Total": "1",
-          "Assets": null,
-          "DataPoints": [
-              {
-                  "Title": "Checklist: Timeout",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                  "ValueY": "1",
-                  "ValueZ": null,
-                  "Note": null
-              }
-          ],
-          "Active": true,
-          "Monthly": false,
-          "DataDate": "2020-05-07T00:00:00",
-          "HospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-          "FacilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-          "DepartmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-          "RoomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-          "ProcedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-          "SpecialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-      },
-      {
-          "Name": null,
-          "ReportName": "SSCWhenDoneCorrectlyCount",
-          "Title": "Surgical Safety Checklist When Was Checklist Done Correctly Count",
-          "SubTitle": null,
-          "Body": null,
-          "Footer": null,
-          "Description": null,
-          "Total": "1",
-          "Assets": null,
-          "DataPoints": [
-              {
-                  "Title": "Checklist: Timeout",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                  "ValueY": "1",
-                  "ValueZ": "1",
-                  "Note": null
-              }
-          ],
-          "Active": true,
-          "Monthly": false,
-          "DataDate": "2020-05-07T00:00:00",
-          "HospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-          "FacilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-          "DepartmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-          "RoomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-          "ProcedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-          "SpecialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-      },
-      {
-          "Name": null,
-          "ReportName": "SSCHowManyMembersPresentSum",
-          "Title": "Surgical Safety Checklist How Many Members Present Sum",
-          "SubTitle": null,
-          "Body": null,
-          "Footer": null,
-          "Description": null,
-          "Total": "1",
-          "Assets": null,
-          "DataPoints": [
-              {
-                  "Title": "Checklist: Timeout",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                  "ValueY": "8",
-                  "ValueZ": null,
-                  "Note": null
-              }
-          ],
-          "Active": true,
-          "Monthly": false,
-          "DataDate": "2020-05-07T00:00:00",
-          "HospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-          "FacilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-          "DepartmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-          "RoomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-          "ProcedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-          "SpecialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-      },
-      {
-          "Name": null,
-          "ReportName": "SSCHowManyMembersPausedSum",
-          "Title": "Surgical Safety Checklist How Many Members Paused Sum",
-          "SubTitle": null,
-          "Body": null,
-          "Footer": null,
-          "Description": null,
-          "Total": "1",
-          "Assets": null,
-          "DataPoints": [
-              {
-                  "Title": "Checklist: Timeout",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                  "ValueY": "8",
-                  "ValueZ": null,
-                  "Note": null
-              }
-          ],
-          "Active": true,
-          "Monthly": false,
-          "DataDate": "2020-05-07T00:00:00",
-          "HospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-          "FacilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-          "DepartmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-          "RoomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-          "ProcedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-          "SpecialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-      },
-      {
-          "Name": null,
-          "ReportName": "SSCLessThan5MembersPresentCount",
-          "Title": "Surgical Safety Checklist Less Than 5 Members Present Count",
-          "SubTitle": null,
-          "Body": null,
-          "Footer": null,
-          "Description": null,
-          "Total": "1",
-          "Assets": null,
-          "DataPoints": [
-              {
-                  "Title": "Checklist: Timeout",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                  "ValueY": "0",
-                  "ValueZ": "1",
-                  "Note": null
-              }
-          ],
-          "Active": true,
-          "Monthly": false,
-          "DataDate": "2020-05-07T00:00:00",
-          "HospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-          "FacilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-          "DepartmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-          "RoomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-          "ProcedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-          "SpecialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-      },
-      {
-          "Name": null,
-          "ReportName": "SSCNotAllMembersPausedCount",
-          "Title": "Surgical Safety Checklist Not All Members Paused Count",
-          "SubTitle": null,
-          "Body": null,
-          "Footer": null,
-          "Description": null,
-          "Total": "1",
-          "Assets": null,
-          "DataPoints": [
-              {
-                  "Title": "Checklist: Timeout",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                  "ValueY": "0",
-                  "ValueZ": "1",
-                  "Note": null
-              }
-          ],
-          "Active": true,
-          "Monthly": false,
-          "DataDate": "2020-05-07T00:00:00",
-          "HospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-          "FacilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-          "DepartmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-          "RoomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-          "ProcedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-          "SpecialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-      },
-      {
-          "Name": null,
-          "ReportName": "SSCPriorityItemVerbalCheckCount",
-          "Title": "Surgical Safety Checklist Priority Item Verbal Check Count",
-          "SubTitle": null,
-          "Body": null,
-          "Footer": null,
-          "Description": null,
-          "Total": "1",
-          "Assets": null,
-          "DataPoints": [
-              {
-                  "Title": "Checklist: Timeout",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                  "ValueY": "3",
-                  "ValueZ": "6",
-                  "Note": null
-              }
-          ],
-          "Active": true,
-          "Monthly": false,
-          "DataDate": "2020-05-07T00:00:00",
-          "HospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-          "FacilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-          "DepartmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-          "RoomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-          "ProcedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-          "SpecialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-      },
-      {
-          "Name": null,
-          "ReportName": "SSCMissedTimeoutPriorityItem",
-          "Title": "Surgical Safety Checklist Timeout Missed Priority Items",
-          "SubTitle": null,
-          "Body": null,
-          "Footer": null,
-          "Description": null,
-          "Total": "1",
-          "Assets": null,
-          "DataPoints": [
-              {
-                  "Title": "Patient ID",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "7834F12C-7CD0-48BD-ACA0-C83C98A59446",
-                  "ValueY": "0",
-                  "ValueZ": null,
-                  "Note": null
-              },
-              {
-                  "Title": "Procedure",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "449BFC11-5988-47F9-B3AF-06443242027C",
-                  "ValueY": "0",
-                  "ValueZ": null,
-                  "Note": null
-              },
-              {
-                  "Title": "Site",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "D3DBBE2A-194A-4CB8-AFFF-DFC9561C9584",
-                  "ValueY": "1",
-                  "ValueZ": null,
-                  "Note": null
-              },
-              {
-                  "Title": "Antibiotic prophylaxis",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "15D58C95-8C77-458B-8330-E0B44BAB7BF4",
-                  "ValueY": "0",
-                  "ValueZ": null,
-                  "Note": null
-              },
-              {
-                  "Title": "DVT prophylaxis",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "A356E060-46EC-4F50-8AC6-4088CA5A6CD4",
-                  "ValueY": "1",
-                  "ValueZ": null,
-                  "Note": null
-              },
-              {
-                  "Title": "Allergies",
-                  "SubTitle": null,
-                  "Description": null,
-                  "ValueX": "6DD5EB0A-4FF1-4059-89C6-37B991388498",
-                  "ValueY": "1",
-                  "ValueZ": null,
-                  "Note": null
-              }
-          ],
-          "Active": true,
-          "Monthly": false,
-          "DataDate": "2020-05-07T00:00:00",
-          "HospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-          "FacilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-          "DepartmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-          "RoomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-          "ProcedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-          "SpecialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-      }
-  ],
-  "ChecklistScore": null,
-  "Checklists": {
-      "Header": null,
-      "Title": null,
-      "SubTitle": null,
-      "Body": null,
-      "Footer": null,
-      "Description": null,
-      "Order": 0,
-      "Group": null,
-      "GroupOrder": 0,
-      "Total": null,
-      "StartTime": 0,
-      "EndTime": 0,
-      "Assets": null,
-      "DataPoints": [
-          {
-              "Title": "{ValueX} was missed",
-              "SubTitle": null,
-              "Description": null,
-              "ValueX": "Briefing Analysis",
-              "ValueY": null,
-              "ValueZ": null,
-              "Note": null
-          },
-          {
-              "Title": "View Time Out Analysis",
-              "SubTitle": "(Anesthesia Setup)",
-              "Description": null,
-              "ValueX": "AnesthesiaSetup",
-              "ValueY": null,
-              "ValueZ": null,
-              "Note": null
-          },
-          {
-              "Title": "{ValueX} was missed",
-              "SubTitle": null,
-              "Description": null,
-              "ValueX": "Postop Debrief Analysis",
-              "ValueY": null,
-              "ValueZ": null,
-              "Note": null
-          }
-      ],
-      "TileType": null
-  },
-  "PhasesOfInterest": {
-      "Header": null,
-      "Title": "Phases of Interest",
-      "SubTitle": null,
-      "Body": null,
-      "Footer": null,
-      "Description": null,
-      "Order": 0,
-      "Group": null,
-      "GroupOrder": 0,
-      "Total": null,
-      "StartTime": 0,
-      "EndTime": 0,
-      "Assets": null,
-      "DataPoints": [
-          {
-              "Title": "Extubation And Patient Transfer",
-              "SubTitle": null,
-              "Description": null,
-              "ValueX": "PatientTransfer",
-              "ValueY": "2 Events",
-              "ValueZ": null,
-              "Note": null
-          },
-          {
-              "Title": "Dissection of Gallbladder off Liver",
-              "SubTitle": null,
-              "Description": null,
-              "ValueX": "SurgicalProcedure",
-              "ValueY": "2 Events",
-              "ValueZ": null,
-              "Note": null
-          },
-          {
-              "Title": "Anesthesia Setup",
-              "SubTitle": null,
-              "Description": null,
-              "ValueX": "AnesthesiaSetup",
-              "ValueY": "1 Event",
-              "ValueZ": null,
-              "Note": null
-          },
-          {
-              "Title": "Access",
-              "SubTitle": null,
-              "Description": null,
-              "ValueX": "SurgicalProcedure",
-              "ValueY": "1 Event",
-              "ValueZ": null,
-              "Note": null
-          }
-      ],
-      "TileType": null
-  }
+    "checklists": {
+        "header": null,
+        "title": null,
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": null,
+        "order": 0,
+        "group": null,
+        "groupOrder": 0,
+        "total": null,
+        "startTime": 0,
+        "endTime": 0,
+        "assets": null,
+        "dataPoints": [
+            {
+                "title": "{ValueX} was missed",
+                "subTitle": null,
+                "description": null,
+                "valueX": "Briefing Analysis",
+                "valueY": null,
+                "valueZ": null,
+                "note": null
+            },
+            {
+                "title": "View Time Out Analysis",
+                "subTitle": "(Anesthesia Setup)",
+                "description": null,
+                "valueX": "AnesthesiaSetup",
+                "valueY": null,
+                "valueZ": null,
+                "note": null
+            },
+            {
+                "title": "{ValueX} was missed",
+                "subTitle": null,
+                "description": null,
+                "valueX": "Postop Debrief Analysis",
+                "valueY": null,
+                "valueZ": null,
+                "note": null
+            }
+        ],
+        "tileType": null
+    },
+    "phasesOfInterest": {
+        "header": null,
+        "title": "Phases of Interest",
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": null,
+        "order": 0,
+        "group": null,
+        "groupOrder": 0,
+        "total": null,
+        "startTime": 0,
+        "endTime": 0,
+        "assets": null,
+        "dataPoints": [
+            {
+                "title": "Extubation And Patient Transfer",
+                "subTitle": null,
+                "description": null,
+                "valueX": "PatientTransfer",
+                "valueY": "2 Events",
+                "valueZ": null,
+                "note": null
+            },
+            {
+                "title": "Dissection of Gallbladder off Liver",
+                "subTitle": null,
+                "description": null,
+                "valueX": "SurgicalProcedure",
+                "valueY": "2 Events",
+                "valueZ": null,
+                "note": null
+            },
+            {
+                "title": "Anesthesia Setup",
+                "subTitle": null,
+                "description": null,
+                "valueX": "AnesthesiaSetup",
+                "valueY": "1 Event",
+                "valueZ": null,
+                "note": null
+            },
+            {
+                "title": "Access",
+                "subTitle": null,
+                "description": null,
+                "valueX": "SurgicalProcedure",
+                "valueY": "1 Event",
+                "valueZ": null,
+                "note": null
+            }
+        ],
+        "tileType": null
+    }
 }

@@ -6,6 +6,7 @@ import { mdiClose } from '@mdi/js';
 import globalFuncs from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
 import EMMPhaseAnalysis from './EMMPhaseAnalysis'
+import emmData from '../../src/emm.json';
 
 export default class EMMReports extends React.PureComponent {
   constructor(props) {
@@ -22,11 +23,13 @@ export default class EMMReports extends React.PureComponent {
   };
 
   getReport() {
-    let { emmReportID } = this.props;
-    globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + emmReportID, 'get', this.props.userToken, {})
-      .then(caseData => {
-        this.props.setEMMReport(caseData)
-      });
+    this.props.setEMMReport(emmData)
+
+    // let { emmReportID } = this.props;
+    // globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + emmReportID, 'get', this.props.userToken, {})
+    //   .then(caseData => {
+    //     this.props.setEMMReport(caseData)
+    //   });
   };
 
   loadAMPScript() {
