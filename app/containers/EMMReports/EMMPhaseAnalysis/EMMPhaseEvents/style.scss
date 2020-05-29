@@ -1,13 +1,33 @@
 @import '../../../../styles/global-styles';
 
-.phase-events {
-  padding: 32px 16px;
+.phase-events-title {
   border-bottom: 1px solid #F3F3F3;
-  .main-text {
-    opacity: 0.8;
-  }
+  padding: 16px;
+  font-size: 14px;
+}
+.phase-events {
+  padding: 24px 16px;
+  border-bottom: 1px solid #F3F3F3;
   .time-select {
     color: #028CC8;
     font-size: 14px;
+    line-height: 19px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+  .event {
+    color: #028CC8;
+    font-size: 14px;
+    line-height: 19px;
+    margin-top: 16px;
+    cursor: pointer;
+    .event-circle {
+      border: 4px solid #FF0000;
+      border-radius: 50%;
+      height: 16px;
+      width: 16px;
+      background: #FFFFFF;
+      margin: 2px 8px 0px 0px;
+    }
   }
 }

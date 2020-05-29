@@ -68,6 +68,7 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
           </div>
           <div className="Phase-Events-Container">
             <EMMPhaseEvents
+              phaseTitle={phaseData.name}
               phaseData={phaseData.enhancedMMData}
               seekVideo={(time)=>this.seekVideo(time)}
             />
