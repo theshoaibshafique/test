@@ -66,7 +66,7 @@ export default class ListDetailed extends React.PureComponent {
           })
         }}
       >
-        <Grid container className="list-detailed" direction="column" spacing={0} style={{minHeight: 210}}>
+        <Grid container className="list-detailed" direction="column" spacing={0} style={{minHeight: 150}}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>

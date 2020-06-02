@@ -152,7 +152,7 @@ export default class BarChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} direction="column" className="bar-chart" style={ {minHeight:210 }}>
+        <Grid container spacing={0} direction="column" className="bar-chart" style={ {minHeight:150 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>

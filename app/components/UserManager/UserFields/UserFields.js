@@ -247,7 +247,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist"
                 />
               }
-              label="Surgical Checklist"
+              label="Surgical Safety Checklist"
             />
           </FormControl>
         </Grid>
