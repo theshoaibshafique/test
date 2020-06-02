@@ -582,7 +582,7 @@
         ],
         "tileType": "EmmScore"
     },
-    "numberOfEvents": {
+    "adverseEventRate": {
         "header": null,
         "title": "Number of Events",
         "subTitle": null,

@@ -52,8 +52,8 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
               <Grid item xs={6}>
                 <Paper className="Emm-Paper">
                   <ReportScore
-                    title={emmReportData.numberOfEvents.title}
-                    score={emmReportData.numberOfEvents.dataPoints[0].valueX} />
+                    title={emmReportData.adverseEventRate.title}
+                    score={emmReportData.adverseEventRate.dataPoints[0].valueX} />
                 </Paper>
               </Grid>
               <Grid item xs={12}>

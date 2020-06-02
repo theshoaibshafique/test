@@ -2,6 +2,7 @@ import React from 'react';
 import './style.scss';
 import globalFunctions from '../../../../utils/global-functions';
 import EMMPhaseEvents from '../EMMPhaseEvents';
+import ChecklistAnalysis from './ChecklistAnalysis';
 
 export default class EMMPhaseVideoContainer extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -62,7 +63,8 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
   render() {
     let { phaseData } = this.props;
     return (
-      <div className="Emm-Phase-Video-Container flex">
+      <div className="Emm-Phase-Video-Container">
+        <div className="flex">
           <div className="phase-video">
             <video id={`azuremediaplayer${this.props.title.replace(/\W/g, '')}`} className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
           </div>
@@ -73,6 +75,13 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
               seekVideo={(time)=>this.seekVideo(time)}
             />
           </div>
+        </div>
+
+        {(phaseData.checklistData) &&
+          <ChecklistAnalysis
+            checklistData={phaseData.checklistData}
+          />
+        }
       </div>
     );
   }
