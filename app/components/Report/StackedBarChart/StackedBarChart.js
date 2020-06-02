@@ -89,12 +89,12 @@ export default class StackedBarChart extends React.PureComponent {
     dataPoints.map((point) => {
       if (!formattedData.x.includes(point.valueX)) {
         formattedData.x.push(point.valueX);
+        point.valueZ && zData.push(point.valueZ);
       }
 
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueY);
       legendData[point.title] = point.subTitle;
-      point.valueZ && zData.push(point.valueZ);
     });
     let columns = [];
     Object.entries(formattedData).map(([key, value]) => {

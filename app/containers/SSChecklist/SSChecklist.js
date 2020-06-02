@@ -340,7 +340,7 @@ export default class EMMCases extends React.PureComponent {
             "description": null,
             "valueX": "Briefing",
             "valueY": 50,
-            "valueZ": null,
+            "valueZ": 400,
             "note": null
           },
           {
@@ -349,7 +349,7 @@ export default class EMMCases extends React.PureComponent {
             "description": null,
             "valueX": "Briefing",
             "valueY": 250,
-            "valueZ": null,
+            "valueZ": 400,
             "note": null
           },
           {
@@ -367,7 +367,7 @@ export default class EMMCases extends React.PureComponent {
             "description": null,
             "valueX": "Time Out",
             "valueY": 400,
-            "valueZ": null,
+            "valueZ": 680,
             "note": null
           },
           {
@@ -376,7 +376,7 @@ export default class EMMCases extends React.PureComponent {
             "description": null,
             "valueX": "Time Out",
             "valueY": 150,
-            "valueZ": null,
+            "valueZ": 680,
             "note": null
           },
           {
@@ -394,7 +394,7 @@ export default class EMMCases extends React.PureComponent {
             "description": null,
             "valueX": "Postop Debrief",
             "valueY": 200,
-            "valueZ": null,
+            "valueZ": 710,
             "note": null
           },
           {
@@ -403,7 +403,7 @@ export default class EMMCases extends React.PureComponent {
             "description": null,
             "valueX": "Postop Debrief",
             "valueY": 250,
-            "valueZ": null,
+            "valueZ": 710,
             "note": null
           },
           {
@@ -1318,13 +1318,29 @@ export default class EMMCases extends React.PureComponent {
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
 
+    if (tileRequest.tileType == 'InfographicMessage') {
+      let reportData = this.state.reportData;
+      if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
+        reportData[i].group[j] = tileRequest;
+      }
+      this.setState({ reportData, pendingTileCount: this.state.pendingTileCount - 1 },
+        () => {
+          if (this.state.pendingTileCount <= 0) {
+            // let reportData = this.state.rawData.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
+            this.notLoading();
+          }
+        });
+      return;
+    }
+
     globalFuncs.axiosFetch(process.env.SSCTILE_API, this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
+        result = result.data;
         if (result === 'error' || result === 'conflict') {
           this.notLoading();
         } else {
           //TODO: remove hardcoded values
-          result = this.temp[index - 1];
+          // result = this.temp[index - 1];
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
@@ -1380,13 +1396,13 @@ export default class EMMCases extends React.PureComponent {
 
     globalFuncs.axiosFetch(process.env.SSCTILE_API, this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
+        result = result.data;
         if (result === 'error' || result === 'conflict') {
           this.notLoading();
         } else {
           //TODO: remove hardcoded values
           result = this.tempModal;
           result.tileType = tileRequest.tileType;
-          console.log(result);
           if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
             this.setState({ isOpen: true, modalTile: result });
           }
@@ -1437,7 +1453,6 @@ export default class EMMCases extends React.PureComponent {
   renderTiles() {
     //Tiles of the same type get a different colour
     let tileTypeCount = {};
-
     return this.state.reportData.map((tileGroup, index) => {
       //Tiles in the same group are displayed in 1 "Card"
       let tile = tileGroup.group[0];
@@ -1453,9 +1468,9 @@ export default class EMMCases extends React.PureComponent {
                       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
                       tile.tileTypeCount = tileTypeCount[tile.tileType];
                       let xs = this.getTileSize(tile.tileType);
-                      if (tile.tileType == 'StackedBarChart' && tile.body){
+                      if (tile.tileType == 'StackedBarChart' && tile.body) {
                         return <div key={`${tile.tileType}${i}`}></div>
-                      } else if (tile.tileType == 'Checklist' && tile.body){
+                      } else if (tile.tileType == 'Checklist' && tile.body) {
                         xs = 12;
                       }
                       return <Grid item xs={xs} key={`${tile.tileType}${i}`}>{this.renderTile(tile)}</Grid>
@@ -1483,53 +1498,60 @@ export default class EMMCases extends React.PureComponent {
     if (!tile) {
       return <div></div>;
     }
-    switch (tile.tileType) {
-      case 'List':
+    switch (`${tile.tileType}`.toUpperCase()) {
+      case 'LIST':
         return <HorizontalBarChart {...tile} specialties={this.props.specialties} />
-      case 'InfographicText':
+      case 'INFOGRAPHICTEXT':
         return <ReportScore
           pushUrl={this.props.pushUrl}
           title={tile.title}
           redirectDisplay={tile.subTitle}
           redirectLink={tile.footer}
           score={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].valueX}
+          message={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].title}
+          subTitle={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].subTitle}
           tooltipText={tile.description} />
-      case 'BarChartDetailed':
+      case 'BARCHARTDETAILED':
         return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
-      case 'InfographicParagraph':
+      case 'INFOGRAPHICPARAGRAPH':
         return <InfographicParagraph {...tile} />
-      case 'LineChart':
-      case 'AreaChart':
+      case 'LINECHART':
+      case 'AREACHART':
         return <AreaChart {...tile} />
-      case 'BarChart':
+      case 'BARCHART':
         return <BarChart pattern={this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length)} {...tile} />
-      case 'ListDetail':
-      case 'ListDetailed':
+      case 'LISTDETAIL':
+      case 'LISTDETAILED':
         return <ListDetailed {...tile} specialties={this.props.specialties} />
-      case 'Checklist':
-        return <Checklist {...tile} openModal={(tileRequest) => this.openModal(tileRequest)}/>
-      case 'ChecklistDetail':
-        return <ChecklistDetail {...tile} closeModal={() => this.closeModal()}/>
-      case 'StackedBarChart':
+      case 'CHECKLIST':
+        return <Checklist {...tile} openModal={(tileRequest) => this.openModal(tileRequest)} />
+      case 'CHECKLISTDETAIL':
+        return <ChecklistDetail {...tile} closeModal={() => this.closeModal()} />
+      case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} />
+      case 'INFOGRAPHICMESSAGE':
+        let pendingDate = moment();
+        pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY,pendingDate.daysInMonth()))
+        return <div>{`We’re currently processing the data for this month’s report. Please come back on ${pendingDate.format('LL')} to view your report.`}</div>
     }
   }
 
   getTileSize(tileType) {
-    switch (tileType) {
-      case 'List':
-      case 'ListDetail':
-      case 'ListDetailed':
-      case 'InfographicText':
-      case 'Checklist':
+    switch (`${tileType}`.toUpperCase()) {
+      case 'LIST':
+      case 'LISTDETAIL':
+      case 'LISTDETAILED':
+      case 'INFOGRAPHICTEXT':
+      case 'CHECKLIST':
         return 4;
-      case 'BarChart':
-      case 'AreaChart':
-      case 'LineChart':
-      case 'BarChartDetailed':
-      case 'StackedBarChart':
+      case 'BARCHART':
+      case 'AREACHART':
+      case 'LINECHART':
+      case 'BARCHARTDETAILED':
+      case 'STACKEDBARCHART':
         return 8;
-      case 'InfographicParagraph':
+      case 'INFOGRAPHICMESSAGE':
+      case 'INFOGRAPHICPARAGRAPH':
         return 12;
     }
   }

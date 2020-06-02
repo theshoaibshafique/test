@@ -49,6 +49,14 @@ $ssc-picker-height: 150px;
     background-color: unset;
     padding-left: 0;
 }
+.ssc-card.InfographicMessage {
+    opacity: 0.8;
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 36px;
+  }
 .ssc-picker-container{
     position: absolute;
     width: calc(100% - #{$nav-width});

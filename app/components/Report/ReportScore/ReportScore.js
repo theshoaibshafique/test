@@ -44,7 +44,7 @@ export default class ReportScore extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify="center" style={{ textAlign: 'center',minHeight:220 }} className="report-score">
+        <Grid container spacing={0} style={{ textAlign: 'center', minHeight: 220 }} className="report-score">
           <Grid item xs={12} className="score-title">
             <span >
               {this.props.title}
@@ -53,9 +53,17 @@ export default class ReportScore extends React.PureComponent {
               </LightTooltip>}
             </span>
           </Grid>
-          <Grid item xs={12} >
+          {this.props.message && <Grid item xs={12} style={{padding:'30px 0'}}>
+            <div className="score-message">{this.props.message}</div>
+            {this.props.subTitle && <div className="score-subtitle">
+              {this.props.subTitle}
+            </div>}
+          </Grid>}
+
+
+          {this.props.score >= 0 && <Grid item xs={12} >
             <span className="score-display">{this.props.score}</span>
-          </Grid>
+          </Grid>}
           {this.props.redirectLink &&
             <Grid item xs={12} className="link">
               <a onClick={() => this.redirect()}>{this.props.redirectDisplay}</a>
