@@ -70,11 +70,13 @@ export default class ListDetailed extends React.PureComponent {
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>
-          <Grid item xs={12} className="chart-subtitle">
+          {!this.props.body && <Grid item xs={12} className="chart-subtitle">
             {this.props.subTitle}
-          </Grid>
+          </Grid>}
           <Grid item xs={12} >
-            {this.props.body ?
+            {this.props.body && this.props.subTitle 
+            ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
+            : this.props.body ? 
               <div className="display-text" style={{ marginTop: 32 }}>{this.props.body}</div>
               : this.renderList()}
           </Grid>

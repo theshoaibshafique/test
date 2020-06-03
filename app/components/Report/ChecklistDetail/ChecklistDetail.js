@@ -38,7 +38,7 @@ export default class ChecklistDetail extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      dataPoints: this.groupTiles(this.props.dataPoints),
+      dataPoints: [],
       topItems: []
     }
   };

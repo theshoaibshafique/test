@@ -74,7 +74,9 @@ export default class Checklist extends React.PureComponent {
             {this.props.subTitle}
           </Grid>}
           <Grid item xs={12} >
-            {this.props.body ?
+            {this.props.body && this.props.subTitle
+            ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
+            : this.props.body ? 
               <div className="display-text">{this.props.body}</div>
               : this.renderList()}
           </Grid>
