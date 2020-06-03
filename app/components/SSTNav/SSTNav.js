@@ -92,10 +92,10 @@ class SSTNav extends React.Component {
               onClose={() => this.closeMenu()}
               style={{ left: 90 }}
             >
-              <MenuItem>
+              <MenuItem className="sst-menu-item">
                 <NavLink to="/my-profile" onClick={() => this.closeMenu()} style={{ color: 'unset', textDecoration: 'none' }} >My Profile</NavLink>
               </MenuItem>
-              <MenuItem>
+              <MenuItem className="sst-menu-item">
                 <div onClick={() => { this.props.logoutRef.current && this.props.logoutRef.current.click() }}>Logout</div>
               </MenuItem>
             </Menu>

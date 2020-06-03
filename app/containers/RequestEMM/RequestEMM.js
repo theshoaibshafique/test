@@ -369,7 +369,7 @@ export default class RequestEMM extends React.PureComponent {
           result.map((user) => {
             users.push({ value: user.userName, label: user.firstName.concat(' ').concat(user.lastName) });
           });
-
+          users.sort((a, b) => { return ('' + a.label).localeCompare(b.label)});
           this.setState({
             userList: users
           });
