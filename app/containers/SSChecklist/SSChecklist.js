@@ -1344,6 +1344,7 @@ export default class EMMCases extends React.PureComponent {
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
+          result.dashboardName = tileRequest.dashboardName;
 
           let reportData = this.state.reportData;
           if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
@@ -1401,7 +1402,7 @@ export default class EMMCases extends React.PureComponent {
           this.notLoading();
         } else {
           //TODO: remove hardcoded values
-          result = this.tempModal;
+          // result = this.tempModal;
           result.tileType = tileRequest.tileType;
           if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
             this.setState({ isOpen: true, modalTile: result });
@@ -1462,7 +1463,7 @@ export default class EMMCases extends React.PureComponent {
             <Card className="ssc-card">
               <CardContent>
                 <Grid container spacing={0} >
-                  {tile.tileType == 'StackedBarChart' && <Grid className="chart-title" style={{ textAlign: 'center' }} item xs={12}>{tile.title}</Grid>}
+                  {tile.tileType == 'StackedBarChart' && <Grid className="chart-title" style={{ textAlign: 'center',marginBottom:16 }} item xs={12}>{tile.title}</Grid>}
                   {
                     tileGroup.group.map((tile, i) => {
                       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;

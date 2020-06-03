@@ -85,12 +85,15 @@ export default class ChecklistDetail extends React.PureComponent {
               <Grid container spacing={0} key={`${i}-${j}`}
                 className={`${isTopItem && 'top-item'} ${value <= 0 && 'complete-item'}`}
               >
-                <Grid item xs={10} className={point.subTitle ? "list-subtitle" : "list-title"}  >
+                <Grid item xs={8} className={point.subTitle ? "list-subtitle" : "list-title"}  >
                   {point.subTitle || point.title}
                 </Grid>
-                <Grid item xs={2} className={point.subTitle ? "list-subtitle-value" : "list-title-value"}>
-                  {point.valueX}
-                </Grid>
+                {point.valueZ
+                  ? <Grid item xs={4} className="list-subtitle-no-data">{point.valueZ}</Grid>
+                  : <Grid item xs={4} className={point.subTitle ? "list-subtitle-value" : "list-title-value"}>
+                    {point.valueX}
+                  </Grid>}
+
                 {!point.subTitle && <Grid item xs={12}><Divider className="ssc-divider" /></Grid>}
                 {point.subTitle && <Grid item xs={12} style={{ marginBottom: 24 }}>
                   {value ?
@@ -102,6 +105,9 @@ export default class ChecklistDetail extends React.PureComponent {
                       variant="determinate"
                       value={100}
                     />}
+                </Grid>}
+                {point.description && <Grid item xs={12} className="list-text">
+                  {point.description}
                 </Grid>}
 
               </Grid>
@@ -145,8 +151,8 @@ export default class ChecklistDetail extends React.PureComponent {
           <Grid container spacing={0} justify="center">
             {this.renderData()}
           </Grid>
-          <Grid item xs={12} style={{textAlign:'right'}}>
-            <Button disableElevation disableRipple variant="contained" className="secondary" style={{marginRight:40,marginBottom:40}} onClick={(e) => this.props.closeModal()}>Close</Button>
+          <Grid item xs={12} style={{ textAlign: 'right' }}>
+            <Button disableElevation disableRipple variant="contained" className="secondary" style={{ marginRight: 40, marginBottom: 40 }} onClick={(e) => this.props.closeModal()}>Close</Button>
           </Grid>
         </Grid>
       </LoadingOverlay >

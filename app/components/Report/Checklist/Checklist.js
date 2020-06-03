@@ -80,7 +80,7 @@ export default class Checklist extends React.PureComponent {
               <div className="display-text">{this.props.body}</div>
               : this.renderList()}
           </Grid>
-          <Grid item xs={12} className="link" onClick={() => this.props.openModal({...this.props,tileType:this.props.footer})}>
+          <Grid item xs={12} className="link" onClick={() => this.props.openModal({...this.props,tileType:this.props.footer,reportName:this.props.total})}>
               {this.props.description}
           </Grid>
 
