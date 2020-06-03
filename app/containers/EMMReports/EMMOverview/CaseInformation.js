@@ -15,8 +15,6 @@ const CaseInformation = (props) => {
     return allComplications.filter((allComplication) => { return allComplication.value.toUpperCase() == complication.toUpperCase() })[0]
   })
 
-  console.log(caseComplications)
-
   return (
     <div className="Case-Information left-align">
       <div className="case-info-heading main-text">Duration</div>
