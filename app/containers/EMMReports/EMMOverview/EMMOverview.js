@@ -3,6 +3,7 @@ import './style.scss';
 import { Grid, Paper } from '@material-ui/core';
 import ReportScore from '../../../components/Report/ReportScore';
 import CircleProgress from '../../../components/Report/CircleProgress';
+import ChecklistStatus from './ChecklistStatus';
 
 export default class EMMOverview extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -35,7 +36,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
               </Grid>
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">
-                  CASE INFORMATION
+                  <div className="Section-Title">Case Information</div>
                 </Paper>
               </Grid>
             </Grid>
@@ -58,7 +59,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
               </Grid>
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">
-                  <h2>Surigcal Safety Checklist</h2>
+                  <div className="Section-Title">Surigcal Safety Checklist</div>
                   <div className="SSC-Circles">
                     {
                       emmReportData.checklistScore.dataPoints.map((sscCircle, index) => {
@@ -73,10 +74,15 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                       })
                     }
                   </div>
+                  <hr />
+                  <ChecklistStatus
+                    checklists={emmReportData.checklists.dataPoints} />
                 </Paper>
               </Grid>
               <Grid item xs={12}>
-                <Paper className="Emm-Paper">Phases Of Interest</Paper>
+                <Paper className="Emm-Paper">
+                  <div className="Section-Title">Phases Of Interest</div>
+                </Paper>
               </Grid>
             </Grid>
           </Grid>
