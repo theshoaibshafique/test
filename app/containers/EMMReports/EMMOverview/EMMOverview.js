@@ -5,6 +5,7 @@ import ReportScore from '../../../components/Report/ReportScore';
 import CircleProgress from '../../../components/Report/CircleProgress';
 import ChecklistStatus from './ChecklistStatus';
 import PhasesOfInterest from './PhasesOfInterest';
+import CaseInformation from './CaseInformation';
 
 export default class EMMOverview extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -21,7 +22,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
 
   render() {
     let { circleSize, sscCirclesColors } = this.state;
-    let { emmReportData } = this.props;
+    let { emmReportData, specialties, complications } = this.props;
     return (
       <div className="Emm-Reports-Overview">
         <Grid container spacing={3}>
@@ -38,6 +39,13 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">
                   <div className="Section-Title">Case Information</div>
+                  <CaseInformation
+                    caseDuration={emmReportData.caseDuration}
+                    procedures={emmReportData.procedures}
+                    complications={emmReportData.complicationNames}
+                    allSpecialties={specialties}
+                    allComplications={complications}
+                  />
                 </Paper>
               </Grid>
             </Grid>
