@@ -1,5 +1,4 @@
 import React from 'react';
-import { Grid, Paper } from '@material-ui/core';
 
 const ChecklistStatus = (props) => {
   let { checklists } = props;

@@ -48,3 +48,36 @@ hr { margin: 24px 0px; }
     opacity: 0.8;
   }
 }
+
+.Phases-Of-Interests-Container {
+  margin-top: 24px;
+  justify-content: center;
+  .phase-of-interest {
+    margin: 0px 15px;
+    width: 200px;
+    position: relative;
+    &:after {
+      content: '';
+      position: absolute;
+      right: -15px;
+      top: 10%;
+      height: 80%;
+      width: 1px;
+      background: #C8C8C8;
+    }
+    &:last-child:after {
+      content: none;
+    }
+  }
+  .phase-title {
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 8px;
+    color: #028CC8;
+  }
+  .phase-event {
+    font-size: 14px;
+    line-height: 19px;
+    color: #000;
+  }
+}

@@ -17,6 +17,14 @@
     .main-text {
         opacity: 0.8;
     }
+    .event-circle {
+        border: 4px solid #FF0000;
+        border-radius: 50%;
+        height: 16px;
+        width: 16px;
+        background: #FFFFFF;
+        margin: 2px 8px 0px 0px;
+      }
 }
 
 .EMM-Reports-Header {

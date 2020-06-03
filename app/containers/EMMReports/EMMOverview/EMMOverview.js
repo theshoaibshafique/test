@@ -4,6 +4,7 @@ import { Grid, Paper } from '@material-ui/core';
 import ReportScore from '../../../components/Report/ReportScore';
 import CircleProgress from '../../../components/Report/CircleProgress';
 import ChecklistStatus from './ChecklistStatus';
+import PhasesOfInterest from './PhasesOfInterest';
 
 export default class EMMOverview extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -82,6 +83,9 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">
                   <div className="Section-Title">Phases Of Interest</div>
+                  <PhasesOfInterest
+                    phases={emmReportData.phasesOfInterest.dataPoints}
+                  />
                 </Paper>
               </Grid>
             </Grid>
