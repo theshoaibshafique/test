@@ -68,6 +68,13 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
         <div className="flex">
           <div className="phase-video">
             <video id={`azuremediaplayer${this.props.title.replace(/\W/g, '')}`} className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
+            {
+              (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) &&
+                <VideoTimeline
+                  duration={phaseData.endTime - phaseData.startTime}
+                  procedureSteps={phaseData.enhancedMMData}
+                />
+            }
           </div>
           <div
             className="Phase-Events-Container"
@@ -80,14 +87,6 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
             />
           </div>
         </div>
-
-        {
-          (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) &&
-            <VideoTimeline
-              duration={phaseData.endTime - phaseData.startTime}
-              procedureSteps={phaseData.enhancedMMData}
-            />
-        }
 
         {(phaseData.checklistData) &&
           <ChecklistAnalysis
