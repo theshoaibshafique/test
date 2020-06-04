@@ -3,6 +3,7 @@ import './style.scss';
 import globalFunctions from '../../../../utils/global-functions';
 import EMMPhaseEvents from '../EMMPhaseEvents';
 import ChecklistAnalysis from './ChecklistAnalysis';
+import VideoTimeline from './VideoTimeline';
 
 export default class EMMPhaseVideoContainer extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -68,7 +69,10 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
           <div className="phase-video">
             <video id={`azuremediaplayer${this.props.title.replace(/\W/g, '')}`} className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
           </div>
-          <div className="Phase-Events-Container">
+          <div
+            className="Phase-Events-Container"
+            style={(phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) ? {height: '578px'} : {}}
+          >
             <EMMPhaseEvents
               phaseTitle={phaseData.name}
               phaseData={phaseData.enhancedMMData}
@@ -76,6 +80,14 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
             />
           </div>
         </div>
+
+        {
+          (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) &&
+            <VideoTimeline
+              duration={phaseData.endTime - phaseData.startTime}
+              procedureSteps={phaseData.enhancedMMData}
+            />
+        }
 
         {(phaseData.checklistData) &&
           <ChecklistAnalysis

@@ -54,4 +54,15 @@
       color: #FF0000;
     }
   }
+
+  .Video-Timeline {
+    height: 30px;
+    background: #FFFFFF;
+    width: 975px;
+    .time-line-marker {
+      cursor: pointer;
+      top: 5px;
+      margin-right: 0px;
+    }
+  }
 }
