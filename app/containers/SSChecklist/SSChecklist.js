@@ -834,28 +834,28 @@ export default class EMMCases extends React.PureComponent {
           {
             "title": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F",
             "subTitle": "",
-            "description": "",
-            "valueX": "89",
-            "valueY": "",
-            "valueZ": "",
+            "description": "89",
+            "valueX": "Compliance Score: 90",
+            "valueY": "Engagement Score: 55",
+            "valueZ": "Quality Score: 100",
             "note": ""
           },
           {
             "title": "95F656BA-06BE-4BB5-994C-3AC17FBC6DCB",
             "subTitle": "",
-            "description": "",
-            "valueX": "86",
-            "valueY": "",
-            "valueZ": "",
+            "description": "86",
+            "valueX": "Compliance Score: 100",
+            "valueY": "Engagement Score: 76",
+            "valueZ": "Quality Score: 70",
             "note": ""
           },
           {
             "title": "1E84E235-220B-4296-8BA2-9D6EA0FCE370",
             "subTitle": "",
-            "description": "",
-            "valueX": "80",
-            "valueY": "",
-            "valueZ": "",
+            "description": "80",
+            "valueX": "Compliance Score: 96",
+            "valueY": "Engagement Score: 50",
+            "valueZ": "Quality Score: 80",
             "note": ""
           }
         ],
