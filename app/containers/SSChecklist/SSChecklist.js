@@ -1258,7 +1258,7 @@ export default class EMMCases extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ tileRequest: [],isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType
@@ -1294,8 +1294,6 @@ export default class EMMCases extends React.PureComponent {
               this.notLoading();
             }
           }).catch((error) => {
-            this.state.source && this.state.source.cancel('Things have changed');
-            // console.error("ssc",error)
           });
       });
   };
@@ -1454,7 +1452,7 @@ export default class EMMCases extends React.PureComponent {
   renderTiles() {
     //Tiles of the same type get a different colour
     let tileTypeCount = {};
-    return this.state.reportData.map((tileGroup, index) => {
+    return this.state.reportData && this.state.reportData.map((tileGroup, index) => {
       //Tiles in the same group are displayed in 1 "Card"
       let tile = tileGroup.group[0];
       if (tileGroup.group.length > 1) {
