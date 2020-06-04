@@ -1313,7 +1313,7 @@ export default class EMMCases extends React.PureComponent {
       "dashboardName": tileRequest.dashboardName,
 
       "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
-      "day": this.state.selectedWeekday,
+      "days": this.state.selectedWeekday && [moment().isoWeekday(this.state.selectedWeekday).day()],
       "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
@@ -1390,7 +1390,7 @@ export default class EMMCases extends React.PureComponent {
       "dashboardName": tileRequest.dashboardName,
 
       "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
-      "day": this.state.selectedWeekday,
+      "days": this.state.selectedWeekday && [moment().day(this.state.selectedWeekday)],
       "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
