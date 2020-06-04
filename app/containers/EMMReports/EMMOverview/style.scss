@@ -23,10 +23,9 @@ $paddingSize: 40px;
   & > div {
     width: calc(100% / 3);
   }
-}
-
-.zero-score {
-  width: 100%;
+  .zero-score {
+    width: 100%;
+  }
 }
 
 hr { margin: 24px 0px; }

@@ -1,4 +1,5 @@
 import React from 'react';
+import globalFuncs from '../../../utils/global-functions';
 
 const CaseInformation = (props) => {
   let { caseDuration, procedures, complications, allSpecialties, allComplications } = props;
@@ -18,7 +19,7 @@ const CaseInformation = (props) => {
   return (
     <div className="Case-Information left-align">
       <div className="case-info-heading main-text">Duration</div>
-      <div className="case-info-details">{caseDuration}</div>
+      <div className="case-info-details">{globalFuncs.formatSecsToTime(caseDuration, true)}</div>
       <div className="case-info-heading main-text">Procedure</div>
       <div className="case-info-details">
       {

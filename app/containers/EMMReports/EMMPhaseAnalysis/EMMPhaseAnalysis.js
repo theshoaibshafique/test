@@ -2,6 +2,7 @@ import React from 'react';
 import './style.scss';
 import EMMPhaseSelector from './EMMPhaseSelector';
 import EMMPhaseVideoContainer from './EMMPhaseVideoContainer';
+import globalFuncs from '../../../utils/global-functions';
 
 export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -28,24 +29,7 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
     this.setState({currentPhase: phaseIndex})
   }
 
-  formatSecsToTime (seconds, toWords = false) {
-    var hh = Math.floor(seconds / 3600);
-    var mm = Math.floor((seconds - (hh * 3600)) / 60);
-    var ss = seconds - (hh * 3600) - (mm * 60);
 
-    if (!toWords)
-      return `${this.pad(hh)}:${this.pad(mm)}:${this.pad(ss)}`;
-    else
-      return `${this.formatWords(hh, 'hour')} ${this.formatWords(mm, 'minute')} ${this.formatWords(ss, 'second')}`;
-  }
-
-  formatWords(value, word) {
-    return `${(value > 0) ? `${value} ${word}${(value > 1) ? `s` : ''}`  : '' }`
-  }
-
-  pad (string) {
-    return ('0' + string).slice(-2)
-  }
 
   render() {
     let { currentPhase, phaseTitles, phaseEvents } = this.state;
@@ -62,7 +46,7 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
         />
         <h2>{phaseTitles[currentPhase]}</h2>
         <div className="phase-duration main-text">
-          Duration: {this.formatSecsToTime(selectedPhase.endTime - selectedPhase.startTime, true)} ({this.formatSecsToTime(selectedPhase.startTime)} - {this.formatSecsToTime(selectedPhase.endTime)})
+          Duration: {globalFuncs.formatSecsToTime(selectedPhase.endTime - selectedPhase.startTime, true)} ({globalFuncs.formatSecsToTime(selectedPhase.startTime)} - {globalFuncs.formatSecsToTime(selectedPhase.endTime)})
         </div>
           {(scriptReady) &&
             <EMMPhaseVideoContainer
