@@ -3,7 +3,6 @@ import { Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
-import moment from 'moment';
 import LoadingOverlay from 'react-loading-overlay';
 
 export default class StackedBarChart extends React.PureComponent {
@@ -145,10 +144,7 @@ export default class StackedBarChart extends React.PureComponent {
           })}
         </div>
       ));
-
   }
-
-
 
   render() {
     return (
@@ -179,9 +175,7 @@ export default class StackedBarChart extends React.PureComponent {
             {<C3Chart ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
           <Grid item xs={3} className={this.state.chartID}>
-
           </Grid>
-
         </Grid>
       </LoadingOverlay>
     );
