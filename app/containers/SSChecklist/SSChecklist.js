@@ -1311,10 +1311,11 @@ export default class EMMCases extends React.PureComponent {
       "dashboardName": tileRequest.dashboardName,
 
       "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
-      "days": this.state.selectedWeekday && [moment().isoWeekday(this.state.selectedWeekday).day()],
+      "days": this.state.selectedWeekday && [moment().isoWeekday(this.state.selectedWeekday).day()] || [],
       "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
+    jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
 
     if (tileRequest.tileType == 'InfographicMessage') {
       let reportData = this.state.reportData;
@@ -1388,10 +1389,11 @@ export default class EMMCases extends React.PureComponent {
       "dashboardName": tileRequest.dashboardName,
 
       "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
-      "days": this.state.selectedWeekday && [moment().day(this.state.selectedWeekday)],
+      "days": this.state.selectedWeekday && [moment().day(this.state.selectedWeekday)] || [],
       "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
+    jsonBody.Monthly = Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
 
     globalFuncs.axiosFetch(process.env.SSCTILE_API, this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {

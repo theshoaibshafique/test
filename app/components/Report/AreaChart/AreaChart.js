@@ -17,7 +17,7 @@ export default class AreaChart extends React.PureComponent {
         data: {
           x: 'x',
           columns: [], //Dynamically populated
-          type: 'area-spline',
+          type: 'area',
           labels: true
         }, // End data
         oninit: () => {
