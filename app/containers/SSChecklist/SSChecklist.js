@@ -220,6 +220,8 @@ export default class EMMCases extends React.PureComponent {
       procedureOptions: [],
       selectedProcedure: ""
     }
+    this.pendingDate = moment();
+    this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY,this.pendingDate.daysInMonth()))
 
   }
 
@@ -1318,6 +1320,12 @@ export default class EMMCases extends React.PureComponent {
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
 
     if (tileRequest.tileType == 'InfographicMessage') {
+      
+      if (moment().isSameOrAfter(this.pendingDate.clone())){
+        this.setState({tileRequest:[]});
+        return;
+      }
+
       let reportData = this.state.reportData;
       if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
         reportData[i].group[j] = tileRequest;
@@ -1325,7 +1333,6 @@ export default class EMMCases extends React.PureComponent {
       this.setState({ reportData, pendingTileCount: this.state.pendingTileCount - 1 },
         () => {
           if (this.state.pendingTileCount <= 0) {
-            // let reportData = this.state.rawData.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
             this.notLoading();
           }
         });
@@ -1511,7 +1518,7 @@ export default class EMMCases extends React.PureComponent {
           score={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].valueX}
           message={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].title}
           subTitle={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].subTitle}
-          tooltipText={tile.description} />
+          tooltipText={this.props.reportType == "SurgicalSafetyChecklistReport" && tile.description} />
       case 'BARCHARTDETAILED':
         return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
       case 'INFOGRAPHICPARAGRAPH':
@@ -1531,9 +1538,8 @@ export default class EMMCases extends React.PureComponent {
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} />
       case 'INFOGRAPHICMESSAGE':
-        let pendingDate = moment();
-        pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY,pendingDate.daysInMonth()))
-        return <div>{`We’re currently processing the data for this month’s report. Please come back on ${pendingDate.format('LL')} to view your report.`}</div>
+        
+        return <div>{`We’re currently processing the data for this month’s report. Please come back on ${this.pendingDate.format('LL')} to view your report.`}</div>
     }
   }
 
