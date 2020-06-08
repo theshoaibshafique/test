@@ -1,7 +1,6 @@
 import React from 'react';
 import './style.scss';
 import { Grid, Paper } from '@material-ui/core';
-import ReportScore from '../../../components/Report/ReportScore';
 import ChecklistStatus from './ChecklistStatus';
 import PhasesOfInterest from './PhasesOfInterest';
 import CaseInformation from './CaseInformation';
@@ -30,10 +29,8 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">
-                  <ReportScore
-                      title={distractionScore.title}
-                      score={distractionScore.dataPoints[0].valueX}
-                      tooltipText="Distraction tooltip" />
+                  <div className="Section-Title">{distractionScore.title}</div>
+                  <div className="EMM-Score">{distractionScore.dataPoints[0].valueX}</div>
                 </Paper>
               </Grid>
               <Grid item xs={12}>
@@ -54,16 +51,14 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
             <Grid container spacing={3}>
               <Grid item xs={6}>
                 <Paper className="Emm-Paper">
-                  <ReportScore
-                    title={technicalPerformanceScore.title}
-                    score={technicalPerformanceScore.dataPoints[0].valueX} />
+                  <div className="Section-Title">{technicalPerformanceScore.title}</div>
+                  <div className="EMM-Score">{technicalPerformanceScore.dataPoints[0].valueX}</div>
                 </Paper>
               </Grid>
               <Grid item xs={6}>
                 <Paper className="Emm-Paper">
-                  <ReportScore
-                    title={adverseEventRate.title}
-                    score={adverseEventRate.dataPoints[0].valueX} />
+                  <div className="Section-Title">{adverseEventRate.title}</div>
+                  <div className="EMM-Score">{adverseEventRate.dataPoints[0].valueX}</div>
                 </Paper>
               </Grid>
               <Grid item xs={12}>

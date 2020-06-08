@@ -23,13 +23,13 @@ export default class EMMReports extends React.PureComponent {
   };
 
   getReport() {
-    this.props.setEMMReport(emmData)
+    // this.props.setEMMReport(emmData)
 
-    // let { emmReportID } = this.props;
-    // globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + emmReportID, 'get', this.props.userToken, {})
-    //   .then(caseData => {
-    //     this.props.setEMMReport(caseData)
-    //   });
+    let { emmReportID } = this.props;
+    globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + emmReportID, 'get', this.props.userToken, {})
+      .then(caseData => {
+        this.props.setEMMReport(caseData)
+      });
   };
 
   loadAMPScript() {

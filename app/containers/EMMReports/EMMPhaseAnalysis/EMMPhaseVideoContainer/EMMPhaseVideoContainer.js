@@ -15,7 +15,7 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
     }
   }
   componentDidMount() {
-    let myOptions = {
+    let videoOptions = {
       "nativeControlsForTouch": false,
       controls: true,
       fluid: true,
@@ -33,11 +33,11 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
       // plugins: plugins
     }
 
-    globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/test/abcd-test.mp4', 'get', this.props.userToken, {})
+    globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/test/54DA222E-317F-4DD8-BC26-BBACE35E586D-DE11E686-EDE9-4DD0-9B47-6B693C893C99', 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           this.setState({showVideo: true})
-          this.myPlayer = amp(this.state.videoID, myOptions);
+          this.myPlayer = amp(this.state.videoID, videoOptions);
           this.myPlayer.src([{
             src: result.url,
             type: "application/vnd.ms-sstr+xml",

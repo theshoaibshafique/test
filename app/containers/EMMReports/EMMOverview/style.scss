@@ -18,6 +18,11 @@ $paddingSize: 40px;
   }
 }
 
+.EMM-Score {
+  font-size: 74px;
+  color: #004F6E;
+}
+
 .SSC-Circles {
   @include flex-center;
   & > div {
