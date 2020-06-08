@@ -213,7 +213,7 @@ export default class EMMCases extends React.PureComponent {
       reportData: [],
       chartColours: ['#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E'],
 
-      month: moment(),
+      month: moment().subtract(1, 'month').endOf('month'),
       selectedOperatingRoom: "",
       selectedWeekday: "",
       selectedSpecialty: "",
@@ -1342,7 +1342,7 @@ export default class EMMCases extends React.PureComponent {
         });
       return;
     }
-
+    
     globalFuncs.axiosFetch(process.env.SSCTILE_API, this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
         result = result.data;
