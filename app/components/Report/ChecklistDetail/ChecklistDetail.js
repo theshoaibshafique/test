@@ -44,7 +44,8 @@ export default class ChecklistDetail extends React.PureComponent {
   };
 
   componentDidMount() {
-    let dataPoints = this.groupTiles(this.props.dataPoints);
+    let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX || ('' + a.subTitle).localeCompare(b.subTitle) });
+    dataPoints = this.groupTiles(dataPoints);
     let topItems = this.props.dataPoints.filter(point => point.subTitle)
       .sort((a, b) => { return b.valueX - a.valueX })
       .slice(0, 5)
@@ -60,6 +61,7 @@ export default class ChecklistDetail extends React.PureComponent {
   }
 
   groupTiles(dataPoints) {
+    
     //Group data by "Group"
     return [...dataPoints.reduce((hash, data) => {
       const current = hash.get(data.title) || { title: data.title, group: [] }
@@ -96,7 +98,7 @@ export default class ChecklistDetail extends React.PureComponent {
 
                 {!point.subTitle && <Grid item xs={12}><Divider className="ssc-divider" /></Grid>}
                 {point.subTitle && <Grid item xs={12} style={{ marginBottom: 24 }}>
-                  {value ?
+                  {value && value < 100 ?
                     <BorderLinearProgress
                       variant="determinate"
                       value={value}

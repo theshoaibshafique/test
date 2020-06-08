@@ -1400,7 +1400,7 @@ export default class EMMCases extends React.PureComponent {
       "dashboardName": tileRequest.dashboardName,
 
       "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
-      "days": this.state.selectedWeekday && [moment().day(this.state.selectedWeekday)] || [],
+      "days": this.state.selectedWeekday && [moment().isoWeekday(this.state.selectedWeekday).day()] || [],
       "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
@@ -1415,7 +1415,7 @@ export default class EMMCases extends React.PureComponent {
           //TODO: remove hardcoded values
           // result = this.tempModal;
           result.tileType = tileRequest.tileType;
-          if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
+          if (moment(tileRequest.dataDate).isSame(this.state.month, 'month')) {
             this.setState({ isOpen: true, modalTile: result });
           }
 

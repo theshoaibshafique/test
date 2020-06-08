@@ -77,7 +77,8 @@ export default class HorizontalBarChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='center' className="horizontal-chart" style={{ marginBottom: 34, minHeight: 320 }}>
+        <div style={{minHeight: 421}}>
+        <Grid container spacing={0} className="horizontal-chart" style={{ marginBottom: 34 }}>
           <Grid item xs={12} style={{ textAlign: 'center' }}>
             <StarsIcon style={{ color: '#FFB71B', fontSize: 26, marginBottom: 8 }} />
             <span className="chart-title">{this.props.title}</span>
@@ -87,7 +88,7 @@ export default class HorizontalBarChart extends React.PureComponent {
           </Grid>
           {this.props.dataPoints && this.props.dataPoints.map((point) => {
             return (
-              <Grid container justify='center' key={point.title}>
+              <Grid container key={point.title}>
                 <Grid item xs={8}>
                   {this.getName(this.props.specialties, point.title || "")}
                 </Grid>
@@ -105,6 +106,7 @@ export default class HorizontalBarChart extends React.PureComponent {
               </Grid>)
           })}
         </Grid>
+        </div>
       </LoadingOverlay >
     );
   }
