@@ -98,7 +98,7 @@ export default class ChecklistDetail extends React.PureComponent {
 
                 {!point.subTitle && <Grid item xs={12}><Divider className="ssc-divider" /></Grid>}
                 {point.subTitle && <Grid item xs={12} style={{ marginBottom: 24 }}>
-                  {value && value < 100 ?
+                  {value ?
                     <BorderLinearProgress
                       variant="determinate"
                       value={value}
