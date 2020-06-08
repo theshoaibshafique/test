@@ -221,7 +221,7 @@ export default class EMMCases extends React.PureComponent {
       selectedProcedure: ""
     }
     this.pendingDate = moment();
-    this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY,this.pendingDate.daysInMonth()))
+    this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY, this.pendingDate.daysInMonth()))
 
   }
 
@@ -1260,10 +1260,14 @@ export default class EMMCases extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ tileRequest: [],isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ tileRequest: [], isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
-          "reportType": this.state.reportType
+          "reportType": this.state.reportType,
+          "TileRequest": [{
+            "startDate": this.state.month.startOf('month').format(),
+            "endDate": this.state.month.endOf('month').format(),
+          }]
         };
         globalFunctions.axiosFetch(process.env.SSC_API, this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
@@ -1320,9 +1324,9 @@ export default class EMMCases extends React.PureComponent {
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
 
     if (tileRequest.tileType == 'InfographicMessage') {
-      
-      if (moment().isSameOrAfter(this.pendingDate.clone())){
-        this.setState({tileRequest:[]});
+
+      if (moment().isSameOrAfter(this.pendingDate.clone())) {
+        this.setState({ tileRequest: [] });
         return;
       }
 
@@ -1400,7 +1404,7 @@ export default class EMMCases extends React.PureComponent {
       "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
-    jsonBody.Monthly = Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
+    jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
 
     globalFuncs.axiosFetch(process.env.SSCTILE_API, this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
@@ -1470,7 +1474,7 @@ export default class EMMCases extends React.PureComponent {
             <Card className="ssc-card">
               <CardContent>
                 <Grid container spacing={0} >
-                  {tile.tileType == 'StackedBarChart' && <Grid className="chart-title" style={{ textAlign: 'center',marginBottom:16 }} item xs={12}>{tile.title}</Grid>}
+                  {tile.tileType == 'StackedBarChart' && <Grid className="chart-title" style={{ textAlign: 'center', marginBottom: 16 }} item xs={12}>{tile.title}</Grid>}
                   {
                     tileGroup.group.map((tile, i) => {
                       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
@@ -1538,7 +1542,7 @@ export default class EMMCases extends React.PureComponent {
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} />
       case 'INFOGRAPHICMESSAGE':
-        
+
         return <div>{`We’re currently processing the data for this month’s report. Please come back on ${this.pendingDate.format('LL')} to view your report.`}</div>
     }
   }
@@ -1574,7 +1578,7 @@ export default class EMMCases extends React.PureComponent {
       <div className="ssc-page">
         <Grid container spacing={0} className="ssc-picker-container" >
           <Grid item xs={12} className="ssc-picker">
-            <div style={{ maxWidth: 800, margin: 'auto' }}><MonthPicker month={this.state.month} updateMonth={(month) => this.updateMonth(month)} /></div>
+            <div style={{ maxWidth: 800, margin: 'auto' }}><MonthPicker month={this.state.month} maxDate={moment().subtract(1, 'month').endOf('month')} updateMonth={(month) => this.updateMonth(month)} /></div>
           </Grid>
           <Grid item xs={12}>
             <Divider className="ssc-divider" />
