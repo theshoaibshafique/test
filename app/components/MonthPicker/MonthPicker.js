@@ -10,7 +10,8 @@ class MonthPicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      month: this.props.month
+      month: this.props.month,
+      maxDate: this.props.maxDate || moment().endOf('month')
     }
   }
 
@@ -69,7 +70,7 @@ class MonthPicker extends React.Component {
                 disableUnderline: true,
                }}
               views={["year", "month"]}
-              disableFuture
+              maxDate={this.state.maxDate}
               error={false}
               helperText={null}
               value={this.state.month}
@@ -79,7 +80,7 @@ class MonthPicker extends React.Component {
           </MuiPickersUtilsProvider>
         </Grid>
         <Grid item xs={2}>
-          {moment().isSameOrBefore(this.state.month.clone(),'month')
+          {this.state.maxDate.isSameOrBefore(this.state.month.clone(),'month')
             ? ''
             :
             <Grid container justify="center" alignItems="center" style={{ marginLeft: 24 }} className="pointer" onClick={() => this.incrementMonth()}>

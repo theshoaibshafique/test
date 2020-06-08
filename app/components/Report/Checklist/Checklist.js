@@ -29,6 +29,7 @@ export default class Checklist extends React.PureComponent {
     if (index >= 0) {
       return searchList[index].name;
     }
+    return key;
   }
 
   renderList() {

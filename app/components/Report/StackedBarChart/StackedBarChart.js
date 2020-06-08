@@ -77,6 +77,14 @@ export default class StackedBarChart extends React.PureComponent {
     this.generateChartData();
   }
 
+  getName(searchList, key) {
+    let index = searchList.findIndex(item => item.value.toLowerCase() == key.toLowerCase());
+    if (index >= 0) {
+      return searchList[index].name;
+    }
+    return key;
+  }
+
   generateChartData() {
     if (!this.props.dataPoints) {
       return;
@@ -90,7 +98,7 @@ export default class StackedBarChart extends React.PureComponent {
         formattedData.x.push(point.valueX);
         point.valueZ && zData.push(point.valueZ);
       }
-
+      point.title = this.getName(this.props.specialties, point.title);
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueY);
       legendData[point.title] = point.subTitle;
