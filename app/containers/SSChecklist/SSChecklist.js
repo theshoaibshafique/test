@@ -313,12 +313,12 @@ export default class EMMCases extends React.PureComponent {
         return <ReportScore
           pushUrl={this.props.pushUrl}
           title={tile.title}
-          redirectDisplay={tile.subTitle}
-          redirectLink={tile.footer}
+          redirectDisplay={this.props.reportType == "SurgicalSafetyChecklistReport" && tile.subTitle}
+          redirectLink={this.props.reportType == "SurgicalSafetyChecklistReport" && tile.footer}
           score={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].valueX}
           message={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].title}
           subTitle={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].subTitle}
-          tooltipText={this.props.reportType == "SurgicalSafetyChecklistReport" && tile.description} />
+          tooltipText={tile.description} />
       case 'BARCHARTDETAILED':
         return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
       case 'INFOGRAPHICPARAGRAPH':
