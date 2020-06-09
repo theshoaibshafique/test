@@ -72,7 +72,7 @@ export default class EMMCases extends React.PureComponent {
             "endDate": this.state.month.endOf('month').format(),
           }]
         };
-        globalFunctions.axiosFetch(process.env.SSC_API, this.props.userToken, jsonBody, this.state.source.token)
+        globalFunctions.axiosFetch(process.env.SSC_API,'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
             result = result.data;
             if (result === 'error' || result === 'conflict') {
@@ -143,7 +143,7 @@ export default class EMMCases extends React.PureComponent {
       return;
     }
     
-    globalFuncs.axiosFetch(process.env.SSCTILE_API, this.props.userToken, jsonBody, this.state.source.token)
+    globalFuncs.axiosFetch(process.env.SSCTILE_API,'post', this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
         result = result.data;
         if (result === 'error' || result === 'conflict') {
@@ -204,7 +204,7 @@ export default class EMMCases extends React.PureComponent {
     }
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
 
-    globalFuncs.axiosFetch(process.env.SSCTILE_API, this.props.userToken, jsonBody, this.state.source.token)
+    globalFuncs.axiosFetch(process.env.SSCTILE_API,'post', this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
         result = result.data;
         if (result === 'error' || result === 'conflict') {

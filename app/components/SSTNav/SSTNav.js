@@ -5,6 +5,7 @@ import logo from './img/SST-Product_Insights_sketch.png';
 import { List, ListItem, Collapse, Grid, MenuItem, Menu } from '@material-ui/core';
 import IconExpandLess from '@material-ui/icons/ExpandLess'
 import IconExpandMore from '@material-ui/icons/ExpandMore'
+import LoadingOverlay from 'react-loading-overlay';
 class SSTNav extends React.Component {
   constructor(props) {
     super(props);
@@ -48,27 +49,48 @@ class SSTNav extends React.Component {
             </ListItem>
 
             <ListItem disableGutters><NavLink to="/dashboard" className='text-link '>Dashboard</NavLink></ListItem>
+            {this.props.isLoading &&
+              <ListItem disableGutters><LoadingOverlay
+                active={this.props.isLoading}
+                spinner
+                className="overlays text-link"
+                styles={{
+                  overlay: (base) => ({
+                    ...base,
+                    background: 'none',
+                    color: '#000'
+                  }),
+                  spinner: (base) => ({
+                    ...base,
+                    width:40,
+                    '& svg circle': {
+                      stroke: 'rgba(0, 0, 0, 0.5)'
+                    }
+                  })
+                }}
+              >
+
+              </LoadingOverlay>
+              </ListItem>
+            }
             {(this.props.emmAccess) &&
               <ListItem disableGutters><NavLink to="/emmcases" className='text-link' >eM&M Cases</NavLink></ListItem>
             }
             {(this.props.emmPublishAccess) &&
               <ListItem disableGutters><NavLink to="/emmpublish" className='text-link' >eM&M Publisher</NavLink></ListItem>
             }
-            {/* 
-            <li>Efficiency</li>
-            <li>Surgical Safety Checklist</li>
-          */}
-            {(this.props.sscAccess) && 
+
+            {(this.props.sscAccess) &&
               <ListItem disableGutters>
                 <NavLink to="/sschecklist" className='text-link'>
                   <div>Surgical Safety Checklist</div>
                 </NavLink>
-                <div style={{ marginRight: 8, position: 'absolute', right: 0,cursor:'pointer' }} onClick={() => this.toggleSSC()}>
+                <div style={{ marginRight: 8, position: 'absolute', right: 0, cursor: 'pointer' }} onClick={() => this.toggleSSC()}>
                   {this.state.isSSCOpen ? <IconExpandLess /> : <IconExpandMore />}
                 </div>
               </ListItem>
             }
-            {(this.props.sscAccess) && 
+            {(this.props.sscAccess) &&
               <Collapse in={this.state.isSSCOpen} timeout="auto" unmountOnExit>
                 <ListItem disableGutters><NavLink to="/complianceScore" className='text-link sub-item' >Compliance Score</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/engagementScore" className='text-link sub-item' >Engagement Score</NavLink></ListItem>
