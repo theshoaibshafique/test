@@ -44,12 +44,12 @@ export default class ChecklistDetail extends React.PureComponent {
   };
 
   componentDidMount() {
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX || ('' + a.subTitle).localeCompare(b.subTitle) });
+    let dataPoints = this.props.dataPoints.sort((a, b) => { return  b.valueX - a.valueX || ('' + a.subTitle).localeCompare(b.subTitle) });
     dataPoints = this.groupTiles(dataPoints);
     let topItems = this.props.dataPoints.filter(point => point.subTitle)
       .sort((a, b) => { return b.valueX - a.valueX })
       .slice(0, 5)
-      .map((point) => point.subTitle + point.valueX);
+      .map((point) => point.title+point.subTitle + point.valueX);
     this.setState({ dataPoints, topItems });
   }
 
@@ -82,10 +82,10 @@ export default class ChecklistDetail extends React.PureComponent {
         <Grid item xs={4} key={i} className={"checklist-list"}>
           {dataGroup.group.map((point, j) => {
             let value = parseInt(point.valueX) / parseInt(dataGroup.total) * 100;
-            let isTopItem = this.state.topItems.includes(point.subTitle + point.valueX);
+            let isTopItem = this.state.topItems.includes(point.title+point.subTitle + point.valueX);
             return (
               <Grid container spacing={0} key={`${i}-${j}`}
-                className={`${isTopItem && 'top-item'} ${value <= 0 && 'complete-item'}`}
+                className={`${isTopItem ? 'top-item' : ''} ${value <= 0 || (dataGroup.total <=0 && point.subTitle) ? 'complete-item' : ''}`}
               >
                 <Grid item xs={8} className={point.subTitle ? "list-subtitle" : "list-title"}  >
                   {point.subTitle || point.title}
@@ -148,7 +148,7 @@ export default class ChecklistDetail extends React.PureComponent {
             {this.props.title}
           </Grid>
           <Grid item xs={2} style={{ textAlign: 'right', padding: '40px 24px 0 40px' }}>
-            <IconButton onClick={this.props.closeModal}><CloseIcon fontSize='small' /></IconButton>
+            <IconButton disableRipple disableFocusRipple onClick={this.props.closeModal} className='close-button'><CloseIcon fontSize='small' /></IconButton>
           </Grid>
           <Grid container spacing={0} justify="center">
             {this.renderData()}

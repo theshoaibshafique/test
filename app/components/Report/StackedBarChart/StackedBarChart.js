@@ -11,6 +11,7 @@ export default class StackedBarChart extends React.PureComponent {
     this.chartRef = React.createRef();
 
     this.state = {
+      legendData:[],
       chartID: 'stackedBarChartDetailed',
       chartData: {
         data: {
@@ -44,8 +45,9 @@ export default class StackedBarChart extends React.PureComponent {
           y: {
             label: {
               text: this.props.subTitle, //Dynamically populated
-              position: 'outer-middle'
+              position: 'outer-middle',
             },
+            padding: { top: 30, bottom: 0 },
           }
         },
         grid: {
@@ -61,7 +63,7 @@ export default class StackedBarChart extends React.PureComponent {
           show: false
         },
         size: {
-          width: 440
+          // width: 440
         },
         onrendered: () => this.state.legendData && this.createCustomLegend(`.${this.state.chartID}`),
       }
@@ -96,12 +98,12 @@ export default class StackedBarChart extends React.PureComponent {
     dataPoints.map((point) => {
       if (!formattedData.x.includes(point.valueX)) {
         formattedData.x.push(point.valueX);
-        point.valueZ && zData.push(point.valueZ);
       }
       point.title = this.getName(this.props.specialties, point.title);
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueY);
       legendData[point.title] = point.subTitle;
+      point.valueZ && zData.push(point.valueZ);
     });
     let columns = [];
     Object.entries(formattedData).map(([key, value]) => {
@@ -120,7 +122,7 @@ export default class StackedBarChart extends React.PureComponent {
   }
 
   createCustomLabel(v, id, i, j) {
-    if (id && this.state.zData && j == this.state.zData.length - 1) {
+    if (id && this.state.zData && j == Object.keys(this.state.legendData).length - 1) {
       return this.state.zData[i]
     }
   }
@@ -174,15 +176,15 @@ export default class StackedBarChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='center' className="stacked-barchart-detailed" style={{ textAlign: 'center', minHeight: 320, marginBottom: 50 }}>
+        <Grid container spacing={0} justify='center' className="stacked-barchart-detailed" style={{ textAlign: 'center', minHeight: 320 }}>
           <Grid item xs={9} className="chart-title">
             {this.props.description}
           </Grid>
           <Grid item xs={3}></Grid>
-          <Grid item xs={9} >
+          <Grid item xs={8} >
             {<C3Chart ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
-          <Grid item xs={3} className={this.state.chartID}>
+          <Grid item xs={4} className={this.state.chartID}>
           </Grid>
         </Grid>
       </LoadingOverlay>

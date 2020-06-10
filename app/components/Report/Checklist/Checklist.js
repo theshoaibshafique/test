@@ -20,8 +20,8 @@ export default class Checklist extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    // let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX });
-    // this.setState({ dataPoints });
+    let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX });
+    this.setState({ dataPoints });
   }
 
   getName(searchList, key) {
@@ -34,7 +34,7 @@ export default class Checklist extends React.PureComponent {
 
   renderList() {
 
-    return this.props.dataPoints && this.props.dataPoints.map((point, index) => {
+    return this.state.dataPoints && this.state.dataPoints.map((point, index) => {
       return (<Grid container spacing={0} key={index}>
         <Grid item xs={10} className="list-title">
           {point.title}

@@ -63,6 +63,7 @@
   display: flex;
   margin-top: 32px;
   flex-direction: column;
+  margin-left: 16px;
 }
 .stacked-barchart-detailed .legend-title{
   display: flex;
@@ -103,4 +104,8 @@
 
 .stacked-barchart-detailed .c3-axis-y-label{
   transform: translate(-8px, 10px) rotate(-90deg);
+}
+.stacked-barchart-detailed .c3-axis-y .tick:nth-child(odd),
+.stacked-barchart-detailed .c3-ygrid:nth-child(even){
+  opacity: 0 !important;
 }
