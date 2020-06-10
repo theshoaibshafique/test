@@ -53,7 +53,7 @@ export default class ReportScore extends React.PureComponent {
               </LightTooltip>}
             </span>
           </Grid>
-          {this.props.message && <Grid item xs={12} style={{padding:'30px 0'}}>
+          {this.props.message && <Grid item xs={12} style={{padding:'42px 0'}}>
             <div className="score-message">{this.props.message}</div>
             {this.props.subTitle && <div className="score-subtitle">
               {this.props.subTitle}
