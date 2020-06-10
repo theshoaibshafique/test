@@ -113,3 +113,9 @@ hr { margin: 24px 0px; }
     color: #000;
   }
 }
+
+@media (max-width: $desktop-width) {
+  .Emm-Paper.Score {
+      padding: 40px 8px;
+  }
+}

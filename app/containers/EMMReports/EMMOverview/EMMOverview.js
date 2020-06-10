@@ -28,7 +28,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
           <Grid item xs={4}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Paper className="Emm-Paper">
+                <Paper className="Emm-Paper Score">
                   <div className="Section-Title">{distractionScore.title}</div>
                   <div className="EMM-Score">{distractionScore.dataPoints[0].valueX}</div>
                 </Paper>
@@ -50,13 +50,13 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
           <Grid item xs={8}>
             <Grid container spacing={3}>
               <Grid item xs={6}>
-                <Paper className="Emm-Paper">
+                <Paper className="Emm-Paper Score">
                   <div className="Section-Title">{technicalPerformanceScore.title}</div>
                   <div className="EMM-Score">{technicalPerformanceScore.dataPoints[0].valueX}</div>
                 </Paper>
               </Grid>
               <Grid item xs={6}>
-                <Paper className="Emm-Paper">
+                <Paper className="Emm-Paper Score">
                   <div className="Section-Title">{adverseEventRate.title}</div>
                   <div className="EMM-Score">{adverseEventRate.dataPoints[0].valueX}</div>
                 </Paper>

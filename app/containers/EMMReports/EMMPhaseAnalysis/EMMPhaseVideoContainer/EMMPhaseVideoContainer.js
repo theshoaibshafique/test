@@ -14,9 +14,28 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
     }
   }
   componentDidMount() {
-    const { phaseData } = this.props;
+    this.updateVideo()
+  }
 
-    let videoOptions = {
+  componentDidUpdate(prevProps) {
+    if (prevProps.phaseData != this.props.phaseData) {
+      this.updateVideo();
+    }
+  }
+
+  getVideoID() {
+    const { phaseData } = this.props;
+    if (phaseData.name !== 'SurgicalProcedure') {
+      return '54DA222E-317F-4DD8-BC26-BBACE35E586D-F624B368-6681-47DE-8452-8A64CCEA0728';
+    } else {
+      return '54DA222E-317F-4DD8-BC26-BBACE35E586D-DE11E686-EDE9-4DD0-9B47-6B693C893C99';
+    }
+  }
+
+  updateVideo() {
+    const videoID = this.getVideoID();
+
+    const videoOptions = {
       "nativeControlsForTouch": false,
       controls: true,
       fluid: true,
@@ -35,8 +54,7 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
       // plugins: plugins
     }
 
-    console.log(phaseData.name)
-    globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/54DA222E-317F-4DD8-BC26-BBACE35E586D-DE11E686-EDE9-4DD0-9B47-6B693C893C99', 'get', this.props.userToken, {})
+    globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/' + videoID, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           this.setState({showVideo: true})
@@ -57,13 +75,6 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
           }]);
         }
       });
-
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.phaseData != prevProps.phaseData) {
-      console.log(this.myPlayer.src())
-    }
   }
 
   seekVideo(time) {
