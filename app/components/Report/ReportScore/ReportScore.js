@@ -44,7 +44,7 @@ export default class ReportScore extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} style={{ textAlign: 'center', minHeight: 220 }} className="report-score">
+        <Grid container spacing={0} style={{ textAlign: 'center', minHeight: 190 }} className="report-score">
           <Grid item xs={12} className="score-title">
             <span >
               {this.props.title}
@@ -61,8 +61,8 @@ export default class ReportScore extends React.PureComponent {
           </Grid>}
 
 
-          {this.props.score >= 0 && <Grid item xs={12} >
-            <span className="score-display">{this.props.score}</span>
+          {this.props.score >= 0 && <Grid item xs={12} className="score-display">
+            {this.props.score}
           </Grid>}
           {this.props.redirectLink &&
             <Grid item xs={12} className="link">

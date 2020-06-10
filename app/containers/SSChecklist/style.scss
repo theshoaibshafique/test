@@ -57,6 +57,10 @@ $ssc-picker-height: 150px;
     letter-spacing: 0;
     line-height: 36px;
   }
+.ssc-card .InfographicText{
+    display: flex;
+    align-items: center;
+}
 .ssc-picker-container{
     position: absolute;
     width: calc(100% - #{$nav-width});

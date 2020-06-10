@@ -285,7 +285,7 @@ export default class EMMCases extends React.PureComponent {
                       } else if (tile.tileType == 'Checklist' && tile.body) {
                         xs = 12;
                       }
-                      return <Grid item xs={xs} key={`${tile.tileType}${i}`}>{this.renderTile(tile)}</Grid>
+                      return <Grid item xs={xs} key={`${tile.tileType}${i}`} className={tile.tileType}>{this.renderTile(tile)}</Grid>
                     })
                   }
                 </Grid>
