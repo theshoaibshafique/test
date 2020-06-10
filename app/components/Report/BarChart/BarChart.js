@@ -79,7 +79,7 @@ export default class BarChart extends React.PureComponent {
   }
 
   componentDidMount() {
-    // this.generateChartData();
+    this.generateChartData();
   }
 
   generateChartData() {
