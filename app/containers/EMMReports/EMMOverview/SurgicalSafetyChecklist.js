@@ -2,7 +2,7 @@ import React from 'react';
 import CircleProgress from '../../../components/Report/CircleProgress';
 
 const SurgicalSafetyChecklist = (props) => {
-  let { checklistScore } = props;
+  const { checklistScore } = props;
   const circleSize = 175;
   const sscCirclesColors = ["#A7E5FD", "#97E7B3", "#CFB9E4"];
   const isAllZeroes = checklistScore.filter(score => score.valueX == 0).length == 3;

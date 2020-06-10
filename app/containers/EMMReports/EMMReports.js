@@ -25,7 +25,7 @@ export default class EMMReports extends React.PureComponent {
   getReport() {
     // this.props.setEMMReport(emmData)
 
-    let { emmReportID } = this.props;
+    const { emmReportID } = this.props;
     globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + emmReportID, 'get', this.props.userToken, {})
       .then(caseData => {
         this.props.setEMMReport(caseData)
@@ -50,7 +50,7 @@ export default class EMMReports extends React.PureComponent {
   }
 
   switchTab(currentTab) {
-    let { selectedEMMTab } = this.state;
+    const { selectedEMMTab } = this.state;
     if (currentTab != selectedEMMTab) {
       this.setState({
         selectedEMMTab: (selectedEMMTab == 'overview') ? 'phase' : 'overview'
@@ -59,8 +59,8 @@ export default class EMMReports extends React.PureComponent {
   }
 
   render() {
-    let { selectedEMMTab } = this.state;
-    let { emmReportData } = this.props;
+    const { selectedEMMTab } = this.state;
+    const { emmReportData } = this.props;
     return (
       <div className="EMM-REPORTS full-height relative">
         {(emmReportData) &&

@@ -43,8 +43,8 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
   }
 
   render() {
-    let { phaseData } = this.props;
-    let { showOnlyAE } = this.state;
+    const { phaseData } = this.props;
+    const { showOnlyAE } = this.state;
     return (
       <div>
         <div className="phase-events-title">

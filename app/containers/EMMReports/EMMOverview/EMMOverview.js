@@ -20,8 +20,8 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
   }
 
   render() {
-    let { circleSize, sscCirclesColors } = this.state;
-    let { emmReportData, emmReportData : { distractionScore, technicalPerformanceScore, adverseEventRate, checklistScore, checklists, phasesOfInterest }, specialties, complications } = this.props;
+    const { circleSize, sscCirclesColors } = this.state;
+    const { emmReportData, emmReportData : { distractionScore, technicalPerformanceScore, adverseEventRate, checklistScore, checklists, phasesOfInterest }, specialties, complications } = this.props;
     return (
       <div className="Emm-Reports-Overview">
         <Grid container spacing={3}>

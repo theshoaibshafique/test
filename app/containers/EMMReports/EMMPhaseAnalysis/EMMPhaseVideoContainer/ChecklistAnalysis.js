@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Paper } from '@material-ui/core';
 
 const CheckListData = (props) => {
-  let { data, data : { dataPoints } } = props;
+  const { data, data : { dataPoints } } = props;
 
   const getCheckListData = () => {
     if (data.title == "Missed Items") {

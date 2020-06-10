@@ -9,12 +9,13 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
   constructor(props) {
     super(props);
     this.state = {
-
       videoID:`azuremediaplayer${this.props.title.replace(/\W/g, '')}`,
       showVideo: false
     }
   }
   componentDidMount() {
+    const { phaseData } = this.props;
+
     let videoOptions = {
       "nativeControlsForTouch": false,
       controls: true,
@@ -29,11 +30,13 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
             { name: "x1.0", value: 1.0 },
             { name: "x0.5", value: 0.5 },
         ]
-      }
+      },
+      "logo": { "enabled": false },
       // plugins: plugins
     }
 
-    globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/test/54DA222E-317F-4DD8-BC26-BBACE35E586D-DE11E686-EDE9-4DD0-9B47-6B693C893C99', 'get', this.props.userToken, {})
+    console.log(phaseData.name)
+    globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/54DA222E-317F-4DD8-BC26-BBACE35E586D-DE11E686-EDE9-4DD0-9B47-6B693C893C99', 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           this.setState({showVideo: true})
@@ -57,12 +60,18 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
 
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.phaseData != prevProps.phaseData) {
+      console.log(this.myPlayer.src())
+    }
+  }
+
   seekVideo(time) {
       this.myPlayer.currentTime(time)
   }
 
   render() {
-    let { phaseData } = this.props;
+    const { phaseData } = this.props;
     return (
       <div className="Emm-Phase-Video-Container">
         <div className="flex">

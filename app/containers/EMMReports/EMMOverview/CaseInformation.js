@@ -2,7 +2,7 @@ import React from 'react';
 import globalFuncs from '../../../utils/global-functions';
 
 const CaseInformation = (props) => {
-  let { caseDuration, procedures, complications, allSpecialties, allComplications } = props;
+  const { caseDuration, procedures, complications, allSpecialties, allComplications } = props;
   const caseProcedures = procedures.map((procedure) => {
     const foundSpecialty = allSpecialties.filter((specialty) => { return specialty.value.toUpperCase() == procedure.specialtyName.toUpperCase() })[0];
     const foundProcedure = foundSpecialty.procedures.filter((specialty) => { return specialty.value.toUpperCase() == procedure.procedureName.toUpperCase() })[0];

@@ -14,7 +14,7 @@ export default class EMMPhaseSelector extends React.PureComponent { // eslint-di
   }
 
   render() {
-    let { selectedPhase, phases, phaseEvents } = this.props
+    const { selectedPhase, phases, phaseEvents } = this.props
     return (
       <div className="Emm-Phase-Selector">
         {phases.map((phase, index) => {

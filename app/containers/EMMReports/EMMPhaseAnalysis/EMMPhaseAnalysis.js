@@ -32,9 +32,9 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
 
 
   render() {
-    let { currentPhase, phaseTitles, phaseEvents } = this.state;
-    let { scriptReady, phases } = this.props;
-    let selectedPhase = phases[currentPhase];
+    const { currentPhase, phaseTitles, phaseEvents } = this.state;
+    const { scriptReady, phases } = this.props;
+    const selectedPhase = phases[currentPhase];
     return (
       <div className="Emm-Phases">
         <h1>Case Timeline</h1>

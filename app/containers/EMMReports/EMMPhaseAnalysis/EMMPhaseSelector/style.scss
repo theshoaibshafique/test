@@ -3,8 +3,11 @@
 .Emm-Phase-Selector {
   display: flex;
   margin-bottom: 24px;
+  overflow-x: auto;
+  max-width: 100%;
   .Emm-Phase-Select {
     width: 200px;
+    min-width: 200px;
     padding: 16px 32px 16px 16px;
     margin-right: 8px;
     cursor: pointer;

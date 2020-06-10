@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ChecklistStatus = (props) => {
-  let { checklists } = props;
+  const { checklists } = props;
   const checkListHappened = checklists.filter((checklist) => checklist.title.indexOf('was missed') < 0)
   const checkListMissed = checklists.filter((checklist) => checklist.title.indexOf('was missed') >= 0)
 

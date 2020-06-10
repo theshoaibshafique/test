@@ -1,7 +1,7 @@
 import React from 'react';
 
 const VideoTimeline = (props) => {
-  let { duration, procedureSteps } = props;
+  const { duration, procedureSteps } = props;
   let adverseEvents = [];
   procedureSteps.forEach((procedureStep) => {
     if (procedureStep.dataPoints.length > 0)

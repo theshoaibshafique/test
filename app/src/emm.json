@@ -1,5 +1,5 @@
 {
-    "name": "CDFB1039-7A67-4F39-9573-0C433A2E7C34",
+    "name": "0C93B27D-70F5-4191-8D76-F8608F550EE3",
     "displayName": "Enhanced M&M",
     "description": null,
     "requestId": "BCF917A1-DC7E-4BA3-AE20-0D25BF64BB4C",
@@ -19,7 +19,7 @@
     "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
     "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
     "caseDuration": 46188,
-    "published": true,
+    "published": false,
     "enhancedMMPages": [
         {
             "name": "RoomSetup",
@@ -60,7 +60,7 @@
                         "54DA222E-317F-4DD8-BC26-BBACE35E586D-F624B368-6681-47DE-8452-8A64CCEA0728"
                     ],
                     "dataPoints": [],
-                    "tileType": "EmmVideoClipAnnotation"
+                    "tileType": "EmmVideo"
                 }
             ],
             "checklistData": {
@@ -264,8 +264,8 @@
                             "title": "Bleeding",
                             "subTitle": null,
                             "description": null,
-                            "valueX": null,
-                            "valueY": null,
+                            "valueX": "800",
+                            "valueY": "800",
                             "valueZ": null,
                             "note": null
                         }
@@ -376,8 +376,8 @@
                             "title": "Mechanical Injury",
                             "subTitle": null,
                             "description": null,
-                            "valueX": null,
-                            "valueY": null,
+                            "valueX": "1692",
+                            "valueY": "1692",
                             "valueZ": null,
                             "note": null
                         },
@@ -385,8 +385,8 @@
                             "title": "Bleeding",
                             "subTitle": null,
                             "description": null,
-                            "valueX": null,
-                            "valueY": null,
+                            "valueX": "1900",
+                            "valueY": "1900",
                             "valueZ": null,
                             "note": null
                         }
@@ -503,7 +503,7 @@
                         "54DA222E-317F-4DD8-BC26-BBACE35E586D-E0C2E496-2807-4206-8B9D-8D49690E4323"
                     ],
                     "dataPoints": [],
-                    "tileType": "EmmVideoClipAnnotation"
+                    "tileType": "EmmVideo"
                 },
                 {
                     "header": null,
@@ -522,7 +522,7 @@
                         "54DA222E-317F-4DD8-BC26-BBACE35E586D-C624B368-6681-47DE-8452-8A64CCEA0728"
                     ],
                     "dataPoints": [],
-                    "tileType": "EmmVideoClipAnnotation"
+                    "tileType": "EmmVideo"
                 }
             ],
             "checklistData": null
@@ -535,7 +535,7 @@
         "body": null,
         "footer": null,
         "description": null,
-        "order": 3,
+        "order": 0,
         "group": null,
         "groupOrder": 0,
         "total": null,
@@ -547,7 +547,7 @@
                 "title": null,
                 "subTitle": null,
                 "description": null,
-                "valueX": "99",
+                "valueX": "91.05",
                 "valueY": null,
                 "valueZ": null,
                 "note": null
@@ -562,7 +562,7 @@
         "body": null,
         "footer": null,
         "description": null,
-        "order": 3,
+        "order": 2,
         "group": null,
         "groupOrder": 0,
         "total": null,
@@ -574,7 +574,7 @@
                 "title": null,
                 "subTitle": null,
                 "description": null,
-                "valueX": "77",
+                "valueX": "66.23",
                 "valueY": null,
                 "valueZ": null,
                 "note": null
@@ -584,12 +584,12 @@
     },
     "adverseEventRate": {
         "header": null,
-        "title": "Number of Events",
+        "title": "Adversre Event per Hour",
         "subTitle": null,
         "body": null,
         "footer": null,
         "description": null,
-        "order": 3,
+        "order": 0,
         "group": null,
         "groupOrder": 0,
         "total": null,
@@ -601,7 +601,7 @@
                 "title": null,
                 "subTitle": null,
                 "description": null,
-                "valueX": "6",
+                "valueX": "8.69",
                 "valueY": null,
                 "valueZ": null,
                 "note": null
@@ -609,346 +609,52 @@
         ],
         "tileType": "EmmScore"
     },
-    "checklistScoreData": [
-        {
-            "name": null,
-            "reportName": "SSCCOUNT",
-            "title": "Surgical Safety Checklist Count",
-            "subTitle": null,
-            "body": null,
-            "footer": null,
-            "description": null,
-            "total": "1",
-            "assets": [],
-            "dataPoints": [
-                {
-                    "title": "Checklist: Timeout",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                    "valueY": "1",
-                    "valueZ": null,
-                    "note": null
-                }
-            ],
-            "active": true,
-            "dataDate": "2020-05-07T04:00:00Z",
-            "monthly": false,
-            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-        },
-        {
-            "name": null,
-            "reportName": "SSCWHENDONECORRECTLYCOUNT",
-            "title": "Surgical Safety Checklist When Was Checklist Done Correctly Count",
-            "subTitle": null,
-            "body": null,
-            "footer": null,
-            "description": null,
-            "total": "1",
-            "assets": [],
-            "dataPoints": [
-                {
-                    "title": "Checklist: Timeout",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                    "valueY": "1",
-                    "valueZ": "1",
-                    "note": null
-                }
-            ],
-            "active": true,
-            "dataDate": "2020-05-07T04:00:00Z",
-            "monthly": false,
-            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-        },
-        {
-            "name": null,
-            "reportName": "SSCHOWMANYMEMBERSPRESENTSUM",
-            "title": "Surgical Safety Checklist How Many Members Present Sum",
-            "subTitle": null,
-            "body": null,
-            "footer": null,
-            "description": null,
-            "total": "1",
-            "assets": [],
-            "dataPoints": [
-                {
-                    "title": "Checklist: Timeout",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                    "valueY": "8",
-                    "valueZ": null,
-                    "note": null
-                }
-            ],
-            "active": true,
-            "dataDate": "2020-05-07T04:00:00Z",
-            "monthly": false,
-            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-        },
-        {
-            "name": null,
-            "reportName": "SSCHOWMANYMEMBERSPAUSEDSUM",
-            "title": "Surgical Safety Checklist How Many Members Paused Sum",
-            "subTitle": null,
-            "body": null,
-            "footer": null,
-            "description": null,
-            "total": "1",
-            "assets": [],
-            "dataPoints": [
-                {
-                    "title": "Checklist: Timeout",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                    "valueY": "8",
-                    "valueZ": null,
-                    "note": null
-                }
-            ],
-            "active": true,
-            "dataDate": "2020-05-07T04:00:00Z",
-            "monthly": false,
-            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-        },
-        {
-            "name": null,
-            "reportName": "SSCLESSTHAN5MEMBERSPRESENTCOUNT",
-            "title": "Surgical Safety Checklist Less Than 5 Members Present Count",
-            "subTitle": null,
-            "body": null,
-            "footer": null,
-            "description": null,
-            "total": "1",
-            "assets": [],
-            "dataPoints": [
-                {
-                    "title": "Checklist: Timeout",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                    "valueY": "0",
-                    "valueZ": "1",
-                    "note": null
-                }
-            ],
-            "active": true,
-            "dataDate": "2020-05-07T04:00:00Z",
-            "monthly": false,
-            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-        },
-        {
-            "name": null,
-            "reportName": "SSCNOTALLMEMBERSPAUSEDCOUNT",
-            "title": "Surgical Safety Checklist Not All Members Paused Count",
-            "subTitle": null,
-            "body": null,
-            "footer": null,
-            "description": null,
-            "total": "1",
-            "assets": [],
-            "dataPoints": [
-                {
-                    "title": "Checklist: Timeout",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                    "valueY": "0",
-                    "valueZ": "1",
-                    "note": null
-                }
-            ],
-            "active": true,
-            "dataDate": "2020-05-07T04:00:00Z",
-            "monthly": false,
-            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-        },
-        {
-            "name": null,
-            "reportName": "SSCPRIORITYITEMVERBALCHECKCOUNT",
-            "title": "Surgical Safety Checklist Priority Item Verbal Check Count",
-            "subTitle": null,
-            "body": null,
-            "footer": null,
-            "description": null,
-            "total": "1",
-            "assets": [],
-            "dataPoints": [
-                {
-                    "title": "Checklist: Timeout",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "E54B387C-6B9B-42DD-A7F2-9602EEB61CED",
-                    "valueY": "3",
-                    "valueZ": "6",
-                    "note": null
-                }
-            ],
-            "active": true,
-            "dataDate": "2020-05-07T04:00:00Z",
-            "monthly": false,
-            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-        },
-        {
-            "name": null,
-            "reportName": "SSCMISSEDTIMEOUTPRIORITYITEM",
-            "title": "Surgical Safety Checklist Timeout Missed Priority Items",
-            "subTitle": null,
-            "body": null,
-            "footer": null,
-            "description": null,
-            "total": "1",
-            "assets": [],
-            "dataPoints": [
-                {
-                    "title": "Patient ID",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "7834F12C-7CD0-48BD-ACA0-C83C98A59446",
-                    "valueY": "0",
-                    "valueZ": null,
-                    "note": null
-                },
-                {
-                    "title": "Procedure",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "449BFC11-5988-47F9-B3AF-06443242027C",
-                    "valueY": "0",
-                    "valueZ": null,
-                    "note": null
-                },
-                {
-                    "title": "Site",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "D3DBBE2A-194A-4CB8-AFFF-DFC9561C9584",
-                    "valueY": "1",
-                    "valueZ": null,
-                    "note": null
-                },
-                {
-                    "title": "Antibiotic prophylaxis",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "15D58C95-8C77-458B-8330-E0B44BAB7BF4",
-                    "valueY": "0",
-                    "valueZ": null,
-                    "note": null
-                },
-                {
-                    "title": "DVT prophylaxis",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "A356E060-46EC-4F50-8AC6-4088CA5A6CD4",
-                    "valueY": "1",
-                    "valueZ": null,
-                    "note": null
-                },
-                {
-                    "title": "Allergies",
-                    "subTitle": null,
-                    "description": null,
-                    "valueX": "6DD5EB0A-4FF1-4059-89C6-37B991388498",
-                    "valueY": "1",
-                    "valueZ": null,
-                    "note": null
-                }
-            ],
-            "active": true,
-            "dataDate": "2020-05-07T04:00:00Z",
-            "monthly": false,
-            "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
-            "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
-            "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
-            "roomName": "92A1D4B7-806A-4D20-9D24-3376E0584124",
-            "procedureName": "823774C6-5583-47B0-8397-1B2EBDA40794",
-            "specialtyName": "DEB47645-C2A2-4F96-AD89-31FFBCF5F39F"
-        }
-    ],
+    "checklistScoreData": [],
     "checklistScore": {
-      "header": null,
-      "title": "Surgical Safety Checklist",
-      "subTitle": null,
-      "body": null,
-      "footer": null,
-      "description": null,
-      "order": 3,
-      "group": null,
-      "groupOrder": 0,
-      "total": null,
-      "startTime": 0,
-      "endTime": 0,
-      "assets": [],
-      "dataPoints": [
-          {
-              "title": "Checklist Score",
-              "subTitle": null,
-              "description": null,
-              "valueX": "35",
-              "valueY": null,
-              "valueZ": null,
-              "note": null
-          },
-          {
-            "title": "Engagement Score",
-            "subTitle": null,
-            "description": null,
-            "valueX": "67",
-            "valueY": null,
-            "valueZ": null,
-            "note": null
-        },
-        {
-          "title": "Quality Score",
-          "subTitle": null,
-          "description": null,
-          "valueX": "69",
-          "valueY": null,
-          "valueZ": null,
-          "note": null
-      }
-      ],
-      "tileType": "EmmScore"
-  },
+        "header": null,
+        "title": "Surgical Safety Checklist",
+        "subTitle": null,
+        "body": null,
+        "footer": null,
+        "description": null,
+        "order": 0,
+        "group": null,
+        "groupOrder": 0,
+        "total": null,
+        "startTime": 0,
+        "endTime": 0,
+        "assets": null,
+        "dataPoints": [
+            {
+                "title": "Compliance Score",
+                "subTitle": null,
+                "description": null,
+                "valueX": "0",
+                "valueY": null,
+                "valueZ": null,
+                "note": null
+            },
+            {
+                "title": "Engagement Score",
+                "subTitle": null,
+                "description": null,
+                "valueX": "0",
+                "valueY": null,
+                "valueZ": null,
+                "note": null
+            },
+            {
+                "title": "Quality Score",
+                "subTitle": null,
+                "description": null,
+                "valueX": "0",
+                "valueY": null,
+                "valueZ": null,
+                "note": null
+            }
+        ],
+        "tileType": null
+    },
     "checklists": {
         "header": null,
         "title": null,
