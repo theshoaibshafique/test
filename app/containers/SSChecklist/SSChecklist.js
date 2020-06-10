@@ -24,7 +24,7 @@ import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDe
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
-    super(props);    
+    super(props);
 
     this.state = {
 
@@ -41,7 +41,8 @@ export default class EMMCases extends React.PureComponent {
       selectedWeekday: "",
       selectedSpecialty: "",
       procedureOptions: [],
-      selectedProcedure: ""
+      selectedProcedure: "",
+      hasNoCases: false
     }
     this.pendingDate = moment();
     this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY, this.pendingDate.daysInMonth()))
@@ -72,7 +73,7 @@ export default class EMMCases extends React.PureComponent {
             "endDate": this.state.month.endOf('month').format(),
           }]
         };
-        globalFunctions.axiosFetch(process.env.SSC_API,'post', this.props.userToken, jsonBody, this.state.source.token)
+        globalFunctions.axiosFetch(process.env.SSC_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
             result = result.data;
             if (result === 'error' || result === 'conflict') {
@@ -124,7 +125,7 @@ export default class EMMCases extends React.PureComponent {
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
 
     if (tileRequest.tileType == 'InfographicMessage') {
-
+      //The report isnt "pending" - Its empty
       if (moment().isSameOrAfter(this.pendingDate.clone())) {
         this.setState({ tileRequest: [] });
         return;
@@ -142,8 +143,8 @@ export default class EMMCases extends React.PureComponent {
         });
       return;
     }
-    
-    globalFuncs.axiosFetch(process.env.SSCTILE_API,'post', this.props.userToken, jsonBody, this.state.source.token)
+
+    globalFuncs.axiosFetch(process.env.SSCTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
         result = result.data;
         if (result === 'error' || result === 'conflict') {
@@ -158,10 +159,13 @@ export default class EMMCases extends React.PureComponent {
           if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
             reportData[i].group[j] = result;
           }
+          if (tileRequest.tileType == 'InfographicParagraph') {
+            //In thee case that there is NO CASES and you're using filters - we show custom mesage
+            this.setState({ hasNoCases: result.dataPoints && result.dataPoints.length > 0 && result.dataPoints[0].valueX <= 0 && !jsonBody.Monthly })
+          }
           this.setState({ reportData, pendingTileCount: this.state.pendingTileCount - 1 },
             () => {
               if (this.state.pendingTileCount <= 0) {
-                // let reportData = this.state.rawData.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder);
                 this.notLoading();
               }
             });
@@ -204,7 +208,7 @@ export default class EMMCases extends React.PureComponent {
     }
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
 
-    globalFuncs.axiosFetch(process.env.SSCTILE_API,'post', this.props.userToken, jsonBody, this.state.source.token)
+    globalFuncs.axiosFetch(process.env.SSCTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
         result = result.data;
         if (result === 'error' || result === 'conflict') {
@@ -414,11 +418,22 @@ export default class EMMCases extends React.PureComponent {
           }}
         >
           <Grid container spacing={3} className="ssc-main">
-            {this.state.loading || !this.state.tileRequest.length ?
-              <Grid item xs={12} className="ssc-message">
-                No data available this month
-            </Grid> :
-              this.renderTiles()}
+            {
+              this.state.hasNoCases ?
+                <Grid item xs={12} className="ssc-message">
+                  No data available this month
+                  <Grid item xs={12} className="ssc-message-subtitle">
+                    (Try a different filter criteria)
+                  </Grid>
+                </Grid>
+                :
+                (this.state.loading || !this.state.tileRequest.length || this.state.pendingTileCount > 0)
+                  ?
+                  <Grid item xs={12} className="ssc-message">
+                    No data available this month
+                    </Grid>
+                  :
+                  this.renderTiles()}
           </Grid>
 
           <Modal
