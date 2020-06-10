@@ -75,3 +75,6 @@
   stroke-dasharray: unset;
   stroke: #EAEAEA;
 }
+.bar-chart-detailed .c3-axis-y-label{
+  transform: translate(-10px, 10px) rotate(-90deg);
+}

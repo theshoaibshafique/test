@@ -86,3 +86,6 @@
 .bar-chart .c3-ygrid:nth-child(even){
   opacity: 0 !important;
 }
+.bar-chart .c3-axis-y-label{
+  transform: translate(-8px, 10px) rotate(-90deg);
+}
