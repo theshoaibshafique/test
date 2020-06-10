@@ -130,7 +130,7 @@ export default class StackedBarChart extends React.PureComponent {
     return ReactDOMServer.renderToString(
       <div className="chartTooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{`${d[0].id}`}</div>
-        <div>{`${d[0].value} ${x}`}</div>
+        <div>{`${x}: ${d[0].value}`}</div>
       </div>
     );
   }
