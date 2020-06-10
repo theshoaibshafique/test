@@ -47,11 +47,11 @@ export default class BarChart extends React.PureComponent {
               text: this.props.subTitle, //Dynamically populated
               position: 'outer-middle'
             },
-            max: 100,
+            // max: 100,
             min: 0,
-            padding: { top: 10, bottom: 0 },
+            padding: { top: 20, bottom: 0 },
             tick: {
-              format: function (d) { if (d % 20 == 0) return d }
+              // format: function (d) { if (d % 20 == 0) return d }
             }
           }
         },
@@ -60,13 +60,7 @@ export default class BarChart extends React.PureComponent {
             front: false,
           },
           y: {
-            lines: [
-              { value: 20 },
-              { value: 40 },
-              { value: 60 },
-              { value: 80 },
-              { value: 100 },
-            ]
+            show:true
           }
         },
         padding: { top: 8, bottom: 8 },
@@ -109,7 +103,7 @@ export default class BarChart extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
-
+    
     chartData.axis.x.label.text = this.props.footer;
     chartData.axis.y.label.text = this.props.subTitle;
     let chart = this.chartRef.current && this.chartRef.current.chart;
@@ -119,7 +113,9 @@ export default class BarChart extends React.PureComponent {
   }
 
   createCustomLabel(v, id, i, j) {
-    return id && this.state.zData && this.state.zData[i];
+    if (this.state.zData) {
+      return `${this.state.zData[i]}`
+    }
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {

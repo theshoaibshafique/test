@@ -82,3 +82,7 @@
   letter-spacing: 0;
   line-height: 24px;
 }
+.bar-chart .c3-axis-y .tick:nth-child(odd),
+.bar-chart .c3-ygrid:nth-child(even){
+  opacity: 0 !important;
+}
