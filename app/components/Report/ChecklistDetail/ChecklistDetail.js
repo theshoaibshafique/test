@@ -44,12 +44,13 @@ export default class ChecklistDetail extends React.PureComponent {
   };
 
   componentDidMount() {
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return  b.valueX - a.valueX || ('' + a.subTitle).localeCompare(b.subTitle) });
-    dataPoints = this.groupTiles(dataPoints);
-    let topItems = this.props.dataPoints.filter(point => point.subTitle)
+    let dataPoints = this.props.dataPoints.sort((a, b) => { return b.valueX - a.valueX || ('' + a.subTitle).localeCompare(b.subTitle) });
+
+    let topItems = dataPoints.filter(point => point.subTitle)
       .sort((a, b) => { return b.valueX - a.valueX })
       .slice(0, 5)
-      .map((point) => point.title+point.subTitle + point.valueX);
+      .map((point) => point.title + point.subTitle + point.valueX);
+    dataPoints = this.groupTiles(dataPoints);
     this.setState({ dataPoints, topItems });
   }
 
@@ -61,7 +62,7 @@ export default class ChecklistDetail extends React.PureComponent {
   }
 
   groupTiles(dataPoints) {
-    
+
     //Group data by "Group"
     return [...dataPoints.reduce((hash, data) => {
       const current = hash.get(data.title) || { title: data.title, group: [] }
@@ -82,10 +83,10 @@ export default class ChecklistDetail extends React.PureComponent {
         <Grid item xs={4} key={i} className={"checklist-list"}>
           {dataGroup.group.map((point, j) => {
             let value = parseInt(point.valueX) / parseInt(dataGroup.total) * 100;
-            let isTopItem = this.state.topItems.includes(point.title+point.subTitle + point.valueX);
+            let isTopItem = this.state.topItems.includes(point.title + point.subTitle + point.valueX);
             return (
               <Grid container spacing={0} key={`${i}-${j}`}
-                className={`${isTopItem ? 'top-item' : ''} ${value <= 0 || (dataGroup.total <=0 && point.subTitle) ? 'complete-item' : ''}`}
+                className={`${isTopItem ? 'top-item' : ''} ${value <= 0 || (dataGroup.total <= 0 && point.subTitle) ? 'complete-item' : ''}`}
               >
                 <Grid item xs={8} className={point.subTitle ? "list-subtitle" : "list-title"}  >
                   {point.subTitle || point.title}
