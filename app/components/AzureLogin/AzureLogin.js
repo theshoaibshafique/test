@@ -14,7 +14,7 @@ class AzureLogin extends React.Component {
 
   unauthenticatedFunction = loginFunction => {
     //this.props.history.push(`/usermanagement`);
-    this.props.pushUrl('/dashboard');
+    // this.props.pushUrl('/dashboard');
   }
 
   userAuthenticatedFunction = logout => {
@@ -22,12 +22,18 @@ class AzureLogin extends React.Component {
       this.logoutFunc = logout;
     }
     return (
-        <button className="Logout-Button" onClick={logout} ref={this.props.logoutRef}>Logout</button>
+        <button className="Logout-Button" onClick={() => {this.customLogout(logout)}} ref={this.props.logoutRef}>Logout</button>
     );
   };
 
   _onIdle(e){
     this.logoutFunc();
+  }
+
+  customLogout(logout){
+    //redirect for the next user
+    this.props.pushUrl('/dashboard');
+    logout();
   }
 
   userJustLoggedIn = receivedToken => {
