@@ -20,7 +20,7 @@ export default class Checklist extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX });
+    let dataPoints = this.props.dataPoints.sort((a, b) => { return b.valueX - a.valueX || ('' + a.title).localeCompare(b.title) });
     this.setState({ dataPoints });
   }
 

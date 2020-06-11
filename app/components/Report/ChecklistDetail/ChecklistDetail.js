@@ -47,7 +47,6 @@ export default class ChecklistDetail extends React.PureComponent {
     let dataPoints = this.props.dataPoints.sort((a, b) => { return b.valueX - a.valueX || ('' + a.subTitle).localeCompare(b.subTitle) });
 
     let topItems = dataPoints.filter(point => point.subTitle)
-      .sort((a, b) => { return b.valueX - a.valueX })
       .slice(0, 5)
       .map((point) => point.title + point.subTitle + point.valueX);
     dataPoints = this.groupTiles(dataPoints);
