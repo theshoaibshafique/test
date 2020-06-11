@@ -100,7 +100,7 @@ export default class BarChartDetailed extends React.PureComponent {
         formattedData.x.push(month);
       }
       formattedData[point.title] = formattedData[point.title] || [];
-      formattedData[point.title].push(point.valueY);
+      formattedData[point.title].push(point.valueY == "-1" ? null : point.valueY);
       legendData[point.title] = point.subTitle;
     });
     let columns = [];
