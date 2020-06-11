@@ -342,8 +342,11 @@ export default class EMMCases extends React.PureComponent {
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} />
       case 'INFOGRAPHICMESSAGE':
-
-        return <div>{`We’re currently processing the data for this month’s report. Please come back on ${this.pendingDate.format('LL')} to view your report.`}</div>
+        let pendingDate = this.pendingDate;
+        if (moment().isSameOrAfter(this.state.month.clone(),'month')){
+          pendingDate = pendingDate.clone().add(1, 'month');
+        }
+        return <div>{`We’re currently processing the data for this month’s report. Please come back on ${pendingDate.format('LL')} to view your report.`}</div>
     }
   }
 
@@ -378,7 +381,7 @@ export default class EMMCases extends React.PureComponent {
       <div className="ssc-page">
         <Grid container spacing={0} className="ssc-picker-container" >
           <Grid item xs={12} className="ssc-picker">
-            <div style={{ maxWidth: 800, margin: 'auto' }}><MonthPicker month={this.state.month} maxDate={moment().subtract(1, 'month').endOf('month')} updateMonth={(month) => this.updateMonth(month)} /></div>
+            <div style={{ maxWidth: 800, margin: 'auto' }}><MonthPicker month={this.state.month} maxDate={moment().endOf('month')} updateMonth={(month) => this.updateMonth(month)} /></div>
           </Grid>
           <Grid item xs={12}>
             <Divider className="ssc-divider" />
@@ -398,7 +401,7 @@ export default class EMMCases extends React.PureComponent {
           </Grid>
         </Grid>
         <LoadingOverlay
-          active={this.state.loading}
+          active={this.state.loading || this.state.pendingTileCount > 0}
           spinner
           text='Loading your content...'
           className="overlay"
