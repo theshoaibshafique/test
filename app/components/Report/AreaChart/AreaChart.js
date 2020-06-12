@@ -109,7 +109,7 @@ export default class AreaChart extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
+    let dataPoints = this.props.dataPoints.reverse();
     let legendData = {}
     let formattedData = { x: [] };
     dataPoints.map((point) => {
