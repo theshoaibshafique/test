@@ -21,7 +21,7 @@ const LightTooltip = withStyles((theme) => ({
     fontSize: '14px',
     lineHeight: '19px',
     font: 'Noto Sans',
-    maxWidth:200
+    maxWidth: 200
   }
 }))(Tooltip);
 
@@ -77,35 +77,38 @@ export default class HorizontalBarChart extends React.PureComponent {
           })
         }}
       >
-        <div style={{minHeight: 421}}>
-        <Grid container spacing={0} className="horizontal-chart" style={{ marginBottom: 34 }}>
-          <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <StarsIcon style={{ color: '#FFB71B', fontSize: 26, marginBottom: 8 }} />
-            <span className="chart-title">{this.props.title}</span>
+        <div style={{ minHeight: 421 }}>
+          <Grid container spacing={0} className="horizontal-chart" style={{ marginBottom: 34 }}>
+            <Grid item xs={12} style={{ textAlign: 'center' }}>
+              <StarsIcon style={{ color: '#FFB71B', fontSize: 26, marginBottom: 8 }} />
+              <span className="chart-title">{this.props.title}</span>
+            </Grid>
+            <Grid item xs={12} className="chart-subtitle" style={{ textAlign: 'center', marginBottom: 40 }}>
+              {this.props.subTitle}
+            </Grid>
+            {this.props.dataPoints && this.props.dataPoints.map((point) => {
+              return (
+                <Grid container key={point.title}>
+                  <Grid item xs={8}>
+                    {this.getName(this.props.specialties, point.title || "")}
+                  </Grid>
+                  <Grid item xs={4} className="chart-score">
+                    {point.description}
+                  </Grid>
+                  <Grid item xs={12} className="horizontal-bar" style={{ marginBottom: 40 }}>
+                    <LightTooltip title={this.renderTooltip(point)} placement="top" fontSize="small">
+                      <BorderLinearProgress
+                        variant="determinate"
+                        value={parseInt(point.description)}
+                      />
+                    </LightTooltip>
+                  </Grid>
+                </Grid>)
+            })}
           </Grid>
-          <Grid item xs={12} className="chart-subtitle" style={{ textAlign: 'center', marginBottom: 40 }}>
-            {this.props.subTitle}
-          </Grid>
-          {this.props.dataPoints && this.props.dataPoints.map((point) => {
-            return (
-              <Grid container key={point.title}>
-                <Grid item xs={8}>
-                  {this.getName(this.props.specialties, point.title || "")}
-                </Grid>
-                <Grid item xs={4} className="chart-score">
-                  {point.description}
-                </Grid>
-                <Grid item xs={12} className="horizontal-bar" style={{ marginBottom: 40 }}>
-                  <LightTooltip title={this.renderTooltip(point)} placement="top" fontSize="small">
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={parseInt(point.description)}
-                    />
-                  </LightTooltip>
-                </Grid>
-              </Grid>)
-          })}
-        </Grid>
+          <div className="horizontal-footer">
+            {this.props.footer}
+          </div>
         </div>
       </LoadingOverlay >
     );

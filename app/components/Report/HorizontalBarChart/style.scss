@@ -25,3 +25,15 @@
 .horizontal-chart .horizontal-bar:hover{
   opacity: .6;
 }
+
+.horizontal-footer{
+  opacity: 0.8;
+  color: #000000;
+  font-family: "Noto Sans";
+  font-size: 14px;
+  font-style: italic;
+  letter-spacing: 0;
+  line-height: 19px;
+  position: absolute;
+  bottom: 0;
+}
