@@ -4,7 +4,7 @@ $ssc-picker-height: 150px;
 
 .ssc-page{
     background-color: #F5F5F5;
-    height: calc(100% + #{$ssc-picker-height});
+    height: calc(100%);
 }
 .ssc-page .overlay{
     top: $ssc-picker-height;
