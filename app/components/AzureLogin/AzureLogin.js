@@ -57,12 +57,17 @@ class AzureLogin extends React.Component {
           if (result) {
             this.props.setUserFacility(result);
             this.props.resourcesGathered(true);
+            this.props.notLoading();
           }
         });
       } else {
         this.props.redirect();
+        this.props.notLoading();
       }
-    })
+    }).catch((results) => {
+      this.props.redirect();
+      this.props.notLoading();
+    });
   }
 
   

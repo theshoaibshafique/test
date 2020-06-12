@@ -71,8 +71,11 @@ export default class MainLayout extends React.PureComponent {
           userManagementAccess,emmRequestAccess,emmAccess,emmPublishAccess,sscAccess,isLoading:false
         })
       }).catch(function (results) {
-        // console.error(results);
+        this.notLoading();
       });
+  }
+  notLoading(){
+    this.setState({isLoading:false});
   }
 
   getUserManagementAccess() {
@@ -177,6 +180,7 @@ export default class MainLayout extends React.PureComponent {
                   userLogin={<AzureLogin
                     resourcesGathered={() => this.resourcesGathered()}
                     redirect={() => this.redirect()}
+                    notLoading={() => this.notLoading()}
                     logoutRef={this.logoutRef}
                   />}
                 />
