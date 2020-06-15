@@ -25,6 +25,8 @@ $white: #FFFFFF;
 $header-height: 2.5em;
 $nav-width: 240px;
 
+$desktop-width: 1440px;
+
 html,
 body,
 #app,
@@ -48,8 +50,6 @@ body.fontLoaded .MuiInputBase-input{
   font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
 
-#app {
-}
 
 p,
 label {
@@ -140,6 +140,12 @@ Button.primary {
 
 .round {
   border-radius: 25px;
+}
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .Modal {

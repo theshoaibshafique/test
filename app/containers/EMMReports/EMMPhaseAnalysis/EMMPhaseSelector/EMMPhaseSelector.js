@@ -12,8 +12,9 @@ export default class EMMPhaseSelector extends React.PureComponent { // eslint-di
   componentDidMount() {
 
   }
+
   render() {
-    let { selectedPhase, phases } = this.props
+    const { selectedPhase, phases, phaseEvents } = this.props
     return (
       <div className="Emm-Phase-Selector">
         {phases.map((phase, index) => {
@@ -24,6 +25,7 @@ export default class EMMPhaseSelector extends React.PureComponent { // eslint-di
                   onClick={()=>this.props.changePhase(index)}
                   key={phase}>
                     {phase}
+                    {(phaseEvents[index] > 0) && <div className="phase-events-counter absolute">{phaseEvents[index]}</div>}
                     {(isSelected) && <Icon className="selected-dot" color="#FFFFFF" path={mdiCircleMedium} size={'14px'} />}
                   </Paper>
         })}

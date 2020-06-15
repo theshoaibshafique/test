@@ -96,8 +96,28 @@ function axiosFetch(url,fetchMethod,userToken, fetchBodyJSON,cancelToken) {
   });
 }
 
+function formatSecsToTime (seconds, toWords = false) {
+  var hh = Math.floor(seconds / 3600);
+  var mm = Math.floor((seconds - (hh * 3600)) / 60);
+  var ss = seconds - (hh * 3600) - (mm * 60);
+
+  if (!toWords)
+    return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+  else
+    return `${formatWords(hh, 'hour')} ${formatWords(mm, 'minute')} ${formatWords(ss, 'second')}`;
+}
+
+function formatWords(value, word) {
+  return `${(value > 0) ? `${value} ${word}${(value > 1) ? `s` : ''}`  : '' }`
+}
+
+function pad (string) {
+  return ('0' + string).slice(-2)
+}
+
 export default {
   genericFetch,
   genericFetchWithNoReturnMessage,
-  axiosFetch
+  axiosFetch,
+  formatSecsToTime,
 };

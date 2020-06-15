@@ -19,8 +19,6 @@ import {
   USER_TOKEN,
   USER_FACILITY,
   FACILITY_ROOMS,
-  SHOWEMMREPORT,
-  HIDEEMMREPORT,
   SPECIALTIES,
   COMPLICATIONS,
 } from './constants';
@@ -93,17 +91,4 @@ export function setComplications(complications) {
     type: COMPLICATIONS,
     complications
   };
-}
-
-export function showEMMReport(reportID) {
-  return {
-    type: SHOWEMMREPORT,
-    reportID
-  };
-}
-
-export function hideEMMReport() {
-  return {
-    type: HIDEEMMREPORT
-  }
 }

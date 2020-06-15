@@ -1,0 +1,70 @@
+@import '../../../../styles/global-styles.scss';
+
+.Emm-Phase-Video-Container {
+  .phase-video {
+    width: 975px;
+  }
+  .Phase-Events-Container {
+    background: #FFFFFF;
+    width: calc(100% - 975px);
+    max-width: 250px;
+    height: 548px;
+    overflow-y: auto;
+  }
+  .briefing-analysis {
+    padding: 24px 40px;
+  }
+
+  .checklist-data {
+    font-size: 18px;
+    line-height: 24px;
+    padding: 24px 40px;
+    width: 736px;
+    margin-top: 40px;
+    h3 {
+      font-size: 26px;
+      line-height: 36px;
+      margin: 0px 0px 4px 0px;
+    }
+    h5 {
+      font-size: 14px;
+      line-height: 19px;
+      margin: 0px 0px 24px 0px;
+    }
+  }
+  .checklist-data-container {
+    margin-bottom: 24px;
+  }
+  .checklist-data-title {
+    font-weight: bold;
+    margin-bottom: 8px
+  }
+  .checklist-data-value {
+    color: #FF0000;
+  }
+  .checklist-data-list {
+    margin: 0px;
+    font-size: 12px;
+    line-height: 17px;
+    div {
+      margin-bottom: 8px;
+    }
+    span {
+      font-weight: bold;
+      color: #FF0000;
+    }
+  }
+
+  .Video-Timeline {
+    height: 30px;
+    background: #FFFFFF;
+    width: 975px;
+    .time-line-marker {
+      cursor: pointer;
+      top: 5px;
+      margin-right: 0px;
+    }
+  }
+
+  .vjs-current-time { width: 50px !important; }
+}

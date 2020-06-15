@@ -1,57 +1,90 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import logo from './images/emmLogo.png';
 import './style.scss';
 import Icon from '@mdi/react'
-import { mdiClose, mdiInformationOutline  } from '@mdi/js';
+import { mdiClose } from '@mdi/js';
 import globalFuncs from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
-import EMMPhase from './EMMPhase'
-import { Drawer, List, ListItem, ListItemText, Grid, Typography, Card, Paper } from '@material-ui/core';
+import EMMPhaseAnalysis from './EMMPhaseAnalysis'
+import emmData from '../../src/emm.json';
 
 export default class EMMReports extends React.PureComponent {
   constructor(props) {
     super(props);
-
     this.state = {
-      selectedEMMTab: 'overview'
+      isScriptReady: false
+    }
+  }
+
+  componentDidMount() {
+    this.loadAMPScript();
+    this.getReport();
+  };
+
+  getReport() {
+    // this.props.setEMMReport(emmData)
+
+    const { emmReportID } = this.props;
+    globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + emmReportID, 'get', this.props.userToken, {})
+      .then(caseData => {
+        this.props.setEMMReport(caseData)
+      });
+  };
+
+  loadAMPScript() {
+    if (document.querySelector('#amp-azure')) {
+      this.setState({ isScriptReady: true });
+    };
+    var scriptTag = document.createElement('script');
+    var linkTag = document.createElement('link');
+    linkTag.rel = 'stylesheet';
+    scriptTag.id = 'amp-azure';
+    scriptTag.src = '//amp.azure.net/libs/amp/2.1.5/azuremediaplayer.min.js';
+    linkTag.href = '//amp.azure.net/libs/amp/2.1.5/skins/' + "amp-default" + '/azuremediaplayer.min.css';
+    document.body.appendChild(scriptTag);
+    document.head.insertBefore(linkTag, document.head.firstChild);
+    scriptTag.onload = () => {
+      this.setState({ isScriptReady: true });
     };
   }
 
-  goBack() {
-    this.props.goBack();
-  };
-
   switchTab(currentTab) {
-    let { selectedEMMTab } = this.state;
-    if (currentTab != selectedEMMTab) {
-      this.setState({
-        selectedEMMTab: (selectedEMMTab == 'overview') ? 'phase' : 'overview'
-      })
+    const { emmReportTab } = this.props;
+    if (currentTab != emmReportTab) {
+      this.props.setEmmTab((emmReportTab == 'overview') ? 'phase' : 'overview')
     }
   }
 
   render() {
-    let { selectedEMMTab } = this.state;
+    const { emmReportData, emmReportTab } = this.props;
     return (
       <div className="EMM-REPORTS full-height relative">
-        <div className="close-emm" onClick={()=>this.props.hideEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
-        <div className="EMM-Reports-Header relative center-align">
-          <img className="absolute" src={logo} />
-          <div className="EMM-Tab-Selector">
-            <div
-              className={`EMM-Tab center-align ${(selectedEMMTab == 'overview') && 'selected'}`}
-              onClick={()=>this.switchTab('overview')}>
-                Overview
+        {(emmReportData) &&
+          <div>
+            <div className="close-emm" onClick={()=>this.props.hideEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
+            <div className="EMM-Reports-Header relative center-align">
+              <img className="absolute" src={logo} />
+              <div className="EMM-Tab-Selector">
+                <div
+                  className={`EMM-Tab center-align ${(emmReportTab == 'overview') && 'selected'}`}
+                  onClick={()=>this.switchTab('overview')}>
+                    Overview
+                </div>
+                <div
+                  className={`EMM-Tab center-align ${(emmReportTab == 'phase') && 'selected'}`}
+                  onClick={()=>this.switchTab('phase')}>
+                    Phase Analysis
+                </div>
+              </div>
             </div>
-            <div
-              className={`EMM-Tab center-align ${(selectedEMMTab == 'phase') && 'selected'}`}
-              onClick={()=>this.switchTab('phase')}>
-                Phase Analysis
-            </div>
+            {emmReportTab == 'overview' ?
+              <EMMOverview /> :
+              <EMMPhaseAnalysis
+                scriptReady={this.state.isScriptReady}
+                phases={emmReportData.enhancedMMPages}/>
+            }
           </div>
-        </div>
-        {selectedEMMTab == 'overview' ? <EMMOverview /> : <EMMPhase />}
+        }
       </div>
     );
   }

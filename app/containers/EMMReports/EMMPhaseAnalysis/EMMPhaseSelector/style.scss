@@ -1,0 +1,39 @@
+@import '../../../../styles/global-styles.scss';
+
+.Emm-Phase-Selector {
+  display: flex;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  max-width: 100%;
+  .Emm-Phase-Select {
+    width: 200px;
+    min-width: 200px;
+    padding: 16px 32px 16px 16px;
+    margin-right: 8px;
+    cursor: pointer;
+    color: #028CC8;
+    height: 83px;
+    &.selected-phase {
+      color: $white;
+      background: #004F6E;
+      height: 96px;
+      .selected-dot {
+        position: absolute;
+        bottom: 8px;
+        left: calc(50% - 7px);
+      }
+    }
+    .phase-events-counter {
+      width: 24px;
+      height: 24px;
+      right: 8px;
+      top: 8px;
+      border-radius: 50%;
+      background: #FF0000;
+      text-align: center;
+      font-size: 14px;
+      line-height: 24px;;
+      color: #FFFFFF;
+    }
+  }
+}

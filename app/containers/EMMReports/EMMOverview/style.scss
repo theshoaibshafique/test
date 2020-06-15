@@ -7,8 +7,116 @@ $paddingSize: 40px;
 }
 
 .Emm-Paper {
-  @include flex-center;
   text-align: center;
   padding: $paddingSize;
   border-radius: 8px;
+  .Section-Title {
+    margin: 0px;
+    font-size: 26px;
+    color: #000;
+    opacity: 0.8;
+  }
+}
+
+.EMM-Score {
+  font-size: 74px;
+  color: #004F6E;
+}
+
+.SSC-Circles {
+  @include flex-center;
+  & > div {
+    width: calc(100% / 3);
+  }
+  .zero-score {
+    width: 100%;
+  }
+}
+
+hr { margin: 24px 0px; }
+
+.Case-Information {
+  margin-top: 24px;
+  .case-info-heading {
+    font-size: 14px;
+    line-height: 19px;
+    margin-bottom: 4px;
+  }
+  .case-info-details {
+    font-size: 18px;
+    line-height: 24px;
+    color: #004F6E;
+    margin-bottom: 24px;
+    &.specialty {
+      margin-bottom: 4px;
+    }
+    &.procedure {
+      font-size: 14px;
+      line-height: 19px;
+      color: #000000;
+      opacity: 0.6;
+    }
+  }
+}
+
+.checklist-status {
+  font-size: 14px;
+  line-height: 19px;
+  div { flex-grow: 1; }
+  .checklist-happened {
+    text-align: left;
+    .title {
+      color: #028CC8;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      opacity: 0.6;
+      color: #000;
+    }
+  }
+  .checklist-missed {
+    text-align: right;
+    margin-top: 23px;
+    opacity: 0.8;
+  }
+}
+
+.Phases-Of-Interests-Container {
+  margin-top: 24px;
+  justify-content: center;
+  .phase-of-interest {
+    margin: 0px 15px;
+    width: 200px;
+    position: relative;
+    &:after {
+      content: '';
+      position: absolute;
+      right: -15px;
+      top: 10%;
+      height: 80%;
+      width: 1px;
+      background: #C8C8C8;
+    }
+    &:last-child:after {
+      content: none;
+    }
+  }
+  .phase-title {
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 8px;
+    color: #028CC8;
+    cursor: pointer;
+  }
+  .phase-event {
+    font-size: 14px;
+    line-height: 19px;
+    color: #000;
+  }
+}
+
+@media (max-width: $desktop-width) {
+  .Emm-Paper.Score {
+      padding: 40px 8px;
+  }
 }
