@@ -21,7 +21,7 @@ const initialState = fromJS({
   emmReportID: null,
   emmReportData: null,
   emmTab: 'overview',
-  emmPhase: null
+  emmPhaseIndex: null
 });
 
 function emmReducer(state = initialState, action) {
@@ -32,15 +32,19 @@ function emmReducer(state = initialState, action) {
     case HIDEEMMREPORT:
       return state
         .set('emmReportID', null)
+        .set('emmReportData', null)
+        .set('emmTab', 'overview')
+        .set('emmPhaseIndex', null)
     case SETEMMREPORT:
       return state
         .set('emmReportData', action.reportData)
+        .set('emmPhaseIndex', 0)
     case EMM_SWITCH_TAB:
       return state
         .set('emmTab', action.emmTab)
     case EMM_SWITCH_PHASE:
       return state
-        .set('emmPhase', action.emmPhase)
+        .set('emmPhaseIndex', action.emmPhaseIndex)
     default:
       return state;
   }

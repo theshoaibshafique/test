@@ -1,11 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { setEMMTab } from '../../App/emm-actions';
+import { setEMMTab, setEMMPhaseIndex } from '../../App/emm-actions';
 
 
 class PhasesOfInterest extends React.Component {
   constructor(props) {
     super(props)
+  }
+
+  selectPhaseOfInterest(phaseName) {
+    const phaseIndex = this.props.allPhases.map((phase) => phase.name).indexOf(phaseName)
+    this.props.setEmmTab('phase')
+    this.props.setEmmPhaseIndex(phaseIndex)
   }
 
   render() {
@@ -16,7 +22,7 @@ class PhasesOfInterest extends React.Component {
         {
           filteredPhases.map((phase) => {
             return <div className="phase-of-interest left-align">
-                    <div className="phase-title text-ellipsis" onClick={()=>this.props.setEmmTab('phase')}>{phase.title}</div>
+                    <div className="phase-title text-ellipsis" onClick={()=>this.selectPhaseOfInterest(phase.valueX)}>{phase.title}</div>
                     <div className="phase-event main-text flex"><div className="event-circle"></div>{phase.valueY}</div>
                    </div>
           })
@@ -28,7 +34,8 @@ class PhasesOfInterest extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setEmmTab: (data) => { dispatch(setEMMTab(data)); }
+    setEmmTab: (data) => { dispatch(setEMMTab(data)); },
+    setEmmPhaseIndex: (data) => { dispatch(setEMMPhaseIndex(data)); }
   };
 };
 

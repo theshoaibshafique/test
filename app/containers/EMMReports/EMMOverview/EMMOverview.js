@@ -76,6 +76,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                 <Paper className="Emm-Paper">
                   <div className="Section-Title">Phases Of Interest</div>
                   <PhasesOfInterest
+                    allPhases={emmReportData.enhancedMMPages}
                     phases={phasesOfInterest.dataPoints}
                   />
                 </Paper>

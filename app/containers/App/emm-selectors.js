@@ -21,14 +21,14 @@ const selectEMMTab = () => createSelector(
   (emmState) => emmState.get('emmTab')
 );
 
-const selectEMMPhase = () => createSelector(
+const selectEMMPhaseIndex = () => createSelector(
   selectEMM,
-  (emmState) => emmState.get('emmPhase')
+  (emmState) => emmState.get('emmPhaseIndex')
 );
 
 export {
   selectEMMTab,
   selectEMMReportID,
   selectEMMReportData,
-  selectEMMPhase
+  selectEMMPhaseIndex
 };

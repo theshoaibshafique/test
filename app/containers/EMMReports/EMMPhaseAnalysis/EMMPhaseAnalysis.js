@@ -9,7 +9,6 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
     super(props);
     let { phases } = this.props;
     this.state = {
-      currentPhase: 0,
       phaseTitles: phases.map(phase => phase.title),
       phaseEvents: phases.map((phase) => {
         if (phase.name=="SurgicalProcedure") {
@@ -26,32 +25,30 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
   }
 
   changePhase(phaseIndex) {
-    this.setState({currentPhase: phaseIndex})
+    this.props.setEmmPhaseIndex(phaseIndex)
   }
 
-
-
   render() {
-    const { currentPhase, phaseTitles, phaseEvents } = this.state;
-    const { scriptReady, phases } = this.props;
-    const selectedPhase = phases[currentPhase];
+    const { phaseTitles, phaseEvents } = this.state;
+    const { scriptReady, phases, emmPhaseIndex } = this.props;
+    const selectedPhase = phases[emmPhaseIndex];
     return (
       <div className="Emm-Phases">
         <h1>Case Timeline</h1>
         <EMMPhaseSelector
-          selectedPhase={currentPhase}
+          selectedPhase={emmPhaseIndex}
           phases={phaseTitles}
           phaseEvents={phaseEvents}
           changePhase={(phaseIndex)=>this.changePhase(phaseIndex)}
         />
-        <h2>{phaseTitles[currentPhase]}</h2>
+        <h2>{phaseTitles[emmPhaseIndex]}</h2>
         <div className="phase-duration main-text">
           Duration: {globalFuncs.formatSecsToTime(selectedPhase.endTime - selectedPhase.startTime, true)} ({globalFuncs.formatSecsToTime(selectedPhase.startTime)} - {globalFuncs.formatSecsToTime(selectedPhase.endTime)})
         </div>
           {(scriptReady) &&
             <EMMPhaseVideoContainer
               title={'testingVideo'}
-              phaseData={phases[currentPhase]}
+              phaseData={phases[emmPhaseIndex]}
             />
           }
       </div>

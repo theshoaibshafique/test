@@ -50,9 +50,9 @@ export function setEMMTab(emmTab) {
   }
 }
 
-export function setEMMPhase(emmPhase) {
+export function setEMMPhaseIndex(emmPhaseIndex) {
   return {
     type: EMM_SWITCH_PHASE,
-    emmPhase
+    emmPhaseIndex
   }
 }

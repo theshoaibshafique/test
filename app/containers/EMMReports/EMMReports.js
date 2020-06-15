@@ -11,6 +11,9 @@ import emmData from '../../src/emm.json';
 export default class EMMReports extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      isScriptReady: false
+    }
   }
 
   componentDidMount() {
