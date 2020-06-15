@@ -19,11 +19,8 @@ import {
   USER_TOKEN,
   USER_FACILITY,
   FACILITY_ROOMS,
-  SHOWEMMREPORT,
-  HIDEEMMREPORT,
   SPECIALTIES,
   COMPLICATIONS,
-  SETEMMREPORT,
 } from './constants';
 
 /**
@@ -94,24 +91,4 @@ export function setComplications(complications) {
     type: COMPLICATIONS,
     complications
   };
-}
-
-export function showEMMReport(reportID) {
-  return {
-    type: SHOWEMMREPORT,
-    reportID
-  };
-}
-
-export function hideEMMReport() {
-  return {
-    type: HIDEEMMREPORT
-  }
-}
-
-export function setEMMReport(reportData) {
-  return {
-    type: SETEMMREPORT,
-    reportData
-  }
 }
