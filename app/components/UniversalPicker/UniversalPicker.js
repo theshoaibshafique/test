@@ -111,6 +111,11 @@ class UniversalPicker extends React.Component {
       this.props.updateState('selectedProcedure', "");
     })
   }
+  formatClass(str){
+    if (str){
+      return str.toLowerCase().replace(/\s/g,'-');
+    }
+  }
 
   render() {
     return (
@@ -133,6 +138,7 @@ class UniversalPicker extends React.Component {
                 variant="outlined"
                 name="operatingRoom"
                 placeholder="All ORs"
+                className={this.state.selectedOperatingRoom && this.formatClass(this.state.selectedOperatingRoom.label)}
               />
             )}
           />
@@ -146,7 +152,7 @@ class UniversalPicker extends React.Component {
               style={{ backgroundColor: 'white' }}
             >
               <MenuItem key={-1} value="">
-                <div >All Days</div>
+                <div style={{ opacity: .4 }}>All Days</div>
               </MenuItem>
               {moment.weekdays(true).map((weekday) => (
                 <MenuItem key={weekday} value={weekday}>
@@ -172,6 +178,7 @@ class UniversalPicker extends React.Component {
                 variant="outlined"
                 name="specialty"
                 placeholder="All Specialties"
+                className={this.state.selectedSpecialty && this.formatClass(this.state.selectedSpecialty.name)}
               />
             )}
           />
@@ -192,6 +199,7 @@ class UniversalPicker extends React.Component {
                 variant="outlined"
                 name="procedure"
                 placeholder="All Procedures"
+                className={this.state.selectedProcedure && this.formatClass(this.state.selectedProcedure.name)}
               />
             )}
           />
