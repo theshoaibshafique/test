@@ -122,7 +122,7 @@ export default class StackedBarChart extends React.PureComponent {
   }
 
   createCustomLabel(v, id, i, j) {
-    if (id && this.state.zData && j == Object.keys(this.state.legendData).length - 1) {
+    if (id && this.state.zData ) {
       return this.state.zData[i]
     }
   }
