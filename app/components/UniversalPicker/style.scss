@@ -11,3 +11,8 @@
     font-size: 14px !important;
     line-height: 19px !important;
 }
+.universal-picker .all-specialties .MuiAutocomplete-input,
+.universal-picker .all-procedures .MuiAutocomplete-input,
+.universal-picker .all-ors .MuiAutocomplete-input{
+    opacity: .4;
+}
