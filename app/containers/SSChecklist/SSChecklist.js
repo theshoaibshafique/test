@@ -123,11 +123,11 @@ export default class EMMCases extends React.PureComponent {
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
-
+    
     if (tileRequest.tileType == 'InfographicMessage') {
       //The report isnt "pending" - Its empty
       if (moment().isSameOrAfter(this.pendingDate.clone())) {
-        this.setState({ tileRequest: [] });
+        this.setState({ tileRequest: [],loading:false,pendingTileCount:this.state.pendingTileCount-1 });
         return;
       }
 
