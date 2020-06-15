@@ -132,7 +132,7 @@ class UniversalPicker extends React.Component {
                 error={false}
                 variant="outlined"
                 name="operatingRoom"
-                placeholder="All OR"
+                placeholder="All ORs"
               />
             )}
           />
@@ -146,7 +146,7 @@ class UniversalPicker extends React.Component {
               style={{ backgroundColor: 'white' }}
             >
               <MenuItem key={-1} value="">
-                <div style={{ opacity: .4 }}>All Days</div>
+                <div >All Days</div>
               </MenuItem>
               {moment.weekdays(true).map((weekday) => (
                 <MenuItem key={weekday} value={weekday}>
