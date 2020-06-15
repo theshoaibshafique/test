@@ -3,7 +3,6 @@ import { Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
-import moment from 'moment';
 import LoadingOverlay from 'react-loading-overlay';
 
 export default class BarChart extends React.PureComponent {
@@ -48,11 +47,11 @@ export default class BarChart extends React.PureComponent {
               text: this.props.subTitle, //Dynamically populated
               position: 'outer-middle'
             },
-            max: 100,
+            // max: 100,
             min: 0,
-            padding: { top: 10, bottom: 0 },
+            padding: { top: 20, bottom: 0 },
             tick: {
-              format: function (d) { if (d % 20 == 0) return d }
+              // format: function (d) { if (d % 20 == 0) return d }
             }
           }
         },
@@ -61,13 +60,7 @@ export default class BarChart extends React.PureComponent {
             front: false,
           },
           y: {
-            lines: [
-              { value: 20 },
-              { value: 40 },
-              { value: 60 },
-              { value: 80 },
-              { value: 100 },
-            ]
+            show:true
           }
         },
         padding: { top: 8, bottom: 8 },
@@ -86,7 +79,7 @@ export default class BarChart extends React.PureComponent {
   }
 
   componentDidMount() {
-    // this.generateChartData();
+    this.generateChartData();
   }
 
   generateChartData() {
@@ -110,7 +103,7 @@ export default class BarChart extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
-
+    
     chartData.axis.x.label.text = this.props.footer;
     chartData.axis.y.label.text = this.props.subTitle;
     let chart = this.chartRef.current && this.chartRef.current.chart;
@@ -120,7 +113,9 @@ export default class BarChart extends React.PureComponent {
   }
 
   createCustomLabel(v, id, i, j) {
-    return id && this.state.zData && this.state.zData[i];
+    if (this.state.zData) {
+      return `${this.state.zData[i]}`
+    }
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
@@ -128,8 +123,8 @@ export default class BarChart extends React.PureComponent {
     let z = this.state.zData[d[0].x];
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${d[0].value}% ${x}`}</div>
-        <div>{`${z} occurences`}</div>
+        <div>{`${x}: ${d[0].value}%`}</div>
+        <div>{`Occurence(s): ${z}`}</div>
       </div>);
   }
 
@@ -153,16 +148,17 @@ export default class BarChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} direction="column" className="bar-chart" style={ {minHeight:210 }}>
+        <Grid container spacing={0} direction="column" className="bar-chart" style={ {minHeight:150 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>
-          {this.props.body && <Grid item xs={12} className="chart-subtitle">
-            {this.props.subTitle}
-          </Grid>}
           <Grid item xs={12} >
             {
-              this.props.body ? <div className="display-text">{this.props.body}</div> : <C3Chart style={{marginTop:20}} className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+              this.props.body && this.props.subTitle
+              ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
+              : this.props.body ? 
+                <div className="display-text">{this.props.body}</div> 
+              : <C3Chart style={{marginTop:20}} className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
         </Grid>
       </LoadingOverlay>

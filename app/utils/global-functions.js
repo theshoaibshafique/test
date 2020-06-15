@@ -78,12 +78,12 @@ function genericFetchWithNoReturnMessage(api, fetchMethod, userToken, fetchBodyJ
   })
 }
 
-function axiosFetch(url,userToken, fetchBodyJSON,cancelToken) {
+function axiosFetch(url,fetchMethod,userToken, fetchBodyJSON,cancelToken) {
   if (!url){
     return;
   }
   return axios({
-    method: "POST",
+    method: fetchMethod,
     url: url,
     headers: {
       'Authorization': 'Bearer ' + userToken,

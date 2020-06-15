@@ -1,9 +1,8 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
-import ReactDOMServer from 'react-dom/server';
 import './style.scss';
-import moment from 'moment';
+import moment from 'moment/moment';
 import LoadingOverlay from 'react-loading-overlay';
 
 export default class AreaChart extends React.PureComponent {
@@ -18,7 +17,7 @@ export default class AreaChart extends React.PureComponent {
         data: {
           x: 'x',
           columns: [], //Dynamically populated
-          type: 'area-spline',
+          type: 'area',
           labels: true
         }, // End data
         oninit: () => {
@@ -86,7 +85,7 @@ export default class AreaChart extends React.PureComponent {
           show: false
         },
         size: {
-          height: 200
+          height: 225
         },
         point: {
           // show: false
@@ -110,7 +109,7 @@ export default class AreaChart extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
+    let dataPoints = this.props.dataPoints.reverse();
     let legendData = {}
     let formattedData = { x: [] };
     dataPoints.map((point) => {
@@ -119,7 +118,7 @@ export default class AreaChart extends React.PureComponent {
         formattedData.x.push(month);
       }
       formattedData[point.title] = formattedData[point.title] || [];
-      formattedData[point.title].push(point.valueY);
+      formattedData[point.title].push(point.valueY == "-1" ? null : point.valueY);
       legendData[point.title] = point.subTitle;
     });
     let columns = [];

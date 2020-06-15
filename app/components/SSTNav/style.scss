@@ -36,3 +36,9 @@
 .sstnav li:hover {
     color: $light-blue;
   }
+.sst-menu-item{
+    padding: 0 !important;
+}
+.sst-menu-item a, .sst-menu-item div{
+    padding: 8px 24px;
+}

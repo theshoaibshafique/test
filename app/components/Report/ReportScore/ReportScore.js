@@ -44,18 +44,26 @@ export default class ReportScore extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify="center" style={{ textAlign: 'center',minHeight:220 }} className="report-score">
+        <Grid container spacing={0} style={{ textAlign: 'center', minHeight: 190 }} className="report-score">
           <Grid item xs={12} className="score-title">
             <span >
               {this.props.title}
-              {this.props.tooltipText && <LightTooltip arrow title={this.props.tooltipText} placement="top" fontSize="small">
+              {this.props.tooltipText && <LightTooltip interactive arrow title={this.props.tooltipText} placement="top" fontSize="small">
                 <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
               </LightTooltip>}
             </span>
           </Grid>
-          <Grid item xs={12} >
-            <span className="score-display">{this.props.score}</span>
-          </Grid>
+          {this.props.message && <Grid item xs={12} className="no-data-score">
+            <div className="score-message">{this.props.message}</div>
+            {this.props.subTitle && <div className="score-subtitle">
+              {this.props.subTitle}
+            </div>}
+          </Grid>}
+
+
+          {this.props.score >= 0 && <Grid item xs={12} className="score-display">
+            {this.props.score}
+          </Grid>}
           {this.props.redirectLink &&
             <Grid item xs={12} className="link">
               <a onClick={() => this.redirect()}>{this.props.redirectDisplay}</a>

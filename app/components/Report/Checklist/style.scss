@@ -1,0 +1,68 @@
+@import '../../../styles/global-styles';
+
+.checklist{
+  min-height: 210;
+}
+
+.checklist.checklist-complete{
+  min-height: unset;
+  text-align: center;
+}
+.checklist.checklist-complete .display-text{
+  margin-bottom: 40px;
+  margin-top: 0;
+}
+
+.checklist .chart-title{
+    font-family: "Noto Sans";
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 24px;
+    margin-bottom: 16px !important;
+}
+  
+.checklist .list-title{
+    font-family: "Noto Sans";
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 17px;
+  }
+.checklist .list-title-value {
+    color: #F1403A;
+    font-family: "Noto Sans";
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 19px;
+    text-align: right;
+  }
+
+.checklist .list-subtitle {
+    font-family: "Noto Sans";
+    font-size: 12px;
+    font-style: italic;
+    letter-spacing: 0;
+    line-height: 17px;
+    margin-bottom: 16px !important;
+  }
+
+.checklist .display-text{
+    color: #004F6E;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 0;
+    line-height: 24px;
+}
+.checklist .link{
+  color: #00AAD9;
+  font-family: "Noto Sans";
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 17px;
+}
+.checklist .no-data{
+  margin-top: 0 !important;
+}

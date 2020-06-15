@@ -18,14 +18,21 @@ class UniversalPicker extends React.Component {
       selectedWeekday: "",
       selectedSpecialty: "",
       procedureOptions: [],
-      selectedProcedure: ""
+      selectedProcedure: "",
+      specialties: this.props.specialties || []
     }
+    this.state.specialties = [{ name: "All Specialties", value: "" }, ...this.state.specialties];
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.defaultState != this.props.defaultState) {
       let selectedSpecialty = this.props.defaultState.selectedSpecialty;
-      this.setState({ ...this.props.defaultState, procedureOptions: selectedSpecialty && selectedSpecialty.procedures || [] });
+      let procedureOptions = selectedSpecialty && selectedSpecialty.procedures || [];
+      if (procedureOptions.length > 0) {
+        procedureOptions = [{ name: "All Procedures", value: "" }, ...procedureOptions];
+      }
+
+      this.setState({ ...this.props.defaultState, specialties: [{ name: "All Specialties", value: "" }, ...this.props.specialties], procedureOptions });
 
     }
   }
@@ -38,14 +45,13 @@ class UniversalPicker extends React.Component {
   async populateOperatingRooms(e, callback) {
     return await globalFunctions.genericFetch(process.env.FACILITYDEPARTMENT_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
-        let operatingRooms = [];
+        let operatingRooms = [{ label: "All ORs", value: "" }];
         if (result === 'error' || result === 'conflict') {
 
         } else if (result && result.length > 0) {
           result.map((department) => {
             department.rooms.map((room) => { operatingRooms.push({ departmentTitle: department.departmentTitle, value: room.roomName, label: room.roomTitle, departmentName: department.departmentName }) });
           });
-
         }
         this.setState({ operatingRooms, isORLoading: false });
         return operatingRooms
@@ -71,9 +77,13 @@ class UniversalPicker extends React.Component {
   }
 
   handleSelectedSpecialtyChange(e, selectedSpecialty) {
+    let procedureOptions = selectedSpecialty && selectedSpecialty.procedures || [];
+    if (procedureOptions.length > 0) {
+      procedureOptions = [{ name: "All Procedures", value: "" }, ...procedureOptions];
+    }
     this.setState({
       selectedSpecialty,
-      procedureOptions: selectedSpecialty && selectedSpecialty.procedures || [],
+      procedureOptions,
       selectedProcedure: ""
     }, () => {
       this.props.updateState('selectedSpecialty', selectedSpecialty);
@@ -150,7 +160,7 @@ class UniversalPicker extends React.Component {
         <Grid item xs={3} style={{ maxWidth: 200 }}>
           <Autocomplete
             size="small"
-            options={this.props.specialties.length && this.props.specialties || []}
+            options={this.state.specialties}
             clearOnEscape
             getOptionLabel={option => option.name ? option.name : ''}
             value={this.state.selectedSpecialty}
@@ -186,10 +196,10 @@ class UniversalPicker extends React.Component {
             )}
           />
         </Grid>
-        <Grid item xs={2} style={{maxWidth:100}}>
-          <Button variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{height:40, width:96}}>Apply</Button>
+        <Grid item xs={2} style={{ maxWidth: 100 }}>
+          <Button variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>
         </Grid>
-        <Grid item xs={2} style={{ display: 'flex', alignItems: 'center',marginLeft:16, maxWidth: 100 }}>
+        <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', marginLeft: 16, maxWidth: 100 }}>
           <a className="link" onClick={e => this.resetFilters()}>Reset Filters</a>
         </Grid>
 

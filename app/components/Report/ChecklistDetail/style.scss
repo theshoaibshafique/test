@@ -1,0 +1,111 @@
+@import '../../../styles/global-styles';
+
+.checklistdetail .chart-title{
+  font-size: 26px;
+  letter-spacing: 0;
+  line-height: 36px;
+  padding: 40px 40px 0 40px;
+  margin-bottom: 29px;
+}
+
+.checklistdetail .chart-subtitle{
+  font-size: 14px;
+  font-style: italic;
+  letter-spacing: 0;
+  line-height: 19px;
+  margin-bottom: 32px;
+}
+.checklistdetail .chart-score{
+  color: #005979;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 24px;
+  text-align: right;
+}
+
+
+.checklistdetail .top-item{
+  color: #FF0000;
+  font-weight: bold;
+}
+.checklistdetail .complete-item{
+  opacity: .3;
+}
+.checklistdetail .list-title{
+  opacity: 0.8;
+  color: #000000;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  font-style: italic;
+  letter-spacing: 0;
+  line-height: 24px;
+}
+
+.checklistdetail .list-title-value {
+  color: #004F6E;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 24px;
+  text-align: right;
+}
+
+.checklistdetail .list-subtitle {
+  opacity: 0.8;
+  font-family: "Noto Sans";
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 17px;
+}
+
+.checklistdetail .list-subtitle-value {
+  opacity: 0.8;
+  font-family: "Noto Sans";
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 19px;
+  text-align: right;
+}
+.checklistdetail .checklist-list{
+  padding:0 40px 40px 40px;
+}
+.checklistdetail .ssc-divider{
+  margin: 4px 0 25px 0;
+  background-color: #EAEAEA;
+}
+
+.checklistdetail .display-text{
+  color: #004F6E;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  font-style: italic;
+  letter-spacing: 0;
+  line-height: 24px;
+}
+
+.list-subtitle-no-data{
+  color: #004F6E;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 24px;
+  text-align: right;
+}
+
+.checklistdetail .list-text{
+  opacity: 0.8;
+  color: #000000;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 24px;
+}
+
+.checklistdetail .close-button{
+  padding-top: 0;
+}
+.checklistdetail .close-button:hover{
+  background-color: unset;
+}

@@ -73,14 +73,14 @@ export default class EMMCases extends React.PureComponent {
           result.procedure.map((procedure) => {
             let match = false;
             surgeryList.map((surgery) => {
-              if (surgery.value.toUpperCase() === procedure.toUpperCase()) {
+              if (surgery.value.toUpperCase() === procedure.toUpperCase() && !procedureNames.includes(surgery.name)) {
                 procedureNames.push(surgery.name);
                 match = true;
               }
             });
-            if (!match) { procedureNames.push(procedure); }
+            if (!match && !procedureNames.includes(procedure)) { procedureNames.push(procedure); }
           });
-
+          
           result.complications.map((complication) => {
             let match = false;
             this.props.complications && this.props.complications.map((comp) => {

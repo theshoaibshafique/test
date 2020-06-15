@@ -80,7 +80,10 @@ class UserFields extends React.Component {
   }
 
   validEmail(email) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    var EMAIL_REGEX = process.env.NODE_ENV == 'production'
+      ? /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+      : /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (EMAIL_REGEX.test(email)) {
       return (true);
     }
     return (false);
@@ -247,7 +250,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist"
                 />
               }
-              label="Surgical Checklist"
+              label="Surgical Safety Checklist"
             />
           </FormControl>
         </Grid>

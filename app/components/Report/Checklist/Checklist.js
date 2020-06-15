@@ -3,7 +3,7 @@ import './style.scss';
 import { Grid } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 
-export default class ListDetailed extends React.PureComponent {
+export default class Checklist extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,8 +20,8 @@ export default class ListDetailed extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    // let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX });
-    // this.setState({ dataPoints });
+    let dataPoints = this.props.dataPoints.sort((a, b) => { return b.valueX - a.valueX || ('' + a.title).localeCompare(b.title) });
+    this.setState({ dataPoints });
   }
 
   getName(searchList, key) {
@@ -29,17 +29,21 @@ export default class ListDetailed extends React.PureComponent {
     if (index >= 0) {
       return searchList[index].name;
     }
+    return key;
   }
 
   renderList() {
 
-    return this.props.dataPoints && this.props.dataPoints.map((point, index) => {
+    return this.state.dataPoints && this.state.dataPoints.map((point, index) => {
       return (<Grid container spacing={0} key={index}>
-        <Grid item xs={10} className={point.subTitle ? "list-subtitle" : "list-title"}>
-          {(point.subTitle ? this.getName(this.state.procedures, point.subTitle) : this.getName(this.props.specialties, point.title)) || point.subTitle}
+        <Grid item xs={10} className="list-title">
+          {point.title}
         </Grid>
-        <Grid item xs={2} className={point.subTitle ? "list-subtitle-value" : "list-title-value"}>
+        <Grid item xs={2} className="list-title-value">
           {point.valueX}
+        </Grid>
+        <Grid item xs={12} className="list-subtitle">
+          {point.subTitle}
         </Grid>
       </Grid>)
     })
@@ -66,21 +70,20 @@ export default class ListDetailed extends React.PureComponent {
           })
         }}
       >
-        <Grid container className="list-detailed" direction="column" spacing={0} style={{minHeight: 150}}>
-          <Grid item xs={12} className="chart-title">
-            {this.props.title}
-          </Grid>
-          {!this.props.body && <Grid item xs={12} className="chart-subtitle">
+        <Grid container className={`checklist ${this.props.body ? 'checklist-complete' : ''}`} direction="column" spacing={0} >
+          {!this.props.body && <Grid item xs={12} className="chart-title">
             {this.props.subTitle}
           </Grid>}
           <Grid item xs={12} >
-            {this.props.body && this.props.subTitle 
+            {this.props.body && this.props.subTitle
             ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
             : this.props.body ? 
-              <div className="display-text" style={{ marginTop: 16 }}>{this.props.body}</div>
+              <div className="display-text">{this.props.body}</div>
               : this.renderList()}
           </Grid>
-
+          <Grid item xs={12} className="link" onClick={() => this.props.openModal({...this.props,tileType:this.props.footer,reportName:this.props.total})}>
+              {this.props.description}
+          </Grid>
 
         </Grid>
       </LoadingOverlay>)

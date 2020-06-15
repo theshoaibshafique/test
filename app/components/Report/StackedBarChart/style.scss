@@ -59,10 +59,11 @@
   line-height: 24px;
 }
 
-.bar-chart-detailed-legend{
+.stacked-barchart-detailed .bar-chart-detailed-legend{
   display: flex;
   margin-top: 32px;
   flex-direction: column;
+  margin-left: 16px;
 }
 .stacked-barchart-detailed .legend-title{
   display: flex;
@@ -99,4 +100,18 @@
   line-height: 1.4em;
   border-radius: 4px;
   background-color: rgba(97, 97, 97, 0.9);
+}
+
+.stacked-barchart-detailed .c3-axis-y-label{
+  transform: translate(-8px, 10px) rotate(-90deg);
+}
+.stacked-barchart-detailed .c3-axis-y .tick:nth-child(odd),
+.stacked-barchart-detailed .c3-ygrid:nth-child(even){
+  opacity: 0 !important;
+}
+.stacked-barchart-detailed .c3-chart-text.c3-target{
+  opacity: 0 !important;
+}
+.stacked-barchart-detailed .c3-chart-text.c3-target:first-child{
+  opacity: 1 !important;
 }

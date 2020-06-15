@@ -3,7 +3,7 @@ import { Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
-import moment from 'moment';
+import moment from 'moment/moment';
 import LoadingOverlay from 'react-loading-overlay';
 
 export default class BarChartDetailed extends React.PureComponent {
@@ -44,11 +44,12 @@ export default class BarChartDetailed extends React.PureComponent {
           y: {
             label: {
               text: this.props.subTitle, //Dynamically populated
-              position: 'outer-middle'
+              position: 'outer-middle',
             },
             // max: 110,
+            width:30,
             min: 0,
-            padding: { top: 10, bottom: 0 },
+            padding: { top: 30, bottom: 0 },
             tick: {
               format: function (d) { if (d % 20 == 0) return d }
             }
@@ -90,7 +91,7 @@ export default class BarChartDetailed extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
+    let dataPoints = this.props.dataPoints.reverse()//.sort((a, b) => { return a.valueX - b.valueX });
     let legendData = {}
     let formattedData = { x: [] };
     dataPoints.map((point) => {
@@ -99,7 +100,7 @@ export default class BarChartDetailed extends React.PureComponent {
         formattedData.x.push(month);
       }
       formattedData[point.title] = formattedData[point.title] || [];
-      formattedData[point.title].push(point.valueY);
+      formattedData[point.title].push(point.valueY == "-1" ? null : point.valueY);
       legendData[point.title] = point.subTitle;
     });
     let columns = [];
@@ -122,7 +123,11 @@ export default class BarChartDetailed extends React.PureComponent {
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    return ReactDOMServer.renderToString(<div className="MuiTooltip-tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>{`${d[0].value}`}</div>);
+    return ReactDOMServer.renderToString(
+      <div className="MuiTooltip-tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        {`${d[0].id}: ${d[0].value}`}
+      </div>
+    );
   }
 
   createCustomLegend(chartClass) {
@@ -186,7 +191,7 @@ export default class BarChartDetailed extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='center' className="bar-chart-detailed" style={{ textAlign: 'center',minHeight:320, marginBottom: 50 }}>
+        <Grid container spacing={0} justify='center' className="bar-chart-detailed" style={{ textAlign: 'center', minHeight: 320, marginBottom: 50 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>
