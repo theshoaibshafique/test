@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import EMMOverview from './EMMOverview';
-import { makeSelectToken, makeSelectEMMReportData, makeSelectSpecialties, makeSelectComplications } from '../../App/selectors';
+import { makeSelectToken, makeSelectSpecialties, makeSelectComplications } from '../../App/selectors';
+import { selectEMMReportData } from '../../App/emm-selectors';
 
 const mapStateToProps = createStructuredSelector({
   userToken: makeSelectToken(),
-  emmReportData: makeSelectEMMReportData(),
+  emmReportData: selectEMMReportData(),
   specialties: makeSelectSpecialties(),
   complications: makeSelectComplications(),
 });

@@ -16,9 +16,6 @@ import {
   USER_TOKEN,
   USER_FACILITY,
   FACILITY_ROOMS,
-  SHOWEMMREPORT,
-  HIDEEMMREPORT,
-  SETEMMREPORT,
   SPECIALTIES,
   COMPLICATIONS,
 } from './constants';
@@ -33,14 +30,12 @@ const initialState = fromJS({
   email: null,
   jobTitle: null,
   userFacility: null,
-  emmReportID: null,
-  emmReportData: null,
   facilityRooms: [],
   specialties: [],
   complications: [],
 });
 
-function appReducer(state = initialState, action) {
+function emmReducer(state = initialState, action) {
   switch (action.type) {
     case USER_TOKEN:
       return state
@@ -64,18 +59,9 @@ function appReducer(state = initialState, action) {
     case COMPLICATIONS:
       return state
         .set('complications', action.complications)
-    case SHOWEMMREPORT:
-      return state
-        .set('emmReportID', action.reportID)
-    case HIDEEMMREPORT:
-      return state
-        .set('emmReportID', null)
-    case SETEMMREPORT:
-      return state
-        .set('emmReportData', action.reportData)
     default:
       return state;
   }
 }
 
-export default appReducer;
+export default emmReducer;

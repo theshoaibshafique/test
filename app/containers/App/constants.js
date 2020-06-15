@@ -17,4 +17,5 @@ export const HIDEEMMREPORT = 'insights - hiding emm reports';
 export const SETEMMREPORT = 'insights - set emm reports';
 export const SPECIALTIES = 'insight/App/SPECIALTIES';
 export const COMPLICATIONS = 'insight/App/COMPLICATIONS';
+export const EMM_SWITCH_TAB = 'insights - switch emm tab';
 export const DEFAULT_LOCALE = 'en';
