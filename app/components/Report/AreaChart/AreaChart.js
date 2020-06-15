@@ -85,7 +85,7 @@ export default class AreaChart extends React.PureComponent {
           show: false
         },
         size: {
-          height: 200
+          height: 225
         },
         point: {
           // show: false
