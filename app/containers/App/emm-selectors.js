@@ -6,23 +6,29 @@ import { createSelector } from 'reselect';
 
 const selectEMM = (state) => state.get('emm');
 
-const selectEMMTab = () => createSelector(
-  selectEMM,
-  (globalState) => globalState.get('emmTab')
-);
-
 const selectEMMReportID = () => createSelector(
   selectEMM,
-  (globalState) => globalState.get('emmReportID')
+  (emmState) => emmState.get('emmReportID')
 );
 
 const selectEMMReportData = () => createSelector(
   selectEMM,
-  (globalState) => globalState.get('emmReportData')
+  (emmState) => emmState.get('emmReportData')
+);
+
+const selectEMMTab = () => createSelector(
+  selectEMM,
+  (emmState) => emmState.get('emmTab')
+);
+
+const selectEMMPhase = () => createSelector(
+  selectEMM,
+  (emmState) => emmState.get('emmPhase')
 );
 
 export {
   selectEMMTab,
   selectEMMReportID,
-  selectEMMReportData
+  selectEMMReportData,
+  selectEMMPhase
 };

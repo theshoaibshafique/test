@@ -11,10 +11,6 @@ import emmData from '../../src/emm.json';
 export default class EMMReports extends React.PureComponent {
   constructor(props) {
     super(props);
-
-    this.state = {
-      selectedEMMTab: 'overview'
-    };
   }
 
   componentDidMount() {
@@ -50,17 +46,14 @@ export default class EMMReports extends React.PureComponent {
   }
 
   switchTab(currentTab) {
-    const { selectedEMMTab } = this.state;
-    if (currentTab != selectedEMMTab) {
-      this.setState({
-        selectedEMMTab: (selectedEMMTab == 'overview') ? 'phase' : 'overview'
-      })
+    const { emmReportTab } = this.props;
+    if (currentTab != emmReportTab) {
+      this.props.setEmmTab((emmReportTab == 'overview') ? 'phase' : 'overview')
     }
   }
 
   render() {
-    const { selectedEMMTab } = this.state;
-    const { emmReportData } = this.props;
+    const { emmReportData, emmReportTab } = this.props;
     return (
       <div className="EMM-REPORTS full-height relative">
         {(emmReportData) &&
@@ -70,18 +63,18 @@ export default class EMMReports extends React.PureComponent {
               <img className="absolute" src={logo} />
               <div className="EMM-Tab-Selector">
                 <div
-                  className={`EMM-Tab center-align ${(selectedEMMTab == 'overview') && 'selected'}`}
+                  className={`EMM-Tab center-align ${(emmReportTab == 'overview') && 'selected'}`}
                   onClick={()=>this.switchTab('overview')}>
                     Overview
                 </div>
                 <div
-                  className={`EMM-Tab center-align ${(selectedEMMTab == 'phase') && 'selected'}`}
+                  className={`EMM-Tab center-align ${(emmReportTab == 'phase') && 'selected'}`}
                   onClick={()=>this.switchTab('phase')}>
                     Phase Analysis
                 </div>
               </div>
             </div>
-            {selectedEMMTab == 'overview' ?
+            {emmReportTab == 'overview' ?
               <EMMOverview /> :
               <EMMPhaseAnalysis
                 scriptReady={this.state.isScriptReady}

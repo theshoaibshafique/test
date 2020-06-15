@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { setEMMTab } from '../../App/emm-actions';
 
 
 class PhasesOfInterest extends React.Component {
@@ -15,7 +16,7 @@ class PhasesOfInterest extends React.Component {
         {
           filteredPhases.map((phase) => {
             return <div className="phase-of-interest left-align">
-                    <div className="phase-title text-ellipsis">{phase.title}</div>
+                    <div className="phase-title text-ellipsis" onClick={()=>this.props.setEmmTab('phase')}>{phase.title}</div>
                     <div className="phase-event main-text flex"><div className="event-circle"></div>{phase.valueY}</div>
                    </div>
           })
@@ -27,7 +28,7 @@ class PhasesOfInterest extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    setEmmTab: (data) => { dispatch(setEMMTab(data)); }
   };
 };
 

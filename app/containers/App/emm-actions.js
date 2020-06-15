@@ -19,6 +19,8 @@ import {
   SHOWEMMREPORT,
   HIDEEMMREPORT,
   SETEMMREPORT,
+  EMM_SWITCH_TAB,
+  EMM_SWITCH_PHASE
 } from './constants';
 
 export function showEMMReport(reportID) {
@@ -38,5 +40,19 @@ export function setEMMReport(reportData) {
   return {
     type: SETEMMREPORT,
     reportData
+  }
+}
+
+export function setEMMTab(emmTab) {
+  return {
+    type: EMM_SWITCH_TAB,
+    emmTab
+  }
+}
+
+export function setEMMPhase(emmPhase) {
+  return {
+    type: EMM_SWITCH_PHASE,
+    emmPhase
   }
 }
