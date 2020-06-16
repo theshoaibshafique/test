@@ -378,6 +378,7 @@ export default class EMMCases extends React.PureComponent {
   }
 
   render() {
+    let isLoading = this.state.loading || this.state.pendingTileCount > 0;
     return (
       <div className="ssc-page">
         <Grid container spacing={0} className="ssc-picker-container" >
@@ -402,7 +403,7 @@ export default class EMMCases extends React.PureComponent {
           </Grid>
         </Grid>
         <LoadingOverlay
-          active={this.state.loading || this.state.pendingTileCount > 0}
+          active={isLoading}
           spinner
           text='Loading your content...'
           className="overlay"
@@ -431,9 +432,9 @@ export default class EMMCases extends React.PureComponent {
                   </Grid>
                 </Grid>
                 :
-                (this.state.loading || !this.state.tileRequest.length || this.state.pendingTileCount > 0)
+                (isLoading || !this.state.tileRequest.length)
                   ?
-                  <Grid item xs={12} className="ssc-message">
+                  !isLoading && <Grid item xs={12} className="ssc-message">
                     No data available this month
                     </Grid>
                   :
