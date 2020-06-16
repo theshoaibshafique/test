@@ -10,7 +10,7 @@ export default class BarChart extends React.PureComponent {
     super(props);
 
     this.chartRef = React.createRef();
-
+    this.id = `bar-chart-${this.props.id}`;
     this.state = {
       chartID: 'barChart',
       chartData: {
@@ -90,10 +90,12 @@ export default class BarChart extends React.PureComponent {
     let zData = [];
     let xData = []
     let formattedData = { x: [] };
+    let sum = 0
     dataPoints.map((point, index) => {
       formattedData.x.push(point.valueX);
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueY);
+      sum+=parseInt(point.valueY);
       zData.push(point.valueZ);
       xData.push(point.valueX);
     });
@@ -108,7 +110,9 @@ export default class BarChart extends React.PureComponent {
     chartData.axis.y.label.text = this.props.subTitle;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-
+    if (sum <= 0){
+      d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // hide all
+    }
     this.setState({ chartData, zData, xData, isLoaded: true })
   }
 
@@ -148,7 +152,7 @@ export default class BarChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} direction="column" className="bar-chart" style={ {minHeight:150 }}>
+        <Grid container spacing={0} direction="column" className={`bar-chart ${this.id}`} style={ {minHeight:150 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>

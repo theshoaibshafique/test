@@ -331,7 +331,7 @@ export default class EMMCases extends React.PureComponent {
       case 'AREACHART':
         return <AreaChart {...tile} />
       case 'BARCHART':
-        return <BarChart pattern={this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length)} {...tile} />
+        return <BarChart pattern={this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length)} id={tile.tileTypeCount} {...tile} />
       case 'LISTDETAIL':
       case 'LISTDETAILED':
         return <ListDetailed {...tile} specialties={this.props.specialties} />
