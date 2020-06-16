@@ -378,7 +378,7 @@ export default class EMMCases extends React.PureComponent {
   }
 
   render() {
-    let isLoading = this.state.loading || this.state.pendingTileCount > 0;
+    let isLoading = this.state.isLoading || this.state.pendingTileCount > 0;
     return (
       <div className="ssc-page">
         <Grid container spacing={0} className="ssc-picker-container" >
