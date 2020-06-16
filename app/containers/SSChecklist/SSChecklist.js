@@ -34,7 +34,7 @@ export default class EMMCases extends React.PureComponent {
       pendingTileCount: 0,
       tileRequest: [],
       reportData: [],
-      chartColours: ['#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E'],
+      chartColours: ['#004F6E', '#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4'],
 
       month: moment().subtract(1, 'month').endOf('month'),
       selectedOperatingRoom: "",
@@ -123,11 +123,11 @@ export default class EMMCases extends React.PureComponent {
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
-    
+
     if (tileRequest.tileType == 'InfographicMessage') {
       //The report isnt "pending" - Its empty
       if (moment().isSameOrAfter(this.pendingDate.clone())) {
-        this.setState({ tileRequest: [],loading:false,pendingTileCount:this.state.pendingTileCount-1 });
+        this.setState({ tileRequest: [], loading: false, pendingTileCount: this.state.pendingTileCount - 1 });
         return;
       }
 
@@ -331,7 +331,8 @@ export default class EMMCases extends React.PureComponent {
       case 'AREACHART':
         return <AreaChart {...tile} />
       case 'BARCHART':
-        return <BarChart pattern={this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length)} id={tile.tileTypeCount} {...tile} />
+        let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
+        return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} />
       case 'LISTDETAIL':
       case 'LISTDETAILED':
         return <ListDetailed {...tile} specialties={this.props.specialties} />
@@ -343,7 +344,7 @@ export default class EMMCases extends React.PureComponent {
         return <StackedBarChart {...tile} specialties={this.props.specialties} />
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;
-        if (moment().isSameOrAfter(this.state.month.clone(),'month')){
+        if (moment().isSameOrAfter(this.state.month.clone(), 'month')) {
           pendingDate = pendingDate.clone().add(1, 'month');
         }
         return <div>{`We’re currently processing the data for this month’s report. Please come back on ${pendingDate.format('LL')} to view your report.`}</div>

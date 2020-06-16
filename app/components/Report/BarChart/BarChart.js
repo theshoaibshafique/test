@@ -40,7 +40,7 @@ export default class BarChart extends React.PureComponent {
               position: 'outer-center'
             },
             type: 'category',
-            height: 70
+            height: this.props.id == 2 && this.props.reportType == "ComplianceScoreReport"? 90 : 70
           },
           y: {
             label: {
@@ -66,7 +66,8 @@ export default class BarChart extends React.PureComponent {
         padding: { top: 8, bottom: 8 },
         legend: {
           show: false
-        }
+        },
+        
       }
     }
 
