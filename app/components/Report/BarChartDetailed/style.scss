@@ -53,8 +53,13 @@
 
 .bar-chart-detailed .bar-chart-detailed-legend{
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between; //Microsoft Edge fallback
   margin-top: 16px;
+}
+@supports not (-ms-ime-align: auto) {
+  .bar-chart-detailed .bar-chart-detailed-legend {
+    justify-content: space-evenly
+  }
 }
 .bar-chart-detailed .legend-title{
   display: flex;

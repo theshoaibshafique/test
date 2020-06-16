@@ -78,7 +78,7 @@ export default class HorizontalBarChart extends React.PureComponent {
         }}
       >
         <div style={{ minHeight: 421 }}>
-          <Grid container spacing={0} className="horizontal-chart" style={{ marginBottom: 34 }}>
+          <Grid container spacing={0} className="horizontal-chart">
             <Grid item xs={12} style={{ textAlign: 'center',whiteSpace:'nowrap' }}>
               <StarsIcon style={{ color: '#FFB71B', fontSize: 26, marginBottom: 8 }} />
               <span className="chart-title">{this.props.title}</span>
