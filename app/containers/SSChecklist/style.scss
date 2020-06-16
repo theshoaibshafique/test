@@ -40,7 +40,12 @@ $ssc-picker-height: 150px;
 }
 .ssc-card .MuiCardContent-root{
     margin: 0;
-    padding: 24px 35px;
+    padding: 24px;
+}
+.ssc-card.BarChartDetailed .MuiCardContent-root,
+.ssc-card.List .MuiCardContent-root,
+.ssc-card.BarChart .MuiCardContent-root{
+    padding: 24px 40px;
 }
 
 .ssc-card.InfographicParagraph .MuiCardContent-root,

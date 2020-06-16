@@ -119,9 +119,9 @@ export default class StackedBarChart extends React.PureComponent {
     chart && chart.load(chartData.data);
     chart && chart.groups([Object.keys(formattedData)]);
     var shown = chart && chart.data.shown().map(function(item){ return item.id }) || [""] // get visible ids: ['data1', 'data2', ...]
-    var last = (shown[shown.length - 1]).replace(/\s/g,'-')
+    var last = (shown[shown.length - 1]) || "";
     d3.select('.stacked-barchart-detailed .c3-chart-texts').selectAll('.c3-target').style('display', 'none') // hide all
-    d3.select('.stacked-barchart-detailed .c3-chart-texts').selectAll('.c3-target-' + last).style('display', 'block') // show last
+    d3.select('.stacked-barchart-detailed .c3-chart-texts').selectAll('.c3-target-' + last.replace(/\s/g,'-')).style('display', 'block') // show last
     this.setState({ chartData, legendData, xData: formattedData.x, zData, isLoaded: true })
   }
 
