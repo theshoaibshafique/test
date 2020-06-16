@@ -109,3 +109,6 @@
 .stacked-barchart-detailed .c3-ygrid:nth-child(even){
   opacity: 0 !important;
 }
+.stacked-barchart-detailed .c3-chart-lines .c3-chart-line{
+  display: none;
+}

@@ -18,6 +18,9 @@ export default class StackedBarChart extends React.PureComponent {
           x: 'x',
           columns: [], //Dynamically populated
           type: 'bar',
+          types: {
+            'Total': 'line'
+          },
           labels: {
             format: (v, id, i, j) => this.createCustomLabel(v, id, i, j)
           },
@@ -63,8 +66,8 @@ export default class StackedBarChart extends React.PureComponent {
         legend: {
           show: false
         },
-        size: {
-          // width: 440
+        point: {
+          show: false
         },
         onrendered: () => this.state.legendData && this.createCustomLegend(`.${this.state.chartID}`),
       }
@@ -106,10 +109,13 @@ export default class StackedBarChart extends React.PureComponent {
       legendData[point.title] = point.subTitle;
       point.valueZ && zData.push(point.valueZ);
     });
+
     let columns = [];
     Object.entries(formattedData).map(([key, value]) => {
       columns.push([key, ...value]);
     })
+    //Show Totals as a line graph (while hiding the line) so values always show on top
+    columns.push(['Total',...zData]);
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
     chartData.axis.x.label.text = this.props.footer;
@@ -118,16 +124,13 @@ export default class StackedBarChart extends React.PureComponent {
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData.data);
     chart && chart.groups([Object.keys(formattedData)]);
-    var shown = chart && chart.data.shown().map(function(item){ return item.id }) || [""] // get visible ids: ['data1', 'data2', ...]
-    var last = (shown[shown.length - 1]) || "";
-    d3.select('.stacked-barchart-detailed .c3-chart-texts').selectAll('.c3-target').style('display', 'none') // hide all
-    d3.select('.stacked-barchart-detailed .c3-chart-texts').selectAll('.c3-target-' + last.replace(/\s/g,'-')).style('display', 'block') // show last
-    this.setState({ chartData, legendData, xData: formattedData.x, zData, isLoaded: true })
+    this.setState({ chartData, legendData, xData: formattedData.x, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
-    if (id && this.state.zData ) {
-      return this.state.zData[i]
+    console.log(v,id,i,j)
+    if (id && id == "Total" ) {
+      return v
     }
   }
 
