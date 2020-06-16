@@ -112,7 +112,7 @@ export default class BarChart extends React.PureComponent {
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
     if (sum <= 0){
-      d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // hide all
+      d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // shift up labels
     }
     this.setState({ chartData, zData, xData, isLoaded: true })
   }

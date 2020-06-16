@@ -124,6 +124,9 @@ export default class StackedBarChart extends React.PureComponent {
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData.data);
     chart && chart.groups([Object.keys(formattedData)]);
+    if (zData.reduce((a,b)=>a+b,0) <= 0){
+      d3.select('.stacked-barchart-detailed .c3-chart-texts').style('transform', 'translate(0, -30px)') // shift up labels
+    }
     this.setState({ chartData, legendData, xData: formattedData.x, isLoaded: true })
   }
 
