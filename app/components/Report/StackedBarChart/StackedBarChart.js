@@ -128,7 +128,6 @@ export default class StackedBarChart extends React.PureComponent {
   }
 
   createCustomLabel(v, id, i, j) {
-    console.log(v,id,i,j)
     if (id && id == "Total" ) {
       return v
     }
