@@ -127,7 +127,7 @@ export default class EMMCases extends React.PureComponent {
     if (tileRequest.tileType == 'InfographicMessage') {
       //The report isnt "pending" - Its empty
       if (moment().isSameOrAfter(this.pendingDate.clone())) {
-        this.setState({ tileRequest: [], loading: false, pendingTileCount: this.state.pendingTileCount - 1 });
+        this.setState({ tileRequest: [], isLoading: false, pendingTileCount: this.state.pendingTileCount - 1 });
         return;
       }
 
