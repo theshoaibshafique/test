@@ -125,8 +125,12 @@ export default class EMMCases extends React.PureComponent {
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
 
     if (tileRequest.tileType == 'InfographicMessage') {
+      let pendingDate = this.pendingDate;
+      if (moment().isSameOrAfter(this.state.month.clone(), 'month')) {
+        pendingDate = pendingDate.clone().add(1, 'month');
+      }
       //The report isnt "pending" - Its empty
-      if (moment().isSameOrAfter(this.pendingDate.clone())) {
+      if (moment().isSameOrAfter(pendingDate.clone())) {
         this.setState({ tileRequest: [], isLoading: false, pendingTileCount: this.state.pendingTileCount - 1 });
         return;
       }
