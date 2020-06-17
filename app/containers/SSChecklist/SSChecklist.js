@@ -34,7 +34,7 @@ export default class EMMCases extends React.PureComponent {
       pendingTileCount: 0,
       tileRequest: [],
       reportData: [],
-      chartColours: ['#004F6E', '#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4'],
+      chartColours: ['#004F6E','#FF7D7D','#FFDB8C','#CFB9E4','#50CBFB','#6EDE95','#FFC74D','#FF4D4D','#A77ECD','#A7E5FD','#97E7B3'],
 
       month: moment().subtract(1, 'month').endOf('month'),
       selectedOperatingRoom: "",

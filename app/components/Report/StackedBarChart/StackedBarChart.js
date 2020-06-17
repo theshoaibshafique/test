@@ -27,7 +27,7 @@ export default class StackedBarChart extends React.PureComponent {
           order: 'asc'
         }, // End data
         color: {
-          pattern: ['#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
+          pattern: ['#A7E5FD','#97E7B3','#CFB9E4','#FFDB8C','#FF7D7D','#50CBFB','#6EDE95','#FFC74D','#FF4D4D','#A77ECD','#004F6E']
         },
         bar: {
           width: 50,

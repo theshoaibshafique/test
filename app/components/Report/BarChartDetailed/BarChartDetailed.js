@@ -23,7 +23,7 @@ export default class BarChartDetailed extends React.PureComponent {
           },
         }, // End data
         color: {
-          pattern: ['#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
+          pattern: ['#A7E5FD','#97E7B3','#CFB9E4','#004F6E','#FFDB8C','#FF7D7D','#50CBFB','#6EDE95','#FFC74D','#FF4D4D','#A77ECD']
         },
         bar: {
           width: 25,
