@@ -5,7 +5,7 @@ import EMMPhaseEvents from '../EMMPhaseEvents';
 import ChecklistAnalysis from './ChecklistAnalysis';
 import VideoTimeline from './VideoTimeline';
 
-export default class EMMPhaseVideoContainer extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export default class EMMPhaseVideoContainer extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
     this.state = {
@@ -21,6 +21,10 @@ export default class EMMPhaseVideoContainer extends React.PureComponent { // esl
     if (prevProps.phaseData != this.props.phaseData) {
       this.updateVideo();
     }
+  }
+
+  componentWillUnmount() {
+    this.myPlayer.dispose();
   }
 
   getVideoID() {
