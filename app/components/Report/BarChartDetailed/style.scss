@@ -55,7 +55,6 @@
   display: flex;
   justify-content: space-between; //Microsoft Edge fallback
   margin-top: 16px;
-  flex-direction: row-reverse;
 }
 @supports not (-ms-ime-align: auto) {
   .bar-chart-detailed .bar-chart-detailed-legend {
