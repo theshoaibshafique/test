@@ -29,11 +29,13 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
   }
 
   render() {
+    const { scriptReady, phases, emmPhaseIndex, tabShowing } = this.props;
     const { phaseTitles, phaseEvents } = this.state;
-    const { scriptReady, phases, emmPhaseIndex } = this.props;
     const selectedPhase = phases[emmPhaseIndex];
     return (
-      <div className="Emm-Phases">
+      <div
+        className="Emm-Phases"
+        style={{display: (tabShowing) ? 'block' : 'none'}}  >
         <h1>Case Timeline</h1>
         <EMMPhaseSelector
           selectedPhase={emmPhaseIndex}
