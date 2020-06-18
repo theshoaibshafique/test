@@ -61,21 +61,21 @@ export default class MainLayout extends React.PureComponent {
       this.getEMMAccess(),
       this.getEMMPublishAccess(),
       this.getSSCRequestAccess()].map(function (e) {
-        return e.then(function(result){
+        return e.then(function (result) {
           return result && result.data;
         }).catch(function () {
           return false;
         })
-      })).then(([userManagementAccess,emmRequestAccess,emmAccess,emmPublishAccess,sscAccess]) => {
+      })).then(([userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess]) => {
         this.setState({
-          userManagementAccess,emmRequestAccess,emmAccess,emmPublishAccess,sscAccess,isLoading:false
+          userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess, isLoading: false
         })
       }).catch(function (results) {
         this.notLoading();
       });
   }
-  notLoading(){
-    this.setState({isLoading:false});
+  notLoading() {
+    this.setState({ isLoading: false });
   }
 
   getUserManagementAccess() {
@@ -106,8 +106,8 @@ export default class MainLayout extends React.PureComponent {
 
     if (this.state.userLoggedIn) {
       return <Switch>
-        <Route path="/dashboard" component={MainDashboard} /> }/>
-              {(this.state.emmAccess) &&
+        <Route path="/dashboard" component={MainDashboard} />
+        {(this.state.emmAccess) &&
           <Route path="/emmcases" component={EMMCases} />
         }
         {(this.state.emmPublishAccess) &&
