@@ -126,7 +126,7 @@ export default class EMMCases extends React.PureComponent {
 
     if (tileRequest.tileType == 'InfographicMessage') {
       let pendingDate = this.pendingDate;
-      if (moment().isSameOrAfter(this.state.month.clone(), 'month')) {
+      if (this.state.month.clone().isSameOrAfter(moment(), 'month')) {
         pendingDate = pendingDate.clone().add(1, 'month');
       }
       //The report isnt "pending" - Its empty
