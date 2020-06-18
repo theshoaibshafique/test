@@ -124,7 +124,7 @@ export default class BarChartDetailed extends React.PureComponent {
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
     return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         {`${d[0].id}: ${d[0].value}`}
       </div>
     );

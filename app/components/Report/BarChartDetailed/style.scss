@@ -83,3 +83,15 @@
 .bar-chart-detailed .c3-axis-y-label{
   transform: translate(-10px, 10px) rotate(-90deg);
 }
+.bar-chart-detailed .tooltip{
+  color: #fff;
+  padding: 16px;
+  font-size: 0.625rem;
+  max-width: 300px;
+  word-wrap: break-word;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  line-height: 1.4em;
+  border-radius: 4px;
+  background-color: rgba(97, 97, 97, 0.9);
+}

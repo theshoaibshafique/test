@@ -18,6 +18,7 @@ const BorderLinearProgress = withStyles({
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
+    padding: '16px',
     fontSize: '14px',
     lineHeight: '19px',
     font: 'Noto Sans',
