@@ -104,12 +104,13 @@ export default class BarChartDetailed extends React.PureComponent {
       legendData[point.title] = point.subTitle;
     });
     let columns = [];
+    
     Object.entries(formattedData).map(([key, value]) => {
       columns.push([key, ...value]);
     })
+    columns.sort((a, b) => { return ('' + a[0]).localeCompare(b[0])});
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
-
     chartData.axis.x.label.text = this.props.footer;
     chartData.axis.y.label.text = this.props.subTitle;
 
@@ -135,10 +136,12 @@ export default class BarChartDetailed extends React.PureComponent {
       return;
     }
     let chart = this.chartRef.current.chart;
+    let orderedLegend = Object.entries(this.state.legendData).sort((a, b) => { return ('' + a[1]).localeCompare(b[1])});
+    
     d3.select(chartClass).insert('div').attr('class', 'legend')
       .html(ReactDOMServer.renderToString(
         <div className="bar-chart-detailed-legend">
-          {Object.entries(this.state.legendData).map(([id, value], index) => {
+          {orderedLegend.map(([id, value], index) => {
 
             return id == 'Average'
               ?
@@ -158,7 +161,7 @@ export default class BarChartDetailed extends React.PureComponent {
         </div>
       )).each((x) => {
         //Standard Onclicks dont work when you use renderToString on Graph
-        Object.entries(this.state.legendData).map(([id, value], index) => {
+        orderedLegend.map(([id, value], index) => {
           if (!value) { return };
           d3.select(`.${value.substring(1)}`)
             .on('click', (y) => {
