@@ -23,8 +23,8 @@ const CaseInformation = (props) => {
       <div className="case-info-heading main-text">Procedure</div>
       <div className="case-info-details">
       {
-        caseProcedures.map((caseProcedure) => {
-          return <div className="case-procedure-container">
+        caseProcedures.map((caseProcedure, index) => {
+          return <div key={`caseProcedure${index}`} className="case-procedure-container">
                     <div className="case-info-details specialty">{caseProcedure.specialty}</div>
                     <div className="case-info-details procedure">({caseProcedure.procedure})</div>
                   </div>
@@ -34,8 +34,8 @@ const CaseInformation = (props) => {
       <div className="case-info-heading main-text">Complications</div>
       <div className="case-info-details">
       {
-        caseComplications.map((caseComplication) => {
-          return <div className="case-complication">{caseComplication.name}</div>
+        caseComplications.map((caseComplication, index) => {
+          return <div key={`caseComplication${index}`} className="case-complication">{caseComplication.name}</div>
         })
       }
       </div>
