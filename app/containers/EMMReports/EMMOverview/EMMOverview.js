@@ -1,10 +1,22 @@
 import React from 'react';
 import './style.scss';
-import { Grid, Paper } from '@material-ui/core';
+import { Grid, Paper, Tooltip, withStyles } from '@material-ui/core';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { EMM_DISTRACTION_TOOLTIP, EMM_TECHNICAL_TOOLTIP, EMM_ADVERSEEVENT_TOOLTIP } from '../../../constants'
 import ChecklistStatus from './ChecklistStatus';
 import PhasesOfInterest from './PhasesOfInterest';
 import CaseInformation from './CaseInformation';
 import SurgicalSafetyChecklist from './SurgicalSafetyChecklist';
+
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    padding: '24px 16px',
+    fontSize: '14px',
+    lineHeight: '19px',
+    font: 'Noto Sans'
+  }
+}))(Tooltip);
 
 export default class EMMOverview extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -29,7 +41,12 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper className="Emm-Paper Score">
-                  <div className="Section-Title">{distractionScore.title}</div>
+                  <div className="Section-Title">
+                    {distractionScore.title}
+                    <LightTooltip interactive arrow title={EMM_DISTRACTION_TOOLTIP} placement="top" fontSize="small">
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                    </LightTooltip>
+                  </div>
                   <div className="EMM-Score">{distractionScore.dataPoints[0].valueX}</div>
                 </Paper>
               </Grid>
@@ -51,13 +68,23 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
             <Grid container spacing={3}>
               <Grid item xs={6}>
                 <Paper className="Emm-Paper Score">
-                  <div className="Section-Title">{technicalPerformanceScore.title}</div>
+                  <div className="Section-Title">
+                    {technicalPerformanceScore.title}
+                    <LightTooltip interactive arrow title={EMM_TECHNICAL_TOOLTIP} placement="top" fontSize="small">
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                    </LightTooltip>
+                  </div>
                   <div className="EMM-Score">{technicalPerformanceScore.dataPoints[0].valueX}</div>
                 </Paper>
               </Grid>
               <Grid item xs={6}>
                 <Paper className="Emm-Paper Score">
-                  <div className="Section-Title">{adverseEventRate.title}</div>
+                  <div className="Section-Title">
+                    {adverseEventRate.title}
+                    <LightTooltip interactive arrow title={EMM_ADVERSEEVENT_TOOLTIP} placement="top" fontSize="small">
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                    </LightTooltip>
+                  </div>
                   <div className="EMM-Score">{adverseEventRate.dataPoints[0].valueX}</div>
                 </Paper>
               </Grid>
