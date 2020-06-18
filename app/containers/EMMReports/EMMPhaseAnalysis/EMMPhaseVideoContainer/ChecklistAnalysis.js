@@ -9,7 +9,7 @@ const CheckListData = (props) => {
       return <div className="checklist-data-list main-text">
                 {
                   dataPoints.map((dataPoint, index) => {
-                  return <div>{index + 1}. <span>{dataPoint.valueX}</span></div>
+                    return <div key={`missedItem${index}`}>{index + 1}. <span>{dataPoint.valueX}</span></div>
                   })
                 }
               </div>

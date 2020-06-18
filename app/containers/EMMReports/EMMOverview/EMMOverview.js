@@ -32,10 +32,14 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
   }
 
   render() {
+    const { tabShowing } = this.props;
     const { circleSize, sscCirclesColors } = this.state;
     const { emmReportData, emmReportData : { distractionScore, technicalPerformanceScore, adverseEventRate, checklistScore, checklists, phasesOfInterest }, specialties, complications } = this.props;
     return (
-      <div className="Emm-Reports-Overview">
+      <div
+        className="Emm-Reports-Overview"
+        style={{display: (tabShowing) ? 'block' : 'none'}}
+      >
         <Grid container spacing={3}>
           <Grid item xs={4}>
             <Grid container spacing={3}>

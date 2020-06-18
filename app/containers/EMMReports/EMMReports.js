@@ -39,8 +39,8 @@ export default class EMMReports extends React.PureComponent {
     var linkTag = document.createElement('link');
     linkTag.rel = 'stylesheet';
     scriptTag.id = 'amp-azure';
-    scriptTag.src = '//amp.azure.net/libs/amp/2.1.5/azuremediaplayer.min.js';
-    linkTag.href = '//amp.azure.net/libs/amp/2.1.5/skins/' + "amp-default" + '/azuremediaplayer.min.css';
+    scriptTag.src = '//amp.azure.net/libs/amp/2.2.4/azuremediaplayer.min.js';
+    linkTag.href = '//amp.azure.net/libs/amp/2.2.4/skins/' + "amp-default" + '/azuremediaplayer.min.css';
     document.body.appendChild(scriptTag);
     document.head.insertBefore(linkTag, document.head.firstChild);
     scriptTag.onload = () => {
@@ -77,12 +77,15 @@ export default class EMMReports extends React.PureComponent {
                 </div>
               </div>
             </div>
-            {emmReportTab == 'overview' ?
-              <EMMOverview /> :
+
+              <EMMOverview
+                tabShowing={emmReportTab === 'overview'}
+              />
               <EMMPhaseAnalysis
+                tabShowing={emmReportTab === 'phase'}
                 scriptReady={this.state.isScriptReady}
                 phases={emmReportData.enhancedMMPages}/>
-            }
+
           </div>
         }
       </div>
