@@ -77,15 +77,16 @@ export default class EMMReports extends React.PureComponent {
                 </div>
               </div>
             </div>
-
-              <EMMOverview
-                tabShowing={emmReportTab === 'overview'}
-              />
-              <EMMPhaseAnalysis
-                tabShowing={emmReportTab === 'phase'}
-                scriptReady={this.state.isScriptReady}
-                phases={emmReportData.enhancedMMPages}/>
-
+          {
+            (emmReportTab === 'overview') ?
+            <EMMOverview
+            tabShowing={emmReportTab === 'overview'}
+          />:
+          <EMMPhaseAnalysis
+            tabShowing={emmReportTab === 'phase'}
+            scriptReady={this.state.isScriptReady}
+            phases={emmReportData.enhancedMMPages}/>
+          }
           </div>
         }
       </div>
