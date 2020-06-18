@@ -11,7 +11,7 @@ const LightTooltip = withStyles((theme) => ({
     padding: '16px',
     fontSize: '14px',
     lineHeight: '19px',
-    font: 'Noto Sans'
+    fontFamily: 'Noto Sans'
   }
 }))(Tooltip);
 
