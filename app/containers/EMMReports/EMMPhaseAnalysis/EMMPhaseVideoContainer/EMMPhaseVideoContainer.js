@@ -8,7 +8,8 @@ import VideoTimeline from './VideoTimeline';
 const videoOptions = {
   "nativeControlsForTouch": false,
   controls: true,
-  fluid: true,
+  width: '975px',
+  height: '548px',
   playbackSpeed: {
     enabled: true,
     initialSpeed: 1.0,
