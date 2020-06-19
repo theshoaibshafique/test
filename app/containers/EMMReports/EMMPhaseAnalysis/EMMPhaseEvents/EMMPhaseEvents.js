@@ -53,16 +53,16 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
         <div>
           {phaseData.map((data, index) => {
             if (!showOnlyAE || (showOnlyAE && data.dataPoints.length > 0)) {
-              return <div className="phase-events" key={`data` + index}>
-                        <div
+              return <div className="phase-events" key={`dataPoints${index}`}>
+                        <div key={`phaseEvent${index}`}
                           className="time-select"
                           onClick={()=>this.props.seekVideo(data.startTime)}>
                             {data.title}
                         </div>
                         <div className="main-text">{data.subTitle}</div>
-                        {data.dataPoints.map(data => {
-                          return <div className="event flex">
-                                  <div className="event-circle" />{data.title}
+                        {data.dataPoints.map(aeEvent => {
+                          return <div className="event flex" onClick={()=>this.props.seekVideo(parseInt(aeEvent.valueX))}>
+                                  <div className="event-circle" />{aeEvent.title}
                                 </div>
                           })
                         }
