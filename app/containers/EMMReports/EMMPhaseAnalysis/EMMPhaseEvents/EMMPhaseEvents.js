@@ -42,6 +42,13 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
     }
   }
 
+  aeSelected(startTime, videoID) {
+    if (this.props.phaseTitle !== 'SurgicalProcedure')
+      this.props.changeVideo(videoID)
+    else
+      this.props.seekVideo(startTime)
+  }
+
   render() {
     const { phaseData } = this.props;
     const { showOnlyAE } = this.state;
@@ -56,7 +63,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
               return <div className="phase-events" key={`dataPoints${index}`}>
                         <div key={`phaseEvent${index}`}
                           className="time-select"
-                          onClick={()=>this.props.seekVideo(data.startTime)}>
+                          onClick={()=>this.aeSelected(data.startTime, data.assets[0])}>
                             {data.title}
                         </div>
                         <div className="main-text">{data.subTitle}</div>
