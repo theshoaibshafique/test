@@ -5,6 +5,24 @@ import EMMPhaseEvents from '../EMMPhaseEvents';
 import ChecklistAnalysis from './ChecklistAnalysis';
 import VideoTimeline from './VideoTimeline';
 
+const videoOptions = {
+  "nativeControlsForTouch": false,
+  controls: true,
+  fluid: true,
+  playbackSpeed: {
+    enabled: true,
+    initialSpeed: 1.0,
+    speedLevels: [
+        { name: "x4.0", value: 4.0 },
+        { name: "x3.0", value: 3.0 },
+        { name: "x2.0", value: 2.0 },
+        { name: "x1.0", value: 1.0 },
+        { name: "x0.5", value: 0.5 },
+    ]
+  },
+  "logo": { "enabled": false },
+}
+
 export default class EMMPhaseVideoContainer extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
@@ -14,17 +32,18 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     }
   }
   componentDidMount() {
-    this.updateVideo()
+    this.destroyVideoPlayer()
+    this.changeVideo()
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.phaseData != this.props.phaseData) {
-      this.updateVideo();
+      this.changeVideo();
     }
   }
 
   componentWillUnmount() {
-    this.destroyVideo()
+    this.destroyVideoPlayer()
   }
 
   getVideoID() {
@@ -39,58 +58,42 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     }
   }
 
-  updateVideo() {
-    const videoID = this.getVideoID();
-
-    const videoOptions = {
-      "nativeControlsForTouch": false,
-      controls: true,
-      fluid: true,
-      playbackSpeed: {
-        enabled: true,
-        initialSpeed: 1.0,
-        speedLevels: [
-            { name: "x4.0", value: 4.0 },
-            { name: "x3.0", value: 3.0 },
-            { name: "x2.0", value: 2.0 },
-            { name: "x1.0", value: 1.0 },
-            { name: "x0.5", value: 0.5 },
-        ]
-      },
-      "logo": { "enabled": false },
-      // plugins: plugins
-    }
-
+  changeVideo(updatedVideoID = null) {
+    const videoID = (updatedVideoID !== null) ? updatedVideoID : this.getVideoID();
     if (videoID) {
-      this.setState({ noVideo: false })
-      globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/' + videoID, 'get', this.props.userToken, {})
-        .then(result => {
-          if (result) {
-            this.myPlayer = amp(this.state.videoID, videoOptions);
-            this.myPlayer.src([{
-              src: result.url,
-              type: "application/vnd.ms-sstr+xml",
-              protectionInfo: [
-                {
-                  "type": "PlayReady",
-                  "authenticationToken": result.token
-                },
-                {
-                  "type": "Widevine",
-                  "authenticationToken": result.token
-                }
-              ]
-            }]);
-          }
-        });
+      this.createVideoPlayer(videoID)
     } else {
       this.setState({ noVideo: true })
-      this.destroyVideo()
+      this.destroyVideoPlayer()
     }
 
   }
 
-  destroyVideo() {
+  createVideoPlayer(videoID) {
+    this.setState({ noVideo: false })
+    globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/' + videoID, 'get', this.props.userToken, {})
+      .then(result => {
+        if (result) {
+          this.myPlayer = amp(this.state.videoID, videoOptions);
+          this.myPlayer.src([{
+            src: result.url,
+            type: "application/vnd.ms-sstr+xml",
+            protectionInfo: [
+              {
+                "type": "PlayReady",
+                "authenticationToken": result.token
+              },
+              {
+                "type": "Widevine",
+                "authenticationToken": result.token
+              }
+            ]
+          }]);
+        }
+      });
+  }
+
+  destroyVideoPlayer() {
     if (this.myPlayer)
       this.myPlayer.dispose();
   }
@@ -128,6 +131,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
                 phaseTitle={phaseData.name}
                 phaseData={phaseData.enhancedMMData}
                 seekVideo={(time)=>this.seekVideo(time)}
+                changeVideo={(videoID)=>this.changeVideo(videoID)}
               />
             </div>
           </div>
