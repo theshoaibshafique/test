@@ -9,7 +9,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   constructor(props) {
     super(props);
     this.state = {
-      videoID:`azuremediaplayer${this.props.title.replace(/\W/g, '')}`,
+      videoID:'phaseAnalysisVideo',
       showVideo: false
     }
   }
@@ -91,12 +91,13 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
       <div className="Emm-Phase-Video-Container">
         <div className="flex">
           <div className="phase-video">
-            <video id={`azuremediaplayer${this.props.title.replace(/\W/g, '')}`} className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
+            <video id="phaseAnalysisVideo" className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
             {
               (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) &&
                 <VideoTimeline
                   duration={phaseData.endTime - phaseData.startTime}
                   procedureSteps={phaseData.enhancedMMData}
+                  seekVideo={(time)=>this.seekVideo(time)}
                 />
             }
           </div>
