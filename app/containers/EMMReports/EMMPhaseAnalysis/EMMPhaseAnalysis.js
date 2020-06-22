@@ -28,6 +28,14 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
     this.props.setEmmPhaseIndex(phaseIndex)
   }
 
+  getPhaseTime(startTime, endTime) {
+    if (startTime == endTime) {
+      return <span>0 minutes</span>
+    } else {
+      return <span>{globalFuncs.formatSecsToTime(endTime - startTime, true)} ({globalFuncs.formatSecsToTime(startTime)} - {globalFuncs.formatSecsToTime(endTime)})</span>
+    }
+  }
+
   render() {
     const { scriptReady, phases, emmPhaseIndex, tabShowing } = this.props;
     const { phaseTitles, phaseEvents } = this.state;
@@ -44,7 +52,7 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
         />
         <h2>{phaseTitles[emmPhaseIndex]}</h2>
         <div className="phase-duration main-text">
-          Duration: {globalFuncs.formatSecsToTime(selectedPhase.endTime - selectedPhase.startTime, true)} ({globalFuncs.formatSecsToTime(selectedPhase.startTime)} - {globalFuncs.formatSecsToTime(selectedPhase.endTime)})
+          Duration: {this.getPhaseTime(selectedPhase.startTime, selectedPhase.endTime)}
         </div>
           {(scriptReady && tabShowing) &&
             <EMMPhaseVideoContainer
