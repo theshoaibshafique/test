@@ -40,7 +40,7 @@ export default class BarChart extends React.PureComponent {
               position: 'outer-center'
             },
             type: 'category',
-            height: this.props.id == 2 && this.props.reportType == "ComplianceScoreReport"? 90 : 70
+            height: this.props.id == 2 && this.props.reportType == "ComplianceScoreReport" ? 90 : 70
           },
           y: {
             label: {
@@ -60,14 +60,14 @@ export default class BarChart extends React.PureComponent {
             front: false,
           },
           y: {
-            show:true
+            show: true
           }
         },
         padding: { top: 8, bottom: 8 },
         legend: {
           show: false
         },
-        
+
       }
     }
 
@@ -89,16 +89,18 @@ export default class BarChart extends React.PureComponent {
     }
     let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
     let zData = [];
-    let xData = []
+    let xData = [];
+    let descData = [];
     let formattedData = { x: [] };
     let sum = 0
     dataPoints.map((point, index) => {
       formattedData.x.push(point.valueX);
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueY);
-      sum+=parseInt(point.valueY);
+      sum += parseInt(point.valueY);
       zData.push(point.valueZ);
       xData.push(point.valueX);
+      descData.push(point.description);
     });
     let columns = [];
     Object.entries(formattedData).map(([key, value]) => {
@@ -106,15 +108,15 @@ export default class BarChart extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
-    
+
     chartData.axis.x.label.text = this.props.footer;
     chartData.axis.y.label.text = this.props.subTitle;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-    if (sum <= 0){
+    if (sum <= 0) {
       d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // shift up labels
     }
-    this.setState({ chartData, zData, xData, isLoaded: true })
+    this.setState({ chartData, zData, xData, descData, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
@@ -126,10 +128,12 @@ export default class BarChart extends React.PureComponent {
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
     let x = this.state.xData[d[0].x];
     let z = this.state.zData[d[0].x];
+    let desc = this.state.descData[d[0].x];
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{`${x}: ${d[0].value}%`}</div>
         <div>{`Occurence(s): ${z}`}</div>
+        <div>{`${desc}`}</div>
       </div>);
   }
 
@@ -153,17 +157,17 @@ export default class BarChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} direction="column" className={`bar-chart ${this.id}`} style={ {minHeight:150 }}>
+        <Grid container spacing={0} direction="column" className={`bar-chart ${this.id}`} style={{ minHeight: 150 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>
           <Grid item xs={12} >
             {
               this.props.body && this.props.subTitle
-              ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
-              : this.props.body ? 
-                <div className="display-text">{this.props.body}</div> 
-              : <C3Chart style={{marginTop:20}} className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+                ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
+                : this.props.body ?
+                  <div className="display-text">{this.props.body}</div>
+                  : <C3Chart style={{ marginTop: 20 }} className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
         </Grid>
       </LoadingOverlay>
