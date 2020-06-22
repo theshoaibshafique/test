@@ -11,7 +11,7 @@ import SurgicalSafetyChecklist from './SurgicalSafetyChecklist';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
-    padding: '24px 16px',
+    padding: '16px',
     fontSize: '14px',
     lineHeight: '19px',
     font: 'Noto Sans'
