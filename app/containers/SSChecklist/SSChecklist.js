@@ -42,7 +42,8 @@ export default class EMMCases extends React.PureComponent {
       selectedSpecialty: "",
       procedureOptions: [],
       selectedProcedure: "",
-      hasNoCases: false
+      hasNoCases: false,
+      isFilterApplied:true // Filter is applied right away by default
     }
     this.pendingDate = moment();
     this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY, this.pendingDate.daysInMonth()))
@@ -64,7 +65,7 @@ export default class EMMCases extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ tileRequest: [], isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ tileRequest: [],isFilterApplied:true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType,
@@ -241,7 +242,8 @@ export default class EMMCases extends React.PureComponent {
 
   updateState(key, value) {
     this.setState({
-      [key]: value
+      [key]: value,
+      isFilterApplied: false
     }, () => {
       this.saveFilter();
     });
@@ -399,6 +401,7 @@ export default class EMMCases extends React.PureComponent {
               userToken={this.props.userToken}
               defaultState={this.state}
               apply={() => this.getReportLayout()}
+              disabled={this.state.isFilterApplied}
               updateState={(key, value) => this.updateState(key, value)}
             />
           </Grid>
