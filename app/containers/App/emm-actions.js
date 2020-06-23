@@ -20,7 +20,8 @@ import {
   HIDEEMMREPORT,
   SETEMMREPORT,
   EMM_SWITCH_TAB,
-  EMM_SWITCH_PHASE
+  EMM_SWITCH_PHASE,
+  EMM_SET_VIDEO_TIME
 } from './constants';
 
 export function showEMMReport(reportID) {
@@ -54,5 +55,12 @@ export function setEMMPhaseIndex(emmPhaseIndex) {
   return {
     type: EMM_SWITCH_PHASE,
     emmPhaseIndex
+  }
+}
+
+export function setEMMVideoTime(videoTime) {
+  return {
+    type: EMM_SET_VIDEO_TIME,
+    videoTime
   }
 }

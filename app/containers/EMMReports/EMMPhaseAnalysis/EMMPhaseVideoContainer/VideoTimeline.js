@@ -1,15 +1,33 @@
 import React from 'react';
 
 const VideoTimeline = (props) => {
-  const { duration, procedureSteps, seekVideo } = props;
+  const { duration, procedureSteps, seekVideo, currentVideoTime } = props;
   let adverseEvents = [];
   procedureSteps.forEach((procedureStep) => {
     if (procedureStep.dataPoints.length > 0)
       adverseEvents = [...adverseEvents, ...procedureStep.dataPoints]
   })
 
+  const shouldHighlight = (startTime, endTime) => {
+    return (currentVideoTime >= startTime && currentVideoTime < endTime) ? 'highlighted' : '';
+  }
+
   return (
     <div className="Video-Timeline relative">
+      {
+        procedureSteps.map((procedureStep, index) => {
+          return <div
+                   key={`procedureStepTimeline${index}`}
+                   className={`absolute procedure-step-timeline ${shouldHighlight(procedureStep.startTime, procedureStep.endTime)}`}
+                   style={{
+                     left: `${(procedureStep.startTime) / duration * 100}%`,
+                     width: `${(procedureStep.endTime - procedureStep.startTime) / duration * 100}%`
+                   }}
+                  >
+                 </div>
+        })
+      }
+
       {
         adverseEvents.map((event, index) => {
           return <div

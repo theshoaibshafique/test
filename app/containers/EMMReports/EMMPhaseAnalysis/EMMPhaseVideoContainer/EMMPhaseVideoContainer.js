@@ -62,7 +62,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   changeVideo(updatedVideoID = null) {
     const videoID = (updatedVideoID !== null) ? updatedVideoID : this.getVideoID();
     if (videoID) {
-      this.createVideoPlayer(videoID)
+      this.createVideoPlayer(videoID, this.props.phaseData)
     } else {
       this.setState({ noVideo: true })
       this.destroyVideoPlayer()
@@ -70,7 +70,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
 
   }
 
-  createVideoPlayer(videoID) {
+  createVideoPlayer(videoID, phaseData) {
     this.setState({ noVideo: false })
     globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/' + videoID, 'get', this.props.userToken, {})
       .then(result => {
@@ -90,13 +90,18 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
               }
             ]
           }]);
+          this.myPlayer.addEventListener('timeupdate', (e) => {
+            this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
+          });
         }
       });
   }
 
   destroyVideoPlayer() {
-    if (this.myPlayer)
+    if (this.myPlayer) {
       this.myPlayer.dispose();
+      this.props.setEMMVideoTime(0);
+    }
   }
 
   seekVideo(time) {
@@ -121,6 +126,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
                     duration={phaseData.endTime - phaseData.startTime}
                     procedureSteps={phaseData.enhancedMMData}
                     seekVideo={(time)=>this.seekVideo(time)}
+                    currentVideoTime={this.props.emmVideoTime}
                   />
               }
             </div>
@@ -133,6 +139,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
                 phaseData={phaseData.enhancedMMData}
                 seekVideo={(time)=>this.seekVideo(time)}
                 changeVideo={(videoID)=>this.changeVideo(videoID)}
+                currentVideoTime={this.props.emmVideoTime}
               />
             </div>
           </div>
