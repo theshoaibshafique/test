@@ -49,6 +49,18 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
       this.props.seekVideo(startTime)
   }
 
+  shouldHighlight(startTime, endTime) {
+    let { currentVideoTime, phaseTitle } = this.props;
+    let highlighted = false;
+    if (phaseTitle === 'SurgicalProcedure') {
+      if (currentVideoTime >= startTime && currentVideoTime <= endTime)
+        highlighted = true;
+    } else {
+
+    }
+    return (highlighted) ? 'highlighted' : '';
+  }
+
   render() {
     const { phaseData } = this.props;
     const { showOnlyAE } = this.state;
@@ -60,7 +72,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
         <div>
           {phaseData.map((data, index) => {
             if (!showOnlyAE || (showOnlyAE && data.dataPoints.length > 0)) {
-              return <div className="phase-events" key={`dataPoints${index}`}>
+              return <div className={`phase-events ${this.shouldHighlight(data.startTime, data.endTime)}`} key={`dataPoints${index}`}>
                         <div key={`phaseEvent${index}`}
                           className="time-select"
                           onClick={()=>this.aeSelected(data.startTime, data.assets[0])}>

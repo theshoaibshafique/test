@@ -19,4 +19,5 @@ export const HIDEEMMREPORT = 'insights - hiding emm reports';
 export const SETEMMREPORT = 'insights - set emm reports';
 export const EMM_SWITCH_TAB = 'insights - switch emm tab';
 export const EMM_SWITCH_PHASE = 'insights - set emm phase'
+export const EMM_SET_VIDEO_TIME = 'insights - update video time'
 export const DEFAULT_LOCALE = 'en';

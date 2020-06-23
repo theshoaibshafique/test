@@ -13,7 +13,12 @@
 import { fromJS } from 'immutable';
 
 import {
-  EMM_SWITCH_TAB, SHOWEMMREPORT, HIDEEMMREPORT, SETEMMREPORT, EMM_SWITCH_PHASE
+  EMM_SWITCH_TAB,
+  SHOWEMMREPORT,
+  HIDEEMMREPORT,
+  SETEMMREPORT,
+  EMM_SWITCH_PHASE,
+  EMM_SET_VIDEO_TIME
 } from './constants';
 
 // The initial state of the App
@@ -21,7 +26,8 @@ const initialState = fromJS({
   emmReportID: null,
   emmReportData: null,
   emmTab: 'overview',
-  emmPhaseIndex: null
+  emmPhaseIndex: null,
+  emmVideoTime: 0
 });
 
 function emmReducer(state = initialState, action) {
@@ -45,6 +51,9 @@ function emmReducer(state = initialState, action) {
     case EMM_SWITCH_PHASE:
       return state
         .set('emmPhaseIndex', action.emmPhaseIndex)
+    case EMM_SET_VIDEO_TIME:
+      return state
+        .set('emmVideoTime', action.videoTime)
     default:
       return state;
   }

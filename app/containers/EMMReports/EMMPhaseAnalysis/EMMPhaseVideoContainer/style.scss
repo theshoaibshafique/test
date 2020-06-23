@@ -1,6 +1,10 @@
 @import '../../../../styles/global-styles.scss';
 
 .Emm-Phase-Video-Container {
+  .highlighted {
+    background: #D8F0F9;
+  }
+
   .phase-video {
     width: 975px;
     .azuremediaplayer {
@@ -70,6 +74,10 @@
     background: #FFFFFF;
     width: 975px;
     border-right: 1px solid #F3F3F3;
+    .procedure-step-timeline {
+      height: 30px;
+    }
+
     .time-line-marker {
       cursor: pointer;
       top: 5px;
