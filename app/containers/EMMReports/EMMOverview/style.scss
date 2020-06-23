@@ -33,7 +33,11 @@ $paddingSize: 40px;
   }
 }
 
-hr { margin: 24px 0px; }
+hr {
+  margin: 24px 0px;
+  color: #c8c8c8;
+  border-top: 1px solid;
+}
 
 .Case-Information {
   margin-top: 24px;
@@ -64,6 +68,7 @@ hr { margin: 24px 0px; }
   line-height: 19px;
   div { flex-grow: 1; }
   .checklist-happened {
+    cursor: pointer;
     text-align: left;
     .title {
       color: #028CC8;
@@ -86,7 +91,8 @@ hr { margin: 24px 0px; }
   justify-content: center;
   .phase-of-interest {
     margin: 0px 15px;
-    width: 200px;
+    flex: 1;
+    min-width: 0px;
     position: relative;
     &:after {
       content: '';

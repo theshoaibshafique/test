@@ -21,8 +21,8 @@ class PhasesOfInterest extends React.Component {
       <div className="Phases-Of-Interests-Container flex">
         {
           filteredPhases.map((phase) => {
-            return <div className="phase-of-interest left-align">
-                    <div className="phase-title text-ellipsis" onClick={()=>this.selectPhaseOfInterest(phase.valueX)}>{phase.title}</div>
+            return <div className="phase-of-interest center-align">
+                    <div className="phase-title text-ellipsis" title={phase.title} onClick={()=>this.selectPhaseOfInterest(phase.valueX)}>{phase.title}</div>
                     <div className="phase-event main-text flex"><div className="event-circle"></div>{phase.valueY}</div>
                    </div>
           })
