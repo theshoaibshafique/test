@@ -100,6 +100,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                     />
                   <hr />
                   <ChecklistStatus
+                    allPhases={emmReportData.enhancedMMPages}
                     checklists={checklists.dataPoints} />
                 </Paper>
               </Grid>
