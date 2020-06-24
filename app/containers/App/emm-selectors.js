@@ -31,10 +31,16 @@ const selectEMMVidoeTime = () => createSelector(
   (emmState) => emmState.get('emmVideoTime')
 );
 
+const selectEMMPublishAccess = () => createSelector(
+  selectEMM,
+  (emmState) => emmState.get('emmPublishAccess')
+);
+
 export {
   selectEMMTab,
   selectEMMReportID,
   selectEMMReportData,
   selectEMMPhaseIndex,
-  selectEMMVidoeTime
+  selectEMMVidoeTime,
+  selectEMMPublishAccess
 };

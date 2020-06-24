@@ -14,6 +14,10 @@ const VideoTimeline = (props) => {
 
   return (
     <div className="Video-Timeline relative">
+      <div
+        className="current-video-time absolute"
+        style={{left: `${currentVideoTime/duration * 100}%`}}
+      />
       {
         procedureSteps.map((procedureStep, index) => {
           return <div

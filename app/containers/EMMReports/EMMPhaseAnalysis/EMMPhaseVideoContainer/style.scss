@@ -74,6 +74,13 @@
     background: #FFFFFF;
     width: 975px;
     border-right: 1px solid #F3F3F3;
+    .current-video-time {
+      background: red;
+      width: 2px;
+      height: 30px;
+      z-index: 10;
+    }
+
     .procedure-step-timeline {
       height: 30px;
     }

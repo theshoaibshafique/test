@@ -18,7 +18,8 @@ import {
   HIDEEMMREPORT,
   SETEMMREPORT,
   EMM_SWITCH_PHASE,
-  EMM_SET_VIDEO_TIME
+  EMM_SET_VIDEO_TIME,
+  EMM_PUBLISH_ACCESS
 } from './constants';
 
 // The initial state of the App
@@ -27,7 +28,8 @@ const initialState = fromJS({
   emmReportData: null,
   emmTab: 'overview',
   emmPhaseIndex: null,
-  emmVideoTime: 0
+  emmVideoTime: 0,
+  emmPublishAccess: false
 });
 
 function emmReducer(state = initialState, action) {
@@ -54,6 +56,9 @@ function emmReducer(state = initialState, action) {
     case EMM_SET_VIDEO_TIME:
       return state
         .set('emmVideoTime', action.videoTime)
+    case EMM_PUBLISH_ACCESS:
+      return state
+        .set('emmPublishAccess', action.publishAccess)
     default:
       return state;
   }
