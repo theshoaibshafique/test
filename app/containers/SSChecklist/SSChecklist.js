@@ -3,9 +3,9 @@ import axios from 'axios';
 
 import 'c3/c3.css';
 import './style.scss';
-
+import SscOnboard from './img/SSC_ONBOARD.png';
 import globalFuncs from '../../utils/global-functions';
-import { Grid, Divider, CardContent, Card, Modal, DialogContent } from '@material-ui/core';
+import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, Button } from '@material-ui/core';
 import MonthPicker from '../../components/MonthPicker/MonthPicker';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
@@ -21,20 +21,22 @@ import ListDetailed from '../../components/Report/ListDetailed/ListDetailed';
 import StackedBarChart from '../../components/Report/StackedBarChart';
 import Checklist from '../../components/Report/Checklist';
 import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDetail';
+import CloseIcon from '@material-ui/icons/Close';
 
-export default class EMMCases extends React.PureComponent {
+export default class SSChecklist extends React.PureComponent {
   constructor(props) {
     super(props);
-
+    this.ONBOARD_TYPE = "SSChecklist";
     this.state = {
 
       isOpen: false,
+      isOnboardModalOpen: false,
       reportType: this.props.reportType,
       isLoading: true,
       pendingTileCount: 0,
       tileRequest: [],
       reportData: [],
-      chartColours: ['#004F6E','#FF7D7D','#FFDB8C','#CFB9E4','#50CBFB','#6EDE95','#FFC74D','#FF4D4D','#A77ECD','#A7E5FD','#97E7B3'],
+      chartColours: ['#004F6E', '#FF7D7D', '#FFDB8C', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3'],
 
       month: moment().subtract(1, 'month').endOf('month'),
       selectedOperatingRoom: "",
@@ -43,7 +45,7 @@ export default class EMMCases extends React.PureComponent {
       procedureOptions: [],
       selectedProcedure: "",
       hasNoCases: false,
-      isFilterApplied:true // Filter is applied right away by default
+      isFilterApplied: true // Filter is applied right away by default
     }
     this.pendingDate = moment();
     this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY, this.pendingDate.daysInMonth()))
@@ -61,11 +63,50 @@ export default class EMMCases extends React.PureComponent {
   componentDidMount() {
     this.loadFilter();
     this.getReportLayout();
+    this.openOnboarding()
   };
+
+  openOnboarding() {
+    //If they already did the onboard - Dont bother checking API
+    if (localStorage.getItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`)) {
+      return;
+    }
+    globalFunctions.axiosFetch(process.env.ONBOARD_API, 'get', this.props.userToken, {})
+      .then(result => {
+        var data = result.data;
+
+        if (data && data.onboardCompleted && data.onboardCompleted.includes && data.onboardCompleted.includes(this.ONBOARD_TYPE)) {
+          return;
+        }
+        this.openOnboardModal();
+        this.updateOnboardStatus();
+      }).catch((error) => {
+
+      });
+  }
+  updateOnboardStatus() {
+    let jsonBody = { onboardCompleted: [this.ONBOARD_TYPE] };
+    globalFunctions.axiosFetch(process.env.USERDETAILSMODIFY_API, 'post', this.props.userToken, jsonBody)
+      .then(result => {
+        //Cache onboard report name so we know not to open it again automatically
+        if (result.data) {
+          localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
+        }
+      }).catch((error) => {
+
+      });
+  }
+
+  openOnboardModal() {
+    this.setState({ isOnboardModalOpen: true })
+  }
+  closeOnboardModal() {
+    this.setState({ isOnboardModalOpen: false });
+  }
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ tileRequest: [],isFilterApplied:true, isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ tileRequest: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType,
@@ -408,6 +449,9 @@ export default class EMMCases extends React.PureComponent {
           <Grid item xs={12}>
             <Divider className="ssc-divider" />
           </Grid>
+          <div className="sscOnboard-link link" onClick={() => this.openOnboardModal()}>
+            What's this report about?
+          </div>
         </Grid>
         <LoadingOverlay
           active={isLoading}
@@ -454,6 +498,63 @@ export default class EMMCases extends React.PureComponent {
           >
             <DialogContent className="ssc Modal">
               {this.renderTile(this.state.modalTile)}
+            </DialogContent>
+          </Modal>
+          <Modal
+            open={this.state.isOnboardModalOpen}
+            onClose={() => this.closeOnboardModal()}
+          >
+            <DialogContent className="sscOnboarding Modal">
+              <Grid container spacing={0} justify='center' className="onboard-modal" >
+                <Grid item xs={10} className="sscOnboard-title">
+                  What is the Surgical Safety Checklist Report?
+                </Grid>
+                <Grid item xs={2} style={{ textAlign: 'right', padding: '40px 24px 0 40px' }}>
+                  <IconButton disableRipple disableFocusRipple onClick={() => this.closeOnboardModal()} className='close-button'><CloseIcon fontSize='small' /></IconButton>
+                </Grid>
+                <Grid item xs={6} className="sscOnboard-paragraph">
+                  <div className="sscOnboard-paragraph-block1">
+                    This report offers insights into the three phases (Briefing, Time Out, Postop Debrief) of the Surgical Safety Checklist with respect to three main scores: Compliance, Engagement, and Quality.
+                  </div>
+                  <div className="sscOnboard-paragraph-block2">
+                    Each score targets a different aspect of the conduct of the checklist that teams can improve upon to promote its usage and develop a shared understanding of the surgery being performing.
+                  </div>
+                  <div style={{ marginTop: 'auto' }}>
+                    <div className="ssc-Onboard-report-info Compliance">
+                      <span className="sscOnboard-hex">&#x2B22;</span>
+                      <span className="sscOnboard-report-title">Compliance Score </span>
+                    is a measure of how often, and when, the each phase of the checklist was conducted.
+                    </div>
+                    <div className="ssc-Onboard-report-info Engagement">
+                      <span className="sscOnboard-hex">&#x2B22;</span>
+                      <span className="sscOnboard-report-title">Engagement Score </span>
+                    is a measure of the team’s focus during each phase of the checklist.
+                    </div>
+                    <div className="ssc-Onboard-report-info Quality">
+                      <span className="sscOnboard-hex">&#x2B22;</span>
+                      <span className="sscOnboard-report-title">Quality Score </span>
+                    is a measure of the information being exchanged during the briefing, time out and postop debrief.
+                    </div>
+                  </div>
+                </Grid>
+                <Grid item xs={6}>
+                  <div className="sscOnboard-segment">
+                    <div className="sscOnboard-subtitle">
+                      Segmenting the data:
+                    </div>
+                    <div>
+                      Data can be filtered by date, OR, and specialty, as applicable to facilitate the identification of areas for improvement.
+                    </div>
+                  </div>
+                  <div className="sscOnboard-image">
+                    <img src={SscOnboard} />
+                  </div>
+                </Grid>
+
+                <Grid item xs={12} style={{ textAlign: 'right', marginTop: 40 }}>
+                  <Button disableElevation disableRipple variant="contained" className="secondary" style={{ marginRight: 40, marginBottom: 40 }} onClick={() => this.closeOnboardModal()}>Close</Button>
+                </Grid>
+              </Grid>
             </DialogContent>
           </Modal>
         </LoadingOverlay>
