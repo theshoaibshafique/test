@@ -1,5 +1,19 @@
 @import '../../styles/global-styles.scss';
 
+.publish-dialog {
+    .MuiPaper-root {
+        padding: 16px;
+    }
+    .cancel-publish {
+        color: #028CC8 !important;
+    }
+}
+.publish-button {
+    padding: 8px 16px !important;
+    font-size: 18px;
+    line-height: 24px !important;
+}
+
 .EMM-REPORTS {
     padding: 24px 120px;
     max-width: 1920px;
@@ -34,11 +48,6 @@
     img {
         width: 200px;
         left: 0px;
-    }
-    .publish-button {
-        padding: 8px 16px;
-        font-size: 18px;
-        line-height: 24px;
     }
     &.has-publish-button { height: 96px; }
 }

@@ -3,18 +3,46 @@ import logo from './images/emmLogo.png';
 import './style.scss';
 import Icon from '@mdi/react'
 import { mdiClose } from '@mdi/js';
-import { Button } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import globalFuncs from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
 import EMMPhaseAnalysis from './EMMPhaseAnalysis'
-import emmData from '../../src/emm.json';
+
+const ConfirmPublishDialog = (props) => {
+  const { publishDialogOpen, closePublishDialog } = props;
+  return (
+    <Dialog
+      open={publishDialogOpen}
+      onClose={()=>closePublishDialog(false)}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      className="publish-dialog"
+    >
+      <DialogTitle id="alert-dialog-title">Are you sure you want to publish?</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Publishing a report will allow customers to access it from eM&M Cases. This action cannot be undone.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={()=>closePublishDialog(false)} className="cancel-publish" color="primary">
+          Cancel
+        </Button>
+        <Button onClick={()=>closePublishDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
+          Publish
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
 
 export default class EMMReports extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       isScriptReady: false,
-      isPublished: false
+      isPublished: false,
+      publishDialogOpen: false
     }
   }
 
@@ -60,37 +88,49 @@ export default class EMMReports extends React.PureComponent {
 
   publishReport() {
     let { emmReportData, userToken } = this.props;
-    let { isPublished } = this.state;
     const jsonBody = {
       "name": emmReportData.name,
-      "published": !isPublished
+      "published": true
     }
     globalFuncs.genericFetch(process.env.EMMPUBLISH_API, 'PATCH', userToken, jsonBody)
       .then(result => {
         if (result !== 'error' && result !== 'conflict') {
-          this.setState({ isPublished: !isPublished })
+          this.setState({ isPublished: true })
         }
       });
   }
 
+  closePublishDialog(choice) {
+    if (choice) {
+      this.publishReport();
+    }
+    this.setState({
+      publishDialogOpen: false
+    })
+  }
+
   render() {
     const { emmReportData, emmReportTab, emmPublishAccess } = this.props;
-    const { isPublished } = this.state;
+    const { isPublished, publishDialogOpen } = this.state;
 
-    // let isReportPublished;
-    // if (emmReportData)
-    //   isReportPublished = emmPublishAccess && !emmReportData.published
+    let showPublishButton;
+    if (emmReportData)
+      showPublishButton = emmPublishAccess && !emmReportData.published && !isPublished
 
     return (
       <div className="EMM-REPORTS full-height relative">
+        <ConfirmPublishDialog
+          publishDialogOpen={publishDialogOpen}
+          closePublishDialog={(choice)=>this.closePublishDialog(choice)}
+        />
         {(emmReportData) &&
           <div>
             <div className="close-emm" onClick={()=>this.props.hideEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
-            <div className={`EMM-Reports-Header relative center-align ${(emmPublishAccess) && 'has-publish-button'}`}>
+            <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
               <img className="absolute" src={logo} />
               {
-                (emmPublishAccess) &&
-                  <Button variant="outlined" className="primary publish-button" onClick={() => this.publishReport()}>{(isPublished) ? 'Unpublish' : 'Publish'} Report</Button>
+                (showPublishButton) &&
+                  <Button variant="outlined" className="primary publish-button" onClick={() => this.setState({ publishDialogOpen : true })}>{(isPublished) ? 'Unpublish' : 'Publish'} Report</Button>
               }
               <div className="EMM-Tab-Selector">
                 <div
