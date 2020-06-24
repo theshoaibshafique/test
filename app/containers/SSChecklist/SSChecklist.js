@@ -79,7 +79,7 @@ export default class SSChecklist extends React.PureComponent {
           return;
         }
         this.openOnboardModal();
-
+        this.updateOnboardStatus();
       }).catch((error) => {
 
       });
@@ -88,16 +88,16 @@ export default class SSChecklist extends React.PureComponent {
     let jsonBody = { onboardCompleted: [this.ONBOARD_TYPE] };
     globalFunctions.axiosFetch(process.env.USERDETAILSMODIFY_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
-        debugger;
+        if (result.data) {
+          localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
+        }
       }).catch((error) => {
 
       });
   }
 
   openOnboardModal() {
-    this.setState({ isOnboardModalOpen: true }, () => {
-      // this.updateOnboardStatus();
-    })
+    this.setState({ isOnboardModalOpen: true })
   }
   closeOnboardModal() {
     this.setState({ isOnboardModalOpen: false });
@@ -448,6 +448,9 @@ export default class SSChecklist extends React.PureComponent {
           <Grid item xs={12}>
             <Divider className="ssc-divider" />
           </Grid>
+          <div className="sscOnboard-link link" onClick={() => this.openOnboardModal()}>
+            What's this report about?
+          </div>
         </Grid>
         <LoadingOverlay
           active={isLoading}
@@ -515,7 +518,7 @@ export default class SSChecklist extends React.PureComponent {
                   <div className="sscOnboard-paragraph-block2">
                     Each score targets a different aspect of the conduct of the checklist that teams can improve upon to promote its usage and develop a shared understanding of the surgery being performing.
                   </div>
-                  <div style={{marginTop:'auto'}}>
+                  <div style={{ marginTop: 'auto' }}>
                     <div className="ssc-Onboard-report-info Compliance">
                       <span className="sscOnboard-hex">&#x2B22;</span>
                       <span className="sscOnboard-report-title">Compliance Score </span>
@@ -547,7 +550,7 @@ export default class SSChecklist extends React.PureComponent {
                   </div>
                 </Grid>
 
-                <Grid item xs={12} style={{ textAlign: 'right',marginTop:40 }}>
+                <Grid item xs={12} style={{ textAlign: 'right', marginTop: 40 }}>
                   <Button disableElevation disableRipple variant="contained" className="secondary" style={{ marginRight: 40, marginBottom: 40 }} onClick={() => this.closeOnboardModal()}>Close</Button>
                 </Grid>
               </Grid>
