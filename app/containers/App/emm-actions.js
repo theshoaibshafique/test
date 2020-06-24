@@ -21,7 +21,8 @@ import {
   SETEMMREPORT,
   EMM_SWITCH_TAB,
   EMM_SWITCH_PHASE,
-  EMM_SET_VIDEO_TIME
+  EMM_SET_VIDEO_TIME,
+  EMM_PUBLISH_ACCESS
 } from './constants';
 
 export function showEMMReport(reportID) {
@@ -62,5 +63,12 @@ export function setEMMVideoTime(videoTime) {
   return {
     type: EMM_SET_VIDEO_TIME,
     videoTime
+  }
+}
+
+export function setEMMPublishAccess(publishAccess) {
+  return {
+    type: EMM_PUBLISH_ACCESS,
+    publishAccess
   }
 }

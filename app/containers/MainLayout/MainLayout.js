@@ -70,6 +70,7 @@ export default class MainLayout extends React.PureComponent {
         this.setState({
           userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess, isLoading: false
         })
+        this.props.setEMMPublishAccess(emmPublishAccess);
       }).catch(function (results) {
         this.notLoading();
       });
