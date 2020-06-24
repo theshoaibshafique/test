@@ -88,6 +88,7 @@ export default class SSChecklist extends React.PureComponent {
     let jsonBody = { onboardCompleted: [this.ONBOARD_TYPE] };
     globalFunctions.axiosFetch(process.env.USERDETAILSMODIFY_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
+        //Cache onboard report name so we know not to open it again automatically
         if (result.data) {
           localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
         }
