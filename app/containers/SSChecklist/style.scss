@@ -101,30 +101,107 @@ $ssc-picker-height: 150px;
     line-height: 36px;
 }
 
+.sscOnboarding.Modal,
 .ssc.Modal{
     padding: 0;
 }
 
 
 .no-data {
-    opacity: 0.8;
-    color: #000000;
-    font-family: "Noto Sans";
-    font-size: 18px;
-    letter-spacing: 0;
-    line-height: 24px;
-    text-align: center;
-    margin-top: 16px;
-    margin-bottom: 8px;
-  }
+  opacity: 0.8;
+  color: #000000;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 24px;
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
   
-  .no-data-subtitle {
-    opacity: 0.8;
-    color: #000000;
-    font-family: "Noto Sans";
-    font-size: 14px;
+.no-data-subtitle {
+  opacity: 0.8;
+  color: #000000;
+  font-family: "Noto Sans";
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 19px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.sscOnboarding .sscOnboard-title{
+    font-size: 26px;
     letter-spacing: 0;
-    line-height: 19px;
-    text-align: center;
+    line-height: 36px;
+    padding: 40px 40px 0 40px;
+    margin-bottom: 29px;
+}
+.sscOnboarding {    
+  color: #000000;
+  font-family: "Noto Sans";
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 19px;
+  max-width: 800px;
+}
+.sscOnboarding .sscOnboard-paragraph{
+    padding: 0 0 0 40px;
+    display: flex;
+    flex-direction: column;
+}
+.sscOnboarding .sscOnboard-paragraph-block1{
     margin-bottom: 24px;
-  }
+}
+.sscOnboarding .sscOnboard-paragraph-block2{
+    margin-bottom: 40px;
+}
+.sscOnboard-report-title{
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: bold;
+}
+.ssc-Onboard-report-info:not(:last-child){
+    margin-bottom: 24px;
+}
+.ssc-Onboard-report-info{
+    color:#004F6E;
+}
+
+.ssc-Onboard-report-info.Compliance .sscOnboard-report-title,
+.ssc-Onboard-report-info.Compliance .sscOnboard-hex{
+    color: #477B78;
+}
+.ssc-Onboard-report-info.Engagement .sscOnboard-report-title,
+.ssc-Onboard-report-info.Engagement .sscOnboard-hex{
+    color: #476A7C;
+}
+.ssc-Onboard-report-info.Quality .sscOnboard-report-title,
+.ssc-Onboard-report-info.Quality .sscOnboard-hex{
+    color: #736545;
+}
+.sscOnboard-segment{
+    margin-left: 100px;
+    margin-bottom: 24px;
+    background-color: #E6E6E6;
+    padding:16px;
+}
+.sscOnboard-subtitle{
+    font-weight: bold;
+}
+.sscOnboard-image{
+    text-align: center;
+}
+.sscOnboard-image img{
+    max-height: 300px;
+}
+.sscOnboarding .close-button{
+    padding-top: 0;
+}
+.sscOnboard-hex{
+    display: inline-block;
+    font-size: 20px;
+    margin-right: 4px;    
+    transform: translate(2px,2px) rotate(90deg);
+    
+}
