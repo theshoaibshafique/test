@@ -29,9 +29,11 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     super(props);
     this.state = {
       videoID:'phaseAnalysisVideo',
-      noVideo: false
+      noVideo: false,
+      selectedVideoClipID: 0
     }
   }
+
   componentDidMount() {
     this.destroyVideoPlayer()
     this.changeVideo()
@@ -59,9 +61,13 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     }
   }
 
-  changeVideo(updatedVideoID = null) {
+  changeVideo(updatedVideoID = null, videoIndex = 0) {
     const videoID = (updatedVideoID !== null) ? updatedVideoID : this.getVideoID();
+    const { phaseData } = this.props;
     if (videoID) {
+      if (phaseData.name !== 'SurgicalProcedure') {
+        this.setState({ selectedVideoClipID: videoIndex })
+      }
       this.createVideoPlayer(videoID, this.props.phaseData)
     } else {
       this.setState({ noVideo: true })
@@ -109,8 +115,8 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   render() {
-    const { phaseData } = this.props;
-    const { noVideo } = this.state;
+    const { phaseData, emmVideoTime } = this.props;
+    const { noVideo, selectedVideoClipID } = this.state;
     return (
       <div className="Emm-Phase-Video-Container">
         {
@@ -138,8 +144,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
                 phaseTitle={phaseData.name}
                 phaseData={phaseData.enhancedMMData}
                 seekVideo={(time)=>this.seekVideo(time)}
-                changeVideo={(videoID)=>this.changeVideo(videoID)}
-                currentVideoTime={this.props.emmVideoTime}
+                changeVideo={(videoID, videoIndex)=>this.changeVideo(videoID, videoIndex)}
+                currentVideoTime={emmVideoTime}
+                selectedVideoClipID={selectedVideoClipID}
               />
             </div>
           </div>

@@ -42,21 +42,20 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
     }
   }
 
-  aeSelected(startTime, videoID) {
+  aeSelected(startTime, videoID, videoIndex) {
     if (this.props.phaseTitle !== 'SurgicalProcedure')
-      this.props.changeVideo(videoID)
+      this.props.changeVideo(videoID, videoIndex)
     else
       this.props.seekVideo(startTime)
   }
 
-  shouldHighlight(startTime, endTime) {
-    let { currentVideoTime, phaseTitle } = this.props;
+  shouldHighlight(startTime, endTime, videoIndex) {
+    let { currentVideoTime, phaseTitle, selectedVideoClipID } = this.props;
     let highlighted = false;
     if (phaseTitle === 'SurgicalProcedure') {
-      if (currentVideoTime >= startTime && currentVideoTime <= endTime)
-        highlighted = true;
+      highlighted = (currentVideoTime >= startTime && currentVideoTime <= endTime);
     } else {
-
+      highlighted = (selectedVideoClipID == videoIndex)
     }
     return (highlighted) ? 'highlighted' : '';
   }
@@ -72,10 +71,10 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
         <div>
           {phaseData.map((data, index) => {
             if (!showOnlyAE || (showOnlyAE && data.dataPoints.length > 0)) {
-              return <div className={`phase-events ${this.shouldHighlight(data.startTime, data.endTime)}`} key={`dataPoints${index}`}>
+              return <div className={`phase-events ${this.shouldHighlight(data.startTime, data.endTime, index)}`} key={`dataPoints${index}`}>
                         <div key={`phaseEvent${index}`}
                           className="time-select"
-                          onClick={()=>this.aeSelected(data.startTime, data.assets[0])}>
+                          onClick={()=>this.aeSelected(data.startTime, data.assets[0], index)}>
                             {data.title}
                         </div>
                         <div className="main-text">{data.subTitle}</div>
