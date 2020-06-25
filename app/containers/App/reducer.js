@@ -18,6 +18,7 @@ import {
   FACILITY_ROOMS,
   SPECIALTIES,
   COMPLICATIONS,
+  OPERATING_ROOM,
 } from './constants';
 
 // The initial state of the App
@@ -33,6 +34,7 @@ const initialState = fromJS({
   facilityRooms: [],
   specialties: [],
   complications: [],
+  operatingRoom: []
 });
 
 function emmReducer(state = initialState, action) {
@@ -59,6 +61,9 @@ function emmReducer(state = initialState, action) {
     case COMPLICATIONS:
       return state
         .set('complications', action.complications)
+    case OPERATING_ROOM:
+      return state
+        .set('operatingRoom', action.operatingRoom)
     default:
       return state;
   }
