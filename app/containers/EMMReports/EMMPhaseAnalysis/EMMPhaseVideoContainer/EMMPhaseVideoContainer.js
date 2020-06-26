@@ -8,8 +8,8 @@ import VideoTimeline from './VideoTimeline';
 const videoOptions = {
   "nativeControlsForTouch": false,
   controls: true,
-  width: '975px',
-  height: '548px',
+  width: '1110px',
+  height: '625px',
   playbackSpeed: {
     enabled: true,
     initialSpeed: 1.0,
@@ -138,7 +138,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             </div>
             <div
               className="Phase-Events-Container"
-              style={(phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) ? {height: '578px'} : {}}
+              style={(phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) ? {height: '655px'} : {}}
             >
               <EMMPhaseEvents
                 phaseTitle={phaseData.name}

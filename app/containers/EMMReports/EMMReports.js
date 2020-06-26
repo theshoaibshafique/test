@@ -118,13 +118,13 @@ export default class EMMReports extends React.PureComponent {
       showPublishButton = emmPublishAccess && !emmReportData.published && !isPublished
 
     return (
-      <div className="EMM-REPORTS full-height relative">
+      <div className="EMM-REPORTS-SCROLL">
         <ConfirmPublishDialog
           publishDialogOpen={publishDialogOpen}
           closePublishDialog={(choice)=>this.closePublishDialog(choice)}
         />
         {(emmReportData) &&
-          <div>
+          <div className="EMM-REPORTS relative">
             <div className="close-emm" onClick={()=>this.props.hideEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
             <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
               <img className="absolute" src={logo} />
