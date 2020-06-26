@@ -114,7 +114,7 @@ class UserModalStep1 extends React.Component {
             jsonBody = {
               "userName": result,
               "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit', 'Surgical Checklist']
+              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit', 'Surgical Checklist', 'Efficiency']
             }
 
             globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // Insights
@@ -135,6 +135,10 @@ class UserModalStep1 extends React.Component {
 
             if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist") >= 0) {
               rolesNames.push('Surgical Checklist');
+            }
+            
+            if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Efficiency") >= 0) {
+              rolesNames.push('Efficiency');
             }
 
             if (rolesNames.length > 0) {
@@ -233,7 +237,7 @@ class UserModalStep1 extends React.Component {
             jsonBody = {
               "userName": this.props.userValue.currentUser,
               "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit', 'Surgical Checklist']
+              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit', 'Surgical Checklist','Efficiency']
             }
 
             globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // Insights
@@ -292,6 +296,10 @@ class UserModalStep1 extends React.Component {
 
             if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist") >= 0) {
               rolesNames.push('Surgical Checklist');
+            }
+            
+            if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Efficiency") >= 0) {
+              rolesNames.push('Efficiency');
             }
 
             jsonBody = {

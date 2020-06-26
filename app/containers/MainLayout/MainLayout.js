@@ -34,6 +34,7 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: false,
       emmPublishAccess: false,
       sscAccess: false,
+      efficiencyAccess:false,
       isLoading: true
     }
 
@@ -60,15 +61,16 @@ export default class MainLayout extends React.PureComponent {
       this.getEMMRequestAccess(),
       this.getEMMAccess(),
       this.getEMMPublishAccess(),
-      this.getSSCRequestAccess()].map(function (e) {
-        return e.then(function (result) {
+      this.getSSCRequestAccess(),
+      this.getEfficiencyRequestAccess()].map(function (e) {
+        return e && e.then(function (result) {
           return result && result.data;
         }).catch(function () {
           return false;
         })
-      })).then(([userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess]) => {
+      })).then(([userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess, efficiencyAccess]) => {
         this.setState({
-          userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess, isLoading: false
+          userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess, efficiencyAccess, isLoading: false
         })
         this.props.setEMMPublishAccess(emmPublishAccess);
       }).catch(function (results) {
@@ -95,6 +97,9 @@ export default class MainLayout extends React.PureComponent {
   };
   getSSCRequestAccess() {
     return globalFunctions.axiosFetch(process.env.SSC_ACCESS_API, 'get', this.props.userToken);
+  };
+  getEfficiencyRequestAccess() {
+    return globalFunctions.axiosFetch(process.env.EFFICIENCY_ACCESS_API, 'get', this.props.userToken);
   };
 
   getContainer() {

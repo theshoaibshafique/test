@@ -252,6 +252,23 @@ class UserFields extends React.Component {
               }
               label="Surgical Safety Checklist"
             />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  disableRipple
+                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  className="SST-Checkbox"
+                  id="efficiencyAccess"
+                  name="efficiencyAccess"
+                  disabled={isAdmin}
+                  onChange={this.props.handleFormChange}
+                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Efficiency")}
+                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Efficiency"
+                />
+              }
+              label="Efficiency Report"
+            />
           </FormControl>
         </Grid>
       </Grid>
