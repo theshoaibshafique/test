@@ -75,7 +75,7 @@ export default class EMMCases extends React.PureComponent {
       surgeryMap,
       complicationsMap,
       operatingRoomMap,
-      recentSearch: '',
+      recentSearch: [],
       noMatch: false,
       localSearchCache: []
     };
