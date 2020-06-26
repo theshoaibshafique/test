@@ -1,0 +1,40 @@
+@import '../../styles/global-styles.scss';
+
+$ssc-picker-height: 150px;
+
+.efficiency-page{
+    background-color: #F5F5F5;
+    height: calc(100%);
+}
+.efficiency-page .overlay{
+    top: $ssc-picker-height;
+    background-color: #F5F5F5;
+}
+
+
+.efficiency-divider {
+    background-color: #C8C8C8;
+}
+.efficiency-picker {
+    background-color: #E8E8E8;
+    padding: 16px;
+}
+
+.efficiency-card.MuiCard-root{
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    border-radius: 8px !important;
+}
+
+.efficiency-picker-container{
+    position: absolute;
+    width: calc(100% - #{$nav-width}) !important;
+    z-index: 1300;
+}
+.efficiency-main{
+    padding: 40px;
+    max-width: 1198px;
+    margin: auto;
+    top: $ssc-picker-height;
+    // position: relative;
+}
+

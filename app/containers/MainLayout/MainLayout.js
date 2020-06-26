@@ -14,6 +14,7 @@ import UserManagement from 'containers/UserManagement/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import SSChecklist from 'containers/SSChecklist/Loadable';
+import Efficiency from 'containers/Efficiency/Loadable';
 import NoAccess from 'containers/NoAccess/Loadable';
 import SSTNav from 'components/SSTNav';
 import AzureLogin from 'components/AzureLogin';
@@ -22,6 +23,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
 import globalFunctions from '../../utils/global-functions';
+
 
 export default class MainLayout extends React.PureComponent {
   constructor(props) {
@@ -34,7 +36,7 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: false,
       emmPublishAccess: false,
       sscAccess: false,
-      efficiencyAccess:false,
+      efficiencyAccess: false,
       isLoading: true
     }
 
@@ -143,6 +145,23 @@ export default class MainLayout extends React.PureComponent {
         {(this.state.sscAccess) &&
           <Route path="/qualityScore" render={(props) => <SSChecklist {...props} reportType={"QualityScoreReport"} />} />
         }
+
+        {(this.state.efficiencyAccess) &&
+          <Route path="/efficiency" render={(props) => <Efficiency {...props} reportType={"Efficiency"} />} />
+        }
+        {(this.state.efficiencyAccess) &&
+          <Route path="/daysStarting" render={(props) => <Efficiency {...props} reportType={"Efficiency"} />} />
+        }
+        {(this.state.efficiencyAccess) &&
+          <Route path="/turnoverTime" render={(props) => <Efficiency {...props} reportType={"Efficiency"} />} />
+        }
+        {(this.state.efficiencyAccess) &&
+          <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"Efficiency"} />} />
+        }
+        {(this.state.efficiencyAccess) &&
+          <Route path="/caseAnalysis" render={(props) => <Efficiency {...props} reportType={"Efficiency"} />} />
+        }
+
         <Route path="/my-profile" component={MyProfile} />
         <Route path="" component={NotFoundPage} />
       </Switch>
@@ -180,6 +199,7 @@ export default class MainLayout extends React.PureComponent {
                   emmAccess={this.state.emmAccess}
                   emmPublishAccess={this.state.emmPublishAccess}
                   sscAccess={this.state.sscAccess}
+                  efficiencyAccess={this.state.efficiencyAccess}
                   pathname={this.props.location.pathname}
                   logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}

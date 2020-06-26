@@ -10,9 +10,11 @@ class SSTNav extends React.Component {
   constructor(props) {
     super(props);
     this.sscLinks = ["/sschecklist", "/complianceScore", "/engagementScore", "/qualityScore"]
+    this.efficiencyLinks = ["/efficiency ", "/daysStarting", "/turnoverTime", "/orUtilization", "/caseAnalysis"]
     this.state = {
       pathname: this.props.pathname,
-      isSSCOpen: this.isSSCNav(this.props.pathname),
+      isSSCOpen: this.isInNav(this.sscLinks, this.props.pathname),
+      isEfficiencyOpen: this.isInNav(this.efficiencyLinks, this.props.pathname),
       menu: null
     }
 
@@ -20,16 +22,23 @@ class SSTNav extends React.Component {
 
   componentDidUpdate() {
     if (this.props.pathname != this.state.pathname) {
-      this.setState({ isSSCOpen: this.isSSCNav(this.props.pathname), pathname: this.props.pathname });
+      this.setState({
+        isSSCOpen: this.isInNav(this.sscLinks, this.props.pathname),
+        isEfficiencyOpen: this.isInNav(this.efficiencyLinks, this.props.pathname),
+        pathname: this.props.pathname
+      });
     }
   }
 
-  isSSCNav(pathname) {
-    return new RegExp(this.sscLinks.join("|")).test(pathname);
+  isInNav(links, pathname) {
+    return new RegExp(links.join("|")).test(pathname);
   }
 
   toggleSSC() {
     this.setState({ isSSCOpen: !this.state.isSSCOpen })
+  }
+  toggleEfficiency() {
+    this.setState({ isEfficiencyOpen: !this.state.isEfficiencyOpen })
   }
 
   openMenu(e) {
@@ -62,7 +71,7 @@ class SSTNav extends React.Component {
                   }),
                   spinner: (base) => ({
                     ...base,
-                    width:40,
+                    width: 40,
                     '& svg circle': {
                       stroke: 'rgba(0, 0, 0, 0.5)'
                     }
@@ -78,6 +87,25 @@ class SSTNav extends React.Component {
             }
             {(this.props.emmPublishAccess) &&
               <ListItem disableGutters><NavLink to="/emmpublish" className='text-link' >eM&M Publisher</NavLink></ListItem>
+            }
+
+            {(this.props.efficiencyAccess) &&
+              <ListItem disableGutters>
+                <NavLink to="/efficiency" className='text-link'>
+                  <div>Efficiency</div>
+                </NavLink>
+                <div style={{ marginRight: 8, position: 'absolute', right: 0, cursor: 'pointer' }} onClick={() => this.toggleEfficiency()}>
+                  {this.state.isEfficiencyOpen ? <IconExpandLess /> : <IconExpandMore />}
+                </div>
+              </ListItem>
+            }
+            {(this.props.efficiencyAccess) &&
+              <Collapse in={this.state.isEfficiencyOpen} timeout="auto" unmountOnExit>
+                <ListItem disableGutters><NavLink to="/daysStarting" className='text-link sub-item' >Days Starting on Time</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/turnoverTime" className='text-link sub-item' >Turnover Time</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/orUtilization " className='text-link sub-item' >OR Utilization</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/caseAnalysis" className='text-link sub-item' >Case Analysis</NavLink></ListItem>
+              </Collapse>
             }
 
             {(this.props.sscAccess) &&
