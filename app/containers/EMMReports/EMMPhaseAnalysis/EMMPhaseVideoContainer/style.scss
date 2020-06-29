@@ -3,13 +3,15 @@
 $video-width: 1110px;
 $video-height: 625px;
 
+$sidebar-width: 250px;
+
 .Emm-Phase-Video-Container {
   .highlighted {
     background: #D8F0F9;
   }
 
   .phase-video {
-    width: $video-width;
+    width: calc(100% - #{$sidebar-width});
     .azuremediaplayer {
       width: 100%;
       height: $video-height;
@@ -18,7 +20,8 @@ $video-height: 625px;
   }
   .Phase-Events-Container {
     background: #FFFFFF;
-    width: calc(100% - #{$video-width});
+    // width: calc(100% - #{$video-width});
+    width: $sidebar-width;
     max-width: 250px;
     height: $video-height;
     overflow-y: auto;
