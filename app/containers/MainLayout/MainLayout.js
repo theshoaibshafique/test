@@ -7,7 +7,6 @@ import MainDashboard from 'containers/MainDashboard/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
 import EMMPublish from 'containers/EMMPublish/Loadable';
 import EMM from 'containers/EMM/Loadable';
-import EMMReport from 'containers/EMMReport/Loadable';
 import EMMReports from 'containers/EMMReports';
 import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
@@ -116,9 +115,6 @@ export default class MainLayout extends React.PureComponent {
         }
         {(this.state.emmAccess) &&
           <Route path="/emm/:requestid" component={EMM} />
-        }
-        {(this.state.emmAccess) &&
-          <Route path="/emmreport/:requestid" component={EMMReport} />
         }
         {(this.state.emmRequestAccess) &&
           <Route path="/requestemm" component={RequestEMM} />
