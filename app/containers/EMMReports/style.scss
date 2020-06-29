@@ -1,5 +1,60 @@
 @import '../../styles/global-styles.scss';
 
+$onboardwidth: 875px;
+.onboarding-dialog {
+    .MuiDialog-paperWidthSm {
+        max-width: $onboardwidth;
+    }
+}
+.onboarding-dialog-content {
+    width: $onboardwidth;
+    padding: 40px !important;
+    .close-button {
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        padding: 0px;
+    }
+    h2 {
+        font-size: 26px;
+        line-height: 36px;
+        margin-bottom: 16px;
+    }
+    .title-p { font-size: 14px; margin-bottom: 16px; }
+    h2, .title-p { text-align: center; }
+    .content-container {
+        margin: 0 auto;
+        width: 720px;
+        h5 {
+            font-size: 26px;
+            line-height: 36px;
+            margin: 0px 0px 16px 0px;
+        }
+        .content-tile {
+            width: 348px;
+            padding: 24px;
+            margin-right: 24px;
+            border-radius: 5px;
+            img {
+                width: 200px;
+                margin: 0px auto;
+                display: block;
+                text-align: center;
+            }
+            h5, .content-p { text-align: center; }
+            &:first-child {
+                background: #EEEAF2;
+                h5 { color: #009483 }
+            }
+            &:last-child {
+                margin-right: 0px;
+                background: #CCEAE6;
+                h5 { color: #592D82}
+            }
+        }
+    }
+}
+
 .publish-dialog {
     .MuiPaper-root {
         padding: 16px;

@@ -1,18 +1,21 @@
 import React from 'react';
-import logo from './images/emmLogo.png';
+import emmLogo from './images/emmLogo.png';
+import emmVideo from './images/emmVideo.png';
+import emmSummary from './images/emmSummary.png';
 import './style.scss';
 import Icon from '@mdi/react'
 import { mdiClose } from '@mdi/js';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import globalFuncs from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
 import EMMPhaseAnalysis from './EMMPhaseAnalysis'
 
 const ConfirmPublishDialog = (props) => {
-  const { publishDialogOpen, closePublishDialog } = props;
+  const { dialogOpen, closePublishDialog } = props;
   return (
     <Dialog
-      open={publishDialogOpen}
+      open={dialogOpen}
       onClose={()=>closePublishDialog(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
@@ -36,20 +39,85 @@ const ConfirmPublishDialog = (props) => {
   )
 }
 
+const OnBoardDialog = (props) => {
+  const { dialogOpen, dialogClose } = props;
+  return (
+    <Dialog
+      className="onboarding-dialog"
+      open={dialogOpen}
+      onClose={()=>dialogClose()}
+    >
+      <DialogContent className="onboarding-dialog-content relative">
+        <IconButton disableRipple disableFocusRipple onClick={() => dialogClose()} className='close-button absolute'><CloseIcon fontSize='small' /></IconButton>
+        <h2>What is the Enhanced M&M Report</h2>
+        <p className="title-p">The Enhanced M&M report offers video-based insights into a specific case.<br />The report is broken down into two key sections: Overview and Phase Analysis.</p>
+        <div className="content-container flex">
+          <div className="content-tile">
+            <h5>Overview</h5>
+            <img src={emmSummary} />
+            <p className="content-p">Overview highlights the basic case details, including the conduct of the surgical safety checklist, and results on key indices of performance.</p>
+          </div>
+          <div className="content-tile">
+            <h5>Phase Analysis</h5>
+            <img src={emmVideo} />
+            <p className="content-p">Phase Analysis offers the ability to either view the entire procedural video, or to focus on video clips that identify both non-routine, and intra-operative adverse events.</p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+
 export default class EMMReports extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.ONBOARD_TYPE = "EMMReport";
     this.state = {
       isScriptReady: false,
       isPublished: false,
-      publishDialogOpen: false
+      publishDialogOpen: false,
+      onBoardDialogOpen: false
     }
   }
 
   componentDidMount() {
     this.loadAMPScript();
     this.getReport();
+    this.openOnboarding();
   };
+
+  openOnboarding() {
+    //If they already did the onboard - Dont bother checking API
+    if (localStorage.getItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`)) {
+      return;
+    }
+    globalFuncs.axiosFetch(process.env.ONBOARD_API, 'get', this.props.userToken, {})
+      .then(result => {
+        var data = result.data;
+
+        if (data && data.onboardCompleted && data.onboardCompleted.includes && data.onboardCompleted.includes(this.ONBOARD_TYPE)) {
+          return;
+        }
+        this.setState({ onBoardDialogOpen: true })
+        this.updateOnboardStatus();
+      }).catch((error) => {
+
+      });
+  }
+
+  updateOnboardStatus() {
+    let jsonBody = { onboardCompleted: [this.ONBOARD_TYPE] };
+    globalFuncs.axiosFetch(process.env.USERDETAILSMODIFY_API, 'post', this.props.userToken, jsonBody)
+      .then(result => {
+        //Cache onboard report name so we know not to open it again automatically
+        if (result.data) {
+          localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
+        }
+      }).catch((error) => {
+
+      });
+  }
 
   getReport() {
     const { emmReportID, userToken } = this.props;
@@ -111,7 +179,7 @@ export default class EMMReports extends React.PureComponent {
 
   render() {
     const { emmReportData, emmReportTab, emmPublishAccess } = this.props;
-    const { isPublished, publishDialogOpen } = this.state;
+    const { isPublished, publishDialogOpen, onBoardDialogOpen } = this.state;
 
     let showPublishButton;
     if (emmReportData)
@@ -120,14 +188,18 @@ export default class EMMReports extends React.PureComponent {
     return (
       <div className="EMM-REPORTS-SCROLL">
         <ConfirmPublishDialog
-          publishDialogOpen={publishDialogOpen}
+          dialogOpen={publishDialogOpen}
           closePublishDialog={(choice)=>this.closePublishDialog(choice)}
+        />
+        <OnBoardDialog
+          dialogOpen={onBoardDialogOpen}
+          dialogClose={()=>this.setState({ onBoardDialogOpen: false })}
         />
         {(emmReportData) &&
           <div className="EMM-REPORTS relative">
             <div className="close-emm" onClick={()=>this.props.hideEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
             <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
-              <img className="absolute" src={logo} />
+              <img className="absolute" src={emmLogo} />
               {
                 (showPublishButton) &&
                   <Button variant="outlined" className="primary publish-button" onClick={() => this.setState({ publishDialogOpen : true })}>{(isPublished) ? 'Unpublish' : 'Publish'} Report</Button>
