@@ -35,9 +35,9 @@ class ChecklistStatus extends React.Component {
         </div>
         <div className="checklist-missed">
           <strong>
-            <em>{checkListMissed.map((missed) => missed.valueX.replace('Analysis', '')).join(', ')}</em>
+            <em>{checkListMissed.map((missed) => missed.valueX.replace(' Analysis', '')).join(', ')}</em>
           </strong>
-          {(checkListMissed.length > 1) ? 'were' : 'was'} missed
+          {(checkListMissed.length > 1) ? ' were' : ' was'} missed
         </div>
       </div>
     )
