@@ -5,7 +5,8 @@ import 'c3/c3.css';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, Button } from '@material-ui/core';
-import MonthPicker from '../../components/MonthPicker/MonthPicker';
+import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
+
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import LoadingOverlay from 'react-loading-overlay';
@@ -14,16 +15,19 @@ export default class Efficiency extends React.PureComponent {
   constructor(props) {
     super(props);
     this.ONBOARD_TYPE = "Efficiency";
-    this.state = {
 
+    this.state = {
       reportType: this.props.reportType,
+      isLandingPage: this.props.reportType == "EfficiencyReport",
       isLoading: true,
       pendingTileCount: 0,
       tileRequest: [],
       reportData: [],
       chartColours: ['#004F6E', '#FF7D7D', '#FFDB8C', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3'],
-
-      month: moment().subtract(1, 'month').endOf('month'),
+      
+      startDate: moment().subtract(1, 'month').startOf('month'),
+      endDate: moment().subtract(1, 'month').endOf('month'),
+      
       selectedOperatingRoom: "",
       selectedSpecialty: "",
       procedureOptions: [],
@@ -38,7 +42,11 @@ export default class Efficiency extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     if (prevProps.reportType != this.props.reportType) {
-      this.setState({ reportType: this.props.reportType, reportData: [] }, () => {
+      this.setState({
+        reportType: this.props.reportType,
+        reportData: [],
+        isLandingPage: this.props.reportType == "EfficiencyReport"
+      }, () => {
         this.getReportLayout();
       })
     }
@@ -125,12 +133,19 @@ export default class Efficiency extends React.PureComponent {
       <div className="efficiency-page">
         <Grid container spacing={0} className="efficiency-picker-container" >
           <Grid item xs={12} className="efficiency-picker">
-            <div style={{ maxWidth: 800, margin: 'auto' }}><MonthPicker month={this.state.month} maxDate={moment().endOf('month')} updateMonth={(month) => this.updateMonth(month)} /></div>
+            <div style={{ maxWidth: 800, margin: 'auto' }}>
+              <MonthRangePicker
+                startDate={this.state.startDate}
+                endDate={this.state.endDate}
+                maxDate={moment().endOf('day')}
+                updateState={(key, value) => this.updateState(key, value)}
+              />
+            </div>
           </Grid>
           <Grid item xs={12}>
             <Divider className="efficiency-divider" />
           </Grid>
-          <Grid item xs={12} className="efficiency-picker">
+          {!this.state.isLandingPage && <Grid item xs={12} className="efficiency-picker">
             <UniversalPicker
               specialties={this.props.specialties}
               userFacility={this.props.userFacility}
@@ -140,16 +155,16 @@ export default class Efficiency extends React.PureComponent {
               disabled={this.state.isFilterApplied}
               updateState={(key, value) => this.updateState(key, value)}
             />
-          </Grid>
-          <Grid item xs={12}>
+          </Grid>}
+          {!this.state.isLandingPage && <Grid item xs={12}>
             <Divider className="efficiency-divider" />
-          </Grid>
+          </Grid>}
         </Grid>
         <LoadingOverlay
           active={isLoading}
           spinner
           text='Loading your content...'
-          className="overlay"
+          className={`overlay ${this.state.isLandingPage ? 'landing-page' : ''}`}
           styles={{
             overlay: (base) => ({
               ...base,

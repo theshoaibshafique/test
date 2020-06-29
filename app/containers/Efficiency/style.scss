@@ -10,6 +10,10 @@ $ssc-picker-height: 150px;
     top: $ssc-picker-height;
     background-color: #F5F5F5;
 }
+.efficiency-page .overlay.landing-page{
+    top: calc(#{$ssc-picker-height} - 65px);
+    background-color: #F5F5F5;
+}
 
 
 .efficiency-divider {
@@ -17,7 +21,7 @@ $ssc-picker-height: 150px;
 }
 .efficiency-picker {
     background-color: #E8E8E8;
-    padding: 16px;
+    padding-top: 16px;
 }
 
 .efficiency-card.MuiCard-root{
@@ -29,6 +33,7 @@ $ssc-picker-height: 150px;
     position: absolute;
     width: calc(100% - #{$nav-width}) !important;
     z-index: 1300;
+    top: 0;
 }
 .efficiency-main{
     padding: 40px;

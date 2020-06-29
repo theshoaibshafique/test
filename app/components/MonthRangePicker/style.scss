@@ -1,0 +1,37 @@
+@import '../../styles/global-styles';
+
+.pointer {
+    cursor: pointer;
+}
+.month-range-picker{
+    .report-date{
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+    .DateRangePickerInput{
+        width: 305px;
+    }
+    .DateInput{
+        width: 140px !important;
+    }
+    .DateRangePickerInput,
+    .DateInput_input{
+        background-color: #E8E8E8 !important;
+    }
+    
+    .CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover{
+        background: #004F6E !important;
+        border: 1px double #004F6E !important;
+        color: #fff;
+    }
+    .CalendarDay__hovered_span, .CalendarDay__hovered_span:hover,
+    .CalendarDay__selected_span{
+        background: #A7E5FD !important;
+        border: 1px double #A7E5FD !important;
+        color: #fff;
+    }
+}
