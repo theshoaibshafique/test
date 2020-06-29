@@ -46,7 +46,7 @@ export default class EMMPublish extends React.PureComponent {
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.getEMMCases();
   };
 
@@ -66,7 +66,15 @@ export default class EMMPublish extends React.PureComponent {
             this.notLoading();
             return;
           }
-          let facilityNames = result.map((emmCase) => { return { 'facilityName': emmCase.facilityName } });
+          let uniqueSet = new Set();
+          let facilityNames = [];
+          result.forEach((emmCase) => {
+            uniqueSet.add(emmCase.facilityName)
+          });
+          uniqueSet.forEach((value) => {
+            facilityNames.push({ 'facilityName': value })
+          })
+
           globalFuncs.genericFetch(process.env.FACILITYLIST_API + "/", 'post', this.props.userToken, facilityNames)
             .then(facilityResult => {
               if (facilityResult === 'error' || facilityResult === 'conflict') {
@@ -93,7 +101,7 @@ export default class EMMPublish extends React.PureComponent {
                         ?'Report not available'
                         : <Button disableElevation variant="contained" className="secondary" onClick={() => this.props.showEMMReport(emmCase.enhancedMMReferenceName)} >Open Report</Button>
                     }
-                  })
+                  }),
                 }, this.notLoading())
               }
             });
@@ -122,9 +130,18 @@ export default class EMMPublish extends React.PureComponent {
 
 
   render() {
+    const { emmCases } = this.state;
     let allPageSizeOptions = [5, 10, 25, 50, 75, 100];
-    let pageSizeOptions = [];
-    allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a, this.state.emmCases.length)), a > this.state.emmCases.length));
+    let pageSizeOptions = allPageSizeOptions.filter((option) => {
+      return (option < emmCases.length)
+    });
+
+    pageSizeOptions.push(emmCases.length)
+
+    if (emmCases.length < 10) {
+      pageSizeOptions = []
+    }
+
     return (
       <LoadingOverlay
         active={this.state.isLoading}
@@ -134,7 +151,7 @@ export default class EMMPublish extends React.PureComponent {
       >
         <section className="emm-publish-page">
           <div className="header page-title">
-            <div><span className="pad">Enhanced M&M Cases</span> </div>
+            <div><span className="pad">Enhanced M&M Cases</span></div>
           </div>
           <div>
           <Checkbox
@@ -145,31 +162,34 @@ export default class EMMPublish extends React.PureComponent {
           </div>
 
           <div>
-            <MaterialTable
-              title=""
-              columns={[
-                { title: 'Facility', field: 'facilityName' },
-                { title: 'OR', field: 'roomName' ,width:20},
-                { title: 'Procedure', field: 'procedures' },
-                { title: 'Complication', field: 'complications' },
-                { title: 'Published', field: 'enhancedMMPublished', lookup:{'true': 'Yes', 'false': 'No'},width:20 },
-                { title: 'requestID', field: 'requestID', hidden: true, searchable: true },
-                { title: 'Report', field: 'report', searchable: false ,width:150},
-                { title: 'enhancedMMReferenceName', field: 'enhancedMMReferenceName', hidden: true},
-              ]}
-              options={{
-                pageSize: 10,
-                pageSizeOptions: pageSizeOptions,
-                search: true,
-                paging: true,
-                searchFieldAlignment: 'left',
-                searchFieldStyle: { marginLeft: -24 },
-                actionsColumnIndex: -1
-              }}
+            {
+              (!this.state.isLoading) &&
+                <MaterialTable
+                  title=""
+                  columns={[
+                    { title: 'Facility', field: 'facilityName' },
+                    { title: 'OR', field: 'roomName' ,width:20},
+                    { title: 'Procedure', field: 'procedures' },
+                    { title: 'Complication', field: 'complications' },
+                    { title: 'Published', field: 'enhancedMMPublished', lookup:{'true': 'Yes', 'false': 'No'},width:20 },
+                    { title: 'requestID', field: 'requestID', hidden: true, searchable: true },
+                    { title: 'Report', field: 'report', searchable: false ,width:150},
+                    { title: 'enhancedMMReferenceName', field: 'enhancedMMReferenceName', hidden: true},
+                  ]}
+                  options={{
+                    pageSize: (emmCases.length < 10) ? 10 : emmCases.length,
+                    pageSizeOptions: pageSizeOptions,
+                    search: true,
+                    paging: true,
+                    searchFieldAlignment: 'left',
+                    searchFieldStyle: { marginLeft: -24 },
+                    actionsColumnIndex: -1
+                  }}
 
-              data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => !emmCase.enhancedMMPublished) : this.state.emmCases}
-              icons={tableIcons}
-            />
+                  data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => !emmCase.enhancedMMPublished) : this.state.emmCases}
+                  icons={tableIcons}
+                />
+            }
           </div>
 
         </section>
