@@ -58,6 +58,7 @@ class AzureLogin extends React.Component {
             this.props.setUserFacility(result);
             this.props.resourcesGathered(true);
             this.props.notLoading();
+            this.getOperatingRooms()
           }
         });
       } else {
@@ -70,7 +71,7 @@ class AzureLogin extends React.Component {
     });
   }
 
-  
+
   getSpecialty() {
     if (this.props.specialties && this.props.specialties.length > 0){
       return;
@@ -101,6 +102,13 @@ class AzureLogin extends React.Component {
         }
       });
   };
+
+  getOperatingRooms(){
+    globalFunctions.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+      .then(result => {
+        this.props.setOperatingRoom(result)
+      });
+  }
 
   render() {
     return (

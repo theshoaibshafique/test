@@ -43,6 +43,11 @@ const makeSelectComplications = () => createSelector(
   (globalState) => globalState.get('complications')
 );
 
+const makeSelectOperatingRoom = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('operatingRoom')
+);
+
 const makeSelectFacilityRooms = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('facilityRooms')
@@ -82,6 +87,7 @@ export {
   makeSelectLocation,
   makeSelectSpecialties,
   makeSelectComplications,
+  makeSelectOperatingRoom,
   makeSelectFacilityRooms,
   makeSelectUserFacility,
   makeSelectFirstName,

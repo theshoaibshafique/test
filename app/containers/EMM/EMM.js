@@ -133,7 +133,6 @@ export default class EMM extends React.PureComponent {
 
   openReport() {
     this.props.showEMMReport(this.state.enhancedMMReferenceName)
-    // this.props.pushUrl('/emmreport/' + this.state.enhancedMMReferenceName);
   }
 
 render() {

@@ -21,6 +21,7 @@ import {
   FACILITY_ROOMS,
   SPECIALTIES,
   COMPLICATIONS,
+  OPERATING_ROOM,
 } from './constants';
 
 /**
@@ -90,5 +91,19 @@ export function setComplications(complications) {
   return {
     type: COMPLICATIONS,
     complications
+  };
+}
+
+/**
+ * Save locations list
+ *
+ * @param  {array} locations list of locations
+ *
+ * @return {object}    An action object with a type of OPERATING_ROOM
+ */
+export function setOperatingRoom(operatingRoom) {
+  return {
+    type: OPERATING_ROOM,
+    operatingRoom
   };
 }

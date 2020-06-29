@@ -1,20 +1,69 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { Grid, Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core/';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 
-import { Grid } from '@material-ui/core';
+const EMMCasesTable = (props) => {
+  let { tableData, redirect, openReport } = props;
+
+  return (
+    <div>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{width:"20%"}}>Request ID</TableCell>
+              <TableCell style={{width:"20%"}} align="left">Procedure</TableCell>
+              <TableCell style={{width:"30%"}} align="left">Complications</TableCell>
+              <TableCell style={{width:"15%"}} align="left">Operating Room</TableCell>
+              <TableCell style={{width:"20%"}} align="left">Status</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody className="pointer">
+
+            {tableData.map((cases, index) => {
+                return <TableRow key={index}>
+                  <TableCell style={{width:"20%"}} onClick={() => redirect(cases.requestId)}>{cases.requestId}</TableCell>
+                  <TableCell style={{width:"20%"}} onClick={() => redirect(cases.requestId)}>{cases.procedureNames}</TableCell>
+                  <TableCell style={{width:"30%"}} onClick={() => redirect(cases.requestId)}>{cases.complicationNames}</TableCell>
+                  <TableCell style={{width:"15%"}} onClick={() => redirect(cases.requestId)}>{cases.operatingRoom}</TableCell>
+                  <TableCell style={{width:"20%"}} align="left">
+                    {(cases.reportPublished) ?
+                      <Button type="submit" variant="outlined" className="open-report" onClick={() => openReport(cases.enhancedMMReferenceName)}><span>Open Report</span></Button> :
+                      <span className="in-progress">In-Progress</span>}
+                  </TableCell>
+                </TableRow>
+              })
+            }
+
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  )
+}
 
 export default class EMMCases extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    let { specialties, complications, operatingRooms } = this.props;
+
+    let surgeryMap = new Map;
+    specialties.map((specialty) => specialty.procedures).flatten().forEach((procedure) => {
+      surgeryMap.set(procedure.value.toUpperCase(), procedure.name)
+    })
+
+    let complicationsMap = new Map;
+    complications.forEach((complication) => {
+      complicationsMap.set(complication.value.toUpperCase(), complication.name)
+    })
+
+    let operatingRoomMap = new Map();
+    operatingRooms.map((room) => {
+      operatingRoomMap.set(room.roomName.toUpperCase(), room.roomTitle);
+    });
+
     this.state = {
       requestID: '',
       report: {
@@ -23,33 +72,55 @@ export default class EMMCases extends React.PureComponent {
         complicationNames: [],
         operatingRoom: ''
       },
-      recentSearch: '',
-      noMatch: false
+      surgeryMap,
+      complicationsMap,
+      operatingRoomMap,
+      recentSearch: [],
+      noMatch: false,
+      localSearchCache: []
     };
   }
 
-  componentDidMount() {
-    if (localStorage.getItem('recentSearch-'+this.props.userEmail)) {
-      const recentSearchCache = JSON.parse(localStorage.getItem('recentSearch-'+this.props.userEmail));
+  hashMapSearch(map, targets) {
+    let result = [];
+    targets.forEach((target) => {
+      (map.has(target.toUpperCase())) &&
+        result.push(map.get(target.toUpperCase()))
+    })
+    return result.join(', ');
+  }
 
-      this.setState({ 
-        recentSearch: recentSearchCache
-      });  
+  componentDidMount() {
+    let { surgeryMap, complicationsMap, operatingRoomMap } = this.state;
+    let localSearchCache = JSON.parse(localStorage.getItem('recentSearch-'+this.props.userEmail));
+    if (localSearchCache && localSearchCache.length > 0) {
+      //Call Api to get most recent list
+      globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/list', 'POST', this.props.userToken, localSearchCache)
+        .then(result => {
+          let recentSearch = [];
+          result.map((savedResult) => {
+            let operatingRoom = operatingRoomMap.get(savedResult.roomName.toUpperCase());
+
+            recentSearch.push({
+              requestId: savedResult.name,
+              procedureNames: this.hashMapSearch(surgeryMap, savedResult.procedure),
+              complicationNames: this.hashMapSearch(complicationsMap, savedResult.complications),
+              operatingRoom: operatingRoom,
+              reportPublished: savedResult.enhancedMMPublished,
+              enhancedMMReferenceName: savedResult.enhancedMMReferenceName
+            })
+          })
+
+          this.setState({
+            recentSearch,
+            localSearchCache
+          })
+        })
     }
-    this.getOperatingRooms();
   };
 
-  getOperatingRooms(){
-    globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
-      .then(result => {
-        let operatingRoomList = [];
-        if (result) {
-          result.map((room) => {
-            operatingRoomList.push({ value: room.roomName, label: room.roomTitle })
-          });
-        }
-        this.setState({ operatingRoomList });
-      });
+  openReport(reportID) {
+    this.props.showEMMReport(reportID)
   }
 
   search(e) {
@@ -57,66 +128,44 @@ export default class EMMCases extends React.PureComponent {
       e.preventDefault();
     }
 
-    if (this.state.requestID) {
+    let { requestID, recentSearch, localSearchCache, surgeryMap, complicationsMap, operatingRoomMap } = this.state;
+
+    if (requestID) {
       this.reset();
-      
+
       globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/' + this.state.requestID, 'get', this.props.userToken, {})
       .then(result => {
         if (result === 'error' || result === 'conflict') {
           this.setState({ noMatch: true })
         } else {
-          let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
-          let procedureNames = [];
-          let complicationList = [];
-          let operatingRoom = '';
-
-          result.procedure.map((procedure) => {
-            let match = false;
-            surgeryList.map((surgery) => {
-              if (surgery.value.toUpperCase() === procedure.toUpperCase() && !procedureNames.includes(surgery.name)) {
-                procedureNames.push(surgery.name);
-                match = true;
-              }
-            });
-            if (!match && !procedureNames.includes(procedure)) { procedureNames.push(procedure); }
-          });
-          
-          result.complications.map((complication) => {
-            let match = false;
-            this.props.complications && this.props.complications.map((comp) => {
-              if (complication.toUpperCase() === comp.value.toUpperCase()) {
-                complicationList.push(comp.name);
-                match = true;
-              }
-            });
-            if (!match) { complicationList.push(complication); }
-          });
-
-          this.state.operatingRoomList.map((room) => {
-            if (room.value.toUpperCase() === result.roomName.toUpperCase()) {
-              operatingRoom = room.label;
-            }
-          });
+          let operatingRoom = operatingRoomMap.get(result.roomName.toUpperCase());
 
           let report = {
             requestId: result.name,
-            procedureNames: procedureNames.join(', '),
-            complicationNames: complicationList.join(', '),
-            operatingRoom: operatingRoom
+            procedureNames: this.hashMapSearch(surgeryMap, result.procedure),
+            complicationNames: this.hashMapSearch(complicationsMap, result.complications),
+            operatingRoom: operatingRoom,
+            reportPublished: result.enhancedMMPublished,
+            enhancedMMReferenceName: result.enhancedMMReferenceName
           }
 
           this.setState({ report: report });
 
-          if (this.state.recentSearch.length < 5) {
-            this.setState({ recentSearch: [...this.state.recentSearch, report] });
-          } else if (this.state.recentSearch.length = 5) {
-            let search = this.state.recentSearch;
-            search.shift();
-            search.push(report);
-            this.setState({ recentSearch: search });
+          if (localSearchCache.indexOf(result.name.toUpperCase()) < 0) {
+            if (recentSearch.length < 5) {
+              this.setState({ recentSearch: [...recentSearch, report] });
+            } else {
+              let search = recentSearch;
+              search.shift();
+              search.push(report);
+              this.setState({ recentSearch: search });
+            }
+            localStorage.setItem('recentSearch-'+this.props.userEmail, JSON.stringify([...localSearchCache, result.name.toUpperCase()]));
+            this.setState({
+              localSearchCache: [...localSearchCache, result.name.toUpperCase()]
+            })
           }
-          
-          localStorage.setItem('recentSearch-'+this.props.userEmail, JSON.stringify(this.state.recentSearch));
+
           this.setState({ noMatch: false })
         }
       });
@@ -144,7 +193,7 @@ export default class EMMCases extends React.PureComponent {
 
   render() {
     return (
-      <section>
+      <section className="EMM-CASES">
         <form onSubmit={this.search}>
         <Grid container spacing={2}>
           <Grid item xs={12} className="header">
@@ -167,7 +216,7 @@ export default class EMMCases extends React.PureComponent {
                 />
               </Grid>
               <Grid item xs={2}>
-                <Button type="submit" variant="outlined" className="primary" style={{height:40}} onClick={(e) => this.search(e)}>Search</Button>  
+                <Button type="submit" variant="outlined" className="primary" style={{height:40}} onClick={(e) => this.search(e)}>Search</Button>
               </Grid>
             </Grid>
           </Grid>
@@ -177,28 +226,11 @@ export default class EMMCases extends React.PureComponent {
           }
           <Grid item xs={12}>
             {(this.state.report.requestId) &&
-              <div>
-                <TableContainer>  
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell style={{width:"20%"}}>Request ID</TableCell>
-                        <TableCell style={{width:"35%"}} align="left">Procedure</TableCell>
-                        <TableCell style={{width:"35%"}} align="left">Complications</TableCell>
-                        <TableCell style={{width:"10%"}} align="left">Operating Room</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody className="pointer">
-                        <TableRow onClick={() => this.redirect(this.state.requestID)}>
-                          <TableCell style={{width:"20%"}}>{this.state.report.requestId}</TableCell>
-                          <TableCell style={{width:"35%"}} align="left">{this.state.report.procedureNames}</TableCell>
-                          <TableCell style={{width:"35%"}} align="left">{this.state.report.complicationNames}</TableCell>
-                          <TableCell style={{width:"10%"}} align="left">{this.state.report.operatingRoom}</TableCell>
-                        </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
+              <EMMCasesTable
+                tableData={[this.state.report]}
+                redirect={(id)=>this.redirect(id)}
+                openReport={(reportID)=>this.openReport(reportID)}
+              />
             }
 
           {(this.state.noMatch) &&
@@ -211,31 +243,11 @@ export default class EMMCases extends React.PureComponent {
           }
           <Grid item xs={12}>
             {(this.state.recentSearch.length > 0) &&
-              <TableContainer>  
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell style={{width:"20%"}}>Request ID</TableCell>
-                      <TableCell style={{width:"35%"}} align="left">Procedure</TableCell>
-                      <TableCell style={{width:"35%"}} align="left">Complications</TableCell>
-                      <TableCell style={{width:"10%"}} align="left">Operating Room</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody className="pointer">
-                  
-                  {this.state.recentSearch.map((cases, index) => {
-                      return <TableRow key={index} onClick={() => this.redirect(cases.requestId)}>
-                        <TableCell style={{width:"20%"}}>{cases.requestId}</TableCell>
-                        <TableCell style={{width:"35%"}} align="left">{cases.procedureNames}</TableCell>
-                        <TableCell style={{width:"35%"}} align="left">{cases.complicationNames}</TableCell>
-                        <TableCell style={{width:"10%"}} align="left">{cases.operatingRoom}</TableCell>
-                      </TableRow>
-                    })
-                  }
-
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              <EMMCasesTable
+                tableData={this.state.recentSearch}
+                redirect={(id)=>this.redirect(id)}
+                openReport={(reportID)=>this.openReport(reportID)}
+              />
             }
           </Grid>
 
