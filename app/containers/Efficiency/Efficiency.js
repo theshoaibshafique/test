@@ -25,9 +25,6 @@ export default class Efficiency extends React.PureComponent {
       reportData: [],
       chartColours: ['#004F6E', '#FF7D7D', '#FFDB8C', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3'],
 
-      startDate: moment().subtract(1, 'month').startOf('month'),
-      endDate: moment().subtract(1, 'month').endOf('month'),
-
       selectedOperatingRoom: "",
       selectedSpecialty: "",
       procedureOptions: [],
@@ -37,6 +34,16 @@ export default class Efficiency extends React.PureComponent {
     }
     this.pendingDate = moment();
     this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY, this.pendingDate.daysInMonth()))
+    //If we're after this months pending date - we move on to the next
+    if (moment().isSameOrAfter(this.pendingDate.clone())) {
+      this.pendingDate = this.pendingDate.clone().add(1, 'month');
+    }
+    this.state.pendingWarning = `Data for ${this.pendingDate.clone().subtract(1, 'month').format('MMMM')} will be ready on ${this.pendingDate.format('LL')}`;
+    
+    //Last available data date is 2 months before the pending date
+    this.state.startDate = this.pendingDate.clone().subtract(2, 'month').startOf('month');
+    this.state.endDate = this.pendingDate.clone().subtract(2, 'month').endOf('month');
+    this.state.maxDate = this.state.endDate.clone();
 
   }
 
@@ -158,8 +165,9 @@ export default class Efficiency extends React.PureComponent {
               <MonthRangePicker
                 startDate={this.state.startDate}
                 endDate={this.state.endDate}
-                maxDate={moment().endOf('day')}
+                maxDate={this.state.maxDate}
                 updateState={(key, value) => this.updateState(key, value)}
+                displayWarning={this.state.pendingWarning}
               />
             </div>
           </Grid>

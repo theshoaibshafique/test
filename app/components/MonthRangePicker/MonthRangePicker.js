@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Menu, MenuItem } from '@material-ui/core';
+import { Grid, Menu, MenuItem, Divider } from '@material-ui/core';
 import moment from 'moment/moment';
 
 import './style.scss';
@@ -67,24 +67,24 @@ class MonthRangePicker extends React.Component {
     this.setState({ focusedInput });
   }
 
-  resetDates(){
+  resetDates() {
     this.setState({
       startDate: null,
       endDate: null,
       maxRange: this.state.maxDate
-     })
+    })
   }
 
   renderInfo() {
     return (
-      <Grid container spacing={0} justify="space-around" style={{padding:24}}>
-        <Grid item xs={8}>
-          Wow what a lovely message we have here lol
-        </Grid>
-        <Grid item xs={4} style={{textAlign:'right'}}> 
+      <Grid container spacing={0} direction="column" >
+        <Grid item xs style={{ textAlign: 'right', padding: '0 16px 16px' }}>
           <a className="link" onClick={e => this.resetDates()}>Clear dates</a>
         </Grid>
-
+        <Divider style={{ backgroundColor: '#C8C8C8' }} />
+        <Grid item xs className="display-warning">
+          {this.props.displayWarning || "Each month’s data will become available on the 15th of the following month."}
+        </Grid>
       </Grid>
     )
   }
@@ -97,9 +97,9 @@ class MonthRangePicker extends React.Component {
         </Grid>
         <DateRangePicker
           startDate={this.state.startDate}
-          startDateId="your_unique_start_date_id"
+          startDateId="startDateID"
           endDate={this.state.endDate}
-          endDateId="your_unique_end_date_id"
+          endDateId="endDateID"
           onDatesChange={({ startDate, endDate }) => this.updateRange(startDate, endDate)}
           focusedInput={this.state.focusedInput}
           onFocusChange={focusedInput => this.onFocusChange(focusedInput)}

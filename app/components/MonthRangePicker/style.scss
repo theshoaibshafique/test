@@ -7,7 +7,6 @@
     .report-date{
         opacity: 0.8;
         color: #000000;
-        font-family: "Noto Sans";
         font-size: 14px;
         letter-spacing: 0;
         line-height: 19px;
@@ -16,7 +15,6 @@
         position: absolute;
         opacity: 0.8;
         color: #000000;
-        font-family: "Noto Sans";
         font-size: 18px;
         font-style: italic;
         letter-spacing: 0;
@@ -24,13 +22,25 @@
         top: 32px;
         right: 40px;
       }
+    .DateRangePickerInput *{
+        font-family: "Noto Sans" !important;
+        color: #000000;
+    }
 
-    .DateRangePickerInput{
-        width: 320px;
+    .DateRangePickerInput_arrow_svg{
+        width: 16px;
+        height: 16px;
+        margin-bottom: 3px;
     }
-    .DateInput{
-        width: 140px !important;
-    }
+    .display-warning{
+        padding: 16px;
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 19px;
+        opacity: 0.8;
+      }
+
     .DateRangePickerInput,
     .DateInput_input{
         background-color: #E8E8E8 !important;
@@ -46,8 +56,8 @@
     }
     .CalendarDay__hovered_span, .CalendarDay__hovered_span:hover,
     .CalendarDay__selected_span{
-        background: #A7E5FD !important;
-        border: 1px double #A7E5FD !important;
+        background: #3DB3E3 !important;
+        border: 1px double #3DB3E3 !important;
         color: #fff;
     }
 }
