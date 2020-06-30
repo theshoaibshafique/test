@@ -28,8 +28,8 @@ class MonthRangePicker extends React.Component {
     }
   }
 
-  getMaxRange(startDate){
-    if (startDate){
+  getMaxRange(startDate) {
+    if (startDate) {
       return moment.min(startDate.clone().add(10, 'days'), this.state.maxDate);
     }
     return this.state.maxDate;
@@ -52,19 +52,40 @@ class MonthRangePicker extends React.Component {
     });
   }
 
-  onFocusChange(focusedInput){
-    
+  onFocusChange(focusedInput) {
+
     //Clear maxRange when changing startDate
-    if (focusedInput == "startDate"){
-      this.setState({maxRange:this.state.maxDate});
-    } else if (this.state.startDate){
+    if (focusedInput == "startDate") {
+      this.setState({ maxRange: this.state.maxDate });
+    } else if (this.state.startDate) {
       //if changing endDate and startDate is set - re-enforce maxRange
-      this.setState({maxRange:this.getMaxRange(this.state.startDate)})
+      this.setState({ maxRange: this.getMaxRange(this.state.startDate) })
     }
-    
-    this.setState({focusedInput});
+
+    this.setState({ focusedInput });
   }
 
+  resetDates(){
+    this.setState({
+      startDate: null,
+      endDate: null,
+      maxRange: this.state.maxDate
+     })
+  }
+
+  renderInfo() {
+    return (
+      <Grid container spacing={0} justify="space-around" style={{padding:24}}>
+        <Grid item xs={8}>
+          Wow what a lovely message we have here lol
+        </Grid>
+        <Grid item xs={4} style={{textAlign:'right'}}> 
+          <a className="link" onClick={e => this.resetDates()}>Clear dates</a>
+        </Grid>
+
+      </Grid>
+    )
+  }
 
   render() {
     return (
@@ -72,9 +93,6 @@ class MonthRangePicker extends React.Component {
         <Grid item xs className="report-date">
           Report Date
         </Grid>
-        {/* <Grid item xs className="date-display" onClick={(e) => this.openMenu(e)}>
-          WOOW
-        </Grid> */}
         <DateRangePicker
           startDate={this.state.startDate}
           startDateId="your_unique_start_date_id"
@@ -82,7 +100,7 @@ class MonthRangePicker extends React.Component {
           endDateId="your_unique_end_date_id"
           onDatesChange={({ startDate, endDate }) => this.updateRange(startDate, endDate)}
           focusedInput={this.state.focusedInput}
-          onFocusChange={focusedInput => this.onFocusChange( focusedInput )}
+          onFocusChange={focusedInput => this.onFocusChange(focusedInput)}
 
           isOutsideRange={date => date.isAfter(this.state.maxRange)}
           hideKeyboardShortcutsPanel={true}
@@ -90,6 +108,8 @@ class MonthRangePicker extends React.Component {
           noBorder
           reopenPickerOnClearDates
           readOnly
+
+          renderCalendarInfo={() => this.renderInfo()}
         />
 
       </Grid>
