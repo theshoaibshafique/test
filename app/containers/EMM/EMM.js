@@ -13,7 +13,7 @@ export default class EMM extends React.PureComponent {
       compDate: null,
       specialtyNames: [],
       operatingRoomList: [],
-      emmPublishAccess: false,
+      emmAccess: false,
       enhancedMMReferenceName: '',
       enhancedMMPublished: false,
       showReport: false
@@ -22,9 +22,10 @@ export default class EMM extends React.PureComponent {
 
   componentDidMount() {
     this.getOperatingRooms();
-    this.getEMMPublishAccess();
+    this.getEMMAccess();
   };
-  getEMMPublishAccess() {
+
+  getEMMAccess() {
     fetch(process.env.EMMACCESS_API, {
       method: 'get',
       headers: {
@@ -36,7 +37,7 @@ export default class EMM extends React.PureComponent {
       if (response.status === 200) {
         response.json().then((result) => {
           if (result) {
-            this.setState ({ emmPublishAccess: true })
+            this.setState ({ emmAccess: true })
           }
         });
       }
@@ -141,7 +142,7 @@ render() {
         <div className="header page-title">
           <div>
             <span className="pad">Enhanced M&M</span>
-            {(this.state.enhancedMMReferenceName && (this.state.emmPublishAccess || this.state.enhancedMMPublished) ) &&
+            {(this.state.enhancedMMReferenceName && this.state.enhancedMMPublished && this.state.emmAccess) &&
               <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button>} </div>
         </div>
 
