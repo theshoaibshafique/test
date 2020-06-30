@@ -21,9 +21,9 @@ const ConfirmPublishDialog = (props) => {
       aria-describedby="alert-dialog-description"
       className="publish-dialog"
     >
-      <DialogTitle id="alert-dialog-title">Are you sure you want to publish?</DialogTitle>
+      <DialogTitle>Are you sure you want to publish?</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
+        <DialogContentText className="confirm-publish-text">
           Publishing a report will allow customers to access it from eM&M Cases. This action cannot be undone.
         </DialogContentText>
       </DialogContent>
