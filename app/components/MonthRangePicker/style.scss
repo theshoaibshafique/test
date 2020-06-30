@@ -12,8 +12,21 @@
         letter-spacing: 0;
         line-height: 19px;
     }
+    .display-info{
+        position: absolute;
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        font-style: italic;
+        letter-spacing: 0;
+        line-height: 24px;
+        top: 32px;
+        right: 40px;
+      }
+
     .DateRangePickerInput{
-        width: 340px;
+        width: 320px;
     }
     .DateInput{
         width: 140px !important;
@@ -21,6 +34,9 @@
     .DateRangePickerInput,
     .DateInput_input{
         background-color: #E8E8E8 !important;
+    }
+    .DateInput_input{
+        cursor: pointer;
     }
     
     .CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover{

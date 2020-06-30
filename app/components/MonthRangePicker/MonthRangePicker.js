@@ -111,7 +111,9 @@ class MonthRangePicker extends React.Component {
 
           renderCalendarInfo={() => this.renderInfo()}
         />
-
+        <div className="display-info">
+          All data is based on elective hours
+        </div>
       </Grid>
     );
   }
