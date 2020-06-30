@@ -14,8 +14,9 @@ class MonthRangePicker extends React.Component {
       open: false,
       startDate: this.props.startDate || moment().startOf('month'),
       endDate: this.props.endDate || moment().endOf('month'),
-      maxDate: this.props.maxDate || moment().endOf('month')
+      maxDate: this.props.maxDate || moment().endOf('month'),
     }
+    this.state.maxRange = this.getMaxRange(this.state.startDate);
   }
 
   componentDidUpdate(prevProps) {
@@ -27,15 +28,43 @@ class MonthRangePicker extends React.Component {
     }
   }
 
-  updateRange(range) {
-    
+  getMaxRange(startDate){
+    if (startDate){
+      return moment.min(startDate.clone().add(10, 'days'), this.state.maxDate);
+    }
+    return this.state.maxDate;
+  }
+
+  updateRange(startDate, endDate) {
+
+    let maxRange = this.state.maxRange;
+    //Start date changes
+    if (startDate != this.state.startDate) {
+      endDate = null;
+      maxRange = this.getMaxRange(startDate);
+    }
     this.setState({
-      dateRange: range,
+      startDate,
+      endDate,
+      maxRange
     }, () => {
-      this.props.updateState('dateRange', range);
+      // this.props.updateState('dateRange', range);
     });
   }
-  
+
+  onFocusChange(focusedInput){
+    
+    //Clear maxRange when changing startDate
+    if (focusedInput == "startDate"){
+      this.setState({maxRange:this.state.maxDate});
+    } else if (this.state.startDate){
+      //if changing endDate and startDate is set - re-enforce maxRange
+      this.setState({maxRange:this.getMaxRange(this.state.startDate)})
+    }
+    
+    this.setState({focusedInput});
+  }
+
 
   render() {
     return (
@@ -51,14 +80,16 @@ class MonthRangePicker extends React.Component {
           startDateId="your_unique_start_date_id"
           endDate={this.state.endDate}
           endDateId="your_unique_end_date_id"
-          onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
+          onDatesChange={({ startDate, endDate }) => this.updateRange(startDate, endDate)}
           focusedInput={this.state.focusedInput}
-          onFocusChange={focusedInput => this.setState({ focusedInput })}
+          onFocusChange={focusedInput => this.onFocusChange( focusedInput )}
 
-          isOutsideRange={date => date.isAfter(this.state.maxDate)}
+          isOutsideRange={date => date.isAfter(this.state.maxRange)}
           hideKeyboardShortcutsPanel={true}
-          displayFormat="MMMM DD YYYY"
+          displayFormat="MMM DD YYYY"
           noBorder
+          reopenPickerOnClearDates
+          readOnly
         />
 
       </Grid>

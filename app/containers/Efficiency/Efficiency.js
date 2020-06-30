@@ -132,7 +132,7 @@ export default class Efficiency extends React.PureComponent {
     return (
       <div className="efficiency-page">
         <Grid container spacing={0} className="efficiency-picker-container" >
-          <Grid item xs={12} className="efficiency-picker">
+          <Grid item xs={12} className="efficiency-range-picker">
             <div style={{ maxWidth: 800, margin: 'auto' }}>
               <MonthRangePicker
                 startDate={this.state.startDate}
