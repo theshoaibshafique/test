@@ -24,10 +24,10 @@ export default class Efficiency extends React.PureComponent {
       tileRequest: [],
       reportData: [],
       chartColours: ['#004F6E', '#FF7D7D', '#FFDB8C', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3'],
-      
+
       startDate: moment().subtract(1, 'month').startOf('month'),
       endDate: moment().subtract(1, 'month').endOf('month'),
-      
+
       selectedOperatingRoom: "",
       selectedSpecialty: "",
       procedureOptions: [],
@@ -56,6 +56,22 @@ export default class Efficiency extends React.PureComponent {
     this.loadFilter();
 
   };
+
+  getFilterLayout(reportType) {
+    switch (`${reportType}`.toUpperCase()) {
+      case 'DAYSSTARTINGREPORT':
+        return { showOR: true, showSpecialty: true }
+      case 'TURNOVERTIMEREPORT':
+        return { showOR: true }
+      case 'ORUTILIZATIONREPORT':
+        return { showOR: true, showSpecialty: true }
+      case 'CASEANALYSISREPORT':
+        return { showSpecialty: true, showProcedure: true, showOR2: true }
+      default:
+        return {};
+    }
+  }
+
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
@@ -92,14 +108,19 @@ export default class Efficiency extends React.PureComponent {
   loadFilter() {
     if (localStorage.getItem('efficiencyFilter-' + this.props.userEmail)) {
       const recentSearchCache = JSON.parse(localStorage.getItem('efficiencyFilter-' + this.props.userEmail));
-      this.setState({ ...recentSearchCache, month: moment(recentSearchCache.month) });
+      this.setState({
+        ...recentSearchCache,
+        startDate: moment(recentSearchCache.startDate),
+        endDate: moment(recentSearchCache.endDate)
+      });
     }
   }
 
   saveFilter() {
     localStorage.setItem('efficiencyFilter-' + this.props.userEmail,
       JSON.stringify({
-        month: this.state.month,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
         selectedOperatingRoom: this.state.selectedOperatingRoom,
         selectedSpecialty: this.state.selectedSpecialty,
         selectedProcedure: this.state.selectedProcedure
@@ -154,6 +175,7 @@ export default class Efficiency extends React.PureComponent {
               apply={() => this.getReportLayout()}
               disabled={this.state.isFilterApplied}
               updateState={(key, value) => this.updateState(key, value)}
+              {...this.getFilterLayout(this.state.reportType)}
             />
           </Grid>}
           {!this.state.isLandingPage && <Grid item xs={12}>

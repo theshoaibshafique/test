@@ -20,9 +20,10 @@ class MonthRangePicker extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.dateRange != this.props.dateRange || prevProps.maxDate != this.props.maxDate) {
+    if (prevProps.startDate != this.props.startDate || prevProps.endDate != this.props.endDate || prevProps.maxDate != this.props.maxDate) {
       this.setState({
-        dateRange: this.props.dateRange,
+        startDate: this.props.startDate,
+        endDate: this.props.endDate,
         maxDate: this.props.maxDate
       })
     }
@@ -30,7 +31,7 @@ class MonthRangePicker extends React.Component {
 
   getMaxRange(startDate) {
     if (startDate) {
-      return moment.min(startDate.clone().add(10, 'days'), this.state.maxDate);
+      return moment.min(startDate.clone().add(6, 'months'), this.state.maxDate);
     }
     return this.state.maxDate;
   }
@@ -48,7 +49,8 @@ class MonthRangePicker extends React.Component {
       endDate,
       maxRange
     }, () => {
-      // this.props.updateState('dateRange', range);
+      this.props.updateState('startDate', startDate);
+      this.props.updateState('endDate', endDate);
     });
   }
 

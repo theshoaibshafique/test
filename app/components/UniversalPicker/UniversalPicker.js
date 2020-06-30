@@ -19,7 +19,8 @@ class UniversalPicker extends React.Component {
       selectedSpecialty: "",
       procedureOptions: [],
       selectedProcedure: "",
-      specialties: this.props.specialties || []
+      specialties: this.props.specialties || [],
+      ...this.getDisplayOptions()
     }
     this.state.specialties = [{ name: "All Specialties", value: "" }, ...this.state.specialties];
   }
@@ -32,14 +33,40 @@ class UniversalPicker extends React.Component {
         procedureOptions = [{ name: "All Procedures", value: "" }, ...procedureOptions];
       }
 
-      this.setState({ ...this.props.defaultState, specialties: [{ name: "All Specialties", value: "" }, ...this.props.specialties], procedureOptions });
+      this.setState({
+        ...this.props.defaultState,
+        specialties: [{ name: "All Specialties", value: "" }, ...this.props.specialties],
+        procedureOptions,
+        ...this.getDisplayOptions()
+      });
 
     }
   }
 
-
   componentDidMount() {
     this.populateOperatingRooms();
+  }
+
+  getDisplayOptions() {
+    if (Boolean(this.props.showOR || this.props.showDays || this.props.showSpecialty || this.props.showProcedure || this.props.showOR2)) {
+      return {
+
+        showOR: this.props.showOR,
+        showDays: this.props.showDays,
+        showSpecialty: this.props.showSpecialty,
+        showProcedure: this.props.showProcedure,
+        //Default to hiding
+        showOR2: this.props.showOR2
+      };
+    }
+    return {//Default to showing
+      showOR: true,
+      showDays: true,
+      showSpecialty: true,
+      showProcedure: true,
+      //Default to hiding
+      showOR2: false
+    };
   }
 
   async populateOperatingRooms(e, callback) {
@@ -111,9 +138,9 @@ class UniversalPicker extends React.Component {
       this.props.updateState('selectedProcedure', "");
     })
   }
-  formatClass(str){
-    if (str){
-      return str.toLowerCase().replace(/\s/g,'-');
+  formatClass(str) {
+    if (str) {
+      return str.toLowerCase().replace(/\s/g, '-');
     }
   }
 
@@ -121,7 +148,7 @@ class UniversalPicker extends React.Component {
     return (
       <Grid container spacing={1} justify="center" className="universal-picker">
         <span style={{ display: 'flex', alignItems: 'center', marginRight: 16 }}><SearchIcon /></span>
-        <Grid item xs={1} style={{ minWidth: 150 }}>
+        {this.state.showOR && <Grid item xs={1} style={{ minWidth: 150 }}>
           <Autocomplete
             size="small"
             options={this.state.operatingRooms}
@@ -142,8 +169,8 @@ class UniversalPicker extends React.Component {
               />
             )}
           />
-        </Grid>
-        <Grid item xs={1} style={{ minWidth: 150 }}>
+        </Grid>}
+        {this.state.showDays && <Grid item xs={1} style={{ minWidth: 150 }}>
           <FormControl variant="outlined" size="small" style={{ width: '100%' }}>
             <Select
               displayEmpty
@@ -161,9 +188,9 @@ class UniversalPicker extends React.Component {
               ))}
             </Select>
           </FormControl>
-        </Grid>
+        </Grid>}
 
-        <Grid item xs={3} style={{ maxWidth: 200 }}>
+        {this.state.showSpecialty && <Grid item xs={3} style={{ maxWidth: 200 }}>
           <Autocomplete
             size="small"
             options={this.state.specialties}
@@ -182,8 +209,8 @@ class UniversalPicker extends React.Component {
               />
             )}
           />
-        </Grid>
-        <Grid item xs={3} style={{ maxWidth: 210 }}>
+        </Grid>}
+        {this.state.showProcedure && <Grid item xs={3} style={{ maxWidth: 210 }}>
           <Autocomplete
             size="small"
             options={this.state.procedureOptions}
@@ -203,7 +230,29 @@ class UniversalPicker extends React.Component {
               />
             )}
           />
-        </Grid>
+        </Grid>}
+        {this.state.showOR2 && <Grid item xs={1} style={{ minWidth: 150 }}>
+          <Autocomplete
+            size="small"
+            options={this.state.operatingRooms}
+            loading={this.state.isORLoading}
+            clearOnEscape
+            getOptionLabel={option => option.label ? option.label : ''}
+            value={this.state.selectedOperatingRoom}
+            onChange={(e, value) => this.handleORChange(e, value)}
+            groupBy={option => option.departmentTitle}
+            renderInput={params => (
+              <TextField
+                {...params}
+                error={false}
+                variant="outlined"
+                name="operatingRoom"
+                placeholder="All ORs"
+                className={this.state.selectedOperatingRoom && this.formatClass(this.state.selectedOperatingRoom.label)}
+              />
+            )}
+          />
+        </Grid>}
         <Grid item xs={2} style={{ maxWidth: 100 }}>
           <Button disabled={this.props.disabled} variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>
         </Grid>

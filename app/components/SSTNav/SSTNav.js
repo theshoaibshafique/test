@@ -103,7 +103,7 @@ class SSTNav extends React.Component {
               <Collapse in={this.state.isEfficiencyOpen} timeout="auto" unmountOnExit>
                 <ListItem disableGutters><NavLink to="/daysStarting" className='text-link sub-item' >Days Starting on Time</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/turnoverTime" className='text-link sub-item' >Turnover Time</NavLink></ListItem>
-                <ListItem disableGutters><NavLink to="/orUtilization " className='text-link sub-item' >OR Utilization</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/orUtilization" className='text-link sub-item' >OR Utilization</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/caseAnalysis" className='text-link sub-item' >Case Analysis</NavLink></ListItem>
               </Collapse>
             }
