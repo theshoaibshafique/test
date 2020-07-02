@@ -18,20 +18,20 @@ $onboardwidth: 875px;
     h2 {
         font-size: 26px;
         line-height: 36px;
-        margin-bottom: 16px;
+        margin: 0px 0px 16px;
     }
     .title-p { font-size: 14px; margin-bottom: 16px; }
     h2, .title-p { text-align: center; }
     .content-container {
         margin: 0 auto;
-        width: 720px;
+        width: 795px;
         h5 {
             font-size: 26px;
             line-height: 36px;
             margin: 0px 0px 16px 0px;
         }
         .content-tile {
-            width: 348px;
+            width: 385x;
             padding: 24px;
             margin-right: 24px;
             border-radius: 5px;
@@ -111,13 +111,21 @@ $onboardwidth: 875px;
 }
 
 .EMM-Reports-Header {
-    height: 68px;
+    height: 96px;
     overflow: hidden;
     img {
         width: 200px;
         left: 0px;
     }
-    &.has-publish-button { height: 96px; }
+    .onboarding-open {
+        top: 86px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 19px;
+        color: #4EA1DA;
+        &:hover { text-decoration: underline; }
+    }
+    &.has-publish-button { height: 106px; }
 }
 
 .EMM-Tab-Selector {
