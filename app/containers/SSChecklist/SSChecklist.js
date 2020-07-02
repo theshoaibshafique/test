@@ -391,7 +391,8 @@ export default class SSChecklist extends React.PureComponent {
         return <StackedBarChart {...tile} specialties={this.props.specialties} />
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;
-        if (moment().isSameOrAfter(this.state.month.clone(), 'month')) {
+        //If the selected month is CURRENT month when this message is shown - Report will be ready next month
+        if (this.state.month.clone().isSameOrAfter(moment(), 'month')) {
           pendingDate = pendingDate.clone().add(1, 'month');
         }
         return <div>{`We’re currently processing the data for this month’s report. Please come back on ${pendingDate.format('LL')} to view your report.`}</div>
