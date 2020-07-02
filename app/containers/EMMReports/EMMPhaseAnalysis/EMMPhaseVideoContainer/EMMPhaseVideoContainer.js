@@ -67,7 +67,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
       if (phaseData.name !== 'SurgicalProcedure') {
         this.setState({ selectedVideoClipID: videoIndex })
       }
-      this.createVideoPlayer(videoID, this.props.phaseData)
+      this.createVideoPlayer(videoID)
     } else {
       this.setState({ noVideo: true })
       this.destroyVideoPlayer()
@@ -75,12 +75,13 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
 
   }
 
-  createVideoPlayer(videoID, phaseData) {
+  createVideoPlayer(videoID) {
     this.setState({ noVideo: false })
     globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/' + videoID, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           this.myPlayer = amp(this.state.videoID, videoOptions);
+          console.log(result.token)
           this.myPlayer.src([{
             src: result.url,
             type: "application/vnd.ms-sstr+xml",
@@ -151,7 +152,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
           </div>
         }
 
-        {(phaseData.checklistData) &&
+        {(phaseData.checklistData.length > 0) &&
           <ChecklistAnalysis
             checklistData={phaseData.checklistData}
           />

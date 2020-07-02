@@ -63,6 +63,9 @@ const OnBoardDialog = (props) => {
             <p className="content-p">Phase Analysis offers the ability to either view the entire procedural video, or to focus on video clips that identify both non-routine, and intra-operative adverse events.</p>
           </div>
         </div>
+        <div className="right-align">
+          <Button disableElevation disableRipple variant="contained" className="secondary" style={{ marginTop: 24 }} onClick={() => dialogClose()}>Close</Button>
+        </div>
       </DialogContent>
     </Dialog>
   )
@@ -200,6 +203,7 @@ export default class EMMReports extends React.PureComponent {
             <div className="close-emm" onClick={()=>this.props.hideEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
             <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
               <img className="absolute" src={emmLogo} />
+              <div className="onboarding-open absolute" onClick={()=>this.setState({ onBoardDialogOpen: true })}>What’s this report about?</div>
               {
                 (showPublishButton) &&
                   <Button variant="outlined" className="primary publish-button" onClick={() => this.setState({ publishDialogOpen : true })}>{(isPublished) ? 'Unpublish' : 'Publish'} Report</Button>

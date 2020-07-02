@@ -67,10 +67,11 @@ hr {
 .checklist-status {
   font-size: 14px;
   line-height: 19px;
-  div { flex-grow: 1; }
+  .checklist-happened-container { flex-grow: 1; }
   .checklist-happened {
     cursor: pointer;
     text-align: left;
+    margin-right: 32px;
     .title {
       color: #028CC8;
       margin-bottom: 4px;
