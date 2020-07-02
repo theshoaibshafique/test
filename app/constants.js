@@ -1,5 +1,5 @@
 export const idleTimeout = 1000 * 60 * 45; // in Milliseconds
 
 export const EMM_DISTRACTION_TOOLTIP = 'Distraction Index is comprised of room traffic, personal conversation, PA announcements, among other device sounds and alarms. Distraction Index has a range between 0 and 100, with an average procedure having a Distraction Index of 30, and greater scores indicative of more distracting operating room environments.';
-export const EMM_TECHNICAL_TOOLTIP = 'Technical Performance Index is comprised of procedure duration, technical skill assessment of the operators, and intraoperative adverse event occurrences. Performance Index has a range between 0 and 100. An average procedure will have a Performance Index of 70, with higher scores indicative of better performance.'
-export const EMM_ADVERSEEVENT_TOOLTIP = 'Adverse Event Rate is the number of intraoperative adverse events that transpire per hour of surgical procedure';
+export const EMM_TECHNICAL_TOOLTIP = 'Performance Index is comprised of procedure duration, technical skill assessment of the operators, and intraoperative adverse event occurrences. Performance Index has a range between 0 and 100. An average procedure will have a Performance Index of 70, with higher scores indicative of better performance.'
+export const EMM_ADVERSEEVENT_TOOLTIP = 'Adverse Event Rate is the number of intraoperative adverse events that transpire per hour of surgical procedure.';
