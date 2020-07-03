@@ -50,7 +50,11 @@ export default class StackedBarChart extends React.PureComponent {
               text: this.props.subTitle, //Dynamically populated
               position: 'outer-middle',
             },
-            tick: { format: d3.format("d") },
+            tick: {
+              format: function (d) {
+                return (parseInt(d) == d) ? d : null;
+              }
+            },
             min: 0,
             padding: { top: 30, bottom: 0 },
           }
@@ -112,11 +116,11 @@ export default class StackedBarChart extends React.PureComponent {
       legendData[point.title] = point.subTitle;
       point.valueZ && zData.push(point.valueZ);
     });
-    
+
     let columns = [];
-    
+
     Object.entries(formattedData).map(([key, value]) => {
-      if (key == 'x'){
+      if (key == 'x') {
         columns.push([key, ...value]);
       } else {
         columns.push([key, ...formattedData.x.map((x) => {
@@ -124,7 +128,7 @@ export default class StackedBarChart extends React.PureComponent {
         })]);
       }
     })
-    
+
     //Show Totals as a line graph (while hiding the line) so values always show on top
     columns.push(['Total', ...zData]);
     let chartData = this.state.chartData;
