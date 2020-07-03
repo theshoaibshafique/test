@@ -61,7 +61,7 @@ export default class ChecklistDetail extends React.PureComponent {
   }
 
   groupTiles(dataPoints) {
-
+    const orderBy = {"Briefing":1,"Time Out":2,"Postop Debrief":3};
     //Group data by "Group"
     return [...dataPoints.reduce((hash, data) => {
       const current = hash.get(data.title) || { title: data.title, group: [] }
@@ -71,7 +71,7 @@ export default class ChecklistDetail extends React.PureComponent {
       current.group.push(data)
 
       return hash.set(data.title, current);
-    }, new Map).values()];
+    }, new Map).values()].sort((a,b) => orderBy[a.title] - orderBy[b.title]);
   }
 
   renderData() {
