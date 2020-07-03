@@ -50,6 +50,7 @@ export default class StackedBarChart extends React.PureComponent {
               text: this.props.subTitle, //Dynamically populated
               position: 'outer-middle',
             },
+            tick: { format: d3.format("d") },
             min: 0,
             padding: { top: 30, bottom: 0 },
           }
