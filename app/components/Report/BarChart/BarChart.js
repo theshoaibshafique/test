@@ -4,7 +4,7 @@ import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
-
+import moment from 'moment/moment';
 export default class BarChart extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -36,7 +36,7 @@ export default class BarChart extends React.PureComponent {
         axis: {
           x: {
             label: {
-              text: this.props.footer, //Dynamically populated
+              text: this.props.xAxis, //Dynamically populated
               position: 'outer-center'
             },
             type: 'category',
@@ -44,7 +44,7 @@ export default class BarChart extends React.PureComponent {
           },
           y: {
             label: {
-              text: this.props.subTitle, //Dynamically populated
+              text: this.props.yAxis, //Dynamically populated
               position: 'outer-middle'
             },
             // max: 100,
@@ -94,12 +94,16 @@ export default class BarChart extends React.PureComponent {
     let formattedData = { x: [] };
     let sum = 0
     dataPoints.map((point, index) => {
-      formattedData.x.push(point.valueX);
+      let xValue = point.valueX;
+      if (parseInt(point.valueX) == point.valueX) {
+        xValue = moment().month(parseInt(point.valueX) - 1).format('MMM');
+      } 
+      formattedData.x.push(xValue);
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueY);
       sum += parseInt(point.valueY);
       zData.push(point.valueZ);
-      xData.push(point.valueX);
+      xData.push(xValue);
       descData.push(point.description);
     });
     let columns = [];
@@ -109,8 +113,8 @@ export default class BarChart extends React.PureComponent {
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
 
-    chartData.axis.x.label.text = this.props.footer;
-    chartData.axis.y.label.text = this.props.subTitle;
+    chartData.axis.x.label.text = this.props.xAxis;
+    chartData.axis.y.label.text = this.props.yAxis;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
     if (sum <= 0) {
@@ -120,7 +124,7 @@ export default class BarChart extends React.PureComponent {
   }
 
   createCustomLabel(v, id, i, j) {
-    if (this.state.zData) {
+    if (this.state.zData && this.state.zData[i] != null) {
       return `${this.state.zData[i]}`
     }
   }
@@ -131,9 +135,9 @@ export default class BarChart extends React.PureComponent {
     let desc = this.state.descData[d[0].x];
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${x}: ${d[0].value}%`}</div>
-        <div>{`Occurence(s): ${z}`}</div>
-        <div>{`${desc}`}</div>
+        <div>{`${x}${this.props.toolTip ? this.props.toolTip : ''}: ${d[0].value}${this.props.unit}`}</div>
+        {z != null && <div>{`Occurence(s): ${z}`}</div>}
+        {desc != null && <div>{`${desc}`}</div>}
       </div>);
   }
 

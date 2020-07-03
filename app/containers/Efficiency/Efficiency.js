@@ -165,7 +165,7 @@ export default class Efficiency extends React.PureComponent {
           "reportName": null,
           "title": "Days Starting on Time Trend",
           "subTitle": null,
-          "toolTip": null,
+          "toolTip": " Late",
           "body": null,
           "footer": null,
           "description": null,
@@ -180,7 +180,7 @@ export default class Efficiency extends React.PureComponent {
               "title": null,
               "subTitle": null,
               "description": null,
-              "valueX": 8,
+              "valueX": "0-5",
               "valueY": 55,
               "valueZ": null,
               "note": null
@@ -189,7 +189,7 @@ export default class Efficiency extends React.PureComponent {
               "title": null,
               "subTitle": null,
               "description": null,
-              "valueX": 9,
+              "valueX": "5-20",
               "valueY": 12,
               "valueZ": null,
               "note": null
@@ -198,7 +198,7 @@ export default class Efficiency extends React.PureComponent {
               "title": null,
               "subTitle": null,
               "description": null,
-              "valueX": 10,
+              "valueX": "20-40",
               "valueY": 22,
               "valueZ": null,
               "note": null
@@ -207,7 +207,7 @@ export default class Efficiency extends React.PureComponent {
               "title": null,
               "subTitle": null,
               "description": null,
-              "valueX": 11,
+              "valueX": "40+",
               "valueY": 88,
               "valueZ": null,
               "note": null

@@ -379,7 +379,13 @@ export default class SSChecklist extends React.PureComponent {
         return <AreaChart {...tile} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
-        return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} />
+        return <BarChart 
+        pattern={pattern} id={tile.tileTypeCount} 
+        reportType={this.props.reportType} 
+        {...tile}
+        unit={'%'}
+        yAxis={tile.subTitle}
+        xAxis={tile.footer} />
       case 'LISTDETAIL':
       case 'LISTDETAILED':
         return <ListDetailed {...tile} specialties={this.props.specialties} />
