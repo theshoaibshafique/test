@@ -146,7 +146,7 @@ export default class MainLayout extends React.PureComponent {
           <Route path="/efficiency" render={(props) => <Efficiency {...props} reportType={"EfficiencyReport"} />} />
         }
         {(this.state.efficiencyAccess) &&
-          <Route path="/daysStarting" render={(props) => <Efficiency {...props} reportType={"DaysStartingReport"} />} />
+          <Route path="/daysStarting" render={(props) => <Efficiency {...props} reportType={"DaysStartingOnTimeReport"} />} />
         }
         {(this.state.efficiencyAccess) &&
           <Route path="/turnoverTime" render={(props) => <Efficiency {...props} reportType={"TurnoverTimeReport"} />} />

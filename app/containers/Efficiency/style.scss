@@ -5,45 +5,70 @@ $ssc-picker-height: 150px;
 .efficiency-page{
     background-color: #F5F5F5;
     height: calc(100%);
-}
-.efficiency-page .overlay{
-    top: $ssc-picker-height;
-    background-color: #F5F5F5;
-}
-.efficiency-page .overlay.landing-page{
-    top: calc(#{$ssc-picker-height} - 65px);
-    background-color: #F5F5F5;
+    .overlay{
+        top: $ssc-picker-height;
+        background-color: #F5F5F5;
+    }
+    .overlay.landing-page{
+        top: calc(#{$ssc-picker-height} - 65px);
+        background-color: #F5F5F5;
+    }
+    .efficiency-message{
+        font-family: "Noto Sans";
+        font-size: 26px;
+        letter-spacing: 0;
+        line-height: 36px;
+        text-align: center;
+    }
+    .efficiency-message-subtitle{
+        font-family: "Noto Sans";
+        font-size: 18px;
+        letter-spacing: 0;
+        line-height: 24px;
+        text-align: center;
+    }
+    .efficiency-divider {
+        background-color: #C8C8C8;
+    }
+    .efficiency-range-picker{
+        background-color: #E8E8E8;
+        padding: 16px 0 0 0;
+    }
+    .efficiency-picker {
+        background-color: #E8E8E8;
+        padding: 16px;
+    }
+    
+    .efficiency-card.MuiCard-root{
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+        border-radius: 8px !important;
+    }
+    
+    .efficiency-picker-container{
+        position: absolute;
+        width: calc(100% - #{$nav-width}) !important;
+        z-index: 1300;
+        top: 0;
+    }
+    .efficiency-main{
+        padding: 40px;
+        max-width: 1198px;
+        margin: auto;
+        top: $ssc-picker-height;
+        // position: relative;
+    }
+
+    .efficiency-card.MuiCard-root{
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+        border-radius: 8px !important;
+    }
+    .efficiency-card.InfographicText{
+        max-width: 360px;
+    }
+    
 }
 
 
-.efficiency-divider {
-    background-color: #C8C8C8;
-}
-.efficiency-range-picker{
-    background-color: #E8E8E8;
-    padding: 16px 0 0 0;
-}
-.efficiency-picker {
-    background-color: #E8E8E8;
-    padding: 16px;
-}
 
-.efficiency-card.MuiCard-root{
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
-    border-radius: 8px !important;
-}
 
-.efficiency-picker-container{
-    position: absolute;
-    width: calc(100% - #{$nav-width}) !important;
-    z-index: 1300;
-    top: 0;
-}
-.efficiency-main{
-    padding: 40px;
-    max-width: 1198px;
-    margin: auto;
-    top: $ssc-picker-height;
-    // position: relative;
-}
 

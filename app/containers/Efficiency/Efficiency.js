@@ -10,6 +10,9 @@ import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import LoadingOverlay from 'react-loading-overlay';
+import globalFunctions from '../../utils/global-functions';
+import DisplayNumber from '../../components/Report/InfographicText/DisplayNumber';
+import BarChart from '../../components/Report/BarChart/BarChart';
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
@@ -39,13 +42,199 @@ export default class Efficiency extends React.PureComponent {
       this.pendingDate = this.pendingDate.clone().add(1, 'month');
     }
     this.state.pendingWarning = `Data for ${this.pendingDate.clone().subtract(1, 'month').format('MMMM')} will be ready on ${this.pendingDate.format('LL')}`;
-    
+
     //Last available data date is 2 months before the pending date
     this.state.startDate = this.pendingDate.clone().subtract(2, 'month').startOf('month');
     this.state.endDate = this.pendingDate.clone().subtract(2, 'month').endOf('month');
     this.state.maxDate = this.state.endDate.clone();
 
+    this.temp = this.getTemp();
   }
+
+  getTemp() {
+    switch (`${this.state.reportType}`.toUpperCase()) {
+      case 'DAYSSTARTINGONTIMEREPORT':
+        return [{
+          "name": null,
+          "reportName": null,
+          "title": "Days Starting on Time",
+          "subTitle": "(20 out of 22 days)",
+          "toolTip": "Proportion of days where the first case of the day started at or before the defined elective start time for that institution.",
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": null,
+          "yAxis": null,
+          "urlText": null,
+          "url": null,
+          "unit": "%",
+          "dataPoints": [
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 40,
+              "valueY": null,
+              "valueZ": null,
+              "note": null
+            }
+          ],
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
+          "name": null,
+          "reportName": null,
+          "title": "Days Starting on Time Trend",
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": "Month",
+          "yAxis": "Percentage (%)",
+          "urlText": null,
+          "url": null,
+          "unit": "%",
+          "dataPoints": [
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 8,
+              "valueY": 29,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 9,
+              "valueY": 37,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 10,
+              "valueY": 41,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 11,
+              "valueY": 68,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 12,
+              "valueY": 70,
+              "valueZ": null,
+              "note": null
+            }
+          ],
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
+          "name": null,
+          "reportName": null,
+          "title": "Days Starting on Time Trend",
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": "Delay from start (mins)",
+          "yAxis": "Percentage (%)",
+          "urlText": null,
+          "url": null,
+          "unit": "%",
+          "dataPoints": [
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 8,
+              "valueY": 55,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 9,
+              "valueY": 12,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 10,
+              "valueY": 22,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 11,
+              "valueY": 88,
+              "valueZ": null,
+              "note": null
+            }
+          ],
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }]
+      case 'TURNOVERTIMEREPORT':
+        return []
+      case 'ORUTILIZATIONREPORT':
+        return []
+      case 'CASEANALYSISREPORT':
+        return []
+      default:
+        return [];
+    }
+
+  }
+
 
   componentDidUpdate(prevProps) {
     if (prevProps.reportType != this.props.reportType) {
@@ -61,12 +250,12 @@ export default class Efficiency extends React.PureComponent {
 
   componentDidMount() {
     this.loadFilter();
-
+    this.getReportLayout();
   };
 
   getFilterLayout(reportType) {
     switch (`${reportType}`.toUpperCase()) {
-      case 'DAYSSTARTINGREPORT':
+      case 'DAYSSTARTINGONTIMEREPORT':
         return { showOR: true, showSpecialty: true }
       case 'TURNOVERTIMEREPORT':
         return { showOR: true }
@@ -82,7 +271,96 @@ export default class Efficiency extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
+    this.setState({ tileRequest: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
+      () => {
+        let jsonBody = {
+          "reportType": this.state.reportType,
+          "TileRequest": [{
+            "startDate": this.state.startDate,
+            "endDate": this.state.endDate,
+          }]
+        };
+        globalFunctions.axiosFetch(process.env.EFFICIENCY_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
+          .then(result => {
+            result = result.data;
+            if (result === 'error' || result === 'conflict') {
+              this.notLoading();
+            } else if (result) {
+              if (result.tileRequest && result.tileRequest.length > 0) {
+                let reportData = this.groupTiles(result.tileRequest.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
+                let tileRequest = result.tileRequest.filter((tile) => {
+                  return moment(tile.startDate).isSame(this.state.startDate, 'month');
+                });
+                this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, reportData, tileRequest },
+                  () => {
+                    //TODO: remove 'index' for hardcoded list
+                    let index = 0
+                    this.state.reportData.map((tileGroup, i) => {
+                      tileGroup.group.map((tile, j) => {
+                        index += 1;
+                        this.getTile(tile, i, j, index);
+                      });
+                    })
+
+                  });
+              } else {
+                //report does not exist
+                this.notLoading();
+              }
+            } else {
+              this.notLoading();
+            }
+          }).catch((error) => {
+          });
+      });
   };
+  getTile(tileRequest, i, j, index) {
+    let jsonBody = {
+      "facilityName": tileRequest.facilityName,
+      "reportName": tileRequest.reportName,
+      "hospitalName": tileRequest.hospitalName,
+      "departmentName": tileRequest.departmentName,
+
+      "startDate": this.state.startDate,
+      "endDate": this.state.endDate,
+      "tileType": tileRequest.tileType,
+      "dashboardName": tileRequest.dashboardName,
+
+      "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
+      "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
+      "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
+    }
+
+    globalFuncs.axiosFetch(process.env.EFFICIENCYTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
+      .then(result => {
+        result = result.data;
+        if (result === 'error' || result === 'conflict') {
+          this.notLoading();
+        } else {
+          //TODO: remove hardcoded values
+          result = this.temp[index - 1];
+          result.tileOrder = tileRequest.tileOrder;
+          result.tileType = tileRequest.tileType;
+          result.groupOrder = tileRequest.groupOrder;
+          result.dashboardName = tileRequest.dashboardName;
+
+          let reportData = this.state.reportData;
+          if (moment(tileRequest.startDate).isSame(this.state.startDate, 'month')) {
+            reportData[i].group[j] = result;
+          }
+
+          this.setState({ reportData, pendingTileCount: this.state.pendingTileCount - 1 },
+            () => {
+              if (this.state.pendingTileCount <= 0) {
+                this.notLoading();
+              }
+            });
+        }
+      }).catch((error) => {
+        this.setState({ pendingTileCount: this.state.pendingTileCount - 1 })
+        // console.error("tile",error)
+      });
+  }
 
   groupTiles(tileData) {
     //Group data by "Group"
@@ -136,17 +414,68 @@ export default class Efficiency extends React.PureComponent {
 
 
   renderTiles() {
-
+    //Tiles of the same type get a different colour
+    let tileTypeCount = {};
+    return this.state.reportData && this.state.reportData.map((tileGroup, index) => {
+      
+      return (
+        tileGroup.group.map((tile, i) => {
+          tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
+          tile.tileTypeCount = tileTypeCount[tile.tileType];
+          return <Grid item xs={this.getTileSize(tile.tileType)} key={`${index}-${i}`}>
+            <Card className={`efficiency-card ${tile.tileType}`}>
+              <CardContent>{this.renderTile(tile)}</CardContent>
+            </Card>
+          </Grid>
+        })
+      )
+    })
   }
 
   renderTile(tile) {
     if (!tile) {
       return <div></div>;
     }
+    switch (`${tile.tileType}`.toUpperCase()) {
+      case 'LIST':
+        return <HorizontalBarChart {...tile} specialties={this.props.specialties} />
+      case 'INFOGRAPHICTEXT':
+        return <DisplayNumber
+          title={tile.title}
+          subTitle={tile.subTitle}
+          tooltipText={tile.toolTip}
+          unit={tile.unit}
+          number={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].valueX}
+        />
+      case 'BARCHARTDETAILED':
+        return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
+      case 'INFOGRAPHICPARAGRAPH':
+        return <InfographicParagraph {...tile} />
+      case 'LINECHART':
+      case 'AREACHART':
+        return <AreaChart {...tile} />
+      case 'BARCHART':
+        let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
+        return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} />
+      case 'LISTDETAIL':
+      case 'LISTDETAILED':
+        return <ListDetailed {...tile} specialties={this.props.specialties} />
+      case 'CHECKLIST':
+        return <Checklist {...tile} openModal={(tileRequest) => this.openModal(tileRequest)} />
+      case 'CHECKLISTDETAIL':
+        return <ChecklistDetail {...tile} closeModal={() => this.closeModal()} />
+      case 'STACKEDBARCHART':
+        return <StackedBarChart {...tile} specialties={this.props.specialties} />
+    }
   }
 
   getTileSize(tileType) {
-
+    switch (`${tileType}`.toUpperCase()) {
+      case 'BARCHART':
+        return 6;
+      case 'INFOGRAPHICTEXT':
+        return 12;
+    }
   }
 
   notLoading() {
@@ -211,7 +540,22 @@ export default class Efficiency extends React.PureComponent {
           }}
         >
           <Grid container spacing={3} className="efficiency-main">
-            WOOW
+            {
+              this.state.hasNoCases ?
+                <Grid item xs={12} className="efficiency-message">
+                  No data available this month
+                  <Grid item xs={12} className="efficiency-message-subtitle">
+                    (Try a different filter criteria)
+                  </Grid>
+                </Grid>
+                :
+                (isLoading || !this.state.tileRequest.length)
+                  ?
+                  !isLoading && <Grid item xs={12} className="efficiency-message">
+                    No data available this month
+                    </Grid>
+                  :
+                  this.renderTiles()}
           </Grid>
 
         </LoadingOverlay>
