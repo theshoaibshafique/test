@@ -26,7 +26,7 @@ export default class Efficiency extends React.PureComponent {
       pendingTileCount: 0,
       tileRequest: [],
       reportData: [],
-      chartColours: ['#004F6E', '#FF7D7D', '#FFDB8C', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3'],
+      chartColours: ['#CFB9E4', '#FF7D7D', '#FFDB8C', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3', '#004F6E'],
 
       selectedOperatingRoom: "",
       selectedSpecialty: "",
@@ -417,7 +417,7 @@ export default class Efficiency extends React.PureComponent {
     //Tiles of the same type get a different colour
     let tileTypeCount = {};
     return this.state.reportData && this.state.reportData.map((tileGroup, index) => {
-      
+
       return (
         tileGroup.group.map((tile, i) => {
           tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
