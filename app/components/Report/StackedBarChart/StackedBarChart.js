@@ -11,7 +11,7 @@ export default class StackedBarChart extends React.PureComponent {
     this.chartRef = React.createRef();
 
     this.state = {
-      legendData:[],
+      legendData: [],
       chartID: 'stackedBarChartDetailed',
       chartData: {
         data: {
@@ -27,7 +27,7 @@ export default class StackedBarChart extends React.PureComponent {
           order: 'asc'
         }, // End data
         color: {
-          pattern: ['#A7E5FD','#97E7B3','#CFB9E4','#FFDB8C','#FF7D7D','#50CBFB','#6EDE95','#FFC74D','#FF4D4D','#A77ECD','#004F6E']
+          pattern: ['#A7E5FD', '#97E7B3', '#CFB9E4', '#FFDB8C', '#FF7D7D', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#004F6E']
         },
         bar: {
           width: 50,
@@ -59,7 +59,7 @@ export default class StackedBarChart extends React.PureComponent {
             front: false,
           },
           y: {
-            show:true
+            show: true
           }
         },
         padding: { top: 8, bottom: 8 },
@@ -96,6 +96,7 @@ export default class StackedBarChart extends React.PureComponent {
       return;
     }
     let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
+
     let legendData = {};
     let zData = [];
     let formattedData = { x: [] };
@@ -104,18 +105,27 @@ export default class StackedBarChart extends React.PureComponent {
         formattedData.x.push(point.valueX);
       }
       point.title = this.getName(this.props.specialties, point.title);
-      formattedData[point.title] = formattedData[point.title] || [];
-      formattedData[point.title].push(point.valueY);
+      formattedData[point.title] = formattedData[point.title] || {};
+      formattedData[point.title][point.valueX] = formattedData[point.title][point.valueX] || 0
+      formattedData[point.title][point.valueX] = point.valueY;
       legendData[point.title] = point.subTitle;
       point.valueZ && zData.push(point.valueZ);
     });
-
+    
     let columns = [];
+    
     Object.entries(formattedData).map(([key, value]) => {
-      columns.push([key, ...value]);
+      if (key == 'x'){
+        columns.push([key, ...value]);
+      } else {
+        columns.push([key, ...formattedData.x.map((x) => {
+          return value[x] || "0";
+        })]);
+      }
     })
+    
     //Show Totals as a line graph (while hiding the line) so values always show on top
-    columns.push(['Total',...zData]);
+    columns.push(['Total', ...zData]);
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
     chartData.axis.x.label.text = this.props.footer;
@@ -124,14 +134,14 @@ export default class StackedBarChart extends React.PureComponent {
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData.data);
     chart && chart.groups([Object.keys(formattedData)]);
-    if (zData.reduce((a,b)=>a+b,0) <= 0){
+    if (zData.reduce((a, b) => a + b, 0) <= 0) {
       d3.select('.stacked-barchart-detailed .c3-chart-texts').style('transform', 'translate(0, -30px)') // shift up labels
     }
     this.setState({ chartData, legendData, xData: formattedData.x, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
-    if (id && id == "Total" ) {
+    if (id && id == "Total") {
       return v
     }
   }
