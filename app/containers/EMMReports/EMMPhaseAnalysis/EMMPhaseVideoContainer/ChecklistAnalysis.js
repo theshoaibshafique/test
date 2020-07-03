@@ -31,23 +31,36 @@ const CheckListData = (props) => {
 }
 
 const ChecklistAnalysis = (props) => {
-  const { checklistData : {title, subTitle, enhancedMMData} } = props;
+  const { checklistData } = props;
 
   return (
-    <Paper className="checklist-data">
-      <h3 className="main-text center-align">{title}</h3>
-      <h5 className="main-text center-align"><em>{subTitle}</em></h5>
-      <Grid container spacing={0}>
-        <Grid item xs={6}>
-          <CheckListData data={enhancedMMData[0]} />
-          <CheckListData data={enhancedMMData[1]} />
-          <CheckListData data={enhancedMMData[2]} />
-        </Grid>
-        <Grid item xs={6}>
-          <CheckListData data={enhancedMMData[3]} />
-        </Grid>
-      </Grid>
-    </Paper>
+    <div>
+      {
+        checklistData.map((checklist, index) => {
+          const title = checklist.title;
+          const subTitle = checklist.subTitle
+          const enhancedMMData = checklist.enhancedMMData;
+          return <Paper
+                  key={`checklistData${index}`}
+                  className="checklist-data">
+                  <h3 className="main-text center-align">{title}</h3>
+                  <h5 className="main-text center-align"><em>{subTitle}</em></h5>
+                  <Grid container spacing={0}>
+                    <Grid item xs={6}>
+                      <CheckListData data={enhancedMMData[0]} />
+                      <CheckListData data={enhancedMMData[1]} />
+                      <CheckListData data={enhancedMMData[2]} />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <CheckListData data={enhancedMMData[3]} />
+                    </Grid>
+                  </Grid>
+                </Paper>
+        })
+      }
+
+    </div>
+
   )
 }
 

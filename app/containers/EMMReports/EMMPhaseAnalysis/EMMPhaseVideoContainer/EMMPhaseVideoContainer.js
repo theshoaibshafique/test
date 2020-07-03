@@ -8,8 +8,7 @@ import VideoTimeline from './VideoTimeline';
 const videoOptions = {
   "nativeControlsForTouch": false,
   controls: true,
-  width: '975px',
-  height: '548px',
+  fluid: true,
   playbackSpeed: {
     enabled: true,
     initialSpeed: 1.0,
@@ -68,7 +67,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
       if (phaseData.name !== 'SurgicalProcedure') {
         this.setState({ selectedVideoClipID: videoIndex })
       }
-      this.createVideoPlayer(videoID, this.props.phaseData)
+      this.createVideoPlayer(videoID)
     } else {
       this.setState({ noVideo: true })
       this.destroyVideoPlayer()
@@ -76,12 +75,13 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
 
   }
 
-  createVideoPlayer(videoID, phaseData) {
+  createVideoPlayer(videoID) {
     this.setState({ noVideo: false })
     globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/' + videoID, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           this.myPlayer = amp(this.state.videoID, videoOptions);
+          console.log(result.token)
           this.myPlayer.src([{
             src: result.url,
             type: "application/vnd.ms-sstr+xml",
@@ -138,7 +138,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             </div>
             <div
               className="Phase-Events-Container"
-              style={(phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) ? {height: '578px'} : {}}
+              style={(phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) ? {height: '655px'} : {}}
             >
               <EMMPhaseEvents
                 phaseTitle={phaseData.name}
@@ -152,7 +152,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
           </div>
         }
 
-        {(phaseData.checklistData) &&
+        {(phaseData.checklistData.length > 0) &&
           <ChecklistAnalysis
             checklistData={phaseData.checklistData}
           />

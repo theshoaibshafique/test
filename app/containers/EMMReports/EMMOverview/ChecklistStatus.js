@@ -20,7 +20,7 @@ class ChecklistStatus extends React.Component {
 
     return (
       <div className="checklist-status flex">
-        <div className="checklist-happened">
+        <div className="checklist-happened-container flex">
           {
             checkListHappened.map((happened, index) => {
               return <div
@@ -33,12 +33,15 @@ class ChecklistStatus extends React.Component {
             })
           }
         </div>
-        <div className="checklist-missed">
-          <strong>
-            <em>{checkListMissed.map((missed) => missed.valueX.replace('Analysis', '')).join(', ')}</em>
-          </strong>
-          {(checkListMissed.length > 1) ? 'were' : 'was'} missed
-        </div>
+        {
+          (checkListMissed.length > 0) &&
+            <div className="checklist-missed">
+              <strong>
+                <em>{checkListMissed.map((missed) => missed.valueX.replace(' Analysis', '')).join(', ')}</em>
+              </strong>
+              {(checkListMissed.length > 1) ? ' were' : ' was'} missed
+            </div>
+        }
       </div>
     )
   }

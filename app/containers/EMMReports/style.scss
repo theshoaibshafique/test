@@ -1,8 +1,71 @@
 @import '../../styles/global-styles.scss';
 
+$onboardwidth: 875px;
+.onboarding-dialog {
+    .MuiDialog-paperWidthSm {
+        max-width: $onboardwidth;
+    }
+}
+.onboarding-dialog-content {
+    width: $onboardwidth;
+    padding: 40px !important;
+    .close-button {
+        position: absolute;
+        top: 40px;
+        right: 40px;
+        padding: 0px;
+    }
+    h2 {
+        font-size: 26px;
+        line-height: 36px;
+        margin: 0px 0px 16px;
+    }
+    .title-p { font-size: 14px; margin-bottom: 16px; }
+    h2, .title-p { text-align: center; }
+    .content-container {
+        margin: 0 auto;
+        width: 795px;
+        h5 {
+            font-size: 26px;
+            line-height: 36px;
+            margin: 0px 0px 16px 0px;
+        }
+        .content-tile {
+            width: 385x;
+            padding: 24px;
+            margin-right: 24px;
+            border-radius: 5px;
+            img {
+                width: 200px;
+                margin: 0px auto;
+                display: block;
+                text-align: center;
+            }
+            h5, .content-p { text-align: center; }
+            &:first-child {
+                background: #EEEAF2;
+                h5 { color: #009483 }
+            }
+            &:last-child {
+                margin-right: 0px;
+                background: #CCEAE6;
+                h5 { color: #592D82}
+            }
+        }
+    }
+}
+
 .publish-dialog {
     .MuiPaper-root {
         padding: 16px;
+    }
+    h2 {
+        opacity: 0.8;
+    }
+    .confirm-publish-text {
+        font-size: 14px;
+        color: black;
+        opacity: 0.8;
     }
     .cancel-publish {
         color: #028CC8 !important;
@@ -14,9 +77,14 @@
     line-height: 24px !important;
 }
 
+.EMM-REPORTS-SCROLL {
+    height: 100%;
+    overflow-y: auto;
+}
+
 .EMM-REPORTS {
-    padding: 24px 120px;
-    max-width: 1920px;
+    padding: 24px 40px;
+    max-width: 1440px;
     margin: 0px auto;
     overflow-y: auto;
     font-size: 18px;
@@ -24,7 +92,7 @@
         cursor: pointer;
         position: absolute;
         top: 24px;
-        right: 24px;
+        right: 40px;
         font-size: 14px;
         color: #000;
         z-index: 99;
@@ -43,13 +111,21 @@
 }
 
 .EMM-Reports-Header {
-    height: 68px;
+    height: 96px;
     overflow: hidden;
     img {
         width: 200px;
         left: 0px;
     }
-    &.has-publish-button { height: 96px; }
+    .onboarding-open {
+        top: 86px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 19px;
+        color: #4EA1DA;
+        &:hover { text-decoration: underline; }
+    }
+    &.has-publish-button { height: 106px; }
 }
 
 .EMM-Tab-Selector {
@@ -75,11 +151,5 @@
             background: $blue;
             font-weight: bold;
         }
-    }
-}
-
-@media (max-width: $desktop-width) {
-    .EMM-REPORTS {
-        padding: 24px 60px;
     }
 }

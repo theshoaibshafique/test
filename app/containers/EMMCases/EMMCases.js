@@ -75,7 +75,7 @@ export default class EMMCases extends React.PureComponent {
       surgeryMap,
       complicationsMap,
       operatingRoomMap,
-      recentSearch: '',
+      recentSearch: [],
       noMatch: false,
       localSearchCache: []
     };
@@ -124,11 +124,11 @@ export default class EMMCases extends React.PureComponent {
   }
 
   search(e) {
+    let { requestID, recentSearch, localSearchCache, surgeryMap, complicationsMap, operatingRoomMap } = this.state;
     if (e){
       e.preventDefault();
     }
 
-    let { requestID, recentSearch, localSearchCache, surgeryMap, complicationsMap, operatingRoomMap } = this.state;
 
     if (requestID) {
       this.reset();
@@ -194,33 +194,33 @@ export default class EMMCases extends React.PureComponent {
   render() {
     return (
       <section className="EMM-CASES">
-        <form onSubmit={this.search}>
         <Grid container spacing={2}>
           <Grid item xs={12} className="header">
-          Enhanced M&M Cases
+            Enhanced M&M Cases
           </Grid>
-          <Grid item xs={12} className="page-subtitle">
-          Please enter your eM&M Request ID below and click Search to retrieve your report or open a recently accessed report.
-          </Grid>
-          <Grid item xs={8}>
-            <Grid container spacing={2}>
-              <Grid item xs={8}>
-                <TextField
-                  id="requestID"
-                  name="requestID"
-                  placeholder="Request ID"
-                  variant="outlined"
-                  size="small"
-                  className="input-field"
-                  onChange={(e) => this.handleFormChange(e)}
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <Button type="submit" variant="outlined" className="primary" style={{height:40}} onClick={(e) => this.search(e)}>Search</Button>
+          <form onSubmit={()=>this.search()}>
+            <Grid item xs={12} className="page-subtitle">
+              Please enter your eM&M Request ID below and click Search to retrieve your report or open a recently accessed report.
+            </Grid>
+            <Grid item xs={8}>
+              <Grid container spacing={2}>
+                <Grid item xs={8}>
+                  <TextField
+                    id="requestID"
+                    name="requestID"
+                    placeholder="Request ID"
+                    variant="outlined"
+                    size="small"
+                    className="input-field"
+                    onChange={(e) => this.handleFormChange(e)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button type="submit" variant="outlined" className="primary" style={{height:40}} onClick={(e) => this.search(e)}>Search</Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-
+          </form>
           {(this.state.report.requestId || this.state.noMatch) &&
           <Grid item xs={12} className="search">Search Result</Grid>
           }
@@ -252,7 +252,6 @@ export default class EMMCases extends React.PureComponent {
           </Grid>
 
         </Grid>
-        </form>
       </section>
     );
   }
