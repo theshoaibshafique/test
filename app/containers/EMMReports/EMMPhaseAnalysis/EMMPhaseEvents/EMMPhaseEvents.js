@@ -79,7 +79,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
                         </div>
                         <div className="main-text">{data.subTitle}</div>
                         {data.dataPoints.map(aeEvent => {
-                          return <div className="event flex" onClick={()=>this.props.seekVideo(parseInt(aeEvent.valueX) - 30)}>
+                          return <div className="event flex" onClick={()=>this.props.seekVideo(parseInt(aeEvent.valueX))}>
                                   <div className="event-circle" />{aeEvent.title}
                                 </div>
                           })
