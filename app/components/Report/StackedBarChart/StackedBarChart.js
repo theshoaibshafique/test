@@ -89,6 +89,9 @@ export default class StackedBarChart extends React.PureComponent {
   }
 
   getName(searchList, key) {
+    if (!key){
+      return key;
+    }
     let index = searchList.findIndex(item => item.value.toLowerCase() == key.toLowerCase());
     if (index >= 0) {
       return searchList[index].name;
@@ -142,16 +145,19 @@ export default class StackedBarChart extends React.PureComponent {
     if (zData.reduce((a, b) => a + b, 0) <= 0) {
       d3.select('.stacked-barchart-detailed .c3-chart-texts').style('transform', 'translate(0, -30px)') // shift up labels
     }
-    this.setState({ chartData, legendData, xData: formattedData.x, isLoaded: true })
+    this.setState({ chartData, legendData,zData, xData: formattedData.x, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
     if (id && id == "Total") {
-      return v
+      return v == null ? "N/A" : v;
     }
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
+    if (this.state.zData[d[0].x] == "N/A"){
+      return;
+    }
     let x = this.state.xData[d[0].x];
     return ReactDOMServer.renderToString(
       <div className="chartTooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
@@ -170,6 +176,9 @@ export default class StackedBarChart extends React.PureComponent {
       .html(ReactDOMServer.renderToString(
         <div className="bar-chart-detailed-legend">
           {Object.entries(this.state.legendData).map(([id, value], index) => {
+            if (id == "N/A"){
+              return;
+            }
             return (<div style={{ margin: '4px 0' }} key={index}>
               <div className="legend-title">
                 <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>

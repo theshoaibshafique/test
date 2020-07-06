@@ -129,6 +129,9 @@ export default class BarChart extends React.PureComponent {
     let x = this.state.xData[d[0].x];
     let z = this.state.zData[d[0].x];
     let desc = this.state.descData[d[0].x];
+    if (z == "N/A"){
+      return;
+    }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{`${x}: ${d[0].value}%`}</div>
