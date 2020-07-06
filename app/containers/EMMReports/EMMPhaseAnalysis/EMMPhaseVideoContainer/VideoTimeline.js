@@ -37,7 +37,7 @@ const VideoTimeline = (props) => {
           return <div
                     key={`adverseEvent${index}`}
                     className="time-line-marker event-circle absolute"
-                    style={{left: `${((event.valueX - 16) / duration * 100)}%`}}
+                    style={{left: `calc(${(event.valueX / duration * 100)}%)`}}
                     onClick={()=>seekVideo(parseInt(event.valueX))}/>
 
         })
