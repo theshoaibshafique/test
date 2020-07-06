@@ -64,7 +64,7 @@ const OnBoardDialog = (props) => {
           </div>
         </div>
         <div className="right-align">
-          <Button disableElevation disableRipple variant="contained" className="secondary" style={{ marginTop: 24 }} onClick={() => dialogClose()}>Close</Button>
+          <Button disableElevation disableRipple variant="contained" className="secondary" style={{ marginTop: 40 }} onClick={() => dialogClose()}>Close</Button>
         </div>
       </DialogContent>
     </Dialog>

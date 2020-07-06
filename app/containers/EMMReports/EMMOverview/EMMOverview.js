@@ -35,6 +35,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
     const { tabShowing } = this.props;
     const { circleSize, sscCirclesColors } = this.state;
     const { emmReportData, emmReportData : { distractionScore, technicalPerformanceScore, adverseEventRate, checklistScore, checklists, phasesOfInterest }, specialties, complications } = this.props;
+    const adverseEventRateTitle = adverseEventRate.dataPoints[0].valueX.substr(0, adverseEventRate.dataPoints[0].valueX.length - 3)
     return (
       <div
         className="Emm-Reports-Overview"
@@ -89,7 +90,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                       <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
                     </LightTooltip>
                   </div>
-                  <div className="EMM-Score">{adverseEventRate.dataPoints[0].valueX}</div>
+                  <div className="EMM-Score">{adverseEventRateTitle}<span style={{fontSize:'26px'}}>/hr</span></div>
                 </Paper>
               </Grid>
               <Grid item xs={12}>

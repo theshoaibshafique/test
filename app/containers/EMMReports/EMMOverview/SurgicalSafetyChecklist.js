@@ -5,7 +5,7 @@ const SurgicalSafetyChecklist = (props) => {
   const { checklistScore } = props;
   const circleSize = 175;
   const sscCirclesColors = ["#A7E5FD", "#97E7B3", "#CFB9E4"];
-  const isAllZeroes = checklistScore.filter(score => score.valueX == 0).length == 3;
+  const hasNegativeScore = checklistScore.filter(score => score.valueX == -1).length == 2;
 
   const showZeroCheckList = () => {
     return <div className="zero-score flex">
@@ -37,7 +37,7 @@ const SurgicalSafetyChecklist = (props) => {
   return (
     <div className="SSC-Circles">
       {
-        (isAllZeroes) ?
+        (hasNegativeScore) ?
           showZeroCheckList()
         :
           showStandardCheckList()
