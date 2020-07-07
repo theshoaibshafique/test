@@ -21,10 +21,6 @@ const LightTooltip = withStyles((theme) => ({
 export default class EMMOverview extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
-    this.state = {
-      circleSize: 175,
-      sscCirclesColors: ["#A7E5FD", "#97E7B3", "#CFB9E4"]
-    }
   }
 
   componentDidMount() {
@@ -33,7 +29,6 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
 
   render() {
     const { tabShowing } = this.props;
-    const { circleSize, sscCirclesColors } = this.state;
     const { emmReportData, emmReportData : { distractionScore, technicalPerformanceScore, adverseEventRate, checklistScore, checklists, phasesOfInterest }, specialties, complications } = this.props;
     const adverseEventRateTitle = adverseEventRate.dataPoints[0].valueX.substr(0, adverseEventRate.dataPoints[0].valueX.length - 3)
     return (
