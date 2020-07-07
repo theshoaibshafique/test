@@ -1,9 +1,20 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Tooltip, withStyles } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import moment from 'moment/moment';
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    padding: '16px',
+    fontSize: '14px',
+    lineHeight: '19px',
+    fontFamily: 'Noto Sans'
+  }
+}))(Tooltip);
 
 export default class StackedBarChart extends React.PureComponent {
   constructor(props) {
@@ -74,7 +85,7 @@ export default class StackedBarChart extends React.PureComponent {
         point: {
           show: false
         },
-        onrendered: () => this.state.legendData && this.createCustomLegend(`.${this.state.chartID}`),
+        // onrendered: () => this.state.legendData && this.createCustomLegend(`.${this.state.chartID}`),
       }
     }
 
@@ -89,7 +100,7 @@ export default class StackedBarChart extends React.PureComponent {
   }
 
   getName(searchList, key) {
-    if (!key){
+    if (!key) {
       return key;
     }
     let index = searchList.findIndex(item => item.value.toLowerCase() == key.toLowerCase());
@@ -108,20 +119,25 @@ export default class StackedBarChart extends React.PureComponent {
     let legendData = {};
     let zData = [];
     let formattedData = { x: [] };
+    let tooltipData = {};
     dataPoints.map((point) => {
-      if (!formattedData.x.includes(point.valueX)) {
-        formattedData.x.push(point.valueX);
+      let xValue = point.valueX;
+      if (parseInt(point.valueX) == point.valueX) {
+        xValue = moment().month(parseInt(point.valueX) - 1).format('MMM');
+      } 
+      if (!formattedData.x.includes(xValue)) {
+        formattedData.x.push(xValue);
       }
+      
       point.title = this.getName(this.props.specialties, point.title);
       formattedData[point.title] = formattedData[point.title] || {};
-      formattedData[point.title][point.valueX] = formattedData[point.title][point.valueX] || 0
-      formattedData[point.title][point.valueX] = point.valueY;
+      formattedData[point.title][xValue] = formattedData[point.title][xValue] || 0
+      formattedData[point.title][xValue] = point.valueY;
       legendData[point.title] = point.subTitle;
       point.valueZ && zData.push(point.valueZ);
+      tooltipData[point.title] = point.note ? point.note : tooltipData[point.title];
     });
-
     let columns = [];
-
     Object.entries(formattedData).map(([key, value]) => {
       if (key == 'x') {
         columns.push([key, ...value]);
@@ -145,7 +161,7 @@ export default class StackedBarChart extends React.PureComponent {
     if (zData.reduce((a, b) => a + b, 0) <= 0) {
       d3.select('.stacked-barchart-detailed .c3-chart-texts').style('transform', 'translate(0, -30px)') // shift up labels
     }
-    this.setState({ chartData, legendData,zData, xData: formattedData.x, isLoaded: true })
+    this.setState({ chartData, legendData,tooltipData, zData, xData: formattedData.x, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
@@ -155,7 +171,7 @@ export default class StackedBarChart extends React.PureComponent {
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    if (this.state.zData[d[0].x] == "N/A"){
+    if (this.state.zData[d[0].x] == "N/A") {
       return;
     }
     let x = this.state.xData[d[0].x];
@@ -167,27 +183,28 @@ export default class StackedBarChart extends React.PureComponent {
     );
   }
 
-  createCustomLegend(chartClass) {
-    chartClass = `${chartClass}${this.props.horizontalLegend ? '-horizontal' : ''}`
-    if (!this.chartRef.current || !d3.select(chartClass).select('.legend').empty()) {
+  renderLegend() {
+    if (!this.chartRef.current) {
       return;
     }
     let chart = this.chartRef.current.chart;
-    d3.select(chartClass).insert('div').attr('class', 'legend')
-      .html(ReactDOMServer.renderToString(
-        <div className="bar-chart-detailed-legend">
-          {Object.entries(this.state.legendData).map(([id, value], index) => {
-            if (id == "N/A"){
-              return;
-            }
-            return (<div style={{ margin: '4px 0' }} key={index}>
-              <div className="legend-title">
-                <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
-              </div>
-            </div>)
-          })}
-        </div>
-      ));
+    return <div className={`${this.state.chartID}${this.props.horizontalLegend ? '-horizontal' : ''}`}>
+      <div className="bar-chart-detailed-legend">
+        {Object.entries(this.state.legendData).map(([id, value], index) => {
+          if (id == "N/A") {
+            return;
+          }
+          return (<div className="legend-item" key={index}>
+            <div className="legend-title">
+              <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
+              {this.state.tooltipData[id] && <LightTooltip interactive arrow title={this.state.tooltipData[id]} placement="top" fontSize="small">
+                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+              </LightTooltip>}
+            </div>
+          </div>)
+        })}
+      </div>
+    </div>
   }
 
   render() {
@@ -216,9 +233,11 @@ export default class StackedBarChart extends React.PureComponent {
           </Grid>
           <Grid item xs={3}></Grid>
           <Grid item xs={this.props.horizontalLegend ? 12 : 8} >
-            {<C3Chart ref={this.chartRef} {...this.state.chartData} className={`${this.state.chartID}-horizontal`} />}
+            {<C3Chart ref={this.chartRef} {...this.state.chartData} />}
+            {this.props.horizontalLegend && this.renderLegend()}
           </Grid>
           <Grid item xs={4} className={this.state.chartID}>
+            {!this.props.horizontalLegend && this.renderLegend()}
           </Grid>
         </Grid>
       </LoadingOverlay>

@@ -334,7 +334,7 @@ export default class Efficiency extends React.PureComponent {
                 "valueX":1,
                 "valueY":12,
                 "valueZ":"",
-                "note":""
+                "note":"The time between the first member of the surgical team preparing the room for a case, and the patient entering the operating room."
              },
              {
                 "title":"Clean-up",
@@ -343,7 +343,7 @@ export default class Efficiency extends React.PureComponent {
                 "valueX":1,
                 "valueY":3,
                 "valueZ":"",
-                "note":""
+                "note":"The time between a patient leaving the operating room, and the last member of the cleaning team leaving the operating room."
              },
              {
                 "title":"Setup",
@@ -442,7 +442,7 @@ export default class Efficiency extends React.PureComponent {
                 "valueX":6,
                 "valueY":2,
                 "valueZ":"",
-                "note":""
+                "note":"The time when the room is not in use between the completion of room clean-up and the start of room set-up."
              },
           ],
           "active":true,

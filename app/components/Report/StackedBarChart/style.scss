@@ -69,7 +69,6 @@
   display: flex;
 }
 .stackedBarChartDetailed-horizontal {
-  margin-bottom: 24px;
   .bar-chart-detailed-legend{
     margin: 0;
     flex-direction: row ;
@@ -77,12 +76,17 @@
 
   .bar-chart-detailed-legend{
     display: flex;
-    justify-content: center;
+    justify-content:center;
     margin-top: 16px;
+  }
+  .legend-item{
+    margin: 0 4px !important;
   }
 }
 
-
+.stacked-barchart-detailed .legend-item{
+  margin: 4px 0;
+}
 
 .stacked-barchart-detailed .legend-title,
 .stacked-barchart-detailed .c3-axis,
