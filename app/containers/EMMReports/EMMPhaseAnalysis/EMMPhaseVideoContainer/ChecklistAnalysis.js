@@ -44,9 +44,9 @@ const ChecklistAnalysis = (props) => {
           const subTitle = checklist.subTitle
           const enhancedMMData = checklist.enhancedMMData;
           const isPeopleEqual = enhancedMMData[1].dataPoints[0].valueX == enhancedMMData[2].dataPoints[0].valueX;
-          const isBriefing = (title.indexOf('Briefing') > 0);
-          const isTimeout = (title.indexOf('Timeout') > 0);
-          const isDebrief = (title.indexOf('Postop Debrief') > 0);
+          const isBriefing = (title.indexOf('Briefing') >= 0);
+          const isTimeout = (title.indexOf('Time Out') >= 0);
+          const isDebrief = (title.indexOf('Postop Debrief') >= 0);
           const checkListPhase = enhancedMMData[0].dataPoints[0].valueX;
           const showInRed = (((isBriefing || isTimeout) && checkListPhase == "After skin incision") || (isDebrief &&(checkListPhase == 'Before skin closing' || checkListPhase == 'During skin closing')))
 
