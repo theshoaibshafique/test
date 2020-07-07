@@ -51,7 +51,7 @@ export default class DisplayNumber extends React.PureComponent {
           </Grid>
           <Grid item xs={12}>
             <span className="display-number">{this.props.number}</span>{this.props.unit && <span className="display-number-unit">{this.props.unit}</span>}
-            {this.props.subTitle && <span className="display-number-subtitle">{this.props.subTitle}</span>}
+            {this.props.footer && <span className="display-number-footer">{this.props.footer}</span>}
           </Grid>
         </Grid>
       </LoadingOverlay>

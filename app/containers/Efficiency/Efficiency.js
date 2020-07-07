@@ -14,6 +14,7 @@ import globalFunctions from '../../utils/global-functions';
 import DisplayNumber from '../../components/Report/InfographicText/DisplayNumber';
 import BarChart from '../../components/Report/BarChart/BarChart';
 import StackedBarChart from '../../components/Report/StackedBarChart';
+import DonutChart from '../../components/Report/DonutChart/DonutChart';
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
@@ -57,10 +58,10 @@ export default class Efficiency extends React.PureComponent {
           "name": null,
           "reportName": null,
           "title": "Days Starting on Time",
-          "subTitle": "(20 out of 22 days)",
+          "subTitle": null,
           "toolTip": "Proportion of days where the first case of the day started at or before the defined elective start time for that institution.",
           "body": null,
-          "footer": null,
+          "footer": "(20 out of 22 days)",
           "description": null,
           "total": null,
           "xAxis": null,
@@ -68,17 +69,7 @@ export default class Efficiency extends React.PureComponent {
           "urlText": null,
           "url": null,
           "unit": "%",
-          "dataPoints": [
-            {
-              "title": null,
-              "subTitle": null,
-              "description": null,
-              "valueX": 40,
-              "valueY": null,
-              "valueZ": null,
-              "note": null
-            }
-          ],
+          "total":40,
           "active": true,
           "dataDate": "0001-01-01T00:00:00",
           "monthly": false,
@@ -162,7 +153,7 @@ export default class Efficiency extends React.PureComponent {
         }, {
           "name": null,
           "reportName": null,
-          "title": "Days Starting on Time Trend",
+          "title": "Distribution of Late Start Time",
           "subTitle": null,
           "toolTip": " Late",
           "body": null,
@@ -238,17 +229,7 @@ export default class Efficiency extends React.PureComponent {
           "urlText":null,
           "url":null,
           "unit":null,
-          "dataPoints":[
-                    {
-                   "title": null,
-                   "subTitle": null,
-                   "description": null,
-                   "valueX": 60,
-                   "valueY": null,
-                   "valueZ": null,
-                   "note": null
-                 }
-          ],
+          "total":60,
           "active":true,
           "dataDate":"0001-01-01T00:00:00",
           "monthly":false,
@@ -262,17 +243,17 @@ export default class Efficiency extends React.PureComponent {
           "name":null,
           "reportName":null,
           "title":"Turnover Analysis",
-          "subTitle":null,
+          "subTitle":"Avg. Turnover",
           "toolTip":"A breakdown of how the time between the prior patient exiting the operating room and the subsequent patient entering the operating room was spent.",
           "body":null,
           "footer":null,
           "description":null,
-          "total":null,
+          "total":"25",
           "xAxis":"Month",
           "yAxis":"Percentage (%)",
           "urlText":null,
           "url":null,
-          "unit":"%",
+          "unit":"mins",
           "dataPoints":[
                  {
                    "title": "Setup",
@@ -281,7 +262,7 @@ export default class Efficiency extends React.PureComponent {
                    "valueX": 20,
                    "valueY": null,
                    "valueZ": null,
-                   "note": null
+                   "note": "The time between the first member of the surgical team preparing the room for a case, and the patient entering the operating room."
                  },
                  {
                    "title": "Clean-up",
@@ -290,7 +271,7 @@ export default class Efficiency extends React.PureComponent {
                    "valueX": 9,
                    "valueY": null,
                    "valueZ": null,
-                   "note": null
+                   "note": "The time between a patient leaving the operating room, and the last member of the cleaning team leaving the operating room."
                  },
                  {
                    "title": "Idle",
@@ -299,7 +280,7 @@ export default class Efficiency extends React.PureComponent {
                    "valueX": 5,
                    "valueY": null,
                    "valueZ": null,
-                   "note": null
+                   "note": "The time when the room is not in use between the completion of room clean-up and the start of room set-up."
                  },
           ],
           "active":true,
@@ -672,10 +653,10 @@ export default class Efficiency extends React.PureComponent {
       case 'INFOGRAPHICTEXT':
         return <DisplayNumber
           title={tile.title}
-          subTitle={tile.subTitle}
+          footer={tile.footer}
           tooltipText={tile.toolTip}
           unit={tile.unit}
-          number={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].valueX}
+          number={tile.total}
         />
       case 'BARCHARTDETAILED':
         return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
@@ -694,6 +675,8 @@ export default class Efficiency extends React.PureComponent {
         return <Checklist {...tile} openModal={(tileRequest) => this.openModal(tileRequest)} />
       case 'CHECKLISTDETAIL':
         return <ChecklistDetail {...tile} closeModal={() => this.closeModal()} />
+      case 'DONUTCHART':
+        return <DonutChart {...tile} />
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} horizontalLegend={true} />
     }
@@ -701,6 +684,7 @@ export default class Efficiency extends React.PureComponent {
 
   getTileSize(tileType) {
     switch (`${tileType}`.toUpperCase()) {
+      case 'DONUTCHART':
       case 'STACKEDBARCHART':
       case 'BARCHART':
         return 6;
@@ -770,7 +754,7 @@ export default class Efficiency extends React.PureComponent {
             })
           }}
         >
-          <Grid container spacing={3} className="efficiency-main">
+          <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
             {
               this.state.hasNoCases ?
                 <Grid item xs={12} className="efficiency-message">
