@@ -13,6 +13,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import globalFunctions from '../../utils/global-functions';
 import DisplayNumber from '../../components/Report/InfographicText/DisplayNumber';
 import BarChart from '../../components/Report/BarChart/BarChart';
+import StackedBarChart from '../../components/Report/StackedBarChart';
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
@@ -47,8 +48,6 @@ export default class Efficiency extends React.PureComponent {
     this.state.startDate = this.pendingDate.clone().subtract(2, 'month').startOf('month');
     this.state.endDate = this.pendingDate.clone().subtract(2, 'month').endOf('month');
     this.state.maxDate = this.state.endDate.clone();
-
-    this.temp = this.getTemp();
   }
 
   getTemp() {
@@ -224,7 +223,238 @@ export default class Efficiency extends React.PureComponent {
           "specialtyName": null
         }]
       case 'TURNOVERTIMEREPORT':
-        return []
+        return [{
+          "name":null,
+          "reportName":null,
+          "title":"Total # of Cases",
+          "subTitle":null,
+          "toolTip":null,
+          "body":null,
+          "footer":null,
+          "description":null,
+          "total":null,
+          "xAxis":null,
+          "yAxis":null,
+          "urlText":null,
+          "url":null,
+          "unit":null,
+          "dataPoints":[
+                    {
+                   "title": null,
+                   "subTitle": null,
+                   "description": null,
+                   "valueX": 60,
+                   "valueY": null,
+                   "valueZ": null,
+                   "note": null
+                 }
+          ],
+          "active":true,
+          "dataDate":"0001-01-01T00:00:00",
+          "monthly":false,
+          "hospitalName":null,
+          "facilityName":null,
+          "departmentName":null,
+          "roomName":null,
+          "procedureName":null,
+          "specialtyName":null
+       },{
+          "name":null,
+          "reportName":null,
+          "title":"Turnover Analysis",
+          "subTitle":null,
+          "toolTip":"A breakdown of how the time between the prior patient exiting the operating room and the subsequent patient entering the operating room was spent.",
+          "body":null,
+          "footer":null,
+          "description":null,
+          "total":null,
+          "xAxis":"Month",
+          "yAxis":"Percentage (%)",
+          "urlText":null,
+          "url":null,
+          "unit":"%",
+          "dataPoints":[
+                 {
+                   "title": "Setup",
+                   "subTitle": null,
+                   "description": null,
+                   "valueX": 20,
+                   "valueY": null,
+                   "valueZ": null,
+                   "note": null
+                 },
+                 {
+                   "title": "Clean-up",
+                   "subTitle": null,
+                   "description": null,
+                   "valueX": 9,
+                   "valueY": null,
+                   "valueZ": null,
+                   "note": null
+                 },
+                 {
+                   "title": "Idle",
+                   "subTitle": null,
+                   "description": null,
+                   "valueX": 5,
+                   "valueY": null,
+                   "valueZ": null,
+                   "note": null
+                 },
+          ],
+          "active":true,
+          "dataDate":"0001-01-01T00:00:00",
+          "monthly":false,
+          "hospitalName":null,
+          "facilityName":null,
+          "departmentName":null,
+          "roomName":null,
+          "procedureName":null,
+          "specialtyName":null
+       },{
+          "name":null,
+          "reportName":null,
+          "title":"Monthly Turnover Trend",
+          "subTitle":null,
+          "toolTip":null,
+          "body":null,
+          "footer":null,
+          "description":null,
+          "total":null,
+          "xAxis":"Month",
+          "yAxis":"Avg. Minutes",
+          "urlText":null,
+          "url":null,
+          "unit":"%",
+           "dataPoints":[
+             {
+                "title":"Setup",
+                "subTitle":"",
+                "description":"",
+                "valueX":1,
+                "valueY":12,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Clean-up",
+                "subTitle":"",
+                "description":"",
+                "valueX":1,
+                "valueY":3,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Setup",
+                "subTitle":"",
+                "description":"",
+                "valueX":2,
+                "valueY":9,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Clean-up",
+                "subTitle":"",
+                "description":"",
+                "valueX":2,
+                "valueY":2,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Setup",
+                "subTitle":"",
+                "description":"",
+                "valueX":3,
+                "valueY":7,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Clean-up",
+                "subTitle":"",
+                "description":"",
+                "valueX":3,
+                "valueY":2,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Setup",
+                "subTitle":"",
+                "description":"",
+                "valueX":4,
+                "valueY":2,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Clean-up",
+                "subTitle":"",
+                "description":"",
+                "valueX":4,
+                "valueY":2,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Setup",
+                "subTitle":"",
+                "description":"",
+                "valueX":5,
+                "valueY":9,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Clean-up",
+                "subTitle":"",
+                "description":"",
+                "valueX":5,
+                "valueY":1,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Setup",
+                "subTitle":"",
+                "description":"",
+                "valueX":6,
+                "valueY":15,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Clean-up",
+                "subTitle":"",
+                "description":"",
+                "valueX":6,
+                "valueY":3,
+                "valueZ":"",
+                "note":""
+             },
+             {
+                "title":"Idle",
+                "subTitle":"",
+                "description":"",
+                "valueX":6,
+                "valueY":2,
+                "valueZ":"",
+                "note":""
+             },
+          ],
+          "active":true,
+          "dataDate":"0001-01-01T00:00:00",
+          "monthly":false,
+          "hospitalName":null,
+          "facilityName":null,
+          "departmentName":null,
+          "roomName":null,
+          "procedureName":null,
+          "specialtyName":null
+       }]
       case 'ORUTILIZATIONREPORT':
         return []
       case 'CASEANALYSISREPORT':
@@ -338,7 +568,7 @@ export default class Efficiency extends React.PureComponent {
           this.notLoading();
         } else {
           //TODO: remove hardcoded values
-          result = this.temp[index - 1];
+          result = this.getTemp()[index - 1];
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
@@ -465,12 +695,13 @@ export default class Efficiency extends React.PureComponent {
       case 'CHECKLISTDETAIL':
         return <ChecklistDetail {...tile} closeModal={() => this.closeModal()} />
       case 'STACKEDBARCHART':
-        return <StackedBarChart {...tile} specialties={this.props.specialties} />
+        return <StackedBarChart {...tile} specialties={this.props.specialties} horizontalLegend={true} />
     }
   }
 
   getTileSize(tileType) {
     switch (`${tileType}`.toUpperCase()) {
+      case 'STACKEDBARCHART':
       case 'BARCHART':
         return 6;
       case 'INFOGRAPHICTEXT':

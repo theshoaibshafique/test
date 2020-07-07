@@ -30,7 +30,7 @@ export default class StackedBarChart extends React.PureComponent {
           pattern: ['#A7E5FD', '#97E7B3', '#CFB9E4', '#FFDB8C', '#FF7D7D', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#004F6E']
         },
         bar: {
-          width: 50,
+          width: this.props.horizontalLegend ? 35 : 50,
           space: .2
         },
         tooltip: {
@@ -40,14 +40,14 @@ export default class StackedBarChart extends React.PureComponent {
         axis: {
           x: {
             label: {
-              text: this.props.footer, //Dynamically populated
+              text: this.props.xAxis, //Dynamically populated
               position: 'outer-center'
             },
             type: 'category',
           },
           y: {
             label: {
-              text: this.props.subTitle, //Dynamically populated
+              text: this.props.yAxis, //Dynamically populated
               position: 'outer-middle',
             },
             tick: {
@@ -136,8 +136,8 @@ export default class StackedBarChart extends React.PureComponent {
     columns.push(['Total', ...zData]);
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
-    chartData.axis.x.label.text = this.props.footer;
-    chartData.axis.y.label.text = this.props.subTitle;
+    chartData.axis.x.label.text = this.props.xAxis;
+    chartData.axis.y.label.text = this.props.yAxis;
 
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData.data);
@@ -168,6 +168,7 @@ export default class StackedBarChart extends React.PureComponent {
   }
 
   createCustomLegend(chartClass) {
+    chartClass = `${chartClass}${this.props.horizontalLegend ? '-horizontal' : ''}`
     if (!this.chartRef.current || !d3.select(chartClass).select('.legend').empty()) {
       return;
     }
@@ -210,12 +211,12 @@ export default class StackedBarChart extends React.PureComponent {
         }}
       >
         <Grid container spacing={0} justify='center' className="stacked-barchart-detailed" style={{ textAlign: 'center', minHeight: 320 }}>
-          <Grid item xs={9} className="chart-title">
-            {this.props.description}
+          <Grid item xs={this.props.horizontalLegend ? 12 : 9} className="chart-title">
+            {this.props.title}
           </Grid>
           <Grid item xs={3}></Grid>
-          <Grid item xs={8} >
-            {<C3Chart ref={this.chartRef} {...this.state.chartData} />}
+          <Grid item xs={this.props.horizontalLegend ? 12 : 8} >
+            {<C3Chart ref={this.chartRef} {...this.state.chartData} className={`${this.state.chartID}-horizontal`} />}
           </Grid>
           <Grid item xs={4} className={this.state.chartID}>
           </Grid>

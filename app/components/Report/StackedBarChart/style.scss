@@ -68,6 +68,21 @@
 .stacked-barchart-detailed .legend-title{
   display: flex;
 }
+.stackedBarChartDetailed-horizontal {
+  margin-bottom: 24px;
+  .bar-chart-detailed-legend{
+    margin: 0;
+    flex-direction: row ;
+  }
+
+  .bar-chart-detailed-legend{
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+}
+
+
 
 .stacked-barchart-detailed .legend-title,
 .stacked-barchart-detailed .c3-axis,
