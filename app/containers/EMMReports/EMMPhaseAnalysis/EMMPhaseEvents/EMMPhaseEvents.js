@@ -1,5 +1,6 @@
 import React from 'react';
 import './style.scss';
+import globalFuncs from '../../../../utils/global-functions';
 import { FormControlLabel, Checkbox } from '@material-ui/core';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
@@ -75,7 +76,10 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
                         <div key={`phaseEvent${index}`}
                           className="time-select"
                           onClick={()=>this.aeSelected(data.startTime, data.assets[0], index)}>
-                            {data.title}
+                            {
+                              (data.startTime == data.endTime) ? globalFuncs.formatSecsToTime(data.startTime)
+                              : globalFuncs.formatSecsToTime(data.startTime) +  ' - ' + globalFuncs.formatSecsToTime(data.endTime)
+                            }
                         </div>
                         <div className="main-text">{data.subTitle}</div>
                         {data.dataPoints.map(aeEvent => {
