@@ -21,6 +21,14 @@ $paddingSize: 40px;
 .EMM-Score {
   font-size: 74px;
   color: #004F6E;
+  .performance-unavailable {
+    font-size: 18px;
+    line-height: 24px;
+    color: #000000;
+    opacity: 0.8;
+    height: 85px;
+    margin-top: 20px;
+  }
 }
 
 .SSC-Circles {
