@@ -101,8 +101,12 @@ function formatSecsToTime (seconds, toWords = false) {
   var mm = Math.floor((seconds - (hh * 3600)) / 60);
   var ss = seconds - (hh * 3600) - (mm * 60);
 
-  if (!toWords)
-    return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+  if (!toWords) {
+    if (parseInt(hh) == 0)
+      return `${pad(mm)}:${pad(ss)}`;
+    else
+      return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+  }
   else
     return `${formatWords(hh, 'hour')} ${formatWords(mm, 'minute')} ${formatWords(ss, 'second')}`;
 }
