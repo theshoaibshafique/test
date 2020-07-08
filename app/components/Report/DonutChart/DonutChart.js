@@ -32,7 +32,7 @@ export default class DonutChart extends React.PureComponent {
           // }
         }, // End data
         color: {
-          pattern: this.props.pattern || ['#A7E5FD','#97E7B3','#FFDB8C','#FF7D7D','#CFB9E4','#50CBFB','#6EDE95','#FFC74D','#FF4D4D','#A77ECD']
+          pattern: this.props.pattern || ['#A7E5FD', '#97E7B3', '#FFDB8C', '#FF7D7D', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD']
         },
 
         tooltip: {
@@ -46,12 +46,16 @@ export default class DonutChart extends React.PureComponent {
         },
         donut: {
           label: {
-            show: false
-          }
+            show: false,
+          },
+          width: 48,
+          title: this.props.subTitle
         },
-        size:{
-          height:383
-        }
+        size: {
+          height:384,
+          width: 320
+      },
+        onrendered: () => this.chartRef.current && this.renderCustomTitle(),
       }
     }
 
@@ -74,7 +78,7 @@ export default class DonutChart extends React.PureComponent {
     let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
     let xData = [];
     let tooltipData = {};
-    let formattedData = { };
+    let formattedData = {};
     let legendData = {};
 
     dataPoints.map((point, index) => {
@@ -95,11 +99,11 @@ export default class DonutChart extends React.PureComponent {
 
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-    this.setState({ chartData, xData, tooltipData,legendData, isLoaded: true })
+    this.setState({ chartData, xData, tooltipData, legendData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    
+
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{`Avg. ${d[0].id}: ${d[0].value}`}</div>
@@ -125,6 +129,22 @@ export default class DonutChart extends React.PureComponent {
       </div>
     </div>
   }
+  renderCustomTitle() {
+    if (!this.chartRef.current || !d3.select(".c3-chart-arcs-title").select('tspan').empty()) {
+      return;
+    }
+    d3.select(".c3-chart-arcs-title")
+      .attr("dy", -10)
+    d3.select(".c3-chart-arcs-title").attr('class', 'donut-title')
+      .insert("tspan")
+      .html(ReactDOMServer.renderToString(<tspan dy={44} x={0} className="second-title">25<tspan className="donut-unit">mins</tspan></tspan>))
+    // d3.select(".c3-chart-arcs-title").attr('class', 'c3-chart-arcs-title donut-title')
+    //   .append("tspan")
+    //   .attr("dy", 16)
+    //   .attr("x", 0)
+    //   .attr("class", "second-title")
+    //   .text("Second title");
+  }
   render() {
     return (
       <LoadingOverlay
@@ -148,8 +168,8 @@ export default class DonutChart extends React.PureComponent {
         <Grid container spacing={0} className={`donut-chart ${this.id}`} style={{ minHeight: 150 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={this.props.toolTip} placement="top" fontSize="small">
-                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
-              </LightTooltip>}
+              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+            </LightTooltip>}
           </Grid>
           <Grid item xs={8} >
             <C3Chart ref={this.chartRef} {...this.state.chartData} />
