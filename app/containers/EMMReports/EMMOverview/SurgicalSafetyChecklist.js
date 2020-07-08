@@ -17,7 +17,7 @@ const SurgicalSafetyChecklist = (props) => {
                 size={circleSize}
               />
             </div>
-            <div className="flex vertical-center">Quality and Engagement score could not be measured because checklist was not conducted during this case.</div>
+            <div className="flex vertical-center" style={{paddingLeft: '80px'}}>Quality and Engagement score could not be measured because checklist was not conducted during this case.</div>
            </div>
   }
 
