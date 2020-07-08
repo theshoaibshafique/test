@@ -137,7 +137,7 @@ export default class DonutChart extends React.PureComponent {
       .attr("dy", -10)
     d3.select(".c3-chart-arcs-title").attr('class', 'donut-title')
       .insert("tspan")
-      .html(ReactDOMServer.renderToString(<tspan dy={44} x={0} className="second-title">25<tspan className="donut-unit">mins</tspan></tspan>))
+      .html(ReactDOMServer.renderToString(<tspan dy={44} x={0} className="second-title">{this.props.total}<tspan className="donut-unit">{this.props.unit}</tspan></tspan>))
     // d3.select(".c3-chart-arcs-title").attr('class', 'c3-chart-arcs-title donut-title')
     //   .append("tspan")
     //   .attr("dy", 16)
