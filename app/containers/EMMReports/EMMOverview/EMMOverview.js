@@ -74,7 +74,11 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                       <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
                     </LightTooltip>
                   </div>
-                  <div className="EMM-Score">{technicalPerformanceScore.dataPoints[0].valueX}</div>
+                  <div className="EMM-Score">{
+                    (parseInt(technicalPerformanceScore.dataPoints[0].valueX) < 0) ?
+                      <div className="performance-unavailable">Unavailable for this case</div>
+                      : technicalPerformanceScore.dataPoints[0].valueX
+                  }</div>
                 </Paper>
               </Grid>
               <Grid item xs={6}>
