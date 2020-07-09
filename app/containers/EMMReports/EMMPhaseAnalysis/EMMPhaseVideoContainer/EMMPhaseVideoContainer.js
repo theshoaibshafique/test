@@ -81,7 +81,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
       .then(result => {
         if (result) {
           this.myPlayer = amp(this.state.videoID, videoOptions);
-          console.log(result.token)
+          // console.log(result.token)
           this.myPlayer.src([{
             src: result.url,
             type: "application/vnd.ms-sstr+xml",

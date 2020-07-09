@@ -61,6 +61,17 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
     return (highlighted) ? 'highlighted' : '';
   }
 
+  getAEEventTitle(data) {
+    let { phaseTitle } = this.props;
+    if (phaseTitle != 'SurgicalProcedure') {
+      return data.title
+    } else {
+      return (data.startTime == data.endTime) ?
+        globalFuncs.formatSecsToTime(data.startTime) :
+        globalFuncs.formatSecsToTime(data.startTime) +  ' - ' + globalFuncs.formatSecsToTime(data.endTime)
+    }
+  }
+
   render() {
     const { phaseData } = this.props;
     const { showOnlyAE } = this.state;
@@ -75,15 +86,12 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
               return <div className={`phase-events ${this.shouldHighlight(data.startTime, data.endTime, index)}`} key={`dataPoints${index}`}>
                         <div key={`phaseEvent${index}`}
                           className="time-select"
-                          onClick={()=>this.aeSelected(data.startTime, data.assets[0], index)}>
-                            {
-                              (data.startTime == data.endTime) ? globalFuncs.formatSecsToTime(data.startTime)
-                              : globalFuncs.formatSecsToTime(data.startTime) +  ' - ' + globalFuncs.formatSecsToTime(data.endTime)
-                            }
+                          onClick={() => this.aeSelected(data.startTime, data.assets[0], index)}>
+                            {this.getAEEventTitle(data)}
                         </div>
                         <div className="main-text">{data.subTitle}</div>
-                        {data.dataPoints.map(aeEvent => {
-                          return <div className="event flex" onClick={()=>this.props.seekVideo(parseInt(aeEvent.valueX))}>
+                        {data.dataPoints.map((aeEvent, index) => {
+                          return <div key={`aeEvent${index}`} className="event flex" onClick={()=>this.props.seekVideo(parseInt(aeEvent.valueX))}>
                                   <div className="event-circle" />{aeEvent.title}
                                 </div>
                           })
