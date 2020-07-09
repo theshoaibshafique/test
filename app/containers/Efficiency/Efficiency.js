@@ -437,7 +437,156 @@ export default class Efficiency extends React.PureComponent {
           "specialtyName":null
        }]
       case 'ORUTILIZATIONREPORT':
-        return []
+        return [{
+          "name":null,
+          "reportName":null,
+          "title":"OR Utilzation",
+          "subTitle":null,
+          "toolTip":"The sum of all case time (the time between the patient entering the operating room for their surgery, and exiting once the surgery is complete) divided by the total block time.",
+          "body":null,
+          "footer":null,
+          "description":null,
+          "total":null,
+          "xAxis":null,
+          "yAxis":null,
+          "urlText":null,
+          "url":null,
+          "unit":"%",
+          "total":75,
+          "active":true,
+          "dataDate":"0001-01-01T00:00:00",
+          "monthly":false,
+          "hospitalName":null,
+          "facilityName":null,
+          "departmentName":null,
+          "roomName":null,
+          "procedureName":null,
+          "specialtyName":null
+       },{
+          "name": null,
+          "reportName": null,
+          "title": "OR Utilization Trend",
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": "Month",
+          "yAxis": "Percentage (%)",
+          "urlText": null,
+          "url": null,
+          "unit": "%",
+          "dataPoints": [
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 8,
+              "valueY": 29,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 9,
+              "valueY": 37,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 10,
+              "valueY": 41,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 11,
+              "valueY": 68,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": 12,
+              "valueY": 70,
+              "valueZ": null,
+              "note": null
+            }
+          ],
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        },{
+          "name":null,
+          "reportName":null,
+          "title":"Distribution of Cases by Specialty",
+          "subTitle":"Total Cases",
+          "toolTip":null,
+          "body":null,
+          "footer":null,
+          "description":null,
+          "total":"25",
+          "xAxis":"Month",
+          "yAxis":"Percentage (%)",
+          "urlText":null,
+          "url":null,
+          "unit":null,
+          "dataPoints":[
+                 {
+                   "title": "Setup",
+                   "subTitle": null,
+                   "description": null,
+                   "valueX": 20,
+                   "valueY": null,
+                   "valueZ": null,
+                   "note": null
+                 },
+                 {
+                   "title": "Clean-up",
+                   "subTitle": null,
+                   "description": null,
+                   "valueX": 9,
+                   "valueY": null,
+                   "valueZ": null,
+                   "note": null
+                 },
+                 {
+                   "title": "Idle",
+                   "subTitle": null,
+                   "description": null,
+                   "valueX": 5,
+                   "valueY": null,
+                   "valueZ": null,
+                   "note": null
+                 },
+          ],
+          "active":true,
+          "dataDate":"0001-01-01T00:00:00",
+          "monthly":false,
+          "hospitalName":null,
+          "facilityName":null,
+          "departmentName":null,
+          "roomName":null,
+          "procedureName":null,
+          "specialtyName":null
+       }]
       case 'CASEANALYSISREPORT':
         return []
       default:

@@ -110,6 +110,7 @@ class MonthRangePicker extends React.Component {
           noBorder
           reopenPickerOnClearDates
           readOnly
+          minimumNights={0} 
 
           renderCalendarInfo={() => this.renderInfo()}
         />
