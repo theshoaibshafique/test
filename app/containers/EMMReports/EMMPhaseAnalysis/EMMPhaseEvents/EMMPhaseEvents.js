@@ -61,7 +61,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
     return (highlighted) ? 'highlighted' : '';
   }
 
-  getEventTitle(data) {
+  getAEEventTitle(data) {
     let { phaseTitle } = this.props;
     if (phaseTitle != 'SurgicalProcedure') {
       return data.title
@@ -87,7 +87,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
                         <div key={`phaseEvent${index}`}
                           className="time-select"
                           onClick={() => this.aeSelected(data.startTime, data.assets[0], index)}>
-                            {this.getEventTitle(data)}
+                            {this.getAEEventTitle(data)}
                         </div>
                         <div className="main-text">{data.subTitle}</div>
                         {data.dataPoints.map((aeEvent, index) => {
