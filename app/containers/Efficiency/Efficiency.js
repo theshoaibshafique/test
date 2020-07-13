@@ -837,7 +837,9 @@ export default class Efficiency extends React.PureComponent {
       isFilterApplied: false
     }, () => {
       this.saveFilter();
-      debugger;
+      if ((key == "endDate" || key == "startDate") && this.state.endDate){
+        this.getReportLayout();
+      }
     });
   }
 
