@@ -85,7 +85,7 @@ export default class StackedBarChart extends React.PureComponent {
         point: {
           show: false
         },
-        // onrendered: () => this.state.legendData && this.createCustomLegend(`.${this.state.chartID}`),
+        onrendered: () => this.chartRef.current && this.updateLegend(`.${this.state.chartID}`),
       }
     }
 
@@ -151,13 +151,28 @@ export default class StackedBarChart extends React.PureComponent {
     //Show Totals as a line graph (while hiding the line) so values always show on top
     columns.push(['Total', ...zData]);
     let chartData = this.state.chartData;
-    chartData.data.columns = columns;
+    //Set as 0 by default and "load" columns later for animation
+    chartData.data.columns = columns.map((arr) => {
+      return arr.map((x) => {
+        return parseInt(x) == x ? 0 : x;
+      })
+    });
     chartData.axis.x.label.text = this.props.xAxis;
     chartData.axis.y.label.text = this.props.yAxis;
 
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData.data);
     chart && chart.groups([Object.keys(formattedData)]);
+    //Load actual data for animation
+    setTimeout(() => {
+      chartData.data.columns = columns
+      chart && chart.load(chartData.data);
+      chart && chart.groups([Object.keys(formattedData)]);
+      setTimeout(() => {
+        chartData.data.columns = columns
+        chart && chart.load(chartData.data);
+      }, 500);
+    }, 500);
     if (zData.reduce((a, b) => a + b, 0) <= 0) {
       d3.select('.stacked-barchart-detailed .c3-chart-texts').style('transform', 'translate(0, -30px)') // shift up labels
     }
@@ -194,7 +209,7 @@ export default class StackedBarChart extends React.PureComponent {
           if (id == "N/A") {
             return;
           }
-          return (<div className="legend-item" key={index}>
+          return (<div className="legend-item" id={id.replace(/\s/g, "")} key={index}>
             <div className="legend-title">
               <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
               {this.state.tooltipData[id] && <LightTooltip interactive arrow title={this.state.tooltipData[id]} placement="top" fontSize="small">
@@ -205,6 +220,19 @@ export default class StackedBarChart extends React.PureComponent {
         })}
       </div>
     </div>
+  }
+
+  updateLegend(){
+    let chart = this.chartRef.current.chart;
+    Object.entries(this.state.legendData).map(([id, value], index) => {
+      d3.select(`.stacked-barchart-detailed #${id.replace(/\s/g, "")}`)
+        .on('mouseover', () => {
+          chart.focus(id);
+        })
+        .on('mouseout', () => {
+          chart.revert();
+        })
+    })
   }
 
   render() {

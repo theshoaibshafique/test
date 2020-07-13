@@ -23,7 +23,7 @@ export default class BarChartDetailed extends React.PureComponent {
           },
         }, // End data
         color: {
-          pattern: ['#A7E5FD','#97E7B3','#CFB9E4','#004F6E','#FFDB8C','#FF7D7D','#50CBFB','#6EDE95','#FFC74D','#FF4D4D','#A77ECD']
+          pattern: ['#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E', '#FFDB8C', '#FF7D7D', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD']
         },
         bar: {
           width: 25,
@@ -47,7 +47,7 @@ export default class BarChartDetailed extends React.PureComponent {
               position: 'outer-middle',
             },
             // max: 110,
-            width:30,
+            width: 30,
             min: 0,
             padding: { top: 30, bottom: 0 },
             tick: {
@@ -104,18 +104,28 @@ export default class BarChartDetailed extends React.PureComponent {
       legendData[point.title] = point.subTitle;
     });
     let columns = [];
-    
+
     Object.entries(formattedData).map(([key, value]) => {
       columns.push([key, ...value]);
     })
-    columns.sort((a, b) => { return ('' + a[0]).localeCompare(b[0])});
+    columns.sort((a, b) => { return ('' + a[0]).localeCompare(b[0]) });
     let chartData = this.state.chartData;
-    chartData.data.columns = columns;
+    //Set as 0 by default and "load" columns later for animation
+    chartData.data.columns = columns.map((arr) => {
+      return arr.map((x) => {
+        return parseInt(x) == x ? 0 : x;
+      })
+    });
     chartData.axis.x.label.text = this.props.footer;
     chartData.axis.y.label.text = this.props.subTitle;
 
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData.data);
+    //Load actual data for animation
+    setTimeout(() => {
+      chartData.data.columns = columns
+      chart && chart.load(chartData.data);
+    }, 500);
     this.setState({ chartData, legendData, isLoaded: true })
   }
 
@@ -136,8 +146,8 @@ export default class BarChartDetailed extends React.PureComponent {
       return;
     }
     let chart = this.chartRef.current.chart;
-    let orderedLegend = Object.entries(this.state.legendData).sort((a, b) => { return ('' + a[1]).localeCompare(b[1])});
-    
+    const orderBy = {"Compliance Score":1,"Engagement Score":2,"Quality Score":3,"Average":4};
+    let orderedLegend = Object.entries(this.state.legendData).sort((a, b) => { return orderBy[a[0]] -orderBy[b[0]] });
     d3.select(chartClass).insert('div').attr('class', 'legend')
       .html(ReactDOMServer.renderToString(
         <div className="bar-chart-detailed-legend">
@@ -145,12 +155,12 @@ export default class BarChartDetailed extends React.PureComponent {
 
             return id == 'Average'
               ?
-              (<div className="legend-title" key={index}>
+              (<div className="legend-title" id={id} key={index}>
                 <span className="line" style={{ color: chart.color(id) }} /><div style={{ margin: '-5px 0px 0px 4px' }}> {id}</div>
               </div>)
               :
               (<div key={index}>
-                <div className="legend-title">
+                <div className="legend-title" id={id.replace(/\s/g, "")}>
                   <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
                 </div>
                 <div className={`link ${value && value.substring(1)}`} >
@@ -162,6 +172,13 @@ export default class BarChartDetailed extends React.PureComponent {
       )).each((x) => {
         //Standard Onclicks dont work when you use renderToString on Graph
         orderedLegend.map(([id, value], index) => {
+          d3.select(`.bar-chart-detailed-legend #${id.replace(/\s/g, "")}`)
+            .on('mouseover', () => {
+              chart.focus(id);
+            })
+            .on('mouseout', () => {
+              chart.revert();
+            })
           if (!value) { return };
           d3.select(`.${value.substring(1)}`)
             .on('click', (y) => {

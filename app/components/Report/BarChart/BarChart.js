@@ -22,6 +22,9 @@ export default class BarChart extends React.PureComponent {
             format: (v, id, i, j) => this.createCustomLabel(v, id, i, j)
           }
         }, // End data
+        zoom: {
+          rescale: true
+        },
         color: {
           pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
         },
@@ -97,7 +100,7 @@ export default class BarChart extends React.PureComponent {
       let xValue = point.valueX;
       if (parseInt(point.valueX) == point.valueX) {
         xValue = moment().month(parseInt(point.valueX) - 1).format('MMM');
-      } 
+      }
       formattedData.x.push(xValue);
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueY);
@@ -111,12 +114,27 @@ export default class BarChart extends React.PureComponent {
       columns.push([key, ...value]);
     })
     let chartData = this.state.chartData;
-    chartData.data.columns = columns;
+    //Set as 0 by default and "load" columns later for animation
+    chartData.data.columns = columns.map((arr) => {
+      return arr.map((x) => {
+        return parseInt(x) == x ? 0 : x;
+      })
+    });
 
     chartData.axis.x.label.text = this.props.xAxis;
     chartData.axis.y.label.text = this.props.yAxis;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
+    //Load actual data for animation
+    setTimeout(() => {
+      chartData.data.columns = columns
+      chart && chart.load(chartData.data);
+      setTimeout(() => {
+        chartData.data.columns = columns
+        chart && chart.load(chartData.data);
+      }, 500);
+    }, 500);
+
     if (sum <= 0) {
       d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // shift up labels
     }
@@ -133,7 +151,7 @@ export default class BarChart extends React.PureComponent {
     let x = this.state.xData[d[0].x];
     let z = this.state.zData[d[0].x];
     let desc = this.state.descData[d[0].x];
-    if (z == "N/A"){
+    if (z == "N/A") {
       return;
     }
     return ReactDOMServer.renderToString(

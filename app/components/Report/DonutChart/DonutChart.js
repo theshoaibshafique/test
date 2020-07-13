@@ -95,10 +95,19 @@ export default class DonutChart extends React.PureComponent {
       columns.push([key, ...value]);
     })
     let chartData = this.state.chartData;
-    chartData.data.columns = columns;
-
+    //Set as 0 by default and "load" columns later for animation
+    chartData.data.columns = columns.map((arr) => {
+      return arr.map((x) => {
+        return parseInt(x) == x ? 0 : x;
+      })
+    });
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
+    //Load actual data for animation
+    setTimeout(() => {
+      chartData.data.columns = columns
+      chart && chart.load(chartData.data);
+    }, 500);
     this.setState({ chartData, xData, tooltipData, legendData, isLoaded: true })
   }
 
@@ -117,7 +126,7 @@ export default class DonutChart extends React.PureComponent {
     return <div className={this.state.chartID}>
       <div className="donut-chart-detailed-legend">
         {Object.entries(this.state.legendData).map(([id, value], index) => {
-          return (<div className="legend-item" key={index}>
+          return (<div className="legend-item" id={id.replace(/\s/g, "")} key={index}>
             <div className="legend-title">
               <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
               {this.state.tooltipData[id] && <LightTooltip interactive arrow title={this.state.tooltipData[id]} placement="top" fontSize="small">
@@ -130,7 +139,20 @@ export default class DonutChart extends React.PureComponent {
     </div>
   }
   renderCustomTitle() {
-    if (!this.chartRef.current || !d3.select(".donut-chart .c3-chart-arcs-title").select('tspan').empty()) {
+    if (!this.chartRef.current) {
+      return;
+    }
+    let chart = this.chartRef.current.chart;
+    Object.entries(this.state.legendData).map(([id, value], index) => {
+      d3.select(`.donut-chart #${id.replace(/\s/g, "")}`)
+        .on('mouseover', () => {
+          chart.focus(id);
+        })
+        .on('mouseout', () => {
+          chart.revert();
+        })
+    })
+    if (!d3.select(".donut-chart .c3-chart-arcs-title").select('tspan').empty()) {
       return;
     }
     d3.select(".donut-chart .c3-chart-arcs-title")
@@ -138,12 +160,7 @@ export default class DonutChart extends React.PureComponent {
     d3.select(".donut-chart .c3-chart-arcs-title").attr('class', 'donut-title')
       .insert("tspan")
       .html(ReactDOMServer.renderToString(<tspan dy={44} x={0} className="second-title">{this.props.total}<tspan className="donut-unit">{this.props.unit}</tspan></tspan>))
-    // d3.select(".c3-chart-arcs-title").attr('class', 'c3-chart-arcs-title donut-title')
-    //   .append("tspan")
-    //   .attr("dy", 16)
-    //   .attr("x", 0)
-    //   .attr("class", "second-title")
-    //   .text("Second title");
+    
   }
   render() {
     return (
