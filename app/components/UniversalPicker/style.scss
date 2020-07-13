@@ -1,23 +1,33 @@
-@import '../../styles/global-styles';
+@import "../../styles/global-styles";
 
-.universal-picker .MuiInputBase-root{
-    background-color: white;
-}
-.universal-picker .MuiOutlinedInput-notchedOutline{
-    border: none;
-}
+.universal-picker {
+    .MuiInputBase-root {
+        background-color: white;
+    }
 
-.MuiListSubheader-root{
-    font-size: 14px !important;
-    line-height: 19px !important;
-}
-.universal-picker .all-days,
-.universal-picker .all-specialties .MuiAutocomplete-input,
-.universal-picker .all-procedures .MuiAutocomplete-input,
-.universal-picker .all-ors .MuiAutocomplete-input{
-    opacity: .4;
-}
-.universal-picker .MuiButton-root.Mui-disabled{
-    color: #ffffff;
-    opacity: .3;
+    .MuiOutlinedInput-notchedOutline {
+        border: none;
+    }
+    .MuiListSubheader-root {
+        font-size: 14px !important;
+        line-height: 19px !important;
+    }
+
+    .all-days,
+    .all-specialties .MuiAutocomplete-input,
+    .all-specialties .MuiAutocomplete-input,
+    .all-ors .MuiAutocomplete-input {
+        opacity: 0.4;
+    }
+    .Mui-disabled .MuiAutocomplete-input::placeholder,
+    .select-a-specialty .MuiAutocomplete-input::placeholder {
+        opacity: 1;
+    }
+    .MuiButton-root.Mui-disabled {
+        color: #ffffff;
+        opacity: 0.3;
+    }
+    .MuiOutlinedInput-root.MuiAutocomplete-inputRoot.Mui-disabled {
+        opacity: 0.3;
+    }
 }

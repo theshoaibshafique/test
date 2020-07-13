@@ -14,6 +14,7 @@ import globalFunctions from '../../utils/global-functions';
 import DisplayNumber from '../../components/Report/InfographicText/DisplayNumber';
 import BarChart from '../../components/Report/BarChart/BarChart';
 import StackedBarChart from '../../components/Report/StackedBarChart';
+import Table from '../../components/Report/Table';
 import DonutChart from '../../components/Report/DonutChart/DonutChart';
 
 export default class Efficiency extends React.PureComponent {
@@ -588,7 +589,85 @@ export default class Efficiency extends React.PureComponent {
           "specialtyName":null
        }]
       case 'CASEANALYSISREPORT':
-        return []
+        return [{
+          "name":null,
+          "reportName":null,
+          "title":"Total # of Cases",
+          "subTitle":null,
+          "toolTip":null,
+          "body":null,
+          "footer":null,
+          "description":null,
+          "total":null,
+          "xAxis":null,
+          "yAxis":null,
+          "urlText":null,
+          "url":null,
+          "unit":null,
+          "total":75,
+          "active":true,
+          "dataDate":"0001-01-01T00:00:00",
+          "monthly":false,
+          "hospitalName":null,
+          "facilityName":null,
+          "departmentName":null,
+          "roomName":null,
+          "procedureName":null,
+          "specialtyName":null
+       },{
+          "name": null,
+          "reportName": null,
+          "title": null,
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": null,
+          "yAxis": null,
+          "urlText": null,
+          "url": null,
+          "unit": null,
+          "dataPoints": [
+            {
+              "title": "Adrenalectomy",
+              "subTitle": 30,
+              "description": 90,
+              "valueX": 30,
+              "valueY": 3,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": "Appendectonomy",
+              "subTitle": 30,
+              "description": 150,
+              "valueX": 30,
+              "valueY": 3,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": "Cholectysectomy",
+              "subTitle": 30,
+              "description": 90,
+              "valueX": 30,
+              "valueY": 3,
+              "valueZ": null,
+              "note": null
+            },
+          ],
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }]
       default:
         return [];
     }
@@ -598,9 +677,14 @@ export default class Efficiency extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     if (prevProps.reportType != this.props.reportType) {
+      let selectedSpecialty = this.state.selectedSpecialty
+      if (selectedSpecialty && !selectedSpecialty.value){
+        selectedSpecialty = "";
+      }
       this.setState({
         reportType: this.props.reportType,
         reportData: [],
+        selectedSpecialty,
         isLandingPage: this.props.reportType == "EfficiencyReport"
       }, () => {
         this.getReportLayout();
@@ -609,8 +693,8 @@ export default class Efficiency extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.loadFilter();
-    this.getReportLayout();
+    this.loadFilter(this.getReportLayout);
+    
   };
 
   getFilterLayout(reportType) {
@@ -622,7 +706,7 @@ export default class Efficiency extends React.PureComponent {
       case 'ORUTILIZATIONREPORT':
         return { showOR: true, showSpecialty: true }
       case 'CASEANALYSISREPORT':
-        return { showSpecialty: true, showProcedure: true, showOR2: true }
+        return { showSpecialty: true, showProcedure: true, showOR2: true, isSpecialtyMandatory:true }
       default:
         return {};
     }
@@ -631,7 +715,13 @@ export default class Efficiency extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ tileRequest: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
+    let selectedSpecialty = this.state.selectedSpecialty && this.state.selectedSpecialty.value;
+    if (this.state.reportType == "CaseAnalysisReport" && !selectedSpecialty){
+      this.setState({isSelectionRequired:true,isLoading:false});
+      return;
+    }
+
+    this.setState({ tileRequest: [],isSelectionRequired:false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType,
@@ -747,17 +837,18 @@ export default class Efficiency extends React.PureComponent {
       isFilterApplied: false
     }, () => {
       this.saveFilter();
+      debugger;
     });
   }
 
-  loadFilter() {
+  loadFilter(callback) {
     if (localStorage.getItem('efficiencyFilter-' + this.props.userEmail)) {
       const recentSearchCache = JSON.parse(localStorage.getItem('efficiencyFilter-' + this.props.userEmail));
       this.setState({
         ...recentSearchCache,
         startDate: moment(recentSearchCache.startDate),
         endDate: moment(recentSearchCache.endDate)
-      });
+      }, callback);
     }
   }
 
@@ -797,8 +888,6 @@ export default class Efficiency extends React.PureComponent {
       return <div></div>;
     }
     switch (`${tile.tileType}`.toUpperCase()) {
-      case 'LIST':
-        return <HorizontalBarChart {...tile} specialties={this.props.specialties} />
       case 'INFOGRAPHICTEXT':
         return <DisplayNumber
           title={tile.title}
@@ -807,23 +896,11 @@ export default class Efficiency extends React.PureComponent {
           unit={tile.unit}
           number={tile.total}
         />
-      case 'BARCHARTDETAILED':
-        return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
-      case 'INFOGRAPHICPARAGRAPH':
-        return <InfographicParagraph {...tile} />
-      case 'LINECHART':
-      case 'AREACHART':
-        return <AreaChart {...tile} />
+      case 'TABLE':
+        return <Table {...tile}/>
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} />
-      case 'LISTDETAIL':
-      case 'LISTDETAILED':
-        return <ListDetailed {...tile} specialties={this.props.specialties} />
-      case 'CHECKLIST':
-        return <Checklist {...tile} openModal={(tileRequest) => this.openModal(tileRequest)} />
-      case 'CHECKLISTDETAIL':
-        return <ChecklistDetail {...tile} closeModal={() => this.closeModal()} />
       case 'DONUTCHART':
         return <DonutChart {...tile} />
       case 'STACKEDBARCHART':
@@ -837,6 +914,7 @@ export default class Efficiency extends React.PureComponent {
       case 'STACKEDBARCHART':
       case 'BARCHART':
         return 6;
+      case 'TABLE':
       case 'INFOGRAPHICTEXT':
         return 12;
     }
@@ -850,6 +928,7 @@ export default class Efficiency extends React.PureComponent {
 
   render() {
     let isLoading = this.state.isLoading || this.state.pendingTileCount > 0;
+    
     return (
       <div className="efficiency-page">
         <Grid container spacing={0} className="efficiency-picker-container" >
@@ -905,7 +984,9 @@ export default class Efficiency extends React.PureComponent {
         >
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
             {
-              this.state.hasNoCases ?
+              this.state.isSelectionRequired //|| !selectedSpecialty
+              ? <Grid item xs={12} className="efficiency-select-filter">Select a Specialty using the filters above to see Case Analysis data!</Grid>
+              : this.state.hasNoCases ?
                 <Grid item xs={12} className="efficiency-message">
                   No data available this month
                   <Grid item xs={12} className="efficiency-message-subtitle">
