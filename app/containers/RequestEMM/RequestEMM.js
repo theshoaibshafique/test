@@ -193,11 +193,6 @@ export default class RequestEMM extends React.PureComponent {
     this.setState({ operationDate: currentDate })
   }
 
-  formatDateTime(date) {
-    let newDate = moment(date);
-    return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
-  }
-
   isToday(date) {
     const today = new Date();
     return date.getDate() == today.getDate() &&
@@ -308,8 +303,8 @@ export default class RequestEMM extends React.PureComponent {
       "specialty": this.state.specialtyCheck ? [this.state.specialtyValue] : selectedSpecialties,
       "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : selectedProcedures,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
-      "postOpDate": this.formatDateTime(this.state.compDate),
-      "operationDate": this.formatDateTime(this.state.operationDate),
+      "postOpDate": globalFuncs.formatDateTime(this.state.compDate),
+      "operationDate": globalFuncs.formatDateTime(this.state.operationDate),
       "notes": this.state.notes,
       "usersToNotify": usersToNotify,
       "departmentName": this.state.departmentName,

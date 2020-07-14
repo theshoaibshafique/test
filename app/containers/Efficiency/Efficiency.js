@@ -70,7 +70,7 @@ export default class Efficiency extends React.PureComponent {
           "urlText": null,
           "url": null,
           "unit": "%",
-          "total":40,
+          "total": 40,
           "active": true,
           "dataDate": "0001-01-01T00:00:00",
           "monthly": false,
@@ -216,254 +216,254 @@ export default class Efficiency extends React.PureComponent {
         }]
       case 'TURNOVERTIMEREPORT':
         return [{
-          "name":null,
-          "reportName":null,
-          "title":"Total # of Cases",
-          "subTitle":null,
-          "toolTip":null,
-          "body":null,
-          "footer":null,
-          "description":null,
-          "total":null,
-          "xAxis":null,
-          "yAxis":null,
-          "urlText":null,
-          "url":null,
-          "unit":null,
-          "total":60,
-          "active":true,
-          "dataDate":"0001-01-01T00:00:00",
-          "monthly":false,
-          "hospitalName":null,
-          "facilityName":null,
-          "departmentName":null,
-          "roomName":null,
-          "procedureName":null,
-          "specialtyName":null
-       },{
-          "name":null,
-          "reportName":null,
-          "title":"Turnover Analysis",
-          "subTitle":"Avg. Turnover",
-          "toolTip":"A breakdown of how the time between the prior patient exiting the operating room and the subsequent patient entering the operating room was spent.",
-          "body":null,
-          "footer":null,
-          "description":null,
-          "total":"25",
-          "xAxis":"Month",
-          "yAxis":"Percentage (%)",
-          "urlText":null,
-          "url":null,
-          "unit":"mins",
-          "dataPoints":[
-                 {
-                   "title": "Setup",
-                   "subTitle": null,
-                   "description": null,
-                   "valueX": 20,
-                   "valueY": null,
-                   "valueZ": null,
-                   "note": "The time between the first member of the surgical team preparing the room for a case, and the patient entering the operating room."
-                 },
-                 {
-                   "title": "Clean-up",
-                   "subTitle": null,
-                   "description": null,
-                   "valueX": 9,
-                   "valueY": null,
-                   "valueZ": null,
-                   "note": "The time between a patient leaving the operating room, and the last member of the cleaning team leaving the operating room."
-                 },
-                 {
-                   "title": "Idle",
-                   "subTitle": null,
-                   "description": null,
-                   "valueX": 5,
-                   "valueY": null,
-                   "valueZ": null,
-                   "note": "The time when the room is not in use between the completion of room clean-up and the start of room set-up."
-                 },
+          "name": null,
+          "reportName": null,
+          "title": "Total # of Cases",
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": null,
+          "yAxis": null,
+          "urlText": null,
+          "url": null,
+          "unit": null,
+          "total": 60,
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
+          "name": null,
+          "reportName": null,
+          "title": "Turnover Analysis",
+          "subTitle": "Avg. Turnover",
+          "toolTip": "A breakdown of how the time between the prior patient exiting the operating room and the subsequent patient entering the operating room was spent.",
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": "25",
+          "xAxis": "Month",
+          "yAxis": "Percentage (%)",
+          "urlText": null,
+          "url": null,
+          "unit": "mins",
+          "dataPoints": [
+            {
+              "title": "Setup",
+              "subTitle": null,
+              "description": null,
+              "valueX": 20,
+              "valueY": null,
+              "valueZ": null,
+              "note": "The time between the first member of the surgical team preparing the room for a case, and the patient entering the operating room."
+            },
+            {
+              "title": "Clean-up",
+              "subTitle": null,
+              "description": null,
+              "valueX": 9,
+              "valueY": null,
+              "valueZ": null,
+              "note": "The time between a patient leaving the operating room, and the last member of the cleaning team leaving the operating room."
+            },
+            {
+              "title": "Idle",
+              "subTitle": null,
+              "description": null,
+              "valueX": 5,
+              "valueY": null,
+              "valueZ": null,
+              "note": "The time when the room is not in use between the completion of room clean-up and the start of room set-up."
+            },
           ],
-          "active":true,
-          "dataDate":"0001-01-01T00:00:00",
-          "monthly":false,
-          "hospitalName":null,
-          "facilityName":null,
-          "departmentName":null,
-          "roomName":null,
-          "procedureName":null,
-          "specialtyName":null
-       },{
-          "name":null,
-          "reportName":null,
-          "title":"Monthly Turnover Trend",
-          "subTitle":null,
-          "toolTip":null,
-          "body":null,
-          "footer":null,
-          "description":null,
-          "total":null,
-          "xAxis":"Month",
-          "yAxis":"Avg. Minutes",
-          "urlText":null,
-          "url":null,
-          "unit":"%",
-           "dataPoints":[
-             {
-                "title":"Setup",
-                "subTitle":"",
-                "description":"",
-                "valueX":1,
-                "valueY":12,
-                "valueZ":"",
-                "note":"The time between the first member of the surgical team preparing the room for a case, and the patient entering the operating room."
-             },
-             {
-                "title":"Clean-up",
-                "subTitle":"",
-                "description":"",
-                "valueX":1,
-                "valueY":3,
-                "valueZ":"",
-                "note":"The time between a patient leaving the operating room, and the last member of the cleaning team leaving the operating room."
-             },
-             {
-                "title":"Setup",
-                "subTitle":"",
-                "description":"",
-                "valueX":2,
-                "valueY":9,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Clean-up",
-                "subTitle":"",
-                "description":"",
-                "valueX":2,
-                "valueY":2,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Setup",
-                "subTitle":"",
-                "description":"",
-                "valueX":3,
-                "valueY":7,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Clean-up",
-                "subTitle":"",
-                "description":"",
-                "valueX":3,
-                "valueY":2,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Setup",
-                "subTitle":"",
-                "description":"",
-                "valueX":4,
-                "valueY":2,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Clean-up",
-                "subTitle":"",
-                "description":"",
-                "valueX":4,
-                "valueY":2,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Setup",
-                "subTitle":"",
-                "description":"",
-                "valueX":5,
-                "valueY":9,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Clean-up",
-                "subTitle":"",
-                "description":"",
-                "valueX":5,
-                "valueY":1,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Setup",
-                "subTitle":"",
-                "description":"",
-                "valueX":6,
-                "valueY":15,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Clean-up",
-                "subTitle":"",
-                "description":"",
-                "valueX":6,
-                "valueY":3,
-                "valueZ":"",
-                "note":""
-             },
-             {
-                "title":"Idle",
-                "subTitle":"",
-                "description":"",
-                "valueX":6,
-                "valueY":2,
-                "valueZ":"",
-                "note":"The time when the room is not in use between the completion of room clean-up and the start of room set-up."
-             },
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
+          "name": null,
+          "reportName": null,
+          "title": "Monthly Turnover Trend",
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": "Month",
+          "yAxis": "Avg. Minutes",
+          "urlText": null,
+          "url": null,
+          "unit": "%",
+          "dataPoints": [
+            {
+              "title": "Setup",
+              "subTitle": "",
+              "description": "",
+              "valueX": 1,
+              "valueY": 12,
+              "valueZ": "",
+              "note": "The time between the first member of the surgical team preparing the room for a case, and the patient entering the operating room."
+            },
+            {
+              "title": "Clean-up",
+              "subTitle": "",
+              "description": "",
+              "valueX": 1,
+              "valueY": 3,
+              "valueZ": "",
+              "note": "The time between a patient leaving the operating room, and the last member of the cleaning team leaving the operating room."
+            },
+            {
+              "title": "Setup",
+              "subTitle": "",
+              "description": "",
+              "valueX": 2,
+              "valueY": 9,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Clean-up",
+              "subTitle": "",
+              "description": "",
+              "valueX": 2,
+              "valueY": 2,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Setup",
+              "subTitle": "",
+              "description": "",
+              "valueX": 3,
+              "valueY": 7,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Clean-up",
+              "subTitle": "",
+              "description": "",
+              "valueX": 3,
+              "valueY": 2,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Setup",
+              "subTitle": "",
+              "description": "",
+              "valueX": 4,
+              "valueY": 2,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Clean-up",
+              "subTitle": "",
+              "description": "",
+              "valueX": 4,
+              "valueY": 2,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Setup",
+              "subTitle": "",
+              "description": "",
+              "valueX": 5,
+              "valueY": 9,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Clean-up",
+              "subTitle": "",
+              "description": "",
+              "valueX": 5,
+              "valueY": 1,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Setup",
+              "subTitle": "",
+              "description": "",
+              "valueX": 6,
+              "valueY": 15,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Clean-up",
+              "subTitle": "",
+              "description": "",
+              "valueX": 6,
+              "valueY": 3,
+              "valueZ": "",
+              "note": ""
+            },
+            {
+              "title": "Idle",
+              "subTitle": "",
+              "description": "",
+              "valueX": 6,
+              "valueY": 2,
+              "valueZ": "",
+              "note": "The time when the room is not in use between the completion of room clean-up and the start of room set-up."
+            },
           ],
-          "active":true,
-          "dataDate":"0001-01-01T00:00:00",
-          "monthly":false,
-          "hospitalName":null,
-          "facilityName":null,
-          "departmentName":null,
-          "roomName":null,
-          "procedureName":null,
-          "specialtyName":null
-       }]
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }]
       case 'ORUTILIZATIONREPORT':
         return [{
-          "name":null,
-          "reportName":null,
-          "title":"OR Utilzation",
-          "subTitle":null,
-          "toolTip":"The sum of all case time (the time between the patient entering the operating room for their surgery, and exiting once the surgery is complete) divided by the total block time.",
-          "body":null,
-          "footer":null,
-          "description":null,
-          "total":null,
-          "xAxis":null,
-          "yAxis":null,
-          "urlText":null,
-          "url":null,
-          "unit":"%",
-          "total":75,
-          "active":true,
-          "dataDate":"0001-01-01T00:00:00",
-          "monthly":false,
-          "hospitalName":null,
-          "facilityName":null,
-          "departmentName":null,
-          "roomName":null,
-          "procedureName":null,
-          "specialtyName":null
-       },{
+          "name": null,
+          "reportName": null,
+          "title": "OR Utilzation",
+          "subTitle": null,
+          "toolTip": "The sum of all case time (the time between the patient entering the operating room for their surgery, and exiting once the surgery is complete) divided by the total block time.",
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": null,
+          "yAxis": null,
+          "urlText": null,
+          "url": null,
+          "unit": "%",
+          "total": 75,
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
           "name": null,
           "reportName": null,
           "title": "OR Utilization Trend",
@@ -534,87 +534,87 @@ export default class Efficiency extends React.PureComponent {
           "roomName": null,
           "procedureName": null,
           "specialtyName": null
-        },{
-          "name":null,
-          "reportName":null,
-          "title":"Distribution of Cases by Specialty",
-          "subTitle":"Total Cases",
-          "toolTip":null,
-          "body":null,
-          "footer":null,
-          "description":null,
-          "total":"25",
-          "xAxis":"Month",
-          "yAxis":"Percentage (%)",
-          "urlText":null,
-          "url":null,
-          "unit":null,
-          "dataPoints":[
-                 {
-                   "title": "Setup",
-                   "subTitle": null,
-                   "description": null,
-                   "valueX": 20,
-                   "valueY": null,
-                   "valueZ": null,
-                   "note": null
-                 },
-                 {
-                   "title": "Clean-up",
-                   "subTitle": null,
-                   "description": null,
-                   "valueX": 9,
-                   "valueY": null,
-                   "valueZ": null,
-                   "note": null
-                 },
-                 {
-                   "title": "Idle",
-                   "subTitle": null,
-                   "description": null,
-                   "valueX": 5,
-                   "valueY": null,
-                   "valueZ": null,
-                   "note": null
-                 },
+        }, {
+          "name": null,
+          "reportName": null,
+          "title": "Distribution of Cases by Specialty",
+          "subTitle": "Total Cases",
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": "25",
+          "xAxis": "Month",
+          "yAxis": "Percentage (%)",
+          "urlText": null,
+          "url": null,
+          "unit": null,
+          "dataPoints": [
+            {
+              "title": "Setup",
+              "subTitle": null,
+              "description": null,
+              "valueX": 20,
+              "valueY": null,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": "Clean-up",
+              "subTitle": null,
+              "description": null,
+              "valueX": 9,
+              "valueY": null,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": "Idle",
+              "subTitle": null,
+              "description": null,
+              "valueX": 5,
+              "valueY": null,
+              "valueZ": null,
+              "note": null
+            },
           ],
-          "active":true,
-          "dataDate":"0001-01-01T00:00:00",
-          "monthly":false,
-          "hospitalName":null,
-          "facilityName":null,
-          "departmentName":null,
-          "roomName":null,
-          "procedureName":null,
-          "specialtyName":null
-       }]
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }]
       case 'CASEANALYSISREPORT':
         return [{
-          "name":null,
-          "reportName":null,
-          "title":"Total # of Cases",
-          "subTitle":null,
-          "toolTip":null,
-          "body":null,
-          "footer":null,
-          "description":null,
-          "total":null,
-          "xAxis":null,
-          "yAxis":null,
-          "urlText":null,
-          "url":null,
-          "unit":null,
-          "total":75,
-          "active":true,
-          "dataDate":"0001-01-01T00:00:00",
-          "monthly":false,
-          "hospitalName":null,
-          "facilityName":null,
-          "departmentName":null,
-          "roomName":null,
-          "procedureName":null,
-          "specialtyName":null
-       },{
+          "name": null,
+          "reportName": null,
+          "title": "Total # of Cases",
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": null,
+          "yAxis": null,
+          "urlText": null,
+          "url": null,
+          "unit": null,
+          "total": 75,
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
           "name": null,
           "reportName": null,
           "title": null,
@@ -678,7 +678,7 @@ export default class Efficiency extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.reportType != this.props.reportType) {
       let selectedSpecialty = this.state.selectedSpecialty
-      if (selectedSpecialty && !selectedSpecialty.value){
+      if (selectedSpecialty && !selectedSpecialty.value) {
         selectedSpecialty = "";
       }
       this.setState({
@@ -694,7 +694,7 @@ export default class Efficiency extends React.PureComponent {
 
   componentDidMount() {
     this.loadFilter(this.getReportLayout);
-    
+
   };
 
   getFilterLayout(reportType) {
@@ -706,7 +706,7 @@ export default class Efficiency extends React.PureComponent {
       case 'ORUTILIZATIONREPORT':
         return { showOR: true, showSpecialty: true }
       case 'CASEANALYSISREPORT':
-        return { showSpecialty: true, showProcedure: true, showOR2: true, isSpecialtyMandatory:true }
+        return { showSpecialty: true, showProcedure: true, showOR2: true, isSpecialtyMandatory: true }
       default:
         return {};
     }
@@ -716,18 +716,18 @@ export default class Efficiency extends React.PureComponent {
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
     let selectedSpecialty = this.state.selectedSpecialty && this.state.selectedSpecialty.value;
-    if (this.state.reportType == "CaseAnalysisReport" && !selectedSpecialty){
-      this.setState({isSelectionRequired:true,isLoading:false});
+    if (this.state.reportType == "CaseAnalysisReport" && !selectedSpecialty) {
+      this.setState({ isSelectionRequired: true, isLoading: false });
       return;
     }
 
-    this.setState({ tileRequest: [],isSelectionRequired:false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ tileRequest: [], isSelectionRequired: false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType,
           "TileRequest": [{
-            "startDate": this.state.startDate,
-            "endDate": this.state.endDate,
+            "startDate": globalFuncs.formatDateTime(this.state.startDate),
+            "endDate": globalFuncs.formatDateTime(this.state.endDate),
           }]
         };
         globalFunctions.axiosFetch(process.env.EFFICIENCY_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
@@ -771,8 +771,8 @@ export default class Efficiency extends React.PureComponent {
       "hospitalName": tileRequest.hospitalName,
       "departmentName": tileRequest.departmentName,
 
-      "startDate": this.state.startDate,
-      "endDate": this.state.endDate,
+      "startDate": globalFuncs.formatDateTime(this.state.startDate),
+      "endDate": globalFuncs.formatDateTime(this.state.endDate),
       "tileType": tileRequest.tileType,
       "dashboardName": tileRequest.dashboardName,
 
@@ -837,7 +837,7 @@ export default class Efficiency extends React.PureComponent {
       isFilterApplied: false
     }, () => {
       this.saveFilter();
-      if ((key == "endDate" || key == "startDate") && this.state.endDate){
+      if ((key == "endDate" || key == "startDate") && this.state.endDate) {
         this.getReportLayout();
       }
     });
@@ -899,7 +899,7 @@ export default class Efficiency extends React.PureComponent {
           number={tile.total}
         />
       case 'TABLE':
-        return <Table {...tile}/>
+        return <Table {...tile} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} />
@@ -930,7 +930,7 @@ export default class Efficiency extends React.PureComponent {
 
   render() {
     let isLoading = this.state.isLoading || this.state.pendingTileCount > 0;
-    
+
     return (
       <div className="efficiency-page">
         <Grid container spacing={0} className="efficiency-picker-container" >
@@ -987,22 +987,22 @@ export default class Efficiency extends React.PureComponent {
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
             {
               this.state.isSelectionRequired //|| !selectedSpecialty
-              ? <Grid item xs={12} className="efficiency-select-filter">Select a Specialty using the filters above to see Case Analysis data!</Grid>
-              : this.state.hasNoCases ?
-                <Grid item xs={12} className="efficiency-message">
-                  No data available this month
-                  <Grid item xs={12} className="efficiency-message-subtitle">
-                    (Try a different filter criteria)
-                  </Grid>
-                </Grid>
-                :
-                (isLoading || !this.state.tileRequest.length)
-                  ?
-                  !isLoading && <Grid item xs={12} className="efficiency-message">
+                ? <Grid item xs={12} className="efficiency-select-filter">Select a Specialty using the filters above to see Case Analysis data!</Grid>
+                : this.state.hasNoCases ?
+                  <Grid item xs={12} className="efficiency-message">
                     No data available this month
-                    </Grid>
+                  <Grid item xs={12} className="efficiency-message-subtitle">
+                      (Try a different filter criteria)
+                  </Grid>
+                  </Grid>
                   :
-                  this.renderTiles()}
+                  (isLoading || !this.state.tileRequest.length)
+                    ?
+                    !isLoading && <Grid item xs={12} className="efficiency-message">
+                      No data available this month
+                    </Grid>
+                    :
+                    this.renderTiles()}
           </Grid>
 
         </LoadingOverlay>
