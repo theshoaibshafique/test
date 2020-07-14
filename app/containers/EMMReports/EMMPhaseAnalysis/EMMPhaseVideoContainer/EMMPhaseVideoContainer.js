@@ -77,7 +77,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
 
   createVideoPlayer(videoID) {
     this.setState({ noVideo: false })
-    globalFunctions.genericFetch('https://test-insightsapi.surgicalsafety.com/api/media/' + videoID, 'get', this.props.userToken, {})
+    globalFunctions.genericFetch(process.env.MEDIA_API + videoID, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           this.myPlayer = amp(this.state.videoID, videoOptions);
