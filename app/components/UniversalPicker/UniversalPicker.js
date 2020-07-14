@@ -20,9 +20,10 @@ class UniversalPicker extends React.Component {
       procedureOptions: [],
       selectedProcedure: "",
       specialties: this.props.specialties || [],
+      specialtyDisplay: this.props.isSpecialtyMandatory ? "Select a Specialty" : "All Specialties",
       ...this.getDisplayOptions()
     }
-    this.state.specialties = [{ name: "All Specialties", value: "" }, ...this.state.specialties];
+    this.state.specialties = [{ name: this.state.specialtyDisplay, value: "" }, ...this.state.specialties];
   }
 
   componentDidUpdate(prevProps) {
@@ -32,10 +33,11 @@ class UniversalPicker extends React.Component {
       if (procedureOptions.length > 0) {
         procedureOptions = [{ name: "All Procedures", value: "" }, ...procedureOptions];
       }
-
+      let specialtyDisplay = this.props.isSpecialtyMandatory ? "Select a Specialty" : "All Specialties";
       this.setState({
         ...this.props.defaultState,
-        specialties: [{ name: "All Specialties", value: "" }, ...this.props.specialties],
+        specialtyDisplay,
+        specialties: [{ name: specialtyDisplay, value: "" }, ...this.props.specialties],
         procedureOptions,
         ...this.getDisplayOptions()
       });
@@ -145,6 +147,9 @@ class UniversalPicker extends React.Component {
   }
 
   render() {
+    let specialtySelected = this.state.selectedSpecialty && this.state.selectedSpecialty.value;
+    let disabled = this.props.disabled || this.props.isSpecialtyMandatory && !specialtySelected;
+
     return (
       <Grid container spacing={1} justify="center" className="universal-picker">
         <span style={{ display: 'flex', alignItems: 'center', marginRight: 16 }}><SearchIcon /></span>
@@ -190,7 +195,7 @@ class UniversalPicker extends React.Component {
           </FormControl>
         </Grid>}
 
-        {this.state.showSpecialty && <Grid item xs={3} style={{ maxWidth: 200 }}>
+        {this.state.showSpecialty && <Grid item xs={3} style={{ maxWidth: this.props.isSpecialtyMandatory ? 218 : 200 }}>
           <Autocomplete
             size="small"
             options={this.state.specialties}
@@ -204,8 +209,8 @@ class UniversalPicker extends React.Component {
                 error={false}
                 variant="outlined"
                 name="specialty"
-                placeholder="All Specialties"
-                className={this.state.selectedSpecialty && this.formatClass(this.state.selectedSpecialty.name)}
+                placeholder={this.state.specialtyDisplay}
+                className={this.state.selectedSpecialty && this.formatClass(this.state.selectedSpecialty.name) || this.props.isSpecialtyMandatory && "select-a-specialty"}
               />
             )}
           />
@@ -219,6 +224,7 @@ class UniversalPicker extends React.Component {
             value={this.state.selectedProcedure}
             onChange={(e, value) => this.handleSelectedProcedureChange(e, value)}
             noOptionsText="Please select a specialty"
+            disabled={this.props.isSpecialtyMandatory && !specialtySelected}
             renderInput={params => (
               <TextField
                 {...params}
@@ -241,6 +247,7 @@ class UniversalPicker extends React.Component {
             value={this.state.selectedOperatingRoom}
             onChange={(e, value) => this.handleORChange(e, value)}
             groupBy={option => option.departmentTitle}
+            disabled={this.props.isSpecialtyMandatory && !specialtySelected}
             renderInput={params => (
               <TextField
                 {...params}
@@ -254,7 +261,7 @@ class UniversalPicker extends React.Component {
           />
         </Grid>}
         <Grid item xs={2} style={{ maxWidth: 100 }}>
-          <Button disabled={this.props.disabled} variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>
+          <Button disabled={disabled} variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>
         </Grid>
         <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', marginLeft: 16, maxWidth: 100 }}>
           <a className="link" onClick={e => this.resetFilters()}>Clear Filters</a>

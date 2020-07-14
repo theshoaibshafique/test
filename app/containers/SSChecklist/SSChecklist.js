@@ -111,8 +111,8 @@ export default class SSChecklist extends React.PureComponent {
         let jsonBody = {
           "reportType": this.state.reportType,
           "TileRequest": [{
-            "startDate": this.state.month.startOf('month').format(),
-            "endDate": this.state.month.endOf('month').format(),
+            "startDate": globalFuncs.formatDateTime(this.state.month.startOf('month')),
+            "endDate": globalFuncs.formatDateTime(this.state.month.endOf('month')),
           }]
         };
         globalFunctions.axiosFetch(process.env.SSC_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
@@ -154,8 +154,8 @@ export default class SSChecklist extends React.PureComponent {
       "hospitalName": tileRequest.hospitalName,
       "departmentName": tileRequest.departmentName,
 
-      "startDate": this.state.month.startOf('month').format(),
-      "endDate": this.state.month.endOf('month').format(),
+      "startDate": globalFuncs.formatDateTime(this.state.month.startOf('month')),
+      "endDate": globalFuncs.formatDateTime(this.state.month.endOf('month')),
       "tileType": tileRequest.tileType,
       "dashboardName": tileRequest.dashboardName,
 
@@ -242,8 +242,8 @@ export default class SSChecklist extends React.PureComponent {
       "hospitalName": tileRequest.hospitalName,
       "departmentName": tileRequest.departmentName,
 
-      "startDate": this.state.month.startOf('month').format(),
-      "endDate": this.state.month.endOf('month').format(),
+      "startDate": globalFuncs.formatDateTime(this.state.month.startOf('month')),
+      "endDate": globalFuncs.formatDateTime(this.state.month.endOf('month')),
       "tileType": tileRequest.tileType,
       "dashboardName": tileRequest.dashboardName,
 
@@ -379,13 +379,13 @@ export default class SSChecklist extends React.PureComponent {
         return <AreaChart {...tile} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
-        return <BarChart 
-        pattern={pattern} id={tile.tileTypeCount} 
-        reportType={this.props.reportType} 
-        {...tile}
-        unit={'%'}
-        yAxis={tile.subTitle}
-        xAxis={tile.footer} />
+        return <BarChart
+          pattern={pattern} id={tile.tileTypeCount}
+          reportType={this.props.reportType}
+          {...tile}
+          unit={'%'}
+          yAxis={tile.subTitle}
+          xAxis={tile.footer} />
       case 'LISTDETAIL':
       case 'LISTDETAILED':
         return <ListDetailed {...tile} specialties={this.props.specialties} />

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import moment from 'moment/moment';
 
 function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
   if (fetchMethod === 'get') {
@@ -96,6 +97,11 @@ function axiosFetch(url,fetchMethod,userToken, fetchBodyJSON,cancelToken) {
   });
 }
 
+function formatDateTime(date) {
+  let newDate = moment(date);
+  return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+}
+
 function formatSecsToTime (seconds, toWords = false) {
   var hh = Math.floor(seconds / 3600);
   var mm = Math.floor((seconds - (hh * 3600)) / 60);
@@ -124,4 +130,5 @@ export default {
   genericFetchWithNoReturnMessage,
   axiosFetch,
   formatSecsToTime,
+  formatDateTime
 };
