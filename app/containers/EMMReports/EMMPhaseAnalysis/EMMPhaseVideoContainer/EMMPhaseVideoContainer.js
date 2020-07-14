@@ -120,36 +120,37 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     return (
       <div className="Emm-Phase-Video-Container">
         {
-          (noVideo) ?
+          (noVideo && phaseData.checklistData.length == 0) ?
             <div className="no-data-container">There are no Adverse Events or Surgical Safety Checklist information during this phase.</div>
           :
-          <div className="flex">
-            <div className="phase-video">
-              <video id="phaseAnalysisVideo" className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
-              {
-                (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) &&
-                  <VideoTimeline
-                    duration={phaseData.endTime - phaseData.startTime}
-                    procedureSteps={phaseData.enhancedMMData}
-                    seekVideo={(time)=>this.seekVideo(time)}
-                    currentVideoTime={this.props.emmVideoTime}
-                  />
-              }
+          (!noVideo) &&
+            <div className="flex">
+              <div className="phase-video">
+                <video id="phaseAnalysisVideo" className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
+                {
+                  (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) &&
+                    <VideoTimeline
+                      duration={phaseData.endTime - phaseData.startTime}
+                      procedureSteps={phaseData.enhancedMMData}
+                      seekVideo={(time)=>this.seekVideo(time)}
+                      currentVideoTime={this.props.emmVideoTime}
+                    />
+                }
+              </div>
+              <div
+                className="Phase-Events-Container"
+                style={(phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) ? {height: '655px'} : {}}
+              >
+                <EMMPhaseEvents
+                  phaseTitle={phaseData.name}
+                  phaseData={phaseData.enhancedMMData}
+                  seekVideo={(time)=>this.seekVideo(time)}
+                  changeVideo={(videoID, videoIndex)=>this.changeVideo(videoID, videoIndex)}
+                  currentVideoTime={emmVideoTime}
+                  selectedVideoClipID={selectedVideoClipID}
+                />
+              </div>
             </div>
-            <div
-              className="Phase-Events-Container"
-              style={(phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0) ? {height: '655px'} : {}}
-            >
-              <EMMPhaseEvents
-                phaseTitle={phaseData.name}
-                phaseData={phaseData.enhancedMMData}
-                seekVideo={(time)=>this.seekVideo(time)}
-                changeVideo={(videoID, videoIndex)=>this.changeVideo(videoID, videoIndex)}
-                currentVideoTime={emmVideoTime}
-                selectedVideoClipID={selectedVideoClipID}
-              />
-            </div>
-          </div>
         }
 
         {(phaseData.checklistData.length > 0) &&
