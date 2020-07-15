@@ -85,6 +85,9 @@ export default class StackedBarChart extends React.PureComponent {
         point: {
           show: false
         },
+        size: this.props.horizontalLegend ?{
+          height: 296,
+        } : {},
         onrendered: () => this.chartRef.current && this.updateLegend(`.${this.state.chartID}`),
       }
     }

@@ -192,7 +192,7 @@ export default class BarChart extends React.PureComponent {
                 ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
                 : this.props.body ?
                   <div className="display-text">{this.props.body}</div>
-                  : <C3Chart style={{ marginTop: 20 }} className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+                  : <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
         </Grid>
       </LoadingOverlay>

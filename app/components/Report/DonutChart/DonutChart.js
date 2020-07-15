@@ -52,9 +52,9 @@ export default class DonutChart extends React.PureComponent {
           title: this.props.subTitle
         },
         size: {
-          height:384,
+          height: 360,
           width: 320
-      },
+        },
         onrendered: () => this.chartRef.current && this.renderCustomTitle(),
       }
     }
@@ -160,7 +160,7 @@ export default class DonutChart extends React.PureComponent {
     d3.select(".donut-chart .c3-chart-arcs-title").attr('class', 'donut-title')
       .insert("tspan")
       .html(ReactDOMServer.renderToString(<tspan dy={44} x={0} className="second-title">{this.props.total}<tspan className="donut-unit">{this.props.unit}</tspan></tspan>))
-    
+
   }
   render() {
     return (
