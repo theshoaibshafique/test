@@ -53,8 +53,8 @@ export default class Table extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={1} className="table-main">
-          <Grid item xs={12} >
+        <Grid container direction="column" spacing={1} className={`table-main ${this.props.description ? 'empty' : ''}`}>
+          <Grid item xs >
             <MaterialTable
               columns={[
                 {
@@ -101,9 +101,11 @@ export default class Table extends React.PureComponent {
                   opacity: .6,
                   fontFamily: "Noto Sans",
                   width: 'unset'
-                },
-                rowStyle: {
-
+                }
+              }}
+              localization={{
+                body: {
+                  emptyDataSourceMessage: this.props.description
                 }
               }}
               data={this.props.dataPoints}

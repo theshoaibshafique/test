@@ -628,6 +628,7 @@ export default class Efficiency extends React.PureComponent {
           "body": null,
           "footer": null,
           "description": null,
+          "description": "There are no cases for the specified filter criteria.",
           "total": null,
           "xAxis": null,
           "yAxis": null,
@@ -635,33 +636,33 @@ export default class Efficiency extends React.PureComponent {
           "url": null,
           "unit": null,
           "dataPoints": [
-            {
-              "title": "Adrenalectomy",
-              "subTitle": 30,
-              "description": 90,
-              "valueX": 30,
-              "valueY": 3,
-              "valueZ": null,
-              "note": null
-            },
-            {
-              "title": "Appendectonomy",
-              "subTitle": 30,
-              "description": 150,
-              "valueX": 30,
-              "valueY": 3,
-              "valueZ": null,
-              "note": null
-            },
-            {
-              "title": "Cholectysectomy",
-              "subTitle": 30,
-              "description": 90,
-              "valueX": 30,
-              "valueY": 3,
-              "valueZ": null,
-              "note": null
-            },
+            // {
+            //   "title": "Adrenalectomy",
+            //   "subTitle": 30,
+            //   "description": 90,
+            //   "valueX": 30,
+            //   "valueY": 3,
+            //   "valueZ": null,
+            //   "note": null
+            // },
+            // {
+            //   "title": "Appendectonomy",
+            //   "subTitle": 30,
+            //   "description": 150,
+            //   "valueX": 30,
+            //   "valueY": 3,
+            //   "valueZ": null,
+            //   "note": null
+            // },
+            // {
+            //   "title": "Cholectysectomy",
+            //   "subTitle": 30,
+            //   "description": 90,
+            //   "valueX": 30,
+            //   "valueY": 3,
+            //   "valueZ": null,
+            //   "note": null
+            // },
           ],
           "active": true,
           "dataDate": "0001-01-01T00:00:00",
