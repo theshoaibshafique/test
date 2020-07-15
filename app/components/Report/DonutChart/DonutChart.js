@@ -75,7 +75,14 @@ export default class DonutChart extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
+    
     let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
+    if (dataPoints.length == 0){
+      dataPoints.push({
+        "title": "NA",
+        "valueX": 1,
+      })
+    }
     let xData = [];
     let tooltipData = {};
     let formattedData = {};
@@ -112,7 +119,9 @@ export default class DonutChart extends React.PureComponent {
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-
+    if (d[0].id == "NA"){
+      return;
+    }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{`Avg. ${d[0].id}: ${d[0].value}`}</div>
@@ -126,6 +135,9 @@ export default class DonutChart extends React.PureComponent {
     return <div className={this.state.chartID}>
       <div className="donut-chart-detailed-legend">
         {Object.entries(this.state.legendData).map(([id, value], index) => {
+          if (id == "NA"){
+            return;
+          }
           return (<div className="legend-item" id={id.replace(/\s/g, "")} key={index}>
             <div className="legend-title">
               <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
