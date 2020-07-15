@@ -82,10 +82,10 @@ export default class MainDashboard extends React.Component {
 
   getTile(tile, index) {
     let jsonBody = {
-      "endDate": tile.endDate,
+      "endDate": globalFuncs.formatDateTime(tile.endDate),
       "facilityName": tile.facilityName,
       "reportName": tile.reportName,
-      "startDate": tile.startDate,
+      "startDate": globalFuncs.formatDateTime(tile.startDate),
       "tileType": tile.tileType,
       "dashboardName": tile.dashboardName
     }
