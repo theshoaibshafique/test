@@ -182,11 +182,11 @@ export default class BarChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} direction="column" className={`bar-chart ${this.id}`} style={{ minHeight: 150 }}>
-          <Grid item xs={12} className="chart-title">
+        <Grid container spacing={0} direction="column" className={`bar-chart ${this.id}`} >
+          <Grid item xs className="chart-title">
             {this.props.title}
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs>
             {
               this.props.body && this.props.subTitle
                 ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>

@@ -1,5 +1,7 @@
 @import '../../../styles/global-styles';
 .display-number-main{
+  max-width: 420px;
+  
   .display-number-title {
     text-align: left;
     opacity: 0.8;
@@ -20,13 +22,25 @@
     line-height: 74px;
   }
   .display-number-unit {
-    height: 24px;
-    width: 15px;
     color: #004F6E;
     font-family: "Noto Sans";
     font-size: 18px;
     letter-spacing: 0;
     line-height: 24px;
     vertical-align: top;
+  }
+  .display-number-footer,
+  .display-number-message {
+    opacity: 0.8;
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+  .display-number-message{
+    color: #004F6E;
+    margin-bottom: 32px;
+    opacity: 1;
   }
 }

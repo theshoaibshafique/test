@@ -40,8 +40,8 @@ export default class DisplayNumber extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={1} className="display-number-main">
-          <Grid item xs={12} className="display-number-title">
+        <Grid container spacing={1} className="display-number-main" direction="column">
+          <Grid item xs className="display-number-title">
             <span >
               {this.props.title}
               {this.props.tooltipText && <LightTooltip interactive arrow title={this.props.tooltipText} placement="top" fontSize="small">
@@ -49,10 +49,19 @@ export default class DisplayNumber extends React.PureComponent {
               </LightTooltip>}
             </span>
           </Grid>
-          <Grid item xs={12}>
-            <span className="display-number">{this.props.number}</span>{this.props.unit && <span className="display-number-unit">{this.props.unit}</span>}
-            {this.props.footer && <span className="display-number-footer">{this.props.footer}</span>}
-          </Grid>
+
+          {
+            this.props.message
+              ?
+              <Grid item xs className="display-number-message">
+                {this.props.message}
+              </Grid>
+              :
+              <Grid item xs>
+                <span className="display-number">{this.props.number}</span>{this.props.unit && <span className="display-number-unit">{this.props.unit}</span>}
+                {this.props.footer && <span className="display-number-footer">{this.props.footer}</span>}
+              </Grid>
+          }
         </Grid>
       </LoadingOverlay>
     );

@@ -63,7 +63,8 @@ export default class Efficiency extends React.PureComponent {
           "toolTip": "Proportion of days where the first case of the day started at or before the defined elective start time for that institution.",
           "body": null,
           "footer": "(20 out of 22 days)",
-          "description": null,
+          // "description": null,
+          "description": "No data available (no elective hours found)",
           "total": null,
           "xAxis": null,
           "yAxis": null,
@@ -157,9 +158,10 @@ export default class Efficiency extends React.PureComponent {
           "title": "Distribution of Late Start Time",
           "subTitle": null,
           "toolTip": " Late",
-          "body": null,
+          "body": "",
           "footer": null,
-          "description": null,
+          // "description": null,
+          "description": "No data available",
           "total": null,
           "xAxis": "Delay from start (mins)",
           "yAxis": "Percentage (%)",
@@ -897,12 +899,13 @@ export default class Efficiency extends React.PureComponent {
           tooltipText={tile.toolTip}
           unit={tile.unit}
           number={tile.total}
+          message={tile.description}
         />
       case 'TABLE':
         return <Table {...tile} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
-        return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} />
+        return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} body={tile.description} />
       case 'DONUTCHART':
         return <DonutChart {...tile} />
       case 'STACKEDBARCHART':

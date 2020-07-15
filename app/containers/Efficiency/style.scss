@@ -8,9 +8,26 @@ $ssc-picker-height: 150px;
     .MuiCardContent-root {
         padding: 24px;
     }
+    .efficiency-card.InfographicText {
+        max-width: fit-content;
+    }
     .TurnoverTimeReport {
         .efficiency-card.InfographicText {
             max-width: 260px;
+        }
+    }
+    .DaysStartingOnTimeReport {
+        .efficiency-card.BarChart {
+            .MuiCardContent-root{
+                min-height: 420px;
+            }
+            .bar-chart{
+                min-height: 372px;
+            }
+            //No score
+            .display-text{
+                font-style: unset;
+            }
         }
     }
     .efficiency-card.Table{
@@ -84,9 +101,6 @@ $ssc-picker-height: 150px;
     .efficiency-card.MuiCard-root {
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
         border-radius: 8px !important;
-    }
-    .efficiency-card.InfographicText {
-        max-width: 360px;
     }
 
     .StackedBarChart .chart-title {

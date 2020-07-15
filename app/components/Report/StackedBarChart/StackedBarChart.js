@@ -38,7 +38,7 @@ export default class StackedBarChart extends React.PureComponent {
           order: 'asc'
         }, // End data
         color: {
-          pattern: ['#A7E5FD','#97E7B3','#FFDB8C','#FF7D7D','#CFB9E4','#50CBFB','#6EDE95','#FFC74D','#FF4D4D','#A77ECD']
+          pattern: ['#A7E5FD', '#97E7B3', '#FFDB8C', '#FF7D7D', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD']
         },
         bar: {
           width: this.props.horizontalLegend ? 35 : 50,
@@ -85,7 +85,7 @@ export default class StackedBarChart extends React.PureComponent {
         point: {
           show: false
         },
-        size: this.props.horizontalLegend ?{
+        size: this.props.horizontalLegend ? {
           height: 296,
         } : {},
         onrendered: () => this.chartRef.current && this.updateLegend(`.${this.state.chartID}`),
@@ -127,11 +127,11 @@ export default class StackedBarChart extends React.PureComponent {
       let xValue = point.valueX;
       if (parseInt(point.valueX) == point.valueX) {
         xValue = moment().month(parseInt(point.valueX) - 1).format('MMM');
-      } 
+      }
       if (!formattedData.x.includes(xValue)) {
         formattedData.x.push(xValue);
       }
-      
+
       point.title = this.getName(this.props.specialties, point.title);
       formattedData[point.title] = formattedData[point.title] || {};
       formattedData[point.title][xValue] = formattedData[point.title][xValue] || 0
@@ -179,7 +179,7 @@ export default class StackedBarChart extends React.PureComponent {
     if (zData.reduce((a, b) => a + b, 0) <= 0) {
       d3.select('.stacked-barchart-detailed .c3-chart-texts').style('transform', 'translate(0, -30px)') // shift up labels
     }
-    this.setState({ chartData, legendData,tooltipData, zData, xData: formattedData.x, isLoaded: true })
+    this.setState({ chartData, legendData, tooltipData, zData, xData: formattedData.x, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
@@ -225,7 +225,7 @@ export default class StackedBarChart extends React.PureComponent {
     </div>
   }
 
-  updateLegend(){
+  updateLegend() {
     let chart = this.chartRef.current.chart;
     Object.entries(this.state.legendData).map(([id, value], index) => {
       d3.select(`.stacked-barchart-detailed #${id.replace(/\s/g, "")}`)
