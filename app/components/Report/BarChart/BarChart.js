@@ -20,7 +20,7 @@ export default class BarChart extends React.PureComponent {
           type: 'bar',
           labels: {
             format: (v, id, i, j) => this.createCustomLabel(v, id, i, j)
-          }
+          },
         }, // End data
         zoom: {
           rescale: true
@@ -128,11 +128,15 @@ export default class BarChart extends React.PureComponent {
     //Load actual data for animation
     setTimeout(() => {
       chartData.data.columns = columns
+      chart = this.chartRef.current && this.chartRef.current.chart;
       chart && chart.load(chartData.data);
-      setTimeout(() => {
-        chartData.data.columns = columns
-        chart && chart.load(chartData.data);
-      }, 500);
+      if (zData.length > 0){
+        setTimeout(() => {
+          chartData.data.columns = columns
+          chart = this.chartRef.current && this.chartRef.current.chart;
+          chart && chart.load(chartData.data);
+        }, 500);
+      }
     }, 500);
 
     if (sum <= 0) {

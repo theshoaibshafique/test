@@ -113,7 +113,8 @@ export default class DonutChart extends React.PureComponent {
     //Load actual data for animation
     setTimeout(() => {
       chartData.data.columns = columns
-      chart && chart.load(chartData.data);
+      chart = this.chartRef.current && this.chartRef.current.chart;
+      chartData.data.columns.length > 0  && chart && chart.load(chartData.data);
     }, 500);
     this.setState({ chartData, xData, tooltipData, legendData, isLoaded: true })
   }
@@ -138,7 +139,7 @@ export default class DonutChart extends React.PureComponent {
           if (id == "NA"){
             return;
           }
-          return (<div className="legend-item" id={id.replace(/\s/g, "")} key={index}>
+          return (<div className="legend-item" id={id.replace(/[^A-Z0-9]+/ig, "")} key={index}>
             <div className="legend-title">
               <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
               {this.state.tooltipData[id] && <LightTooltip interactive arrow title={this.state.tooltipData[id]} placement="top" fontSize="small">
@@ -156,7 +157,7 @@ export default class DonutChart extends React.PureComponent {
     }
     let chart = this.chartRef.current.chart;
     Object.entries(this.state.legendData).map(([id, value], index) => {
-      d3.select(`.donut-chart #${id.replace(/\s/g, "")}`)
+      d3.select(`.donut-chart #${id.replace(/[^A-Z0-9]+/ig, "")}`)
         .on('mouseover', () => {
           chart.focus(id);
         })

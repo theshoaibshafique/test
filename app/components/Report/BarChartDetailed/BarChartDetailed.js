@@ -160,7 +160,7 @@ export default class BarChartDetailed extends React.PureComponent {
               </div>)
               :
               (<div key={index}>
-                <div className="legend-title" id={id.replace(/\s/g, "")}>
+                <div className="legend-title" id={id.replace(/[^A-Z0-9]+/ig, "")}>
                   <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
                 </div>
                 <div className={`link ${value && value.substring(1)}`} >
@@ -172,7 +172,7 @@ export default class BarChartDetailed extends React.PureComponent {
       )).each((x) => {
         //Standard Onclicks dont work when you use renderToString on Graph
         orderedLegend.map(([id, value], index) => {
-          d3.select(`.bar-chart-detailed-legend #${id.replace(/\s/g, "")}`)
+          d3.select(`.bar-chart-detailed-legend #${id.replace(/[^A-Z0-9]+/ig, "")}`)
             .on('mouseover', () => {
               chart.focus(id);
             })
