@@ -16,6 +16,7 @@ import BarChart from '../../components/Report/BarChart/BarChart';
 import StackedBarChart from '../../components/Report/StackedBarChart';
 import Table from '../../components/Report/Table';
 import DonutChart from '../../components/Report/DonutChart/DonutChart';
+import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
@@ -441,6 +442,38 @@ export default class Efficiency extends React.PureComponent {
           "roomName": null,
           "procedureName": null,
           "specialtyName": null
+        }, {
+          "name": "C0FABD3D-8776-4E6E-8F2B-5F31BF33F59A",
+          "reportName": "SSC_CC",
+          "title": "",
+          "subTitle": "",
+          "body": "",
+          "footer": "",
+          "description": "Based on {0} with elective hours from your filter criteria",
+          "total": "",
+          "assets": [
+
+          ],
+          "dataPoints": [
+            {
+              "title": "",
+              "subTitle": "",
+              "description": "",
+              "valueX": "22 day(s)",
+              "valueY": "",
+              "valueZ": "",
+              "note": ""
+            }
+          ],
+          "active": true,
+          "dataDate": "2020-01-01T00:00:00Z",
+          "monthly": true,
+          "hospitalName": "738D2883-5B17-454A-BD4D-9628218016F9",
+          "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+          "departmentName": "19F36BB1-82AE-4473-9AFB-C3E561ACA15E",
+          "roomName": "",
+          "procedureName": "",
+          "specialtyName": ""
         }]
       case 'ORUTILIZATIONREPORT':
         return [{
@@ -896,6 +929,8 @@ export default class Efficiency extends React.PureComponent {
       return <div></div>;
     }
     switch (`${tile.tileType}`.toUpperCase()) {
+      case 'INFOGRAPHICPARAGRAPH':
+        return <InfographicParagraph {...tile} />
       case 'INFOGRAPHICTEXT':
         return <DisplayNumber
           title={tile.title}
@@ -924,6 +959,7 @@ export default class Efficiency extends React.PureComponent {
       case 'BARCHART':
         return 6;
       case 'TABLE':
+      case 'INFOGRAPHICPARAGRAPH':
       case 'INFOGRAPHICTEXT':
         return 12;
     }

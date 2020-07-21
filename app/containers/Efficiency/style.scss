@@ -10,7 +10,13 @@ $ssc-picker-height: 150px;
     }
     .efficiency-card.InfographicText {
         max-width: fit-content;
-        min-width: 260px;
+        min-width: 300px;
+    }
+    .efficiency-card.InfographicParagraph .MuiCardContent-root,
+    .efficiency-card.MuiCard-root.InfographicParagraph {
+        box-shadow: none;
+        background-color: unset;
+        padding-left: 0;
     }
     .TurnoverTimeReport {
         .efficiency-card.InfographicText {
@@ -19,20 +25,20 @@ $ssc-picker-height: 150px;
     }
     .DaysStartingOnTimeReport {
         .efficiency-card.BarChart {
-            .MuiCardContent-root{
+            .MuiCardContent-root {
                 min-height: 420px;
             }
-            .bar-chart{
+            .bar-chart {
                 min-height: 372px;
             }
             //No score
-            .display-text{
+            .display-text {
                 font-style: unset;
             }
         }
     }
-    .efficiency-card.Table{
-        .MuiCardContent-root{
+    .efficiency-card.Table {
+        .MuiCardContent-root {
             padding: 0;
         }
     }
