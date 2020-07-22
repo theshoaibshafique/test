@@ -23,7 +23,7 @@ export default class DisplayNumber extends React.PureComponent {
   render() {
     return (
       <LoadingOverlay
-        active={!this.props.number}
+        active={!this.props.number && !this.props.message}
         spinner
         className="overlays"
         styles={{
