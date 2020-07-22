@@ -783,11 +783,11 @@ export default class Efficiency extends React.PureComponent {
                 this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, reportData, tileRequest },
                   () => {
                     //TODO: remove 'index' for hardcoded list
-                    let index = 0
+                    // let index = 0
                     this.state.reportData.map((tileGroup, i) => {
                       tileGroup.group.map((tile, j) => {
-                        index += 1;
-                        this.getTile(tile, i, j, index);
+                        // index += 1;
+                        this.getTile(tile, i, j);
                       });
                     })
 
@@ -827,7 +827,7 @@ export default class Efficiency extends React.PureComponent {
           this.notLoading();
         } else {
           //TODO: remove hardcoded values
-          result = this.getTemp()[index - 1];
+          // result = this.getTemp()[index - 1];
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
