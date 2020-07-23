@@ -12,11 +12,13 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
       phaseTitles: phases.map(phase => phase.title),
       phaseEvents: phases.map((phase) => {
         if (phase.name=="SurgicalProcedure") {
-          let eventsCounter = 0;
+          let eventsCounter = new Set();
           phase.enhancedMMData.forEach((procedureStep) => {
-            eventsCounter += procedureStep.dataPoints.length
+            procedureStep.dataPoints.forEach((data) => {
+              eventsCounter.add(data.title + '' + data.valueX)
+            })
           })
-          return eventsCounter;
+          return eventsCounter.size;
         } else {
           return phase.enhancedMMData.length
         }
