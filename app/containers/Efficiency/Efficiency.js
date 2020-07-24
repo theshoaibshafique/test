@@ -669,33 +669,33 @@ export default class Efficiency extends React.PureComponent {
           "url": null,
           "unit": null,
           "dataPoints": [
-            // {
-            //   "title": "Adrenalectomy",
-            //   "subTitle": 30,
-            //   "description": 90,
-            //   "valueX": 30,
-            //   "valueY": 3,
-            //   "valueZ": null,
-            //   "note": null
-            // },
-            // {
-            //   "title": "Appendectonomy",
-            //   "subTitle": 30,
-            //   "description": 150,
-            //   "valueX": 30,
-            //   "valueY": 3,
-            //   "valueZ": null,
-            //   "note": null
-            // },
-            // {
-            //   "title": "Cholectysectomy",
-            //   "subTitle": 30,
-            //   "description": 90,
-            //   "valueX": 30,
-            //   "valueY": 3,
-            //   "valueZ": null,
-            //   "note": null
-            // },
+            {
+              "title": "Adrenalectomy",
+              "subTitle": 30,
+              "description": 90,
+              "valueX": 30,
+              "valueY": 3,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": "Appendectonomy",
+              "subTitle": 30,
+              "description": 150,
+              "valueX": 30,
+              "valueY": 3,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": "Cholectysectomy",
+              "subTitle": 30,
+              "description": 90,
+              "valueX": 30,
+              "valueY": 3,
+              "valueZ": null,
+              "note": null
+            },
           ],
           "active": true,
           "dataDate": "0001-01-01T00:00:00",
@@ -825,9 +825,34 @@ export default class Efficiency extends React.PureComponent {
         result = result.data;
         if (result === 'error' || result === 'conflict') {
           this.notLoading();
-        } else {
-          //TODO: remove hardcoded values
-          // result = this.getTemp()[index - 1];
+        } else {          
+          const value = this.state.reportType;
+          if (this.state.reportType.toUpperCase() === 'CASEANALYSISREPORT') {
+            if (result.reportName === 'CA_REC') {
+              result.dataPointRows.forEach(dataPointRow => {
+                dataPointRow.columns.forEach(column => {
+                  const {key, value } = column;
+                  switch(key) {
+                    case 'procedureName':                      
+                      column.value = this.state.selectedSpecialty.procedures.find(s => s.value.toUpperCase() == column.value.toUpperCase()).name;
+                      break;
+                    case 'avgRoomSetup':
+                    case 'avgCase':
+                    case 'avgRoomCleanup':                                          
+                      column.value =  Math.floor(parseInt(value) / 60);                      
+                      break;
+                    default:                      
+                  }
+                });
+              });
+              const { dataPointRows } = result;
+              const i = 1;
+            }            
+          }
+          else {
+            //TODO: remove hardcoded values
+            result = this.getTemp()[index - 1];
+          }          
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
@@ -940,8 +965,8 @@ export default class Efficiency extends React.PureComponent {
           number={tile.total}
           message={tile.description}
         />
-      case 'TABLE':
-        return <Table {...tile} />
+      case 'TABLE':        
+        return <Table dataPointRows={tile.dataPointRows} descripton={tile.description} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} body={tile.description} />
