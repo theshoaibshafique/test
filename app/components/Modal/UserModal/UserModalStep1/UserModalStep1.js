@@ -26,20 +26,20 @@ class UserModalStep1 extends React.Component {
     let jsonBody = {
       "userName": this.props.userValue.currentUser
     }
-    this.setState({isEmailLoading:true})
+    this.setState({ isEmailLoading: true })
     globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTRESET_API, 'PATCH', this.props.userToken, jsonBody)
-    .then(result => {
-      if (result === 'error' || result === 'conflict') {
-        // send error to modal
-        this.setState({ errorMsgVisible: true });
-      } else {
-        // show toast for success
-        this.setState({
-          isEmailSent: true
-        })
-      }
-      this.setState({isEmailLoading:false})
-    })
+      .then(result => {
+        if (result === 'error' || result === 'conflict') {
+          // send error to modal
+          this.setState({ errorMsgVisible: true });
+        } else {
+          // show toast for success
+          this.setState({
+            isEmailSent: true
+          })
+        }
+        this.setState({ isEmailLoading: false })
+      })
   };
 
   addUser() {
@@ -70,14 +70,14 @@ class UserModalStep1 extends React.Component {
           let fieldErrors = this.state.fieldErrors;
           fieldErrors.email = 'A user with this email address already exists. Please use a different email address.'
           this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, fieldErrors, isLoading: false });
-        } else if (result && result.conflict){
-          result.conflict.then( message => {
-            if (message && message.toLowerCase().indexOf("email")>=0){
+        } else if (result && result.conflict) {
+          result.conflict.then(message => {
+            if (message && message.toLowerCase().indexOf("email") >= 0) {
               let fieldErrors = this.state.fieldErrors;
               fieldErrors.email = message
               this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, fieldErrors, isLoading: false });
             } else {
-              this.setState({ errorMsgVisible: true, errorMsg:message , isLoading: false });
+              this.setState({ errorMsgVisible: true, errorMsg: message, isLoading: false });
             }
           });
         } else {
@@ -113,6 +113,19 @@ class UserModalStep1 extends React.Component {
 
             jsonBody = {
               "userName": result,
+              "appName": 'FF9C8C7C-2404-4DC0-9768-942649032327',
+              "roleNames": ['Admin']
+            }
+
+            globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API, 'post', this.props.userToken, jsonBody) // Lookup
+              .then(result => {
+                if (result === 'error' || result === 'conflict') {
+                  this.setState({ errorMsgVisible: true });
+                }
+              });
+
+            jsonBody = {
+              "userName": result,
               "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
               "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit', 'Surgical Checklist', 'Efficiency']
             }
@@ -136,7 +149,7 @@ class UserModalStep1 extends React.Component {
             if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist") >= 0) {
               rolesNames.push('Surgical Checklist');
             }
-            
+
             if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Efficiency") >= 0) {
               rolesNames.push('Efficiency');
             }
@@ -190,15 +203,15 @@ class UserModalStep1 extends React.Component {
           this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false, isLoading: false });
         } else if (result === 'conflict') {
           this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, isLoading: false });
-        }  else if (result && result.conflict){
-          if (result.conflict.toLowerCase().indexOf("email")>=0){
+        } else if (result && result.conflict) {
+          if (result.conflict.toLowerCase().indexOf("email") >= 0) {
             let fieldErrors = this.state.fieldErrors;
             fieldErrors.email = result.conflict
             this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, fieldErrors, isLoading: false });
           } else {
-            this.setState({ errorMsgVisible: true, errorMsg:result.conflict , isLoading: false });
+            this.setState({ errorMsgVisible: true, errorMsg: result.conflict, isLoading: false });
           }
-        }  else {
+        } else {
           // update roles
           this.setState({ errorMsgVisible: false, errorMsgEmailVisible: false });
           let jsonBody;
@@ -236,8 +249,23 @@ class UserModalStep1 extends React.Component {
 
             jsonBody = {
               "userName": this.props.userValue.currentUser,
+              "appName": 'FF9C8C7C-2404-4DC0-9768-942649032327',
+              "roleNames": ['Admin']
+            }
+
+            globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // Lookups
+              .then(result => {
+                if (result === 'error' || result === 'conflict') {
+                  // send error to modal
+                  this.setState({ errorMsgVisible: true });
+                }
+                this.setState({ isLoading: false });
+              });
+
+            jsonBody = {
+              "userName": this.props.userValue.currentUser,
               "appName": '35840EC2-8FA4-4515-AF4F-D90BD2A303BA',
-              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit', 'Surgical Checklist','Efficiency']
+              "roleNames": ['Admin', 'Enhanced M&M View', 'Enhanced M&M Edit', 'Surgical Checklist', 'Efficiency']
             }
 
             globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // Insights
@@ -285,6 +313,21 @@ class UserModalStep1 extends React.Component {
                 this.setState({ isLoading: false });
               });
 
+            jsonBody = {
+              "userName": this.props.userValue.currentUser,
+              "appName": 'FF9C8C7C-2404-4DC0-9768-942649032327',
+              "roleNames": []
+            }
+
+            globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENTUSERROLES_API, 'PUT', this.props.userToken, jsonBody) // Lookups
+              .then(result => {
+                if (result === 'error' || result === 'conflict') {
+                  // send error to modal
+                  this.setState({ errorMsgVisible: true });
+                }
+                this.setState({ isLoading: false });
+              });
+
             let rolesNames = [];  // will add in the selected insights role and remove Admin
             if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View") >= 0) {
               rolesNames.push('Enhanced M&M View');
@@ -297,7 +340,7 @@ class UserModalStep1 extends React.Component {
             if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist") >= 0) {
               rolesNames.push('Surgical Checklist');
             }
-            
+
             if (this.props.userValue.permissions.indexOf("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Efficiency") >= 0) {
               rolesNames.push('Efficiency');
             }
@@ -363,7 +406,7 @@ class UserModalStep1 extends React.Component {
                   Close
                 </Button>
               </Grid>
-              
+
             </Grid>
 
           </Grid>
