@@ -31,12 +31,18 @@ export default class Table extends React.PureComponent {
   };
 
   render() {
+    const dataPoints = this.props.dataPointRows.map(value => {
+      return value.columns.reduce((accumulator, currentValue) => {
+        accumulator[currentValue.key] = currentValue.value;
+        return accumulator;
+      }, {});
+    });
     // let allPageSizeOptions = [ 5, 10, 25 ,50, 75, 100 ];
     // let pageSizeOptions = [];
     // allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a,this.props.dataPoints.length)), a > this.props.dataPoints.length));
     return (
       <LoadingOverlay
-        active={!this.props.dataPoints}
+        active={!this.props.dataPointRows}
         spinner
         className="overlays"
         styles={{
@@ -58,33 +64,33 @@ export default class Table extends React.PureComponent {
             <MaterialTable
               columns={[
                 {
-                  title: 'Procedure', field: 'title', cellStyle: {
+                  title: 'Procedure', field: 'procedureName', cellStyle: {
                     padding: '12px 16px'
                   }
                 },
                 {
-                  title: 'Avg. Room Setup (mins)', field: 'subTitle', cellStyle: {
+                  title: 'Avg. Room Setup (mins)', field: 'avgRoomSetup', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   }
                 },
                 {
-                  title: 'Avg. Case (mins)', field: 'description', cellStyle: {
+                  title: 'Avg. Case (mins)', field: 'avgCase', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   }
                 },
                 {
-                  title: 'Avg. Room Clean-up (mins)', field: 'valueX', cellStyle: {
+                  title: 'Avg. Room Clean-up (mins)', field: 'avgRoomCleanup', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   }
                 },
                 {
-                  title: 'Total Cases', field: 'valueY', cellStyle: {
+                  title: 'Total Cases', field: 'totalCases', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
@@ -108,7 +114,7 @@ export default class Table extends React.PureComponent {
                   emptyDataSourceMessage: this.props.description
                 }
               }}
-              data={this.props.dataPoints}
+              data={dataPoints}
               icons={tableIcons}
             />
           </Grid>
