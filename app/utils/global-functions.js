@@ -102,6 +102,17 @@ function formatDateTime(date) {
   return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
 }
 
+function getName(searchList, key) {
+  if (!key) {
+    return key;
+  }
+  let index = searchList.findIndex(item => item.value.toLowerCase() == key.toLowerCase());
+  if (index >= 0) {
+    return searchList[index].name;
+  }
+  return key;
+}
+
 function formatSecsToTime (seconds, toWords = false) {
   var hh = Math.floor(seconds / 3600);
   var mm = Math.floor((seconds - (hh * 3600)) / 60);
@@ -130,5 +141,6 @@ export default {
   genericFetchWithNoReturnMessage,
   axiosFetch,
   formatSecsToTime,
-  formatDateTime
+  formatDateTime,
+  getName
 };

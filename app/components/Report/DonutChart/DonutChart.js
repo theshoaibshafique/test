@@ -6,6 +6,7 @@ import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
 import moment from 'moment/moment';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import globalFunctions from '../../../utils/global-functions';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
@@ -91,6 +92,7 @@ export default class DonutChart extends React.PureComponent {
     dataPoints.map((point, index) => {
       let xValue = point.valueX;
       // formattedData.x.push(xValue);
+      point.title = globalFunctions.getName(this.props.specialties, point.title);
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueX);
       xData.push(xValue);
