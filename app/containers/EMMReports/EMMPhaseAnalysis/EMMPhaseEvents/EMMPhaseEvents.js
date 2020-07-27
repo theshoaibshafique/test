@@ -22,9 +22,9 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
   }
 
   getEventsTitle() {
-    let { phaseTitle } = this.props;
+    let { phaseTitle, selectedSurgicalTab } = this.props;
     let { showOnlyAE } = this.state;
-    if (phaseTitle == 'SurgicalProcedure') {
+    if (phaseTitle == 'SurgicalProcedure' && selectedSurgicalTab == 0) {
       return <div>
               <div className="main-text bold">Procedure Steps</div>
               <FormControlLabel
@@ -73,15 +73,17 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
   }
 
   render() {
-    const { phaseData } = this.props;
+    const { phaseData, selectedSurgicalTab, enhancedMMOpenData } = this.props;
     const { showOnlyAE } = this.state;
+    let dataToShow = (phaseData.name == 'SurgicalProcedure' && selectedSurgicalTab == 1) ? enhancedMMOpenData : phaseData;
+
     return (
       <div>
         <div className="phase-events-title">
           {this.getEventsTitle()}
         </div>
         <div>
-          {phaseData.map((data, index) => {
+          {dataToShow.map((data, index) => {
             if (!showOnlyAE || (showOnlyAE && data.dataPoints.length > 0)) {
               return <div className={`phase-events ${this.shouldHighlight(data.startTime, data.endTime, index)}`} key={`dataPoints${index}`}>
                         <div key={`phaseEvent${index}`}
