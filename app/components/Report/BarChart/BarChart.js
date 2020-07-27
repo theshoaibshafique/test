@@ -90,7 +90,7 @@ export default class BarChart extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
+    let dataPoints = this.props.dataPoints;
     let zData = [];
     let xData = [];
     let descData = [];
