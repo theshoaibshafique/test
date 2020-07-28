@@ -1222,7 +1222,7 @@ export default class Efficiency extends React.PureComponent {
           }
           else {
             //TODO: remove hardcoded values
-            result = this.getTemp()[index - 1];
+            // result = this.getTemp()[index - 1];
           }
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
