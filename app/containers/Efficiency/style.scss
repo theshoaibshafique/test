@@ -18,6 +18,17 @@ $ssc-picker-height: 150px;
         background-color: unset;
         padding-left: 0;
     }
+    .EfficiencyReport {
+        .link {
+            text-decoration: unset;
+            color: #028cc8;
+            font-family: "Noto Sans";
+            font-size: 18px;
+            letter-spacing: 0;
+            line-height: 24px;
+            text-align: center;
+        }
+    }
     .TurnoverTimeReport {
         .efficiency-card.InfographicText {
             // max-width: 260px;
@@ -124,6 +135,6 @@ $ssc-picker-height: 150px;
         padding-bottom: 0;
     }
 }
-.MuiAutocomplete-popper .MuiAutocomplete-groupLabel{
+.MuiAutocomplete-popper .MuiAutocomplete-groupLabel {
     line-height: 26px;
 }

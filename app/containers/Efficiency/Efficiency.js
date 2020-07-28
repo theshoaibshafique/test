@@ -69,8 +69,8 @@ export default class Efficiency extends React.PureComponent {
           "total": null,
           "xAxis": "Operating Room",
           "yAxis": "Percentage of Days (%)",
-          "urlText": null,
-          "url": null,
+          "urlText": "Learn More",
+          "url": "/daysStarting",
           "unit": "%",
           "dataPoints": [
             {
@@ -113,8 +113,8 @@ export default class Efficiency extends React.PureComponent {
           "total": null,
           "xAxis": "Operating Room",
           "yAxis": "Avg. Minutes",
-          "urlText": null,
-          "url": null,
+          "urlText": "Learn More",
+          "url": "/turnoverTime",
           "unit": " mins",
           "dataPoints": [
             {
@@ -157,8 +157,8 @@ export default class Efficiency extends React.PureComponent {
           "total": null,
           "xAxis": null,
           "yAxis": null,
-          "urlText": null,
-          "url": null,
+          "urlText": "Learn More",
+          "url": "/orUtilization",
           "unit": null,
           "dataPoints": [
 
@@ -218,7 +218,7 @@ export default class Efficiency extends React.PureComponent {
               }
             ],
           }, {
-            "title": "OR 2",
+            "title": "OR 3",
             "subtitle": "Number of Cases: 60",
             "xAxis": "Last 6 months",
             "total": 75,
@@ -271,6 +271,60 @@ export default class Efficiency extends React.PureComponent {
                 "note": null
               }
             ],
+          }, {
+            "title": "OR 1",
+            "subtitle": "Number of Cases: 42",
+            "xAxis": "Last 6 months",
+            "total": 80,
+            "footer": "Utilization",
+            "unit": "%",
+            "dataPoints": [
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 8,
+                "valueY": 5,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 9,
+                "valueY": 30,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 10,
+                "valueY": 0,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 11,
+                "valueY": 68,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 12,
+                "valueY": 70,
+                "valueZ": null,
+                "note": null
+              }
+            ],
           }],
           "active": true,
           "dataDate": "0001-01-01T00:00:00",
@@ -293,8 +347,8 @@ export default class Efficiency extends React.PureComponent {
           "total": "25",
           "xAxis": "Month",
           "yAxis": "Percentage (%)",
-          "urlText": null,
-          "url": null,
+          "urlText": "Learn More",
+          "url": "/caseAnalysis",
           "unit": "mins",
           "dataPoints": [
             {

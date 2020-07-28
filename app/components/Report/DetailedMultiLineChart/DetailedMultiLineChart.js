@@ -6,6 +6,7 @@ import moment from 'moment/moment';
 import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import LineChart from '../LineChart/LineChart';
+import { NavLink } from 'react-router-dom';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
@@ -86,11 +87,15 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                     </Grid>
                   </Grid>
                 </Grid>
-                {index < this.props.subReportData.length-1 && <Divider className="row-divider" />}
+                {index < this.props.subReportData.length - 1 && <Divider className="row-divider" />}
               </Grid>
             )
           })}
-
+          <Grid item xs={12} style={{ textAlign: 'center',marginTop:24 }}>
+            {this.props.url && <NavLink to={this.props.url} className='link'>
+              {this.props.urlText}
+            </NavLink>}
+          </Grid>
         </Grid>
       </LoadingOverlay>
     );

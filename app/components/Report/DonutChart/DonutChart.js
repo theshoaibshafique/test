@@ -7,6 +7,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import moment from 'moment/moment';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import globalFunctions from '../../../utils/global-functions';
+import { NavLink } from 'react-router-dom';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
@@ -76,9 +77,9 @@ export default class DonutChart extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    
+
     let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
-    if (dataPoints.length == 0){
+    if (dataPoints.length == 0) {
       dataPoints.push({
         "title": "NA",
         "valueX": 1,
@@ -116,13 +117,13 @@ export default class DonutChart extends React.PureComponent {
     setTimeout(() => {
       chartData.data.columns = columns
       chart = this.chartRef.current && this.chartRef.current.chart;
-      chartData.data.columns.length > 0  && chart && chart.load(chartData.data);
+      chartData.data.columns.length > 0 && chart && chart.load(chartData.data);
     }, 500);
     this.setState({ chartData, xData, tooltipData, legendData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    if (d[0].id == "NA"){
+    if (d[0].id == "NA") {
       return;
     }
     return ReactDOMServer.renderToString(
@@ -138,7 +139,7 @@ export default class DonutChart extends React.PureComponent {
     return <div className={this.state.chartID}>
       <div className="donut-chart-detailed-legend">
         {Object.entries(this.state.legendData).map(([id, value], index) => {
-          if (id == "NA"){
+          if (id == "NA") {
             return;
           }
           return (<div className="legend-item" id={id.replace(/[^A-Z0-9]+/ig, "")} key={index}>
@@ -209,6 +210,11 @@ export default class DonutChart extends React.PureComponent {
           <Grid item xs={4} className={this.state.chartID}>
             {this.renderLegend()}
           </Grid>
+          {this.props.url && <Grid item xs={12} style={{ textAlign: 'center', marginBottom: 24 }}>
+            <NavLink to={this.props.url} className='link'>
+              {this.props.urlText}
+            </NavLink>
+          </Grid>}
         </Grid>
       </LoadingOverlay>
     );

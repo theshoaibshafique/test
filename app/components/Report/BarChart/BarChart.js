@@ -5,6 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
 import moment from 'moment/moment';
+import { NavLink } from 'react-router-dom';
 export default class BarChart extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -43,7 +44,7 @@ export default class BarChart extends React.PureComponent {
               position: 'outer-center'
             },
             type: 'category',
-            height: this.props.id == 2 && this.props.reportType == "ComplianceScoreReport" ? 90 : 70
+            height: this.props.id == 2 && this.props.reportType == "ComplianceScoreReport" ? 90 : 60
           },
           y: {
             label: {
@@ -130,7 +131,7 @@ export default class BarChart extends React.PureComponent {
       chartData.data.columns = columns
       chart = this.chartRef.current && this.chartRef.current.chart;
       chart && chart.load(chartData.data);
-      if (zData.length > 0){
+      if (zData.length > 0) {
         setTimeout(() => {
           chartData.data.columns = columns
           chart = this.chartRef.current && this.chartRef.current.chart;
@@ -197,6 +198,11 @@ export default class BarChart extends React.PureComponent {
                 : this.props.body ?
                   <div className="display-text">{this.props.body}</div>
                   : <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+          </Grid>
+          <Grid item xs>
+            {this.props.url && <NavLink to={this.props.url} className='link'>
+              {this.props.urlText}
+            </NavLink>}
           </Grid>
         </Grid>
       </LoadingOverlay>
