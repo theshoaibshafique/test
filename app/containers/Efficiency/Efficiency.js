@@ -14,6 +14,7 @@ import globalFunctions from '../../utils/global-functions';
 import DisplayNumber from '../../components/Report/InfographicText/DisplayNumber';
 import BarChart from '../../components/Report/BarChart/BarChart';
 import StackedBarChart from '../../components/Report/StackedBarChart';
+import DetailedMultiLineChart from '../../components/Report/DetailedMultiLineChart/DetailedMultiLineChart';
 import Table from '../../components/Report/Table';
 import DonutChart from '../../components/Report/DonutChart/DonutChart';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
@@ -55,6 +56,323 @@ export default class Efficiency extends React.PureComponent {
 
   getTemp() {
     switch (`${this.state.reportType}`.toUpperCase()) {
+      case 'EFFICIENCYREPORT':
+        return [{
+          "name": null,
+          "reportName": null,
+          "title": "Days Starting on Time Trend",
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": "Operating Room",
+          "yAxis": "Percentage of Days (%)",
+          "urlText": null,
+          "url": null,
+          "unit": "%",
+          "dataPoints": [
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": "OR 1",
+              "valueY": 45,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": "OR 2",
+              "valueY": 37,
+              "valueZ": null,
+              "note": null
+            }
+          ],
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
+          "name": null,
+          "reportName": null,
+          "title": "Turnover Time",
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": "Operating Room",
+          "yAxis": "Avg. Minutes",
+          "urlText": null,
+          "url": null,
+          "unit": " mins",
+          "dataPoints": [
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": "OR 1",
+              "valueY": 25,
+              "valueZ": null,
+              "note": null
+            },
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": "OR 2",
+              "valueY": 14,
+              "valueZ": null,
+              "note": null
+            }
+          ],
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
+          "name": null,
+          "reportName": null,
+          "title": "OR Utilization",
+          "subTitle": null,
+          "toolTip": "Wow i cant believe you guy",
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": null,
+          "xAxis": null,
+          "yAxis": null,
+          "urlText": null,
+          "url": null,
+          "unit": null,
+          "dataPoints": [
+
+          ],
+          "subReportData": [{
+            "title": "OR 2",
+            "subtitle": "Number of Cases: 42",
+            "xAxis": "Last 6 months",
+            "total": 80,
+            "footer": "Utilization",
+            "unit": "%",
+            "dataPoints": [
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 8,
+                "valueY": 0,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 9,
+                "valueY": 0,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 10,
+                "valueY": 0,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 11,
+                "valueY": 68,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 12,
+                "valueY": 70,
+                "valueZ": null,
+                "note": null
+              }
+            ],
+          }, {
+            "title": "OR 2",
+            "subtitle": "Number of Cases: 60",
+            "xAxis": "Last 6 months",
+            "total": 75,
+            "footer": "Utilization",
+            "unit": "%",
+            "dataPoints": [
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 8,
+                "valueY": 29,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 9,
+                "valueY": 37,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 10,
+                "valueY": 41,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 11,
+                "valueY": 68,
+                "valueZ": null,
+                "note": null
+              },
+              {
+                "title": null,
+                "subTitle": null,
+                "description": null,
+                "valueX": 12,
+                "valueY": 70,
+                "valueZ": null,
+                "note": null
+              }
+            ],
+          }],
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
+          "name": null,
+          "reportName": null,
+          "title": "Case Analysis",
+          "subTitle": "Avg. Turnover",
+          "toolTip": "A breakdown of how the time between the prior patient exiting the operating room and the subsequent patient entering the operating room was spent.",
+          "body": null,
+          "footer": null,
+          "description": null,
+          "total": "25",
+          "xAxis": "Month",
+          "yAxis": "Percentage (%)",
+          "urlText": null,
+          "url": null,
+          "unit": "mins",
+          "dataPoints": [
+            {
+              "title": "Setup",
+              "subTitle": null,
+              "description": null,
+              "valueX": 20,
+              "valueY": null,
+              "valueZ": null,
+              "note": "The time between the first member of the surgical team preparing the room for a case, and the patient entering the operating room."
+            },
+            {
+              "title": "Clean-up",
+              "subTitle": null,
+              "description": null,
+              "valueX": 9,
+              "valueY": null,
+              "valueZ": null,
+              "note": "The time between a patient leaving the operating room, and the last member of the cleaning team leaving the operating room."
+            },
+            {
+              "title": "Idle",
+              "subTitle": null,
+              "description": null,
+              "valueX": 5,
+              "valueY": null,
+              "valueZ": null,
+              "note": "The time when the room is not in use between the completion of room clean-up and the start of room set-up."
+            },
+          ],
+          "active": true,
+          "dataDate": "0001-01-01T00:00:00",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": null,
+          "departmentName": null,
+          "roomName": null,
+          "procedureName": null,
+          "specialtyName": null
+        }, {
+          "name": null,
+          "reportName": "TT_ED",
+          "title": null,
+          "subTitle": null,
+          "toolTip": null,
+          "body": null,
+          "footer": null,
+          "description": "Based on {0} with elective hours from your filter criteria",
+          "total": null,
+          "xAxis": null,
+          "yAxis": null,
+          "urlText": null,
+          "url": null,
+          "unit": null,
+          "dataPoints": [
+            {
+              "title": null,
+              "subTitle": null,
+              "description": null,
+              "valueX": "30 days",
+              "valueY": null,
+              "valueZ": null,
+              "note": null
+            }
+          ],
+          "dataPointRows": [
+
+          ],
+          "active": true,
+          "dataDate": "2020-01-01T12:00:00Z",
+          "monthly": false,
+          "hospitalName": null,
+          "facilityName": "FE063AF9-99AB-4A0A-BCDD-DC9E76ECF567",
+          "departmentName": null,
+          "roomName": "",
+          "procedureName": "",
+          "specialtyName": "deb47645-c2a2-4f96-ad89-31ffbcf5f39f"
+        }];
       case 'DAYSSTARTINGONTIMEREPORT':
         return [{
           "name": null,
@@ -782,11 +1100,11 @@ export default class Efficiency extends React.PureComponent {
                 this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, reportData, tileRequest },
                   () => {
                     //TODO: remove 'index' for hardcoded list
-                    // let index = 0
+                    let index = 0
                     this.state.reportData.map((tileGroup, i) => {
                       tileGroup.group.map((tile, j) => {
-                        // index += 1;
-                        this.getTile(tile, i, j);
+                        index += 1;
+                        this.getTile(tile, i, j, index);
                       });
                     })
 
@@ -850,7 +1168,7 @@ export default class Efficiency extends React.PureComponent {
           }
           else {
             //TODO: remove hardcoded values
-            //result = this.getTemp()[index - 1];
+            result = this.getTemp()[index - 1];
           }
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
@@ -953,6 +1271,8 @@ export default class Efficiency extends React.PureComponent {
       return <div></div>;
     }
     switch (`${tile.tileType}`.toUpperCase()) {
+      case 'DETAILEDMULTILINECHART':
+        return <DetailedMultiLineChart {...tile} />
       case 'INFOGRAPHICPARAGRAPH':
         return <InfographicParagraph {...tile} />
       case 'INFOGRAPHICTEXT':
@@ -970,7 +1290,7 @@ export default class Efficiency extends React.PureComponent {
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} body={tile.description} />
       case 'DONUTCHART':
-        return <DonutChart {...tile} specialties={this.props.specialties}/>
+        return <DonutChart {...tile} specialties={this.props.specialties} />
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} horizontalLegend={true} />
     }
@@ -978,6 +1298,7 @@ export default class Efficiency extends React.PureComponent {
 
   getTileSize(tileType) {
     switch (`${tileType}`.toUpperCase()) {
+      case 'DETAILEDMULTILINECHART':
       case 'DONUTCHART':
       case 'STACKEDBARCHART':
       case 'BARCHART':
