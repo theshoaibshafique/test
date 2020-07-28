@@ -1,11 +1,21 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, withStyles, Tooltip } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
 import moment from 'moment/moment';
 import { NavLink } from 'react-router-dom';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    padding: '16px',
+    fontSize: '14px',
+    lineHeight: '19px',
+    fontFamily: 'Noto Sans'
+  }
+}))(Tooltip);
 export default class BarChart extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -141,7 +151,7 @@ export default class BarChart extends React.PureComponent {
     }, 500);
 
     if (sum <= 0) {
-      d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // shift up labels
+      typeof d3 !== 'undefined' && d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // shift up labels
     }
     this.setState({ chartData, zData, xData, descData, isLoaded: true })
   }
@@ -161,7 +171,7 @@ export default class BarChart extends React.PureComponent {
     }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${x}${this.props.toolTip ? this.props.toolTip : ''}: ${d[0].value}${this.props.unit}`}</div>
+        <div>{`${x}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
         {z != null && <div>{`Occurence(s): ${z}`}</div>}
         {desc != null && <div>{`${desc}`}</div>}
       </div>);
@@ -189,7 +199,9 @@ export default class BarChart extends React.PureComponent {
       >
         <Grid container spacing={0} direction="column" className={`bar-chart ${this.id}`} >
           <Grid item xs className="chart-title">
-            {this.props.title}
+            {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={this.props.toolTip} placement="top" fontSize="small">
+              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+            </LightTooltip>}
           </Grid>
           <Grid item xs>
             {
