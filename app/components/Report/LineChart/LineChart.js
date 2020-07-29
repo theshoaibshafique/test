@@ -33,7 +33,7 @@ export default class LineChart extends React.PureComponent {
           },
           y: {
             show:false,
-            // max: 110,
+            max: 100,
             min: 0,
             padding: { top: 4, bottom: 4 },
           }

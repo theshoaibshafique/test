@@ -1366,9 +1366,12 @@ export default class Efficiency extends React.PureComponent {
           body={tile.description}
           labelList={this.state.operatingRooms} />
       case 'DONUTCHART':
-        return <DonutChart {...tile} specialties={this.props.specialties} />
+        return <DonutChart {...tile} specialties={this.props.specialties} orderBy={{"Setup":1,"Clean-up":2,"Idle":3}}/>
       case 'STACKEDBARCHART':
-        return <StackedBarChart {...tile} specialties={this.props.specialties} horizontalLegend={true} />
+        return <StackedBarChart {...tile} 
+        specialties={this.props.specialties} 
+        horizontalLegend={true}
+        orderBy={{"Setup":1,"Clean-up":2,"Idle":3}} />
     }
   }
 

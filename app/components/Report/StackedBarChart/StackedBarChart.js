@@ -119,38 +119,35 @@ export default class StackedBarChart extends React.PureComponent {
     }
     let dataPoints = this.props.dataPoints//.sort((a, b) => { return a.valueX - b.valueX });
 
-    let legendData = {};
     let zData = [];
-    let formattedData = { x: [] };
+    let xData = [];
+    let formattedData = { };
     let tooltipData = {};
     dataPoints.map((point) => {
       let xValue = point.valueX;
       if (parseInt(point.valueX) == point.valueX) {
         xValue = moment().month(parseInt(point.valueX) - 1).format('MMM');
       }
-      if (!formattedData.x.includes(xValue)) {
-        formattedData.x.push(xValue);
+      if (!xData.includes(xValue)) {
+        xData.push(xValue);
       }
 
       point.title = this.getName(this.props.specialties, point.title);
       formattedData[point.title] = formattedData[point.title] || {};
       formattedData[point.title][xValue] = formattedData[point.title][xValue] || 0
       formattedData[point.title][xValue] = point.valueY;
-      legendData[point.title] = point.subTitle;
       point.valueZ && zData.push(point.valueZ);
       tooltipData[point.title] = point.note ? point.note : tooltipData[point.title];
     });
-    let columns = [];
-    Object.entries(formattedData).map(([key, value]) => {
-      if (key == 'x') {
-        columns.push([key, ...value]);
-      } else {
-        columns.push([key, ...formattedData.x.map((x) => {
-          return value[x] || "0";
-        })]);
-      }
+    let columns = [['x',...xData]];
+    const orderBy = this.props.orderBy || {};
+    let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] });
+    legendData.map(([key, value]) => {
+      columns.push([key, ...xData.map((x) => {
+        return value[x] || "0";
+      })]);
     })
-
+    
     //Show Totals as a line graph (while hiding the line) so values always show on top
     columns.push(['Total', ...zData]);
     let chartData = this.state.chartData;
@@ -183,7 +180,7 @@ export default class StackedBarChart extends React.PureComponent {
     if (zData.reduce((a, b) => a + b, 0) <= 0) {
       d3.select('.stacked-barchart-detailed .c3-chart-texts').style('transform', 'translate(0, -30px)') // shift up labels
     }
-    this.setState({ chartData, legendData, tooltipData, zData, xData: formattedData.x, isLoaded: true })
+    this.setState({ chartData, legendData, tooltipData, zData, xData, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
@@ -199,8 +196,8 @@ export default class StackedBarChart extends React.PureComponent {
     let x = this.state.xData[d[0].x];
     return ReactDOMServer.renderToString(
       <div className="chartTooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${d[0].id}`}</div>
-        <div>{`${x}: ${d[0].value}`}</div>
+        <div>{`${this.props.description ? this.props.description : ''}${d[0].id}`}</div>
+        <div>{`${x}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
       </div>
     );
   }
@@ -212,7 +209,7 @@ export default class StackedBarChart extends React.PureComponent {
     let chart = this.chartRef.current.chart;
     return <div className={`${this.state.chartID}${this.props.horizontalLegend ? '-horizontal' : ''}`}>
       <div className="bar-chart-detailed-legend">
-        {Object.entries(this.state.legendData).map(([id, value], index) => {
+        {this.state.legendData.map(([id, value], index) => {
           if (id == "N/A") {
             return;
           }
@@ -231,7 +228,7 @@ export default class StackedBarChart extends React.PureComponent {
 
   updateLegend() {
     let chart = this.chartRef.current.chart;
-    Object.entries(this.state.legendData).map(([id, value], index) => {
+    this.state.legendData.map(([id, value], index) => {
       d3.select(`.stacked-barchart-detailed #${id.replace(/[^A-Z0-9]+/ig, "")}`)
         .on('mouseover', () => {
           chart.focus(id);

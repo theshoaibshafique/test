@@ -174,7 +174,7 @@ export default class BarChart extends React.PureComponent {
     }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${x}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
+        <div>{`${x}${this.props.footer ? this.props.footer : ''}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
         {z != null && <div>{`Occurence(s): ${z}`}</div>}
         {desc != null && <div>{`${desc}`}</div>}
       </div>);
