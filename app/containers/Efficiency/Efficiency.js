@@ -27,6 +27,9 @@ export default class Efficiency extends React.PureComponent {
     this.state = {
       reportType: this.props.reportType,
       isLandingPage: this.props.reportType == "EfficiencyReport",
+      operatingRooms:this.props.operatingRooms && this.props.operatingRooms.map((or) => {
+        return { value: or.roomName, name: or.roomTitle };
+      }),
       isLoading: true,
       pendingTileCount: 0,
       tileRequest: [],
@@ -293,7 +296,7 @@ export default class Efficiency extends React.PureComponent {
                 "subTitle": null,
                 "description": null,
                 "valueX": 9,
-                "valueY": 30,
+                "valueY": "NaN",
                 "valueZ": null,
                 "note": null
               },
@@ -1222,7 +1225,7 @@ export default class Efficiency extends React.PureComponent {
           }
           else {
             //TODO: remove hardcoded values
-            // result = this.getTemp()[index - 1];
+            result = this.getTemp()[index - 1];
           }
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
@@ -1326,7 +1329,9 @@ export default class Efficiency extends React.PureComponent {
     }
     switch (`${tile.tileType}`.toUpperCase()) {
       case 'DETAILEDMULTILINECHART':
-        return <DetailedMultiLineChart {...tile} />
+        return <DetailedMultiLineChart
+          {...tile}
+          labelList={this.state.operatingRooms} />
       case 'INFOGRAPHICPARAGRAPH':
         return <InfographicParagraph {...tile} />
       case 'INFOGRAPHICTEXT':
@@ -1342,15 +1347,13 @@ export default class Efficiency extends React.PureComponent {
         return <Table dataPointRows={tile.dataPointRows} descripton={tile.description} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
-        return <BarChart 
-        pattern={pattern} 
-        id={tile.tileTypeCount} 
-        reportType={this.props.reportType} 
-        {...tile} 
-        body={tile.description} 
-        labelList={this.props.operatingRooms && this.props.operatingRooms.map((or) => {
-          return {value:or.roomName,name:or.roomTitle};
-        })} />
+        return <BarChart
+          pattern={pattern}
+          id={tile.tileTypeCount}
+          reportType={this.props.reportType}
+          {...tile}
+          body={tile.description}
+          labelList={this.state.operatingRooms} />
       case 'DONUTCHART':
         return <DonutChart {...tile} specialties={this.props.specialties} />
       case 'STACKEDBARCHART':

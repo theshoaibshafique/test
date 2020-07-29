@@ -68,7 +68,7 @@ export default class LineChart extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    let dataPoints = this.props.dataPoints.reverse();
+    let dataPoints = this.props.dataPoints;
     let legendData = {}
     let formattedData = { x: [] };
     dataPoints.map((point) => {
@@ -99,11 +99,6 @@ export default class LineChart extends React.PureComponent {
       chartData.data.columns = columns
       chart = this.chartRef.current && this.chartRef.current.chart;
       chart && chart.load(chartData.data);
-      setTimeout(() => {
-        chartData.data.columns = columns
-        chart = this.chartRef.current && this.chartRef.current.chart;
-        chart && chart.load(chartData.data);
-      }, 500);
     }, 500);
 
     this.setState({ chartData, legendData, isLoaded: true })

@@ -7,6 +7,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import LineChart from '../LineChart/LineChart';
 import { NavLink } from 'react-router-dom';
+import globalFunctions from '../../../utils/global-functions';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
@@ -67,10 +68,10 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                 <Grid item xs={4} >
                   <Grid container spacing={1} direction="column">
                     <Grid item xs className="row-title">
-                      {reportData.title}
+                      {globalFunctions.getName(this.props.labelList,reportData.title)}
                     </Grid>
                     <Grid item xs className="row-subtitle">
-                      {reportData.subtitle}
+                      {reportData.subTitle}
                     </Grid>
                   </Grid>
                 </Grid>
