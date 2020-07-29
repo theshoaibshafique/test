@@ -27,7 +27,7 @@ export default class Efficiency extends React.PureComponent {
     this.state = {
       reportType: this.props.reportType,
       isLandingPage: this.props.reportType == "EfficiencyReport",
-      operatingRooms:this.props.operatingRooms && this.props.operatingRooms.map((or) => {
+      operatingRoomList:this.props.operatingRooms && this.props.operatingRooms.map((or) => {
         return { value: or.roomName, name: or.roomTitle };
       }),
       isLoading: true,
@@ -1342,7 +1342,7 @@ export default class Efficiency extends React.PureComponent {
       case 'DETAILEDMULTILINECHART':
         return <DetailedMultiLineChart
           {...tile}
-          labelList={this.state.operatingRooms} />
+          labelList={this.state.operatingRoomList} />
       case 'INFOGRAPHICPARAGRAPH':
         return <InfographicParagraph {...tile} />
       case 'INFOGRAPHICTEXT':
@@ -1364,7 +1364,7 @@ export default class Efficiency extends React.PureComponent {
           reportType={this.props.reportType}
           {...tile}
           body={tile.description}
-          labelList={this.state.operatingRooms} />
+          labelList={this.state.operatingRoomList} />
       case 'DONUTCHART':
         return <DonutChart {...tile} specialties={this.props.specialties} orderBy={{"Setup":1,"Clean-up":2,"Idle":3}}/>
       case 'STACKEDBARCHART':
