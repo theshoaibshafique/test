@@ -106,7 +106,7 @@ function getName(searchList, key) {
   if (!key || !searchList) {
     return key;
   }
-  let index = searchList.findIndex(item => item.value.toLowerCase() == key.toLowerCase());
+  let index = searchList.findIndex(item => item.value && `${item.value}`.toLowerCase() == `${key}`.toLowerCase());
   if (index >= 0) {
     return searchList[index].name;
   }
