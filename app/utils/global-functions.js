@@ -103,7 +103,7 @@ function formatDateTime(date) {
 }
 
 function getName(searchList, key) {
-  if (!key) {
+  if (!key || !searchList) {
     return key;
   }
   let index = searchList.findIndex(item => item.value.toLowerCase() == key.toLowerCase());

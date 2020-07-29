@@ -7,6 +7,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import moment from 'moment/moment';
 import { NavLink } from 'react-router-dom';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import globalFunctions from '../../../utils/global-functions';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
@@ -19,7 +20,7 @@ const LightTooltip = withStyles((theme) => ({
 export default class BarChart extends React.PureComponent {
   constructor(props) {
     super(props);
-
+    
     this.chartRef = React.createRef();
     this.id = `bar-chart-${this.props.id}`;
     this.state = {
@@ -65,7 +66,9 @@ export default class BarChart extends React.PureComponent {
             min: 0,
             padding: { top: 20, bottom: 0 },
             tick: {
-              // format: function (d) { if (d % 20 == 0) return d }
+              format: function (d) {
+                return (parseInt(d) == d) ? d : null;
+              }
             }
           }
         },
@@ -108,7 +111,7 @@ export default class BarChart extends React.PureComponent {
     let formattedData = { x: [] };
     let sum = 0
     dataPoints.map((point, index) => {
-      let xValue = point.valueX;
+      let xValue = globalFunctions.getName(this.props.labelList,point.valueX);
       if (parseInt(point.valueX) == point.valueX) {
         xValue = moment().month(parseInt(point.valueX) - 1).format('MMM');
       }

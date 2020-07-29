@@ -1342,7 +1342,15 @@ export default class Efficiency extends React.PureComponent {
         return <Table dataPointRows={tile.dataPointRows} descripton={tile.description} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
-        return <BarChart pattern={pattern} id={tile.tileTypeCount} reportType={this.props.reportType} {...tile} body={tile.description} />
+        return <BarChart 
+        pattern={pattern} 
+        id={tile.tileTypeCount} 
+        reportType={this.props.reportType} 
+        {...tile} 
+        body={tile.description} 
+        labelList={this.props.operatingRooms && this.props.operatingRooms.map((or) => {
+          return {value:or.roomName,name:or.roomTitle};
+        })} />
       case 'DONUTCHART':
         return <DonutChart {...tile} specialties={this.props.specialties} />
       case 'STACKEDBARCHART':
