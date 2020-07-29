@@ -196,8 +196,8 @@ export default class StackedBarChart extends React.PureComponent {
     let x = this.state.xData[d[0].x];
     return ReactDOMServer.renderToString(
       <div className="chartTooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${d[0].id}`}</div>
-        <div>{`${x}: ${d[0].value}`}</div>
+        <div>{`${this.props.description ? this.props.description : ''}${d[0].id}`}</div>
+        <div>{`${x}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
       </div>
     );
   }

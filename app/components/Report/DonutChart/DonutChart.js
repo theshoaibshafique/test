@@ -128,7 +128,7 @@ export default class DonutChart extends React.PureComponent {
     }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${d[0].id}: ${d[0].value}`}</div>
+        <div>{`${this.props.description ? this.props.description : ''}${d[0].id}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
       </div>);
   }
   renderLegend() {
