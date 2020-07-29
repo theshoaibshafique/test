@@ -78,7 +78,7 @@ export default class DonutChart extends React.PureComponent {
       return;
     }
 
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
+    let dataPoints = this.props.dataPoints;
     if (dataPoints.length == 0) {
       dataPoints.push({
         "title": "NA",
@@ -88,7 +88,6 @@ export default class DonutChart extends React.PureComponent {
     let xData = [];
     let tooltipData = {};
     let formattedData = {};
-    let legendData = {};
 
     dataPoints.map((point, index) => {
       let xValue = point.valueX;
@@ -97,11 +96,12 @@ export default class DonutChart extends React.PureComponent {
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueX);
       xData.push(xValue);
-      legendData[point.title] = point.subTitle;
       tooltipData[point.title] = point.note ? point.note : tooltipData[point.title];
     });
     let columns = [];
-    Object.entries(formattedData).map(([key, value]) => {
+    const orderBy = this.props.orderBy || {};
+    let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] });
+    legendData.map(([key, value]) => {
       columns.push([key, ...value]);
     })
     let chartData = this.state.chartData;
@@ -128,7 +128,7 @@ export default class DonutChart extends React.PureComponent {
     }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`Avg. ${d[0].id}: ${d[0].value}`}</div>
+        <div>{`${d[0].id}: ${d[0].value}`}</div>
       </div>);
   }
   renderLegend() {
@@ -138,7 +138,7 @@ export default class DonutChart extends React.PureComponent {
     let chart = this.chartRef.current.chart;
     return <div className={this.state.chartID}>
       <div className="donut-chart-detailed-legend">
-        {Object.entries(this.state.legendData).map(([id, value], index) => {
+        {this.state.legendData.map(([id, value], index) => {
           if (id == "NA") {
             return;
           }
@@ -159,7 +159,7 @@ export default class DonutChart extends React.PureComponent {
       return;
     }
     let chart = this.chartRef.current.chart;
-    Object.entries(this.state.legendData).map(([id, value], index) => {
+    this.state.legendData.map(([id, value], index) => {
       d3.select(`.donut-chart #${id.replace(/[^A-Z0-9]+/ig, "")}`)
         .on('mouseover', () => {
           chart.focus(id);
