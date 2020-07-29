@@ -1108,8 +1108,19 @@ export default class Efficiency extends React.PureComponent {
 
   componentDidMount() {
     this.loadFilter(this.getReportLayout);
-
+    this.getEarliestStartDate();
   };
+
+  async getEarliestStartDate() {
+    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "/startDate", 'get', this.props.userToken, {})
+      .then(result => {
+        if (!result){
+          return;
+        }
+        this.setState({earliestStartDate:moment(result)});
+      });
+
+  }
 
   getFilterLayout(reportType) {
     switch (`${reportType}`.toUpperCase()) {
@@ -1275,7 +1286,7 @@ export default class Efficiency extends React.PureComponent {
       isFilterApplied: false
     }, () => {
       this.saveFilter();
-      if ((key == "endDate" || key == "startDate") && this.state.endDate) {
+      if ((key == "endDate" || key == "startDate") && this.state.endDate && this.state.startDate) {
         this.getReportLayout();
       }
     });
@@ -1392,6 +1403,7 @@ export default class Efficiency extends React.PureComponent {
               <MonthRangePicker
                 startDate={this.state.startDate}
                 endDate={this.state.endDate}
+                minDate={this.state.earliestStartDate}
                 maxDate={this.state.maxDate}
                 updateState={(key, value) => this.updateState(key, value)}
                 displayWarning={this.state.pendingWarning}
