@@ -18,6 +18,7 @@ import DetailedMultiLineChart from '../../components/Report/DetailedMultiLineCha
 import Table from '../../components/Report/Table';
 import DonutChart from '../../components/Report/DonutChart/DonutChart';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
+import CloseIcon from '@material-ui/icons/Close';
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
@@ -27,7 +28,8 @@ export default class Efficiency extends React.PureComponent {
     this.state = {
       reportType: this.props.reportType,
       isLandingPage: this.props.reportType == "EfficiencyReport",
-      operatingRoomList:this.props.operatingRooms && this.props.operatingRooms.map((or) => {
+      isOnboardModalOpen: false,
+      operatingRoomList: this.props.operatingRooms && this.props.operatingRooms.map((or) => {
         return { value: or.roomName, name: or.roomTitle };
       }),
       isLoading: true,
@@ -276,7 +278,7 @@ export default class Efficiency extends React.PureComponent {
             ],
           }, {
             "title": "OR 1",
-            "subtitle": "Number of Cases: 42",
+            "subTitle": "Number of Cases: 42",
             "xAxis": "Last 6 months",
             "total": 80,
             "footer": "Utilization",
@@ -1109,15 +1111,47 @@ export default class Efficiency extends React.PureComponent {
   componentDidMount() {
     this.loadFilter(this.getReportLayout);
     this.getEarliestStartDate();
+    this.openOnboarding()
   };
+
+  openOnboarding() {
+    //If they already did the onboard - Dont bother checking API
+    if (localStorage.getItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`)) {
+      return;
+    }
+    globalFunctions.axiosFetch(process.env.ONBOARD_API, 'get', this.props.userToken, {})
+      .then(result => {
+        var data = result.data;
+
+        if (data && data.onboardCompleted && data.onboardCompleted.includes && data.onboardCompleted.includes(this.ONBOARD_TYPE)) {
+          return;
+        }
+        this.openOnboardModal();
+        this.updateOnboardStatus();
+      }).catch((error) => {
+
+      });
+  }
+  updateOnboardStatus() {
+    let jsonBody = { onboardCompleted: [this.ONBOARD_TYPE] };
+    globalFunctions.axiosFetch(process.env.USERDETAILSMODIFY_API, 'post', this.props.userToken, jsonBody)
+      .then(result => {
+        //Cache onboard report name so we know not to open it again automatically
+        if (result.data) {
+          localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
+        }
+      }).catch((error) => {
+
+      });
+  }
 
   async getEarliestStartDate() {
     return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "/startDate", 'get', this.props.userToken, {})
       .then(result => {
-        if (!result){
+        if (!result) {
           return;
         }
-        this.setState({earliestStartDate:moment(result)});
+        this.setState({ earliestStartDate: moment(result) });
       });
 
   }
@@ -1136,6 +1170,12 @@ export default class Efficiency extends React.PureComponent {
     }
   }
 
+  openOnboardModal() {
+    this.setState({ isOnboardModalOpen: true })
+  }
+  closeOnboardModal() {
+    this.setState({ isOnboardModalOpen: false });
+  }
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
@@ -1366,12 +1406,12 @@ export default class Efficiency extends React.PureComponent {
           body={tile.description}
           labelList={this.state.operatingRoomList} />
       case 'DONUTCHART':
-        return <DonutChart {...tile} specialties={this.props.specialties} orderBy={{"Setup":1,"Clean-up":2,"Idle":3}}/>
+        return <DonutChart {...tile} specialties={this.props.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'STACKEDBARCHART':
-        return <StackedBarChart {...tile} 
-        specialties={this.props.specialties} 
-        horizontalLegend={true}
-        orderBy={{"Setup":1,"Clean-up":2,"Idle":3}} />
+        return <StackedBarChart {...tile}
+          specialties={this.props.specialties}
+          horizontalLegend={true}
+          orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
     }
   }
 
@@ -1431,6 +1471,9 @@ export default class Efficiency extends React.PureComponent {
           {!this.state.isLandingPage && <Grid item xs={12}>
             <Divider className="efficiency-divider" />
           </Grid>}
+          <div className="efficiencyOnboard-link link" onClick={() => this.openOnboardModal()}>
+            What's this report about?
+          </div>
         </Grid>
         <LoadingOverlay
           active={isLoading}
@@ -1473,6 +1516,58 @@ export default class Efficiency extends React.PureComponent {
                     this.renderTiles()}
           </Grid>
 
+          <Modal
+            open={this.state.isOnboardModalOpen}
+            onClose={() => this.closeOnboardModal()}
+          >
+            <DialogContent className="efficiencyOnBoarding Modal">
+              <Grid container spacing={0} justify='center' className="onboard-modal" >
+                <Grid item xs={10} className="efficiencyOnBoard-title">
+                  What is the Efficiency Report?
+                </Grid>
+                <Grid item xs={2} style={{ textAlign: 'right', padding: '40px 24px 0 40px' }}>
+                  <IconButton disableRipple disableFocusRipple onClick={() => this.closeOnboardModal()} className='close-button'><CloseIcon fontSize='small' /></IconButton>
+                </Grid>
+                <Grid item xs={7} className="efficiencyOnBoard-column">
+                  <Grid container spacing={0} direction="column">
+                    <Grid item xs className="efficiencyOnBoard-paragraph">
+                      This report offers insights into the function of the operating room during elective hours according to four main categories
+                    </Grid>
+                    <Grid item xs className="efficiencyOnBoard-paragraph">
+                      <Grid container spacing={0}>
+                        <Grid item xs className="efficiency-OnBoard-box">
+                          <div>Days Started On Time</div>
+                        </Grid>
+                        <Grid item xs className="efficiency-OnBoard-box">
+                          <div>Turnover Time</div>
+                        </Grid>
+                        <Grid item xs className="efficiency-OnBoard-box">
+                          <div>OR Utilization</div>
+                        </Grid>
+                        <Grid item xs className="efficiency-OnBoard-box">
+                          <div>Case Analysis</div>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={5}>
+                  <div className="efficiencyOnBoard-segment">
+                    <div className="efficiencyOnBoard-subtitle">
+                      Segmenting the data:
+                    </div>
+                    <div>
+                      Each category can be filtered according to time, operating room, and specialty as applicable. Trends over time can also be analyzed per category.
+                    </div>
+                  </div>
+                </Grid>
+
+                <Grid item xs={12} style={{ textAlign: 'right', marginTop: 40 }}>
+                  <Button disableElevation disableRipple variant="contained" className="secondary" style={{ marginRight: 40, marginBottom: 40 }} onClick={() => this.closeOnboardModal()}>Close</Button>
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </Modal>
         </LoadingOverlay>
       </div>
     );
