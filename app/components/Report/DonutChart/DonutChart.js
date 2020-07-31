@@ -22,9 +22,9 @@ export default class DonutChart extends React.PureComponent {
     super(props);
 
     this.chartRef = React.createRef();
-    this.id = `bar-chart-${this.props.id}`;
+    this.id = `donut-chart-${this.props.id}`;
     this.state = {
-      chartID: 'barChart',
+      chartID: 'donutChart',
       chartData: {
         data: {
           columns: [], //Dynamically populated
@@ -56,6 +56,9 @@ export default class DonutChart extends React.PureComponent {
         size: {
           height: 360,
           width: 320
+        },
+        transition: {
+          duration: 0
         },
         onrendered: () => this.chartRef.current && this.renderCustomTitle(),
       }
@@ -106,19 +109,9 @@ export default class DonutChart extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     //Set as 0 by default and "load" columns later for animation
-    chartData.data.columns = columns.map((arr) => {
-      return arr.map((x) => {
-        return parseInt(x) == x ? 0 : x;
-      })
-    });
+    chartData.data.columns = columns;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-    //Load actual data for animation
-    setTimeout(() => {
-      chartData.data.columns = columns
-      chart = this.chartRef.current && this.chartRef.current.chart;
-      chartData.data.columns.length > 0 && chart && chart.load(chartData.data);
-    }, 500);
     this.setState({ chartData, xData, tooltipData, legendData, isLoaded: true })
   }
 
@@ -138,18 +131,26 @@ export default class DonutChart extends React.PureComponent {
     let chart = this.chartRef.current.chart;
     return <div className={this.state.chartID}>
       <div className="donut-chart-detailed-legend">
-        {this.state.legendData.map(([id, value], index) => {
+        {this.state.legendData && this.state.legendData.map(([id, value], index) => {
           if (id == "NA") {
             return;
           }
-          return (<div className="legend-item" id={id.replace(/[^A-Z0-9]+/ig, "")} key={index}>
-            <div className="legend-title">
-              <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
-              {this.state.tooltipData[id] && <LightTooltip interactive arrow title={this.state.tooltipData[id]} placement="top" fontSize="small">
-                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
-              </LightTooltip>}
-            </div>
-          </div>)
+          return (
+            <div className="legend-item" id={id.replace(/[^A-Z0-9]+/ig, "")}
+              onMouseOver={() => {
+                chart && chart.focus(id);
+              }}
+              onMouseOut={() => {
+                chart && chart.revert(id);
+              }}
+              key={index}>
+              <div className="legend-title">
+                <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
+                {this.state.tooltipData[id] && <LightTooltip interactive arrow title={this.state.tooltipData[id]} placement="top" fontSize="small">
+                  <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                </LightTooltip>}
+              </div>
+            </div>)
         })}
       </div>
     </div>
@@ -158,16 +159,6 @@ export default class DonutChart extends React.PureComponent {
     if (!this.chartRef.current) {
       return;
     }
-    let chart = this.chartRef.current.chart;
-    this.state.legendData.map(([id, value], index) => {
-      d3.select(`.donut-chart #${id.replace(/[^A-Z0-9]+/ig, "")}`)
-        .on('mouseover', () => {
-          chart.focus(id);
-        })
-        .on('mouseout', () => {
-          chart.revert();
-        })
-    })
     if (!d3.select(".donut-chart .c3-chart-arcs-title").select('tspan').empty()) {
       return;
     }
