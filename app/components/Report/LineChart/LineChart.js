@@ -43,8 +43,7 @@ export default class LineChart extends React.PureComponent {
           show: false
         },
         size: {
-          height: 50,
-          width:200
+          height: 50
         },
         point: {
           // show: false

@@ -75,10 +75,10 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={5} >
+                <Grid item xs={6} >
                   <LineChart {...reportData} />
                 </Grid>
-                <Grid item xs={3} className="row-score">
+                <Grid item xs={2} className="row-score">
                   <Grid container spacing={1} direction="column">
                     <Grid item xs>
                       {reportData.total}{reportData.unit}
