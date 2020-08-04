@@ -1164,8 +1164,8 @@ export default class Efficiency extends React.PureComponent {
         let jsonBody = {
           "reportType": this.state.reportType,
           "TileRequest": [{
-            "startDate": globalFuncs.formatDateTime(this.state.startDate),
-            "endDate": globalFuncs.formatDateTime(this.state.endDate),
+            "startDate": globalFuncs.formatDateTime(this.state.startDate.startOf('day')),
+            "endDate": globalFuncs.formatDateTime(this.state.endDate.endOf('day')),
           }]
         };
         globalFunctions.axiosFetch(process.env.EFFICIENCY_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
@@ -1209,8 +1209,8 @@ export default class Efficiency extends React.PureComponent {
       "hospitalName": tileRequest.hospitalName,
       "departmentName": tileRequest.departmentName,
 
-      "startDate": globalFuncs.formatDateTime(this.state.startDate),
-      "endDate": globalFuncs.formatDateTime(this.state.endDate),
+      "startDate": globalFuncs.formatDateTime(this.state.startDate.startOf('day')),
+      "endDate": globalFuncs.formatDateTime(this.state.endDate.endOf('day')),
       "tileType": tileRequest.tileType,
       "dashboardName": tileRequest.dashboardName,
 
