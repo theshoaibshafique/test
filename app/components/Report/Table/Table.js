@@ -59,7 +59,7 @@ export default class Table extends React.PureComponent {
           })
         }}
       >
-        <Grid container direction="column" spacing={1} className={`table-main ${this.props.description ? 'empty' : ''}`}>
+        <Grid container direction="column" spacing={1} className={`table-main ${!this.props.dataPointRows ? 'empty' : ''}`}>
           <Grid item xs >
             <MaterialTable
               columns={[

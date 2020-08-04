@@ -1037,7 +1037,7 @@ export default class Efficiency extends React.PureComponent {
           "toolTip": null,
           "body": null,
           "footer": null,
-          "description": null,
+          // "description": null,
           "description": "There are no cases for the specified filter criteria.",
           "total": null,
           "xAxis": null,
@@ -1046,33 +1046,7 @@ export default class Efficiency extends React.PureComponent {
           "url": null,
           "unit": null,
           "dataPoints": [
-            {
-              "title": "Adrenalectomy",
-              "subTitle": 30,
-              "description": 90,
-              "valueX": 30,
-              "valueY": 3,
-              "valueZ": null,
-              "note": null
-            },
-            {
-              "title": "Appendectonomy",
-              "subTitle": 30,
-              "description": 150,
-              "valueX": 30,
-              "valueY": 3,
-              "valueZ": null,
-              "note": null
-            },
-            {
-              "title": "Cholectysectomy",
-              "subTitle": 30,
-              "description": 90,
-              "valueX": 30,
-              "valueY": 3,
-              "valueZ": null,
-              "note": null
-            },
+            
           ],
           "active": true,
           "dataDate": "0001-01-01T00:00:00",
@@ -1395,7 +1369,7 @@ export default class Efficiency extends React.PureComponent {
           message={tile.description}
         />
       case 'TABLE':
-        return <Table dataPointRows={tile.dataPointRows} descripton={tile.description} />
+        return <Table dataPointRows={tile.dataPointRows} description={tile.description} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart
