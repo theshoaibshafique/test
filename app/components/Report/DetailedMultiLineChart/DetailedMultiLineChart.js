@@ -62,7 +62,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
             </LightTooltip>}
           </Grid>
 
-          {this.props.subReportData && this.props.subReportData.map((reportData, index) => {
+          {this.props.subReportData && this.props.subReportData.sort((a, b) => { return b.total - a.total }).map((reportData, index) => {
             return (
               <Grid container spacing={0} className="multi-line-chart-row" key={`row-${index}`}>
                 <Grid item xs={4} >
