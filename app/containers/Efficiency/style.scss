@@ -192,4 +192,10 @@ $ssc-picker-height: 150px;
         background-color: #CCEAE6;
         padding: 12px;
     }
+    .close-button {
+        padding-top: 0;
+    }
+    .close-button:hover {
+        background-color: unset;
+    }
 }
