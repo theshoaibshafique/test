@@ -1203,6 +1203,7 @@ export default class Efficiency extends React.PureComponent {
       });
   };
   getTile(tileRequest, i, j, index) {
+    let filter = this.getFilterLayout(this.state.reportType);
     let jsonBody = {
       "facilityName": tileRequest.facilityName,
       "reportName": tileRequest.reportName,
@@ -1214,9 +1215,9 @@ export default class Efficiency extends React.PureComponent {
       "tileType": tileRequest.tileType,
       "dashboardName": tileRequest.dashboardName,
 
-      "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
-      "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
-      "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
+      "roomName": (filter.showOR || filter.showOR2) && this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
+      "specialtyName": filter.showSpecialty && this.state.selectedSpecialty && this.state.selectedSpecialty.value,
+      "procedureName": filter.showProcedure && this.state.selectedProcedure && this.state.selectedProcedure.value
     }
 
     globalFuncs.axiosFetch(process.env.EFFICIENCYTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
