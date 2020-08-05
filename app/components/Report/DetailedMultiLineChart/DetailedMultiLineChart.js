@@ -36,6 +36,8 @@ export default class DetailedMultiLineChart extends React.PureComponent {
 
 
   render() {
+    let subReportData = this.props.subReportData || [];
+    subReportData.sort((a, b) => { return parseInt(b.total) - parseInt(a.total) || ('' + a.total).localeCompare(b.total) })
     return (
       <LoadingOverlay
         active={!this.props.dataPoints}
@@ -62,7 +64,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
             </LightTooltip>}
           </Grid>
 
-          {this.props.subReportData && this.props.subReportData.sort((a, b) => { return b.total - a.total }).map((reportData, index) => {
+          {subReportData.map((reportData, index) => {
             return (
               <Grid container spacing={0} className="multi-line-chart-row" key={`row-${index}`}>
                 <Grid item xs={4} >
