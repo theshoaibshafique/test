@@ -141,7 +141,7 @@ export default class DonutChart extends React.PureComponent {
                 chart && chart.focus(id);
               }}
               onMouseOut={() => {
-                chart && chart.revert(id);
+                chart && chart.revert();
               }}
               key={index}>
               <div className="legend-title">
