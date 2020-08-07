@@ -1226,33 +1226,7 @@ export default class Efficiency extends React.PureComponent {
         if (result === 'error' || result === 'conflict') {
           this.notLoading();
         } else {
-          const value = this.state.reportType;
-          if (this.state.reportType.toUpperCase() === 'CASEANALYSISREPORT') {
-            if (result.reportName === 'CA_REC') {
-              result.dataPointRows.forEach(dataPointRow => {
-                dataPointRow.columns.forEach(column => {
-                  const { key, value } = column;
-                  switch (key) {
-                    case 'procedureName':
-                      column.value = this.state.selectedSpecialty.procedures.find(s => s.value.toUpperCase() == column.value.toUpperCase()).name;
-                      break;
-                    case 'avgRoomSetup':
-                    case 'avgCase':
-                    case 'avgRoomCleanup':
-                      column.value = Math.floor(parseInt(value) / 60);
-                      break;
-                    default:
-                  }
-                });
-              });
-              const { dataPointRows } = result;
-              const i = 1;
-            }
-          }
-          else {
-            //TODO: remove hardcoded values
-            // result = this.getTemp()[index - 1];
-          }
+          
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
@@ -1370,7 +1344,7 @@ export default class Efficiency extends React.PureComponent {
           message={tile.description}
         />
       case 'TABLE':
-        return <Table dataPointRows={tile.dataPointRows} description={tile.description} />
+        return <Table procedures={this.state.selectedSpecialty && this.state.selectedSpecialty.procedures}dataPointRows={tile.dataPointRows} description={tile.description} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart
