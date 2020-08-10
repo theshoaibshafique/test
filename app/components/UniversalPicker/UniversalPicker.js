@@ -84,6 +84,8 @@ class UniversalPicker extends React.Component {
         }
         this.setState({ operatingRooms, isORLoading: false });
         return operatingRooms
+      }).catch(error => {
+        console.error(error)
       });
 
   }

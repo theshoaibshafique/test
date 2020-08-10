@@ -70,7 +70,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                 <Grid item xs={4} >
                   <Grid container spacing={1} direction="column">
                     <Grid item xs className="row-title">
-                      {globalFunctions.getName(this.props.labelList,reportData.title)}
+                      {globalFunctions.getName(this.props.labelList, reportData.title)}
                     </Grid>
                     <Grid item xs className="row-subtitle">
                       {reportData.subTitle}
@@ -94,7 +94,10 @@ export default class DetailedMultiLineChart extends React.PureComponent {
               </Grid>
             )
           })}
-          <Grid item xs={12} style={{ textAlign: 'center',marginTop:24 }}>
+          {subReportData.length == 0 && <Grid item xs={12} className="display-text">
+              {this.props.body}
+            </Grid>}
+          <Grid item xs={12} style={{ textAlign: 'center', marginTop: 24 }}>
             {this.props.url && <NavLink to={this.props.url} className='link'>
               {this.props.urlText}
             </NavLink>}
