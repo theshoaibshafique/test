@@ -261,7 +261,7 @@ export default class SSChecklist extends React.PureComponent {
           this.notLoading();
         } else {
           result.tileType = tileRequest.tileType;
-          if (moment(tileRequest.dataDate).isSame(this.state.month, 'month')) {
+          if (moment.utc(tileRequest.dataDate).isSame(this.state.month.startOf('month'),'month')) {
             this.setState({ isOpen: true, modalTile: result });
           }
 
