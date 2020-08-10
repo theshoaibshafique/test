@@ -77,7 +77,7 @@ export default class EMMPublish extends React.PureComponent {
 
           globalFuncs.genericFetch(process.env.FACILITYLIST_API + "/", 'post', this.props.userToken, facilityNames)
             .then(facilityResult => {
-              if (facilityResult === 'error' || facilityResult === 'conflict') {
+              if (facilityResult === 'error' || facilityResult === 'conflict' || !facilityResult) {
                 this.setState({
                   emmCases: []
                 });

@@ -12,6 +12,9 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
       }
     }).then(response => {
       if (response) {
+        if (response.status == 204){
+          return response.text();
+        }
         if ([200, 201, 202].indexOf(response.status) >= 0) {
           return response.json();
         } else if (response.text.length) {
@@ -39,6 +42,9 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
       body: JSON.stringify(fetchBodyJSON)
     }).then(response => {
       if (response) {
+        if (response.status == 204){
+          return response.text();
+        }
         if ([200, 201, 202].indexOf(response.status) >= 0) {
           return response.json();
         } else if (response.text.length) {

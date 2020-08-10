@@ -79,7 +79,7 @@ class AzureLogin extends React.Component {
     globalFunctions.genericFetch(process.env.SPECIALTY_API, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
-          if (result == 'error'){
+          if (result == 'error' || !result){
             return;
           }
           this.props.setSpecialtyList(result);
@@ -96,7 +96,7 @@ class AzureLogin extends React.Component {
     }
     globalFunctions.genericFetch(process.env.COMPLICATION_API, 'get', this.props.userToken, {})
       .then(result => {
-        if (result == 'error'){
+        if (result == 'error' || !result){
           return;
         }
         if (result) {
@@ -108,7 +108,7 @@ class AzureLogin extends React.Component {
   getOperatingRooms(){
     globalFunctions.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
-        if (result == 'error'){
+        if (result == 'error' || !result){
           return;
         }
         this.props.setOperatingRoom(result)
