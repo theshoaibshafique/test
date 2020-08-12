@@ -28,13 +28,14 @@ export default class RequestEMM extends React.PureComponent {
       compDate: null,
       selectedOperatingRoom: '',
       selectedComplication: [],
-      specialtyProduceduresList: [],
       notes: '',
       options: '',
       operatingRooms: [],
       specialtyCheck: false,
-      specialtyValue: '',
       procedureValue: '',
+      procedureList: [],
+      selectedProcedureList: [],
+      selectedProcedures: [],
       complicationsCheck: false,
       complicationValue: '',
       complicationList: [],
@@ -47,7 +48,6 @@ export default class RequestEMM extends React.PureComponent {
       selectedAP: '',
       isLoading: false,
       emmID: '',
-      specialtyProducedureOptions: [],
       minOperationDate: new Date(),
       maxOperationDate: new Date(),
       hoursOptions: this.createDigitDropdown(1, 13, 2, 0),
@@ -58,12 +58,11 @@ export default class RequestEMM extends React.PureComponent {
     this.state.minOperationDate.setDate(new Date().getDate() - 30);
     this.state.minOperationDate.setHours(0, 0, 0, 0);
 
-
     this.props.specialties && this.props.specialties.forEach((specialty) => {
       specialty.procedures.forEach((procedure) => {
         procedure.specialtyName = specialty.name;
         procedure.ID = specialty.value
-        this.state.specialtyProducedureOptions.push(procedure);
+        this.state.procedureList.push(procedure);
       });
     });
   }
@@ -110,13 +109,12 @@ export default class RequestEMM extends React.PureComponent {
     })
   };
 
-  changeSpecialtyProcedureList(e, values) {
+  handleChangeProcedure(e,values){
+    let value = values.map(comp => comp.value);
     let errors = this.state.errors;
-    errors.specialtyProducedures = '';
-    this.setState({
-      specialtyProduceduresList: values, errors
-    })
-  };
+    errors.procedure = '';
+    this.setState({ selectedProcedures: value, selectedProcedureList: values, errors });
+  }
 
   handleCheckSpecialty(e) {
     let errors = this.state.errors;
@@ -168,12 +166,13 @@ export default class RequestEMM extends React.PureComponent {
 
   fillProcedure(e) {
     let errors = this.state.errors;
-    errors.procedure = '';
+    errors.procedureValue = '';
     this.setState({ procedureValue: e.target.value, errors });
   }
 
   fillComplication(e) {
     let errors = this.state.errors;
+    errors.complicationValue = '';
     this.setState({ complicationValue: e.target.value });
   }
 
@@ -231,17 +230,11 @@ export default class RequestEMM extends React.PureComponent {
 
     //If using the other field for Specialty/Procedure
     if (this.state.specialtyCheck) {
-      //Other fields
-      if (!this.state.specialtyValue) {
-        errors.specialty = "Please enter a specialty";
-      }
-
       if (!this.state.procedureValue) {
-        errors.procedure = "Please enter a procedure";
+        errors.procedureValue = "Please enter a procedure";
       }
-
-    } else if (!this.state.specialtyProduceduresList.length) {
-      errors.specialtyProducedures = "Please select a procedure";
+    } else if (!this.state.selectedProcedures.length) {
+      errors.procedure = "Please select a procedure";
     }
 
     var minCompDate = this.state.operationDate ? this.state.operationDate : this.state.minOperationDate;
@@ -291,17 +284,10 @@ export default class RequestEMM extends React.PureComponent {
       return;
     }
 
-    var selectedProcedures = [];
-    var selectedSpecialties = [];
-    if (!this.state.specialtyCheck) {
-      selectedProcedures = this.state.specialtyProduceduresList.map(procedure => procedure.value);
-      selectedSpecialties = this.state.specialtyProduceduresList.map(procedure => procedure.ID);
-    }
-
     let jsonBody = {
       "roomName": this.state.selectedOperatingRoom.value,
-      "specialty": this.state.specialtyCheck ? [this.state.specialtyValue] : selectedSpecialties,
-      "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : selectedProcedures,
+      "specialty": "58ABBA4B-BEFC-4663-8373-6535EA6F1E5C",
+      "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : this.state.selectedProcedures,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
       "postOpDate": globalFuncs.formatDateTime(this.state.compDate),
       "operationDate": globalFuncs.formatDateTime(this.state.operationDate),
@@ -335,13 +321,13 @@ export default class RequestEMM extends React.PureComponent {
       compDate: null,
       selectedOperatingRoom: '',
       selectedComplication: [],
-      specialtyProduceduresList: [],
       complicationList: [],
       notes: '',
       options: '',
       specialtyCheck: false,
-      specialtyValue: '',
       procedureValue: '',
+      selectedProcedureList: [],
+      selectedProcedures: [],
       complicationsCheck: false,
       complicationValue: '',
       snackBarMsg: '',
@@ -552,26 +538,25 @@ export default class RequestEMM extends React.PureComponent {
             </Grid>
             <Grid item xs={4}></Grid>
             <Grid item xs={12} className="input-title" >
-              Specialty and Procedure (Select 1 or more)
+              Procedures (Select 1 or more)
             </Grid>
             <Grid item xs={8} >
               <Autocomplete
                 multiple
                 size="small"
-                id="specialty"
-                options={this.state.specialtyProducedureOptions}
-                groupBy={option => option.specialtyName}
+                id="procedure"
+                options={this.state.procedureList}
                 getOptionLabel={option => option.name}
-                value={this.state.specialtyProduceduresList}
-                onChange={(e, value) => this.changeSpecialtyProcedureList(e, value)}
+                value={this.state.selectedProcedureList}
+                onChange={(e, value) => this.handleChangeProcedure(e, value)}
                 renderInput={params => (
                   <TextField
                     {...params}
-                    error={Boolean(this.state.errors.specialtyProducedures)}
-                    helperText={this.state.errors.specialtyProducedures}
                     variant="outlined"
                     placeholder="Start typing to filter and select from the list"
-                    name="specialtyProducedures"
+                    error={Boolean(this.state.errors.procedure)}
+                    helperText={this.state.errors.procedure}
+                    name="procedure"
                   />
                 )}
               />
@@ -586,40 +571,18 @@ export default class RequestEMM extends React.PureComponent {
             </Grid>
             {(this.state.specialtyCheck) &&
               <Grid item xs={12}>
-                <Grid container spacing={2}>
-                  <Grid item xs={4} className="input-title" >
-                    Specialty
-                  </Grid>
-                  <Grid item xs={4} className="input-title" >
-                    Procedure
-                  </Grid>
-                  <Grid item xs={4}></Grid>
-                  <Grid item xs={4} >
-                    <TextField
-                      id="specialty-other"
-                      error={Boolean(this.state.errors.specialty)}
-                      helperText={this.state.errors.specialty}
-                      name="specialty"
-                      size="small"
-                      variant="outlined"
-                      className="input-field"
-                      onChange={(e) => this.fillSpecialty(e)}
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
+                <Grid item xs={4}>
                     <TextField
                       id="procedure-other"
                       variant="outlined"
                       size="small"
-                      name="procedure"
-                      error={Boolean(this.state.errors.procedure)}
-                      helperText={this.state.errors.procedure}
+                      name="procedureValue"
+                      error={Boolean(this.state.errors.procedureValue)}
+                      helperText={this.state.errors.procedureValue}
                       className="input-field"
                       onChange={(e) => this.fillProcedure(e)}
                     />
                   </Grid>
-                  <Grid item xs={4}></Grid>
-                </Grid>
               </Grid>
             }
 
