@@ -280,7 +280,7 @@ export default class RequestEMM extends React.PureComponent {
 
     let jsonBody = {
       "roomName": this.state.selectedOperatingRoom.value,
-      "specialty": "58ABBA4B-BEFC-4663-8373-6535EA6F1E5C",
+      "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
       "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : this.state.selectedProcedures,
       "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
       "postOpDate": globalFuncs.formatDateTime(this.state.compDate),
