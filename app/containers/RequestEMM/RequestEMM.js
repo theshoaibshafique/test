@@ -19,6 +19,7 @@ import { Grid, FormHelperText } from '@material-ui/core';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import moment from 'moment/moment';
+import globalFunctions from '../../utils/global-functions';
 
 export default class RequestEMM extends React.PureComponent {
   constructor(props) {
@@ -58,13 +59,6 @@ export default class RequestEMM extends React.PureComponent {
     this.state.minOperationDate.setDate(new Date().getDate() - 30);
     this.state.minOperationDate.setHours(0, 0, 0, 0);
 
-    this.props.specialties && this.props.specialties.forEach((specialty) => {
-      specialty.procedures.forEach((procedure) => {
-        procedure.specialtyName = specialty.name;
-        procedure.ID = specialty.value
-        this.state.procedureList.push(procedure);
-      });
-    });
   }
 
   createDigitDropdown = (n, m, size, d) => {
@@ -92,7 +86,7 @@ export default class RequestEMM extends React.PureComponent {
   handleChange(e) {
     let errors = this.state.errors;
     errors.operatingRoom = '';
-    
+
     this.setState({ selectedOperatingRoom: e, departmentName: e.departmentName, errors });
   };
 
@@ -109,7 +103,7 @@ export default class RequestEMM extends React.PureComponent {
     })
   };
 
-  handleChangeProcedure(e,values){
+  handleChangeProcedure(e, values) {
     let value = values.map(comp => comp.value);
     let errors = this.state.errors;
     errors.procedure = '';
@@ -220,7 +214,7 @@ export default class RequestEMM extends React.PureComponent {
       errors.minutes = "Please select an estimated time";
     }
 
-    if (!this.state.selectedAP || this.state.selectedAP == -1) {
+    if (!this.state.selectedAP || this.state.selectedAP == "NA") {
       errors.ap = "Please select an estimated time";
     }
 
@@ -350,7 +344,7 @@ export default class RequestEMM extends React.PureComponent {
           result.map((user) => {
             users.push({ value: user.userName, label: user.firstName.concat(' ').concat(user.lastName) });
           });
-          users.sort((a, b) => { return ('' + a.label).localeCompare(b.label)});
+          users.sort((a, b) => { return ('' + a.label).localeCompare(b.label) });
           this.setState({
             userList: users
           });
@@ -375,8 +369,8 @@ export default class RequestEMM extends React.PureComponent {
 
         } else if (result && result.length > 0) {
           result.map((department) => {
-            let rooms = department.rooms.map((room) => {return {value: room.roomName, label: room.roomTitle ,departmentName:department.departmentName}});
-            operatingRooms.push({label: department.departmentTitle, options:rooms});
+            let rooms = department.rooms.map((room) => { return { value: room.roomName, label: room.roomTitle, departmentName: department.departmentName } });
+            operatingRooms.push({ label: department.departmentTitle, options: rooms });
           });
 
         }
@@ -388,7 +382,29 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.populateSpecialtyList();
+  }
+  populateSpecialtyList() {
+    globalFunctions.genericFetch(process.env.SPECIALTY_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+      .then(result => {
+        if (result) {
+          if (result == 'error' || !result) {
+            return;
+          }
+          let procedureList = this.state.procedureList || []
+          result && result.forEach((specialty) => {
+            specialty.procedures.forEach((procedure) => {
+              procedure.specialtyName = specialty.name;
+              procedure.ID = specialty.value
+              procedureList.push(procedure);
+            });
+          });
+          this.setState({procedureList});
+        } else {
 
+          // error
+        }
+      });
   }
 
   handleUserEmailChange = (inputValue) => {
@@ -501,9 +517,9 @@ export default class RequestEMM extends React.PureComponent {
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <FormControl variant="outlined" className="input-field" size="small" error={Boolean(this.state.errors.ap)} >
-                    <Select value={this.state.selectedAP || "-1"} onChange={(e) => this.handleSelectedAPChange(e)} name="ap">
-                      <MenuItem value="-1" disabled>A/P</MenuItem>
+                  <FormControl variant="outlined" className={`input-field ap-field ${this.state.selectedAP || "NA"}`} size="small" error={Boolean(this.state.errors.ap)} >
+                    <Select value={this.state.selectedAP || "NA"} onChange={(e) => this.handleSelectedAPChange(e)} name="ap">
+                      <MenuItem value="NA" disabled>A/P</MenuItem>
                       <MenuItem value="AM">AM</MenuItem>
                       <MenuItem value="PM">PM</MenuItem>
                     </Select>
@@ -572,17 +588,17 @@ export default class RequestEMM extends React.PureComponent {
             {(this.state.specialtyCheck) &&
               <Grid item xs={12}>
                 <Grid item xs={4}>
-                    <TextField
-                      id="procedure-other"
-                      variant="outlined"
-                      size="small"
-                      name="procedureValue"
-                      error={Boolean(this.state.errors.procedureValue)}
-                      helperText={this.state.errors.procedureValue}
-                      className="input-field"
-                      onChange={(e) => this.fillProcedure(e)}
-                    />
-                  </Grid>
+                  <TextField
+                    id="procedure-other"
+                    variant="outlined"
+                    size="small"
+                    name="procedureValue"
+                    error={Boolean(this.state.errors.procedureValue)}
+                    helperText={this.state.errors.procedureValue}
+                    className="input-field"
+                    onChange={(e) => this.fillProcedure(e)}
+                  />
+                </Grid>
               </Grid>
             }
 
