@@ -1,55 +1,57 @@
 @import '../../../styles/global-styles';
-
-.donut-chart .chart-title{
-  opacity: 0.8;
-  color: #000000;
-  font-family: "Noto Sans";
-  font-size: 26px;
-  letter-spacing: 0;
-  line-height: 36px;
-  text-align: center;
-}
-
-.donut-chart-detailed-legend{
-  display: flex;
-  margin-top: 32px;
-  flex-direction: column;
-  margin-left: 16px;
-}
-.donut-chart .legend-title{
-  display: flex;
-}
-.donut-chart .legend-item{
-  margin: 4px 0;
-  opacity: 0.8;
-  color: #000000;
-  font-family: "Noto Sans";
-  font-size: 14px;
-  letter-spacing: 0;
-  line-height: 19px;
-}
-
-.donut-title{
-  opacity: 0.8;
-  color: #000000;
-  font-family: "Noto Sans";
-  font-size: 18px;
-  letter-spacing: 0;
-  line-height: 24px;
-}
-.second-title {
-  color: #004F6E;
-  font-family: "Noto Sans";
-  font-size: 42px;
-  letter-spacing: 0;
-  line-height: 42px;
-}
-.donut-unit{
-  color: #004F6E;
-  font-family: "Noto Sans";
-  font-size: 18px;
-  letter-spacing: 0;
-  line-height: 42px;
+.donut-chart{
+  .chart-title{
+    opacity: 0.8;
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 36px;
+    text-align: center;
+  }
+  .donut-chart-detailed-legend{
+    display: flex;
+    margin-top: 32px;
+    flex-direction: column;
+    margin-left: 16px;
+  }
+  .legend-title{
+    display: flex;
+  }
+  .legend-item{
+    margin: 4px 0;
+    opacity: 0.8;
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 19px;
+  }
+  .donut-title{
+    opacity: 0.8;
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+  .second-title {
+    color: #004F6E;
+    font-family: "Noto Sans";
+    font-size: 42px;
+    letter-spacing: 0;
+    line-height: 42px;
+  }
+  .donut-unit{
+    color: #004F6E;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 42px;
+  }
+  .c3-tooltip-container .tooltip{
+    white-space: nowrap;
+  }
 }
 .c3-arc-NA{
   fill: #F3F3F3 !important;

@@ -12,18 +12,24 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
       }
     }).then(response => {
       if (response) {
-        if ([200, 201, 202, 204].indexOf(response.status) >= 0) {
+        if (response.status == 204){
+          return response.text();
+        }
+        if ([200, 201, 202].indexOf(response.status) >= 0) {
           return response.json();
         } else if (response.text.length) {
-            if ([200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
-              return response.json();
-            }
+          if ([200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
+            return response.json();
+          }
         } else if ([409].indexOf(response.status) >= 0) {
           return 'conflict';
         } else {
           return 'error';
         }
       }
+    }).catch(error => {
+      console.error(error)
+      return error;
     })
   } else {
     return fetch(api, {
@@ -36,14 +42,17 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
       body: JSON.stringify(fetchBodyJSON)
     }).then(response => {
       if (response) {
-        if ([200, 201, 202, 204].indexOf(response.status) >= 0) {
+        if (response.status == 204){
+          return response.text();
+        }
+        if ([200, 201, 202].indexOf(response.status) >= 0) {
           return response.json();
         } else if (response.text.length) {
-            if ([200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
-              return response.json();
-            }
+          if ([200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
+            return response.json();
+          }
         } else if ([409].indexOf(response.status) >= 0) {
-          return {"conflict":response.json()};
+          return { "conflict": response.json() };
         } else {
           return 'error';
         }
@@ -64,23 +73,23 @@ function genericFetchWithNoReturnMessage(api, fetchMethod, userToken, fetchBodyJ
   }).then(response => {
     return response.text()
   })
-  .then(response => {
-    if (response) {
-      if ([200, 201, 202, 204].indexOf(response.status) >= 0 || [200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
-        return JSON.parse(response);
-      } else if ([409].indexOf(response.status) >= 0 || response === '"Email Exists"') {
-        return {"conflict":JSON.parse(response)};
-      } else {
-        return 'error';
+    .then(response => {
+      if (response) {
+        if ([200, 201, 202, 204].indexOf(response.status) >= 0 || [200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
+          return JSON.parse(response);
+        } else if ([409].indexOf(response.status) >= 0 || response === '"Email Exists"') {
+          return { "conflict": JSON.parse(response) };
+        } else {
+          return 'error';
+        }
       }
-    }
-  }).catch(error => {
-    console.log(error)
-  })
+    }).catch(error => {
+      console.log(error)
+    })
 }
 
-function axiosFetch(url,fetchMethod,userToken, fetchBodyJSON,cancelToken) {
-  if (!url){
+function axiosFetch(url, fetchMethod, userToken, fetchBodyJSON, cancelToken) {
+  if (!url) {
     return;
   }
   return axios({
@@ -102,7 +111,18 @@ function formatDateTime(date) {
   return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
 }
 
-function formatSecsToTime (seconds, toWords = false) {
+function getName(searchList, key) {
+  if (!key || !searchList) {
+    return key;
+  }
+  let index = searchList.findIndex(item => item.value && `${item.value}`.toLowerCase() == `${key}`.toLowerCase());
+  if (index >= 0) {
+    return searchList[index].name;
+  }
+  return key;
+}
+
+function formatSecsToTime(seconds, toWords = false) {
   var hh = Math.floor(seconds / 3600);
   var mm = Math.floor((seconds - (hh * 3600)) / 60);
   var ss = seconds - (hh * 3600) - (mm * 60);
@@ -118,10 +138,10 @@ function formatSecsToTime (seconds, toWords = false) {
 }
 
 function formatWords(value, word) {
-  return `${(value > 0) ? `${value} ${word}${(value > 1) ? `s` : ''}`  : '' }`
+  return `${(value > 0) ? `${value} ${word}${(value > 1) ? `s` : ''}` : ''}`
 }
 
-function pad (string) {
+function pad(string) {
   return ('0' + string).slice(-2)
 }
 
@@ -130,5 +150,6 @@ export default {
   genericFetchWithNoReturnMessage,
   axiosFetch,
   formatSecsToTime,
-  formatDateTime
+  formatDateTime,
+  getName
 };

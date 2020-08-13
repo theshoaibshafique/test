@@ -1,0 +1,68 @@
+@import "../../../styles/global-styles";
+
+.detailed-multi-line-chart {
+    .chart-title {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 26px;
+        letter-spacing: 0;
+        line-height: 36px;
+        margin-bottom: 40px;
+    }
+    .row-divider {
+        height: 1px;
+        width: 200px;
+        background-color: #eaeaea;
+        margin: 23px auto;
+    }
+    .row-title {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 24px;
+    }
+    .row-subtitle {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+    .row-score {
+        color: #004f6e;
+        font-family: "Noto Sans";
+        font-size: 26px;
+        letter-spacing: 0;
+        line-height: 26px;
+        text-align: right;
+    }
+    .row-score-title {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 12px;
+        letter-spacing: 0;
+        line-height: 17px;
+    }
+    .c3-line {
+        stroke-width: 2px;
+    }
+    circle {
+        r:1;
+        stroke: unset !important;
+    }
+    .display-text {
+        color: #004f6e;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        letter-spacing: 0;
+        line-height: 24px;
+        text-align: center;
+        margin: 136px 0;
+      }
+}

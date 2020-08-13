@@ -1,0 +1,11 @@
+@import "../../../styles/global-styles";
+.line-chart {
+    .chart-label {
+        opacity: 0.6;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 12px;
+        letter-spacing: 0;
+        line-height: 17px;
+    }
+}

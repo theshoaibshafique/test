@@ -6,6 +6,8 @@ import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
 import moment from 'moment/moment';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import globalFunctions from '../../../utils/global-functions';
+import { NavLink } from 'react-router-dom';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
@@ -20,9 +22,9 @@ export default class DonutChart extends React.PureComponent {
     super(props);
 
     this.chartRef = React.createRef();
-    this.id = `bar-chart-${this.props.id}`;
+    this.id = `donut-chart-${this.props.id}`;
     this.state = {
-      chartID: 'barChart',
+      chartID: 'donutChart',
       chartData: {
         data: {
           columns: [], //Dynamically populated
@@ -55,6 +57,9 @@ export default class DonutChart extends React.PureComponent {
           height: 360,
           width: 320
         },
+        transition: {
+          duration: 0
+        },
         onrendered: () => this.chartRef.current && this.renderCustomTitle(),
       }
     }
@@ -75,9 +80,9 @@ export default class DonutChart extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
-    if (dataPoints.length == 0){
+
+    let dataPoints = this.props.dataPoints;
+    if (dataPoints.length == 0) {
       dataPoints.push({
         "title": "NA",
         "valueX": 1,
@@ -86,46 +91,37 @@ export default class DonutChart extends React.PureComponent {
     let xData = [];
     let tooltipData = {};
     let formattedData = {};
-    let legendData = {};
 
     dataPoints.map((point, index) => {
       let xValue = point.valueX;
       // formattedData.x.push(xValue);
+      point.title = globalFunctions.getName(this.props.specialties, point.title);
       formattedData[point.title] = formattedData[point.title] || [];
       formattedData[point.title].push(point.valueX);
       xData.push(xValue);
-      legendData[point.title] = point.subTitle;
       tooltipData[point.title] = point.note ? point.note : tooltipData[point.title];
     });
     let columns = [];
-    Object.entries(formattedData).map(([key, value]) => {
+    const orderBy = this.props.orderBy || {};
+    let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] });
+    legendData.map(([key, value]) => {
       columns.push([key, ...value]);
     })
     let chartData = this.state.chartData;
     //Set as 0 by default and "load" columns later for animation
-    chartData.data.columns = columns.map((arr) => {
-      return arr.map((x) => {
-        return parseInt(x) == x ? 0 : x;
-      })
-    });
+    chartData.data.columns = columns;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-    //Load actual data for animation
-    setTimeout(() => {
-      chartData.data.columns = columns
-      chart = this.chartRef.current && this.chartRef.current.chart;
-      chartData.data.columns.length > 0  && chart && chart.load(chartData.data);
-    }, 500);
     this.setState({ chartData, xData, tooltipData, legendData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    if (d[0].id == "NA"){
+    if (d[0].id == "NA") {
       return;
     }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`Avg. ${d[0].id}: ${d[0].value}`}</div>
+        <div>{`${this.props.description ? this.props.description : ''}${d[0].id}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
       </div>);
   }
   renderLegend() {
@@ -135,18 +131,26 @@ export default class DonutChart extends React.PureComponent {
     let chart = this.chartRef.current.chart;
     return <div className={this.state.chartID}>
       <div className="donut-chart-detailed-legend">
-        {Object.entries(this.state.legendData).map(([id, value], index) => {
-          if (id == "NA"){
+        {this.state.legendData && this.state.legendData.map(([id, value], index) => {
+          if (id == "NA") {
             return;
           }
-          return (<div className="legend-item" id={id.replace(/[^A-Z0-9]+/ig, "")} key={index}>
-            <div className="legend-title">
-              <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
-              {this.state.tooltipData[id] && <LightTooltip interactive arrow title={this.state.tooltipData[id]} placement="top" fontSize="small">
-                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
-              </LightTooltip>}
-            </div>
-          </div>)
+          return (
+            <div className="legend-item" id={id.replace(/[^A-Z0-9]+/ig, "")}
+              onMouseOver={() => {
+                chart && chart.focus(id);
+              }}
+              onMouseOut={() => {
+                chart && chart.revert();
+              }}
+              key={index}>
+              <div className="legend-title">
+                <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
+                {this.state.tooltipData[id] && <LightTooltip interactive arrow title={this.state.tooltipData[id]} placement="top" fontSize="small">
+                  <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                </LightTooltip>}
+              </div>
+            </div>)
         })}
       </div>
     </div>
@@ -155,16 +159,6 @@ export default class DonutChart extends React.PureComponent {
     if (!this.chartRef.current) {
       return;
     }
-    let chart = this.chartRef.current.chart;
-    Object.entries(this.state.legendData).map(([id, value], index) => {
-      d3.select(`.donut-chart #${id.replace(/[^A-Z0-9]+/ig, "")}`)
-        .on('mouseover', () => {
-          chart.focus(id);
-        })
-        .on('mouseout', () => {
-          chart.revert();
-        })
-    })
     if (!d3.select(".donut-chart .c3-chart-arcs-title").select('tspan').empty()) {
       return;
     }
@@ -197,7 +191,14 @@ export default class DonutChart extends React.PureComponent {
       >
         <Grid container spacing={0} className={`donut-chart ${this.id}`} style={{ minHeight: 150 }}>
           <Grid item xs={12} className="chart-title">
-            {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={this.props.toolTip} placement="top" fontSize="small">
+            {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow placement="top" fontSize="small"
+              title={
+                <div>
+                  <div>{this.props.toolTip}</div>
+                  {this.props.body ? <div style={{marginTop:16}}>{this.props.body}</div> : ''}
+                </div>
+              }
+            >
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
           </Grid>
@@ -207,6 +208,11 @@ export default class DonutChart extends React.PureComponent {
           <Grid item xs={4} className={this.state.chartID}>
             {this.renderLegend()}
           </Grid>
+          {this.props.url && <Grid item xs={12} style={{ textAlign: 'center', marginBottom: 24 }}>
+            <NavLink to={this.props.url} className='link'>
+              {this.props.urlText}
+            </NavLink>
+          </Grid>}
         </Grid>
       </LoadingOverlay>
     );

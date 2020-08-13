@@ -23,6 +23,7 @@ const tableIcons = {
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
 import MaterialTable from 'material-table';
+import globalFunctions from '../../../utils/global-functions';
 
 
 export default class Table extends React.PureComponent {
@@ -31,8 +32,25 @@ export default class Table extends React.PureComponent {
   };
 
   render() {
-    const dataPoints = this.props.dataPointRows.map(value => {
-      return value.columns.reduce((accumulator, currentValue) => {
+    let dataPointRows = this.props.dataPointRows && this.props.dataPointRows.map(dataPointRow => {
+      return dataPointRow.columns.map(column => {
+        const { key, value } = column;
+        switch (key) {
+          case 'procedureName':
+            column.value = globalFunctions.getName(this.props.procedures, column.value);
+            break;
+          case 'avgRoomSetup':
+          case 'avgCase':
+          case 'avgRoomCleanup':
+            column.value = Math.floor(parseInt(value) / 60);
+          default:
+            break;
+        }
+        return column;
+      });
+    });
+    const dataPoints = dataPointRows && dataPointRows.map(value => {
+      return value.reduce((accumulator, currentValue) => {
         accumulator[currentValue.key] = currentValue.value;
         return accumulator;
       }, {});
@@ -42,7 +60,7 @@ export default class Table extends React.PureComponent {
     // allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a,this.props.dataPoints.length)), a > this.props.dataPoints.length));
     return (
       <LoadingOverlay
-        active={!this.props.dataPointRows}
+        active={!this.props.description}
         spinner
         className="overlays"
         styles={{
@@ -59,7 +77,7 @@ export default class Table extends React.PureComponent {
           })
         }}
       >
-        <Grid container direction="column" spacing={1} className={`table-main ${this.props.description ? 'empty' : ''}`}>
+        <Grid container spacing={1} className={`table-main ${!this.props.dataPointRows ? 'empty' : ''}`}>
           <Grid item xs >
             <MaterialTable
               columns={[

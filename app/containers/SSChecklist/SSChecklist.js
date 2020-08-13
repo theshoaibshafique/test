@@ -261,7 +261,7 @@ export default class SSChecklist extends React.PureComponent {
           this.notLoading();
         } else {
           result.tileType = tileRequest.tileType;
-          if (moment(tileRequest.dataDate).isSame(this.state.month, 'month')) {
+          if (moment.utc(tileRequest.dataDate).isSame(this.state.month.startOf('month'),'month')) {
             this.setState({ isOpen: true, modalTile: result });
           }
 
@@ -384,6 +384,7 @@ export default class SSChecklist extends React.PureComponent {
           reportType={this.props.reportType}
           {...tile}
           unit={'%'}
+          footer={''}
           yAxis={tile.subTitle}
           xAxis={tile.footer} />
       case 'LISTDETAIL':
@@ -394,7 +395,7 @@ export default class SSChecklist extends React.PureComponent {
       case 'CHECKLISTDETAIL':
         return <ChecklistDetail {...tile} closeModal={() => this.closeModal()} />
       case 'STACKEDBARCHART':
-        return <StackedBarChart {...tile} specialties={this.props.specialties} yAxis={tile.subTitle} xAxis={tile.footer} title={tile.description} />
+        return <StackedBarChart {...tile} specialties={this.props.specialties} yAxis={tile.subTitle} xAxis={tile.footer} title={tile.description} description={''} />
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;
         //If the selected month is CURRENT month when this message is shown - Report will be ready next month

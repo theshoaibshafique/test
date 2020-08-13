@@ -1,14 +1,26 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, withStyles, Tooltip } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
 import moment from 'moment/moment';
+import { NavLink } from 'react-router-dom';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import globalFunctions from '../../../utils/global-functions';
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    padding: '16px',
+    fontSize: '14px',
+    lineHeight: '19px',
+    fontFamily: 'Noto Sans'
+  }
+}))(Tooltip);
 export default class BarChart extends React.PureComponent {
   constructor(props) {
     super(props);
-
+    
     this.chartRef = React.createRef();
     this.id = `bar-chart-${this.props.id}`;
     this.state = {
@@ -43,7 +55,7 @@ export default class BarChart extends React.PureComponent {
               position: 'outer-center'
             },
             type: 'category',
-            height: this.props.id == 2 && this.props.reportType == "ComplianceScoreReport" ? 90 : 70
+            height: this.props.id == 2 && this.props.reportType == "ComplianceScoreReport" ? 90 : 60
           },
           y: {
             label: {
@@ -54,7 +66,9 @@ export default class BarChart extends React.PureComponent {
             min: 0,
             padding: { top: 20, bottom: 0 },
             tick: {
-              // format: function (d) { if (d % 20 == 0) return d }
+              format: function (d) {
+                return (parseInt(d) == d) ? d : null;
+              }
             }
           }
         },
@@ -90,14 +104,14 @@ export default class BarChart extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return a.valueX - b.valueX });
+    let dataPoints = this.props.dataPoints;
     let zData = [];
     let xData = [];
     let descData = [];
     let formattedData = { x: [] };
     let sum = 0
     dataPoints.map((point, index) => {
-      let xValue = point.valueX;
+      let xValue = globalFunctions.getName(this.props.labelList,point.valueX);
       if (parseInt(point.valueX) == point.valueX) {
         xValue = moment().month(parseInt(point.valueX) - 1).format('MMM');
       }
@@ -130,7 +144,7 @@ export default class BarChart extends React.PureComponent {
       chartData.data.columns = columns
       chart = this.chartRef.current && this.chartRef.current.chart;
       chart && chart.load(chartData.data);
-      if (zData.length > 0){
+      if (zData.length > 0) {
         setTimeout(() => {
           chartData.data.columns = columns
           chart = this.chartRef.current && this.chartRef.current.chart;
@@ -140,7 +154,7 @@ export default class BarChart extends React.PureComponent {
     }, 500);
 
     if (sum <= 0) {
-      d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // shift up labels
+      typeof d3 !== 'undefined' && d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // shift up labels
     }
     this.setState({ chartData, zData, xData, descData, isLoaded: true })
   }
@@ -160,7 +174,7 @@ export default class BarChart extends React.PureComponent {
     }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${x}${this.props.toolTip ? this.props.toolTip : ''}: ${d[0].value}${this.props.unit}`}</div>
+        <div>{`${x}${this.props.footer ? this.props.footer : ''}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
         {z != null && <div>{`Occurence(s): ${z}`}</div>}
         {desc != null && <div>{`${desc}`}</div>}
       </div>);
@@ -188,7 +202,9 @@ export default class BarChart extends React.PureComponent {
       >
         <Grid container spacing={0} direction="column" className={`bar-chart ${this.id}`} >
           <Grid item xs className="chart-title">
-            {this.props.title}
+            {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={this.props.toolTip} placement="top" fontSize="small">
+              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+            </LightTooltip>}
           </Grid>
           <Grid item xs>
             {
@@ -197,6 +213,11 @@ export default class BarChart extends React.PureComponent {
                 : this.props.body ?
                   <div className="display-text">{this.props.body}</div>
                   : <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+          </Grid>
+          <Grid item xs>
+            {this.props.url && <NavLink to={this.props.url} className='link'>
+              {this.props.urlText}
+            </NavLink>}
           </Grid>
         </Grid>
       </LoadingOverlay>

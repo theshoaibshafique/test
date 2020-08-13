@@ -15,15 +15,17 @@ class MonthRangePicker extends React.Component {
       startDate: this.props.startDate || moment().startOf('month'),
       endDate: this.props.endDate || moment().endOf('month'),
       maxDate: this.props.maxDate || moment().endOf('month'),
+      minDate: this.props.minDate || moment().startOf('month')
     }
     this.state.maxRange = this.getMaxRange(this.state.startDate);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.startDate != this.props.startDate || prevProps.endDate != this.props.endDate || prevProps.maxDate != this.props.maxDate) {
+    if (prevProps.startDate != this.props.startDate || prevProps.endDate != this.props.endDate || prevProps.maxDate != this.props.maxDate || prevProps.minDate != this.props.minDate) {
       this.setState({
         startDate: this.props.startDate,
         endDate: this.props.endDate,
+        minDate: this.props.minDate,
         maxDate: this.props.maxDate
       })
     }
@@ -104,7 +106,8 @@ class MonthRangePicker extends React.Component {
           focusedInput={this.state.focusedInput}
           onFocusChange={focusedInput => this.onFocusChange(focusedInput)}
 
-          isOutsideRange={date => date.isAfter(this.state.maxRange)}
+          isOutsideRange={date => date.isAfter(this.state.maxRange) || date.isBefore(this.state.minDate)}
+          minDate={this.state.minDate}
           hideKeyboardShortcutsPanel={true}
           displayFormat="MMM DD YYYY"
           noBorder
