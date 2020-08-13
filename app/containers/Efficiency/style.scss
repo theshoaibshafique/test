@@ -8,6 +8,9 @@ $ssc-picker-height: 150px;
     .MuiCardContent-root {
         padding: 24px 40px;
     }
+    .efficiency-card.DonutChart{
+        overflow: visible;
+    }
     .efficiency-card.InfographicText {
         max-width: fit-content;
         min-width: 300px;
