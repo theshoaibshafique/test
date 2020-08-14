@@ -29,12 +29,24 @@ import globalFunctions from '../../../utils/global-functions';
 export default class Table extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      dataPoints: []
+    };
   };
 
-  render() {
-    let dataPointRows = this.props.dataPointRows && this.props.dataPointRows.map(dataPointRow => {
+  componentDidMount(){
+    this.calculateRows(this.props.dataPointRows);
+  }
+  componentDidUpdate(prev){
+    if (prev.dataPointRows != this.props.dataPointRows){
+      this.calculateRows(this.props.dataPointRows)
+    }
+  }
+
+  calculateRows(rawDataPointRows){
+    let dataPointRows = rawDataPointRows && rawDataPointRows.map(dataPointRow => {
       return dataPointRow.columns.map(column => {
-        const { key, value } = column;
+        let { key, value } = column;
         switch (key) {
           case 'procedureName':
             column.value = globalFunctions.getName(this.props.procedures, column.value);
@@ -42,22 +54,24 @@ export default class Table extends React.PureComponent {
           case 'avgRoomSetup':
           case 'avgCase':
           case 'avgRoomCleanup':
-            column.value = Math.floor(parseInt(value) / 60);
+            column.value = Math.round(parseInt(value) / 60);
           default:
             break;
         }
         return column;
       });
     });
-    const dataPoints = dataPointRows && dataPointRows.map(value => {
+    let dataPoints = dataPointRows && dataPointRows.map(value => {
       return value.reduce((accumulator, currentValue) => {
         accumulator[currentValue.key] = currentValue.value;
         return accumulator;
       }, {});
     });
-    // let allPageSizeOptions = [ 5, 10, 25 ,50, 75, 100 ];
-    // let pageSizeOptions = [];
-    // allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a,this.props.dataPoints.length)), a > this.props.dataPoints.length));
+    this.setState({dataPoints});
+  }
+
+
+  render() {
     return (
       <LoadingOverlay
         active={!this.props.description}
@@ -132,7 +146,7 @@ export default class Table extends React.PureComponent {
                   emptyDataSourceMessage: this.props.description
                 }
               }}
-              data={dataPoints}
+              data={this.state.dataPoints}
               icons={tableIcons}
             />
           </Grid>
