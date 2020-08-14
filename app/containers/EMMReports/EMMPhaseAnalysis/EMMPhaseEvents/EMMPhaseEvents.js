@@ -44,7 +44,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
   }
 
   aeSelected(startTime, videoID, videoIndex) {
-    if (this.props.phaseTitle !== 'SurgicalProcedure')
+    if (this.props.phaseTitle !== 'SurgicalProcedure' || this.props.selectedSurgicalTab == 1)
       this.props.changeVideo(videoID, videoIndex)
     else
       this.props.seekVideo(startTime)
@@ -73,9 +73,9 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
   }
 
   render() {
-    const { phaseData, selectedSurgicalTab, enhancedMMOpenData } = this.props;
+    const { phaseTitle, phaseData, selectedSurgicalTab, enhancedMMOpenData } = this.props;
     const { showOnlyAE } = this.state;
-    let dataToShow = (phaseData.name == 'SurgicalProcedure' && selectedSurgicalTab == 1) ? enhancedMMOpenData : phaseData;
+    let dataToShow = (phaseTitle == 'SurgicalProcedure' && selectedSurgicalTab == 1) ? enhancedMMOpenData : phaseData;
 
     return (
       <div>
