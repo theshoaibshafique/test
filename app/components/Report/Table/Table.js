@@ -70,6 +70,10 @@ export default class Table extends React.PureComponent {
     this.setState({dataPoints});
   }
 
+  customSort(name){
+    return (a,b) =>{ return a[name]-b[name] || ('' + a.procedureName).localeCompare(b.procedureName)}
+  }
+
 
   render() {
     return (
@@ -105,28 +109,32 @@ export default class Table extends React.PureComponent {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
-                  }
+                  },
+                  customSort: this.customSort('avgRoomSetup')
                 },
                 {
                   title: 'Avg. Case (mins)', field: 'avgCase', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
-                  }
+                  },
+                  customSort: this.customSort('avgCase')
                 },
                 {
                   title: 'Avg. Room Clean-up (mins)', field: 'avgRoomCleanup', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
-                  }
+                  },
+                  customSort: this.customSort('avgRoomCleanup')
                 },
                 {
                   title: 'Total Cases', field: 'totalCases', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
-                  }
+                  },
+                  customSort: this.customSort('totalCases')
                 }
               ]}
               options={{
