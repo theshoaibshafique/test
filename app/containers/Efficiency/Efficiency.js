@@ -343,6 +343,7 @@ export default class Efficiency extends React.PureComponent {
           pattern={pattern}
           id={tile.tileTypeCount}
           reportType={this.props.reportType}
+          noWrapXTick={this.state.isLandingPage}
           {...tile}
           body={tile.description}
           labelList={this.state.operatingRoomList} />
