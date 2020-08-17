@@ -51,9 +51,9 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
   }
 
   shouldHighlight(startTime, endTime, videoIndex) {
-    let { currentVideoTime, phaseTitle, selectedVideoClipID } = this.props;
+    let { currentVideoTime, phaseTitle, selectedVideoClipID, selectedSurgicalTab } = this.props;
     let highlighted = false;
-    if (phaseTitle === 'SurgicalProcedure') {
+    if (phaseTitle === 'SurgicalProcedure' && selectedSurgicalTab == 0) {
       highlighted = (currentVideoTime >= startTime && currentVideoTime <= endTime);
     } else {
       highlighted = (selectedVideoClipID == videoIndex)
