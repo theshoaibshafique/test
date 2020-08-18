@@ -292,7 +292,8 @@ export default class UserManagement extends React.PureComponent {
               search: true,
               paging: true,
               searchFieldAlignment: 'left',
-              searchFieldStyle:{marginLeft:-24}
+              searchFieldStyle:{marginLeft:-24},
+              draggable:false
             }}
             data={this.state.userList}
             icons={tableIcons}
