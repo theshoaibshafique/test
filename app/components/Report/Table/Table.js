@@ -114,7 +114,8 @@ export default class Table extends React.PureComponent {
                 {
                   title: 'Procedure', field: 'procedureName', cellStyle: {
                     padding: '12px 16px'
-                  }
+                  },
+                  defaultSort:'desc',
                 },
                 {
                   title: 'Avg. Room Setup (mins)', field: 'avgRoomSetup', cellStyle: {

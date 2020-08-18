@@ -216,7 +216,7 @@ export default class Efficiency extends React.PureComponent {
         if (result === 'error' || result === 'conflict') {
           this.notLoading();
         } else {
-          
+
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
@@ -280,7 +280,7 @@ export default class Efficiency extends React.PureComponent {
         endDate: moment(recentSearchCache.endDate)
       }, callback);
     } else {
-      this.setState({isLoading:true},callback);
+      this.setState({ isLoading: true }, callback);
     }
   }
 
@@ -299,20 +299,23 @@ export default class Efficiency extends React.PureComponent {
   renderTiles() {
     //Tiles of the same type get a different colour
     let tileTypeCount = {};
-    return this.state.reportData && this.state.reportData.map((tileGroup, index) => {
-
+    let result = this.state.reportData && this.state.reportData.map((tileGroup, index) => {
       return (
         tileGroup.group.map((tile, i) => {
           tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
           tile.tileTypeCount = tileTypeCount[tile.tileType];
-          return <Grid item xs={this.getTileSize(tile.tileType)} key={`${index}-${i}`}>
+          return <Grid item xs={this.getTileSize(tile.tileType)} className={`grid-${tile.tileType}`} key={`${index}-${i}`}>
             <Card className={`efficiency-card ${tile.tileType}`}>
               <CardContent>{this.renderTile(tile)}</CardContent>
             </Card>
           </Grid>
         })
       )
-    })
+    }) || [];
+    result.push(<Grid item xs={12} style={{paddingTop:0}}>
+      <InfographicParagraph description={"ORs with no data available are excluded from the report"} />
+    </Grid>);
+    return result;
   }
 
   renderTile(tile) {
@@ -336,7 +339,7 @@ export default class Efficiency extends React.PureComponent {
           message={tile.description}
         />
       case 'TABLE':
-        return <Table procedures={this.state.selectedSpecialty && this.state.selectedSpecialty.procedures}dataPointRows={tile.dataPointRows} description={tile.description} />
+        return <Table procedures={this.state.selectedSpecialty && this.state.selectedSpecialty.procedures} dataPointRows={tile.dataPointRows} description={tile.description} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart

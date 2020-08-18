@@ -63,7 +63,9 @@ export default class DetailedMultiLineChart extends React.PureComponent {
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
           </Grid>
-
+          <Grid item xs={12} className="chart-subtitle">
+            {this.props.subTitle}
+          </Grid>
           {subReportData.map((reportData, index) => {
             return (
               <Grid container spacing={0} className="multi-line-chart-row" key={`row-${index}`}>

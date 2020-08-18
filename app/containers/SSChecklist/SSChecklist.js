@@ -321,7 +321,7 @@ export default class SSChecklist extends React.PureComponent {
             <Card className="ssc-card">
               <CardContent>
                 <Grid container spacing={0} >
-                  {tile.tileType == 'StackedBarChart' && <Grid className="chart-title" style={{ textAlign: 'center', marginBottom: 24 }} item xs={12}>{tile.title}</Grid>}
+                  {tile.tileType == 'StackedBarChart' && <Grid className="ssc-chart-title" style={{ textAlign: 'center', marginBottom: 24 }} item xs={12}>{tile.title}</Grid>}
                   {
                     tileGroup.group.map((tile, i) => {
                       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;

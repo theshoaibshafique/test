@@ -220,6 +220,9 @@ export default class BarChart extends React.PureComponent {
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
           </Grid>
+          <Grid item xs={12} className="chart-subtitle">
+            {this.props.subTitle}
+          </Grid>
           <Grid item xs>
             {
               this.props.body && this.props.subTitle
