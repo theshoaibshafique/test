@@ -348,7 +348,6 @@ export default class Efficiency extends React.PureComponent {
           reportType={this.props.reportType}
           noWrapXTick={this.state.isLandingPage}
           {...tile}
-          body={tile.description}
           labelList={this.state.operatingRoomList} />
       case 'DONUTCHART':
         return <DonutChart {...tile} specialties={this.props.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />

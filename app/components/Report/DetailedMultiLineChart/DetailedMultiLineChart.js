@@ -66,39 +66,41 @@ export default class DetailedMultiLineChart extends React.PureComponent {
           <Grid item xs={12} className="chart-subtitle">
             {this.props.subTitle}
           </Grid>
-          {subReportData.map((reportData, index) => {
-            return (
-              <Grid container spacing={0} className="multi-line-chart-row" key={`row-${index}`}>
-                <Grid item xs={4} >
-                  <Grid container spacing={1} direction="column">
-                    <Grid item xs className="row-title">
-                      {globalFunctions.getName(this.props.labelList, reportData.title)}
-                    </Grid>
-                    <Grid item xs className="row-subtitle">
-                      {reportData.subTitle}
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={6} >
-                  <LineChart {...reportData} />
-                </Grid>
-                <Grid item xs={2} className="row-score">
-                  <Grid container spacing={1} direction="column">
-                    <Grid item xs>
-                      {reportData.total}{reportData.unit}
-                    </Grid>
-                    <Grid item xs className="row-score-title">
-                      {reportData.footer}
+          <Grid item xs={12} className="sub-chart-container">
+            {subReportData.map((reportData, index) => {
+              return (
+                <Grid container spacing={0} className="multi-line-chart-row" key={`row-${index}`}>
+                  <Grid item xs={4} >
+                    <Grid container spacing={1} direction="column">
+                      <Grid item xs className="row-title">
+                        {globalFunctions.getName(this.props.labelList, reportData.title)}
+                      </Grid>
+                      <Grid item xs className="row-subtitle">
+                        {reportData.subTitle}
+                      </Grid>
                     </Grid>
                   </Grid>
+                  <Grid item xs={6} >
+                    <LineChart {...reportData} />
+                  </Grid>
+                  <Grid item xs={2} className="row-score">
+                    <Grid container spacing={1} direction="column">
+                      <Grid item xs>
+                        {reportData.total}{reportData.unit}
+                      </Grid>
+                      <Grid item xs className="row-score-title">
+                        {reportData.footer}
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  {index < this.props.subReportData.length - 1 && <Divider className="row-divider" />}
                 </Grid>
-                {index < this.props.subReportData.length - 1 && <Divider className="row-divider" />}
-              </Grid>
-            )
-          })}
-          {subReportData.length == 0 && <Grid item xs={12} className="display-text">
+              )
+            })}
+            {subReportData.length == 0 && <Grid item xs={12} className="display-text">
               {this.props.body}
             </Grid>}
+          </Grid>
           <Grid item xs={12} style={{ textAlign: 'center', marginTop: 24 }}>
             {this.props.url && <NavLink to={this.props.url} className='link'>
               {this.props.urlText}
