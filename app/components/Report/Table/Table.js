@@ -67,11 +67,23 @@ export default class Table extends React.PureComponent {
         return accumulator;
       }, {});
     });
+    dataPoints.sort((a,b)=>('' + a.procedureName).localeCompare(b.procedureName))
     this.setState({dataPoints});
   }
 
-  customSort(name){
-    return (a,b) =>{ return a[name]-b[name] || ('' + a.procedureName).localeCompare(b.procedureName)}
+  customSort(name,title){
+    return (a,b) =>{ return a[name]-b[name] || this.procedureNameCompare(title,a,b)}
+  }
+
+  procedureNameCompare(title,a,b){
+    var element = document.querySelectorAll('.MuiTableSortLabel-active .MuiTableSortLabel-iconDirectionAsc');
+    var titleElement = document.querySelectorAll('.MuiTableSortLabel-active');
+    let isSameTitle = titleElement.length && title == titleElement[0].textContent;
+    //If element exists we're descending
+    if (element.length && isSameTitle){
+      return ('' + b.procedureName).localeCompare(a.procedureName);
+    }
+    return ('' + a.procedureName).localeCompare(b.procedureName);
   }
 
 
@@ -110,7 +122,7 @@ export default class Table extends React.PureComponent {
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   },
-                  customSort: this.customSort('avgRoomSetup')
+                  customSort: this.customSort('avgRoomSetup','Avg. Room Setup (mins)')
                 },
                 {
                   title: 'Avg. Case (mins)', field: 'avgCase', cellStyle: {
@@ -118,7 +130,7 @@ export default class Table extends React.PureComponent {
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   },
-                  customSort: this.customSort('avgCase')
+                  customSort: this.customSort('avgCase','Avg. Case (mins)')
                 },
                 {
                   title: 'Avg. Room Clean-up (mins)', field: 'avgRoomCleanup', cellStyle: {
@@ -126,7 +138,7 @@ export default class Table extends React.PureComponent {
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   },
-                  customSort: this.customSort('avgRoomCleanup')
+                  customSort: this.customSort('avgRoomCleanup','Avg. Room Clean-up (mins)')
                 },
                 {
                   title: 'Total Cases', field: 'totalCases', cellStyle: {
@@ -134,7 +146,7 @@ export default class Table extends React.PureComponent {
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   },
-                  customSort: this.customSort('totalCases')
+                  customSort: this.customSort('totalCases','Total Cases')
                 }
               ]}
               options={{
@@ -147,7 +159,8 @@ export default class Table extends React.PureComponent {
                   opacity: .6,
                   fontFamily: "Noto Sans",
                   width: 'unset'
-                }
+                },
+                draggable:false
               }}
               localization={{
                 body: {
