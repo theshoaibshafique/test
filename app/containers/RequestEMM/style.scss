@@ -1,5 +1,11 @@
 @import '../../styles/global-styles.scss';
 
+.request-emm-page{
+    .ap-field.NA .MuiSelect-root {
+        opacity: .6;
+    }
+}
+
 .input {
     display: flex;
 }

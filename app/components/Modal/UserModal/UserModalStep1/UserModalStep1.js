@@ -328,7 +328,7 @@ class UserModalStep1 extends React.Component {
                 </Grid>
                 <Grid item xs={2}>
                   <Grid container justify="flex-end">
-                    <IconButton onClick={this.props.closeModal}><CloseIcon fontSize='small' /></IconButton>
+                    <IconButton onClick={this.props.closeModal} className='close-button' disableRipple disableFocusRipple><CloseIcon fontSize='small' /></IconButton>
                   </Grid>
                 </Grid>
               </Grid>
@@ -360,7 +360,7 @@ class UserModalStep1 extends React.Component {
                 </Grid>
                 <Grid item xs={2}>
                   <Grid container justify="flex-end">
-                    <IconButton onClick={this.props.closeModal}><CloseIcon fontSize='small' /></IconButton>
+                    <IconButton onClick={this.props.closeModal} className='close-button' disableRipple disableFocusRipple><CloseIcon fontSize='small' /></IconButton>
                   </Grid>
                 </Grid>
               </Grid>

@@ -8,7 +8,18 @@
         font-size: 26px;
         letter-spacing: 0;
         line-height: 36px;
+        
+    }
+    .chart-subtitle {
+        font-size: 14px;
+        font-style: italic;
+        letter-spacing: 0;
+        line-height: 19px;
         margin-bottom: 40px;
+        text-align: center;
+    }
+    .sub-chart-container{
+        min-height: 295px;
     }
     .row-divider {
         height: 1px;
@@ -53,7 +64,7 @@
         stroke-width: 2px;
     }
     circle {
-        r:1;
+        r: 1;
         stroke: unset !important;
     }
     .display-text {
@@ -64,5 +75,5 @@
         line-height: 24px;
         text-align: center;
         margin: 136px 0;
-      }
+    }
 }

@@ -6,6 +6,7 @@ import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import moment from 'moment/moment';
+import globalFunctions from '../../../utils/global-functions';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
@@ -102,17 +103,6 @@ export default class StackedBarChart extends React.PureComponent {
     this.generateChartData();
   }
 
-  getName(searchList, key) {
-    if (!key) {
-      return key;
-    }
-    let index = searchList.findIndex(item => item.value.toLowerCase() == key.toLowerCase());
-    if (index >= 0) {
-      return searchList[index].name;
-    }
-    return key;
-  }
-
   generateChartData() {
     if (!this.props.dataPoints) {
       return;
@@ -132,7 +122,7 @@ export default class StackedBarChart extends React.PureComponent {
         xData.push(xValue);
       }
 
-      point.title = this.getName(this.props.specialties, point.title);
+      point.title = globalFunctions.getName(this.props.specialties, point.title);
       formattedData[point.title] = formattedData[point.title] || {};
       formattedData[point.title][xValue] = formattedData[point.title][xValue] || 0
       formattedData[point.title][xValue] = point.valueY;

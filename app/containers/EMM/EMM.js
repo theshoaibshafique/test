@@ -64,19 +64,13 @@ export default class EMM extends React.PureComponent {
 
       } else {
         let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
+
         let procedureNames = [];
         let complicationList = [];
         let operatingRoom = '';
-        let specialtyNames = [];
+
         result.procedure.map((procedure) => {
-          let match = false;
-          surgeryList.map((surgery) => {
-            if (surgery.value.toUpperCase() === procedure.toUpperCase()) {
-              procedureNames.push(surgery.name);
-              match = true;
-            }
-          });
-          if (!match) { procedureNames.push(procedure); }
+          procedureNames.push(globalFuncs.getName(surgeryList,procedure))
         });
 
         result.complications.map((complication) => {
@@ -95,22 +89,11 @@ export default class EMM extends React.PureComponent {
           }
         });
 
-        result.specialty.map((specialty) => {
-          let match = false;
-          this.props.specialties && this.props.specialties.map((spec) => {
-            if (spec.value.toUpperCase() === specialty.toUpperCase()) {
-              specialtyNames.push(spec.name);
-              match = true;
-            }
-          });
-          if (!match) { specialtyNames.push(specialty); }
-        });
         this.setState({
           procedureNames: procedureNames,
           complicationNames: complicationList.join(', '),
           operatingRoom: operatingRoom,
           compDate: new Date(result.postOpDate).toLocaleDateString(),
-          specialtyNames: specialtyNames,
           enhancedMMReferenceName: result.enhancedMMReferenceName,
           enhancedMMPublished: result.enhancedMMPublished
         });
@@ -119,10 +102,10 @@ export default class EMM extends React.PureComponent {
   };
 
   renderSpecialtiesProcedures() {
-    if (this.state.specialtyNames.length) {
-      return this.state.specialtyNames.map((specialty, index) => {
+    if (this.state.procedureNames.length) {
+      return this.state.procedureNames.map((procedure, index) => {
         return  <div className="table-row row-font" key={index}>
-                  <div>{this.state.procedureNames[index]}</div><div>&nbsp;({specialty})</div>
+                  <div>{procedure}</div>
                 </div>
       });
     }
@@ -137,13 +120,18 @@ export default class EMM extends React.PureComponent {
   }
 
 render() {
+    const { enhancedMMReferenceName, enhancedMMPublished, emmAccess } = this.state;
+    const isReportReady = (enhancedMMReferenceName && enhancedMMPublished && emmAccess)
     return (
       <section className="full-height">
         <div className="header page-title">
           <div>
             <span className="pad">Enhanced M&M</span>
-            {(this.state.enhancedMMReferenceName && this.state.enhancedMMPublished && this.state.emmAccess) &&
-              <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button>} </div>
+            {(isReportReady) ?
+              <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button> :
+              <span className="report-status">(Report Status: In Progress)</span>
+            }
+          </div>
         </div>
 
         <div className="table-row info-title">
@@ -155,7 +143,7 @@ render() {
         </div>
 
         <div>
-          <div className="first-column info-title">Specialties and Procedures</div>
+          <div className="first-column info-title">Procedures</div>
         </div>
 
         {this.renderSpecialtiesProcedures()}

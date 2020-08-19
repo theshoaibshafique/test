@@ -73,8 +73,11 @@ class MonthRangePicker extends React.Component {
     this.setState({
       startDate: null,
       endDate: null,
-      maxRange: this.state.maxDate
+      maxRange: this.state.maxDate,
+      focusedInput: "startDate"
     })
+    this.props.updateState('startDate', null);
+    this.props.updateState('endDate', null);
   }
 
   renderInfo() {
@@ -113,7 +116,7 @@ class MonthRangePicker extends React.Component {
           noBorder
           reopenPickerOnClearDates
           readOnly
-          minimumNights={0} 
+          minimumNights={0}
 
           renderCalendarInfo={() => this.renderInfo()}
         />

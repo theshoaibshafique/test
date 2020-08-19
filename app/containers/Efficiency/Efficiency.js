@@ -64,10 +64,20 @@ export default class Efficiency extends React.PureComponent {
       if (selectedSpecialty && !selectedSpecialty.value) {
         selectedSpecialty = "";
       }
+      let startDate = this.state.startDate;
+      let endDate = this.state.endDate;
+      //if either are null then set to last valid date or latest date with data
+      if (!startDate || !endDate) {
+        const recentSearchCache = JSON.parse(localStorage.getItem('efficiencyFilter-' + this.props.userEmail));
+        startDate = moment(recentSearchCache.startDate) || this.pendingDate.clone().subtract(2, 'month').startOf('month');
+        endDate = moment(recentSearchCache.endDate) || this.pendingDate.clone().subtract(2, 'month').endOf('month');
+      }
       this.setState({
         reportType: this.props.reportType,
         reportData: [],
         selectedSpecialty,
+        startDate,
+        endDate,
         isLandingPage: this.props.reportType == "EfficiencyReport"
       }, () => {
         this.getReportLayout();
@@ -151,15 +161,19 @@ export default class Efficiency extends React.PureComponent {
       this.setState({ isSelectionRequired: true, isLoading: false });
       return;
     }
+    if (!this.state.endDate || !this.state.startDate) {
+      return;
+    }
     this.setState({ tileRequest: [], isSelectionRequired: false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType,
           "TileRequest": [{
-            "startDate": globalFuncs.formatDateTime(this.state.startDate.startOf('day')),
-            "endDate": globalFuncs.formatDateTime(this.state.endDate.endOf('day')),
+            "startDate": this.state.startDate && globalFuncs.formatDateTime(this.state.startDate.startOf('day')),
+            "endDate": this.state.endDate && globalFuncs.formatDateTime(this.state.endDate.endOf('day'))
           }]
         };
+
         globalFunctions.axiosFetch(process.env.EFFICIENCY_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
             result = result.data;
@@ -216,7 +230,7 @@ export default class Efficiency extends React.PureComponent {
         if (result === 'error' || result === 'conflict') {
           this.notLoading();
         } else {
-          
+
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
@@ -249,16 +263,6 @@ export default class Efficiency extends React.PureComponent {
     }, new Map).values()];
   }
 
-  updateMonth(month) {
-    this.setState({
-      month: month,
-      isLoading: true
-    }, () => {
-      this.saveFilter();
-      this.getReportLayout();
-    });
-  }
-
   updateState(key, value) {
     this.setState({
       [key]: value,
@@ -280,11 +284,14 @@ export default class Efficiency extends React.PureComponent {
         endDate: moment(recentSearchCache.endDate)
       }, callback);
     } else {
-      this.setState({isLoading:true},callback);
+      this.setState({ isLoading: true }, callback);
     }
   }
 
   saveFilter() {
+    if (!this.state.endDate || !this.state.startDate) {
+      return;
+    }
     localStorage.setItem('efficiencyFilter-' + this.props.userEmail,
       JSON.stringify({
         startDate: this.state.startDate,
@@ -299,20 +306,23 @@ export default class Efficiency extends React.PureComponent {
   renderTiles() {
     //Tiles of the same type get a different colour
     let tileTypeCount = {};
-    return this.state.reportData && this.state.reportData.map((tileGroup, index) => {
-
+    let result = this.state.reportData && this.state.reportData.map((tileGroup, index) => {
       return (
         tileGroup.group.map((tile, i) => {
           tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
           tile.tileTypeCount = tileTypeCount[tile.tileType];
-          return <Grid item xs={this.getTileSize(tile.tileType)} key={`${index}-${i}`}>
+          return <Grid item xs={this.getTileSize(tile.tileType)} className={`grid-${tile.tileType}`} key={`${index}-${i}`}>
             <Card className={`efficiency-card ${tile.tileType}`}>
               <CardContent>{this.renderTile(tile)}</CardContent>
             </Card>
           </Grid>
         })
       )
-    })
+    }) || [];
+    result.push(<Grid item xs={12} style={{ paddingTop: 0 }}>
+      <InfographicParagraph description={"ORs with no data available are excluded from the report"} />
+    </Grid>);
+    return result;
   }
 
   renderTile(tile) {
@@ -336,15 +346,15 @@ export default class Efficiency extends React.PureComponent {
           message={tile.description}
         />
       case 'TABLE':
-        return <Table procedures={this.state.selectedSpecialty && this.state.selectedSpecialty.procedures}dataPointRows={tile.dataPointRows} description={tile.description} />
+        return <Table procedures={this.state.selectedSpecialty && this.state.selectedSpecialty.procedures} dataPointRows={tile.dataPointRows} description={tile.description} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart
           pattern={pattern}
           id={tile.tileTypeCount}
           reportType={this.props.reportType}
+          noWrapXTick={this.state.isLandingPage}
           {...tile}
-          body={tile.description}
           labelList={this.state.operatingRoomList} />
       case 'DONUTCHART':
         return <DonutChart {...tile} specialties={this.props.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
@@ -404,7 +414,7 @@ export default class Efficiency extends React.PureComponent {
               userToken={this.props.userToken}
               defaultState={this.state}
               apply={() => this.getReportLayout()}
-              disabled={this.state.isFilterApplied}
+              disabled={Boolean(this.state.isFilterApplied || !this.state.startDate || !this.state.endDate)}
               updateState={(key, value) => this.updateState(key, value)}
               {...this.getFilterLayout(this.state.reportType)}
             />

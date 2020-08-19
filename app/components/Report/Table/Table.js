@@ -29,12 +29,24 @@ import globalFunctions from '../../../utils/global-functions';
 export default class Table extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      dataPoints: []
+    };
   };
 
-  render() {
-    let dataPointRows = this.props.dataPointRows && this.props.dataPointRows.map(dataPointRow => {
+  componentDidMount(){
+    this.calculateRows(this.props.dataPointRows);
+  }
+  componentDidUpdate(prev){
+    if (prev.dataPointRows != this.props.dataPointRows){
+      this.calculateRows(this.props.dataPointRows)
+    }
+  }
+
+  calculateRows(rawDataPointRows){
+    let dataPointRows = rawDataPointRows && rawDataPointRows.map(dataPointRow => {
       return dataPointRow.columns.map(column => {
-        const { key, value } = column;
+        let { key, value } = column;
         switch (key) {
           case 'procedureName':
             column.value = globalFunctions.getName(this.props.procedures, column.value);
@@ -42,22 +54,40 @@ export default class Table extends React.PureComponent {
           case 'avgRoomSetup':
           case 'avgCase':
           case 'avgRoomCleanup':
-            column.value = Math.floor(parseInt(value) / 60);
+            column.value = Math.round(parseInt(value) / 60);
           default:
             break;
         }
         return column;
       });
     });
-    const dataPoints = dataPointRows && dataPointRows.map(value => {
+    let dataPoints = dataPointRows && dataPointRows.map(value => {
       return value.reduce((accumulator, currentValue) => {
         accumulator[currentValue.key] = currentValue.value;
         return accumulator;
       }, {});
     });
-    // let allPageSizeOptions = [ 5, 10, 25 ,50, 75, 100 ];
-    // let pageSizeOptions = [];
-    // allPageSizeOptions.some(a => (pageSizeOptions.push(Math.min(a,this.props.dataPoints.length)), a > this.props.dataPoints.length));
+    dataPoints.sort((a,b)=>('' + a.procedureName).localeCompare(b.procedureName))
+    this.setState({dataPoints});
+  }
+
+  customSort(name,title){
+    return (a,b) =>{ return a[name]-b[name] || this.procedureNameCompare(title,a,b)}
+  }
+
+  procedureNameCompare(title,a,b){
+    var element = document.querySelectorAll('.MuiTableSortLabel-active .MuiTableSortLabel-iconDirectionAsc');
+    var titleElement = document.querySelectorAll('.MuiTableSortLabel-active');
+    let isSameTitle = titleElement.length && title == titleElement[0].textContent;
+    //If element exists we're descending
+    if (element.length && isSameTitle){
+      return ('' + b.procedureName).localeCompare(a.procedureName);
+    }
+    return ('' + a.procedureName).localeCompare(b.procedureName);
+  }
+
+
+  render() {
     return (
       <LoadingOverlay
         active={!this.props.description}
@@ -84,35 +114,40 @@ export default class Table extends React.PureComponent {
                 {
                   title: 'Procedure', field: 'procedureName', cellStyle: {
                     padding: '12px 16px'
-                  }
+                  },
+                  defaultSort:'asc',
                 },
                 {
                   title: 'Avg. Room Setup (mins)', field: 'avgRoomSetup', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
-                  }
+                  },
+                  customSort: this.customSort('avgRoomSetup','Avg. Room Setup (mins)')
                 },
                 {
                   title: 'Avg. Case (mins)', field: 'avgCase', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
-                  }
+                  },
+                  customSort: this.customSort('avgCase','Avg. Case (mins)')
                 },
                 {
                   title: 'Avg. Room Clean-up (mins)', field: 'avgRoomCleanup', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
-                  }
+                  },
+                  customSort: this.customSort('avgRoomCleanup','Avg. Room Clean-up (mins)')
                 },
                 {
                   title: 'Total Cases', field: 'totalCases', cellStyle: {
                     textAlign: 'right',
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
-                  }
+                  },
+                  customSort: this.customSort('totalCases','Total Cases')
                 }
               ]}
               options={{
@@ -125,14 +160,15 @@ export default class Table extends React.PureComponent {
                   opacity: .6,
                   fontFamily: "Noto Sans",
                   width: 'unset'
-                }
+                },
+                draggable:false
               }}
               localization={{
                 body: {
                   emptyDataSourceMessage: this.props.description
                 }
               }}
-              data={dataPoints}
+              data={this.state.dataPoints}
               icons={tableIcons}
             />
           </Grid>

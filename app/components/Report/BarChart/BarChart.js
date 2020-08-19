@@ -20,7 +20,7 @@ const LightTooltip = withStyles((theme) => ({
 export default class BarChart extends React.PureComponent {
   constructor(props) {
     super(props);
-    
+
     this.chartRef = React.createRef();
     this.id = `bar-chart-${this.props.id}`;
     this.state = {
@@ -53,6 +53,20 @@ export default class BarChart extends React.PureComponent {
             label: {
               text: this.props.xAxis, //Dynamically populated
               position: 'outer-center'
+            },
+            tick: {
+              format: this.props.noWrapXTick ? function (x) {
+                x = this.api.categories()[x];
+                function stringEllipsis(charsToShow, nosOfDots) {
+                  return this.toString().substring(0, charsToShow) + Array(nosOfDots + 1).join(".")
+                }
+                let totalBars = Math.abs(this.x.orgDomain().reverse().reduce(function (a, b) {
+                  return a - b
+                }));
+                let substrLimit = parseInt(30 / Math.ceil(totalBars));
+                x = substrLimit < x.length ? stringEllipsis.apply(x , [substrLimit , 3]) : x;
+                return x;
+              } : null
             },
             type: 'category',
             height: this.props.id == 2 && this.props.reportType == "ComplianceScoreReport" ? 90 : 60
@@ -111,7 +125,7 @@ export default class BarChart extends React.PureComponent {
     let formattedData = { x: [] };
     let sum = 0
     dataPoints.map((point, index) => {
-      let xValue = globalFunctions.getName(this.props.labelList,point.valueX);
+      let xValue = globalFunctions.getName(this.props.labelList, point.valueX);
       if (parseInt(point.valueX) == point.valueX) {
         xValue = moment().month(parseInt(point.valueX) - 1).format('MMM');
       }
@@ -206,12 +220,15 @@ export default class BarChart extends React.PureComponent {
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
           </Grid>
+          <Grid item xs={12} className="chart-subtitle">
+            {this.props.subTitle}
+          </Grid>
           <Grid item xs>
             {
               this.props.body && this.props.subTitle
                 ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
-                : this.props.body ?
-                  <div className="display-text">{this.props.body}</div>
+                : this.props.body || this.props.description ?
+                  <div className="display-text">{this.props.description}</div>
                   : <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
           <Grid item xs>

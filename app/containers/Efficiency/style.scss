@@ -8,6 +8,12 @@ $ssc-picker-height: 150px;
     .MuiCardContent-root {
         padding: 24px 40px;
     }
+    .grid-InfographicParagraph{
+        padding-bottom: 8px;
+    }
+    .efficiency-card.DonutChart{
+        overflow: visible;
+    }
     .efficiency-card.InfographicText {
         max-width: fit-content;
         min-width: 300px;
@@ -17,6 +23,7 @@ $ssc-picker-height: 150px;
         box-shadow: none;
         background-color: unset;
         padding-left: 0;
+        padding-bottom: 0;
     }
     .EfficiencyReport {
         .link {
@@ -32,10 +39,8 @@ $ssc-picker-height: 150px;
             margin: 148px 0;
             font-style: unset;
         }
-    }
-    .TurnoverTimeReport {
-        .efficiency-card.InfographicText {
-            // max-width: 260px;
+        .DonutChart .chart-title{
+            margin-bottom: 18px;
         }
     }
     .DaysStartingOnTimeReport {
