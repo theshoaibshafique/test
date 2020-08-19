@@ -3,6 +3,12 @@
 .User-Modal {
     width: 50%;
     max-width: 1150px;
+    .close-button {
+        padding-top: 0;
+    }
+    .close-button:hover {
+        background-color: unset;
+    }
 }
 
 .ToolBar {

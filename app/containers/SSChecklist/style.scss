@@ -18,7 +18,7 @@ $ssc-picker-height: 150px;
         font-size: 26px;
         line-height: 36px;
     }
-    
+
     .ssc-divider {
         background-color: #c8c8c8;
     }
@@ -30,11 +30,11 @@ $ssc-picker-height: 150px;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
         border-radius: 8px !important;
     }
-    .ssc-card.ssc-card.BarChart{
-        .chart-title{
+    .ssc-card.ssc-card.BarChart {
+        .chart-title {
             margin-bottom: 16px;
         }
-        .chart-subtitle{
+        .chart-subtitle {
             display: none;
         }
     }
@@ -52,7 +52,7 @@ $ssc-picker-height: 150px;
     .ssc-card.BarChart .MuiCardContent-root {
         padding: 24px 40px;
     }
-    
+
     .ssc-card.InfographicParagraph .MuiCardContent-root,
     .ssc-card.MuiCard-root.InfographicParagraph {
         box-shadow: none;
@@ -97,18 +97,13 @@ $ssc-picker-height: 150px;
         line-height: 24px;
         text-align: center;
     }
-    
+
     .ssc-chart-title {
         font-size: 26px;
         letter-spacing: 0;
         line-height: 36px;
     }
-    
-    .sscOnboarding.Modal,
-    .ssc.Modal {
-        padding: 0;
-    }
-    
+
     .no-data {
         opacity: 0.8;
         color: #000000;
@@ -120,7 +115,7 @@ $ssc-picker-height: 150px;
         margin-top: 16px;
         margin-bottom: 8px;
     }
-    
+
     .no-data-subtitle {
         opacity: 0.8;
         color: #000000;
@@ -132,7 +127,10 @@ $ssc-picker-height: 150px;
         margin-bottom: 24px;
     }
 }
-
+.sscOnboarding.Modal,
+.ssc.Modal {
+    padding: 0;
+}
 .sscOnboarding {
     color: #000000;
     font-family: "Noto Sans";
@@ -208,7 +206,6 @@ $ssc-picker-height: 150px;
         margin-right: 4px;
         transform: translate(2px, 2px) rotate(90deg);
     }
-    
 }
 .sscOnboard-link {
     position: absolute;
