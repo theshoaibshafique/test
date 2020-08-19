@@ -64,10 +64,21 @@ export default class Efficiency extends React.PureComponent {
       if (selectedSpecialty && !selectedSpecialty.value) {
         selectedSpecialty = "";
       }
+      //If one date is null - set both to be the same date
+      let startDate = this.state.startDate || this.state.endDate;
+      let endDate = this.state.endDate || this.state.startDate;
+      //If they're still null then set to last valid date or latest date with data
+      if (!startDate || !endDate) {
+        const recentSearchCache = JSON.parse(localStorage.getItem('efficiencyFilter-' + this.props.userEmail));
+        startDate = moment(recentSearchCache.startDate) || this.pendingDate.clone().subtract(2, 'month').startOf('month');
+        endDate = moment(recentSearchCache.endDate) || this.pendingDate.clone().subtract(2, 'month').endOf('month');
+      }
       this.setState({
         reportType: this.props.reportType,
         reportData: [],
         selectedSpecialty,
+        startDate,
+        endDate,
         isLandingPage: this.props.reportType == "EfficiencyReport"
       }, () => {
         this.getReportLayout();
@@ -151,15 +162,19 @@ export default class Efficiency extends React.PureComponent {
       this.setState({ isSelectionRequired: true, isLoading: false });
       return;
     }
+    if (!this.state.endDate || !this.state.startDate) {
+      return;
+    }
     this.setState({ tileRequest: [], isSelectionRequired: false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType,
           "TileRequest": [{
-            "startDate": globalFuncs.formatDateTime(this.state.startDate.startOf('day')),
-            "endDate": globalFuncs.formatDateTime(this.state.endDate.endOf('day')),
+            "startDate": this.state.startDate && globalFuncs.formatDateTime(this.state.startDate.startOf('day')),
+            "endDate": this.state.endDate && globalFuncs.formatDateTime(this.state.endDate.endOf('day'))
           }]
         };
+
         globalFunctions.axiosFetch(process.env.EFFICIENCY_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
             result = result.data;
@@ -249,16 +264,6 @@ export default class Efficiency extends React.PureComponent {
     }, new Map).values()];
   }
 
-  updateMonth(month) {
-    this.setState({
-      month: month,
-      isLoading: true
-    }, () => {
-      this.saveFilter();
-      this.getReportLayout();
-    });
-  }
-
   updateState(key, value) {
     this.setState({
       [key]: value,
@@ -285,6 +290,9 @@ export default class Efficiency extends React.PureComponent {
   }
 
   saveFilter() {
+    if (!this.state.endDate || !this.state.startDate) {
+      return;
+    }
     localStorage.setItem('efficiencyFilter-' + this.props.userEmail,
       JSON.stringify({
         startDate: this.state.startDate,
@@ -312,7 +320,7 @@ export default class Efficiency extends React.PureComponent {
         })
       )
     }) || [];
-    result.push(<Grid item xs={12} style={{paddingTop:0}}>
+    result.push(<Grid item xs={12} style={{ paddingTop: 0 }}>
       <InfographicParagraph description={"ORs with no data available are excluded from the report"} />
     </Grid>);
     return result;
@@ -407,7 +415,7 @@ export default class Efficiency extends React.PureComponent {
               userToken={this.props.userToken}
               defaultState={this.state}
               apply={() => this.getReportLayout()}
-              disabled={this.state.isFilterApplied}
+              disabled={Boolean(this.state.isFilterApplied || !this.state.startDate || !this.state.endDate)}
               updateState={(key, value) => this.updateState(key, value)}
               {...this.getFilterLayout(this.state.reportType)}
             />
