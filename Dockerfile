@@ -9,6 +9,8 @@ RUN npm run build:cicd_test
 RUN mv build test
 RUN npm run build:cicd_uat
 RUN mv build uat
+RUN npm run build:local
+RUN mv build local
 
 FROM node:10-alpine
 WORKDIR /app
@@ -16,3 +18,4 @@ RUN npm install -g serve
 COPY --from=builder /app/dev ./dev
 COPY --from=builder /app/test ./test
 COPY --from=builder /app/uat ./uat
+COPY --from=builder /app/local ./local

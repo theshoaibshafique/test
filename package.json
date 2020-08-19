@@ -18,6 +18,7 @@
     "build:test": "npm run build:clean && cross-env NODE_ENV=test webpack --config config/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",
     "build:uat": "npm run build:clean && cross-env NODE_ENV=UAT webpack --config config/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",
     "build:clean": "rimraf ./build",
+    "build:local": "npm run build:clean && cross-env NODE_ENV=local webpack --config config/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",    
     "build:cicd_dev": "npm run build:clean && cross-env NODE_ENV=cicd_dev webpack --config config/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",
     "build:cicd_test": "npm run build:clean && cross-env NODE_ENV=cicd_test webpack --config config/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",    
     "build:cicd_uat": "npm run build:clean && cross-env NODE_ENV=cicd_uat webpack --config config/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",    
