@@ -64,11 +64,11 @@ export default class EMM extends React.PureComponent {
 
       } else {
         let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
-        
+
         let procedureNames = [];
         let complicationList = [];
         let operatingRoom = '';
-        
+
         result.procedure.map((procedure) => {
           procedureNames.push(globalFuncs.getName(surgeryList,procedure))
         });
@@ -120,13 +120,18 @@ export default class EMM extends React.PureComponent {
   }
 
 render() {
+    const { enhancedMMReferenceName, enhancedMMPublished, emmAccess } = this.state;
+    const isReportReady = (enhancedMMReferenceName && enhancedMMPublished && emmAccess)
     return (
       <section className="full-height">
         <div className="header page-title">
           <div>
             <span className="pad">Enhanced M&M</span>
-            {(this.state.enhancedMMReferenceName && this.state.enhancedMMPublished && this.state.emmAccess) &&
-              <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button>} </div>
+            {(isReportReady) ?
+              <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button> :
+              <span className="report-status">(Report Status: In Progress)</span>
+            }
+          </div>
         </div>
 
         <div className="table-row info-title">
