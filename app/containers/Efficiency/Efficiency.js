@@ -64,10 +64,9 @@ export default class Efficiency extends React.PureComponent {
       if (selectedSpecialty && !selectedSpecialty.value) {
         selectedSpecialty = "";
       }
-      //If one date is null - set both to be the same date
-      let startDate = this.state.startDate || this.state.endDate;
-      let endDate = this.state.endDate || this.state.startDate;
-      //If they're still null then set to last valid date or latest date with data
+      let startDate = this.state.startDate;
+      let endDate = this.state.endDate;
+      //if either are null then set to last valid date or latest date with data
       if (!startDate || !endDate) {
         const recentSearchCache = JSON.parse(localStorage.getItem('efficiencyFilter-' + this.props.userEmail));
         startDate = moment(recentSearchCache.startDate) || this.pendingDate.clone().subtract(2, 'month').startOf('month');
