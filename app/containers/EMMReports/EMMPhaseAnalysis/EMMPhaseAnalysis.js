@@ -18,7 +18,7 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
               eventsCounter.add(data.title + '' + data.valueX)
             })
           })
-          return eventsCounter.size;
+          return eventsCounter.size + phase.enhancedMMOpenData.length;
         } else {
           return phase.enhancedMMData.length
         }

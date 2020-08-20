@@ -91,9 +91,10 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
 
   changeVideo(updatedVideoID = null, videoIndex = 0) {
     const videoID = (updatedVideoID !== null) ? updatedVideoID : this.getVideoID();
+    const { selectedSurgicalTab } = this.state;
     const { phaseData } = this.props;
     if (videoID) {
-      if (phaseData.name !== 'SurgicalProcedure') {
+      if (phaseData.name !== 'SurgicalProcedure' || selectedSurgicalTab !== 0 ) {
         this.setState({ selectedVideoClipID: videoIndex })
       }
       this.createVideoPlayer(videoID)

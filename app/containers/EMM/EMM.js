@@ -119,7 +119,7 @@ export default class EMM extends React.PureComponent {
     this.props.showEMMReport(this.state.enhancedMMReferenceName)
   }
 
-render() {
+  render() {
     const { enhancedMMReferenceName, enhancedMMPublished, emmAccess } = this.state;
     const isReportReady = (enhancedMMReferenceName && enhancedMMPublished && emmAccess)
     return (
