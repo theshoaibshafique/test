@@ -55,7 +55,7 @@ export default class Efficiency extends React.PureComponent {
     //Last available data date is 2 months before the pending date
     this.state.startDate = this.pendingDate.clone().subtract(2, 'month').startOf('month');
     this.state.endDate = this.pendingDate.clone().subtract(2, 'month').endOf('month');
-    this.state.maxDate = this.state.endDate.clone();
+    this.state.maxDate = process.env.DISPLAY_PENDING_REPORT == "true" ? moment().endOf('month') : this.state.endDate.clone();
   }
 
   componentDidUpdate(prevProps) {
