@@ -1,12 +1,38 @@
 import React from 'react';
-import { Grid, TextField, FormControl, MenuItem, Select, Button } from '@material-ui/core';
+import { Grid, TextField, FormControl, MenuItem, Select, Button, withStyles, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import moment from 'moment/moment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-
+const CustomAutocomplete = withStyles((theme) => ({
+  listbox: {
+    width: 200,
+    margin: 0,
+    padding: 0,
+    zIndex: 1,
+    position: 'absolute',
+    listStyle: 'none',
+    backgroundColor: theme.palette.background.paper,
+    borderRadius:4,
+    boxShadow: "0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)",
+    '& li[data-focus="true"]': {
+      backgroundColor: '#4a8df6',
+      color: 'white',
+      cursor: 'pointer',
+    },
+    '& li[data-focus="true"] p': {
+      overflow:'unset !important',
+      whiteSpace:'unset',
+      textOverflow:'unset'
+    },
+    '& li:active': {
+      backgroundColor: '#2977f5',
+      color: 'white',
+    },
+  }
+}))(Autocomplete);
 
 class UniversalPicker extends React.Component {
   constructor(props) {
@@ -218,15 +244,15 @@ class UniversalPicker extends React.Component {
           />
         </Grid>}
         {this.state.showProcedure && <Grid item xs={3} style={{ maxWidth: 210 }}>
-          <Autocomplete
+          <CustomAutocomplete
             size="small"
             options={this.state.procedureOptions}
             clearOnEscape
-            getOptionLabel={option => option.name ? option.name : ''}
             value={this.state.selectedProcedure}
             onChange={(e, value) => this.handleSelectedProcedureChange(e, value)}
             noOptionsText="Please select a specialty"
             disabled={this.props.isSpecialtyMandatory && !specialtySelected}
+            disableListWrap
             renderInput={params => (
               <TextField
                 {...params}
@@ -237,6 +263,7 @@ class UniversalPicker extends React.Component {
                 className={this.state.selectedProcedure && this.formatClass(this.state.selectedProcedure.name)}
               />
             )}
+            renderOption={(option) => (<Typography noWrap>{option.name ? option.name : ''}</Typography>)}
           />
         </Grid>}
         {this.state.showOR2 && <Grid item xs={1} style={{ minWidth: 150 }}>
