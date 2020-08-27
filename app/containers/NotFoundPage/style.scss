@@ -1,6 +1,30 @@
 .not-found-page {
-  h1 {
-    font-size: 2em;
-    margin-bottom: 0.25em;
+  text-align: center;
+  padding: 40px;
+  margin-top: 200px;
+  .title {
+    color: #004F6E;
+    font-family: "Noto Sans";
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 36px;
+  }
+  .title-break {
+    height: 1px;
+    width: 120px;
+    background-color: #C8C8C8;
+    margin:auto;
+    margin-bottom: 24px;
+  }
+  .content {
+    opacity: 0.8;
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 24px;
+    text-align: center;
+    max-width: 720px;
+    margin: auto;
   }
 }
