@@ -22,11 +22,11 @@ export default class NotFoundPage extends React.PureComponent { // eslint-disabl
     return (
       <Grid container spacing={0} direction="column" className="not-found-page">
         <Grid item xs className="title">
-          Access Denied
+          Page Not Found
         </Grid>
         <div item xs className="title-break"></div>
         <Grid item xs className="content">
-          You do not have access to this page. This could be due to a connection issue or a missing permission. Please logout and log back in to try again or contact your administrator.
+          The page you are looking for might have been removed, had its name changed, or temporarily unavailable. Contact your administrator or go back to the previous page.
         </Grid>
       </Grid>
     );

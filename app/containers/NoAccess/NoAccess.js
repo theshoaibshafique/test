@@ -6,6 +6,7 @@
 
 import React from 'react';
 import './style.scss';
+import { Grid } from '@material-ui/core';
 
 export default class NoAccess extends React.PureComponent { 
   constructor(props) {
@@ -19,13 +20,15 @@ export default class NoAccess extends React.PureComponent {
 
   render() {
     return (
-      <div className="no-access">
-        <article className="test">
-            <h1>You do not have access to Insights Products. This could be due to one of two things:</h1>
-            <h1>• A connection issue has occurred. Please logout and log back in</h1>
-            <h1>• Contact your adminstrator for access to the appropriate products</h1>
-        </article>
-      </div>
+      <Grid container spacing={0} direction="column" className="not-found-page">
+        <Grid item xs className="title">
+          Access Denied
+        </Grid>
+        <div item xs className="title-break"></div>
+        <Grid item xs className="content">
+          You do not have access to this page. This could be due to a connection issue or a missing permission. Please logout and log back in to try again or contact your administrator.
+        </Grid>
+      </Grid>
     );
   }
 }
