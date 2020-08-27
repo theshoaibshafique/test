@@ -24,36 +24,40 @@
     line-height: 24px;
     text-align: right;
   }
-}
 
-.area-chart .c3-axis .tick line{
-  opacity: 0;
-}
-.area-chart .c3-area{
-  fill: url('#gradient') !important;
-  opacity: 1 !important;
-}
-// .area-chart .c3-circle,
-.area-chart .c3-text{
-  fill: #004F6E !important;
-}
-
-.area-chart .c3-text,
-.area-chart .legend-title,
-.area-chart .c3-axis,
-.c3-axis-y-label,.c3-axis-x-label {
-  font-family: "Noto Sans";
-  font-size: 14px;
-  letter-spacing: 0;
-  line-height: 19px;
-}
-.area-chart .c3 path, 
-.area-chart .c3 line,
-.area-chart .c3-xgrid,
-.area-chart .c3-ygrid{
-  stroke-dasharray: unset;
-  stroke: #EAEAEA;
-}
-.c3-axis-x .tick {
-  font-weight: bold;
+  .c3-axis .tick line{
+    opacity: 0;
+  }
+  .c3-area{
+    fill: url('#gradient') !important;
+    opacity: 1 !important;
+  }
+  .c3-text{
+    fill: #004F6E !important;
+  }
+  
+  .c3-text,
+  .legend-title,
+  .c3-axis,
+  .c3-axis-y-label,
+  .c3-axis-x-label {
+    font-family: "Noto Sans";
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 19px;
+  }
+  .c3-axis-y-label,
+  .c3-axis-x-label {
+    font-size: 15px;
+  }
+  .c3 path, 
+  .c3 line,
+  .c3-xgrid,
+  .c3-ygrid{
+    stroke-dasharray: unset;
+    stroke: #EAEAEA;
+  }
+  .c3-axis-x .tick {
+    font-weight: bold;
+  }
 }

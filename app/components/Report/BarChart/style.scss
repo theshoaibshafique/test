@@ -44,6 +44,10 @@
     letter-spacing: 0;
     line-height: 19px;
   }
+  .c3-axis-y-label,
+  .c3-axis-x-label {
+    font-size: 15px;
+  }
   .c3-axis-x .tick {
     font-weight: bold;
   }
