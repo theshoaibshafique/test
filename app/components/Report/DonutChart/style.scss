@@ -52,6 +52,11 @@
   .c3-tooltip-container .tooltip{
     white-space: nowrap;
   }
+  .circle:before {
+    content: ' \25CF';
+    font-size: 32px;
+    line-height: 0;
+  }
 }
 .c3-arc-NA{
   fill: #F3F3F3 !important;
