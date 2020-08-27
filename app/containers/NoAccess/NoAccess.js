@@ -20,7 +20,7 @@ export default class NoAccess extends React.PureComponent {
 
   render() {
     return (
-      <Grid container spacing={0} direction="column" className="not-found-page">
+      <Grid container spacing={0} direction="column" className="no-access">
         <Grid item xs className="title">
           Access Denied
         </Grid>
