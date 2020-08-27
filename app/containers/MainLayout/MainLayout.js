@@ -12,6 +12,7 @@ import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import LoadingIndicator from 'components/LoadingIndicator';
 import SSChecklist from 'containers/SSChecklist/Loadable';
 import Efficiency from 'containers/Efficiency/Loadable';
 import NoAccess from 'containers/NoAccess/Loadable';
@@ -52,7 +53,8 @@ export default class MainLayout extends React.PureComponent {
 
   redirect() {
     this.setState({
-      authenticated: false
+      authenticated: false,
+      isLoading:false
     });
   };
 
@@ -159,7 +161,7 @@ export default class MainLayout extends React.PureComponent {
         }
 
         <Route path="/my-profile" component={MyProfile} />
-        <Route path="" component={NotFoundPage} />
+        <Route path="" component={this.state.isLoading ? LoadingIndicator : NotFoundPage} />
       </Switch>
     } else {
       return ''
@@ -202,7 +204,6 @@ export default class MainLayout extends React.PureComponent {
                   userLogin={<AzureLogin
                     resourcesGathered={() => this.resourcesGathered()}
                     redirect={() => this.redirect()}
-                    notLoading={() => this.notLoading()}
                     logoutRef={this.logoutRef}
                   />}
                 />
