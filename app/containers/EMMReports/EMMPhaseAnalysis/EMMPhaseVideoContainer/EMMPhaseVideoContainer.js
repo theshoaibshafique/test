@@ -179,7 +179,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
         {(isProcedureStepWithTabs) && this.getProcedureTabs()}
         {
           (noVideo && phaseData.checklistData.length == 0) ?
-            <div className="no-data-container">There are no Adverse Events or Surgical Safety Checklist information during this phase.</div>
+            <div className="no-data-container">
+              There are no {(phaseData.name === 'SurgicalProcedure') ? 'Adverse' : 'Non-Routine' } Events or Surgical Safety Checklist information during this phase.
+            </div>
           :
           (!noVideo) &&
             <div className="flex">
