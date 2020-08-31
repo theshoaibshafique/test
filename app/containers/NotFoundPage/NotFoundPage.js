@@ -20,15 +20,17 @@ export default class NotFoundPage extends React.PureComponent { // eslint-disabl
 
   render() {
     return (
-      <Grid container spacing={0} direction="column" className="not-found-page">
-        <Grid item xs className="title">
-          Page Not Found
+      <div className="not-found-page">
+        <Grid container spacing={0} direction="column" justify="center">
+          <Grid item xs className="title">
+            Page Not Found
         </Grid>
-        <div item xs className="title-break"></div>
-        <Grid item xs className="content">
-          The page you are looking for might have been removed, had its name changed, or temporarily unavailable. Contact your administrator or go back to the previous page.
+          <div item xs className="title-break"></div>
+          <Grid item xs className="content">
+            The page you are looking for might have been removed, had its name changed, or temporarily unavailable. Contact your administrator or go back to the previous page.
         </Grid>
-      </Grid>
+        </Grid>
+      </div>
     );
   }
 }
