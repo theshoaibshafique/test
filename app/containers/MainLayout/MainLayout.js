@@ -2,8 +2,8 @@ import React from 'react';
 import './style.scss';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
-import axios from 'axios';
 import MainDashboard from 'containers/MainDashboard/Loadable';
+import Welcome from 'containers/Welcome/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
 import EMMPublish from 'containers/EMMPublish/Loadable';
 import EMM from 'containers/EMM/Loadable';
@@ -115,7 +115,7 @@ export default class MainLayout extends React.PureComponent {
 
     if (this.state.userLoggedIn) {
       return <Switch>
-        <Route path="/dashboard" component={MainDashboard} />
+        <Route path="/dashboard" component={Welcome} />
         {(this.state.emmAccess) &&
           <Route path="/emmcases" component={EMMCases} />
         }
@@ -164,7 +164,7 @@ export default class MainLayout extends React.PureComponent {
         <Route path="" component={this.state.isLoading ? LoadingIndicator : NotFoundPage} />
       </Switch>
     } else {
-      return ''
+      return this.state.isLoading ? <LoadingIndicator/> : ''
     }
   };
 

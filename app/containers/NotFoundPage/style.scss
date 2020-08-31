@@ -1,7 +1,9 @@
 .not-found-page {
   text-align: center;
-  padding: 40px;
-  margin-top: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
   .title {
     color: #004F6E;
     font-family: "Noto Sans";

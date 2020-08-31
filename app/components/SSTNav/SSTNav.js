@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './style.scss';
-import logo from './img/SST-Product_Insights_sketch.png';
+import logo from 'images/SST-Product_Insights_sketch.png';
 import { List, ListItem, Collapse, Grid, MenuItem, Menu } from '@material-ui/core';
 import IconExpandLess from '@material-ui/icons/ExpandLess'
 import IconExpandMore from '@material-ui/icons/ExpandMore'
