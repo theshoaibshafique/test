@@ -253,6 +253,7 @@ class UniversalPicker extends React.Component {
             noOptionsText="Please select a specialty"
             disabled={this.props.isSpecialtyMandatory && !specialtySelected}
             disableListWrap
+            getOptionLabel={option => option.name ? option.name : ''}
             renderInput={params => (
               <TextField
                 {...params}
