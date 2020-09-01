@@ -7,12 +7,12 @@
     justify-content: center;
     height: 100%;
     .welcome-grid{
-        animation: fadeIn 1s ease-in both;
+        animation: fadeIn .75s ease-in both;
     }
     @keyframes fadeIn {
         from {
             opacity: 0;
-            transform: translate3d(0, -30%, 0);
+            transform: translate3d(0, -10%, 0);
         }
         to {
             opacity: 1;
