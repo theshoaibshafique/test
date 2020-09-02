@@ -31,7 +31,7 @@ $onboardwidth: 875px;
             margin: 0px 0px 16px 0px;
         }
         .content-tile {
-            width: 385x;
+            width: 385px;
             padding: 24px;
             margin-right: 24px;
             border-radius: 5px;
@@ -44,12 +44,12 @@ $onboardwidth: 875px;
             h5, .content-p { text-align: center; }
             &:first-child {
                 background: #EEEAF2;
-                h5 { color: #009483 }
+                h5 { color: #592D82; }
             }
             &:last-child {
                 margin-right: 0px;
                 background: #CCEAE6;
-                h5 { color: #592D82}
+                h5 { color: #009483; }
             }
         }
     }
