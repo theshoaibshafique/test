@@ -8,7 +8,6 @@
         font-size: 26px;
         letter-spacing: 0;
         line-height: 36px;
-        
     }
     .chart-subtitle {
         font-size: 14px;
@@ -18,7 +17,7 @@
         margin-bottom: 40px;
         text-align: center;
     }
-    .sub-chart-container{
+    .sub-chart-container {
         min-height: 295px;
     }
     .row-divider {
@@ -35,6 +34,14 @@
         font-weight: bold;
         letter-spacing: 0;
         line-height: 24px;
+
+        //TODO: revert styling change
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        font-size: 26px;
+        line-height: 26px;
     }
     .row-subtitle {
         opacity: 0.8;
@@ -43,6 +50,8 @@
         font-size: 14px;
         letter-spacing: 0;
         line-height: 19px;
+        //TODO:show case count
+        display: none;
     }
     .row-score {
         color: #004f6e;

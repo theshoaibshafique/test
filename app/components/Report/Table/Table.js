@@ -116,6 +116,7 @@ export default class Table extends React.PureComponent {
                     padding: '12px 16px'
                   },
                   defaultSort:'asc',
+                  width:480
                 },
                 {
                   title: 'Avg. Room Setup (mins)', field: 'avgRoomSetup', cellStyle: {
@@ -123,6 +124,7 @@ export default class Table extends React.PureComponent {
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   },
+                  width:140,
                   customSort: this.customSort('avgRoomSetup','Avg. Room Setup (mins)')
                 },
                 {
@@ -131,6 +133,7 @@ export default class Table extends React.PureComponent {
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   },
+                  width:140,
                   customSort: this.customSort('avgCase','Avg. Case (mins)')
                 },
                 {
@@ -139,6 +142,7 @@ export default class Table extends React.PureComponent {
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   },
+                  width:140,
                   customSort: this.customSort('avgRoomCleanup','Avg. Room Clean-up (mins)')
                 },
                 {
@@ -147,6 +151,7 @@ export default class Table extends React.PureComponent {
                     borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     padding: '12px 16px'
                   },
+                  width:140,
                   customSort: this.customSort('totalCases','Total Cases')
                 }
               ]}

@@ -57,6 +57,12 @@ $ssc-picker-height: 150px;
             }
         }
     }
+    //TODO: display infographic text
+    .TurnoverTimeReport{
+        .grid-InfographicText{
+            display: none;
+        }
+    }
     .efficiency-card.Table {
         .MuiCardContent-root {
             padding: 0;
