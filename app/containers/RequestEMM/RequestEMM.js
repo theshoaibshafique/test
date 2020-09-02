@@ -281,8 +281,8 @@ export default class RequestEMM extends React.PureComponent {
     let jsonBody = {
       "roomName": this.state.selectedOperatingRoom.value,
       "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
-      "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : this.state.selectedProcedures,
-      "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
+      "procedure": this.state.specialtyCheck && this.state.procedureValue ? [...this.state.selectedProcedures, this.state.procedureValue] : this.state.selectedProcedures,
+      "complications": this.state.complicationsCheck && this.state.complicationValue ? [...this.state.selectedComplication, this.state.complicationValue] : this.state.selectedComplication,
       "postOpDate": globalFuncs.formatDateTime(this.state.compDate),
       "operationDate": globalFuncs.formatDateTime(this.state.operationDate),
       "notes": this.state.notes,
@@ -290,7 +290,7 @@ export default class RequestEMM extends React.PureComponent {
       "departmentName": this.state.departmentName,
       "facilityName": this.props.userFacility
     }
-
+    
     globalFuncs.genericFetch(process.env.EMMREQUEST_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {

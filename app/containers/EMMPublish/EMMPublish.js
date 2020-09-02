@@ -39,13 +39,6 @@ export default class EMMPublish extends React.PureComponent {
     };
   }
 
-  getName(searchList, key) {
-    let index = searchList.findIndex(specialty => specialty.value.toLowerCase() == key.toLowerCase());
-    if (index >= 0) {
-      return searchList[index].name;
-    }
-  }
-
   componentDidMount() {
     this.getEMMCases();
   };
@@ -93,8 +86,8 @@ export default class EMMPublish extends React.PureComponent {
                       requestID: emmCase.name,
                       facilityName: facility.facilityTitle,
                       roomName: room.roomTitle,
-                      procedures: emmCase.procedure.map((procedure) => { return this.getName(surgeryList, procedure) }).join(', '),
-                      complications: emmCase.complications.map((complication) => { return this.getName(this.props.complications || [], complication) }).join(', '),
+                      procedures: emmCase.procedure.map((procedure) => { return globalFuncs.getName(surgeryList, procedure) }).join(', '),
+                      complications: emmCase.complications.map((complication) => { return globalFuncs.getName(this.props.complications || [], complication) }).join(', '),
                       enhancedMMPublished: emmCase.enhancedMMPublished,
                       enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
                       report:!emmCase.enhancedMMReferenceName
