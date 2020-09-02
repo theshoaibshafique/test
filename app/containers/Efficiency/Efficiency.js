@@ -436,7 +436,12 @@ export default class Efficiency extends React.PureComponent {
               ...base,
               background: 'none',
               color: '#000',
-              marginTop: 150
+              marginTop: 150,
+              opacity: 0.8,
+              color: "#000000",
+              fontFamily: "Noto Sans",
+              fontSize: 18,
+              lineHeight: "24px"
             }),
             spinner: (base) => ({
               ...base,
@@ -520,7 +525,7 @@ export default class Efficiency extends React.PureComponent {
             </DialogContent>
           </Modal>
         </LoadingOverlay>
-      </div>
+      </div >
     );
   }
 }

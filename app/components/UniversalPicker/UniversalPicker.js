@@ -5,17 +5,16 @@ import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import moment from 'moment/moment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
-const CustomAutocomplete = withStyles((theme) => ({
+const dropdownStyles = (theme,props) => {return {
   listbox: {
-    width: 200,
+    width: 480,
     margin: 0,
     padding: 0,
     zIndex: 1,
     position: 'absolute',
     listStyle: 'none',
     backgroundColor: theme.palette.background.paper,
-    borderRadius:4,
+    borderRadius: 4,
     boxShadow: "0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)",
     '& li[data-focus="true"]': {
       backgroundColor: '#4a8df6',
@@ -23,16 +22,19 @@ const CustomAutocomplete = withStyles((theme) => ({
       cursor: 'pointer',
     },
     '& li[data-focus="true"] p': {
-      overflow:'unset !important',
-      whiteSpace:'unset',
-      textOverflow:'unset'
+      overflow: 'unset !important',
+      whiteSpace: 'unset',
+      textOverflow: 'unset'
     },
     '& li:active': {
       backgroundColor: '#2977f5',
       color: 'white',
     },
+    ...props
   }
-}))(Autocomplete);
+}};
+const ProcedureAutocomplete = withStyles((theme) => (dropdownStyles(theme)))(Autocomplete);
+const SpecialtyAutocomplete = withStyles((theme) => (dropdownStyles(theme,{width:400})))(Autocomplete);
 
 class UniversalPicker extends React.Component {
   constructor(props) {
@@ -224,7 +226,7 @@ class UniversalPicker extends React.Component {
         </Grid>}
 
         {this.state.showSpecialty && <Grid item xs={3} style={{ maxWidth: this.props.isSpecialtyMandatory ? 218 : 200 }}>
-          <Autocomplete
+          <SpecialtyAutocomplete
             size="small"
             options={this.state.specialties}
             clearOnEscape
@@ -241,10 +243,11 @@ class UniversalPicker extends React.Component {
                 className={this.state.selectedSpecialty && this.formatClass(this.state.selectedSpecialty.name) || this.props.isSpecialtyMandatory && "select-a-specialty"}
               />
             )}
+            renderOption={(option) => (<Typography noWrap>{option.name ? option.name : ''}</Typography>)}
           />
         </Grid>}
         {this.state.showProcedure && <Grid item xs={3} style={{ maxWidth: 210 }}>
-          <CustomAutocomplete
+          <ProcedureAutocomplete
             size="small"
             options={this.state.procedureOptions}
             clearOnEscape

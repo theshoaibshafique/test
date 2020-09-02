@@ -29,7 +29,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
           <Grid item xs className="message">
             Welcome {this.props.firstName} {this.props.lastName}
           </Grid>
-          <div item xs className="title-break"></div>
+          <div className="title-break"></div>
         </Grid>
         <div className="footer">Can’t find what you’re looking for? Contact your administrator for assistance.</div>
       </div>

@@ -71,13 +71,13 @@ export default class DetailedMultiLineChart extends React.PureComponent {
               return (
                 <Grid container spacing={0} className="multi-line-chart-row" key={`row-${index}`}>
                   <Grid item xs={4} >
-                    <Grid container spacing={1} direction="column">
+                    <Grid container spacing={1} direction="column" className="flex-center" style={{height:"100%"}}>
                       <Grid item xs className="row-title">
                         {globalFunctions.getName(this.props.labelList, reportData.title)}
                       </Grid>
-                      <Grid item xs className="row-subtitle">
+                      {/* <Grid item xs className="row-subtitle">
                         {reportData.subTitle}
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                   </Grid>
                   <Grid item xs={6} >
