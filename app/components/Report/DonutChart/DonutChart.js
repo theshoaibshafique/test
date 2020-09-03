@@ -55,7 +55,7 @@ export default class DonutChart extends React.PureComponent {
         },
         size: {
           height: 360,
-          width: 320
+          // width: 320
         },
         transition: {
           duration: 0

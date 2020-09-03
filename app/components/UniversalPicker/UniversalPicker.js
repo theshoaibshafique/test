@@ -7,7 +7,7 @@ import moment from 'moment/moment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 const dropdownStyles = (theme,props) => {return {
   listbox: {
-    width: 480,
+    maxWidth: 480,
     margin: 0,
     padding: 0,
     zIndex: 1,
@@ -246,7 +246,7 @@ class UniversalPicker extends React.Component {
             renderOption={(option) => (<Typography noWrap>{option.name ? option.name : ''}</Typography>)}
           />
         </Grid>}
-        {this.state.showProcedure && <Grid item xs={3} style={{ maxWidth: 210 }}>
+        {this.state.showProcedure && <Grid item xs={3} style={{ maxWidth: 350 }}>
           <ProcedureAutocomplete
             size="small"
             options={this.state.procedureOptions}
@@ -255,7 +255,6 @@ class UniversalPicker extends React.Component {
             onChange={(e, value) => this.handleSelectedProcedureChange(e, value)}
             noOptionsText="Please select a specialty"
             disabled={this.props.isSpecialtyMandatory && !specialtySelected}
-            disableListWrap
             getOptionLabel={option => option.name ? option.name : ''}
             renderInput={params => (
               <TextField
