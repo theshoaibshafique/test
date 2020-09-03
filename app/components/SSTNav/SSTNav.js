@@ -10,7 +10,7 @@ class SSTNav extends React.Component {
   constructor(props) {
     super(props);
     this.sscLinks = ["/sschecklist", "/complianceScore", "/engagementScore", "/qualityScore"]
-    this.efficiencyLinks = ["/efficiency ", "/daysStarting", "/turnoverTime", "/orUtilization", "/caseAnalysis"]
+    this.efficiencyLinks = ["/efficiency", "/daysStarting", "/turnoverTime", "/orUtilization", "/caseAnalysis"]
     this.state = {
       pathname: this.props.pathname,
       isSSCOpen: this.isInNav(this.sscLinks, this.props.pathname),
