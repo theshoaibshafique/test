@@ -28,9 +28,6 @@ export default class Efficiency extends React.PureComponent {
       reportType: this.props.reportType,
       isLandingPage: this.props.reportType == "EfficiencyReport",
       isOnboardModalOpen: false,
-      operatingRoomList: this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
-        return { value: or.roomName, name: or.roomTitle };
-      }) || [],
       isLoading: true,
       pendingTileCount: 0,
       tileRequest: [],
@@ -333,7 +330,9 @@ export default class Efficiency extends React.PureComponent {
       case 'DETAILEDMULTILINECHART':
         return <DetailedMultiLineChart
           {...tile}
-          labelList={this.state.operatingRoomList} />
+          labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
+            return { value: or.roomName, name: or.roomTitle };
+          }) || []} />
       case 'INFOGRAPHICPARAGRAPH':
         return <InfographicParagraph {...tile} />
       case 'INFOGRAPHICTEXT':
@@ -355,7 +354,9 @@ export default class Efficiency extends React.PureComponent {
           reportType={this.props.reportType}
           noWrapXTick={this.state.isLandingPage}
           {...tile}
-          labelList={this.state.operatingRoomList} />
+          labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
+            return { value: or.roomName, name: or.roomTitle };
+          }) || []} />
       case 'DONUTCHART':
         return <DonutChart {...tile} specialties={this.props.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'STACKEDBARCHART':
