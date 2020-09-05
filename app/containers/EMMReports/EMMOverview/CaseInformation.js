@@ -5,15 +5,23 @@ const CaseInformation = (props) => {
   const { caseDuration, procedures, complications, allSpecialties, allComplications } = props;
   const caseProcedures = procedures.map((procedure) => {
     const foundSpecialty = allSpecialties.filter((specialty) => { return specialty.value.toUpperCase() == procedure.specialtyName.toUpperCase() })[0];
-    const foundProcedure = foundSpecialty.procedures.filter((specialty) => { return specialty.value.toUpperCase() == procedure.procedureName.toUpperCase() })[0];
+    if (foundSpecialty != undefined) {
+      const foundProcedure = foundSpecialty.procedures.filter((specialty) => { return specialty.value.toUpperCase() == procedure.procedureName.toUpperCase() })[0];
 
-    return {
-      'specialty' : foundSpecialty.name,
-      'procedure' : foundProcedure.name
+      return {
+        'specialty' : foundSpecialty.name,
+        'procedure' : foundProcedure.name
+      }
+    } else {
+      return {
+        'specialty' : 'Unknown Specialty',
+        'procedure' : 'Unknown Procedure'
+      }
     }
   })
   const caseComplications = complications.map((complication) => {
-    return allComplications.filter((allComplication) => { return allComplication.value.toUpperCase() == complication.toUpperCase() })[0]
+    return allComplications.filter((allComplication) => {
+      return allComplication.value.toUpperCase() == complication.toUpperCase() })[0]
   })
 
   return (
@@ -35,7 +43,11 @@ const CaseInformation = (props) => {
       <div className="case-info-details">
       {
         caseComplications.map((caseComplication, index) => {
-          return <div key={`caseComplication${index}`} className="case-complication">{caseComplication.name}</div>
+          if (caseComplication == undefined) {
+            return <div key={`caseComplication${index}`} className="case-complication">{complications[index]}</div>
+          } else {
+            return <div key={`caseComplication${index}`} className="case-complication">{caseComplication.name}</div>
+          }
         })
       }
       </div>
