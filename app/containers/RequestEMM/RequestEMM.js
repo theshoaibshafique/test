@@ -385,19 +385,18 @@ export default class RequestEMM extends React.PureComponent {
     this.populateSpecialtyList();
   }
   populateSpecialtyList() {
-    globalFunctions.genericFetch(process.env.SPECIALTY_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+    globalFunctions.genericFetch(process.env.PROCEDURE_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           if (result == 'error' || !result) {
             return;
           }
           let procedureList = this.state.procedureList || []
-          result && result.forEach((specialty) => {
-            specialty.procedures.forEach((procedure) => {
-              procedure.specialtyName = specialty.name;
-              procedure.ID = specialty.value
-              procedureList.push(procedure);
-            });
+          result && result.forEach((procedure) => {
+            procedureList.push({
+              name:procedure.procedureName,
+              value:procedure.name
+            })
           });
           this.setState({procedureList});
         } else {
