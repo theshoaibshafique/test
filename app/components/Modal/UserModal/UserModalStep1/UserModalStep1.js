@@ -382,7 +382,7 @@ class UserModalStep1 extends React.Component {
                 fieldErrors={this.state.fieldErrors}
                 isEmailLoading={this.state.isEmailLoading}
                 isEmailSent={this.state.isEmailSent}
-
+                roleNames={this.props.roleNames}
               />
             </Grid>
 

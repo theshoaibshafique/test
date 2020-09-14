@@ -46,11 +46,11 @@ export default class MainLayout extends React.PureComponent {
   resourcesGathered(roles) {
     this.setState({
       userLoggedIn: true,
-      userManagementAccess: this.containsAny(roles,["ADMIN","SUPERADMIN"]),
-      emmAccess: this.containsAny(roles,["ADMIN","SUPERADMIN","ENHANCED M&M VIEW"]),
-      emmRequestAccess: this.containsAny(roles,["ADMIN","SUPERADMIN","ENHANCED M&M EDIT"]),
-      sscAccess:this.containsAny(roles,["ADMIN","SUPERADMIN","SURGICAL CHECKLIST"]),
-      efficiencyAccess:this.containsAny(roles,["ADMIN","SUPERADMIN","EFFICIENCY"]),
+      userManagementAccess: this.containsAny(roles,["ADMIN"]),
+      emmAccess: this.containsAny(roles,["ADMIN","ENHANCED M&M VIEW"]),
+      emmRequestAccess: this.containsAny(roles,["ADMIN","ENHANCED M&M EDIT"]),
+      sscAccess:this.containsAny(roles,["ADMIN","SURGICAL CHECKLIST"]),
+      efficiencyAccess:this.containsAny(roles,["ADMIN","EFFICIENCY"]),
     });
 
     this.getPageAccess();

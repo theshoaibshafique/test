@@ -37,6 +37,7 @@ export default class UserManagement extends React.PureComponent {
     this.state = {
       isLoading: true,
       userList: [],
+      roleNames:[],
       open: false,
       currentView: 'add',
       userValue: {
@@ -74,6 +75,7 @@ export default class UserManagement extends React.PureComponent {
       }
       this.notLoading();
     });
+    this.getRoles();
   };
 
   openModal(e, view, rowData) {
@@ -260,6 +262,17 @@ export default class UserManagement extends React.PureComponent {
     })
   };
 
+  getRoles(){
+    globalFuncs.genericFetch(process.env.USERMANAGEMENTROLES_API + "/35840EC2-8FA4-4515-AF4F-D90BD2A303BA", 'get', this.props.userToken, {})
+      .then(result => {
+        if (result === 'error' || result === 'conflict') {
+
+        } else if (result) {
+          this.setState({roleNames:result.roleNames || []})
+        }
+      });
+  }
+
   render() {
     let allPageSizeOptions = [ 5, 10, 25 ,50, 75, 100 ];
     let pageSizeOptions = [];
@@ -316,6 +329,7 @@ export default class UserManagement extends React.PureComponent {
           refreshGrid={(userName) => this.refreshGrid(userName)}
           updateGridEdit={(id,userValue) => this.updateGridEdit(id,userValue)}
           isFormValid={() => this.isFormValid()}
+          roleNames={this.state.roleNames}
         />
 
         <DeleteModal
