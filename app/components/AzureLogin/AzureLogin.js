@@ -56,7 +56,7 @@ class AzureLogin extends React.Component {
         response.json().then((result) => {
           if (result) {
             this.props.setUserFacility(result);
-            this.props.resourcesGathered(true);
+            this.props.resourcesGathered(result.roles);
             this.getOperatingRooms()
           }
         });

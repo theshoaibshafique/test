@@ -43,13 +43,22 @@ export default class MainLayout extends React.PureComponent {
     this.logoutRef = React.createRef();
   }
 
-  resourcesGathered() {
+  resourcesGathered(roles) {
     this.setState({
-      userLoggedIn: true
+      userLoggedIn: true,
+      userManagementAccess: this.containsAny(roles,["ADMIN","SUPERADMIN"]),
+      emmAccess: this.containsAny(roles,["ADMIN","SUPERADMIN","ENHANCED M&M VIEW"]),
+      emmRequestAccess: this.containsAny(roles,["ADMIN","SUPERADMIN","ENHANCED M&M EDIT"]),
+      sscAccess:this.containsAny(roles,["ADMIN","SUPERADMIN","SURGICAL CHECKLIST"]),
+      efficiencyAccess:this.containsAny(roles,["ADMIN","SUPERADMIN","EFFICIENCY"]),
     });
 
     this.getPageAccess();
   };
+
+  containsAny(arr1,arr2){
+    return arr1.some(r=>arr2.includes(r.toUpperCase()));
+  }
 
   redirect() {
     this.setState({
@@ -59,21 +68,15 @@ export default class MainLayout extends React.PureComponent {
   };
 
   getPageAccess() {
-    Promise.all([
-      this.getUserManagementAccess(),
-      this.getEMMRequestAccess(),
-      this.getEMMAccess(),
-      this.getEMMPublishAccess(),
-      this.getSSCRequestAccess(),
-      this.getEfficiencyRequestAccess()].map(function (e) {
+    Promise.all([this.getEMMPublishAccess()].map(function (e) {
         return e && e.then(function (result) {
           return result && result.data;
         }).catch(function () {
           return false;
         })
-      })).then(([userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess, efficiencyAccess]) => {
+      })).then(([emmPublishAccess]) => {
         this.setState({
-          userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess, efficiencyAccess, isLoading: false
+          emmPublishAccess, isLoading: false
         })
         this.props.setEMMPublishAccess(emmPublishAccess);
       }).catch(function (results) {
@@ -84,25 +87,8 @@ export default class MainLayout extends React.PureComponent {
     this.setState({ isLoading: false });
   }
 
-  getUserManagementAccess() {
-    return globalFunctions.axiosFetch(process.env.USERMANAGEMENTACCESS_API, 'get', this.props.userToken);
-  };
-
-  getEMMAccess() {
-    return globalFunctions.axiosFetch(process.env.EMMACCESS_API, 'get', this.props.userToken);
-  };
-
   getEMMPublishAccess() {
     return globalFunctions.axiosFetch(process.env.EMMPUBLISHACCESS_API, 'get', this.props.userToken);
-  };
-  getEMMRequestAccess() {
-    return globalFunctions.axiosFetch(process.env.EMMREQUESTACCESS_API, 'get', this.props.userToken);
-  };
-  getSSCRequestAccess() {
-    return globalFunctions.axiosFetch(process.env.SSC_ACCESS_API, 'get', this.props.userToken);
-  };
-  getEfficiencyRequestAccess() {
-    return globalFunctions.axiosFetch(process.env.EFFICIENCY_ACCESS_API, 'get', this.props.userToken);
   };
 
   getContainer() {
@@ -202,7 +188,7 @@ export default class MainLayout extends React.PureComponent {
                   logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}
                   userLogin={<AzureLogin
-                    resourcesGathered={() => this.resourcesGathered()}
+                    resourcesGathered={(roles) => this.resourcesGathered(roles)}
                     redirect={() => this.redirect()}
                     logoutRef={this.logoutRef}
                   />}
