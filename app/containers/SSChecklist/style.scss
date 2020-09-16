@@ -53,6 +53,15 @@ $ssc-picker-height: 150px;
         padding: 24px 40px;
     }
 
+    .InfographicParagraph-1,
+    .InfographicParagraph-1 .MuiCardContent-root{
+        padding-bottom: 0 !important;
+    }
+    .InfographicParagraph-2,
+    .InfographicParagraph-2 .MuiCardContent-root{
+        padding-top: 6px !important;
+    }
+
     .ssc-card.InfographicParagraph .MuiCardContent-root,
     .ssc-card.MuiCard-root.InfographicParagraph {
         box-shadow: none;
