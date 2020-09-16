@@ -1,66 +1,66 @@
-@import '../../../styles/global-styles';
+@import "../../../styles/global-styles";
 
-.list-detailed .chart-title{
-    font-size: 26px;
-    letter-spacing: 0;
-    line-height: 36px;
-    margin-bottom: 4px !important;
-    text-align: center;
- }
-  
-.list-detailed .chart-subtitle{
-    font-size: 14px;
-    font-style: italic;
-    letter-spacing: 0;
-    line-height: 19px;
-    margin-bottom: 0;
-    text-align: center;
- }
+.list-detailed {
+    .chart-title {
+        font-size: 26px;
+        letter-spacing: 0;
+        line-height: 36px;
+        margin-bottom: 4px !important;
+        text-align: center;
+    }
+    .chart-subtitle {
+        font-size: 14px;
+        font-style: italic;
+        letter-spacing: 0;
+        line-height: 19px;
+        margin-bottom: 0;
+        text-align: center;
+    }
+    .list-title {
+        color: #004f6e;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        letter-spacing: 0;
+        line-height: 24px;
+        margin-top: 26px !important;
+    }
+    .list-title-value {
+        color: #ff0201;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 24px;
+        text-align: right;
+        margin-top: 26px !important;
+    }
+    .list-subtitle {
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+        padding-left: 8px;
+        margin-top: 4px !important;
 
-
-.list-detailed .list-title{
-    color: #004F6E;
-    font-family: "Noto Sans";
-    font-size: 18px;
-    letter-spacing: 0;
-    line-height: 24px;
-    margin-top: 26px !important;
-}
-.list-detailed .list-title-value {
-    color: #FF0201;
-    font-family: "Noto Sans";
-    font-size: 18px;
-    font-weight: bold;
-    letter-spacing: 0;
-    line-height: 24px;
-    text-align: right;
-    margin-top: 26px !important;
-  }
-
-.list-detailed .list-subtitle {
-    font-family: "Noto Sans";
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 19px;
-    padding-left: 8px;
-    margin-top: 4px !important;
-}
-
-.list-detailed .list-subtitle-value {
-    font-family: "Noto Sans";
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 19px;
-    text-align: right;
-    margin-top: 4px !important;
-  }
-
-.list-detailed .display-text{
-    color: #004F6E;
-    font-family: "Noto Sans";
-    font-size: 18px;
-    font-style: italic;
-    letter-spacing: 0;
-    line-height: 24px;
-    text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .list-subtitle-value {
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+        text-align: right;
+        margin-top: 4px !important;
+    }
+    .display-text {
+        color: #004f6e;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        font-style: italic;
+        letter-spacing: 0;
+        line-height: 24px;
+        text-align: center;
+    }
 }

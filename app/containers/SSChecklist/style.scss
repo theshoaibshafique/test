@@ -30,6 +30,10 @@ $ssc-picker-height: 150px;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
         border-radius: 8px !important;
     }
+    .ssc-card.BarChart,
+    .ssc-card.ListDetail{
+        height: 100%;
+    }
     .ssc-card.ssc-card.BarChart {
         .chart-title {
             margin-bottom: 16px;
