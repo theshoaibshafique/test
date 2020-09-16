@@ -42,8 +42,7 @@ export default class StackedBarChart extends React.PureComponent {
           pattern: ['#A7E5FD', '#97E7B3', '#FFDB8C', '#FF7D7D', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD']
         },
         bar: {
-          width: this.props.horizontalLegend ? 35 : 50,
-          space: .2
+          width: {ratio:this.props.horizontalLegend ? .4 : .3,}
         },
         tooltip: {
           grouped: false,
@@ -149,6 +148,9 @@ export default class StackedBarChart extends React.PureComponent {
     });
     chartData.axis.x.label.text = this.props.xAxis;
     chartData.axis.y.label.text = this.props.yAxis;
+    if (columns.length <= 2){
+      chartData.bar.width = 80;
+    }
 
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData.data);

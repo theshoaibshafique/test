@@ -41,7 +41,7 @@ export default class BarChart extends React.PureComponent {
           pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
         },
         bar: {
-          width: 40,
+          width: this.props.dataPoints && this.props.dataPoints.length <= 2 ? 80 : 40,
           space: .2
         },
         tooltip: {
