@@ -344,7 +344,7 @@ export default class SSChecklist extends React.PureComponent {
       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
       tile.tileTypeCount = tileTypeCount[tile.tileType];
       return (
-        <Grid item xs={this.getTileSize(tile.tileType)} key={index}>
+        <Grid item xs={this.getTileSize(tile.tileType)} className={`${tile.tileType}-${tile.tileTypeCount}`} key={index}>
           <Card className={`ssc-card ${tile.tileType}`}>
             <CardContent>{this.renderTile(tile)}</CardContent>
           </Card>

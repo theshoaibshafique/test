@@ -47,10 +47,10 @@ export default class MainLayout extends React.PureComponent {
     this.setState({
       userLoggedIn: true,
       userManagementAccess: this.containsAny(roles,["ADMIN"]),
-      emmAccess: this.containsAny(roles,["ADMIN","ENHANCED M&M VIEW"]),
-      emmRequestAccess: this.containsAny(roles,["ADMIN","ENHANCED M&M EDIT"]),
-      sscAccess:this.containsAny(roles,["ADMIN","SURGICAL CHECKLIST"]),
-      efficiencyAccess:this.containsAny(roles,["ADMIN","EFFICIENCY"]),
+      emmAccess: this.containsAny(roles,["ENHANCED M&M VIEW"]),
+      emmRequestAccess: this.containsAny(roles,["ENHANCED M&M EDIT"]),
+      sscAccess:this.containsAny(roles,["SURGICAL CHECKLIST"]),
+      efficiencyAccess:this.containsAny(roles,["EFFICIENCY"]),
     });
 
     this.getPageAccess();
