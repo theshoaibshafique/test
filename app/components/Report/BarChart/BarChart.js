@@ -42,7 +42,7 @@ export default class BarChart extends React.PureComponent {
         },
         bar: {
           width: {
-            ratio:.4
+            ratio: this.props.dataPoints && this.props.dataPoints.length <= 3 ? .2 : .4
           }
         },
         tooltip: {
