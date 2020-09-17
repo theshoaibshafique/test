@@ -142,6 +142,7 @@ $ssc-picker-height: 150px;
 }
 .sscOnboarding.Modal,
 .ssc.Modal {
+    min-width: unset;
     padding: 0;
 }
 .sscOnboarding {
