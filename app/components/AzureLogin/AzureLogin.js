@@ -56,8 +56,8 @@ class AzureLogin extends React.Component {
           if (result) {
             this.props.setUserFacility(result);
             this.props.resourcesGathered(result.roles);
+            this.getSpecialty(result.facilityName);
             this.getOperatingRooms();
-            this.getSpecialty();
           }
         });
       } else {
@@ -69,11 +69,11 @@ class AzureLogin extends React.Component {
   }
 
 
-  getSpecialty() {
+  getSpecialty(userFacility) {
     if (this.props.specialties && this.props.specialties.length > 0){
       return;
     }
-    globalFunctions.genericFetch(process.env.SPECIALTY_API+ "/" + this.props.userFacility, 'get', this.props.userToken, {})
+    globalFunctions.genericFetch(process.env.SPECIALTY_API+ "/" + userFacility, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           if (result == 'error' || !result){

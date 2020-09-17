@@ -76,10 +76,9 @@ export default class ChecklistDetail extends React.PureComponent {
 
   renderData() {
     // let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX });
-
     return this.state.dataPoints && this.state.dataPoints.map((dataGroup, i) => {
       return (
-        <Grid item xs={4} key={i} className={"checklist-list"}>
+        <Grid item xs key={i} className={"checklist-list"}>
           {dataGroup.group.map((point, j) => {
             let value = parseInt(point.valueX) / parseInt(dataGroup.total) * 100;
             let isTopItem = this.state.topItems.includes(point.title + point.subTitle + point.valueX);
@@ -121,7 +120,6 @@ export default class ChecklistDetail extends React.PureComponent {
     })
   }
 
-
   render() {
     return (
       <LoadingOverlay
@@ -143,7 +141,7 @@ export default class ChecklistDetail extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='center' className="checklistdetail" style={{ minHeight: 320 }}>
+        <Grid container spacing={0} justify='center' className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length}`} style={{ minHeight: 320 }}>
           <Grid item xs={10} className="chart-title">
             {this.props.title}
           </Grid>
