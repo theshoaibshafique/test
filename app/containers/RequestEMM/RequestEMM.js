@@ -398,6 +398,7 @@ export default class RequestEMM extends React.PureComponent {
               value:procedure.name
             })
           });
+          procedureList.sort((a, b) => { return ('' + a.name).localeCompare(b.name)});
           this.setState({procedureList});
         } else {
 
