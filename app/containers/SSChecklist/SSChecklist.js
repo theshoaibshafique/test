@@ -53,8 +53,8 @@ export default class SSChecklist extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.reportType != this.props.reportType) {
-      this.setState({ reportType: this.props.reportType, reportData: [] }, () => {
+    if (prevProps.reportType != this.props.reportType || prevProps.specialties != this.props.specialties) {
+      this.setState({ reportType: this.props.reportType, reportData: [], specialties:this.props.specialties }, () => {
         this.getReportLayout();
       })
     }
