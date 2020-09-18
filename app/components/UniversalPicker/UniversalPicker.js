@@ -228,7 +228,7 @@ class UniversalPicker extends React.Component {
         {this.state.showSpecialty && <Grid item xs={3} style={{ maxWidth: this.props.isSpecialtyMandatory ? 218 : 200 }}>
           <SpecialtyAutocomplete
             size="small"
-            options={this.state.specialties}
+            options={this.state.specialties.sort((a,b) => (""+a.name).localeCompare(""+b.name))}
             clearOnEscape
             getOptionLabel={option => option.name ? option.name : ''}
             value={this.state.selectedSpecialty}
@@ -249,7 +249,7 @@ class UniversalPicker extends React.Component {
         {this.state.showProcedure && <Grid item xs={3} style={{ maxWidth: 350 }}>
           <ProcedureAutocomplete
             size="small"
-            options={this.state.procedureOptions}
+            options={this.state.procedureOptions.sort((a,b) => (""+a.name).localeCompare(""+b.name))}
             clearOnEscape
             value={this.state.selectedProcedure}
             onChange={(e, value) => this.handleSelectedProcedureChange(e, value)}
