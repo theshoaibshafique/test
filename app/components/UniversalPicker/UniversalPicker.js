@@ -51,6 +51,7 @@ class UniversalPicker extends React.Component {
       specialtyDisplay: this.props.isSpecialtyMandatory ? "Select a Specialty" : "All Specialties",
       ...this.getDisplayOptions()
     }
+    this.state.specialties.sort((a,b) => (""+a.name).localeCompare(""+b.name))
     this.state.specialties = [{ name: this.state.specialtyDisplay, value: "" }, ...this.state.specialties];
   }
 
@@ -58,10 +59,12 @@ class UniversalPicker extends React.Component {
     if (prevProps.defaultState != this.props.defaultState) {
       let selectedSpecialty = this.props.defaultState.selectedSpecialty;
       let procedureOptions = selectedSpecialty && selectedSpecialty.procedures || [];
+      procedureOptions.sort((a,b) => (""+a.name).localeCompare(""+b.name))
       if (procedureOptions.length > 0) {
         procedureOptions = [{ name: "All Procedures", value: "" }, ...procedureOptions];
       }
       let specialtyDisplay = this.props.isSpecialtyMandatory ? "Select a Specialty" : "All Specialties";
+      this.props.specialties.sort((a,b) => (""+a.name).localeCompare(""+b.name))
       this.setState({
         ...this.props.defaultState,
         specialtyDisplay,
@@ -137,6 +140,7 @@ class UniversalPicker extends React.Component {
 
   handleSelectedSpecialtyChange(e, selectedSpecialty) {
     let procedureOptions = selectedSpecialty && selectedSpecialty.procedures || [];
+    procedureOptions.sort((a,b) => (""+a.name).localeCompare(""+b.name));
     if (procedureOptions.length > 0) {
       procedureOptions = [{ name: "All Procedures", value: "" }, ...procedureOptions];
     }
