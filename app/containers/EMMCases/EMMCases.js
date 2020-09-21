@@ -85,7 +85,7 @@ export default class EMMCases extends React.PureComponent {
     let result = [];
     targets.forEach((target) => {
       (map.has(target.toUpperCase())) &&
-        result.push(map.get(target.toUpperCase()))
+        result.push(map.get(target.toUpperCase())) || result.push(target)
     })
     return result.join(', ');
   }
