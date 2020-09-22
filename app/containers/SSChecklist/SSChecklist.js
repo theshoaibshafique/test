@@ -464,6 +464,7 @@ export default class SSChecklist extends React.PureComponent {
         <LoadingOverlay
           active={isLoading}
           spinner
+          fadeSpeed={0}
           text='Loading your content...'
           className="overlay"
           styles={{
@@ -496,13 +497,13 @@ export default class SSChecklist extends React.PureComponent {
                   </Grid>
                 </Grid>
                 :
-                (isLoading || !this.state.tileRequest.length)
+                (!this.state.tileRequest.length)
                   ?
                   !isLoading && <Grid item xs={12} className="ssc-message">
                     No data available this month
                     </Grid>
                   :
-                  this.renderTiles()}
+                  !isLoading && this.renderTiles()}
           </Grid>
 
           <Modal
