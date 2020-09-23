@@ -35,12 +35,26 @@ export default class EMMPublish extends React.PureComponent {
       isLoading: true,
       emmCases: [],
       operatingRoomList: [],
-      filterPublished: false
+      filterPublished: false,
+      specialties: this.props.specialties || []
     };
   }
 
   componentDidMount() {
-    this.getEMMCases();
+    this.getSpecialty()
+  };
+  getSpecialty() {
+    globalFuncs.genericFetch(process.env.SPECIALTY_API, 'get', this.props.userToken, {})
+      .then(result => {
+        if (result && result != 'error') {
+          this.setState({specialties:result}, () => this.getEMMCases());
+        } else {
+          this.getEMMCases();
+          // error
+        }
+      }).catch(error => {
+        this.getEMMCases();
+      });
   };
 
   getEMMCases() {
@@ -81,7 +95,7 @@ export default class EMMPublish extends React.PureComponent {
                     let facility = facilityResult.find(facility => facility.facilityName == emmCase.facilityName) || {'departments':[]};
                     let department = facility.departments.find(department => department.departmentName == emmCase.departmentName) || {'rooms':[]};
                     let room = department.rooms.find(room => room.roomName == emmCase.roomName) || {'roomTitle':''};
-                    let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
+                    let surgeryList = this.state.specialties.map((specialty) => specialty.procedures).flatten() || [];
                     return {
                       requestID: emmCase.name,
                       facilityName: facility.facilityTitle,
