@@ -10,7 +10,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import './style.scss';
@@ -452,14 +452,14 @@ export default class RequestEMM extends React.PureComponent {
             <Grid item xs={4}></Grid>
             <Grid item xs={4} >
               <MuiPickersUtilsProvider utils={DateFnsUtils} >
-                <KeyboardDatePicker
+                <DatePicker
                   disableToolbar
                   error={Boolean(this.state.errors.operationDate)}
                   helperText={this.state.errors.operationDate}
                   variant="inline"
                   format="MM/dd/yyyy"
                   id="date-picker-operation"
-                  placeholder="Select"
+                  placeholder="Select..."
                   inputVariant="outlined"
                   className="input-field"
                   name="operationDate"
@@ -468,10 +468,8 @@ export default class RequestEMM extends React.PureComponent {
                   value={this.state.operationDate}
                   autoOk
                   size="small"
+                  inputProps={{autoComplete:'off'}}
                   onChange={this.handleOperationDateChange}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -607,7 +605,7 @@ export default class RequestEMM extends React.PureComponent {
             </Grid>
             <Grid item xs={4}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
+                <DatePicker
                   disableToolbar
                   size="small"
                   variant="inline"
@@ -617,16 +615,14 @@ export default class RequestEMM extends React.PureComponent {
                   helperText={this.state.errors.complicationDate}
                   minDate={this.state.operationDate ? this.state.operationDate : this.state.minOperationDate}
                   maxDate={this.state.maxOperationDate}
-                  placeholder="Select"
+                  placeholder="Select..."
                   inputVariant="outlined"
                   className="input-field"
                   autoOk
                   value={this.state.compDate}
+                  inputProps={{autoComplete:'off'}}
                   onChange={this.handleCompDateChange}
                   id="date-picker-complication"
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
