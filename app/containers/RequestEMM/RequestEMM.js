@@ -290,7 +290,7 @@ export default class RequestEMM extends React.PureComponent {
       "departmentName": this.state.departmentName,
       "facilityName": this.props.userFacility
     }
-    
+
     globalFuncs.genericFetch(process.env.EMMREQUEST_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {
@@ -394,12 +394,12 @@ export default class RequestEMM extends React.PureComponent {
           let procedureList = this.state.procedureList || []
           result && result.forEach((procedure) => {
             procedureList.push({
-              name:procedure.procedureName,
-              value:procedure.name
+              name: procedure.procedureName,
+              value: procedure.name
             })
           });
-          procedureList.sort((a, b) => { return ('' + a.name).localeCompare(b.name)});
-          this.setState({procedureList});
+          procedureList.sort((a, b) => { return ('' + a.name).localeCompare(b.name) });
+          this.setState({ procedureList });
         } else {
 
           // error
@@ -439,7 +439,7 @@ export default class RequestEMM extends React.PureComponent {
               Request for Enhanced M&M
             </Grid>
             <Grid item xs={12} className="page-subtitle">
-              Please fill in all the fields to submit a request for an Enhanced M&M.
+              Please fill in all the required fields to submit a request for an Enhanced M&M. You will receive a confirmation email once you complete your submission.
             </Grid>
 
             <Grid item xs={4} className="input-title">
@@ -468,7 +468,7 @@ export default class RequestEMM extends React.PureComponent {
                   value={this.state.operationDate}
                   autoOk
                   size="small"
-                  inputProps={{autoComplete:'off'}}
+                  inputProps={{ autoComplete: 'off' }}
                   onChange={this.handleOperationDateChange}
                 />
               </MuiPickersUtilsProvider>
@@ -620,7 +620,7 @@ export default class RequestEMM extends React.PureComponent {
                   className="input-field"
                   autoOk
                   value={this.state.compDate}
-                  inputProps={{autoComplete:'off'}}
+                  inputProps={{ autoComplete: 'off' }}
                   onChange={this.handleCompDateChange}
                   id="date-picker-complication"
                 />
@@ -694,7 +694,7 @@ export default class RequestEMM extends React.PureComponent {
             </Grid>
 
             <Grid item xs={12} className="input-title">
-              Send email updates about eM&M to (Optional):
+              Also send confirmation email to these users (Optional):
             </Grid>
             <Grid item xs={8} style={{ marginBottom: 24 }}>
               <AsyncSelect
