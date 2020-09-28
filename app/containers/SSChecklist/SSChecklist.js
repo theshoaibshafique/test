@@ -53,8 +53,14 @@ export default class SSChecklist extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.reportType != this.props.reportType || prevProps.specialties != this.props.specialties) {
-      this.setState({ reportType: this.props.reportType, reportData: [], specialties:this.props.specialties }, () => {
+    if (prevProps.reportType != this.props.reportType) {
+      this.setState({ reportType: this.props.reportType, reportData: [] }, () => {
+        this.getReportLayout();
+      })
+    } else if (prevProps.specialties != this.props.specialties){
+      this.setState({specialties:this.props.specialties},()=>{
+        clearTimeout(this.state.timeout);
+        //Load the report once specialties list is changed/populated
         this.getReportLayout();
       })
     }
@@ -62,7 +68,15 @@ export default class SSChecklist extends React.PureComponent {
 
   componentDidMount() {
     this.loadFilter();
-    this.getReportLayout();
+    //Give specialties list a max loading time of 10 seconds before loading the report
+    if (this.props.specialties.size == 0){
+      let timeout = setTimeout(()=>{
+        this.getReportLayout()
+      },10000);
+      this.setState({timeout})
+    } else {
+      this.getReportLayout();  
+    }
     this.openOnboarding()
   };
 

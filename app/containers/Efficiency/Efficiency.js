@@ -33,7 +33,7 @@ export default class Efficiency extends React.PureComponent {
       tileRequest: [],
       reportData: [],
       chartColours: ['#CFB9E4', '#FF7D7D', '#FFDB8C', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3', '#004F6E'],
-
+      specialties: this.props.specialties || [],
       selectedOperatingRoom: "",
       selectedSpecialty: "",
       procedureOptions: [],
@@ -79,13 +79,30 @@ export default class Efficiency extends React.PureComponent {
       }, () => {
         this.getReportLayout();
       })
+    } else if (prevProps.specialties != this.props.specialties){
+      this.setState({specialties:this.props.specialties}, () => {
+        clearTimeout(this.state.timeout);
+        //Load the report once specialties list is changed/populated
+        this.getReportLayout();
+      })
     }
   }
 
   componentDidMount() {
-    this.loadFilter(this.getReportLayout);
+    let callback = null;
+    //Give specialties list a max loading time of 10 seconds before loading the report
+    if (this.props.specialties.size == 0){
+      let timeout = setTimeout(()=>{
+        this.getReportLayout()
+      },10000);
+      this.setState({timeout})
+    } else {
+      callback = this.getReportLayout;
+    }
+    this.loadFilter(callback);
     this.getEarliestStartDate();
     this.openOnboarding()
+    
   };
 
   openOnboarding() {
@@ -358,10 +375,10 @@ export default class Efficiency extends React.PureComponent {
             return { value: or.roomName, name: or.roomTitle };
           }) || []} />
       case 'DONUTCHART':
-        return <DonutChart {...tile} specialties={this.props.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
+        return <DonutChart {...tile} specialties={this.state.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile}
-          specialties={this.props.specialties}
+          specialties={this.state.specialties}
           horizontalLegend={true}
           orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
     }
@@ -410,7 +427,7 @@ export default class Efficiency extends React.PureComponent {
           </Grid>
           {!this.state.isLandingPage && <Grid item xs={12} className="efficiency-picker">
             <UniversalPicker
-              specialties={this.props.specialties}
+              specialties={this.state.specialties}
               userFacility={this.props.userFacility}
               userToken={this.props.userToken}
               defaultState={this.state}
