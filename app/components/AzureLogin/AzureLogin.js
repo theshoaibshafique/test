@@ -79,7 +79,7 @@ class AzureLogin extends React.Component {
           if (result == 'error' || !result){
             return;
           }
-          this.props.setSpecialtyList(result.filter(s => s && s.value));
+          this.props.setSpecialtyList(result.filter && result.filter(s => s && s.value));
         } else {
 
           // error
