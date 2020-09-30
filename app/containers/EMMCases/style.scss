@@ -1,21 +1,5 @@
-@import '../../styles/global-styles.scss';
+@import "../../styles/global-styles.scss";
 
-.header {
-    font-size: 26px;
-    line-height: 36px;
-}
-.search {
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 24px;
-}
-
-.recent {
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 24px;
-    margin-top: 120px;
-}
 
 .pointer {
     cursor: pointer;
@@ -23,8 +7,8 @@
 
 .EMM-CASES {
     .open-report {
-        background: #F3F3F3;
-        border: #F3F3F3;
+        background: #f3f3f3;
+        border: #f3f3f3;
         padding: 8px 16px;
         font-size: 18px;
         line-height: 24px;
@@ -35,4 +19,28 @@
         line-height: 19px;
         opacity: 0.8;
     }
+    .header,
+    .page-search,
+    .recent,
+    .page-subtitle {
+        padding-left: 16px;
+    }
+    .header {
+        font-size: 26px;
+        line-height: 36px;
+        padding-bottom: 24px;
+    }
+    .search {
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 24px;
+    }
+    
+    .recent {
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 24px;
+        margin-top: 120px;
+    }
+    
 }
