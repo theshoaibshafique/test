@@ -1,8 +1,10 @@
 @import '../../styles/global-styles.scss';
-
-.pad {
-    padding: 0 16px;
+.emm-publish-page{
+    .pad {
+        padding: 0 16px;
+    }
 }
+
 
 .emm-publish-page .MuiPaper-elevation2 {
     box-shadow: none;

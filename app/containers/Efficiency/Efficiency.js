@@ -142,7 +142,12 @@ export default class Efficiency extends React.PureComponent {
         if (!result) {
           return;
         }
-        this.setState({ earliestStartDate: moment(result) });
+        let startDate = this.state.startDate;
+        let earliestStartDate = moment(result);
+        if (earliestStartDate.isSameOrAfter(startDate)){
+          startDate = earliestStartDate.utc();
+        }
+        this.setState({ earliestStartDate, startDate });
       });
 
   }
