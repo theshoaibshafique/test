@@ -32,7 +32,7 @@ pipeline {
           stage('Publish to remote') {
             def remote = [:]
             remote.name = 'test'
-            remote.host = '10.10.30.104'
+            remote.host = '10.10.30.111'
             remote.user = 'blackbox'
             remote.password = '!blackbox401'
             remote.allowAnyHosts = true
