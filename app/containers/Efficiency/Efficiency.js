@@ -28,15 +28,12 @@ export default class Efficiency extends React.PureComponent {
       reportType: this.props.reportType,
       isLandingPage: this.props.reportType == "EfficiencyReport",
       isOnboardModalOpen: false,
-      operatingRoomList: this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
-        return { value: or.roomName, name: or.roomTitle };
-      }) || [],
       isLoading: true,
       pendingTileCount: 0,
       tileRequest: [],
       reportData: [],
       chartColours: ['#CFB9E4', '#FF7D7D', '#FFDB8C', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3', '#004F6E'],
-
+      specialties: this.props.specialties || [],
       selectedOperatingRoom: "",
       selectedSpecialty: "",
       procedureOptions: [],
@@ -55,7 +52,7 @@ export default class Efficiency extends React.PureComponent {
     //Last available data date is 2 months before the pending date
     this.state.startDate = this.pendingDate.clone().subtract(2, 'month').startOf('month');
     this.state.endDate = this.pendingDate.clone().subtract(2, 'month').endOf('month');
-    this.state.maxDate = this.state.endDate.clone();
+    this.state.maxDate = process.env.DISPLAY_PENDING_REPORT == "true" ? moment().endOf('month') : this.state.endDate.clone();
   }
 
   componentDidUpdate(prevProps) {
@@ -82,13 +79,30 @@ export default class Efficiency extends React.PureComponent {
       }, () => {
         this.getReportLayout();
       })
+    } else if (prevProps.specialties != this.props.specialties){
+      this.setState({specialties:this.props.specialties}, () => {
+        clearTimeout(this.state.timeout);
+        //Load the report once specialties list is changed/populated
+        this.getReportLayout();
+      })
     }
   }
 
   componentDidMount() {
-    this.loadFilter(this.getReportLayout);
+    let callback = null;
+    //Give specialties list a max loading time of 10 seconds before loading the report
+    if (this.props.specialties.size == 0){
+      let timeout = setTimeout(()=>{
+        this.getReportLayout()
+      },10000);
+      this.setState({timeout})
+    } else {
+      callback = this.getReportLayout;
+    }
+    this.loadFilter(callback);
     this.getEarliestStartDate();
     this.openOnboarding()
+    
   };
 
   openOnboarding() {
@@ -333,7 +347,9 @@ export default class Efficiency extends React.PureComponent {
       case 'DETAILEDMULTILINECHART':
         return <DetailedMultiLineChart
           {...tile}
-          labelList={this.state.operatingRoomList} />
+          labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
+            return { value: or.roomName, name: or.roomTitle };
+          }) || []} />
       case 'INFOGRAPHICPARAGRAPH':
         return <InfographicParagraph {...tile} />
       case 'INFOGRAPHICTEXT':
@@ -355,12 +371,14 @@ export default class Efficiency extends React.PureComponent {
           reportType={this.props.reportType}
           noWrapXTick={this.state.isLandingPage}
           {...tile}
-          labelList={this.state.operatingRoomList} />
+          labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
+            return { value: or.roomName, name: or.roomTitle };
+          }) || []} />
       case 'DONUTCHART':
-        return <DonutChart {...tile} specialties={this.props.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
+        return <DonutChart {...tile} specialties={this.state.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile}
-          specialties={this.props.specialties}
+          specialties={this.state.specialties}
           horizontalLegend={true}
           orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
     }
@@ -409,7 +427,7 @@ export default class Efficiency extends React.PureComponent {
           </Grid>
           {!this.state.isLandingPage && <Grid item xs={12} className="efficiency-picker">
             <UniversalPicker
-              specialties={this.props.specialties}
+              specialties={this.state.specialties}
               userFacility={this.props.userFacility}
               userToken={this.props.userToken}
               defaultState={this.state}
@@ -436,7 +454,12 @@ export default class Efficiency extends React.PureComponent {
               ...base,
               background: 'none',
               color: '#000',
-              marginTop: 150
+              marginTop: 150,
+              opacity: 0.8,
+              color: "#000000",
+              fontFamily: "Noto Sans",
+              fontSize: 18,
+              lineHeight: "24px"
             }),
             spinner: (base) => ({
               ...base,
@@ -520,7 +543,7 @@ export default class Efficiency extends React.PureComponent {
             </DialogContent>
           </Modal>
         </LoadingOverlay>
-      </div>
+      </div >
     );
   }
 }

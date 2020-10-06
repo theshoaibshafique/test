@@ -91,9 +91,10 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
 
   changeVideo(updatedVideoID = null, videoIndex = 0) {
     const videoID = (updatedVideoID !== null) ? updatedVideoID : this.getVideoID();
+    const { selectedSurgicalTab } = this.state;
     const { phaseData } = this.props;
     if (videoID) {
-      if (phaseData.name !== 'SurgicalProcedure') {
+      if (phaseData.name !== 'SurgicalProcedure' || selectedSurgicalTab !== 0 ) {
         this.setState({ selectedVideoClipID: videoIndex })
       }
       this.createVideoPlayer(videoID)
@@ -178,7 +179,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
         {(isProcedureStepWithTabs) && this.getProcedureTabs()}
         {
           (noVideo && phaseData.checklistData.length == 0) ?
-            <div className="no-data-container">There are no Adverse Events or Surgical Safety Checklist information during this phase.</div>
+            <div className="no-data-container">
+              There are no {(phaseData.name === 'SurgicalProcedure') ? 'Adverse' : 'Non-Routine' } Events or Surgical Safety Checklist information during this phase.
+            </div>
           :
           (!noVideo) &&
             <div className="flex">
@@ -187,7 +190,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
                 {
                   (showVideoTimeline) &&
                     <VideoTimeline
-                      duration={phaseData.endTime - phaseData.startTime}
+                      duration={phaseData.enhancedMMVideo[0].endTime - phaseData.enhancedMMVideo[0].startTime}
                       procedureSteps={phaseData.enhancedMMData}
                       seekVideo={(time)=>this.seekVideo(time)}
                       currentVideoTime={this.props.emmVideoTime}

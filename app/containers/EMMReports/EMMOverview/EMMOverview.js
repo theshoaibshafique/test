@@ -7,6 +7,7 @@ import ChecklistStatus from './ChecklistStatus';
 import PhasesOfInterest from './PhasesOfInterest';
 import CaseInformation from './CaseInformation';
 import SurgicalSafetyChecklist from './SurgicalSafetyChecklist';
+import globalFuncs from '../../../utils/global-functions';
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -21,10 +22,19 @@ const LightTooltip = withStyles((theme) => ({
 export default class EMMOverview extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
+    this.state = {
+      specialties: this.props.specialties || []
+    }
   }
 
   componentDidMount() {
-
+    globalFuncs.genericFetch(process.env.SPECIALTY_API, 'get', this.props.userToken, {})
+      .then(result => {
+        if (result && result != 'error') {
+          this.setState({specialties:result});
+        }
+      }).catch(error => {
+      });
   }
 
   render() {
@@ -57,7 +67,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                     caseDuration={emmReportData.caseDuration}
                     procedures={emmReportData.procedures}
                     complications={emmReportData.complicationNames}
-                    allSpecialties={specialties}
+                    allSpecialties={this.state.specialties}
                     allComplications={complications}
                   />
                 </Paper>

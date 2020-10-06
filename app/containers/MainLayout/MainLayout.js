@@ -2,8 +2,8 @@ import React from 'react';
 import './style.scss';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
-import axios from 'axios';
 import MainDashboard from 'containers/MainDashboard/Loadable';
+import Welcome from 'containers/Welcome/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
 import EMMPublish from 'containers/EMMPublish/Loadable';
 import EMM from 'containers/EMM/Loadable';
@@ -12,6 +12,7 @@ import RequestEMM from 'containers/RequestEMM/Loadable';
 import UserManagement from 'containers/UserManagement/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import LoadingIndicator from 'components/LoadingIndicator';
 import SSChecklist from 'containers/SSChecklist/Loadable';
 import Efficiency from 'containers/Efficiency/Loadable';
 import NoAccess from 'containers/NoAccess/Loadable';
@@ -42,36 +43,40 @@ export default class MainLayout extends React.PureComponent {
     this.logoutRef = React.createRef();
   }
 
-  resourcesGathered() {
+  resourcesGathered(roles) {
     this.setState({
-      userLoggedIn: true
+      userLoggedIn: true,
+      userManagementAccess: this.containsAny(roles,["ADMIN"]),
+      emmAccess: this.containsAny(roles,["ENHANCED M&M VIEW"]),
+      emmRequestAccess: this.containsAny(roles,["ENHANCED M&M EDIT"]),
+      sscAccess:this.containsAny(roles,["SURGICAL CHECKLIST"]),
+      efficiencyAccess:this.containsAny(roles,["EFFICIENCY"]),
     });
 
     this.getPageAccess();
   };
 
+  containsAny(arr1,arr2){
+    return arr1.some(r=>arr2.includes(r.toUpperCase()));
+  }
+
   redirect() {
     this.setState({
-      authenticated: false
+      authenticated: false,
+      isLoading:false
     });
   };
 
   getPageAccess() {
-    Promise.all([
-      this.getUserManagementAccess(),
-      this.getEMMRequestAccess(),
-      this.getEMMAccess(),
-      this.getEMMPublishAccess(),
-      this.getSSCRequestAccess(),
-      this.getEfficiencyRequestAccess()].map(function (e) {
+    Promise.all([this.getEMMPublishAccess()].map(function (e) {
         return e && e.then(function (result) {
           return result && result.data;
         }).catch(function () {
           return false;
         })
-      })).then(([userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess, efficiencyAccess]) => {
+      })).then(([emmPublishAccess]) => {
         this.setState({
-          userManagementAccess, emmRequestAccess, emmAccess, emmPublishAccess, sscAccess, efficiencyAccess, isLoading: false
+          emmPublishAccess, isLoading: false
         })
         this.props.setEMMPublishAccess(emmPublishAccess);
       }).catch(function (results) {
@@ -82,25 +87,8 @@ export default class MainLayout extends React.PureComponent {
     this.setState({ isLoading: false });
   }
 
-  getUserManagementAccess() {
-    return globalFunctions.axiosFetch(process.env.USERMANAGEMENTACCESS_API, 'get', this.props.userToken);
-  };
-
-  getEMMAccess() {
-    return globalFunctions.axiosFetch(process.env.EMMACCESS_API, 'get', this.props.userToken);
-  };
-
   getEMMPublishAccess() {
     return globalFunctions.axiosFetch(process.env.EMMPUBLISHACCESS_API, 'get', this.props.userToken);
-  };
-  getEMMRequestAccess() {
-    return globalFunctions.axiosFetch(process.env.EMMREQUESTACCESS_API, 'get', this.props.userToken);
-  };
-  getSSCRequestAccess() {
-    return globalFunctions.axiosFetch(process.env.SSC_ACCESS_API, 'get', this.props.userToken);
-  };
-  getEfficiencyRequestAccess() {
-    return globalFunctions.axiosFetch(process.env.EFFICIENCY_ACCESS_API, 'get', this.props.userToken);
   };
 
   getContainer() {
@@ -113,7 +101,7 @@ export default class MainLayout extends React.PureComponent {
 
     if (this.state.userLoggedIn) {
       return <Switch>
-        <Route path="/dashboard" component={MainDashboard} />
+        <Route path="/dashboard" component={Welcome} />
         {(this.state.emmAccess) &&
           <Route path="/emmcases" component={EMMCases} />
         }
@@ -159,10 +147,10 @@ export default class MainLayout extends React.PureComponent {
         }
 
         <Route path="/my-profile" component={MyProfile} />
-        <Route path="" component={NotFoundPage} />
+        <Route path="" component={this.state.isLoading ? LoadingIndicator : NotFoundPage} />
       </Switch>
     } else {
-      return ''
+      return this.state.isLoading ? <LoadingIndicator/> : ''
     }
   };
 
@@ -200,9 +188,8 @@ export default class MainLayout extends React.PureComponent {
                   logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}
                   userLogin={<AzureLogin
-                    resourcesGathered={() => this.resourcesGathered()}
+                    resourcesGathered={(roles) => this.resourcesGathered(roles)}
                     redirect={() => this.redirect()}
-                    notLoading={() => this.notLoading()}
                     logoutRef={this.logoutRef}
                   />}
                 />

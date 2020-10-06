@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './style.scss';
-import logo from './img/SST-Product_Insights_sketch.png';
+import logo from 'images/SST-Product_Insights_sketch.png';
 import { List, ListItem, Collapse, Grid, MenuItem, Menu } from '@material-ui/core';
 import IconExpandLess from '@material-ui/icons/ExpandLess'
 import IconExpandMore from '@material-ui/icons/ExpandMore'
@@ -10,7 +10,7 @@ class SSTNav extends React.Component {
   constructor(props) {
     super(props);
     this.sscLinks = ["/sschecklist", "/complianceScore", "/engagementScore", "/qualityScore"]
-    this.efficiencyLinks = ["/efficiency ", "/daysStarting", "/turnoverTime", "/orUtilization", "/caseAnalysis"]
+    this.efficiencyLinks = ["/efficiency", "/daysStarting", "/turnoverTime", "/orUtilization", "/caseAnalysis"]
     this.state = {
       pathname: this.props.pathname,
       isSSCOpen: this.isInNav(this.sscLinks, this.props.pathname),

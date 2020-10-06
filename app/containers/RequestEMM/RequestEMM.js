@@ -10,7 +10,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import './style.scss';
@@ -281,8 +281,8 @@ export default class RequestEMM extends React.PureComponent {
     let jsonBody = {
       "roomName": this.state.selectedOperatingRoom.value,
       "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
-      "procedure": this.state.specialtyCheck ? [this.state.procedureValue] : this.state.selectedProcedures,
-      "complications": this.state.complicationsCheck ? [this.state.complicationValue] : this.state.selectedComplication,
+      "procedure": this.state.specialtyCheck && this.state.procedureValue ? [...this.state.selectedProcedures, this.state.procedureValue] : this.state.selectedProcedures,
+      "complications": this.state.complicationsCheck && this.state.complicationValue ? [...this.state.selectedComplication, this.state.complicationValue] : this.state.selectedComplication,
       "postOpDate": globalFuncs.formatDateTime(this.state.compDate),
       "operationDate": globalFuncs.formatDateTime(this.state.operationDate),
       "notes": this.state.notes,
@@ -385,21 +385,21 @@ export default class RequestEMM extends React.PureComponent {
     this.populateSpecialtyList();
   }
   populateSpecialtyList() {
-    globalFunctions.genericFetch(process.env.SPECIALTY_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+    globalFunctions.genericFetch(process.env.PROCEDURE_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           if (result == 'error' || !result) {
             return;
           }
           let procedureList = this.state.procedureList || []
-          result && result.forEach((specialty) => {
-            specialty.procedures.forEach((procedure) => {
-              procedure.specialtyName = specialty.name;
-              procedure.ID = specialty.value
-              procedureList.push(procedure);
-            });
+          result && result.forEach((procedure) => {
+            procedureList.push({
+              name: procedure.procedureName,
+              value: procedure.name
+            })
           });
-          this.setState({procedureList});
+          procedureList.sort((a, b) => { return ('' + a.name).localeCompare(b.name) });
+          this.setState({ procedureList });
         } else {
 
           // error
@@ -439,7 +439,7 @@ export default class RequestEMM extends React.PureComponent {
               Request for Enhanced M&M
             </Grid>
             <Grid item xs={12} className="page-subtitle">
-              Please fill in all the fields to submit a request for an Enhanced M&M.
+              Please fill in all the required fields to submit a request for an Enhanced M&M. You will receive a confirmation email once you complete your submission.
             </Grid>
 
             <Grid item xs={4} className="input-title">
@@ -452,14 +452,14 @@ export default class RequestEMM extends React.PureComponent {
             <Grid item xs={4}></Grid>
             <Grid item xs={4} >
               <MuiPickersUtilsProvider utils={DateFnsUtils} >
-                <KeyboardDatePicker
+                <DatePicker
                   disableToolbar
                   error={Boolean(this.state.errors.operationDate)}
                   helperText={this.state.errors.operationDate}
                   variant="inline"
                   format="MM/dd/yyyy"
                   id="date-picker-operation"
-                  placeholder="Select"
+                  placeholder="Select..."
                   inputVariant="outlined"
                   className="input-field"
                   name="operationDate"
@@ -468,10 +468,8 @@ export default class RequestEMM extends React.PureComponent {
                   value={this.state.operationDate}
                   autoOk
                   size="small"
+                  inputProps={{ autoComplete: 'off' }}
                   onChange={this.handleOperationDateChange}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -607,7 +605,7 @@ export default class RequestEMM extends React.PureComponent {
             </Grid>
             <Grid item xs={4}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
+                <DatePicker
                   disableToolbar
                   size="small"
                   variant="inline"
@@ -617,16 +615,14 @@ export default class RequestEMM extends React.PureComponent {
                   helperText={this.state.errors.complicationDate}
                   minDate={this.state.operationDate ? this.state.operationDate : this.state.minOperationDate}
                   maxDate={this.state.maxOperationDate}
-                  placeholder="Select"
+                  placeholder="Select..."
                   inputVariant="outlined"
                   className="input-field"
                   autoOk
                   value={this.state.compDate}
+                  inputProps={{ autoComplete: 'off' }}
                   onChange={this.handleCompDateChange}
                   id="date-picker-complication"
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -698,7 +694,7 @@ export default class RequestEMM extends React.PureComponent {
             </Grid>
 
             <Grid item xs={12} className="input-title">
-              Send email updates about eM&M to (Optional):
+              Also send confirmation email to these users (Optional):
             </Grid>
             <Grid item xs={8} style={{ marginBottom: 24 }}>
               <AsyncSelect

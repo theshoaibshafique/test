@@ -24,116 +24,123 @@
     line-height: 24px;
     text-align: right;
   }
-}
-
-.stacked-barchart-detailed .link{
-  color: #028CC8;
-  font-family: "Noto Sans";
-  font-size: 12px;
-  letter-spacing: 0;
-  line-height: 17px;
-  text-align: left;
-  margin-left: 24px;
-}
-
-.circle:before {
-  content: ' \25CF';
-  font-size: 32px;
-  line-height: 0;
-}
-
-.line:before {
-  content: ' \2212';
-  font-size: 32px;
-  line-height: 0;
-}
-
-.stacked-barchart-detailed .c3-axis .tick line{
-  opacity: 0;
-}
-
-.stacked-barchart-detailed .c3-text{
-  fill: #004F6E !important;
-  font-family: "Noto Sans";
-  font-size: 18px;
-  font-weight: bold;
-  letter-spacing: 0;
-  line-height: 24px;
-}
-
-.stacked-barchart-detailed .bar-chart-detailed-legend{
-  display: flex;
-  margin-top: 32px;
-  flex-direction: column;
-  margin-left: 16px;
-}
-.stacked-barchart-detailed .legend-title{
-  display: flex;
-}
-.stackedBarChartDetailed-horizontal {
-  .bar-chart-detailed-legend{
-    margin: 0;
-    flex-direction: row ;
+  .link{
+    color: #028CC8;
+    font-family: "Noto Sans";
+    font-size: 12px;
+    letter-spacing: 0;
+    line-height: 17px;
+    text-align: left;
+    margin-left: 24px;
   }
-
+  
+  .circle:before {
+    content: ' \25CF';
+    font-size: 32px;
+    line-height: 0;
+  }
+  
+  .line:before {
+    content: ' \2212';
+    font-size: 32px;
+    line-height: 0;
+  }
+  
+  .c3-axis .tick line{
+    opacity: 0;
+  }
+  
+  .c3-text{
+    fill: #004F6E !important;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+  
   .bar-chart-detailed-legend{
     display: flex;
-    justify-content:center;
-    margin-top: 16px;
+    margin-top: 32px;
+    flex-direction: column;
+    margin-left: 8px;
+    margin-right: 40px;
+    text-align: left;
   }
+  .legend-title{
+    display: flex;
+  }
+  .stackedBarChartDetailed-horizontal {
+    .bar-chart-detailed-legend{
+      margin: 0;
+      flex-direction: row ;
+    }
+  
+    .bar-chart-detailed-legend{
+      display: flex;
+      justify-content:center;
+      margin-top: 16px;
+    }
+    .legend-item{
+      margin: 0 4px !important;
+    }
+  }
+  
   .legend-item{
-    margin: 0 4px !important;
+    margin: 4px 0;
+  }
+  
+  .legend-title,
+  .c3-axis,
+  .c3-axis-y-label,
+  .c3-axis-x-label {
+    font-family: "Noto Sans";
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 19px;
+  }
+  .c3-axis-y-label,
+  .c3-axis-x-label {
+    font-size: 15px;
+  }
+  .c3 path, 
+  .c3 line,
+  .c3-xgrid,
+  .c3-ygrid{
+    stroke-dasharray: unset;
+    stroke: #EAEAEA;
+  }
+  
+  .c3-xgrid-focus{
+    visibility: hidden !important;
+  }
+  
+  .chartTooltip{
+    color: #fff;
+    padding: 16px;
+    text-align: left;
+    font-size: 14px;
+    max-width: 300px;
+    word-wrap: break-word;
+    font-family: "Noto Sans";
+    font-weight: 500 !important;
+    line-height: 19px;
+    border-radius: 4px;
+    background-color: rgba(97, 97, 97, 0.9);
+  }
+  
+  .c3-axis-y-label{
+    transform: translate(-8px, 10px) rotate(-90deg);
+  }
+  .c3-axis-y .tick:nth-child(odd),
+  .c3-ygrid:nth-child(even){
+    opacity: 0 !important;
+  }
+  .c3-chart-lines .c3-chart-line{
+    display: none;
+  }
+  .c3-axis-x .tick{
+    font-weight: bold;
   }
 }
 
-.stacked-barchart-detailed .legend-item{
-  margin: 4px 0;
-}
-
-.stacked-barchart-detailed .legend-title,
-.stacked-barchart-detailed .c3-axis,
-.c3-axis-y-label,.c3-axis-x-label {
-  font-family: "Noto Sans";
-  font-size: 14px;
-  letter-spacing: 0;
-  line-height: 19px;
-}
-.stacked-barchart-detailed .c3 path, 
-.stacked-barchart-detailed .c3 line,
-.stacked-barchart-detailed .c3-xgrid,
-.stacked-barchart-detailed .c3-ygrid{
-  stroke-dasharray: unset;
-  stroke: #EAEAEA;
-}
-
-.stacked-barchart-detailed .c3-xgrid-focus{
-  visibility: hidden !important;
-}
-
-.stacked-barchart-detailed .chartTooltip{
-  color: #fff;
-  padding: 16px;
-  text-align: left;
-  font-size: 14px;
-  max-width: 300px;
-  word-wrap: break-word;
-  font-family: "Noto Sans";
-  font-weight: 500 !important;
-  line-height: 19px;
-  border-radius: 4px;
-  background-color: rgba(97, 97, 97, 0.9);
-}
-
-.stacked-barchart-detailed .c3-axis-y-label{
-  transform: translate(-8px, 10px) rotate(-90deg);
-}
-.stacked-barchart-detailed .c3-axis-y .tick:nth-child(odd),
-.stacked-barchart-detailed .c3-ygrid:nth-child(even){
-  opacity: 0 !important;
-}
-.stacked-barchart-detailed .c3-chart-lines .c3-chart-line{
-  display: none;
-}
-.c3-axis-x .tick{
-  font-weight: bold;
-}

@@ -1,7 +1,18 @@
 import React from 'react';
 import './style.scss';
-import { Grid } from '@material-ui/core';
+import { Grid, withStyles, Tooltip } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
+import globalFunctions from '../../../utils/global-functions';
+
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    padding: '16px',
+    fontSize: '14px',
+    lineHeight: '19px',
+    fontFamily: 'Noto Sans'
+  }
+}))(Tooltip);
 
 export default class ListDetailed extends React.PureComponent {
   constructor(props) {
@@ -24,19 +35,21 @@ export default class ListDetailed extends React.PureComponent {
     // this.setState({ dataPoints });
   }
 
-  getName(searchList, key) {
-    let index = searchList.findIndex(item => item.value.toLowerCase() == key.toLowerCase());
-    if (index >= 0) {
-      return searchList[index].name;
-    }
-  }
-
   renderList() {
 
     return this.props.dataPoints && this.props.dataPoints.map((point, index) => {
       return (<Grid container spacing={0} key={index}>
         <Grid item xs={10} className={point.subTitle ? "list-subtitle" : "list-title"}>
-          {(point.subTitle ? this.getName(this.state.procedures, point.subTitle) : this.getName(this.props.specialties, point.title)) || point.subTitle}
+          {
+            point.subTitle
+              ?
+              point.subTitle == "Other Procedures" ? <div className="list-subtitle">{globalFunctions.getName(this.state.procedures, point.subTitle)}</div> :
+                <LightTooltip interactive arrow title={globalFunctions.getName(this.state.procedures, point.subTitle)} placement="left" fontSize="small">
+                  <div className="list-subtitle">{globalFunctions.getName(this.state.procedures, point.subTitle)}</div>
+                </LightTooltip>
+              : globalFunctions.getName(this.props.specialties, point.title) || point.subTitle
+          }
+
         </Grid>
         <Grid item xs={2} className={point.subTitle ? "list-subtitle-value" : "list-title-value"}>
           {point.valueX}
@@ -66,7 +79,7 @@ export default class ListDetailed extends React.PureComponent {
           })
         }}
       >
-        <Grid container className="list-detailed" direction="column" spacing={0} style={{minHeight: 150}}>
+        <Grid container className="list-detailed" direction="column" spacing={0} style={{ minHeight: 150 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>
@@ -74,11 +87,11 @@ export default class ListDetailed extends React.PureComponent {
             {this.props.subTitle}
           </Grid>}
           <Grid item xs={12} >
-            {this.props.body && this.props.subTitle 
-            ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
-            : this.props.body ? 
-              <div className="display-text" style={{ marginTop: 16 }}>{this.props.body}</div>
-              : this.renderList()}
+            {this.props.body && this.props.subTitle
+              ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
+              : this.props.body ?
+                <div className="display-text" style={{ marginTop: 16 }}>{this.props.body}</div>
+                : this.renderList()}
           </Grid>
 
 

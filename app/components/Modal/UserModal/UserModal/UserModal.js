@@ -29,6 +29,7 @@ class UserModal extends React.Component {
             updateGridEdit={this.props.updateGridEdit}
             isFormValid={this.props.isFormValid}
             fieldErrors={this.props.fieldErrors}
+            roleNames={this.props.roleNames}
           />
         </DialogContent>
       </Modal>

@@ -57,12 +57,26 @@ export default class SSChecklist extends React.PureComponent {
       this.setState({ reportType: this.props.reportType, reportData: [] }, () => {
         this.getReportLayout();
       })
+    } else if (prevProps.specialties != this.props.specialties){
+      this.setState({specialties:this.props.specialties},()=>{
+        clearTimeout(this.state.timeout);
+        //Load the report once specialties list is changed/populated
+        this.getReportLayout();
+      })
     }
   }
 
   componentDidMount() {
     this.loadFilter();
-    this.getReportLayout();
+    //Give specialties list a max loading time of 10 seconds before loading the report
+    if (this.props.specialties.size == 0){
+      let timeout = setTimeout(()=>{
+        this.getReportLayout()
+      },10000);
+      this.setState({timeout})
+    } else {
+      this.getReportLayout();  
+    }
     this.openOnboarding()
   };
 
@@ -344,7 +358,7 @@ export default class SSChecklist extends React.PureComponent {
       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
       tile.tileTypeCount = tileTypeCount[tile.tileType];
       return (
-        <Grid item xs={this.getTileSize(tile.tileType)} key={index}>
+        <Grid item xs={this.getTileSize(tile.tileType)} className={`${tile.tileType}-${tile.tileTypeCount}`} key={index}>
           <Card className={`ssc-card ${tile.tileType}`}>
             <CardContent>{this.renderTile(tile)}</CardContent>
           </Card>
@@ -464,6 +478,7 @@ export default class SSChecklist extends React.PureComponent {
         <LoadingOverlay
           active={isLoading}
           spinner
+          fadeSpeed={0}
           text='Loading your content...'
           className="overlay"
           styles={{
@@ -471,7 +486,12 @@ export default class SSChecklist extends React.PureComponent {
               ...base,
               background: 'none',
               color: '#000',
-              marginTop: 150
+              marginTop: 150,
+              opacity: 0.8,
+              color: "#000000",
+              fontFamily: "Noto Sans",
+              fontSize: 18,
+              lineHeight: "24px"
             }),
             spinner: (base) => ({
               ...base,
@@ -491,13 +511,13 @@ export default class SSChecklist extends React.PureComponent {
                   </Grid>
                 </Grid>
                 :
-                (isLoading || !this.state.tileRequest.length)
+                (!this.state.tileRequest.length)
                   ?
                   !isLoading && <Grid item xs={12} className="ssc-message">
                     No data available this month
                     </Grid>
                   :
-                  this.renderTiles()}
+                  !isLoading && this.renderTiles()}
           </Grid>
 
           <Modal

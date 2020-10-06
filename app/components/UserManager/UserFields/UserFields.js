@@ -89,6 +89,14 @@ class UserFields extends React.Component {
     return (false);
   }
 
+  includesRole(role){
+    if (!this.props.roleNames || this.props.roleNames.length == 0){
+      return false;
+    }
+    let regex = new RegExp(this.props.roleNames.join("|"),"i");
+    return regex.test(role);
+  }
+
   render() {
     const isAdmin = this.checkPermissions("6AD12264-46FA-8440-52AD1846BDF1_Admin");
     return (
@@ -185,7 +193,7 @@ class UserFields extends React.Component {
         </Grid>
         <Grid item xs={12} style={{ paddingTop: 0 }}>
           <FormControl className="input-field permissions-checkbox" >
-            <FormControlLabel
+            {this.includesRole("Admin") && <FormControlLabel
               control={
                 <Checkbox
                   disableRipple
@@ -200,8 +208,8 @@ class UserFields extends React.Component {
                 />
               }
               label="Admin"
-            />
-            <FormControlLabel
+            />}
+            {this.includesRole("Enhanced M&M View") && <FormControlLabel
               control={
                 <Checkbox
                   disableRipple
@@ -217,8 +225,8 @@ class UserFields extends React.Component {
                 />
               }
               label="Enhanced M&M View"
-            />
-            <FormControlLabel
+            />}
+            {this.includesRole("Enhanced M&M Edit") && <FormControlLabel
               control={
                 <Checkbox
                   disableRipple
@@ -234,8 +242,8 @@ class UserFields extends React.Component {
                 />
               }
               label="Enhanced M&M Request"
-            />
-            <FormControlLabel
+            />}
+            {this.includesRole("Surgical Checklist") && <FormControlLabel
               control={
                 <Checkbox
                   disableRipple
@@ -251,8 +259,8 @@ class UserFields extends React.Component {
                 />
               }
               label="Surgical Safety Checklist Report"
-            />
-            <FormControlLabel
+            />}
+            {this.includesRole("Efficiency") && <FormControlLabel
               control={
                 <Checkbox
                   disableRipple
@@ -268,7 +276,7 @@ class UserFields extends React.Component {
                 />
               }
               label="Efficiency Report"
-            />
+            />}
           </FormControl>
         </Grid>
       </Grid>

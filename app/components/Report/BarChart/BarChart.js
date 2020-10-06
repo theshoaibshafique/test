@@ -41,8 +41,9 @@ export default class BarChart extends React.PureComponent {
           pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
         },
         bar: {
-          width: 40,
-          space: .2
+          width: {
+            ratio: this.props.dataPoints && this.props.dataPoints.length <= 3 ? .2 : .4
+          }
         },
         tooltip: {
           grouped: false,
@@ -228,7 +229,7 @@ export default class BarChart extends React.PureComponent {
               this.props.body && this.props.subTitle
                 ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
                 : this.props.body || this.props.description ?
-                  <div className="display-text">{this.props.description}</div>
+                  <div className="display-text">{this.props.body || this.props.description}</div>
                   : <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
           <Grid item xs>

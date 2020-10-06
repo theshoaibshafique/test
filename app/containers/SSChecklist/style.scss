@@ -30,6 +30,10 @@ $ssc-picker-height: 150px;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
         border-radius: 8px !important;
     }
+    .ssc-card.BarChart,
+    .ssc-card.ListDetail{
+        height: 100%;
+    }
     .ssc-card.ssc-card.BarChart {
         .chart-title {
             margin-bottom: 16px;
@@ -51,6 +55,15 @@ $ssc-picker-height: 150px;
     .ssc-card.List .MuiCardContent-root,
     .ssc-card.BarChart .MuiCardContent-root {
         padding: 24px 40px;
+    }
+
+    .InfographicParagraph-1,
+    .InfographicParagraph-1 .MuiCardContent-root{
+        padding-bottom: 0 !important;
+    }
+    .InfographicParagraph-2,
+    .InfographicParagraph-2 .MuiCardContent-root{
+        padding-top: 6px !important;
     }
 
     .ssc-card.InfographicParagraph .MuiCardContent-root,
@@ -129,6 +142,7 @@ $ssc-picker-height: 150px;
 }
 .sscOnboarding.Modal,
 .ssc.Modal {
+    min-width: unset;
     padding: 0;
 }
 .sscOnboarding {

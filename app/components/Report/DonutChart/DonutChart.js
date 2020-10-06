@@ -55,7 +55,7 @@ export default class DonutChart extends React.PureComponent {
         },
         size: {
           height: 360,
-          width: 320
+          // width: 320
         },
         transition: {
           duration: 0
@@ -94,22 +94,17 @@ export default class DonutChart extends React.PureComponent {
 
     dataPoints.map((point, index) => {
       let xValue = point.valueX;
-      // formattedData.x.push(xValue);
       point.title = globalFunctions.getName(this.props.specialties, point.title);
-      formattedData[point.title] = formattedData[point.title] || [];
-      formattedData[point.title].push(point.valueX);
+
+      formattedData[point.title] = point.valueX;
       xData.push(xValue);
       tooltipData[point.title] = point.note ? point.note : tooltipData[point.title];
     });
-    let columns = [];
     const orderBy = this.props.orderBy || {};
-    let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] });
-    legendData.map(([key, value]) => {
-      columns.push([key, ...value]);
-    })
+    let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] || b[1] - a[1] });
     let chartData = this.state.chartData;
     //Set as 0 by default and "load" columns later for animation
-    chartData.data.columns = columns;
+    chartData.data.columns = legendData;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
     this.setState({ chartData, xData, tooltipData, legendData, isLoaded: true })
