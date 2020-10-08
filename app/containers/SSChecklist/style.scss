@@ -18,6 +18,22 @@ $ssc-picker-height: 150px;
         font-size: 26px;
         line-height: 36px;
     }
+    .QualityScoreReport{
+        .BarChart {
+            padding: 0 40px;
+            .chart-title{
+                font-family: "Noto Sans";
+                font-size: 18px;
+                font-weight: bold;
+                letter-spacing: 0;
+                line-height: 24px;
+                margin-bottom: 0px !important;
+            }
+            .chart-subtitle{
+                display: none;
+            }
+        }
+    }
 
     .ssc-divider {
         background-color: #c8c8c8;

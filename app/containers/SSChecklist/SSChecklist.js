@@ -335,13 +335,13 @@ export default class SSChecklist extends React.PureComponent {
             <Card className="ssc-card">
               <CardContent>
                 <Grid container spacing={0} >
-                  {tile.tileType == 'StackedBarChart' && <Grid className="ssc-chart-title" style={{ textAlign: 'center', marginBottom: 24 }} item xs={12}>{tile.title}</Grid>}
+                  {this.state.reportType == 'QualityScoreReport' && tile.tileType == 'BarChart' && <Grid className="ssc-chart-title" style={{ textAlign: 'center', marginBottom: 24 }} item xs={12}>{tile.total}</Grid>}
                   {
                     tileGroup.group.map((tile, i) => {
                       tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
                       tile.tileTypeCount = tileTypeCount[tile.tileType];
                       let xs = this.getTileSize(tile.tileType);
-                      if (tile.tileType == 'StackedBarChart' && tile.body) {
+                      if (this.state.reportType == 'QualityScoreReport' && tile.tileType == 'BarChart' && tile.body) {
                         return <div key={`${tile.tileType}${i}`}></div>
                       } else if (tile.tileType == 'Checklist' && tile.body) {
                         xs = 12;
@@ -392,7 +392,10 @@ export default class SSChecklist extends React.PureComponent {
       case 'AREACHART':
         return <AreaChart {...tile} />
       case 'BARCHART':
-        let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
+        if (this.state.reportType == 'QualityScoreReport'){
+          tile.tileTypeCount+=1;
+        }
+        let pattern = this.state.chartColours.slice(tile.tileTypeCount-1, this.state.chartColours.length);
         return <BarChart
           pattern={pattern} id={tile.tileTypeCount}
           reportType={this.props.reportType}
@@ -501,7 +504,7 @@ export default class SSChecklist extends React.PureComponent {
             })
           }}
         >
-          <Grid container spacing={3} className="ssc-main">
+          <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`}>
             {
               this.state.hasNoCases ?
                 <Grid item xs={12} className="ssc-message">
