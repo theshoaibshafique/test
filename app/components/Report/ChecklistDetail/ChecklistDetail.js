@@ -44,7 +44,7 @@ export default class ChecklistDetail extends React.PureComponent {
   };
 
   componentDidMount() {
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return b.valueX - a.valueX || ('' + a.subTitle).localeCompare(b.subTitle) });
+    let dataPoints = this.props.dataPoints.sort((a, b) => { return parseInt(b.valueX.replace('%','')) - parseInt(a.valueX.replace('%','')) || ('' + a.subTitle).localeCompare(b.subTitle) });
 
     let topItems = dataPoints.filter(point => point.subTitle)
       .slice(0, 5)
@@ -80,11 +80,11 @@ export default class ChecklistDetail extends React.PureComponent {
       return (
         <Grid item xs key={i} className={"checklist-list"}>
           {dataGroup.group.map((point, j) => {
-            let value = parseInt(point.valueX) / parseInt(dataGroup.total) * 100;
+            let value = parseInt(point.valueX.replace('%',''));
             let isTopItem = this.state.topItems.includes(point.title + point.subTitle + point.valueX);
             return (
               <Grid container spacing={0} key={`${i}-${j}`}
-                className={`${isTopItem ? 'top-item' : ''} ${value <= 0 || (dataGroup.total <= 0 && point.subTitle) ? 'complete-item' : ''}`}
+                className={`${isTopItem ? 'top-item' : ''} ${value <= 0  ? 'complete-item' : ''}`}
               >
                 <Grid item xs={8} className={point.subTitle ? "list-subtitle" : "list-title"}  >
                   {point.subTitle || point.title}
