@@ -13,15 +13,6 @@ export default class Checklist extends React.PureComponent {
   };
 
   componentDidMount() {
-    this.groupTitles();
-  }
-
-  groupTitles() {
-    if (!this.props.dataPoints) {
-      return;
-    }
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return b.valueX - a.valueX || ('' + a.title).localeCompare(b.title) });
-    this.setState({ dataPoints });
   }
 
   getName(searchList, key) {
