@@ -277,6 +277,23 @@ class UserFields extends React.Component {
               }
               label="Efficiency Report"
             />}
+            {this.includesRole("Enhanced M&M Presenter") && <FormControlLabel
+              control={
+                <Checkbox
+                  disableRipple
+                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  className="SST-Checkbox"
+                  id="presenterAccess"
+                  name="presenterAccess"
+                  disabled={isAdmin}
+                  onChange={this.props.handleFormChange}
+                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter")}
+                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter"
+                />
+              }
+              label="Enhanced M&M Presenter"
+            />}
           </FormControl>
         </Grid>
       </Grid>
