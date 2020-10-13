@@ -120,7 +120,7 @@ $ssc-picker-height: 150px;
     .efficiency-picker-container {
         position: absolute;
         width: calc(100% - #{$nav-width}) !important;
-        z-index: 1300;
+        z-index: 1100;
         top: 0;
     }
     .efficiency-main {
