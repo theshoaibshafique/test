@@ -50,7 +50,7 @@ class SSTNav extends React.Component {
 
   render() {
     return (
-      <Grid container spacing={0} className="sstnav dark-blue" style={{ height: "100%" }}>
+      <Grid container spacing={0} className="sstnav" style={{ height: "100%" }}>
         <Grid item xs={12}>
           <List disablePadding >
             <ListItem className="Package-Location center-align" disableGutters>
