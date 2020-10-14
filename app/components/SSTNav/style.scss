@@ -28,15 +28,17 @@
 
 .sstnav {
     font-size: 14px;
+    svg {
+        fill: $dark-blue;
+    }
 }
 .sstnav .MuiListItem-root{
     padding: 0;
 }
 
-
 .sstnav li:hover {
-    color: $light-blue;
-  }
+    color: $light-blue !important;
+}
 .sst-menu-item{
     padding: 0 !important;
 }

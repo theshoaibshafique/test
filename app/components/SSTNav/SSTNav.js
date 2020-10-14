@@ -93,10 +93,11 @@ class SSTNav extends React.Component {
               <ListItem disableGutters>
                 <NavLink to="/efficiency" className='text-link'>
                   <div>Efficiency</div>
+                  <div style={{ position: 'absolute', right: 8, top: 14, cursor: 'pointer' }} onClick={() => this.toggleEfficiency()}>
+                    {this.state.isEfficiencyOpen ? <IconExpandLess /> : <IconExpandMore />}
+                  </div>
                 </NavLink>
-                <div style={{ marginRight: 8, position: 'absolute', right: 0, cursor: 'pointer' }} onClick={() => this.toggleEfficiency()}>
-                  {this.state.isEfficiencyOpen ? <IconExpandLess /> : <IconExpandMore />}
-                </div>
+
               </ListItem>
             }
             {(this.props.efficiencyAccess) &&
@@ -112,10 +113,10 @@ class SSTNav extends React.Component {
               <ListItem disableGutters>
                 <NavLink to="/sschecklist" className='text-link'>
                   <div>Surgical Safety Checklist</div>
+                  <div style={{ position: 'absolute', right: 8, top: 14, cursor: 'pointer' }} onClick={() => this.toggleSSC()}>
+                    {this.state.isSSCOpen ? <IconExpandLess /> : <IconExpandMore />}
+                  </div>
                 </NavLink>
-                <div style={{ marginRight: 8, position: 'absolute', right: 0, cursor: 'pointer' }} onClick={() => this.toggleSSC()}>
-                  {this.state.isSSCOpen ? <IconExpandLess /> : <IconExpandMore />}
-                </div>
               </ListItem>
             }
             {(this.props.sscAccess) &&
