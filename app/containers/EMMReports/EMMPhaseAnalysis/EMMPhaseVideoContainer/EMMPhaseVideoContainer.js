@@ -4,6 +4,7 @@ import globalFunctions from '../../../../utils/global-functions';
 import EMMPhaseEvents from '../EMMPhaseEvents';
 import ChecklistAnalysis from './ChecklistAnalysis';
 import VideoTimeline from './VideoTimeline';
+import { FormControlLabel, Switch, withStyles } from '@material-ui/core';
 
 const videoOptions = {
   "nativeControlsForTouch": false,
@@ -22,6 +23,24 @@ const videoOptions = {
   },
   "logo": { "enabled": false },
 }
+
+const SSTSwitch = withStyles((theme) => ({
+  switchBase: {
+    color: '#ABABAB',
+    '&$checked': {
+      color: '#3DB3E3',
+    },
+    '&$checked + $track': {
+      opacity: 1,
+      backgroundColor: '#028CC8',
+    },
+  },
+  checked: {},
+  track: {
+    opacity: 1,
+    backgroundColor: '#575757'
+  }
+}))(Switch);
 
 export default class EMMPhaseVideoContainer extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -42,7 +61,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   componentDidUpdate(prevProps) {
-    let { phaseData } = this.props;
+    let { phaseData, emmPresenterMode } = this.props;
     if (prevProps.phaseData != phaseData) {
       this.setState({
         isProcedureStepWithTabs: false
@@ -53,6 +72,11 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
         }
       })
     }
+
+    if (prevProps.emmPresenterMode !== emmPresenterMode) {
+      debugger;
+    }
+
   }
 
   componentWillUnmount() {
@@ -106,8 +130,11 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   createVideoPlayer(videoID) {
+    const { emmPresenterMode, userToken } = this.props;
     this.setState({ noVideo: false })
-    globalFunctions.genericFetch(process.env.MEDIA_API + videoID, 'get', this.props.userToken, {})
+    const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}${videoID}`;
+    console.log(mediaURL)
+    globalFunctions.genericFetch(mediaURL, 'get', userToken, {})
       .then(result => {
         if (result) {
           this.myPlayer = amp(this.state.videoID, videoOptions);
@@ -169,13 +196,37 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     )
   }
 
+  switchPresenterMode = () => {
+    const { emmPresenterMode, setEMMPresenterDialog, setEMMPresenterMode } = this.props;
+    if (!emmPresenterMode) {
+      //need to show warning if previous state is non presenter mode
+      setEMMPresenterDialog(true)
+    } else {
+      //otherwise, can just turn off presenter mode
+      setEMMPresenterMode(false)
+    }
+  }
+
   render() {
-    const { phaseData, emmVideoTime } = this.props;
+    const { phaseData, emmVideoTime, emmPresenterMode } = this.props;
     const { noVideo, selectedVideoClipID, isProcedureStepWithTabs, selectedSurgicalTab } = this.state;
     const showVideoTimeline = (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0 && selectedSurgicalTab == 0)
 
     return (
-      <div className="Emm-Phase-Video-Container">
+      <div className="Emm-Phase-Video-Container relative">
+        {(!noVideo) &&
+          <div className="absolute" style={{right: '0px', top: '-38px'}}>
+            <FormControlLabel
+              control={
+                <SSTSwitch
+                  checked={emmPresenterMode}
+                  onChange={this.switchPresenterMode}
+                />
+              }
+              label="Presenter Mode"
+            />
+          </div>
+        }
         {(isProcedureStepWithTabs) && this.getProcedureTabs()}
         {
           (noVideo && phaseData.checklistData.length == 0) ?

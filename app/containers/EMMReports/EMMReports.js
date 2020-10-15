@@ -39,6 +39,34 @@ const ConfirmPublishDialog = (props) => {
   )
 }
 
+const ConfirmPresenterDialog = (props) => {
+  const { dialogOpen, closePresenterDialog } = props;
+  return (
+    <Dialog
+      open={dialogOpen}
+      onClose={()=>closePresenterDialog(false)}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      className="publish-dialog"
+    >
+      <DialogTitle>Warning</DialogTitle>
+      <DialogContent>
+        <DialogContentText className="confirm-publish-text">
+        Turning on Presenter Mode will cause the videos in this report to be no longer secured, but will enable sharing over video conferencing tools. Do you wish to proceed?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={()=>closePresenterDialog(false)} className="cancel-publish" color="primary">
+          Cancel
+        </Button>
+        <Button onClick={()=>closePresenterDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
+          Proceed
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
 const OnBoardDialog = (props) => {
   const { dialogOpen, dialogClose } = props;
   return (
@@ -180,8 +208,14 @@ export default class EMMReports extends React.PureComponent {
     })
   }
 
+  closePresenterDialog(choice) {
+    const { setEMMPresenterMode, setEMMPresenterDialog } = this.props;
+    (choice) && setEMMPresenterMode(choice);
+    setEMMPresenterDialog(false);
+  }
+
   render() {
-    const { emmReportData, emmReportTab, emmPublishAccess } = this.props;
+    const { emmReportData, emmReportTab, emmPublishAccess, emmPresenterDialog } = this.props;
     const { isPublished, publishDialogOpen, onBoardDialogOpen } = this.state;
 
     let showPublishButton;
@@ -193,6 +227,10 @@ export default class EMMReports extends React.PureComponent {
         <ConfirmPublishDialog
           dialogOpen={publishDialogOpen}
           closePublishDialog={(choice)=>this.closePublishDialog(choice)}
+          />
+        <ConfirmPresenterDialog
+          dialogOpen={emmPresenterDialog}
+          closePresenterDialog={(choice)=>this.closePresenterDialog(choice)}
         />
         <OnBoardDialog
           dialogOpen={onBoardDialogOpen}

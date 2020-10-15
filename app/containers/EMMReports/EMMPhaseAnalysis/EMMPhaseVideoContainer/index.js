@@ -2,17 +2,20 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import EMMPhaseVideoContainer from './EMMPhaseVideoContainer';
 import { makeSelectToken } from '../../../App/selectors';
-import { setEMMVideoTime } from '../../../App/emm-actions';
-import { selectEMMVidoeTime } from '../../../App/emm-selectors';
+import { setEMMVideoTime, setEMMPresenterDialog, setEMMPresenterMode } from '../../../App/emm-actions';
+import { selectEMMPresenterMode, selectEMMVidoeTime } from '../../../App/emm-selectors';
 
 const mapStateToProps = (state, ownProps) => createStructuredSelector({
   userToken: makeSelectToken(),
-  emmVideoTime: selectEMMVidoeTime()
+  emmVideoTime: selectEMMVidoeTime(),
+  emmPresenterMode: selectEMMPresenterMode()
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setEMMVideoTime: (videoTime) => { dispatch(setEMMVideoTime(videoTime)) }
+    setEMMVideoTime: (videoTime) => { dispatch(setEMMVideoTime(videoTime)) },
+    setEMMPresenterMode: (presenterMode) => { dispatch(setEMMPresenterMode(presenterMode)) },
+    setEMMPresenterDialog: (presenterDialog) => { dispatch(setEMMPresenterDialog(presenterDialog)) }
   };
 };
 
