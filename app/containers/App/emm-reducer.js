@@ -19,7 +19,9 @@ import {
   SETEMMREPORT,
   EMM_SWITCH_PHASE,
   EMM_SET_VIDEO_TIME,
-  EMM_PUBLISH_ACCESS
+  EMM_PUBLISH_ACCESS,
+  EMM_PRESENTER_MODE,
+  EMM_PRESENTER_DIALOG,
 } from './constants';
 
 // The initial state of the App
@@ -29,7 +31,9 @@ const initialState = fromJS({
   emmTab: 'overview',
   emmPhaseIndex: null,
   emmVideoTime: 0,
-  emmPublishAccess: false
+  emmPublishAccess: false,
+  emmPresenterMode: false,
+  emmPresenterDialog: false
 });
 
 function emmReducer(state = initialState, action) {
@@ -59,6 +63,12 @@ function emmReducer(state = initialState, action) {
     case EMM_PUBLISH_ACCESS:
       return state
         .set('emmPublishAccess', action.publishAccess)
+    case EMM_PRESENTER_MODE:
+      return state
+        .set('emmPresenterMode', action.presenterMode)
+    case EMM_PRESENTER_DIALOG:
+      return state
+        .set('emmPresenterDialog', action.presenterDialog)
     default:
       return state;
   }
