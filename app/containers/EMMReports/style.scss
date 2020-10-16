@@ -71,6 +71,7 @@ $onboardwidth: 875px;
         color: #028CC8 !important;
     }
 }
+
 .publish-button {
     padding: 8px 16px !important;
     font-size: 18px;
@@ -80,6 +81,15 @@ $onboardwidth: 875px;
 .EMM-REPORTS-SCROLL {
     height: 100%;
     overflow-y: auto;
+
+    .Presenter-Mode-Banner {
+        background: #004F6E;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 18px;
+        color: $white;
+    }
 }
 
 .EMM-REPORTS {

@@ -67,16 +67,15 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
         isProcedureStepWithTabs: false
       }, () => {
         this.setSurgicalProcedureData();
-        if (this.props.phaseData.name !== 'SurgicalProcedure') {
+        if (phaseData.name !== 'SurgicalProcedure') {
           this.changeVideo();
         }
       })
     }
 
     if (prevProps.emmPresenterMode !== emmPresenterMode) {
-      debugger;
+      this.changeVideo();
     }
-
   }
 
   componentWillUnmount() {
@@ -133,24 +132,30 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     const { emmPresenterMode, userToken } = this.props;
     this.setState({ noVideo: false })
     const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}${videoID}`;
-    console.log(mediaURL)
     globalFunctions.genericFetch(mediaURL, 'get', userToken, {})
       .then(result => {
         if (result) {
           this.myPlayer = amp(this.state.videoID, videoOptions);
+          const presenterProtection = [
+            {
+              "type": "AES",
+              "authenticationToken": result.token
+            }
+          ]
+          const normalProtection = [
+            {
+              "type": "PlayReady",
+              "authenticationToken": result.token
+            },
+            {
+              "type": "Widevine",
+              "authenticationToken": result.token
+            }
+          ]
           this.myPlayer.src([{
             src: result.url,
             type: "application/vnd.ms-sstr+xml",
-            protectionInfo: [
-              {
-                "type": "PlayReady",
-                "authenticationToken": result.token
-              },
-              {
-                "type": "Widevine",
-                "authenticationToken": result.token
-              }
-            ]
+            protectionInfo: (emmPresenterMode) ? presenterProtection : normalProtection
           }]);
           this.myPlayer.addEventListener('timeupdate', (e) => {
             this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))

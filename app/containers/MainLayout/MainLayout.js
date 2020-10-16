@@ -2,7 +2,6 @@ import React from 'react';
 import './style.scss';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
-import MainDashboard from 'containers/MainDashboard/Loadable';
 import Welcome from 'containers/Welcome/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
 import EMMPublish from 'containers/EMMPublish/Loadable';
