@@ -5,7 +5,7 @@ import emmSummary from './images/emmSummary.png';
 import './style.scss';
 import Icon from '@mdi/react'
 import { mdiClose } from '@mdi/js';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import globalFuncs from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
@@ -33,6 +33,34 @@ const ConfirmPublishDialog = (props) => {
         </Button>
         <Button onClick={()=>closePublishDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
           Publish
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+const ConfirmPresenterDialog = (props) => {
+  const { dialogOpen, closePresenterDialog } = props;
+  return (
+    <Dialog
+      open={dialogOpen}
+      onClose={()=>closePresenterDialog(false)}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      className="publish-dialog"
+    >
+      <DialogTitle className="red">Warning</DialogTitle>
+      <DialogContent>
+        <DialogContentText className="confirm-publish-text">
+        Turning on Presenter Mode will cause the videos in this report to be no longer secured, but will enable sharing over video conferencing tools. Do you wish to proceed?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={()=>closePresenterDialog(false)} className="cancel-publish" color="primary">
+          Cancel
+        </Button>
+        <Button onClick={()=>closePresenterDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
+          Proceed
         </Button>
       </DialogActions>
     </Dialog>
@@ -180,8 +208,19 @@ export default class EMMReports extends React.PureComponent {
     })
   }
 
+  closePresenterDialog(choice) {
+    const { setEMMPresenterMode, setEMMPresenterDialog } = this.props;
+    (choice) && setEMMPresenterMode(choice);
+    setEMMPresenterDialog(false);
+  }
+
+  closeEMMReport() {
+    this.props.setEMMPresenterMode(false);
+    this.props.hideEMMReport();
+  }
+
   render() {
-    const { emmReportData, emmReportTab, emmPublishAccess } = this.props;
+    const { emmReportData, emmReportTab, emmPublishAccess, emmPresenterDialog, emmPresenterMode } = this.props;
     const { isPublished, publishDialogOpen, onBoardDialogOpen } = this.state;
 
     let showPublishButton;
@@ -190,17 +229,24 @@ export default class EMMReports extends React.PureComponent {
 
     return (
       <div className="EMM-REPORTS-SCROLL">
+        {(emmPresenterMode) &&
+          <div className="Presenter-Mode-Banner">You are in Presenter Mode</div>
+        }
         <ConfirmPublishDialog
           dialogOpen={publishDialogOpen}
           closePublishDialog={(choice)=>this.closePublishDialog(choice)}
+          />
+        <ConfirmPresenterDialog
+          dialogOpen={emmPresenterDialog}
+          closePresenterDialog={(choice)=>this.closePresenterDialog(choice)}
         />
         <OnBoardDialog
           dialogOpen={onBoardDialogOpen}
           dialogClose={()=>this.setState({ onBoardDialogOpen: false })}
         />
         {(emmReportData) &&
-          <div className="EMM-REPORTS relative">
-            <div className="close-emm" onClick={()=>this.props.hideEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
+          <div className={`EMM-REPORTS ${(emmPresenterMode) && 'banner-present'} relative`}>
+            <div className="close-emm" onClick={()=>this.closeEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
             <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
               <img className="absolute" src={emmLogo} />
               <div className="onboarding-open absolute" onClick={()=>this.setState({ onBoardDialogOpen: true })}>What’s this report about?</div>
@@ -221,15 +267,15 @@ export default class EMMReports extends React.PureComponent {
                 </div>
               </div>
             </div>
-          {
-            (emmReportTab === 'overview') ?
+          {(emmReportTab === 'overview') ?
             <EMMOverview
-            tabShowing={emmReportTab === 'overview'}
-          />:
-          <EMMPhaseAnalysis
-            tabShowing={emmReportTab === 'phase'}
-            scriptReady={this.state.isScriptReady}
-            phases={emmReportData.enhancedMMPages}/>
+              tabShowing={emmReportTab === 'overview'}
+            /> :
+            <EMMPhaseAnalysis
+              tabShowing={emmReportTab === 'phase'}
+              scriptReady={this.state.isScriptReady}
+              phases={emmReportData.enhancedMMPages}
+            />
           }
           </div>
         }

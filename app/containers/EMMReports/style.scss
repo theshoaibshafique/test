@@ -71,6 +71,7 @@ $onboardwidth: 875px;
         color: #028CC8 !important;
     }
 }
+
 .publish-button {
     padding: 8px 16px !important;
     font-size: 18px;
@@ -82,12 +83,29 @@ $onboardwidth: 875px;
     overflow-y: auto;
 }
 
+.Presenter-Mode-Banner {
+    position: fixed;
+    top: 0px;
+    z-index: 99;
+    width: 100%;
+    background: #004F6E;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 18px;
+    color: $white;
+}
+
 .EMM-REPORTS {
     padding: 24px 40px;
     max-width: 1440px;
     margin: 0px auto;
     overflow-y: auto;
     font-size: 18px;
+    &.banner-present {
+        margin-top: 40px;
+        z-index: 1;
+    }
     .close-emm {
         cursor: pointer;
         position: absolute;
