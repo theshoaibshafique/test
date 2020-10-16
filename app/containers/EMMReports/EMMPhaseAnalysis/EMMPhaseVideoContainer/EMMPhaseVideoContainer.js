@@ -150,6 +150,10 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             {
               "type": "Widevine",
               "authenticationToken": result.token
+            },
+            {
+              "type": "FairPlay",
+              "authenticationToken": result.token
             }
           ]
           this.myPlayer.src([{
