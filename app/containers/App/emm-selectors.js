@@ -36,11 +36,23 @@ const selectEMMPublishAccess = () => createSelector(
   (emmState) => emmState.get('emmPublishAccess')
 );
 
+const selectEMMPresenterMode = () => createSelector(
+  selectEMM,
+  (emmState) => emmState.get('emmPresenterMode')
+);
+
+const selectEMMPresenterDialog = () => createSelector(
+  selectEMM,
+  (emmState) => emmState.get('emmPresenterDialog')
+);
+
 export {
   selectEMMTab,
   selectEMMReportID,
   selectEMMReportData,
   selectEMMPhaseIndex,
   selectEMMVidoeTime,
-  selectEMMPublishAccess
+  selectEMMPublishAccess,
+  selectEMMPresenterMode,
+  selectEMMPresenterDialog
 };

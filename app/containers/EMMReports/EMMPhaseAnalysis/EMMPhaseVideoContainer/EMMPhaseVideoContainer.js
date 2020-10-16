@@ -4,6 +4,7 @@ import globalFunctions from '../../../../utils/global-functions';
 import EMMPhaseEvents from '../EMMPhaseEvents';
 import ChecklistAnalysis from './ChecklistAnalysis';
 import VideoTimeline from './VideoTimeline';
+import { FormControlLabel, Switch, withStyles } from '@material-ui/core';
 
 const videoOptions = {
   "nativeControlsForTouch": false,
@@ -22,6 +23,24 @@ const videoOptions = {
   },
   "logo": { "enabled": false },
 }
+
+const SSTSwitch = withStyles((theme) => ({
+  switchBase: {
+    color: '#ABABAB',
+    '&$checked': {
+      color: '#3DB3E3',
+    },
+    '&$checked + $track': {
+      opacity: 1,
+      backgroundColor: '#028CC8',
+    },
+  },
+  checked: {},
+  track: {
+    opacity: 1,
+    backgroundColor: '#575757'
+  }
+}))(Switch);
 
 export default class EMMPhaseVideoContainer extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -42,16 +61,20 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   componentDidUpdate(prevProps) {
-    let { phaseData } = this.props;
+    let { phaseData, emmPresenterMode } = this.props;
     if (prevProps.phaseData != phaseData) {
       this.setState({
         isProcedureStepWithTabs: false
       }, () => {
         this.setSurgicalProcedureData();
-        if (this.props.phaseData.name !== 'SurgicalProcedure') {
+        if (phaseData.name !== 'SurgicalProcedure') {
           this.changeVideo();
         }
       })
+    }
+
+    if (prevProps.emmPresenterMode !== emmPresenterMode) {
+      this.changeVideo();
     }
   }
 
@@ -106,24 +129,33 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   createVideoPlayer(videoID) {
+    const { emmPresenterMode, userToken } = this.props;
     this.setState({ noVideo: false })
-    globalFunctions.genericFetch(process.env.MEDIA_API + videoID, 'get', this.props.userToken, {})
+    const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}${videoID}`;
+    globalFunctions.genericFetch(mediaURL, 'get', userToken, {})
       .then(result => {
         if (result) {
           this.myPlayer = amp(this.state.videoID, videoOptions);
+          const presenterProtection = [
+            {
+              "type": "AES",
+              "authenticationToken": result.token
+            }
+          ]
+          const normalProtection = [
+            {
+              "type": "PlayReady",
+              "authenticationToken": result.token
+            },
+            {
+              "type": "Widevine",
+              "authenticationToken": result.token
+            }
+          ]
           this.myPlayer.src([{
             src: result.url,
             type: "application/vnd.ms-sstr+xml",
-            protectionInfo: [
-              {
-                "type": "PlayReady",
-                "authenticationToken": result.token
-              },
-              {
-                "type": "Widevine",
-                "authenticationToken": result.token
-              }
-            ]
+            protectionInfo: (emmPresenterMode) ? presenterProtection : normalProtection
           }]);
           this.myPlayer.addEventListener('timeupdate', (e) => {
             this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
@@ -169,13 +201,37 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     )
   }
 
+  switchPresenterMode = () => {
+    const { emmPresenterMode, setEMMPresenterDialog, setEMMPresenterMode } = this.props;
+    if (!emmPresenterMode) {
+      //need to show warning if previous state is non presenter mode
+      setEMMPresenterDialog(true)
+    } else {
+      //otherwise, can just turn off presenter mode
+      setEMMPresenterMode(false)
+    }
+  }
+
   render() {
-    const { phaseData, emmVideoTime } = this.props;
+    const { phaseData, emmVideoTime, emmPresenterMode } = this.props;
     const { noVideo, selectedVideoClipID, isProcedureStepWithTabs, selectedSurgicalTab } = this.state;
     const showVideoTimeline = (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0 && selectedSurgicalTab == 0)
 
     return (
-      <div className="Emm-Phase-Video-Container">
+      <div className="Emm-Phase-Video-Container relative">
+        {(!noVideo) &&
+          <div className="absolute" style={{right: '0px', top: '-38px'}}>
+            <FormControlLabel
+              control={
+                <SSTSwitch
+                  checked={emmPresenterMode}
+                  onChange={this.switchPresenterMode}
+                />
+              }
+              label="Presenter Mode"
+            />
+          </div>
+        }
         {(isProcedureStepWithTabs) && this.getProcedureTabs()}
         {
           (noVideo && phaseData.checklistData.length == 0) ?
