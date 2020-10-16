@@ -245,7 +245,7 @@ export default class EMMReports extends React.PureComponent {
           dialogClose={()=>this.setState({ onBoardDialogOpen: false })}
         />
         {(emmReportData) &&
-          <div className="EMM-REPORTS relative">
+          <div className={`EMM-REPORTS ${(emmPresenterMode) && 'banner-present'} relative`}>
             <div className="close-emm" onClick={()=>this.closeEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
             <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
               <img className="absolute" src={emmLogo} />
@@ -267,15 +267,15 @@ export default class EMMReports extends React.PureComponent {
                 </div>
               </div>
             </div>
-          {
-            (emmReportTab === 'overview') ?
+          {(emmReportTab === 'overview') ?
             <EMMOverview
-            tabShowing={emmReportTab === 'overview'}
-          />:
-          <EMMPhaseAnalysis
-            tabShowing={emmReportTab === 'phase'}
-            scriptReady={this.state.isScriptReady}
-            phases={emmReportData.enhancedMMPages}/>
+              tabShowing={emmReportTab === 'overview'}
+            /> :
+            <EMMPhaseAnalysis
+              tabShowing={emmReportTab === 'phase'}
+              scriptReady={this.state.isScriptReady}
+              phases={emmReportData.enhancedMMPages}
+            />
           }
           </div>
         }

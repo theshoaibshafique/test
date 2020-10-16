@@ -81,15 +81,19 @@ $onboardwidth: 875px;
 .EMM-REPORTS-SCROLL {
     height: 100%;
     overflow-y: auto;
+}
 
-    .Presenter-Mode-Banner {
-        background: #004F6E;
-        height: 40px;
-        line-height: 40px;
-        text-align: center;
-        font-size: 18px;
-        color: $white;
-    }
+.Presenter-Mode-Banner {
+    position: fixed;
+    top: 0px;
+    z-index: 99;
+    width: 100%;
+    background: #004F6E;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 18px;
+    color: $white;
 }
 
 .EMM-REPORTS {
@@ -98,6 +102,10 @@ $onboardwidth: 875px;
     margin: 0px auto;
     overflow-y: auto;
     font-size: 18px;
+    &.banner-present {
+        margin-top: 40px;
+        z-index: 1;
+    }
     .close-emm {
         cursor: pointer;
         position: absolute;
