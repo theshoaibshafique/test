@@ -87,7 +87,7 @@ $onboardwidth: 875px;
     position: fixed;
     top: 0px;
     z-index: 99;
-    width: 100%;
+    width: calc(100% - 16px); //css hack
     background: #004F6E;
     height: 40px;
     line-height: 40px;
