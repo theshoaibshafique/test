@@ -219,9 +219,9 @@ export default class SSChecklist extends React.PureComponent {
           if (moment(tileRequest.startDate).isSame(this.state.month, 'month')) {
             reportData[i].group[j] = result;
           }
-          if (tileRequest.tileType == 'InfographicParagraph') {
+          if (tileRequest.tileType == 'InfographicParagraph' && result.dataPoints) {
             //In thee case that there is NO CASES and you're using filters - we show custom mesage
-            this.setState({ hasNoCases: result.dataPoints && result.dataPoints.length > 0 && result.dataPoints[0].valueX <= 0 && !jsonBody.Monthly })
+            this.setState({ hasNoCases: result.dataPoints && result.dataPoints.length > 0 && parseInt(result.dataPoints[0].valueX) <= 0 && !jsonBody.Monthly })
           }
           this.setState({ reportData, pendingTileCount: this.state.pendingTileCount - 1 },
             () => {
