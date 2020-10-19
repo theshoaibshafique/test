@@ -1,14 +1,16 @@
 @import '../../styles/global-styles';
 
 .APP-MAIN-WRAPPER {
-  // height: calc(100% - #{$header-height} )
-  height: calc(100% )
+  height: 100%;
+  display: flex;
 }
 
-.MAIN-NAVIGATION [class*="AnchorLeft"] {
+.MAIN-NAVIGATION {
   width: $nav-width;
-  box-shadow: 1px 0 4px 0 rgba(0,0,0,0.1);
-  z-index: 1500;
+  [class*="AnchorLeft"] {
+    width: $nav-width;
+    box-shadow: 1px 0 4px 0 rgba(0,0,0,0.1);
+  }
 }
 
 .Nav-Wrapper {
@@ -19,9 +21,8 @@
 
 .Content-Wrapper {
   width: calc(100% - #{$nav-width});
-  margin-left: $nav-width;
-  height: 100%;
-  overflow-x: hidden;
+  max-height: 100vh;
+  overflow: hidden;
   & > section {
     padding: 3rem;
     min-height: calc(100% - 92px);

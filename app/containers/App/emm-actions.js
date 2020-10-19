@@ -22,7 +22,9 @@ import {
   EMM_SWITCH_TAB,
   EMM_SWITCH_PHASE,
   EMM_SET_VIDEO_TIME,
-  EMM_PUBLISH_ACCESS
+  EMM_PUBLISH_ACCESS,
+  EMM_PRESENTER_MODE,
+  EMM_PRESENTER_DIALOG
 } from './constants';
 
 export function showEMMReport(reportID) {
@@ -70,5 +72,19 @@ export function setEMMPublishAccess(publishAccess) {
   return {
     type: EMM_PUBLISH_ACCESS,
     publishAccess
+  }
+}
+
+export function setEMMPresenterMode(presenterMode) {
+  return {
+    type: EMM_PRESENTER_MODE,
+    presenterMode
+  }
+}
+
+export function setEMMPresenterDialog(presenterDialog) {
+  return {
+    type: EMM_PRESENTER_DIALOG,
+    presenterDialog
   }
 }

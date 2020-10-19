@@ -79,12 +79,12 @@ $ssc-picker-height: 150px;
     }
 
     .overlay {
-        top: $ssc-picker-height;
+        height: calc(100% - 155px);
         background-color: #f5f5f5;
+        overflow-y: auto;
     }
-    .overlay.landing-page {
-        top: calc(#{$ssc-picker-height} - 65px);
-        background-color: #f5f5f5;
+    .landing-page {
+        height: calc(100% - 82px);
     }
     .efficiency-message {
         font-family: "Noto Sans";
@@ -117,12 +117,6 @@ $ssc-picker-height: 150px;
         border-radius: 8px !important;
     }
 
-    .efficiency-picker-container {
-        position: absolute;
-        width: calc(100% - #{$nav-width}) !important;
-        z-index: 1300;
-        top: 0;
-    }
     .efficiency-main {
         padding: 40px;
         max-width: 1230px;
@@ -162,7 +156,7 @@ $ssc-picker-height: 150px;
     left: 40px;
 }
 .efficiencyOnBoarding {
-    
+
     color: #000;
     font-family: "Noto Sans";
     font-size: 14px;

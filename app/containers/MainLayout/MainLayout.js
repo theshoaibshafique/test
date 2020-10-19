@@ -2,7 +2,6 @@ import React from 'react';
 import './style.scss';
 import { Helmet } from 'react-helmet';
 import { Switch, Route } from 'react-router-dom';
-import MainDashboard from 'containers/MainDashboard/Loadable';
 import Welcome from 'containers/Welcome/Loadable';
 import EMMCases from 'containers/EMMCases/Loadable';
 import EMMPublish from 'containers/EMMPublish/Loadable';
@@ -196,7 +195,7 @@ export default class MainLayout extends React.PureComponent {
               </Drawer>
             </Hidden>
           </nav>
-          <div className="inline overflow-y Content-Wrapper">
+          <div className="Content-Wrapper">
             {this.getContainer()}
           </div>
         </div>

@@ -22,4 +22,6 @@ export const EMM_SWITCH_TAB = 'insights - switch emm tab';
 export const EMM_SWITCH_PHASE = 'insights - set emm phase'
 export const EMM_SET_VIDEO_TIME = 'insights - update video time'
 export const EMM_PUBLISH_ACCESS = 'insights - set emm publish access'
+export const EMM_PRESENTER_DIALOG = 'insights - set emm presenter dialog'
+export const EMM_PRESENTER_MODE = 'insights - set emm presenter mode'
 export const DEFAULT_LOCALE = 'en';
