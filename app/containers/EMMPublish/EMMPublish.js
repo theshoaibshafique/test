@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+                                       import React, { forwardRef } from 'react';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { Checkbox, Button } from '@material-ui/core';
@@ -15,6 +15,7 @@ import Search from '@material-ui/icons/Search';
 import MaterialTable from 'material-table';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 
 const tableIcons = {
   Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
@@ -36,7 +37,8 @@ export default class EMMPublish extends React.PureComponent {
       emmCases: [],
       operatingRoomList: [],
       filterPublished: false,
-      specialties: this.props.specialties || []
+      specialties: this.props.specialties || [],
+      isSafari: navigator.vendor.includes('Apple')
     };
   }
 
@@ -137,7 +139,7 @@ export default class EMMPublish extends React.PureComponent {
 
 
   render() {
-    const { emmCases } = this.state;
+    const { emmCases, isSafari, isLoading } = this.state;
     let allPageSizeOptions = [5, 10, 25, 50, 75, 100];
     let pageSizeOptions = allPageSizeOptions.filter((option) => {
       return (option < emmCases.length)
@@ -151,11 +153,12 @@ export default class EMMPublish extends React.PureComponent {
 
     return (
       <LoadingOverlay
-        active={this.state.isLoading}
+        active={isLoading}
         spinner
         text='Loading your content...'
         className="Overlay"
       >
+        {(isSafari) && <SafariWarningBanner />}
         <section className="emm-publish-page">
           <div className="header page-title">
             <div><span className="pad">Enhanced M&M Cases</span></div>
