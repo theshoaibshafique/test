@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core/';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
+import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 
 const EMMCasesTable = (props) => {
   let { tableData, redirect, openReport } = props;
@@ -77,7 +78,8 @@ export default class EMMCases extends React.PureComponent {
       operatingRoomMap,
       recentSearch: [],
       noMatch: false,
-      localSearchCache: []
+      localSearchCache: [],
+      isSafari: navigator.vendor.includes('Apple')
     };
   }
 
@@ -193,7 +195,11 @@ export default class EMMCases extends React.PureComponent {
 
   render() {
     return (
-      <section className="EMM-CASES">
+      <div>
+        {(this.state.isSafari) &&
+          <SafariWarningBanner />
+        }
+        <section className="EMM-CASES">
         <Grid container spacing={0}>
           <Grid item xs={12} className="header">
             Enhanced M&M Cases
@@ -253,6 +259,7 @@ export default class EMMCases extends React.PureComponent {
 
         </Grid>
       </section>
+      </div>
     );
   }
 }

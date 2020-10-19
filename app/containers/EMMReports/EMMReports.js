@@ -108,7 +108,8 @@ export default class EMMReports extends React.PureComponent {
       isScriptReady: false,
       isPublished: false,
       publishDialogOpen: false,
-      onBoardDialogOpen: false
+      onBoardDialogOpen: false,
+      isSafari: navigator.vendor.includes('Apple')
     }
   }
 
@@ -221,7 +222,7 @@ export default class EMMReports extends React.PureComponent {
 
   render() {
     const { emmReportData, emmReportTab, emmPublishAccess, emmPresenterDialog, emmPresenterMode } = this.props;
-    const { isPublished, publishDialogOpen, onBoardDialogOpen } = this.state;
+    const { isPublished, publishDialogOpen, onBoardDialogOpen, isSafari } = this.state;
 
     let showPublishButton;
     if (emmReportData)
@@ -229,6 +230,7 @@ export default class EMMReports extends React.PureComponent {
 
     return (
       <div className="EMM-REPORTS-SCROLL">
+        {(isSafari && !emmPresenterMode) && <div className="Presenter-Mode-Banner">Safari no work here</div>}
         {(emmPresenterMode) &&
           <div className="Presenter-Mode-Banner">You are in Presenter Mode</div>
         }

@@ -31,10 +31,9 @@ html,
 body,
 #app,
 .app-wrapper {
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   font-size: 1rem;
-  overflow: hidden;
 }
 
 body {
@@ -274,4 +273,15 @@ tbody tr:hover:not(.MuiTableRow-footer) {
 
 .app-wrapper section{
   padding: 2.5em 2em;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.Safari-Warning-Banner {
+  background: #004F6E;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 18px;
+  color: $white;
 }
