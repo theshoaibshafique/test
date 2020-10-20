@@ -230,7 +230,7 @@ export default class EMMReports extends React.PureComponent {
 
     return (
       <div className="EMM-REPORTS-SCROLL">
-        {(isSafari && !emmPresenterMode) && <div className="Presenter-Mode-Banner safari-warning">Warning: Enhanced M&M Reports contains videos that are currently not supported on Safari. You may still access the reports and view its contents, but we recommend using the latest version of Google Chrome or Microsoft Edge browsers for the full experience.</div>}
+        {(isSafari && !emmPresenterMode) && <div className="Presenter-Mode-Banner">You are currently using an unsupported browser.</div>}
         {(emmPresenterMode) &&
           <div className="Presenter-Mode-Banner">You are in Presenter Mode</div>
         }
@@ -247,38 +247,40 @@ export default class EMMReports extends React.PureComponent {
           dialogClose={()=>this.setState({ onBoardDialogOpen: false })}
         />
         {(emmReportData) &&
-          <div className={`EMM-REPORTS ${(isSafari && !emmPresenterMode) ? 'safari-banner' : (emmPresenterMode) && 'presenter-banner'} relative`}>
-            <div className="close-emm" onClick={()=>this.closeEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
-            <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
-              <img className="absolute" src={emmLogo} />
-              <div className="onboarding-open absolute" onClick={()=>this.setState({ onBoardDialogOpen: true })}>What’s this report about?</div>
-              {
-                (showPublishButton) &&
-                  <Button variant="outlined" className="primary publish-button" onClick={() => this.setState({ publishDialogOpen : true })}>{(isPublished) ? 'Unpublish' : 'Publish'} Report</Button>
-              }
-              <div className="EMM-Tab-Selector">
-                <div
-                  className={`EMM-Tab center-align ${(emmReportTab == 'overview') && 'selected'}`}
-                  onClick={()=>this.switchTab('overview')}>
-                    Overview
-                </div>
-                <div
-                  className={`EMM-Tab center-align ${(emmReportTab == 'phase') && 'selected'}`}
-                  onClick={()=>this.switchTab('phase')}>
-                    Phase Analysis
+          <div className={`EMM-REPORTS ${(isSafari || emmPresenterMode) && 'banner-present'}`}>
+            <div className="EMM-REPORTS-WRAPPER relative">
+              <div className="close-emm" onClick={()=>this.closeEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
+              <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
+                <img className="absolute" src={emmLogo} />
+                <div className="onboarding-open absolute" onClick={()=>this.setState({ onBoardDialogOpen: true })}>What’s this report about?</div>
+                {
+                  (showPublishButton) &&
+                    <Button variant="outlined" className="primary publish-button" onClick={() => this.setState({ publishDialogOpen : true })}>{(isPublished) ? 'Unpublish' : 'Publish'} Report</Button>
+                }
+                <div className="EMM-Tab-Selector">
+                  <div
+                    className={`EMM-Tab center-align ${(emmReportTab == 'overview') && 'selected'}`}
+                    onClick={()=>this.switchTab('overview')}>
+                      Overview
+                  </div>
+                  <div
+                    className={`EMM-Tab center-align ${(emmReportTab == 'phase') && 'selected'}`}
+                    onClick={()=>this.switchTab('phase')}>
+                      Phase Analysis
+                  </div>
                 </div>
               </div>
+            {(emmReportTab === 'overview') ?
+              <EMMOverview
+                tabShowing={emmReportTab === 'overview'}
+              /> :
+              <EMMPhaseAnalysis
+                tabShowing={emmReportTab === 'phase'}
+                scriptReady={this.state.isScriptReady}
+                phases={emmReportData.enhancedMMPages}
+              />
+            }
             </div>
-          {(emmReportTab === 'overview') ?
-            <EMMOverview
-              tabShowing={emmReportTab === 'overview'}
-            /> :
-            <EMMPhaseAnalysis
-              tabShowing={emmReportTab === 'phase'}
-              scriptReady={this.state.isScriptReady}
-              phases={emmReportData.enhancedMMPages}
-            />
-          }
           </div>
         }
       </div>
