@@ -158,12 +158,12 @@ export default class EMMPublish extends React.PureComponent {
         text='Loading your content...'
         className="Overlay"
       >
-        {(isSafari) && <SafariWarningBanner />}
         <section className="emm-publish-page">
           <div className="header page-title">
             <div><span className="pad">Enhanced M&M Cases</span></div>
           </div>
           <div>
+          {(isSafari) && <SafariWarningBanner />}
           <Checkbox
                 disableRipple
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}

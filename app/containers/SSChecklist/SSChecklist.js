@@ -75,7 +75,7 @@ export default class SSChecklist extends React.PureComponent {
       },10000);
       this.setState({timeout})
     } else {
-      this.getReportLayout();  
+      this.getReportLayout();
     }
     this.openOnboarding()
   };
@@ -489,7 +489,6 @@ export default class SSChecklist extends React.PureComponent {
               ...base,
               background: 'none',
               color: '#000',
-              marginTop: 150,
               opacity: 0.8,
               color: "#000000",
               fontFamily: "Noto Sans",

@@ -230,7 +230,7 @@ export default class EMMReports extends React.PureComponent {
 
     return (
       <div className="EMM-REPORTS-SCROLL">
-        {(isSafari && !emmPresenterMode) && <div className="Presenter-Mode-Banner">Safari no work here</div>}
+        {(isSafari && !emmPresenterMode) && <div className="Presenter-Mode-Banner safari-warning">Warning: Enhanced M&M Reports contains videos that are currently not supported on Safari. You may still access the reports and view its contents, but we recommend using the latest version of Google Chrome or Microsoft Edge browsers for the full experience.</div>}
         {(emmPresenterMode) &&
           <div className="Presenter-Mode-Banner">You are in Presenter Mode</div>
         }
@@ -247,7 +247,7 @@ export default class EMMReports extends React.PureComponent {
           dialogClose={()=>this.setState({ onBoardDialogOpen: false })}
         />
         {(emmReportData) &&
-          <div className={`EMM-REPORTS ${(emmPresenterMode) && 'banner-present'} relative`}>
+          <div className={`EMM-REPORTS ${(isSafari && !emmPresenterMode) ? 'safari-banner' : (emmPresenterMode) && 'presenter-banner'} relative`}>
             <div className="close-emm" onClick={()=>this.closeEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
             <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
               <img className="absolute" src={emmLogo} />

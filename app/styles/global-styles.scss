@@ -278,10 +278,10 @@ tbody tr:hover:not(.MuiTableRow-footer) {
 }
 
 .Safari-Warning-Banner {
-  background: #004F6E;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  font-size: 18px;
-  color: $white;
+  background: #FFF1D1;
+  border: 1px solid #FFB71B;
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: #000000;
+  padding: 16px;
 }

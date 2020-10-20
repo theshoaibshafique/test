@@ -102,7 +102,7 @@ export default class Efficiency extends React.PureComponent {
     this.loadFilter(callback);
     this.getEarliestStartDate();
     this.openOnboarding()
-    
+
   };
 
   openOnboarding() {
@@ -459,7 +459,6 @@ export default class Efficiency extends React.PureComponent {
               ...base,
               background: 'none',
               color: '#000',
-              marginTop: 150,
               opacity: 0.8,
               color: "#000000",
               fontFamily: "Noto Sans",
