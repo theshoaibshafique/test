@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
+import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 
 export default class EMM extends React.PureComponent {
   constructor(props) {
@@ -16,7 +17,8 @@ export default class EMM extends React.PureComponent {
       emmAccess: false,
       enhancedMMReferenceName: '',
       enhancedMMPublished: false,
-      showReport: false
+      showReport: false,
+      isSafari: navigator.vendor.includes('Apple')
     };
   }
 
@@ -120,19 +122,19 @@ export default class EMM extends React.PureComponent {
   }
 
   render() {
-    const { enhancedMMReferenceName, enhancedMMPublished, emmAccess } = this.state;
+    const { enhancedMMReferenceName, enhancedMMPublished, emmAccess, isSafari } = this.state;
     const isReportReady = (enhancedMMReferenceName && enhancedMMPublished && emmAccess)
     return (
       <section className="full-height">
         <div className="header page-title">
-          <div>
-            <span className="pad">Enhanced M&M</span>
-            {(isReportReady) ?
-              <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button> :
-              <span className="report-status">(Report Status: In Progress)</span>
-            }
-          </div>
+          <div><span className="pad">Enhanced M&M</span></div>
+          {(isReportReady) ?
+            <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button> :
+            <span className="report-status">(Report Status: In Progress)</span>
+          }
         </div>
+        <SafariWarningBanner />
+        {(isSafari) && <SafariWarningBanner />}
 
         <div className="table-row info-title">
           <div className="first-column">Date of Complications</div> <div>Operating Room</div>

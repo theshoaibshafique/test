@@ -195,15 +195,12 @@ export default class EMMCases extends React.PureComponent {
 
   render() {
     return (
-      <div>
-        {(this.state.isSafari) &&
-          <SafariWarningBanner />
-        }
         <section className="EMM-CASES">
         <Grid container spacing={0}>
           <Grid item xs={12} className="header">
             Enhanced M&M Cases
           </Grid>
+          {(this.state.isSafari) && <SafariWarningBanner /> }
           <form onSubmit={()=>this.search()}>
             <Grid item xs={12} className="page-subtitle">
               Please enter your eM&M Request ID below and click Search to retrieve your report or open a recently accessed report.
@@ -259,7 +256,6 @@ export default class EMMCases extends React.PureComponent {
 
         </Grid>
       </section>
-      </div>
     );
   }
 }

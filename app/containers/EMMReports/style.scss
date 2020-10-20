@@ -84,16 +84,18 @@ $onboardwidth: 875px;
 }
 
 .Presenter-Mode-Banner {
-    position: fixed;
-    top: 0px;
-    z-index: 99;
-    width: calc(100% - 16px); //css hack
     background: #004F6E;
     height: 40px;
     line-height: 40px;
     text-align: center;
     font-size: 18px;
     color: $white;
+    &.safari-warning {
+        height: 80px;
+        text-align: left;
+        line-height: 22px;
+        padding: 16px;
+    }
 }
 
 .EMM-REPORTS {
@@ -102,9 +104,11 @@ $onboardwidth: 875px;
     margin: 0px auto;
     overflow-y: auto;
     font-size: 18px;
-    &.banner-present {
-        margin-top: 40px;
-        z-index: 1;
+    &.safari-banner {
+        height: calc(100% - 80px);
+    }
+    &.presenter-banner {
+        height: calc(100% - 40px);
     }
     .close-emm {
         cursor: pointer;
