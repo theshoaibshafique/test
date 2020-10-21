@@ -15,6 +15,7 @@ export const FACILITY_ROOMS = 'insight/App/FACILITY_ROOMS';
 export const SPECIALTIES = 'insight/App/SPECIALTIES';
 export const COMPLICATIONS = 'insight/App/COMPLICATIONS';
 export const OPERATING_ROOM = 'insight/App/OPERATING_ROOM';
+export const USER_ROLES = 'insight/App/USER_ROLES';
 export const SHOWEMMREPORT = 'insights - showing emm reports';
 export const HIDEEMMREPORT = 'insights - hiding emm reports';
 export const SETEMMREPORT = 'insights - set emm reports';

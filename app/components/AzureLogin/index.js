@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setUserInfo, setUserFacility, setFacilityRooms, setSpecialties, setComplications, setOperatingRoom } from '../../containers/App/actions';
+import { setUserInfo, setUserFacility, setFacilityRooms, setSpecialties, setComplications, setOperatingRoom, setUserRoles } from '../../containers/App/actions';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { makeSelectID, makeSelectToken, makeSelectSpecialties, makeSelectComplications, makeSelectUserFacility } from '../../containers/App/selectors';
@@ -33,6 +33,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setOperatingRoom: (operatingRooms) => {
       dispatch(setOperatingRoom(operatingRooms))
+    },
+    setUserRoles: (userRoles) => {
+      dispatch(setUserRoles(userRoles))
     },
     pushUrl: (url) => {
       dispatch(push(url));

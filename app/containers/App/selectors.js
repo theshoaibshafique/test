@@ -78,6 +78,11 @@ const makeSelectJobTitle = () => createSelector(
   (globalState) => globalState.get('jobTitle')
 );
 
+const makeSelectIsPresenter = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('userRoles').filter(role => role === 'Enhanced M&M Presenter').length === 1
+);
+
 export {
   selectGlobal,
   makeSelectToken,
@@ -93,5 +98,6 @@ export {
   makeSelectFirstName,
   makeSelectLastName,
   makeSelectEmail,
-  makeSelectJobTitle
+  makeSelectJobTitle,
+  makeSelectIsPresenter
 };
