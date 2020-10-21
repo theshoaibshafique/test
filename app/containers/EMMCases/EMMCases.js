@@ -237,7 +237,7 @@ export default class EMMCases extends React.PureComponent {
             }
 
           {(this.state.noMatch) &&
-            <Grid item xs={12}>No report matches your Request ID</Grid>
+            <Grid item xs={12} className="not-found">No report matches your Request ID</Grid>
           }
           </Grid>
 
