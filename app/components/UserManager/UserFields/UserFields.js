@@ -4,9 +4,20 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Grid } from '@material-ui/core';
+import { Grid, Tooltip, withStyles} from '@material-ui/core';
 import Icon from '@mdi/react'
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    padding: '16px',
+    fontSize: '14px',
+    lineHeight: '19px',
+    fontFamily: 'Noto Sans'
+  }
+}))(Tooltip);
 
 
 class UserFields extends React.Component {
@@ -89,11 +100,11 @@ class UserFields extends React.Component {
     return (false);
   }
 
-  includesRole(role){
-    if (!this.props.roleNames || this.props.roleNames.length == 0){
+  includesRole(role) {
+    if (!this.props.roleNames || this.props.roleNames.length == 0) {
       return false;
     }
-    let regex = new RegExp(this.props.roleNames.join("|"),"i");
+    let regex = new RegExp(this.props.roleNames.join("|"), "i");
     return regex.test(role);
   }
 
@@ -224,7 +235,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View"
                 />
               }
-              label="Enhanced M&M View"
+              label="Enhanced M&M View Report"
             />}
             {this.includesRole("Enhanced M&M Edit") && <FormControlLabel
               control={
@@ -242,6 +253,25 @@ class UserFields extends React.Component {
                 />
               }
               label="Enhanced M&M Request"
+            />}
+            {this.includesRole("Enhanced M&M Presenter") && <FormControlLabel
+              control={
+                <Checkbox
+                  disableRipple
+                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  className="SST-Checkbox"
+                  id="presenterAccess"
+                  name="presenterAccess"
+                  disabled={isAdmin}
+                  onChange={this.props.handleFormChange}
+                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter")}
+                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter"
+                />
+              }
+              label={<div>Enhanced M&M Presenter<LightTooltip interactive arrow title={"This permission enables the user to access Presenter Mode for Enhanced M&M Reports. Presenter Mode will cause the videos to no longer be secured but will enable sharing over video conferencing tools. This feature can be found above the video player for each report."} placement="top" fontSize="small">
+                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+              </LightTooltip></div>}
             />}
             {this.includesRole("Surgical Checklist") && <FormControlLabel
               control={
@@ -276,23 +306,6 @@ class UserFields extends React.Component {
                 />
               }
               label="Efficiency Report"
-            />}
-            {this.includesRole("Enhanced M&M Presenter") && <FormControlLabel
-              control={
-                <Checkbox
-                  disableRipple
-                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-                  className="SST-Checkbox"
-                  id="presenterAccess"
-                  name="presenterAccess"
-                  disabled={isAdmin}
-                  onChange={this.props.handleFormChange}
-                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter")}
-                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter"
-                />
-              }
-              label="Enhanced M&M Presenter"
             />}
           </FormControl>
         </Grid>
