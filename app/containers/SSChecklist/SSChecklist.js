@@ -120,7 +120,7 @@ export default class SSChecklist extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ tileRequest: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ tileRequest: [], isFilterApplied: true, isLoading: true, modalTile:null, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType,
@@ -267,21 +267,32 @@ export default class SSChecklist extends React.PureComponent {
       "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
     }
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
+    let modal = this.state.modalTile || {days:[]};
+    //If nothing changed - open the tile
+    if (modal.days.length === jsonBody.days.length && modal.days.every(function(value, index) { return value === jsonBody.days[index]})
+      && modal.roomName == jsonBody.roomName
+      && modal.specialtyName == jsonBody.specialtyName
+      && modal.procedureName == jsonBody.procedureName
+      && moment.utc(modal.startDate).isSame(this.state.month.startOf('month'),'month')){
+        this.setState({isOpen:true})
+        return
+    }
 
+    this.setState({isOpen:true, modalTile:this.state.modalTile || jsonBody});
     globalFuncs.axiosFetch(process.env.SSCTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
         result = result.data;
         if (result === 'error' || result === 'conflict') {
-          this.notLoading();
+          this.setState({isOpen:false, modalTile:null, isLoading:false});
         } else {
-          result.tileType = tileRequest.tileType;
+          result = {...jsonBody, ...result, roomName:jsonBody.roomName};
           if (moment.utc(tileRequest.dataDate).isSame(this.state.month.startOf('month'),'month')) {
-            this.setState({ isOpen: true, modalTile: result });
+            this.setState({ modalTile: result });
           }
 
         }
       }).catch((error) => {
-
+        this.setState({isOpen:false, modalTile:null, isLoading:false});
       });
   }
 
@@ -526,7 +537,7 @@ export default class SSChecklist extends React.PureComponent {
             open={this.state.isOpen}
             onClose={() => this.closeModal()}
           >
-            <DialogContent className="ssc Modal">
+            <DialogContent className="ssc Modal"  style={{ minHeight: 320, minWidth: 320 }}>
               {this.renderTile(this.state.modalTile)}
             </DialogContent>
           </Modal>
