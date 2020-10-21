@@ -22,6 +22,7 @@ import {
   SPECIALTIES,
   COMPLICATIONS,
   OPERATING_ROOM,
+  USER_ROLES
 } from './constants';
 
 /**
@@ -105,5 +106,19 @@ export function setOperatingRoom(operatingRoom) {
   return {
     type: OPERATING_ROOM,
     operatingRoom
+  };
+}
+
+/**
+ * Save user roles
+ *
+ * @param  {array} roles list of roles
+ *
+ * @return {object}    An action object with a type of USER_ROLES
+ */
+export function setUserRoles(userRoles) {
+  return {
+    type: USER_ROLES,
+    userRoles
   };
 }

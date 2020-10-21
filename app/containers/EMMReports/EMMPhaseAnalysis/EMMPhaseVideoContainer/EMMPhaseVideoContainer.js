@@ -217,13 +217,13 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   render() {
-    const { phaseData, emmVideoTime, emmPresenterMode } = this.props;
+    const { phaseData, emmVideoTime, emmPresenterMode, hasPresenterRole } = this.props;
     const { noVideo, selectedVideoClipID, isProcedureStepWithTabs, selectedSurgicalTab } = this.state;
     const showVideoTimeline = (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0 && selectedSurgicalTab == 0)
 
     return (
       <div className="Emm-Phase-Video-Container relative">
-        {(!noVideo) &&
+        {(!noVideo && hasPresenterRole) &&
           <div className="absolute" style={{right: '0px', top: '-38px'}}>
             <FormControlLabel
               control={
