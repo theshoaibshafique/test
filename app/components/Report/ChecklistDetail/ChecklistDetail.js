@@ -43,14 +43,24 @@ export default class ChecklistDetail extends React.PureComponent {
     }
   };
 
-  componentDidMount() {
-    let dataPoints = this.props.dataPoints.sort((a, b) => { return parseInt(b.valueX.replace('%','')) - parseInt(a.valueX.replace('%','')) || ('' + a.subTitle).localeCompare(b.subTitle) });
+  componentDidUpdate(prevProps) {
+    if (prevProps.dataPoints != this.props.dataPoints) {
+      this.prepareData();
+    }
+  }
+
+  prepareData() {
+    let dataPoints = this.props.dataPoints && this.props.dataPoints.sort((a, b) => { return parseInt(b.valueX.replace('%', '')) - parseInt(a.valueX.replace('%', '')) || ('' + a.subTitle).localeCompare(b.subTitle) }) || [];
 
     let topItems = dataPoints.filter(point => point.subTitle)
       .slice(0, 5)
       .map((point) => point.title + point.subTitle + point.valueX);
     dataPoints = this.groupTiles(dataPoints);
     this.setState({ dataPoints, topItems });
+  }
+
+  componentDidMount() {
+    this.prepareData();
   }
 
   getName(searchList, key) {
@@ -61,7 +71,7 @@ export default class ChecklistDetail extends React.PureComponent {
   }
 
   groupTiles(dataPoints) {
-    const orderBy = {"Briefing":1,"Time Out":2,"Postop Debrief":3};
+    const orderBy = { "Briefing": 1, "Time Out": 2, "Postop Debrief": 3 };
     //Group data by "Group"
     return [...dataPoints.reduce((hash, data) => {
       const current = hash.get(data.title) || { title: data.title, group: [] }
@@ -71,7 +81,7 @@ export default class ChecklistDetail extends React.PureComponent {
       current.group.push(data)
 
       return hash.set(data.title, current);
-    }, new Map).values()].sort((a,b) => orderBy[a.title] - orderBy[b.title]);
+    }, new Map).values()].sort((a, b) => orderBy[a.title] - orderBy[b.title]);
   }
 
   renderData() {
@@ -80,11 +90,11 @@ export default class ChecklistDetail extends React.PureComponent {
       return (
         <Grid item xs key={i} className={"checklist-list"}>
           {dataGroup.group.map((point, j) => {
-            let value = parseInt(point.valueX.replace('%',''));
+            let value = parseInt(point.valueX.replace('%', ''));
             let isTopItem = this.state.topItems.includes(point.title + point.subTitle + point.valueX);
             return (
               <Grid container spacing={0} key={`${i}-${j}`}
-                className={`${isTopItem ? 'top-item' : ''} ${value <= 0  ? 'complete-item' : ''}`}
+                className={`${isTopItem ? 'top-item' : ''} ${value <= 0 ? 'complete-item' : ''}`}
               >
                 <Grid item xs={8} className={point.subTitle ? "list-subtitle" : "list-title"}  >
                   {point.subTitle || point.title}
@@ -125,7 +135,7 @@ export default class ChecklistDetail extends React.PureComponent {
       <LoadingOverlay
         active={!this.props.dataPoints}
         spinner
-        // text='Loading your content...'
+        text='Loading your content...'
         className="overlays"
         styles={{
           overlay: (base) => ({
@@ -141,14 +151,17 @@ export default class ChecklistDetail extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='center' className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length}`} style={{ minHeight: 320 }}>
-          <Grid item xs={10} className="chart-title">
-            {this.props.title}
+        <Grid container spacing={0} justify='space-between' direction="column" className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length || 1}`} style={{ minHeight: 600, minWidth: 600 }}>
+          <Grid container spacing={0}>
+            <Grid item xs={10} className="chart-title">
+              {this.props.title}
+            </Grid>
+            <Grid item xs={2} style={{ textAlign: 'right', padding: '40px 24px 0 40px' }}>
+              <IconButton disableRipple disableFocusRipple onClick={this.props.closeModal} className='close-button'><CloseIcon fontSize='small' /></IconButton>
+            </Grid>
           </Grid>
-          <Grid item xs={2} style={{ textAlign: 'right', padding: '40px 24px 0 40px' }}>
-            <IconButton disableRipple disableFocusRipple onClick={this.props.closeModal} className='close-button'><CloseIcon fontSize='small' /></IconButton>
-          </Grid>
-          <Grid container spacing={0} justify="center">
+
+          <Grid container spacing={0} justify="center" style={{ minHeight: 420 }} >
             {this.renderData()}
           </Grid>
           <Grid item xs={12} style={{ textAlign: 'right' }}>
