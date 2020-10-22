@@ -102,18 +102,20 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <div className="EMM-Score">{adverseEventRateTitle}<span style={{fontSize:'26px'}}>/hr</span></div>
                 </Paper>
               </Grid>
-              <Grid item xs={12}>
-                <Paper className="Emm-Paper">
-                  <div className="Section-Title">Surigcal Safety Checklist</div>
-                    <SurgicalSafetyChecklist
-                      checklistScore={checklistScore.dataPoints}
-                    />
-                  <hr />
-                  <ChecklistStatus
-                    allPhases={emmReportData.enhancedMMPages}
-                    checklists={checklists.dataPoints} />
-                </Paper>
-              </Grid>
+              {(checklistScore) &&
+                  <Grid item xs={12}>
+                    <Paper className="Emm-Paper">
+                      <div className="Section-Title">Surigcal Safety Checklist</div>
+                        <SurgicalSafetyChecklist
+                          checklistScore={checklistScore.dataPoints}
+                        />
+                      <hr />
+                      <ChecklistStatus
+                        allPhases={emmReportData.enhancedMMPages}
+                        checklists={checklists.dataPoints} />
+                    </Paper>
+                  </Grid>
+              }
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">
                   <div className="Section-Title">Phases Of Interest</div>
