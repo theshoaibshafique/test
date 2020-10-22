@@ -269,7 +269,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter"
                 />
               }
-              label={<div>Enhanced M&M Presenter<LightTooltip interactive arrow title={"This permission enables the user to access Presenter Mode for Enhanced M&M Reports. Presenter Mode will cause the videos to no longer be secured but will enable sharing over video conferencing tools. This feature can be found above the video player for each report."} placement="top" fontSize="small">
+              label={<div>Enhanced M&M Presenter<LightTooltip interactive arrow title={"This permission enables the user to access Presentation Mode for Enhanced M&M Reports. Presentation Mode will cause the videos to no longer be secured but will enable sharing over video conferencing tools. This feature can be found above the video player for each report."} placement="top" fontSize="small">
                 <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
               </LightTooltip></div>}
             />}
