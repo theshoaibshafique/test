@@ -208,10 +208,10 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   switchPresenterMode = () => {
     const { emmPresenterMode, setEMMPresenterDialog, setEMMPresenterMode } = this.props;
     if (!emmPresenterMode) {
-      //need to show warning if previous state is non presenter mode
+      //need to show warning if previous state is non presentation mode
       setEMMPresenterDialog(true)
     } else {
-      //otherwise, can just turn off presenter mode
+      //otherwise, can just turn off presentation mode
       setEMMPresenterMode(false)
     }
   }
@@ -232,7 +232,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
                   onChange={this.switchPresenterMode}
                 />
               }
-              label="Presenter Mode"
+              label="Presentation Mode"
             />
           </div>
         }
