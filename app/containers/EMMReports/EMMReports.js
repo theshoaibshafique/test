@@ -52,7 +52,7 @@ const ConfirmPresenterDialog = (props) => {
       <DialogTitle className="red">Warning</DialogTitle>
       <DialogContent>
         <DialogContentText className="confirm-publish-text">
-        Turning on Presenter Mode will cause the videos in this report to be no longer secured, but will enable sharing over video conferencing tools. Do you wish to proceed?
+          By enabling Presentation Mode, this report will no longer be protected by Digital Rights Management (DRM). The Presentation Mode feature will allow you to broadcast this report over web conferencing apps such as MS Teams, however, as a result, it will also decrease the level of protection. Please ensure you enable Presentation Mode only prior to your presentation and disable it immediately thereafter. Do you wish to proceed?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -232,7 +232,7 @@ export default class EMMReports extends React.PureComponent {
       <div className="EMM-REPORTS-SCROLL">
         {(isSafari && !emmPresenterMode) && <div className="Presenter-Mode-Banner">You are currently using an unsupported browser.</div>}
         {(emmPresenterMode) &&
-          <div className="Presenter-Mode-Banner">You are in Presenter Mode</div>
+          <div className="Presenter-Mode-Banner">You are in Presentation Mode</div>
         }
         <ConfirmPublishDialog
           dialogOpen={publishDialogOpen}
