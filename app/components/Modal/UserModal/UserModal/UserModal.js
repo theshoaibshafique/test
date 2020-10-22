@@ -13,6 +13,7 @@ class UserModal extends React.Component {
         open={this.props.open}
         onClose={this.props.handleClose}
         // disableBackdropClick={true}
+        className="user-modal"
       >
         <DialogContent>
           <UserModalStep1
