@@ -39,7 +39,7 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
   }
 
   render() {
-    const { scriptReady, phases, emmPhaseIndex, tabShowing } = this.props;
+    const { scriptReady, phases, emmPhaseIndex, tabShowing, isPublished } = this.props;
     const { phaseTitles, phaseEvents } = this.state;
     const selectedPhase = phases[emmPhaseIndex];
     return (
@@ -60,6 +60,7 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
             <EMMPhaseVideoContainer
               title={'testingVideo'}
               phaseData={phases[emmPhaseIndex]}
+              isPublished={isPublished}
             />
           }
       </div>

@@ -278,6 +278,7 @@ export default class EMMReports extends React.PureComponent {
                 tabShowing={emmReportTab === 'phase'}
                 scriptReady={this.state.isScriptReady}
                 phases={emmReportData.enhancedMMPages}
+                isPublished={isPublished}
               />
             }
             </div>
