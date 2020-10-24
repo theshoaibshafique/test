@@ -133,7 +133,6 @@ export default class EMM extends React.PureComponent {
             <span className="report-status">(Report Status: In Progress)</span>
           }
         </div>
-        <SafariWarningBanner />
         {(isSafari) && <SafariWarningBanner />}
 
         <div className="table-row info-title">
