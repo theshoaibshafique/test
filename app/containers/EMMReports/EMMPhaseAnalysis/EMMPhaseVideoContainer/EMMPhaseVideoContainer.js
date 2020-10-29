@@ -245,7 +245,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
                 {
                   (showVideoTimeline) &&
                   <VideoTimeline
-                    duration={phaseData.enhancedMMVideo[0].endTime - phaseData.enhancedMMVideo[0].startTime}
+                    duration={phaseData.enhancedMMVideo && phaseData.enhancedMMVideo.length && (phaseData.enhancedMMVideo[0].endTime - phaseData.enhancedMMVideo[0].startTime)}
                     procedureSteps={phaseData.enhancedMMData}
                     seekVideo={(time) => this.seekVideo(time)}
                     currentVideoTime={this.props.emmVideoTime}
