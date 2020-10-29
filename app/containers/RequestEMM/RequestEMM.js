@@ -56,7 +56,7 @@ export default class RequestEMM extends React.PureComponent {
       errors: {}
     };
 
-    this.state.minOperationDate.setDate(new Date().getDate() - 30);
+    this.state.minOperationDate.setDate(new Date().getDate() - 21);
     this.state.minOperationDate.setHours(0, 0, 0, 0);
 
   }
