@@ -14,11 +14,11 @@ const videoOptions = {
     enabled: true,
     initialSpeed: 1.0,
     speedLevels: [
-        { name: "x4.0", value: 4.0 },
-        { name: "x3.0", value: 3.0 },
-        { name: "x2.0", value: 2.0 },
-        { name: "x1.0", value: 1.0 },
-        { name: "x0.5", value: 0.5 },
+      { name: "x4.0", value: 4.0 },
+      { name: "x3.0", value: 3.0 },
+      { name: "x2.0", value: 2.0 },
+      { name: "x1.0", value: 1.0 },
+      { name: "x0.5", value: 0.5 },
     ]
   },
   "logo": { "enabled": false },
@@ -46,9 +46,10 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   constructor(props) {
     super(props);
     this.state = {
-      videoID:'phaseAnalysisVideo',
+      videoID: 'phaseAnalysisVideo',
       noVideo: false,
-      selectedVideoClipID: 0
+      selectedVideoClipID: 0,
+      selectedSurgicalTab: 0
     }
   }
 
@@ -98,18 +99,12 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   getVideoID() {
     const { selectedSurgicalTab } = this.state;
     const { phaseData } = this.props;
-    //Not surgical procedure tab
-    if (phaseData.name !== 'SurgicalProcedure') {
-      if (phaseData.enhancedMMData.length > 0)
-        return phaseData.enhancedMMData[0].assets[0];
-      else
-        return null
-    } else {
-        if (selectedSurgicalTab == 0)
-          return phaseData.enhancedMMVideo[0].assets[0];
-        else
-          return phaseData.enhancedMMOpenData[0].assets[0];
-    }
+    if (phaseData.enhancedMMVideo && phaseData.enhancedMMVideo.length && selectedSurgicalTab == 0)
+      return phaseData.enhancedMMVideo[0].assets[0];
+    else if (phaseData.enhancedMMOpenData && phaseData.enhancedMMOpenData.length)
+      return phaseData.enhancedMMOpenData[0].assets[0];
+    else if (phaseData.enhancedMMData.length > 0)
+      return phaseData.enhancedMMData[0].assets[0];
   }
 
   changeVideo(updatedVideoID = null, videoIndex = 0) {
@@ -117,7 +112,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     const { selectedSurgicalTab } = this.state;
     const { phaseData } = this.props;
     if (videoID) {
-      if (phaseData.name !== 'SurgicalProcedure' || selectedSurgicalTab !== 0 ) {
+      if (selectedSurgicalTab !== 0) {
         this.setState({ selectedVideoClipID: videoIndex })
       }
       this.createVideoPlayer(videoID)
@@ -176,7 +171,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   seekVideo(time) {
-      this.myPlayer.currentTime(time)
+    this.myPlayer.currentTime(time)
   }
 
   updateSelectedSurgicalTab(index) {
@@ -196,11 +191,11 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
           procedureTabTitles.map((tabTitle, index) => {
             return <div
               className={`Surgical-Procedure-Tab ${(selectedSurgicalTab == index) && 'selected'}`}
-              onClick={()=>this.updateSelectedSurgicalTab(index)}
-              >
+              onClick={() => this.updateSelectedSurgicalTab(index)}
+            >
               {tabTitle} Video</div>
-            })
-          }
+          })
+        }
       </div>
     )
   }
@@ -219,12 +214,12 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   render() {
     const { phaseData, emmVideoTime, emmPresenterMode, isPublished, hasPresenterRole } = this.props;
     const { noVideo, selectedVideoClipID, isProcedureStepWithTabs, selectedSurgicalTab } = this.state;
-    const showVideoTimeline = (phaseData.name === 'SurgicalProcedure' && phaseData.enhancedMMData.length > 0 && selectedSurgicalTab == 0)
+    const showVideoTimeline = (phaseData.enhancedMMData.length > 0 && selectedSurgicalTab == 0)
 
     return (
       <div className="Emm-Phase-Video-Container relative">
         {(!noVideo && isPublished && hasPresenterRole) &&
-          <div className="absolute" style={{right: '0px', top: '-38px'}}>
+          <div className="absolute" style={{ right: '0px', top: '-38px' }}>
             <FormControlLabel
               control={
                 <SSTSwitch
@@ -240,34 +235,34 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
         {
           (noVideo && phaseData.checklistData.length == 0) ?
             <div className="no-data-container">
-              There are no {(phaseData.name === 'SurgicalProcedure') ? 'Adverse' : 'Non-Routine' } Events or Surgical Safety Checklist information during this phase.
+              There are no {(phaseData.name === 'SurgicalProcedure') ? 'Adverse' : 'Non-Routine'} Events or Surgical Safety Checklist information during this phase.
             </div>
-          :
-          (!noVideo) &&
+            :
+            (!noVideo) &&
             <div className="flex">
               <div className="phase-video">
                 <video id="phaseAnalysisVideo" className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
                 {
                   (showVideoTimeline) &&
-                    <VideoTimeline
-                      duration={phaseData.enhancedMMVideo[0].endTime - phaseData.enhancedMMVideo[0].startTime}
-                      procedureSteps={phaseData.enhancedMMData}
-                      seekVideo={(time)=>this.seekVideo(time)}
-                      currentVideoTime={this.props.emmVideoTime}
-                    />
+                  <VideoTimeline
+                    duration={phaseData.enhancedMMVideo[0].endTime - phaseData.enhancedMMVideo[0].startTime}
+                    procedureSteps={phaseData.enhancedMMData}
+                    seekVideo={(time) => this.seekVideo(time)}
+                    currentVideoTime={this.props.emmVideoTime}
+                  />
                 }
               </div>
               <div
                 className="Phase-Events-Container"
-                style={(showVideoTimeline) ? {height: '655px'} : {}}
+                style={(showVideoTimeline) ? { height: '655px' } : {}}
               >
                 <EMMPhaseEvents
                   phaseTitle={phaseData.name}
                   phaseData={phaseData.enhancedMMData}
                   enhancedMMOpenData={phaseData.enhancedMMOpenData}
                   selectedSurgicalTab={selectedSurgicalTab}
-                  seekVideo={(time)=>this.seekVideo(time)}
-                  changeVideo={(videoID, videoIndex)=>this.changeVideo(videoID, videoIndex)}
+                  seekVideo={(time) => this.seekVideo(time)}
+                  changeVideo={(videoID, videoIndex) => this.changeVideo(videoID, videoIndex)}
                   currentVideoTime={emmVideoTime}
                   selectedVideoClipID={selectedVideoClipID}
                 />
