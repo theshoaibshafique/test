@@ -1,4 +1,7 @@
 @import '../../../styles/global-styles';
+.table-main .MuiTableCell-root{
+  z-index: 0 !important;
+}
 .table-main.empty {
   
   .MuiTableCell-root.MuiTableCell-body{
