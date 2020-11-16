@@ -20,9 +20,9 @@ export default class MyProfile extends React.PureComponent {
       //Ping user management for logging before redirecting
       globalFuncs.axiosFetch(patchURL, 'patch', this.props.userToken, {})
         .then(result => {
-          window.location.href = url;
+          window.open(url);
         }).catch((error) => {
-          window.location.href = url;
+          window.open(url);
         });
     }
 
