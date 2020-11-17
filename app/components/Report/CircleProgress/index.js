@@ -9,7 +9,7 @@ const useStylesCircleProgress = makeStyles({
       color: '#000000',
       '& h3' : {
         fontSize: '18px',
-        fontWeight: 'bold',
+        fontWeight: 'unset',
         opacity: 0.8
       },
       '& h5' : {

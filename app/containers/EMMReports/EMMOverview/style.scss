@@ -1,26 +1,37 @@
-@import '../../../styles/global-styles.scss';
+@import "../../../styles/global-styles.scss";
 
-$paddingSize: 40px;
+$paddingSize: 24px;
 
 .Emm-Reports-Overview {
   padding-top: $paddingSize;
 }
 
 .Emm-Paper {
-  text-align: center;
+  // text-align: center;
   padding: $paddingSize;
   border-radius: 8px;
   .Section-Title {
     margin: 0px;
-    font-size: 26px;
-    color: #000;
+    color: #000000;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 24px;
     opacity: 0.8;
+  }
+  .Section-Divider {
+    position: absolute;
+    height: 24px;
+    width: 1px;
+    top: 60px;
+    left: 0px;
+    background-color: #c8c8c8;
   }
 }
 
 .EMM-Score {
-  font-size: 74px;
-  color: #004F6E;
+  font-size: 42px;
+  color: #004f6e;
   .performance-unavailable {
     font-size: 18px;
     line-height: 24px;
@@ -30,6 +41,28 @@ $paddingSize: 40px;
     margin-top: 20px;
   }
 }
+.EMM-Score-Icon{
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  float: right;
+  margin-top: 8px;
+  .Overlay{
+    position: absolute;
+    right: 12px;
+    top: 8px;
+  }
+  svg{
+    display: block;
+    margin: auto;
+    margin-top: 8px;
+  }
+  &::before{
+    opacity: .6;
+  }
+}
+
 
 .SSC-Circles {
   @include flex-center;
@@ -58,7 +91,7 @@ hr {
   .case-info-details {
     font-size: 18px;
     line-height: 24px;
-    color: #004F6E;
+    color: #004f6e;
     margin-bottom: 24px;
     &.specialty {
       margin-bottom: 4px;
@@ -75,13 +108,15 @@ hr {
 .checklist-status {
   font-size: 14px;
   line-height: 19px;
-  .checklist-happened-container { flex-grow: 1; }
+  .checklist-happened-container {
+    flex-grow: 1;
+  }
   .checklist-happened {
     cursor: pointer;
     text-align: left;
     margin-right: 32px;
     .title {
-      color: #028CC8;
+      color: #028cc8;
       margin-bottom: 4px;
     }
     .subtitle {
@@ -104,13 +139,13 @@ hr {
     min-width: 0px;
     position: relative;
     &:after {
-      content: '';
+      content: "";
       position: absolute;
       right: -15px;
       top: 10%;
       height: 80%;
       width: 1px;
-      background: #C8C8C8;
+      background: #c8c8c8;
     }
     &:last-child:after {
       content: none;
@@ -121,7 +156,7 @@ hr {
     font-size: 18px;
     line-height: 24px;
     margin-bottom: 8px;
-    color: #028CC8;
+    color: #028cc8;
     cursor: pointer;
   }
   .phase-event {
@@ -133,6 +168,6 @@ hr {
 
 @media (max-width: $desktop-width) {
   .Emm-Paper.Score {
-      padding: 40px 8px;
+    padding: 24px 24px;
   }
 }
