@@ -27,6 +27,11 @@ $paddingSize: 24px;
     left: 0px;
     background-color: #c8c8c8;
   }
+  .Score-Speedometer {
+    position: absolute;
+    right: 8px;
+    top: 14px;
+  }
 }
 
 .EMM-Score {
@@ -41,28 +46,36 @@ $paddingSize: 24px;
     margin-top: 20px;
   }
 }
-.EMM-Score-Icon{
+.EMM-Score-Icon {
   position: relative;
   width: 48px;
   height: 48px;
   border-radius: 8px;
   float: right;
   margin-top: 8px;
-  .Overlay{
+  .Overlay {
     position: absolute;
     right: 12px;
     top: 8px;
   }
-  svg{
+  svg {
     display: block;
     margin: auto;
     margin-top: 8px;
   }
-  &::before{
-    opacity: .6;
-  }
 }
+.HL7 {
+  .performance-unavailable {
+    color: #006484;
+    font-size: 42px;
+    line-height: 57px;
+  }
+  .Score-Unit{
+    font-size: 26px;
+    line-height: 36px;
+  }
 
+}
 
 .SSC-Circles {
   @include flex-center;
