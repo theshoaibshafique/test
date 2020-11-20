@@ -88,7 +88,7 @@ export default class HorizontalBarChart extends React.PureComponent {
   }
 
   chooseColour(d) {
-    return this.state.colours[d.x - 1] || '#6EDE95';
+    return this.state.colours[d.x] || '#6EDE95';
   }
 
   render() {
