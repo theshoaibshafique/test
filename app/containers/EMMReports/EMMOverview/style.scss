@@ -4,6 +4,17 @@ $paddingSize: 24px;
 
 .Emm-Reports-Overview {
   padding-top: $paddingSize;
+  .EMM-Overview-Title {
+    font-size: 26px;
+    line-height: 36px;
+    color: #004f6e;
+  }
+  .EMM-Overview-Subtitle {
+    font-size: 18px;
+    line-height: 24px;
+    opacity: 0.8;
+    padding-bottom: 16px;
+  }
 }
 
 .Emm-Paper {
@@ -27,6 +38,10 @@ $paddingSize: 24px;
     left: 0px;
     background-color: #c8c8c8;
   }
+  .HL7-unavailable{
+    padding: 34px !important;
+  }
+
   .Score-Speedometer {
     position: absolute;
     right: 8px;
@@ -65,16 +80,20 @@ $paddingSize: 24px;
   }
 }
 .HL7 {
+  &.unavailable{
+    .EMM-HL7{
+      padding-bottom: 0;
+    }
+  }
   .performance-unavailable {
     color: #006484;
     font-size: 42px;
     line-height: 57px;
   }
-  .Score-Unit{
+  .Score-Unit {
     font-size: 26px;
     line-height: 36px;
   }
-
 }
 
 .SSC-Circles {
@@ -96,25 +115,11 @@ hr {
 
 .Case-Information {
   margin-top: 24px;
-  .case-info-heading {
-    font-size: 14px;
-    line-height: 19px;
-    margin-bottom: 4px;
-  }
-  .case-info-details {
-    font-size: 18px;
-    line-height: 24px;
-    color: #004f6e;
-    margin-bottom: 24px;
-    &.specialty {
-      margin-bottom: 4px;
-    }
-    &.procedure {
-      font-size: 14px;
-      line-height: 19px;
-      color: #000000;
-      opacity: 0.6;
-    }
+  .case-complication {
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 36px;
+    color: #005979;
   }
 }
 
@@ -145,24 +150,13 @@ hr {
 }
 
 .Phases-Of-Interests-Container {
-  margin-top: 24px;
+  // margin-top: 24px;
+  flex-direction: column;
   .phase-of-interest {
-    margin: 0px 15px;
+    margin-top: 24px;
     flex: 1;
     min-width: 0px;
     position: relative;
-    &:after {
-      content: "";
-      position: absolute;
-      right: -15px;
-      top: 10%;
-      height: 80%;
-      width: 1px;
-      background: #c8c8c8;
-    }
-    &:last-child:after {
-      content: none;
-    }
   }
   .phase-title {
     text-align: left;

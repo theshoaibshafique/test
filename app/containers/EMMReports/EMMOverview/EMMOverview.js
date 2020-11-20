@@ -19,7 +19,7 @@ const LightTooltip = withStyles((theme) => ({
     fontSize: '14px',
     lineHeight: '19px',
     font: 'Noto Sans',
-    maxWidth:500
+    maxWidth: 500
   },
 }))(Tooltip);
 
@@ -27,7 +27,11 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
   constructor(props) {
     super(props);
     this.state = {
-      specialties: this.props.specialties || []
+      specialties: this.props.specialties || [],
+      caseProcedures: [{
+        'specialty': 'Unknown Specialty',
+        'procedure': 'Unknown Procedure'
+      }]
     }
   }
 
@@ -35,13 +39,34 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
     globalFuncs.genericFetch(process.env.SPECIALTY_API, 'get', this.props.userToken, {})
       .then(result => {
         if (result && result != 'error') {
-          this.setState({ specialties: result });
+          const { emmReportData, emmReportData: { procedures } } = this.props;
+          let caseProcedures = procedures.map((procedure) => {
+            const foundSpecialty = result.filter((specialty) => { return specialty.value.toUpperCase() == procedure.specialtyName.toUpperCase() })[0];
+            if (procedure.specialtyName === '') {
+              return {
+                'specialty': '',
+                'procedure': procedure.procedureName
+              }
+            } else if (foundSpecialty != undefined) {
+              const foundProcedure = foundSpecialty.procedures.filter((specialty) => { return specialty.value.toUpperCase() == procedure.procedureName.toUpperCase() })[0];
+              return {
+                'specialty': foundSpecialty.name,
+                'procedure': foundProcedure.name
+              }
+            } else {
+              return {
+                'specialty': 'Unknown Specialty',
+                'procedure': 'Unknown Procedure'
+              }
+            }
+          });
+          this.setState({ specialties: result, caseProcedures });
         }
       }).catch(error => {
       });
   }
 
-  getSpeedometer(speed){
+  getSpeedometer(speed) {
     switch (speed) {
       case 'slow':
         return <Icon color="#FF4D4D" path={mdiSpeedometerSlow} size={'20px'} />;
@@ -54,18 +79,25 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
 
   render() {
     const { tabShowing } = this.props;
-    const { emmReportData, emmReportData: { distractionScore, technicalPerformanceScore, adverseEventRate, checklistScore, checklists, phasesOfInterest }, specialties, complications } = this.props;
-    const {hypotension, hypothermia, hypoxia} = HL7_DATA;
+    const { emmReportData, emmReportData: { distractionScore, technicalPerformanceScore, adverseEventRate, checklistScore, checklists, phasesOfInterest, caseDuration, hypotension, hypothermia, hypoxia }, specialties, complications } = this.props;
     const hasHypotension = hypotension && hypotension.dataPoints && hypotension.dataPoints.length;
     const hasHypothermia = hypothermia && hypothermia.dataPoints && hypothermia.dataPoints.length;
     const hasHypoxia = hypoxia && hypoxia.dataPoints && hypoxia.dataPoints.length;
+    const hasHL7 = (hasHypotension || hasHypothermia || hasHypoxia);
     const adverseEventRateTitle = adverseEventRate.dataPoints[0].valueX.substr(0, adverseEventRate.dataPoints[0].valueX.length - 3)
+
     return (
       <div
         className="Emm-Reports-Overview"
         style={{ display: (tabShowing) ? 'block' : 'none' }}
       >
         <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <div className="EMM-Overview-Title">{this.state.caseProcedures && this.state.caseProcedures.map((caseProcedure) => caseProcedure.procedure).join(' · ')}</div>
+            <div className="EMM-Overview-Subtitle">
+              {[...new Set(this.state.caseProcedures && this.state.caseProcedures.map((caseProcedure) => caseProcedure.specialty))].join(' · ')} — {globalFuncs.formatSecsToTime(caseDuration, true)}
+            </div>
+          </Grid>
           <Grid item xs={8}>
             <Grid container spacing={3}>
               <Grid item xs={4}>
@@ -116,18 +148,18 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                 </Paper>
               </Grid>
               {/* HL7 KPIs */}
-              <Grid item xs={12} className="HL7">
+              <Grid item xs={12} className={`HL7 ${hasHL7 ? '' : 'unavailable'}`}>
                 <Paper className="Emm-Paper Score">
                   <Grid container spacing={9}>
-                    <Grid item xs={4} style={{ position: 'relative' }}>
-                      <LightTooltip interactive arrow title={hypotension.body} placement="top" fontSize="small">
+                    <Grid item xs={4} className="EMM-HL7 relative">
+                      {hasHypotension ? <LightTooltip interactive arrow title={hypotension.body} placement="top" fontSize="small">
                         <span className="Score-Speedometer">{this.getSpeedometer(hypotension.description)}</span>
-                      </LightTooltip>
+                      </LightTooltip> : ''}
                       <div className="Section-Title">
-                        {hypotension.title}
-                        <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypotension.dataPoints} title={hypotension.subTitle}/>} placement="top" fontSize="small">
+                        Hypotension
+                        {hasHypotension ? <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypotension.dataPoints} title={hypotension.subTitle} />} placement="top" fontSize="small">
                           <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
-                        </LightTooltip>
+                        </LightTooltip> : ''}
                       </div>
                       <div>
                         <span className="EMM-Score">{
@@ -142,16 +174,16 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
 
                       </div>
                     </Grid>
-                    <Grid item xs={4} style={{ position: 'relative' }}>
-                      <LightTooltip interactive arrow title={hypothermia.body} placement="top" fontSize="small">
+                    <Grid item xs={4} className="EMM-HL7 relative">
+                      {hasHypothermia ? <LightTooltip interactive arrow title={hypothermia.body} placement="top" fontSize="small">
                         <span className="Score-Speedometer">{this.getSpeedometer(hypothermia.description)}</span>
-                      </LightTooltip>
+                      </LightTooltip> : ''}
                       <div className="Section-Divider" />
                       <div className="Section-Title">
-                        {hypothermia.title}
-                        <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypothermia.dataPoints} title={hypothermia.subTitle}/>} placement="top" fontSize="small">
+                        Hypothermia
+                        {hasHypothermia ? <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypothermia.dataPoints} title={hypothermia.subTitle} />} placement="top" fontSize="small">
                           <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
-                        </LightTooltip>
+                        </LightTooltip> : ''}
                       </div>
                       <div>
                         <span className="EMM-Score">{
@@ -162,26 +194,27 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                         <span className="EMM-Score-Icon" style={{ backgroundColor: 'rgba(207, 185, 228,.6)' }}><Icon color="#A77ECD" path={mdiThermometerLow} size={'32px'} /></span>
                       </div>
                     </Grid>
-                    <Grid item xs={4} style={{ position: 'relative' }}>
-                      <LightTooltip interactive arrow title={hypoxia.body} placement="top" fontSize="small">
-                        <span className="Score-Speedometer" style={{ marginRight:10 }}>{this.getSpeedometer(hypoxia.description)}</span>
-                      </LightTooltip>
+                    <Grid item xs={4} className="EMM-HL7 relative">
+                      {hasHypoxia ? <LightTooltip interactive arrow title={hypoxia.body} placement="top" fontSize="small">
+                        <span className="Score-Speedometer" style={{ marginRight: 10 }}>{this.getSpeedometer(hypoxia.description)}</span>
+                      </LightTooltip> : ''}
                       <div className="Section-Divider" />
                       <div className="Section-Title">
-                        {hypoxia.title}
-                        <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypoxia.dataPoints} title={hypoxia.subTitle}/>} placement="top" fontSize="small">
+                        Hypoxia
+                        {hasHypoxia ? <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypoxia.dataPoints} title={hypoxia.subTitle} />} placement="top" fontSize="small">
                           <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
-                        </LightTooltip>
+                        </LightTooltip> : ''}
                       </div>
                       <div>
                         <span className="EMM-Score">{
                           (!hasHypoxia) ?
-                            <span className="performance-unavailable">Not Available</span>
+                            <span className="performance-unavailable">-</span>
                             : <span>{hypoxia.total}<sup className="Score-Unit">%</sup></span>
                         }</span>
                         <span className="EMM-Score-Icon" style={{ backgroundColor: 'rgba(200, 200, 200,.6)' }}><Icon color="#575757" path={mdiDivingScubaTank} size={'32px'} /></span>
                       </div>
                     </Grid>
+                    { !hasHL7 && <Grid item xs={12} className="HL7-unavailable">HL7 data not available</Grid>}
                   </Grid>
 
                 </Paper>
@@ -210,12 +243,9 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
 
               <Grid item xs={12}>
                 <Paper className="Emm-Paper">
-                  <div className="Section-Title">Case Information</div>
+                  <div className="Section-Title">Complications</div>
                   <CaseInformation
-                    caseDuration={emmReportData.caseDuration}
-                    procedures={emmReportData.procedures}
                     complications={emmReportData.complicationNames}
-                    allSpecialties={this.state.specialties}
                     allComplications={complications}
                   />
                 </Paper>
