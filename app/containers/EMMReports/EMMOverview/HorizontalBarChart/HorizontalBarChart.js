@@ -98,7 +98,7 @@ export default class HorizontalBarChart extends React.PureComponent {
           {this.props.title}
         </Grid>
         <Grid item xs>
-          <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />
+          {this.state.isLoaded && <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
         </Grid>
       </Grid>
     );

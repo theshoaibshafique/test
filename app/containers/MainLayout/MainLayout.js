@@ -170,7 +170,7 @@ export default class MainLayout extends React.PureComponent {
               <EMMReports />
             </div>
           }
-          <nav className={"MAIN-NAVIGATION " + (this.props.emmReportID && 'hidden')}>
+          <nav className={`MAIN-NAVIGATION ${this.props.emmReportID && 'hidden'}`}>
             <Hidden xsDown implementation="css">
               <Drawer
                 variant="permanent"
@@ -195,7 +195,7 @@ export default class MainLayout extends React.PureComponent {
               </Drawer>
             </Hidden>
           </nav>
-          <div className="Content-Wrapper">
+          <div className={`Content-Wrapper ${this.props.emmReportID && 'hidden'}`}>
             {this.getContainer()}
           </div>
         </div>
