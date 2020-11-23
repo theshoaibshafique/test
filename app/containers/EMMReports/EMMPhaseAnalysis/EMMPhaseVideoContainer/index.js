@@ -3,13 +3,14 @@ import { createStructuredSelector } from 'reselect';
 import EMMPhaseVideoContainer from './EMMPhaseVideoContainer';
 import { makeSelectIsPresenter, makeSelectToken } from '../../../App/selectors';
 import { setEMMVideoTime, setEMMPresenterDialog, setEMMPresenterMode } from '../../../App/emm-actions';
-import { selectEMMPresenterMode, selectEMMVidoeTime } from '../../../App/emm-selectors';
+import { selectEMMPresenterMode, selectEMMReportData, selectEMMVidoeTime } from '../../../App/emm-selectors';
 
 const mapStateToProps = (state, ownProps) => createStructuredSelector({
   userToken: makeSelectToken(),
   emmVideoTime: selectEMMVidoeTime(),
   emmPresenterMode: selectEMMPresenterMode(),
   hasPresenterRole: makeSelectIsPresenter(),
+  emmReportData: selectEMMReportData(),
 });
 
 const mapDispatchToProps = (dispatch) => {

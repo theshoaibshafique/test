@@ -5,6 +5,8 @@ import EMMPhaseEvents from '../EMMPhaseEvents';
 import ChecklistAnalysis from './ChecklistAnalysis';
 import VideoTimeline from './VideoTimeline';
 import { FormControlLabel, Switch, withStyles } from '@material-ui/core';
+import VideoData from '../VideoData/VideoData';
+import { DEFAULT_HL7_VALUES } from '../../../../constants';
 
 const videoOptions = {
   "nativeControlsForTouch": false,
@@ -105,6 +107,19 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
       return phaseData.enhancedMMOpenData[0].assets[0];
     else if (phaseData.enhancedMMData.length > 0)
       return phaseData.enhancedMMData[0].assets[0];
+  }
+
+  getVideoStartEndTime() {
+    const { selectedSurgicalTab } = this.state;
+    const { phaseData } = this.props;
+    if (phaseData.enhancedMMVideo && phaseData.enhancedMMVideo.length && selectedSurgicalTab == 0)
+      return { endTime: phaseData.enhancedMMVideo[0].endTime, startTime: phaseData.enhancedMMVideo[0].startTime };
+    else if (phaseData.enhancedMMOpenData && phaseData.enhancedMMOpenData.length)
+      return { endTime: phaseData.enhancedMMOpenData[0].endTime, startTime: phaseData.enhancedMMOpenData[0].startTime };
+    else if (phaseData.enhancedMMData.length > 0)
+      return { endTime: phaseData.enhancedMMData[0].endTime, startTime: phaseData.enhancedMMData[0].startTime };
+    else
+      return {}
   }
 
   changeVideo(updatedVideoID = null, videoIndex = 0) {
@@ -212,10 +227,11 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   render() {
-    const { phaseData, emmVideoTime, emmPresenterMode, isPublished, hasPresenterRole } = this.props;
+    const { phaseData, emmVideoTime, emmPresenterMode, isPublished, hasPresenterRole, emmReportData: { hl7TimeSeries } } = this.props;
     const { noVideo, selectedVideoClipID, isProcedureStepWithTabs, selectedSurgicalTab } = this.state;
     const showVideoTimeline = (phaseData.enhancedMMData.length > 0 && selectedSurgicalTab == 0)
-
+    const {startTime,endTime} = this.getVideoStartEndTime();
+    const duration = endTime - startTime;
     return (
       <div className="Emm-Phase-Video-Container relative">
         {(!noVideo && isPublished && hasPresenterRole) &&
@@ -241,11 +257,12 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             (!noVideo) &&
             <div className="flex">
               <div className="phase-video">
+                {(phaseData.name === 'SurgicalProcedure') && <VideoData videoData={hl7TimeSeries} videoDataLayout={DEFAULT_HL7_VALUES} videoOffSet={startTime} />}
                 <video id="phaseAnalysisVideo" className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
                 {
-                  (showVideoTimeline) &&
+                  (showVideoTimeline && Boolean(duration)) &&
                   <VideoTimeline
-                    duration={phaseData.enhancedMMVideo && phaseData.enhancedMMVideo.length && (phaseData.enhancedMMVideo[0].endTime - phaseData.enhancedMMVideo[0].startTime)}
+                    duration={duration}
                     procedureSteps={phaseData.enhancedMMData}
                     seekVideo={(time) => this.seekVideo(time)}
                     currentVideoTime={this.props.emmVideoTime}

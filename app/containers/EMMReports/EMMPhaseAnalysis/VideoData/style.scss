@@ -1,0 +1,27 @@
+
+.video-data {
+    padding: 8px;
+    opacity: 0.9;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 15;
+    .pointer{
+        cursor: pointer;
+    }
+    .subtle-text{
+        font-size: 12px;
+    }
+    .subtext{
+        font-size: 14px;
+    }
+    .title{
+        white-space: nowrap;
+    }
+    .value{
+        color: #005979;
+    }
+}
