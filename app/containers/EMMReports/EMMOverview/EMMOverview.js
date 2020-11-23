@@ -85,7 +85,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
     const hasHypoxia = hypoxia && hypoxia.dataPoints && hypoxia.dataPoints.length;
     const hasHL7 = (hasHypotension || hasHypothermia || hasHypoxia);
     const adverseEventRateTitle = adverseEventRate.dataPoints[0].valueX.substr(0, adverseEventRate.dataPoints[0].valueX.length - 3)
-
+    const specialty = [...new Set(this.state.caseProcedures && this.state.caseProcedures.map((caseProcedure) => caseProcedure.specialty))].join(' · ');
     return (
       <div
         className="Emm-Reports-Overview"
@@ -95,7 +95,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
           <Grid item xs={12}>
             <div className="EMM-Overview-Title">{this.state.caseProcedures && this.state.caseProcedures.map((caseProcedure) => caseProcedure.procedure).join(' · ')}</div>
             <div className="EMM-Overview-Subtitle">
-              {[...new Set(this.state.caseProcedures && this.state.caseProcedures.map((caseProcedure) => caseProcedure.specialty))].join(' · ')} — {globalFuncs.formatSecsToTime(caseDuration, true)}
+              {`${specialty ? specialty+" — " : ''}${globalFuncs.formatSecsToTime(caseDuration, true)}`}
             </div>
           </Grid>
           <Grid item xs={8}>
