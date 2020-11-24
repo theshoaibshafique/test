@@ -257,7 +257,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             (!noVideo) &&
             <div className="flex">
               <div className="phase-video">
-                {(phaseData.name === 'SurgicalProcedure') && <VideoData videoData={hl7TimeSeries} videoDataLayout={DEFAULT_HL7_VALUES} videoOffSet={startTime} />}
+                <span>{(phaseData.name === 'SurgicalProcedure' && selectedSurgicalTab==0) && <VideoData videoData={hl7TimeSeries} videoDataLayout={DEFAULT_HL7_VALUES} videoOffSet={startTime} />}</span>
                 <video id="phaseAnalysisVideo" className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
                 {
                   (showVideoTimeline && Boolean(duration)) &&
