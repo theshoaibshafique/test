@@ -105,7 +105,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <div className="Section-Title">
                     {distractionScore.title}
                     <LightTooltip interactive arrow title={EMM_DISTRACTION_TOOLTIP} placement="top" fontSize="small">
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
                     </LightTooltip>
                   </div>
                   <div>
@@ -119,7 +119,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <div className="Section-Title">
                     {technicalPerformanceScore.title}
                     <LightTooltip interactive arrow title={EMM_TECHNICAL_TOOLTIP} placement="top" fontSize="small">
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
                     </LightTooltip>
                   </div>
                   <div>
@@ -138,7 +138,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <div className="Section-Title">
                     {adverseEventRate.title}
                     <LightTooltip interactive arrow title={EMM_ADVERSEEVENT_TOOLTIP} placement="top" fontSize="small">
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
                     </LightTooltip>
                   </div>
                   <div>
@@ -158,7 +158,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                       <div className="Section-Title">
                         Hypotension
                         {hasHypotension ? <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypotension.dataPoints} title={hypotension.subTitle} />} placement="top" fontSize="small">
-                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
                         </LightTooltip> : ''}
                       </div>
                       <div>
@@ -182,7 +182,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                       <div className="Section-Title">
                         Hypothermia
                         {hasHypothermia ? <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypothermia.dataPoints} title={hypothermia.subTitle} />} placement="top" fontSize="small">
-                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
                         </LightTooltip> : ''}
                       </div>
                       <div>
@@ -202,7 +202,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                       <div className="Section-Title">
                         Hypoxia
                         {hasHypoxia ? <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypoxia.dataPoints} title={hypoxia.subTitle} />} placement="top" fontSize="small">
-                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
                         </LightTooltip> : ''}
                       </div>
                       <div>
