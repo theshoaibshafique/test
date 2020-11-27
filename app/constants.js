@@ -4,4 +4,4 @@ export const EMM_DISTRACTION_TOOLTIP = 'Distraction Index consists of evidence-b
 export const EMM_TECHNICAL_TOOLTIP = 'Performance Index consists of evidence-based components such as time based metrics, measures of manual dexterity and intraoperative adverse events. The Performance Index has a range between 0 and 100. An average procedure will have a Performance Index of 70, with higher scores indicative of better performance.'
 export const EMM_ADVERSEEVENT_TOOLTIP = 'Adverse Event Rate is the number of intraoperative adverse events that occured per hour of surgical procedure.';
 
-export const DEFAULT_HL7_VALUES = new Set(["Heart Rate","Arterial O2 Saturation","Blood Pressure","Patient Temperature"]);
+export const DEFAULT_HL7_VALUES = new Set(["Heart Rate","Arterial O₂ Saturation","Blood Pressure","Patient Temperature"]);
