@@ -6,7 +6,6 @@ import ChecklistAnalysis from './ChecklistAnalysis';
 import VideoTimeline from './VideoTimeline';
 import { FormControlLabel, Switch, withStyles } from '@material-ui/core';
 import VideoData from '../VideoData/VideoData';
-import { DEFAULT_HL7_VALUES } from '../../../../constants';
 
 const videoOptions = {
   "nativeControlsForTouch": false,
@@ -257,7 +256,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             (!noVideo) &&
             <div className="flex">
               <div className="phase-video">
-                <span>{(phaseData.name === 'SurgicalProcedure' && selectedSurgicalTab==0) && <VideoData videoData={hl7TimeSeries} videoDataLayout={DEFAULT_HL7_VALUES} videoOffSet={startTime} />}</span>
+                <span>{(phaseData.name === 'SurgicalProcedure' && selectedSurgicalTab==0) && <VideoData videoData={hl7TimeSeries} videoOffSet={startTime} />}</span>
                 <video id="phaseAnalysisVideo" className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
                 {
                   (showVideoTimeline && Boolean(duration)) &&

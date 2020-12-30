@@ -20,7 +20,7 @@ class VideoData extends React.Component { // eslint-disable-line react/prefer-st
   }
 
   renderData() {
-    return this.props.videoData && this.props.videoData.filter(entry => this.props.videoDataLayout.has(entry.dataType)).map((entry,index) =>
+    return this.props.videoData && this.props.videoData.slice(0,5).map((entry,index) =>
       <Grid item xs className={`${this.state.isOpen ? '' : 'hidden'}`} key={index}>
         <div className="title subtle-text" >{entry.dataType}</div>
         <div className="value subtext">{this.getDataValue(entry)}</div>
@@ -57,9 +57,9 @@ class VideoData extends React.Component { // eslint-disable-line react/prefer-st
   }
 
   render() {
-    let {videoData, videoDataLayout } = this.props;
-    videoData = videoData && videoData.filter(entry => videoDataLayout && videoDataLayout.has(entry.dataType));
-    if (!videoData || !videoData.length || !videoDataLayout || !videoDataLayout.size){
+    let {videoData } = this.props;
+    videoData = videoData && videoData.slice(0,5);
+    if (!videoData || !videoData.length){
       return "";
     }
     return (
