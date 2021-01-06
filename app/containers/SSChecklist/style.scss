@@ -43,6 +43,9 @@ $ssc-picker-height: 150px;
         background-color: #e8e8e8;
         padding: 16px;
     }
+    .ssc-picker-container{
+        position: relative;
+    }
     .ssc-card.MuiCard-root {
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
         border-radius: 8px !important;
