@@ -133,8 +133,8 @@ class SSTNav extends React.Component {
             {(this.props.emmRequestAccess) &&
               <ListItem disableGutters><NavLink to="/requestemm" className='text-link' >Request for eM&M</NavLink></ListItem>
             }
-            {(this.props.userManagementAccess) &&
-              <ListItem disableGutters><NavLink to="/usermanagement" className='text-link' >User Management</NavLink></ListItem>
+            {(this.props.adminPanelAccess) &&
+              <ListItem disableGutters><NavLink to="/adminPanel" className='text-link' >Admin Panel</NavLink></ListItem>
             }
             <ListItem disableGutters style={{ marginBottom: 20 }}><div className='text-link' onClick={(e) => this.openMenu(e)}>My Account</div></ListItem>
             <Menu

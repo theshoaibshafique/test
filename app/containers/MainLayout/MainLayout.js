@@ -8,7 +8,7 @@ import EMMPublish from 'containers/EMMPublish/Loadable';
 import EMM from 'containers/EMM/Loadable';
 import EMMReports from 'containers/EMMReports';
 import RequestEMM from 'containers/RequestEMM/Loadable';
-import UserManagement from 'containers/UserManagement/Loadable';
+import AdminPanel from 'containers/AdminPanel/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -30,7 +30,7 @@ export default class MainLayout extends React.PureComponent {
     this.state = {
       userLoggedIn: false,
       authenticated: true,
-      userManagementAccess: false,
+      adminPanelAccess: false,
       emmAccess: false,
       emmRequestAccess: false,
       emmPublishAccess: false,
@@ -45,7 +45,7 @@ export default class MainLayout extends React.PureComponent {
   resourcesGathered(roles) {
     this.setState({
       userLoggedIn: true,
-      userManagementAccess: this.containsAny(roles,["ADMIN"]),
+      adminPanelAccess: this.containsAny(roles,["ADMIN"]),
       emmAccess: this.containsAny(roles,["ENHANCED M&M VIEW"]),
       emmRequestAccess: this.containsAny(roles,["ENHANCED M&M EDIT"]),
       sscAccess:this.containsAny(roles,["SURGICAL CHECKLIST"]),
@@ -113,8 +113,8 @@ export default class MainLayout extends React.PureComponent {
         {(this.state.emmRequestAccess) &&
           <Route path="/requestemm" component={RequestEMM} />
         }
-        {(this.state.userManagementAccess) &&
-          <Route path="/usermanagement" component={UserManagement} />
+        {(this.state.adminPanelAccess) &&
+          <Route path="/adminPanel" component={AdminPanel} />
         }
         {(this.state.sscAccess) &&
           <Route path="/sschecklist" render={(props) => <SSChecklist {...props} reportType={"SurgicalSafetyChecklistReport"} />} />
@@ -177,7 +177,7 @@ export default class MainLayout extends React.PureComponent {
                 open
               >
                 <SSTNav
-                  userManagementAccess={this.state.userManagementAccess}
+                  adminPanelAccess={this.state.adminPanelAccess}
                   emmRequestAccess={this.state.emmRequestAccess}
                   emmAccess={this.state.emmAccess}
                   emmPublishAccess={this.state.emmPublishAccess}

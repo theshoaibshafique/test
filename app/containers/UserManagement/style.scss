@@ -1,12 +1,18 @@
 @import '../../styles/global-styles';
-
-.pad {
-    padding: 0 16px;
+.user-management-page{
+    padding: 24px 40px;
+    .add-user-button{
+        margin: 0 0 30px 0;
+    }
+    .pad {
+        padding: 0 16px;
+    }
+    
+    .MuiPaper-elevation2 {
+        box-shadow: none;
+    }
 }
 
-.user-management-page .MuiPaper-elevation2 {
-    box-shadow: none;
-}
 
 .Modal .permissions-checkbox{
     margin-top: 0;

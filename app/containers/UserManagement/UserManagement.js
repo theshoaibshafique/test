@@ -284,9 +284,9 @@ export default class UserManagement extends React.PureComponent {
       text='Loading your content...'
       className="Overlay"
       >
-      <section className="user-management-page">
-        <div className="header page-title">
-          <div><span className="pad">User Management</span><Button variant="outlined" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add</Button> </div>
+      <div className="user-management-page">
+        <div className="add-user-button">
+          <Button variant="outlined" className="primary" onClick={(e) => this.openModal(e, 'add', '')}>Add User</Button>
         </div>
 
         <div>
@@ -340,7 +340,7 @@ export default class UserManagement extends React.PureComponent {
           updateGrid={(id) => this.updateGrid(id)}
         />
 
-      </section>
+      </div>
       </LoadingOverlay>
     );
   }
