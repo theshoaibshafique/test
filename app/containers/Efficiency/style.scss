@@ -11,20 +11,33 @@ $ssc-picker-height: 150px;
     .grid-InfographicParagraph{
         padding-bottom: 8px;
     }
-    .efficiency-card.DonutChart{
-        overflow: visible;
+    .efficiency-card {
+        &.DonutChart{
+            overflow: visible;
+        }
+        &.InfographicText {
+            max-width: fit-content;
+            min-width: 300px;
+        }
+        &.MuiCard-root {
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 8px !important;
+        }
+        &.InfographicParagraph .MuiCardContent-root,
+        &.MuiCard-root.InfographicParagraph{
+            box-shadow: none;
+            background-color: unset;
+            padding-left: 0;
+            padding-bottom: 0;
+        }
+
+        &.Table {
+            .MuiCardContent-root {
+                padding: 0;
+            }
+        }
     }
-    .efficiency-card.InfographicText {
-        max-width: fit-content;
-        min-width: 300px;
-    }
-    .efficiency-card.InfographicParagraph .MuiCardContent-root,
-    .efficiency-card.MuiCard-root.InfographicParagraph {
-        box-shadow: none;
-        background-color: unset;
-        padding-left: 0;
-        padding-bottom: 0;
-    }
+    
     .EfficiencyReport {
         .link {
             text-decoration: unset;
@@ -63,11 +76,7 @@ $ssc-picker-height: 150px;
             display: none;
         }
     }
-    .efficiency-card.Table {
-        .MuiCardContent-root {
-            padding: 0;
-        }
-    }
+    
     .efficiency-select-filter {
         opacity: 0.8;
         color: #000000;
@@ -115,22 +124,12 @@ $ssc-picker-height: 150px;
         position: relative;
     }
 
-    .efficiency-card.MuiCard-root {
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 8px !important;
-    }
-
     .efficiency-main {
         padding: 40px;
         max-width: 1230px;
         margin: auto;
         top: $ssc-picker-height;
         // position: relative;
-    }
-
-    .efficiency-card.MuiCard-root {
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 8px !important;
     }
 
     .StackedBarChart .chart-title {

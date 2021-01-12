@@ -19,10 +19,10 @@ $ssc-picker-height: 150px;
         font-size: 26px;
         line-height: 36px;
     }
-    .QualityScoreReport{
+    .QualityScoreReport {
         .BarChart {
             padding: 0 80px 0 0;
-            .chart-title{
+            .chart-title {
                 font-family: "Noto Sans";
                 font-size: 18px;
                 font-weight: bold;
@@ -30,7 +30,7 @@ $ssc-picker-height: 150px;
                 line-height: 24px;
                 margin-bottom: 0px !important;
             }
-            .chart-subtitle{
+            .chart-subtitle {
                 display: none;
             }
         }
@@ -43,46 +43,51 @@ $ssc-picker-height: 150px;
         background-color: #e8e8e8;
         padding: 16px;
     }
-    .ssc-picker-container{
+    .ssc-picker-container {
         position: relative;
     }
-    .ssc-card.MuiCard-root {
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 8px !important;
-    }
-    .ssc-card.BarChart,
-    .ssc-card.ListDetail{
-        height: 100%;
-    }
-    .ssc-card.ssc-card.BarChart {
-        .chart-title {
-            margin-bottom: 16px;
+    .ssc-card {
+        .MuiCardContent-root {
+            margin: 0;
+            padding: 24px;
         }
-        .chart-subtitle {
-            display: none;
+        &.MuiCard-root {
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 8px !important;
+        }
+
+        &.BarChart,
+        &.ListDetail {
+            height: 100%;
+        }
+        &.ssc-card.BarChart {
+            .chart-title {
+                margin-bottom: 16px;
+            }
+            .chart-subtitle {
+                display: none;
+            }
+        }
+        &.InfographicText .MuiCardContent-root {
+            margin: 0;
+            padding: 24px 16px;
+        }
+        &.BarChartDetailed,
+        &.List,
+        &.BarChart{
+            .MuiCardContent-root {
+                padding: 24px 40px;
+            }
         }
     }
 
-    .ssc-card.InfographicText .MuiCardContent-root {
-        margin: 0;
-        padding: 24px 16px;
-    }
-    .ssc-card .MuiCardContent-root {
-        margin: 0;
-        padding: 24px;
-    }
-    .ssc-card.BarChartDetailed .MuiCardContent-root,
-    .ssc-card.List .MuiCardContent-root,
-    .ssc-card.BarChart .MuiCardContent-root {
-        padding: 24px 40px;
-    }
 
     .InfographicParagraph-1,
-    .InfographicParagraph-1 .MuiCardContent-root{
+    .InfographicParagraph-1 .MuiCardContent-root {
         padding-bottom: 0 !important;
     }
     .InfographicParagraph-2,
-    .InfographicParagraph-2 .MuiCardContent-root{
+    .InfographicParagraph-2 .MuiCardContent-root {
         padding-top: 6px !important;
     }
 

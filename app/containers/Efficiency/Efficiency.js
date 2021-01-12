@@ -115,6 +115,7 @@ export default class Efficiency extends React.PureComponent {
         var data = result.data;
 
         if (data && data.onboardCompleted && data.onboardCompleted.includes && data.onboardCompleted.includes(this.ONBOARD_TYPE)) {
+          localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
           return;
         }
         this.openOnboardModal();
