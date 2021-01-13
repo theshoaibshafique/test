@@ -12,7 +12,7 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
       }
     }).then(response => {
       if (response) {
-        if (response.status == 204){
+        if (response.status == 204) {
           return response.text();
         }
         if ([200, 201, 202].indexOf(response.status) >= 0) {
@@ -42,7 +42,7 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
       body: JSON.stringify(fetchBodyJSON)
     }).then(response => {
       if (response) {
-        if (response.status == 204){
+        if (response.status == 204) {
           return response.text();
         }
         if ([200, 201, 202].indexOf(response.status) >= 0) {
@@ -141,11 +141,25 @@ function pad(string) {
   return ('0' + string).slice(-2)
 }
 
+//n = starting number
+//m = end number (non inclusive)
+//size = total string length
+//d = padding character
+function generatePaddedDigits(n, m, size, d) {
+  var result = [];
+  for (var i = n; i < m; i++) {
+    var digit = i.toString().padStart(size, d);
+    result.push(digit)
+  }
+  return result;
+}
+
 export default {
   genericFetch,
   genericFetchWithNoReturnMessage,
   axiosFetch,
   formatSecsToTime,
   formatDateTime,
-  getName
+  getName,
+  generatePaddedDigits
 };

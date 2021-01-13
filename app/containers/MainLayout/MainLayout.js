@@ -113,8 +113,9 @@ export default class MainLayout extends React.PureComponent {
         {(this.state.emmRequestAccess) &&
           <Route path="/requestemm" component={RequestEMM} />
         }
+        
         {(this.state.adminPanelAccess) &&
-          <Route path="/adminPanel" component={AdminPanel} />
+          <Route path="/adminPanel/:index?" component={AdminPanel} />
         }
         {(this.state.sscAccess) &&
           <Route path="/sschecklist" render={(props) => <SSChecklist {...props} reportType={"SurgicalSafetyChecklistReport"} />} />

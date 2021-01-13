@@ -51,8 +51,8 @@ export default class RequestEMM extends React.PureComponent {
       emmID: '',
       minOperationDate: new Date(),
       maxOperationDate: new Date(),
-      hoursOptions: this.createDigitDropdown(1, 13, 2, 0),
-      minuteOptions: this.createDigitDropdown(0, 60, 2, 0),
+      hoursOptions: globalFuncs.generatePaddedDigits(1, 13, 2, 0),
+      minuteOptions: globalFuncs.generatePaddedDigits(0, 60, 2, 0),
       errors: {}
     };
 
@@ -61,14 +61,6 @@ export default class RequestEMM extends React.PureComponent {
 
   }
 
-  createDigitDropdown = (n, m, size, d) => {
-    var result = [];
-    for (var i = n; i < m; i++) {
-      var digit = i.toString().padStart(size, d);
-      result.push({ time: digit })
-    }
-    return result;
-  }
 
   handleOperationDateChange = (operationDate) => {
     let errors = this.state.errors;
@@ -481,7 +473,7 @@ export default class RequestEMM extends React.PureComponent {
                     disableClearable
                     size="small"
                     options={this.state.hoursOptions}
-                    getOptionLabel={option => option.time ? option.time : ""}
+                    getOptionLabel={option => option}
                     value={this.state.selectedHour}
                     onChange={(e, value) => this.handleSelectedHourChange(e, value)}
                     renderInput={params => (
@@ -500,7 +492,7 @@ export default class RequestEMM extends React.PureComponent {
                     disableClearable
                     size="small"
                     options={this.state.minuteOptions}
-                    getOptionLabel={option => option.time ? option.time : ""}
+                    getOptionLabel={option => option}
                     value={this.state.selectedMinutes}
                     onChange={(e, value) => this.handleSelectedMinutesChange(e, value)}
                     renderInput={params => (

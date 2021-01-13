@@ -4,11 +4,12 @@ import MaterialTable from 'material-table';
 import LoadingOverlay from 'react-loading-overlay';
 import globalFuncs from '../../utils/global-functions';
 import UserManagement from 'containers/UserManagement/Loadable';
+import EfficiencySettings from 'containers/Efficiency/EfficiencySettings/Loadable';
 import './style.scss';
 import { Tab, Tabs, withStyles } from '@material-ui/core';
 const StyledTabs = withStyles({
   root:{
-    boxShadow: "0 1px 2px 0 rgba(0,0,0,0.2)",
+    boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
   },
   indicator: {
     display: 'flex',
@@ -63,6 +64,14 @@ export default class AdminPanel extends React.PureComponent {
   handleChange(obj,tabIndex){
     this.setState({tabIndex});
   }
+  componentDidMount(){
+    const { match: { params } } = this.props;
+    const tabIndex = parseInt(params.index);
+    if (tabIndex == params.index){
+      this.setState({tabIndex:Math.min(Math.max(tabIndex, 0), 1)})
+    }
+    
+  }
 
   render() {
 
@@ -84,7 +93,7 @@ export default class AdminPanel extends React.PureComponent {
           <UserManagement/>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
-          <h1>Insert Settings Here</h1>
+          <EfficiencySettings/>
         </TabPanel>
 
       </div>

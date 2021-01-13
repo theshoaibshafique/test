@@ -1,0 +1,52 @@
+@import "../../../styles/global-styles";
+.efficiency-settings-page {
+    max-width: 680px;
+    .title {
+        font-size: 18px;
+        font-family: "Noto Sans";
+        opacity: 0.8;
+        color: #000000;
+
+        margin-bottom: 24px;
+    }
+    .subtitle {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .content {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 12px;
+        letter-spacing: 0;
+        line-height: 17px;
+        margin-bottom: 8px;
+    }
+    .selectors{
+        margin-bottom: 24px;
+    }
+    .unit{
+        margin: 8px;
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        letter-spacing: 0;
+        line-height: 40px;
+    }
+    .buttons{
+        display: flex;
+        justify-content: flex-end;
+        .reset{
+            color: #028CC8;
+        }
+        button {
+            margin: 16px;    
+        }
+    }
+
+}
