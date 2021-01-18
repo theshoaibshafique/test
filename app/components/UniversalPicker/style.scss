@@ -30,4 +30,32 @@
     .MuiOutlinedInput-root.MuiAutocomplete-inputRoot.Mui-disabled {
         opacity: 0.3;
     }
+    .filter-label {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        width: 210px;
+        // font-size: 12px;
+        // letter-spacing: 0;
+        // line-height: 17px;
+    }
+    .buttons {
+        .clear {
+            color: #028cc8;
+            .MuiButton-label {
+                font-size: 14px;
+                letter-spacing: 0;
+                line-height: 19px;
+            }
+            padding:12px;
+            margin:0 8px;
+        }
+        button {
+            margin: 16px 0px;
+            &:hover{
+                background-color: unset;
+            }
+        }
+        
+    }
 }

@@ -79,8 +79,8 @@ export default class Efficiency extends React.PureComponent {
       }, () => {
         this.getReportLayout();
       })
-    } else if (prevProps.specialties != this.props.specialties){
-      this.setState({specialties:this.props.specialties}, () => {
+    } else if (prevProps.specialties != this.props.specialties) {
+      this.setState({ specialties: this.props.specialties }, () => {
         clearTimeout(this.state.timeout);
         //Load the report once specialties list is changed/populated
         this.getReportLayout();
@@ -91,11 +91,11 @@ export default class Efficiency extends React.PureComponent {
   componentDidMount() {
     let callback = null;
     //Give specialties list a max loading time of 10 seconds before loading the report
-    if (this.props.specialties.size == 0){
-      let timeout = setTimeout(()=>{
+    if (this.props.specialties.size == 0) {
+      let timeout = setTimeout(() => {
         this.getReportLayout()
-      },10000);
-      this.setState({timeout})
+      }, 10000);
+      this.setState({ timeout })
     } else {
       callback = this.getReportLayout;
     }
@@ -145,7 +145,7 @@ export default class Efficiency extends React.PureComponent {
         }
         let startDate = this.state.startDate;
         let earliestStartDate = moment(result);
-        if (earliestStartDate.isSameOrAfter(startDate)){
+        if (earliestStartDate.isSameOrAfter(startDate)) {
           startDate = earliestStartDate.utc();
         }
         this.setState({ earliestStartDate, startDate });
@@ -156,8 +156,9 @@ export default class Efficiency extends React.PureComponent {
   getFilterLayout(reportType) {
     switch (`${reportType}`.toUpperCase()) {
       case 'DAYSSTARTINGONTIMEREPORT':
-        return { showOR: true, showSpecialty: true }
+        return { showOR: true, showSpecialty: true, showGracePeriod: true }
       case 'TURNOVERTIMEREPORT':
+        return { showOR: true, showOutlierThreshold: true }
       case 'ORUTILIZATIONREPORT':
         return { showOR: true }
       case 'CASEANALYSISREPORT':
@@ -200,15 +201,20 @@ export default class Efficiency extends React.PureComponent {
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
-              if (result.tileRequest && result.tileRequest.length > 0) {
-                let reportData = this.groupTiles(result.tileRequest.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
-                let tileRequest = result.tileRequest.filter((tile) => {
-                  return moment(tile.startDate).isSame(this.state.startDate, 'month');
-                });
-                this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, reportData, tileRequest },
+              if (result.dashboardTiles && result.dashboardTiles.length > 0) {
+                let reportData = this.groupTiles(result.dashboardTiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
+                // let tileRequest = result.dashboardTiles.filter((tile) => {
+                //   return moment(tile.startDate).isSame(this.state.startDate, 'month');
+                // });
+
+                this.setState({ pendingTileCount: this.state.pendingTileCount + result.dashboardTiles.length, reportData, tileRequest: result.dashboardTiles, defaultThreshold: result.threshold },
                   () => {
                     this.state.reportData.map((tileGroup, i) => {
                       tileGroup.group.map((tile, j) => {
+                        tile.facilityName = this.props.userFacility;
+                        tile.hospitalName = null;
+                        tile.dashboardName = result.reportName;
+                        tile.departmentName = null;
                         this.getTile(tile, i, j);
                       });
                     })
@@ -230,7 +236,7 @@ export default class Efficiency extends React.PureComponent {
     let filter = this.getFilterLayout(this.state.reportType);
     let jsonBody = {
       "facilityName": tileRequest.facilityName,
-      "reportName": tileRequest.reportName,
+      "reportName": tileRequest.dashboardDataName,
       "hospitalName": tileRequest.hospitalName,
       "departmentName": tileRequest.departmentName,
 
@@ -254,12 +260,9 @@ export default class Efficiency extends React.PureComponent {
           result.tileOrder = tileRequest.tileOrder;
           result.tileType = tileRequest.tileType;
           result.groupOrder = tileRequest.groupOrder;
-          result.dashboardName = tileRequest.dashboardName;
-
+          result.dashboardDataName = tileRequest.dashboardDataName;
           let reportData = this.state.reportData;
-          if (moment(tileRequest.startDate).isSame(this.state.startDate, 'month')) {
-            reportData[i].group[j] = result;
-          }
+          reportData[i].group[j] = result;
 
           this.setState({ reportData, pendingTileCount: this.state.pendingTileCount - 1 },
             () => {
@@ -318,7 +321,11 @@ export default class Efficiency extends React.PureComponent {
         endDate: this.state.endDate,
         selectedOperatingRoom: this.state.selectedOperatingRoom,
         selectedSpecialty: this.state.selectedSpecialty,
-        selectedProcedure: this.state.selectedProcedure
+        selectedProcedure: this.state.selectedProcedure,
+        gracePeriodMinute: this.state.gracePeriodMinute,
+        gracePeriodSec: this.state.gracePeriodSec,
+        outlierThresholdHrs: this.state.outlierThresholdHrs,
+        outlierThresholdMinute: this.state.outlierThresholdMinute
       }));
   }
 
@@ -412,7 +419,6 @@ export default class Efficiency extends React.PureComponent {
 
   render() {
     let isLoading = this.state.isLoading || this.state.pendingTileCount > 0;
-
     return (
       <div className="efficiency-page">
         <Grid container spacing={0} className="efficiency-picker-container" >
@@ -438,6 +444,7 @@ export default class Efficiency extends React.PureComponent {
               userToken={this.props.userToken}
               defaultState={this.state}
               apply={() => this.getReportLayout()}
+              defaultThreshold={this.state.defaultThreshold}
               disabled={Boolean(this.state.isFilterApplied || !this.state.startDate || !this.state.endDate)}
               updateState={(key, value) => this.updateState(key, value)}
               {...this.getFilterLayout(this.state.reportType)}
