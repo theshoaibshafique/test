@@ -1,0 +1,97 @@
+@import "../../../styles/global-styles";
+
+.histogram {
+  text-align: center;
+  min-height: 150px;
+  .chart-title {
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 36px;
+  }
+  .chart-subtitle {
+    font-size: 14px;
+    font-style: italic;
+    letter-spacing: 0;
+    line-height: 19px;
+    margin-bottom: 16px !important;
+  }
+  .chart-score {
+    color: #005979;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 24px;
+    text-align: right;
+  }
+
+  .c3-axis .tick line {
+    opacity: 0;
+  }
+  .c3-text {
+    fill: #004f6e !important;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+  .c3-axis,
+  .c3-axis-y-label,
+  .c3-axis-x-label {
+    font-family: "Noto Sans";
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 19px;
+  }
+  .c3-axis-y-label,
+  .c3-axis-x-label {
+    font-size: 15px;
+  }
+  .c3-axis-x .tick {
+    font-weight: bold;
+  }
+
+  .c3 path,
+  .c3 line,
+  .c3-xgrid,
+  .c3-ygrid {
+    stroke-dasharray: unset;
+    stroke: #eaeaea;
+  }
+
+  .c3 .c3-axis-x path{
+    stroke: unset;
+  }
+  .c3-xgrid-focus {
+    visibility: hidden !important;
+  }
+  .tooltip {
+    color: #fff;
+    padding: 16px;
+    text-align: left;
+    font-size: 14px;
+    max-width: 300px;
+    word-wrap: break-word;
+    font-family: "Noto Sans";
+    font-weight: 500 !important;
+    line-height: 19px;
+    border-radius: 4px;
+    background-color: rgba(97, 97, 97, 0.9);
+  }
+  .display-text {
+    color: #004f6e;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    font-style: italic;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+  .c3-axis-y .tick:nth-child(odd),
+  .c3-ygrid:nth-child(even) {
+    opacity: 0 !important;
+  }
+  .c3-axis-y-label {
+    transform: translate(-8px, 10px) rotate(-90deg);
+  }
+}

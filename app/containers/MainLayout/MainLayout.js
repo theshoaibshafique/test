@@ -131,19 +131,19 @@ export default class MainLayout extends React.PureComponent {
         }
 
         {(this.state.efficiencyAccess) &&
-          <Route path="/efficiency" render={(props) => <Efficiency {...props} reportType={"EfficiencyReport"} />} />
+          <Route path="/efficiency" render={(props) => <Efficiency {...props} reportType={"efficiency"} />} />
         }
         {(this.state.efficiencyAccess) &&
-          <Route path="/daysStarting" render={(props) => <Efficiency {...props} reportType={"DaysStartingOnTimeReport"} />} />
+          <Route path="/daysStarting" render={(props) => <Efficiency {...props} reportType={"firstCaseOnTimeStart"} />} />
         }
         {(this.state.efficiencyAccess) &&
-          <Route path="/turnoverTime" render={(props) => <Efficiency {...props} reportType={"TurnoverTimeReport"} />} />
+          <Route path="/turnoverTime" render={(props) => <Efficiency {...props} reportType={"turnoverTime"} />} />
         }
         {(this.state.efficiencyAccess) &&
-          <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"ORUtilizationReport"} />} />
+          <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"blockUtilization"} />} />
         }
         {(this.state.efficiencyAccess) &&
-          <Route path="/caseAnalysis" render={(props) => <Efficiency {...props} reportType={"CaseAnalysisReport"} />} />
+          <Route path="/caseAnalysis" render={(props) => <Efficiency {...props} reportType={"caseAnalysis"} />} />
         }
 
         <Route path="/my-profile" component={MyProfile} />

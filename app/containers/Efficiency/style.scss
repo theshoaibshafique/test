@@ -38,7 +38,7 @@ $ssc-picker-height: 150px;
         }
     }
     
-    .EfficiencyReport {
+    .efficiency {
         .link {
             text-decoration: unset;
             color: #028cc8;
@@ -52,11 +52,8 @@ $ssc-picker-height: 150px;
             margin: 148px 0;
             font-style: unset;
         }
-        .DonutChart .chart-title{
-            margin-bottom: 18px;
-        }
     }
-    .DaysStartingOnTimeReport {
+    .firstCaseOnTimeStart {
         .efficiency-card.BarChart {
             .MuiCardContent-root {
                 min-height: 420px;
@@ -71,7 +68,7 @@ $ssc-picker-height: 150px;
         }
     }
     //TODO: display infographic text
-    .TurnoverTimeReport{
+    .turnoverTime{
         .grid-InfographicText{
             display: none;
         }

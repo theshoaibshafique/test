@@ -13,12 +13,14 @@ import LoadingOverlay from 'react-loading-overlay';
 import globalFunctions from '../../utils/global-functions';
 import DisplayNumber from '../../components/Report/InfographicText/DisplayNumber';
 import BarChart from '../../components/Report/BarChart/BarChart';
+import Histogram from '../../components/Report/Histogram/Histogram';
 import StackedBarChart from '../../components/Report/StackedBarChart';
 import DetailedMultiLineChart from '../../components/Report/DetailedMultiLineChart/DetailedMultiLineChart';
 import Table from '../../components/Report/Table';
 import DonutChart from '../../components/Report/DonutChart/DonutChart';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import CloseIcon from '@material-ui/icons/Close';
+import { EFFICIENCY_DATA, FCOT } from '../../constants';
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
@@ -26,10 +28,9 @@ export default class Efficiency extends React.PureComponent {
     this.ONBOARD_TYPE = "Efficiency";
     this.state = {
       reportType: this.props.reportType,
-      isLandingPage: this.props.reportType == "EfficiencyReport",
+      isLandingPage: this.props.reportType == "efficiency",
       isOnboardModalOpen: false,
       isLoading: true,
-      pendingTileCount: 0,
       tileRequest: [],
       reportData: [],
       chartColours: ['#CFB9E4', '#FF7D7D', '#FFDB8C', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3', '#004F6E'],
@@ -75,7 +76,7 @@ export default class Efficiency extends React.PureComponent {
         selectedSpecialty,
         startDate,
         endDate,
-        isLandingPage: this.props.reportType == "EfficiencyReport"
+        isLandingPage: this.props.reportType == "efficiency"
       }, () => {
         this.getReportLayout();
       })
@@ -155,13 +156,13 @@ export default class Efficiency extends React.PureComponent {
 
   getFilterLayout(reportType) {
     switch (`${reportType}`.toUpperCase()) {
-      case 'DAYSSTARTINGONTIMEREPORT':
+      case 'FIRSTCASEONTIMESTART':
         return { showOR: true, showSpecialty: true, showGracePeriod: true }
-      case 'TURNOVERTIMEREPORT':
+      case 'TURNOVERTIME':
         return { showOR: true, showOutlierThreshold: true }
-      case 'ORUTILIZATIONREPORT':
+      case 'BLOCKUTILIZATION':
         return { showOR: true }
-      case 'CASEANALYSISREPORT':
+      case 'CASEANALYSIS':
         return { showSpecialty: true, showProcedure: true, showOR2: true, isSpecialtyMandatory: true }
       default:
         return {};
@@ -178,7 +179,7 @@ export default class Efficiency extends React.PureComponent {
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
     let selectedSpecialty = this.state.selectedSpecialty && this.state.selectedSpecialty.value;
-    if (this.state.reportType == "CaseAnalysisReport" && !selectedSpecialty) {
+    if (this.state.reportType == "caseAnalysis" && !selectedSpecialty) {
       this.setState({ isSelectionRequired: true, isLoading: false });
       return;
     }
@@ -201,25 +202,17 @@ export default class Efficiency extends React.PureComponent {
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
-              if (result.dashboardTiles && result.dashboardTiles.length > 0) {
-                let reportData = this.groupTiles(result.dashboardTiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
+              result = EFFICIENCY_DATA;
+              result = FCOT;
+              // result.tiles = result.dashboardTiles
+              if (result.tiles && result.tiles.length > 0) {
+                let reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
                 // let tileRequest = result.dashboardTiles.filter((tile) => {
                 //   return moment(tile.startDate).isSame(this.state.startDate, 'month');
                 // });
+                // debugger;
 
-                this.setState({ pendingTileCount: this.state.pendingTileCount + result.dashboardTiles.length, reportData, tileRequest: result.dashboardTiles, defaultThreshold: result.threshold },
-                  () => {
-                    this.state.reportData.map((tileGroup, i) => {
-                      tileGroup.group.map((tile, j) => {
-                        tile.facilityName = this.props.userFacility;
-                        tile.hospitalName = null;
-                        tile.dashboardName = result.reportName;
-                        tile.departmentName = null;
-                        this.getTile(tile, i, j);
-                      });
-                    })
-
-                  });
+                this.setState({ reportData, tileRequest: result.tiles, defaultThreshold: result.threshold, isLoading: false });
               } else {
                 //report does not exist
                 this.notLoading();
@@ -387,6 +380,14 @@ export default class Efficiency extends React.PureComponent {
           labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
             return { value: or.roomName, name: or.roomTitle };
           }) || []} />
+      case 'HISTOGRAM':
+        return <Histogram
+          id={tile.tileTypeCount}
+          reportType={this.props.reportType}
+          {...tile}
+          labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
+            return { value: or.roomName, name: or.roomTitle };
+          }) || []} />
       case 'DONUTCHART':
         return <DonutChart {...tile} specialties={this.state.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'STACKEDBARCHART':
@@ -403,6 +404,7 @@ export default class Efficiency extends React.PureComponent {
       case 'DONUTCHART':
       case 'STACKEDBARCHART':
       case 'BARCHART':
+      case 'HISTOGRAM':
         return 6;
       case 'TABLE':
       case 'INFOGRAPHICPARAGRAPH':
@@ -418,7 +420,7 @@ export default class Efficiency extends React.PureComponent {
   }
 
   render() {
-    let isLoading = this.state.isLoading || this.state.pendingTileCount > 0;
+    let isLoading = this.state.isLoading;
     return (
       <div className="efficiency-page">
         <Grid container spacing={0} className="efficiency-picker-container" >
@@ -485,21 +487,11 @@ export default class Efficiency extends React.PureComponent {
             {
               this.state.isSelectionRequired //|| !selectedSpecialty
                 ? <Grid item xs={12} className="efficiency-select-filter">Select a Specialty using the filters above to see Case Analysis data!</Grid>
-                : this.state.hasNoCases ?
-                  <Grid item xs={12} className="efficiency-message">
-                    No data available this month
-                  <Grid item xs={12} className="efficiency-message-subtitle">
-                      (Try a different filter criteria)
-                  </Grid>
-                  </Grid>
+                : (isLoading)
+                  ?
+                  <div></div>
                   :
-                  (isLoading || !this.state.tileRequest.length)
-                    ?
-                    !isLoading && <Grid item xs={12} className="efficiency-message">
-                      No data available this month
-                    </Grid>
-                    :
-                    this.renderTiles()}
+                  this.renderTiles()}
           </Grid>
 
           <Modal

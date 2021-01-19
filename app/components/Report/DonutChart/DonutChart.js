@@ -203,7 +203,7 @@ export default class DonutChart extends React.PureComponent {
           <Grid item xs={4} className={this.state.chartID}>
             {this.renderLegend()}
           </Grid>
-          {this.props.url && <Grid item xs={12} style={{ textAlign: 'center', marginBottom: 24 }}>
+          {this.props.url && <Grid item xs={12} style={{ textAlign: 'center' }}>
             <NavLink to={this.props.url} className='link'>
               {this.props.urlText}
             </NavLink>
