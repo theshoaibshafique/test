@@ -20,7 +20,7 @@ import Table from '../../components/Report/Table';
 import DonutChart from '../../components/Report/DonutChart/DonutChart';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import CloseIcon from '@material-ui/icons/Close';
-import { EFFICIENCY_DATA, FCOT } from '../../constants';
+import { EFFICIENCY_DATA, FCOT, TURNOVER, TURNOVER2, TURNOVER3 } from '../../constants';
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
@@ -204,6 +204,7 @@ export default class Efficiency extends React.PureComponent {
             } else if (result) {
               result = EFFICIENCY_DATA;
               result = FCOT;
+              // result = TURNOVER2;
               // result.tiles = result.dashboardTiles
               if (result.tiles && result.tiles.length > 0) {
                 let reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
@@ -331,7 +332,7 @@ export default class Efficiency extends React.PureComponent {
         tileGroup.group.map((tile, i) => {
           tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
           tile.tileTypeCount = tileTypeCount[tile.tileType];
-          return <Grid item xs={this.getTileSize(tile.tileType)} className={`grid-${tile.tileType}`} key={`${index}-${i}`}>
+          return <Grid item xs={this.getTileSize(tile.tileType, tile.tileOrder)} className={`grid-${tile.tileType}`} key={`${index}-${i}`}>
             <Card className={`efficiency-card ${tile.tileType}`}>
               <CardContent>{this.renderTile(tile)}</CardContent>
             </Card>
@@ -398,14 +399,16 @@ export default class Efficiency extends React.PureComponent {
     }
   }
 
-  getTileSize(tileType) {
+  getTileSize(tileType, tileOrder) {
     switch (`${tileType}`.toUpperCase()) {
       case 'DETAILEDMULTILINECHART':
       case 'DONUTCHART':
       case 'STACKEDBARCHART':
       case 'BARCHART':
-      case 'HISTOGRAM':
         return 6;
+      case 'HISTOGRAM':
+        //If its the 2nd in the tile order - its 6
+        return 12 / tileOrder
       case 'TABLE':
       case 'INFOGRAPHICPARAGRAPH':
       case 'INFOGRAPHICTEXT':

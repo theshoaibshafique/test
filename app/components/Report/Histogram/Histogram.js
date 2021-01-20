@@ -22,7 +22,7 @@ export default class Histogram extends React.PureComponent {
     super(props);
 
     this.chartRef = React.createRef();
-    this.id = `bar-chart-${this.props.id}`;
+    this.id = `histogram-${this.props.id}`;
     this.state = {
       chartID: 'histogram',
       chartData: {
@@ -30,13 +30,10 @@ export default class Histogram extends React.PureComponent {
           x: 'x',
           columns: [], //Dynamically populated
           type: 'bar',
+          colors: {
+            y: (d) => this.chooseColour(d)
+          },
         }, // End data
-        zoom: {
-          rescale: true
-        },
-        color: {
-          pattern: this.props.pattern || ['#FF7D7D', '#FFDB8C', '#A7E5FD', '#97E7B3', '#CFB9E4', '#004F6E']
-        },
         bar: {
           width: {
             ratio: .9
@@ -53,13 +50,12 @@ export default class Histogram extends React.PureComponent {
               position: 'outer-center'
             },
             tick: {
-              multiline:false,
+              multiline: false,
               culling: {
                 max: 4 // or whatever value you need
               }
             },
             type: 'category',
-            height: this.props.id == 2 && this.props.reportType == "ComplianceScoreReport" ? 90 : 60
           },
           y: {
             label: {
@@ -92,6 +88,15 @@ export default class Histogram extends React.PureComponent {
           height: 304,
           // width: 470
         },
+        subchart: {
+          show: true,
+          size: {
+            // height: 20
+          },
+        },
+        zoom: {
+          enabled: true,
+        },
 
       }
     }
@@ -109,50 +114,42 @@ export default class Histogram extends React.PureComponent {
   }
 
   generateChartData() {
-    if (!this.props.dataPoints) {
+    let { dataPoints } = this.props;
+    if (!dataPoints) {
       return;
     }
-    let dataPoints = this.props.dataPoints;
-    let xData = [];
-    let formattedData = { x: [] };
+
+    let formattedData = { x: ['x'], y: ['y'] };
+    let colours = [];
     dataPoints.map((point, index) => {
-      let xValue = globalFunctions.getName(this.props.labelList, point.valueX);
-      formattedData.x.push(xValue);
-      formattedData[point.title] = formattedData[point.title] || [];
-      formattedData[point.title].push(point.valueY);
-      xData.push(xValue);
+      formattedData.x.push(point.valueX);
+      colours.push(point.note)
+      formattedData.y.push(parseInt(point.valueY));
     });
-    let columns = [];
-    Object.entries(formattedData).map(([key, value]) => {
-      columns.push([key, ...value]);
-    })
     let chartData = this.state.chartData;
-    //Set as 0 by default and "load" columns later for animation
-    // chartData.data.columns = columns.map((arr) => {
-    //   return arr.map((x) => {
-    //     return parseInt(x) == x ? 0 : x;
-    //   })
-    // });
+    chartData.data.columns = [formattedData.x, formattedData.y];
     let chart = this.chartRef.current && this.chartRef.current.chart;
+    
     chart && chart.load(chartData);
-    //Load actual data for animation
+
     setTimeout(() => {
-      chartData.data.columns = columns
-      chart = this.chartRef.current && this.chartRef.current.chart;
-      chart && chart.load(chartData.data);
+      chart.zoom([0,formattedData.x.length/2])
     }, 500);
 
-    typeof d3 !== 'undefined' && d3.select(`.histogram .c3-axis-x`).style('transform', 'translate(-14px, 225px)') // shift up labels
-    this.setState({ chartData, xData, isLoaded: true })
+    this.setState({ chartData, colours, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    let x = this.state.xData[d[0].x];
-
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
 
       </div>);
+  }
+
+  chooseColour(d) {
+    // console.log(d)
+    return this.state.colours[d.x] || '#FF4D4D';
+  
   }
 
   render() {
