@@ -45,10 +45,10 @@ export default class Histogram extends React.PureComponent {
         },
         axis: {
           x: {
-            label: {
-              text: this.props.xAxis, //Dynamically populated
-              position: 'outer-center'
-            },
+            // label: {
+            //   text: this.props.xAxis, //Dynamically populated
+            //   position: 'outer-center'
+            // },
             tick: {
               multiline: false,
               culling: {
@@ -85,7 +85,7 @@ export default class Histogram extends React.PureComponent {
           show: false
         },
         size: {
-          height: 304,
+          height: 284,
           // width: 470
         },
         subchart: {
@@ -121,35 +121,43 @@ export default class Histogram extends React.PureComponent {
 
     let formattedData = { x: ['x'], y: ['y'] };
     let colours = [];
+    let tooltipData = [];
     dataPoints.map((point, index) => {
       formattedData.x.push(point.valueX);
       colours.push(point.note)
       formattedData.y.push(parseInt(point.valueY));
+      tooltipData.push(point.toolTip);
     });
     let chartData = this.state.chartData;
     chartData.data.columns = [formattedData.x, formattedData.y];
     let chart = this.chartRef.current && this.chartRef.current.chart;
-    
+
     chart && chart.load(chartData);
 
     setTimeout(() => {
-      chart.zoom([0,formattedData.x.length/2])
+      chart.zoom([0, formattedData.x.length / 2])
     }, 500);
 
-    this.setState({ chartData, colours, isLoaded: true })
+    this.setState({ chartData, colours, tooltipData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
+    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].x] || []
+    if (tooltipData.length == 0) {
+      return;
+    }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-
+        {tooltipData.map((line) => {
+          return <div>{line}</div>
+        })}
       </div>);
   }
 
   chooseColour(d) {
     // console.log(d)
     return this.state.colours[d.x] || '#FF4D4D';
-  
+
   }
 
   render() {
@@ -188,6 +196,9 @@ export default class Histogram extends React.PureComponent {
                 : this.props.body || this.props.description ?
                   <div className="display-text">{this.props.body || this.props.description}</div>
                   : <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+          </Grid>
+          <Grid item xs className="c3-axis-x-label">
+            {this.props.xAxis}
           </Grid>
           <Grid item xs>
             {this.props.url && <NavLink to={this.props.url} className='link'>

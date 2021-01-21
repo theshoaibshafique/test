@@ -122,19 +122,21 @@ function getName(searchList, key) {
   return key;
 }
 
-function formatSecsToTime(seconds, toWords = false) {
+function formatSecsToTime(seconds, toWords = false, short = false) {
   var hh = Math.floor(seconds / 3600);
   var mm = Math.floor((seconds - (hh * 3600)) / 60);
   var ss = seconds - (hh * 3600) - (mm * 60);
 
   if (!toWords)
     return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
+  else if (short)
+    return `${formatWords(hh, 'hr')} ${formatWords(mm, 'min')} ${formatWords(ss, 'sec')}`
   else
     return `${formatWords(hh, 'hour')} ${formatWords(mm, 'minute')} ${formatWords(ss, 'second')}`;
 }
 
 function formatWords(value, word) {
-  return `${(value > 0) ? `${value} ${word}${(value > 1) ? `s` : ''}` : ''}`
+  return `${(value > 0) ? `${value}${word}${(value > 1) ? `s` : ''}` : ''}`
 }
 
 function pad(string) {

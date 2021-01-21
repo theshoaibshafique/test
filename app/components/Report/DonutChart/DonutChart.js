@@ -89,6 +89,7 @@ export default class DonutChart extends React.PureComponent {
       })
     }
     let xData = [];
+    let tooltipLegendData = {};
     let tooltipData = {};
     let formattedData = {};
 
@@ -98,7 +99,8 @@ export default class DonutChart extends React.PureComponent {
 
       formattedData[point.title] = point.valueX;
       xData.push(xValue);
-      tooltipData[point.title] = point.note ? point.note : tooltipData[point.title];
+      tooltipLegendData[point.title] = point.note ? point.note : tooltipLegendData[point.title];
+      tooltipData[point.title] = point.toolTip;
     });
     const orderBy = this.props.orderBy || {};
     let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] || b[1] - a[1] });
@@ -107,16 +109,22 @@ export default class DonutChart extends React.PureComponent {
     chartData.data.columns = legendData;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-    this.setState({ chartData, xData, tooltipData, legendData, isLoaded: true })
+    this.setState({ chartData, xData, tooltipLegendData,tooltipData, legendData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
     if (d[0].id == "NA") {
       return;
     }
+    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].id] || []
+    if (tooltipData.length == 0){
+      return;
+    }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${this.props.description ? this.props.description : ''}${d[0].id}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
+        {tooltipData.map((line) => {
+          return <div>{line}</div>
+        })}
       </div>);
   }
   renderLegend() {
@@ -141,7 +149,7 @@ export default class DonutChart extends React.PureComponent {
               key={index}>
               <div className="legend-title">
                 <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
-                {this.state.tooltipData[id] && <LightTooltip interactive arrow title={this.state.tooltipData[id]} placement="top" fontSize="small">
+                {this.state.tooltipLegendData[id] && <LightTooltip interactive arrow title={this.state.tooltipLegendData[id]} placement="top" fontSize="small">
                   <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
                 </LightTooltip>}
               </div>

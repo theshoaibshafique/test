@@ -20,7 +20,7 @@ import Table from '../../components/Report/Table';
 import DonutChart from '../../components/Report/DonutChart/DonutChart';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import CloseIcon from '@material-ui/icons/Close';
-import { EFFICIENCY_DATA, FCOT, TURNOVER, TURNOVER2, TURNOVER3 } from '../../constants';
+import { BLOCKUTILIZATION, CASEANALYSIS, EFFICIENCY_DATA, FCOT, TURNOVER, TURNOVER2, TURNOVER3 } from '../../constants';
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
@@ -101,7 +101,7 @@ export default class Efficiency extends React.PureComponent {
       callback = this.getReportLayout;
     }
     this.loadFilter(callback);
-    this.getEarliestStartDate();
+    this.getConfig();
     this.openOnboarding()
 
   };
@@ -138,18 +138,26 @@ export default class Efficiency extends React.PureComponent {
       });
   }
 
-  async getEarliestStartDate() {
+  async getConfig() {
     return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "/startDate", 'get', this.props.userToken, {})
       .then(result => {
         if (!result) {
           return;
         }
+        result = {
+          "facilityName": "Clements University Hospital",
+          "facilityId": "77c6f277-d2e7-4d37-ac68-bd8c9fb21b92",
+          "startDate": "2020-08-15",
+          "hasEMR": true,
+          "fcotsThreshold": 302,
+          "turnoverThreshold": 4000
+        };
         let startDate = this.state.startDate;
-        let earliestStartDate = moment(result);
+        let earliestStartDate = moment(result.startDate);
         if (earliestStartDate.isSameOrAfter(startDate)) {
           startDate = earliestStartDate.utc();
         }
-        this.setState({ earliestStartDate, startDate });
+        this.setState({ earliestStartDate, startDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold });
       });
 
   }
@@ -166,6 +174,34 @@ export default class Efficiency extends React.PureComponent {
         return { showSpecialty: true, showProcedure: true, showOR2: true, isSpecialtyMandatory: true }
       default:
         return {};
+    }
+  }
+
+  getThreshold(reportType) {
+    switch (`${reportType}`.toUpperCase()) {
+      case 'FIRSTCASEONTIMESTART':
+        return this.state.fcotsThreshold
+      case 'TURNOVERTIME':
+        return this.state.turnoverThreshold
+      default:
+        return 0;
+    }
+  }
+
+  getReport(reportType) {
+    switch (`${reportType}`.toUpperCase()) {
+      case 'EFFICIENCY':
+        return EFFICIENCY_DATA;
+      case 'FIRSTCASEONTIMESTART':
+        return FCOT
+      case 'TURNOVERTIME':
+        return TURNOVER
+      case 'BLOCKUTILIZATION':
+        return BLOCKUTILIZATION
+      case 'CASEANALYSIS':
+        return CASEANALYSIS
+      default:
+        return 0;
     }
   }
 
@@ -202,18 +238,12 @@ export default class Efficiency extends React.PureComponent {
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
-              result = EFFICIENCY_DATA;
-              result = FCOT;
-              // result = TURNOVER2;
-              // result.tiles = result.dashboardTiles
+              result = this.getReport(this.state.reportType);
+
               if (result.tiles && result.tiles.length > 0) {
                 let reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
-                // let tileRequest = result.dashboardTiles.filter((tile) => {
-                //   return moment(tile.startDate).isSame(this.state.startDate, 'month');
-                // });
-                // debugger;
 
-                this.setState({ reportData, tileRequest: result.tiles, defaultThreshold: result.threshold, isLoading: false });
+                this.setState({ reportData, tileRequest: result.tiles, isLoading: false });
               } else {
                 //report does not exist
                 this.notLoading();
@@ -449,7 +479,7 @@ export default class Efficiency extends React.PureComponent {
               userToken={this.props.userToken}
               defaultState={this.state}
               apply={() => this.getReportLayout()}
-              defaultThreshold={this.state.defaultThreshold}
+              defaultThreshold={this.getThreshold(this.state.reportType)}
               disabled={Boolean(this.state.isFilterApplied || !this.state.startDate || !this.state.endDate)}
               updateState={(key, value) => this.updateState(key, value)}
               {...this.getFilterLayout(this.state.reportType)}

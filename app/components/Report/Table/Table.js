@@ -54,7 +54,7 @@ export default class Table extends React.PureComponent {
           case 'avgRoomSetup':
           case 'avgCase':
           case 'avgRoomCleanup':
-            column.value = Math.round(parseInt(value) / 60);
+            column.value = parseInt(value) == value ? Math.round(parseInt(value) / 60) : "N/A";
           default:
             break;
         }
@@ -90,7 +90,7 @@ export default class Table extends React.PureComponent {
   render() {
     return (
       <LoadingOverlay
-        active={!this.props.description}
+        // active={!this.props.description}
         spinner
         className="overlays"
         styles={{
