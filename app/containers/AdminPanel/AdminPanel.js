@@ -7,6 +7,7 @@ import UserManagement from 'containers/UserManagement/Loadable';
 import EfficiencySettings from 'containers/Efficiency/EfficiencySettings/Loadable';
 import './style.scss';
 import { Tab, Tabs, withStyles } from '@material-ui/core';
+import globalFunctions from '../../utils/global-functions';
 const StyledTabs = withStyles({
   root:{
     boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
@@ -70,7 +71,31 @@ export default class AdminPanel extends React.PureComponent {
     if (tabIndex == params.index){
       this.setState({tabIndex:Math.min(Math.max(tabIndex, 0), 1)})
     }
-    
+    this.getConfig();
+  }
+
+  async getConfig() {
+    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config?facilityName="+this.props.facilityName, 'get', this.props.userToken, {})
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        result = JSON.parse(result)
+        this.setState({ fcotsThreshold:result.fcotsThreshold, turnoverThreshold:result.turnoverThreshold, hasEMR:result.hasEMR });
+      });
+
+  }
+
+  async submit(jsonBody) {
+    const url = `${process.env.EFFICIENCY_API}2/config`;
+    return await globalFunctions.genericFetch(url, 'put', this.props.userToken, jsonBody)
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        result = JSON.parse(result)
+        this.setState({ fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, hasEMR: result.hasEMR });
+      });
   }
 
   render() {
@@ -93,7 +118,12 @@ export default class AdminPanel extends React.PureComponent {
           <UserManagement/>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
-          <EfficiencySettings/>
+          <EfficiencySettings
+          fcotsThreshold={this.state.fcotsThreshold} 
+          turnoverThreshold={this.state.turnoverThreshold}
+          hasEMR={this.state.hasEMR}
+          submit={(updates) => this.submit(updates)}
+          />
         </TabPanel>
 
       </div>

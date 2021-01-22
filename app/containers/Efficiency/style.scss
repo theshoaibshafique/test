@@ -8,11 +8,11 @@ $ssc-picker-height: 150px;
     .MuiCardContent-root {
         padding: 24px 40px;
     }
-    .grid-InfographicParagraph{
+    .grid-InfographicParagraph {
         padding-bottom: 8px;
     }
     .efficiency-card {
-        &.DonutChart{
+        &.DonutChart {
             overflow: visible;
         }
         &.InfographicText {
@@ -24,7 +24,7 @@ $ssc-picker-height: 150px;
             border-radius: 8px !important;
         }
         &.InfographicParagraph .MuiCardContent-root,
-        &.MuiCard-root.InfographicParagraph{
+        &.MuiCard-root.InfographicParagraph {
             box-shadow: none;
             background-color: unset;
             padding-left: 0;
@@ -37,7 +37,7 @@ $ssc-picker-height: 150px;
             }
         }
     }
-    
+
     .efficiency {
         .link {
             text-decoration: unset;
@@ -68,12 +68,12 @@ $ssc-picker-height: 150px;
         }
     }
     //TODO: display infographic text
-    .turnoverTime{
-        .grid-InfographicText{
+    .turnoverTime {
+        .grid-InfographicText {
             display: none;
         }
     }
-    
+
     .efficiency-select-filter {
         opacity: 0.8;
         color: #000000;
@@ -117,7 +117,7 @@ $ssc-picker-height: 150px;
         background-color: #e8e8e8;
         padding: 16px;
     }
-    .efficiency-picker-container{
+    .efficiency-picker-container {
         position: relative;
     }
 
@@ -142,6 +142,27 @@ $ssc-picker-height: 150px;
     .DonutChart .MuiCardContent-root {
         padding-bottom: 0;
     }
+    .compare-text {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        letter-spacing: 0;
+        line-height: 24px;
+    }
+    .efficiencyOnboard-link {
+        position: absolute;
+        top: 30px;
+        left: 40px;
+    }
+    .efficiency-settings {
+        position: absolute;
+        top: 30px;
+        right: 44px;
+        a {
+            text-decoration: unset;
+        }
+    }
 }
 .MuiAutocomplete-popper .MuiAutocomplete-groupLabel {
     line-height: 26px;
@@ -149,13 +170,8 @@ $ssc-picker-height: 150px;
 .efficiencyOnBoarding.Modal {
     padding: 0;
 }
-.efficiencyOnboard-link {
-    position: absolute;
-    top: 30px;
-    left: 40px;
-}
-.efficiencyOnBoarding {
 
+.efficiencyOnBoarding {
     color: #000;
     font-family: "Noto Sans";
     font-size: 14px;
@@ -169,7 +185,7 @@ $ssc-picker-height: 150px;
         padding: 40px 40px 0 40px;
         margin-bottom: 29px;
     }
-    .efficiencyOnBoard-column{
+    .efficiencyOnBoard-column {
         padding: 0 0 0 40px;
     }
     .efficiencyOnBoard-paragraph {
@@ -186,14 +202,14 @@ $ssc-picker-height: 150px;
     .efficiencyOnBoard-subtitle {
         font-weight: bold;
     }
-    .efficiency-OnBoard-box{
+    .efficiency-OnBoard-box {
         color: #004f6e;
         text-align: center;
         max-width: 116px;
         padding: 2px;
     }
     .efficiency-OnBoard-box div {
-        background-color: #CCEAE6;
+        background-color: #cceae6;
         padding: 12px;
     }
     .close-button {

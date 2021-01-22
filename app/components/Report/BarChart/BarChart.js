@@ -125,6 +125,7 @@ export default class BarChart extends React.PureComponent {
     let descData = [];
     let formattedData = { x: [] };
     let sum = 0
+    let tooltipData = [];
     dataPoints.map((point, index) => {
       let xValue = globalFunctions.getName(this.props.labelList, point.valueX);
       if (parseInt(point.valueX) == point.valueX) {
@@ -137,6 +138,7 @@ export default class BarChart extends React.PureComponent {
       zData.push(point.valueZ);
       xData.push(xValue);
       descData.push(point.description);
+      tooltipData.push(point.toolTip);
     });
     let columns = [];
     Object.entries(formattedData).map(([key, value]) => {
@@ -171,7 +173,7 @@ export default class BarChart extends React.PureComponent {
     if (sum <= 0) {
       typeof d3 !== 'undefined' && d3.select(`.${this.id} .c3-chart-texts`).style('transform', 'translate(0, -30px)') // shift up labels
     }
-    this.setState({ chartData, zData, xData, descData, isLoaded: true })
+    this.setState({ chartData, zData, xData,tooltipData, descData, isLoaded: true })
   }
 
   createCustomLabel(v, id, i, j) {
@@ -187,12 +189,23 @@ export default class BarChart extends React.PureComponent {
     if (z == "N/A") {
       return;
     }
-    return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        <div>{`${x}${this.props.footer ? this.props.footer : ''}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
-        {z != null && <div>{`Occurence(s): ${z}`}</div>}
-        {desc != null && <div>{`${desc}`}</div>}
-      </div>);
+    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].x] || []
+    if (tooltipData.length == 0) {
+      return ReactDOMServer.renderToString(
+        <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+          <div>{`${x}${this.props.footer ? this.props.footer : ''}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
+          {z != null && <div>{`Occurence(s): ${z}`}</div>}
+          {desc != null && <div>{`${desc}`}</div>}
+        </div>);
+    } else {
+      return ReactDOMServer.renderToString(
+        <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+          {tooltipData.map((line) => {
+            return <div>{line}</div>
+          })}
+        </div>);
+    }
+    
   }
 
   render() {

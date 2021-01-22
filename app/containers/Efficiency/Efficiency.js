@@ -4,7 +4,9 @@ import axios from 'axios';
 import 'c3/c3.css';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, Button } from '@material-ui/core';
+import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, Button, Tab, Tabs, withStyles } from '@material-ui/core';
+import { mdiCogOutline } from '@mdi/js';
+import Icon from '@mdi/react'
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
 
 import moment from 'moment/moment';
@@ -21,6 +23,55 @@ import DonutChart from '../../components/Report/DonutChart/DonutChart';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import CloseIcon from '@material-ui/icons/Close';
 import { BLOCKUTILIZATION, CASEANALYSIS, EFFICIENCY_DATA, FCOT, TURNOVER, TURNOVER2, TURNOVER3 } from '../../constants';
+import { NavLink } from 'react-router-dom';
+
+const StyledTabs = withStyles({
+  root: {
+    boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
+    marginTop: 16
+  },
+  indicator: {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    height: 5,
+    '& > span': {
+      width: '100%',
+      backgroundColor: '#028CC8',
+    },
+  },
+})((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
+
+const StyledTab = withStyles((theme) => ({
+  root: {
+    textTransform: 'none',
+    fontSize: 14,
+    fontFamily: 'Noto Sans',
+    opacity: .8,
+    fontWeight: 'bold',
+    color: '#000 !important',
+    marginRight: theme.spacing(1),
+    '&:focus': {
+      opacity: 1,
+    },
+  },
+}))((props) => <Tab disableRipple {...props} />);
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`nav-tabpanel-${index}`}
+      aria-labelledby={`nav-tab-${index}`}
+      {...other}
+    >
+      {value === index && children}
+    </div>
+  );
+}
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
@@ -29,9 +80,9 @@ export default class Efficiency extends React.PureComponent {
     this.state = {
       reportType: this.props.reportType,
       isLandingPage: this.props.reportType == "efficiency",
+      tabIndex: 0,
       isOnboardModalOpen: false,
       isLoading: true,
-      tileRequest: [],
       reportData: [],
       chartColours: ['#CFB9E4', '#FF7D7D', '#FFDB8C', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3', '#004F6E'],
       specialties: this.props.specialties || [],
@@ -139,19 +190,12 @@ export default class Efficiency extends React.PureComponent {
   }
 
   async getConfig() {
-    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "/startDate", 'get', this.props.userToken, {})
+    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config" + "?facilityName=77C6F277-D2E7-4D37-AC68-BD8C9FB21B92", 'get', this.props.userToken, {})
       .then(result => {
         if (!result) {
           return;
         }
-        result = {
-          "facilityName": "Clements University Hospital",
-          "facilityId": "77c6f277-d2e7-4d37-ac68-bd8c9fb21b92",
-          "startDate": "2020-08-15",
-          "hasEMR": true,
-          "fcotsThreshold": 302,
-          "turnoverThreshold": 4000
-        };
+        result = JSON.parse(result)
         let startDate = this.state.startDate;
         let earliestStartDate = moment(result.startDate);
         if (earliestStartDate.isSameOrAfter(startDate)) {
@@ -188,6 +232,17 @@ export default class Efficiency extends React.PureComponent {
     }
   }
 
+  calculateThreshold(reportType) {
+    switch (`${reportType}`.toUpperCase()) {
+      case 'FIRSTCASEONTIMESTART':
+        return parseInt(this.state.gracePeriodMinute) * 60 + parseInt(this.state.gracePeriodSec)
+      case 'TURNOVERTIME':
+        return parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.gracePeriodSec) * 60
+      default:
+        return null;
+    }
+  }
+
   getReport(reportType) {
     switch (`${reportType}`.toUpperCase()) {
       case 'EFFICIENCY':
@@ -212,6 +267,8 @@ export default class Efficiency extends React.PureComponent {
     this.setState({ isOnboardModalOpen: false });
   }
 
+
+
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
     let selectedSpecialty = this.state.selectedSpecialty && this.state.selectedSpecialty.value;
@@ -222,28 +279,35 @@ export default class Efficiency extends React.PureComponent {
     if (!this.state.endDate || !this.state.startDate) {
       return;
     }
-    this.setState({ tileRequest: [], isSelectionRequired: false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ isSelectionRequired: false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
-        let jsonBody = {
-          "reportType": this.state.reportType,
-          "TileRequest": [{
-            "startDate": this.state.startDate && globalFuncs.formatDateTime(this.state.startDate.startOf('day')),
-            "endDate": this.state.endDate && globalFuncs.formatDateTime(this.state.endDate.endOf('day'))
-          }]
-        };
+        const filter = this.getFilterLayout(this.state.reportType);
+        const jsonBody = {
+          "dashboardName": this.state.reportType,
+          "facilityName": this.props.userFacility,
 
-        globalFunctions.axiosFetch(process.env.EFFICIENCY_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
+          "startDate": this.state.startDate && this.state.startDate.format('YYYY-MM-DD'),
+          "endDate": this.state.endDate && this.state.endDate.format('YYYY-MM-DD'),
+
+          "roomName": (filter.showOR || filter.showOR2) && this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value || null,
+          "specialtyName": filter.showSpecialty && this.state.selectedSpecialty && this.state.selectedSpecialty.name,
+          "procedureName": filter.showProcedure && this.state.selectedProcedure && this.state.selectedProcedure.name,
+          "threshold": this.calculateThreshold(this.state.reportType)
+        }
+
+        globalFunctions.axiosFetch(process.env.EFFICIENCYTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
             result = result.data;
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
-              result = this.getReport(this.state.reportType);
+              result = JSON.parse(result);
+              // result = this.getReport(this.state.reportType)
 
               if (result.tiles && result.tiles.length > 0) {
-                let reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
-
-                this.setState({ reportData, tileRequest: result.tiles, isLoading: false });
+                const reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
+                const globalData = this.groupTiles(result.globalTiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
+                this.setState({ reportData, globalData, isLoading: false });
               } else {
                 //report does not exist
                 this.notLoading();
@@ -256,50 +320,6 @@ export default class Efficiency extends React.PureComponent {
           });
       });
   };
-  getTile(tileRequest, i, j) {
-    let filter = this.getFilterLayout(this.state.reportType);
-    let jsonBody = {
-      "facilityName": tileRequest.facilityName,
-      "reportName": tileRequest.dashboardDataName,
-      "hospitalName": tileRequest.hospitalName,
-      "departmentName": tileRequest.departmentName,
-
-      "startDate": globalFuncs.formatDateTime(this.state.startDate.startOf('day')),
-      "endDate": globalFuncs.formatDateTime(this.state.endDate.endOf('day')),
-      "tileType": tileRequest.tileType,
-      "dashboardName": tileRequest.dashboardName,
-
-      "roomName": (filter.showOR || filter.showOR2) && this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
-      "specialtyName": filter.showSpecialty && this.state.selectedSpecialty && this.state.selectedSpecialty.value,
-      "procedureName": filter.showProcedure && this.state.selectedProcedure && this.state.selectedProcedure.value
-    }
-
-    globalFuncs.axiosFetch(process.env.EFFICIENCYTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
-      .then(result => {
-        result = result.data;
-        if (result === 'error' || result === 'conflict') {
-          this.notLoading();
-        } else {
-
-          result.tileOrder = tileRequest.tileOrder;
-          result.tileType = tileRequest.tileType;
-          result.groupOrder = tileRequest.groupOrder;
-          result.dashboardDataName = tileRequest.dashboardDataName;
-          let reportData = this.state.reportData;
-          reportData[i].group[j] = result;
-
-          this.setState({ reportData, pendingTileCount: this.state.pendingTileCount - 1 },
-            () => {
-              if (this.state.pendingTileCount <= 0) {
-                this.notLoading();
-              }
-            });
-        }
-      }).catch((error) => {
-        this.setState({ pendingTileCount: this.state.pendingTileCount - 1 })
-        // console.error("tile",error)
-      });
-  }
 
   groupTiles(tileData) {
     //Group data by "Group"
@@ -353,11 +373,52 @@ export default class Efficiency extends React.PureComponent {
       }));
   }
 
+  handleTabChange(obj, tabIndex) {
+    this.setState({ tabIndex });
+  }
 
-  renderTiles() {
+  renderDashboard() {
+    let reportData = this.state.reportData && this.state.reportData || []
+    if (this.state.isLandingPage) {
+      return <span>
+        <StyledTabs
+          value={this.state.tabIndex}
+          onChange={(obj, value) => this.handleTabChange(obj, value)}
+          indicatorColor="primary"
+          textColor="primary"
+        >
+          <StyledTab label="My Hospital" />
+          <StyledTab label="How do I compare with others?" />
+        </StyledTabs>
+        <TabPanel value={this.state.tabIndex} index={0}>
+          <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
+            {this.renderTiles(reportData)}
+          </Grid>
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={1}>
+          <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
+            <Grid item xs={7} className="compare-text">The following show’s how well your overall efficiency compares to others. We’re keeping this section simple as we develop more comprehensive benchmark insights.</Grid>
+            {this.renderTiles(this.state.globalData, false)}
+          </Grid>
+        </TabPanel>
+      </span>
+    }
+    return <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
+      {
+        this.state.isSelectionRequired //|| !selectedSpecialty
+          ? <Grid item xs={12} className="efficiency-select-filter">Select a Specialty using the filters above to see Case Analysis data!</Grid>
+          : (this.state.isLoading)
+            ?
+            <div></div>
+            :
+            this.renderTiles()}
+    </Grid>;
+  }
+
+  renderTiles(reportData = this.state.reportData, includeExcludedMessage = true) {
     //Tiles of the same type get a different colour
     let tileTypeCount = {};
-    let result = this.state.reportData && this.state.reportData.map((tileGroup, index) => {
+    let result = reportData && reportData.map((tileGroup, index) => {
       return (
         tileGroup.group.map((tile, i) => {
           tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
@@ -370,7 +431,7 @@ export default class Efficiency extends React.PureComponent {
         })
       )
     }) || [];
-    result.push(<Grid item xs={12} style={{ paddingTop: 0 }}>
+    includeExcludedMessage && result.length && result.push(<Grid item xs={12} style={{ paddingTop: 0 }}>
       <InfographicParagraph description={"ORs with no data available are excluded from the report"} />
     </Grid>);
     return result;
@@ -435,10 +496,8 @@ export default class Efficiency extends React.PureComponent {
       case 'DONUTCHART':
       case 'STACKEDBARCHART':
       case 'BARCHART':
-        return 6;
       case 'HISTOGRAM':
-        //If its the 2nd in the tile order - its 6
-        return 12 / tileOrder
+        return 6;
       case 'TABLE':
       case 'INFOGRAPHICPARAGRAPH':
       case 'INFOGRAPHICTEXT':
@@ -491,6 +550,12 @@ export default class Efficiency extends React.PureComponent {
           <div className="efficiencyOnboard-link link" onClick={() => this.openOnboardModal()}>
             What's this report about?
           </div>
+          {this.props.adminPanelAccess && <div className="efficiency-settings">
+
+            <NavLink to={"/adminPanel/1"} className='link'>
+              <span className="settings-icon"><Icon color="#028CC8" style={{ marginRight: 4 }} path={mdiCogOutline} size={'24px'} /></span>Settings
+            </NavLink>
+          </div>}
         </Grid>
         <LoadingOverlay
           active={isLoading}
@@ -516,16 +581,7 @@ export default class Efficiency extends React.PureComponent {
             })
           }}
         >
-          <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
-            {
-              this.state.isSelectionRequired //|| !selectedSpecialty
-                ? <Grid item xs={12} className="efficiency-select-filter">Select a Specialty using the filters above to see Case Analysis data!</Grid>
-                : (isLoading)
-                  ?
-                  <div></div>
-                  :
-                  this.renderTiles()}
-          </Grid>
+          {this.renderDashboard()}
 
           <Modal
             open={this.state.isOnboardModalOpen}

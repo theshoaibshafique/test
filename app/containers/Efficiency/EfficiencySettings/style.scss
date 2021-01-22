@@ -26,10 +26,10 @@
         line-height: 17px;
         margin-bottom: 8px;
     }
-    .selectors{
+    .selectors {
         margin-bottom: 24px;
     }
-    .unit{
+    .unit {
         margin: 8px;
         opacity: 0.8;
         color: #000000;
@@ -38,15 +38,41 @@
         letter-spacing: 0;
         line-height: 40px;
     }
-    .buttons{
+    .buttons {
         display: flex;
         justify-content: flex-end;
-        .reset{
-            color: #028CC8;
+        .reset {
+            color: #028cc8;
         }
         button {
-            margin: 16px;    
+            margin: 16px;
         }
     }
-
+    .warning {
+        opacity: 0.8;
+        color: #b47b00;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+    .no-emr {
+        color: #004f6e;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+        margin-bottom: 24px;
+    }
+    .grace-period{
+        display: none;
+    }
+    &.has-emr{
+        .no-emr{
+            display: none;
+        }
+        .grace-period{
+            display: unset;
+        }
+    }
 }

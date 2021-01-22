@@ -52,7 +52,7 @@ export default class Histogram extends React.PureComponent {
             tick: {
               multiline: false,
               culling: {
-                max: 4 // or whatever value you need
+                max: 8 // or whatever value you need
               }
             },
             type: 'category',
@@ -124,7 +124,7 @@ export default class Histogram extends React.PureComponent {
     let tooltipData = [];
     dataPoints.map((point, index) => {
       formattedData.x.push(point.valueX);
-      colours.push(point.note)
+      colours.push(point.description)
       formattedData.y.push(parseInt(point.valueY));
       tooltipData.push(point.toolTip);
     });

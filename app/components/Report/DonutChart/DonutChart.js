@@ -54,7 +54,7 @@ export default class DonutChart extends React.PureComponent {
           title: this.props.subTitle
         },
         size: {
-          height: 360,
+          height: 340,
           // width: 320
         },
         transition: {
@@ -211,7 +211,7 @@ export default class DonutChart extends React.PureComponent {
           <Grid item xs={4} className={this.state.chartID}>
             {this.renderLegend()}
           </Grid>
-          {this.props.url && <Grid item xs={12} style={{ textAlign: 'center' }}>
+          {this.props.url && <Grid item xs={12} style={{ textAlign: 'center',marginBottom: 20 }}>
             <NavLink to={this.props.url} className='link'>
               {this.props.urlText}
             </NavLink>
