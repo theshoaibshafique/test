@@ -550,8 +550,7 @@ export default class Efficiency extends React.PureComponent {
           <div className="efficiencyOnboard-link link" onClick={() => this.openOnboardModal()}>
             What's this report about?
           </div>
-          {this.props.adminPanelAccess && <div className="efficiency-settings">
-
+          {this.props.isAdmin && <div className="efficiency-settings">
             <NavLink to={"/adminPanel/1"} className='link'>
               <span className="settings-icon"><Icon color="#028CC8" style={{ marginRight: 4 }} path={mdiCogOutline} size={'24px'} /></span>Settings
             </NavLink>
