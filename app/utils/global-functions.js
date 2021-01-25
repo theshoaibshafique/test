@@ -130,12 +130,17 @@ function formatSecsToTime(seconds, toWords = false, short = false) {
   if (!toWords)
     return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
   else if (short)
-    return `${formatWords(hh, 'hr')} ${formatWords(mm, 'min')} ${formatWords(ss, 'sec')}`
+    return `${formatWords(hh, 'hr',true)} ${formatWords(mm, 'min',true)} ${formatWords(ss, 'sec',true)}`
   else
     return `${formatWords(hh, 'hour')} ${formatWords(mm, 'minute')} ${formatWords(ss, 'second')}`;
 }
 
-function formatWords(value, word) {
+function formatWords(value, word, short = false) {
+  if (value == 0){
+    return ""
+  } else if (short){
+    return `${value}${word}`
+  }
   return `${(value > 0) ? `${value}${word}${(value > 1) ? `s` : ''}` : ''}`
 }
 

@@ -91,7 +91,7 @@ export default class Efficiency extends React.PureComponent {
       procedureOptions: [],
       selectedProcedure: "",
       hasNoCases: false,
-      isFilterApplied: true // Filter is applied right away by default
+      isFilterApplied: true // Filter is applied right away by default,
     }
     this.pendingDate = moment();
     this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY, this.pendingDate.daysInMonth()))
@@ -190,7 +190,17 @@ export default class Efficiency extends React.PureComponent {
         if (earliestStartDate.isSameOrAfter(startDate)) {
           startDate = earliestStartDate.utc();
         }
-        this.setState({ earliestStartDate, startDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold }, () => {
+        const fcotsThresholdList = globalFuncs.formatSecsToTime(result.fcotsThreshold).split(":");
+        const turnoverThresholdList = globalFuncs.formatSecsToTime(result.turnoverThreshold).split(":");
+
+        const gracePeriodMinute = this.state.gracePeriodMinute || fcotsThresholdList[1];
+        const gracePeriodSec = this.state.gracePeriodSec || fcotsThresholdList[2];
+        const outlierThresholdHrs = this.state.outlierThresholdHrs || turnoverThresholdList[0];
+        const outlierThresholdMinute = this.state.outlierThresholdMinute || turnoverThresholdList[1];
+        this.setState({
+          earliestStartDate, startDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold,
+          gracePeriodMinute, gracePeriodSec, outlierThresholdHrs, outlierThresholdMinute,
+        }, () => {
           this.getReportLayout();
         });
       });
@@ -229,7 +239,7 @@ export default class Efficiency extends React.PureComponent {
         const gracePeriod = parseInt(this.state.gracePeriodMinute) * 60 + parseInt(this.state.gracePeriodSec);
         return gracePeriod >= 0 ? gracePeriod : this.state.fcotsThreshold;
       case 'TURNOVERTIME':
-        const outlierThreshold = parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.gracePeriodSec) * 60;
+        const outlierThreshold = parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.outlierThresholdMinute) * 60;
         return outlierThreshold >= 0 ? outlierThreshold : this.state.turnoverThreshold;
       default:
         return null;
@@ -390,7 +400,7 @@ export default class Efficiency extends React.PureComponent {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
-            <Grid item xs={7} className="compare-text">The following show’s how well your overall efficiency compares to others. We’re keeping this section simple as we develop more comprehensive benchmark insights.</Grid>
+            <Grid item xs={7} className="compare-text">Global comparison is currently an alpha feature with more enhancements coming in the future. Please try this feature and share your feedback.</Grid>
             {this.renderTiles(this.state.globalData, false)}
           </Grid>
         </TabPanel>

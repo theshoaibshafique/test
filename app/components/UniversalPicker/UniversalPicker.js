@@ -72,23 +72,22 @@ class UniversalPicker extends React.Component {
       }
       let specialtyDisplay = this.props.isSpecialtyMandatory ? "Select a Specialty" : "All Specialties";
       this.props.specialties.sort((a, b) => ("" + a.name).localeCompare("" + b.name))
-      const defaultThreshold = this.props.defaultThreshold;
-      const defaultHours = Math.floor(defaultThreshold / 3600);
-      const defaultMinutes = Math.floor((defaultThreshold % 3600) / 60);
-      const defaultSeconds = Math.floor(defaultThreshold % 3600 % 60);
-
-      const gracePeriodMinute = defaultMinutes.toString().padStart(2, 0);
-      const gracePeriodSec = defaultSeconds.toString().padStart(2, 0);
-      const outlierThresholdHrs = defaultHours.toString().padStart(2, 0);
-      const outlierThresholdMinute = defaultMinutes.toString().padStart(2, 0);
       this.setState({
         ...this.props.defaultState,
         specialtyDisplay,
         specialties: [{ name: specialtyDisplay, value: "" }, ...this.props.specialties],
         procedureOptions,
-        gracePeriodMinute, gracePeriodSec, outlierThresholdHrs, outlierThresholdMinute, defaultThreshold, defaultHours, defaultMinutes, defaultSeconds,
         ...this.getDisplayOptions()
       });
+    }
+
+    if (prevProps.defaultThreshold != this.props.defaultThreshold ) {
+      const defaultThreshold = this.props.defaultThreshold;
+      const defaultHours = Math.floor(defaultThreshold / 3600);
+      const defaultMinutes = Math.floor((defaultThreshold % 3600) / 60);
+      const defaultSeconds = Math.floor(defaultThreshold % 3600 % 60);
+
+      this.setState({ defaultThreshold, defaultHours, defaultMinutes, defaultSeconds })
     }
   }
 

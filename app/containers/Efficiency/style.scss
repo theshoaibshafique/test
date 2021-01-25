@@ -12,9 +12,6 @@ $ssc-picker-height: 150px;
         padding-bottom: 8px;
     }
     .efficiency-card {
-        &.DonutChart {
-            overflow: visible;
-        }
         &.InfographicText {
             max-width: fit-content;
             min-width: 300px;
@@ -65,6 +62,11 @@ $ssc-picker-height: 150px;
             .display-text {
                 font-style: unset;
             }
+        }
+    }
+    .turnoverTime {
+        .DonutChart .legend-title{
+            white-space: nowrap;
         }
     }
 
