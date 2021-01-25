@@ -17,6 +17,18 @@ export default class EfficiencySettings extends React.PureComponent {
       outlierThresholdMinute: Math.floor((turnoverThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
     }
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.fcotsThreshold != prevProps.fcotsThreshold || this.props.turnoverThreshold != prevProps.turnoverThreshold) {
+      const fcotsThreshold = this.props.fcotsThreshold || 0;
+      const turnoverThreshold = this.props.turnoverThreshold || 0;
+      this.setState({
+        gracePeriodMinute: Math.floor((fcotsThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
+        gracePeriodSec: Math.floor(fcotsThreshold % 3600 % 60).toString().padStart(2, 0) || "00",
+        outlierThresholdHrs: Math.floor(turnoverThreshold / 3600).toString().padStart(2, 0) || "00",
+        outlierThresholdMinute: Math.floor((turnoverThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
+      })
+    }
+  }
   updateState(key, e) {
     this.setState({ [key]: e.target.value })
   }
@@ -37,11 +49,11 @@ export default class EfficiencySettings extends React.PureComponent {
 
     let jsonBody = {
       "facilityName": this.props.facilityName,
-      "updates": [{"name":"fcotsThreshold", "value":`${newFCOTThreshold}`},{"name":"turnoverThreshold", "value":`${newOutlierThreshold}`}]
+      "updates": [{ "name": "fcotsThreshold", "value": `${newFCOTThreshold}` }, { "name": "turnoverThreshold", "value": `${newOutlierThreshold}` }]
     }
-    this.setState({isLoading:true}, () => {
+    this.setState({ isLoading: true }, () => {
       this.props.submit(jsonBody).then(() => {
-        this.setState({isLoading:false})
+        this.setState({ isLoading: false })
       })
     })
 
@@ -64,7 +76,7 @@ export default class EfficiencySettings extends React.PureComponent {
     return (
       <section className={`efficiency-settings-page ${this.props.hasEMR && 'has-emr'}`}>
         <div className="title">
-          First Case On Time Settings
+          First Case On-Time Settings
         </div>
         <div className="no-emr">Settings are not available without EMR Data.</div>
         <div className="grace-period">

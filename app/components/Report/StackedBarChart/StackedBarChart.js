@@ -128,7 +128,7 @@ export default class StackedBarChart extends React.PureComponent {
       formattedData[point.title][xValue] = point.valueY;
       point.valueZ && zData.push(point.valueZ);
       tooltipLegendData[point.title] = point.note ? point.note : tooltipLegendData[point.title];
-      tooltipData[point.title] = point.toolTip;
+      tooltipData[point.title+xValue] = point.toolTip;
     });
     let columns = [['x', ...xData]];
     const orderBy = this.props.orderBy || {};
@@ -187,8 +187,8 @@ export default class StackedBarChart extends React.PureComponent {
     if (this.state.zData[d[0].x] == "N/A") {
       return;
     }
-    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].id] || []
-    // debugger;
+    const valueX = this.state.xData[d[0].x];
+    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].id+valueX] || []
     if (tooltipData.length == 0) {
       let x = this.state.xData[d[0].x];
       return ReactDOMServer.renderToString(

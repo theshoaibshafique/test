@@ -28,7 +28,7 @@ import { NavLink } from 'react-router-dom';
 const StyledTabs = withStyles({
   root: {
     boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
-    marginTop: 16
+    marginTop: 8
   },
   indicator: {
     display: 'flex',
@@ -141,18 +141,7 @@ export default class Efficiency extends React.PureComponent {
   }
 
   componentDidMount() {
-    let callback = null;
-    //Give specialties list a max loading time of 10 seconds before loading the report
-    if (this.props.specialties.size == 0) {
-      let timeout = setTimeout(() => {
-        this.getReportLayout()
-      }, 10000);
-      this.setState({ timeout })
-    } else {
-      callback = this.getReportLayout;
-    }
-    this.loadFilter(callback);
-    this.getConfig();
+    this.loadFilter(this.getConfig);
     this.openOnboarding()
 
   };
@@ -201,7 +190,9 @@ export default class Efficiency extends React.PureComponent {
         if (earliestStartDate.isSameOrAfter(startDate)) {
           startDate = earliestStartDate.utc();
         }
-        this.setState({ earliestStartDate, startDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold });
+        this.setState({ earliestStartDate, startDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold }, () => {
+          this.getReportLayout();
+        });
       });
 
   }
@@ -235,9 +226,11 @@ export default class Efficiency extends React.PureComponent {
   calculateThreshold(reportType) {
     switch (`${reportType}`.toUpperCase()) {
       case 'FIRSTCASEONTIMESTART':
-        return parseInt(this.state.gracePeriodMinute) * 60 + parseInt(this.state.gracePeriodSec)
+        const gracePeriod = parseInt(this.state.gracePeriodMinute) * 60 + parseInt(this.state.gracePeriodSec);
+        return gracePeriod >= 0 ? gracePeriod : this.state.fcotsThreshold;
       case 'TURNOVERTIME':
-        return parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.gracePeriodSec) * 60
+        const outlierThreshold = parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.gracePeriodSec) * 60;
+        return outlierThreshold >= 0 ? outlierThreshold : this.state.turnoverThreshold;
       default:
         return null;
     }
@@ -467,7 +460,7 @@ export default class Efficiency extends React.PureComponent {
           pattern={pattern}
           id={tile.tileTypeCount}
           reportType={this.props.reportType}
-          noWrapXTick={this.state.isLandingPage}
+          noWrapXTick={this.state.isLandingPage && this.state.tabIndex == 0}
           {...tile}
           labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
             return { value: or.roomName, name: or.roomTitle };
@@ -548,7 +541,7 @@ export default class Efficiency extends React.PureComponent {
             <Divider className="efficiency-divider" />
           </Grid>}
           <div className="efficiencyOnboard-link link" onClick={() => this.openOnboardModal()}>
-            What's this report about?
+            What's this dashboard about?
           </div>
           {this.props.isAdmin && <div className="efficiency-settings">
             <NavLink to={"/adminPanel/1"} className='link'>
@@ -589,7 +582,7 @@ export default class Efficiency extends React.PureComponent {
             <DialogContent className="efficiencyOnBoarding Modal">
               <Grid container spacing={0} justify='center' className="onboard-modal" >
                 <Grid item xs={10} className="efficiencyOnBoard-title">
-                  What is the Efficiency Report?
+                  What is the Efficiency Dashboard?
                 </Grid>
                 <Grid item xs={2} style={{ textAlign: 'right', padding: '40px 24px 0 40px' }}>
                   <IconButton disableRipple disableFocusRipple onClick={() => this.closeOnboardModal()} className='close-button'><CloseIcon fontSize='small' /></IconButton>
@@ -597,18 +590,18 @@ export default class Efficiency extends React.PureComponent {
                 <Grid item xs={7} className="efficiencyOnBoard-column">
                   <Grid container spacing={0} direction="column">
                     <Grid item xs className="efficiencyOnBoard-paragraph">
-                      This report offers insights into the function of the operating room during elective hours according to four main categories
+                      This dashboard offers insights into the function of the operating room during elective hours according to four main categories
                     </Grid>
                     <Grid item xs className="efficiencyOnBoard-paragraph">
                       <Grid container spacing={0}>
                         <Grid item xs className="efficiency-OnBoard-box">
-                          <div>Days Started On Time</div>
+                          <div>First Case On-Time</div>
                         </Grid>
                         <Grid item xs className="efficiency-OnBoard-box">
                           <div>Turnover Time</div>
                         </Grid>
                         <Grid item xs className="efficiency-OnBoard-box">
-                          <div>OR Utilization</div>
+                          <div>Block Utilization</div>
                         </Grid>
                         <Grid item xs className="efficiency-OnBoard-box">
                           <div>Case Analysis</div>

@@ -67,12 +67,6 @@ $ssc-picker-height: 150px;
             }
         }
     }
-    //TODO: display infographic text
-    .turnoverTime {
-        .grid-InfographicText {
-            display: none;
-        }
-    }
 
     .efficiency-select-filter {
         opacity: 0.8;
@@ -111,11 +105,11 @@ $ssc-picker-height: 150px;
     }
     .efficiency-range-picker {
         background-color: #e8e8e8;
-        padding: 16px 0 0 0;
+        padding: 8px 0 0 0;
     }
     .efficiency-picker {
         background-color: #e8e8e8;
-        padding: 16px;
+        padding: 8px 16px;
     }
     .efficiency-picker-container {
         position: relative;
@@ -143,6 +137,7 @@ $ssc-picker-height: 150px;
         padding-bottom: 0;
     }
     .compare-text {
+        padding-top: 0;
         opacity: 0.8;
         color: #000000;
         font-family: "Noto Sans";

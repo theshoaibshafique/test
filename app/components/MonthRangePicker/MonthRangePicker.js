@@ -98,7 +98,7 @@ class MonthRangePicker extends React.Component {
     return (
       <Grid container justify="center" alignItems="center" direction="column" className="month-range-picker">
         <Grid item xs className="report-date">
-          Report Date
+          Date Range
         </Grid>
         <DateRangePicker
           startDate={this.state.startDate}
