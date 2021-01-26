@@ -44,7 +44,10 @@ export default class DisplayNumber extends React.PureComponent {
           <Grid item xs className="display-number-title">
             <span >
               {this.props.title}
-              {this.props.tooltipText && <LightTooltip interactive arrow title={this.props.tooltipText} placement="top" fontSize="small">
+              {this.props.tooltipText && <LightTooltip interactive arrow
+                title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip}
+                placement="top" fontSize="small"
+              >
                 <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
               </LightTooltip>}
             </span>

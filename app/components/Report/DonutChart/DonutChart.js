@@ -109,7 +109,7 @@ export default class DonutChart extends React.PureComponent {
     chartData.data.columns = legendData;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-    this.setState({ chartData, xData, tooltipLegendData,tooltipData, legendData, isLoaded: true })
+    this.setState({ chartData, xData, tooltipLegendData, tooltipData, legendData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
@@ -117,7 +117,7 @@ export default class DonutChart extends React.PureComponent {
       return;
     }
     let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].id] || []
-    if (tooltipData.length == 0){
+    if (tooltipData.length == 0) {
       return;
     }
     return ReactDOMServer.renderToString(
@@ -195,12 +195,7 @@ export default class DonutChart extends React.PureComponent {
         <Grid container spacing={0} className={`donut-chart ${this.id}`} style={{ minHeight: 150 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow placement="top" fontSize="small"
-              title={
-                <div>
-                  <div>{this.props.toolTip}</div>
-                  {this.props.body ? <div style={{marginTop:16}}>{this.props.body}</div> : ''}
-                </div>
-              }
+              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip}
             >
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}

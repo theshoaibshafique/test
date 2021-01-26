@@ -59,7 +59,10 @@ export default class DetailedMultiLineChart extends React.PureComponent {
       >
         <Grid container spacing={0} justify='center' className="detailed-multi-line-chart" >
           <Grid item xs={12} className="chart-title" style={{ textAlign: 'center' }}>
-            {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={this.props.toolTip} placement="top" fontSize="small">
+            {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow
+              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip}
+              placement="top" fontSize="small"
+            >
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
           </Grid>
@@ -71,7 +74,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
               return (
                 <Grid container spacing={0} className="multi-line-chart-row" key={`row-${index}`}>
                   <Grid item xs={4} >
-                    <Grid container spacing={1} direction="column" className="flex-center" style={{height:"100%"}}>
+                    <Grid container spacing={1} direction="column" className="flex-center" style={{ height: "100%" }}>
                       <Grid item xs className="row-title">
                         {globalFunctions.getName(this.props.labelList, reportData.title)}
                       </Grid>
