@@ -22,6 +22,7 @@
     }
     .row-divider {
         height: 1px;
+        opacity: 0;
         width: 200px;
         background-color: #eaeaea;
         margin: 23px auto;
@@ -34,6 +35,7 @@
         font-weight: bold;
         letter-spacing: 0;
         line-height: 24px;
+        margin-bottom: 8px;
 
         //TODO: revert styling change
         display: flex;
@@ -75,6 +77,12 @@
     circle {
         r: 1;
         stroke: unset !important;
+    }
+    .line-chart {
+        circle:last-of-type{
+            r:2;
+            fill: #004F6E !important;
+        }
     }
     .display-text {
         color: #004f6e;

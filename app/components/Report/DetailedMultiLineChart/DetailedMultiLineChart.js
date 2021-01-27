@@ -73,7 +73,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
             {subReportData.map((reportData, index) => {
               return (
                 <Grid container spacing={0} className="multi-line-chart-row" key={`row-${index}`}>
-                  <Grid item xs={4} >
+                  <Grid item xs={2} >
                     <Grid container spacing={1} direction="column" className="flex-center" style={{ height: "100%" }}>
                       <Grid item xs className="row-title">
                         {globalFunctions.getName(this.props.labelList, reportData.title)}
@@ -83,7 +83,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                       </Grid> */}
                     </Grid>
                   </Grid>
-                  <Grid item xs={6} >
+                  <Grid item xs={8} >
                     <LineChart {...reportData} />
                   </Grid>
                   <Grid item xs={2} className="row-score">
@@ -104,7 +104,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
               {this.props.body}
             </Grid>}
           </Grid>
-          <Grid item xs={12} style={{ textAlign: 'center', marginTop: 24 }}>
+          <Grid item xs={12} style={{ textAlign: 'center', marginTop: 15 }}>
             {this.props.url && <NavLink to={this.props.url} className='link'>
               {this.props.urlText}
             </NavLink>}

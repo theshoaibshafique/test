@@ -21,21 +21,28 @@ export default class LineChart extends React.PureComponent {
           labels: false
         }, // End data
         color: {
-          pattern: ['#004F6E', '#97E7B3', '#CFB9E4', '#004F6E']
+          pattern: ['#028CC8', '#97E7B3', '#CFB9E4', '#004F6E']
         },
         tooltip: {
           show: false,
         },
         axis: {
           x: {
-            show:false,
+            // show:false,
             type: 'category'
           },
           y: {
-            show:false,
-            max: 100,
-            min: 0,
+            // show:false,
+            // max: 100,
+            // min: 0,
             padding: { top: 4, bottom: 4 },
+            tick: {
+              // multiline: false,
+              count: 2,
+              format: function (d) {
+                return parseInt(d);
+              }
+            },
           }
         },
         padding: { top: 0, bottom: 0 },
@@ -43,7 +50,8 @@ export default class LineChart extends React.PureComponent {
           show: false
         },
         size: {
-          height: 50
+          height: 70,
+          width: 275
         },
         point: {
           // show: false

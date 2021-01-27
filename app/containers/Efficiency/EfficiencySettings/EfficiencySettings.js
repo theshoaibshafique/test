@@ -46,10 +46,14 @@ export default class EfficiencySettings extends React.PureComponent {
   async submit() {
     const newFCOTThreshold = parseInt(this.state.gracePeriodMinute) * 60 + parseInt(this.state.gracePeriodSec);
     const newOutlierThreshold = parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.outlierThresholdMinute) * 60;
-
+    let updates = [];
+    if (this.props.hasEMR){
+      updates.push({ "name": "fcotsThreshold", "value": `${newFCOTThreshold}` });
+    }
+    updates.push({ "name": "turnoverThreshold", "value": `${newOutlierThreshold}` });
     let jsonBody = {
       "facilityName": this.props.facilityName,
-      "updates": [{ "name": "fcotsThreshold", "value": `${newFCOTThreshold}` }, { "name": "turnoverThreshold", "value": `${newOutlierThreshold}` }]
+      "updates": updates
     }
     this.setState({ isLoading: true }, () => {
       this.props.submit(jsonBody).then(() => {
@@ -65,7 +69,7 @@ export default class EfficiencySettings extends React.PureComponent {
     const newOutlierThreshold = parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.outlierThresholdMinute) * 60;
     const fcotsThreshold = this.props.fcotsThreshold;
     const turnoverThreshold = this.props.turnoverThreshold;
-    if (newFCOTThreshold != fcotsThreshold || newOutlierThreshold != turnoverThreshold) {
+    if ((newFCOTThreshold != fcotsThreshold && this.props.hasEMR) || newOutlierThreshold != turnoverThreshold) {
       return <div className="warning">If you leave without saving, changes will be discarded</div>
     }
     return <div></div>
