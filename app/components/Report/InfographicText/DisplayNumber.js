@@ -19,7 +19,7 @@ export default class DisplayNumber extends React.PureComponent {
   constructor(props) {
     super(props);
   };
-
+  
   render() {
     return (
       <LoadingOverlay
@@ -45,7 +45,7 @@ export default class DisplayNumber extends React.PureComponent {
             <span >
               {this.props.title}
               {this.props.tooltipText && <LightTooltip interactive arrow
-                title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip}
+                title={Array.isArray(this.props.tooltipText) ? this.props.tooltipText.map((line) => { return <div>{line}</div> }) : this.props.tooltipText}
                 placement="top" fontSize="small"
               >
                 <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />

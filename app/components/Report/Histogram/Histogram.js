@@ -155,9 +155,7 @@ export default class Histogram extends React.PureComponent {
   }
 
   chooseColour(d) {
-    // console.log(d)
     return this.state.colours[d.x] || '#FF4D4D';
-
   }
 
   render() {
@@ -183,7 +181,7 @@ export default class Histogram extends React.PureComponent {
         <Grid container spacing={0} direction="column" className={`histogram ${this.id}`} >
           <Grid item xs className="chart-title">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow
-              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip}
+              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div style={!line ? {margin:8} : {}}>{line}</div> }) : this.props.toolTip}
               placement="top" fontSize="small"
             >
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
@@ -193,12 +191,7 @@ export default class Histogram extends React.PureComponent {
             {this.props.subTitle}
           </Grid>
           <Grid item xs>
-            {
-              this.props.body && this.props.subTitle
-                ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
-                : this.props.body || this.props.description ?
-                  <div className="display-text">{this.props.body || this.props.description}</div>
-                  : <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+            <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />
           </Grid>
           <Grid item xs className="c3-axis-x-label">
             {this.props.xAxis}

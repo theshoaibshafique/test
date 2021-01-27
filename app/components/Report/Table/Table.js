@@ -54,7 +54,7 @@ export default class Table extends React.PureComponent {
           case 'avgRoomSetup':
           case 'avgCase':
           case 'avgRoomCleanup':
-            column.value = parseInt(value) == value ? Math.round(parseInt(value) / 60) : "N/A";
+            column.value = parseInt(value) == value ? Math.round(parseInt(value)) : "N/A";
           default:
             break;
         }

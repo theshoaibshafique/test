@@ -24,6 +24,7 @@ import InfographicParagraph from '../../components/Report/InfographicParagraph/I
 import CloseIcon from '@material-ui/icons/Close';
 import { BLOCKUTILIZATION, CASEANALYSIS, EFFICIENCY_DATA, FCOT, TURNOVER, TURNOVER2, TURNOVER3 } from '../../constants';
 import { NavLink } from 'react-router-dom';
+import NoData from '../../components/Report/NoData/NoData';
 
 const StyledTabs = withStyles({
   root: {
@@ -143,7 +144,6 @@ export default class Efficiency extends React.PureComponent {
   componentDidMount() {
     this.loadFilter(this.getConfig);
     this.openOnboarding()
-
   };
 
   openOnboarding() {
@@ -199,7 +199,7 @@ export default class Efficiency extends React.PureComponent {
         const outlierThresholdMinute = this.state.outlierThresholdMinute || turnoverThresholdList[1];
         this.setState({
           earliestStartDate, startDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold,
-          gracePeriodMinute, gracePeriodSec, outlierThresholdHrs, outlierThresholdMinute,
+          gracePeriodMinute, gracePeriodSec, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR
         }, () => {
           this.getReportLayout();
         });
@@ -282,7 +282,7 @@ export default class Efficiency extends React.PureComponent {
     if (!this.state.endDate || !this.state.startDate) {
       return;
     }
-    this.setState({ isSelectionRequired: false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ reportData: [], isSelectionRequired: false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         const filter = this.getFilterLayout(this.state.reportType);
         const jsonBody = {
@@ -394,7 +394,7 @@ export default class Efficiency extends React.PureComponent {
           <StyledTab label="How do I compare with others?" />
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
-          <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
+          <Grid container spacing={3} className={`efficiency-main ${this.state.reportType} ${!this.state.hasEMR && 'no-emr'}`}>
             {this.renderTiles(reportData)}
           </Grid>
         </TabPanel>
@@ -405,6 +405,12 @@ export default class Efficiency extends React.PureComponent {
           </Grid>
         </TabPanel>
       </span>
+    }
+    
+    if (this.state.reportType == 'firstCaseOnTimeStart' && !this.state.hasEMR){
+      return (<Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
+        <Grid item xs={12} className="efficiency-select-filter">First Case On Time analysis cannot be completed due to unavailable EMR data.</Grid>
+      </Grid>)
     }
     return <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
       {
@@ -460,10 +466,10 @@ export default class Efficiency extends React.PureComponent {
           tooltipText={tile.toolTip}
           unit={tile.unit}
           number={tile.total}
-          message={tile.description}
+          message={tile.description || tile.body}
         />
       case 'TABLE':
-        return <Table procedures={this.state.selectedSpecialty && this.state.selectedSpecialty.procedures} dataPointRows={tile.dataPointRows} description={tile.description} />
+        return <Table procedures={this.state.selectedSpecialty && this.state.selectedSpecialty.procedures} dataPointRows={tile.dataPointRows} description={tile.description || tile.body} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart
@@ -490,6 +496,8 @@ export default class Efficiency extends React.PureComponent {
           specialties={this.state.specialties}
           horizontalLegend={true}
           orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
+      case 'NODATA':
+        return <NoData {...tile}/>
     }
   }
 
@@ -500,6 +508,7 @@ export default class Efficiency extends React.PureComponent {
       case 'STACKEDBARCHART':
       case 'BARCHART':
       case 'HISTOGRAM':
+      case 'NODATA':
         return 6;
       case 'TABLE':
       case 'INFOGRAPHICPARAGRAPH':

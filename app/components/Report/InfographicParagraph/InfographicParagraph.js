@@ -12,10 +12,11 @@ export default class InfographicParagraph extends React.PureComponent {
     }
 
     renderFormattedText(){
-        if (!this.props.description){
+        const text = this.props.description || this.props.body;
+        if (!text){
             return '';
         } 
-        return this.props.description.split(" ").map((word,index) => {
+        return text.split(" ").map((word,index) => {
             //Matches {0}, {1}, ... etc
             //Replace placeholders with datapoints
             const pattern = /{(\d+)}/g;

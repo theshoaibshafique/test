@@ -10,87 +10,21 @@ export const EFFICIENCY_DATA = {
     {
       "groupOrder": 1,
       "tileOrder": 1,
-      "tileType": "BarChart",
-      "dataPoints": [
-        {
-          "active": false,
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "OR06",
-          "valueY": "89",
-          "valueZ": null,
-          "toolTip": [
-            "89% first case on-time start"
-          ]
-        },
-        {
-          "active": false,
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "OR08",
-          "valueY": "75",
-          "valueZ": null,
-          "toolTip": [
-            "75% first case on-time start"
-          ]
-        },
-        {
-          "active": false,
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "OR30",
-          "valueY": "63",
-          "valueZ": null,
-          "toolTip": [
-            "63% first case on-time start"
-          ]
-        },
-        {
-          "active": false,
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "OR07",
-          "valueY": "63",
-          "valueZ": null,
-          "toolTip": [
-            "63% first case on-time start"
-          ]
-        },
-        {
-          "active": false,
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "OR05",
-          "valueY": "44",
-          "valueZ": null,
-          "toolTip": [
-            "44% first case on-time start"
-          ]
-        }
-      ],
+      "tileType": "NoData",
+      "dataPoints": null,
       "subReportData": [],
       "dataPointRows": [],
       "name": null,
       "title": "First Case On-Time Start",
       "subTitle": null,
-      "body": null,
+      "body": "First Case On Time analysis cannot be completed due to unavailable EMR data.",
       "footer": null,
       "description": null,
       "toolTip": "Percentage of days where the first case began at or before the scheduled start time.",
       "total": null,
       "unit": "%",
-      "url": "/daysStarting",
-      "urlText": "Learn more",
+      // "url": "/daysStarting",
+      // "urlText": "Learn more",
       "xAxis": null,
       "yAxis": "First Case On-Time Start (%)"
     },

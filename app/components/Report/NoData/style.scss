@@ -1,0 +1,28 @@
+@import "../../../styles/global-styles";
+.no-data-tile {
+  text-align: center;
+  .title {
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 36px;
+  }
+  .body {
+    color: #004f6e;
+    font-family: Noto Sans;
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 24px;
+    padding: 156px 0;
+  }
+}
+.no-emr{
+  .no-data-tile{
+    padding: 139px 0;
+    .body{
+      padding: 16px;
+      color: #000;
+      opacity: .8;
+    }
+  }
+  
+}

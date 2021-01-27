@@ -40,7 +40,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
     subReportData.sort((a, b) => { return parseInt(b.total) - parseInt(a.total) || ('' + a.total).localeCompare(b.total) })
     return (
       <LoadingOverlay
-        active={!this.props.dataPoints}
+        // active={!this.props.dataPoints}
         spinner
         className="overlays"
         styles={{

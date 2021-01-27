@@ -208,6 +208,17 @@ export default class BarChart extends React.PureComponent {
     
   }
 
+  renderBody(){
+    const {body, subTitle,description, noDataMessage} = this.props;
+    if (body && subTitle){
+      return <div><div className="no-data">{body}</div> <div className="no-data-subtitle">{subTitle}</div></div>
+    }
+    if (body || description){
+      return <div className="display-text">{body || description}</div>
+    }
+    return <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />
+  }
+
   render() {
     return (
       <LoadingOverlay
@@ -238,12 +249,7 @@ export default class BarChart extends React.PureComponent {
             {this.props.subTitle}
           </Grid>
           <Grid item xs>
-            {
-              this.props.body && this.props.subTitle
-                ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
-                : this.props.body || this.props.description ?
-                  <div className="display-text">{this.props.body || this.props.description}</div>
-                  : <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+            {this.renderBody()}
           </Grid>
           <Grid item xs>
             {this.props.url && <NavLink to={this.props.url} className='link'>
