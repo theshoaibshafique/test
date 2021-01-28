@@ -105,7 +105,6 @@ class SSTNav extends React.Component {
                 <ListItem disableGutters><NavLink to="/daysStarting" className='text-link sub-item' >First Case On-Time</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/turnoverTime" className='text-link sub-item' >Turnover Time</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/orUtilization" className='text-link sub-item' >Block Utilization</NavLink></ListItem>
-                <ListItem disableGutters><NavLink to="/caseAnalysis" className='text-link sub-item' >Case Analysis</NavLink></ListItem>
               </Collapse>
             }
 

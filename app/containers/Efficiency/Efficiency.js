@@ -8,7 +8,7 @@ import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, But
 import { mdiCogOutline } from '@mdi/js';
 import Icon from '@mdi/react'
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
-
+import alphaTag from 'images/alpha-tag.svg';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import LoadingOverlay from 'react-loading-overlay';
@@ -389,9 +389,10 @@ export default class Efficiency extends React.PureComponent {
           onChange={(obj, value) => this.handleTabChange(obj, value)}
           indicatorColor="primary"
           textColor="primary"
+          className="efficiency-tab"
         >
           <StyledTab label="My Hospital" />
-          <StyledTab label="How do I compare with others?" />
+          <StyledTab label={<span><span><img style={{margin:'0 4px 4px 0'}}src={alphaTag}/></span>Global Comparison</span>} />
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType} ${!this.state.hasEMR && 'no-emr'}`}>
@@ -400,7 +401,7 @@ export default class Efficiency extends React.PureComponent {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
-            <Grid item xs={7} className="compare-text">Global comparison is currently an alpha feature with more enhancements coming in the future. Please try this feature and share your feedback.</Grid>
+            <Grid item xs={7} className="compare-text">Global Comparison is currently an <span><img style={{margin:'0 4px 4px 0'}}src={alphaTag}/></span> feature with more enhancements coming in the future. Please try this feature and share your feedback.</Grid>
             {this.renderTiles(this.state.globalData, false)}
           </Grid>
         </TabPanel>
@@ -609,7 +610,7 @@ export default class Efficiency extends React.PureComponent {
                 <Grid item xs={7} className="efficiencyOnBoard-column">
                   <Grid container spacing={0} direction="column">
                     <Grid item xs className="efficiencyOnBoard-paragraph">
-                      This dashboard offers insights into the function of the operating room during elective hours according to four main categories
+                      This dashboard offers insights into the function of the operating room during elective hours according to three main categories
                     </Grid>
                     <Grid item xs className="efficiencyOnBoard-paragraph">
                       <Grid container spacing={0}>
@@ -621,9 +622,6 @@ export default class Efficiency extends React.PureComponent {
                         </Grid>
                         <Grid item xs className="efficiency-OnBoard-box">
                           <div>Block Utilization</div>
-                        </Grid>
-                        <Grid item xs className="efficiency-OnBoard-box">
-                          <div>Case Analysis</div>
                         </Grid>
                       </Grid>
                     </Grid>

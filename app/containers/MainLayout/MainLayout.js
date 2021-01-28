@@ -142,9 +142,6 @@ export default class MainLayout extends React.PureComponent {
         {(this.state.efficiencyAccess) &&
           <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"blockUtilization"} />} />
         }
-        {(this.state.efficiencyAccess) &&
-          <Route path="/caseAnalysis" render={(props) => <Efficiency {...props} reportType={"caseAnalysis"} />} />
-        }
 
         <Route path="/my-profile" component={MyProfile} />
         <Route path="" component={this.state.isLoading ? LoadingIndicator : NotFoundPage} />
