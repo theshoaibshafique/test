@@ -10,7 +10,8 @@ export default class LineChart extends React.PureComponent {
     super(props);
 
     this.chartRef = React.createRef();
-
+    const pointCount = this.props.dataPoints && this.props.dataPoints.filter((point) => point.valueY).length;
+    // debugger;
     this.state = {
       chartID: 'lineChartDetailed',
       chartData: {
@@ -33,9 +34,9 @@ export default class LineChart extends React.PureComponent {
           },
           y: {
             // show:false,
-            // max: 100,
-            // min: 0,
-            padding: { top: 4, bottom: 4 },
+            // max: pointCount <= 1 ? 100 : null,
+            min: pointCount <= 1 ? 0 : null,
+            padding: pointCount <= 1 ? { top: 0, bottom: 0 } : { top: 4, bottom: 4 },
             tick: {
               // multiline: false,
               count: 2,
