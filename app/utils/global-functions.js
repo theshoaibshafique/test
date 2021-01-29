@@ -136,7 +136,7 @@ function formatSecsToTime(seconds, toWords = false, short = false) {
 }
 
 function formatWords(value, word, short = false) {
-  if (value == 0){
+  if (value == 0 || parseInt(value) != value){
     return ""
   } else if (short){
     return `${value}${word}`

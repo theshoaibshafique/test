@@ -134,10 +134,10 @@ export default class Histogram extends React.PureComponent {
 
     chart && chart.load(chartData);
     const indexOfMax = formattedData.y.slice(1).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-    const leftSpan = Math.min(Math.floor(formattedData.y.length *.1), 10)
-    const rightSpan = Math.min(Math.floor(formattedData.y.length *.2), 15)
+    const leftSpan = Math.min(Math.round(formattedData.y.length * .1), 10)
+    const rightSpan = Math.min(Math.round(formattedData.y.length * .2), 15)
     setTimeout(() => {
-      chart.zoom([Math.max(0,indexOfMax-leftSpan), Math.min(formattedData.y.length-1, indexOfMax+rightSpan)])
+      chart.zoom([Math.max(0, indexOfMax - leftSpan), Math.min(formattedData.y.length - 1, indexOfMax + rightSpan)])
     }, 500);
 
     this.setState({ chartData, colours, tooltipData, isLoaded: true })
@@ -183,7 +183,7 @@ export default class Histogram extends React.PureComponent {
         <Grid container spacing={0} direction="column" className={`histogram ${this.id}`} >
           <Grid item xs className="chart-title">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow
-              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div style={!line ? {margin:8} : {}}>{line}</div> }) : this.props.toolTip}
+              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div style={!line ? { margin: 8 } : {}}>{line}</div> }) : this.props.toolTip}
               placement="top" fontSize="small"
             >
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />

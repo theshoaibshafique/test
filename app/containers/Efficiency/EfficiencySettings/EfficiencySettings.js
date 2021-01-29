@@ -82,7 +82,7 @@ export default class EfficiencySettings extends React.PureComponent {
         <div className="title">
           First Case On-Time Settings
         </div>
-        <div className="no-emr">Settings are not available without EMR Data.</div>
+        <div className="no-emr">Settings are unavailable without case schedule data.</div>
         <div className="grace-period">
           <div className="subtitle">
             Grace Period

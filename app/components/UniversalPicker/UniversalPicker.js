@@ -394,7 +394,7 @@ class UniversalPicker extends React.Component {
               </Select>
             </FormControl>
           </div>
-          <FormHelperText>Default: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true)}</FormHelperText>
+          <FormHelperText>Default: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "N/A"}</FormHelperText>
         </Grid>}
         {this.state.showOutlierThreshold && <Grid item xs={2} style={{ maxWidth: 180 }}>
           <InputLabel shrink className="filter-label">
@@ -440,7 +440,7 @@ class UniversalPicker extends React.Component {
               </Select>
             </FormControl>
           </div>
-          <FormHelperText>Default: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true)}</FormHelperText>
+          <FormHelperText>Default: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "N/A"}</FormHelperText>
         </Grid>}
         <Grid item xs={2} className="buttons" >
           <Button disabled={disabled} variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>

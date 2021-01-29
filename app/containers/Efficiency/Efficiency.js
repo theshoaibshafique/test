@@ -22,7 +22,6 @@ import Table from '../../components/Report/Table';
 import DonutChart from '../../components/Report/DonutChart/DonutChart';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import CloseIcon from '@material-ui/icons/Close';
-import { BLOCKUTILIZATION, CASEANALYSIS, EFFICIENCY_DATA, FCOT, TURNOVER, TURNOVER2, TURNOVER3 } from '../../constants';
 import { NavLink } from 'react-router-dom';
 import NoData from '../../components/Report/NoData/NoData';
 
@@ -178,7 +177,7 @@ export default class Efficiency extends React.PureComponent {
   }
 
   async getConfig() {
-    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config" + "?facilityName=77C6F277-D2E7-4D37-AC68-BD8C9FB21B92", 'get', this.props.userToken, {})
+    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config?facilityName="+this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
         if (!result) {
           return;
@@ -243,23 +242,6 @@ export default class Efficiency extends React.PureComponent {
     }
   }
 
-  getReport(reportType) {
-    switch (`${reportType}`.toUpperCase()) {
-      case 'EFFICIENCY':
-        return EFFICIENCY_DATA;
-      case 'FIRSTCASEONTIMESTART':
-        return FCOT
-      case 'TURNOVERTIME':
-        return TURNOVER
-      case 'BLOCKUTILIZATION':
-        return BLOCKUTILIZATION
-      case 'CASEANALYSIS':
-        return CASEANALYSIS
-      default:
-        return 0;
-    }
-  }
-
   openOnboardModal() {
     this.setState({ isOnboardModalOpen: true })
   }
@@ -297,7 +279,6 @@ export default class Efficiency extends React.PureComponent {
               this.notLoading();
             } else if (result) {
               result = JSON.parse(result);
-              // result = this.getReport(this.state.reportType)
 
               if (result.tiles && result.tiles.length > 0) {
                 const reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
@@ -402,7 +383,7 @@ export default class Efficiency extends React.PureComponent {
 
     if (this.state.reportType == 'firstCaseOnTimeStart' && !this.state.hasEMR) {
       return (<Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
-        <Grid item xs={12} className="efficiency-select-filter">First Case On Time analysis cannot be completed due to unavailable EMR data.</Grid>
+        <Grid item xs={12} className="efficiency-select-filter">Analysis cannot be performed due to unavailable case schedule.</Grid>
       </Grid>)
     }
     return <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
