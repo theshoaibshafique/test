@@ -49,6 +49,9 @@ $ssc-picker-height: 150px;
             margin: 148px 0;
             font-style: unset;
         }
+        .donut-chart {
+            margin-bottom: 44px;
+        }
     }
     .firstCaseOnTimeStart {
         .efficiency-card.BarChart {
@@ -140,8 +143,7 @@ $ssc-picker-height: 150px;
     }
     .compare-text {
         padding-top: 0;
-        opacity: 0.8;
-        color: #000000;
+        color: rgba(0,0,0,.8);
         font-family: "Noto Sans";
         font-size: 18px;
         letter-spacing: 0;

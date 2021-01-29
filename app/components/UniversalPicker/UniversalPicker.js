@@ -197,10 +197,14 @@ class UniversalPicker extends React.Component {
       this.props.updateState('selectedWeekday', "");
       this.props.updateState('selectedSpecialty', "");
       this.props.updateState('selectedProcedure', "");
-      this.props.updateState('gracePeriodMinute', gracePeriodMinute);
-      this.props.updateState('gracePeriodSec', gracePeriodSec);
-      this.props.updateState('outlierThresholdHrs', outlierThresholdHrs);
-      this.props.updateState('outlierThresholdMinute', outlierThresholdMinute);
+      if (this.props.showGracePeriod){
+        this.props.updateState('gracePeriodMinute', gracePeriodMinute);
+        this.props.updateState('gracePeriodSec', gracePeriodSec);
+      }
+      if (this.props.showOutlierThreshold){
+        this.props.updateState('outlierThresholdHrs', outlierThresholdHrs);
+        this.props.updateState('outlierThresholdMinute', outlierThresholdMinute);
+      }
     })
   }
   formatClass(str) {

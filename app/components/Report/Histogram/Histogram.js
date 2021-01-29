@@ -133,9 +133,11 @@ export default class Histogram extends React.PureComponent {
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
-
+    const indexOfMax = formattedData.y.slice(1).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+    const leftSpan = Math.min(Math.floor(formattedData.y.length *.1), 10)
+    const rightSpan = Math.min(Math.floor(formattedData.y.length *.2), 15)
     setTimeout(() => {
-      chart.zoom([0, formattedData.x.length / 2])
+      chart.zoom([Math.max(0,indexOfMax-leftSpan), Math.min(formattedData.y.length-1, indexOfMax+rightSpan)])
     }, 500);
 
     this.setState({ chartData, colours, tooltipData, isLoaded: true })

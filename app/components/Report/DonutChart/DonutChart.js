@@ -132,8 +132,8 @@ export default class DonutChart extends React.PureComponent {
       return;
     }
     let chart = this.chartRef.current.chart;
-    return <div className={this.state.chartID}>
-      <div className="donut-chart-detailed-legend">
+    return <div className={`${this.state.chartID} donut-chart-detailed-legend`}>
+      
         {this.state.legendData && this.state.legendData.map(([id, value], index) => {
           if (id == "NA") {
             return;
@@ -155,7 +155,7 @@ export default class DonutChart extends React.PureComponent {
               </div>
             </div>)
         })}
-      </div>
+      
     </div>
   }
   renderCustomTitle() {

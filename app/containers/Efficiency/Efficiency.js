@@ -48,9 +48,8 @@ const StyledTab = withStyles((theme) => ({
     textTransform: 'none',
     fontSize: 14,
     fontFamily: 'Noto Sans',
-    opacity: .8,
     fontWeight: 'bold',
-    color: '#000 !important',
+    color: 'rgba(0,0,0,.8) !important',
     marginRight: theme.spacing(1),
     '&:focus': {
       opacity: 1,
@@ -215,8 +214,6 @@ export default class Efficiency extends React.PureComponent {
         return { showOR: true, showOutlierThreshold: true }
       case 'BLOCKUTILIZATION':
         return { showOR: true }
-      case 'CASEANALYSIS':
-        return { showSpecialty: true, showProcedure: true, showOR2: true, isSpecialtyMandatory: true }
       default:
         return {};
     }
@@ -274,15 +271,10 @@ export default class Efficiency extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    let selectedSpecialty = this.state.selectedSpecialty && this.state.selectedSpecialty.value;
-    if (this.state.reportType == "caseAnalysis" && !selectedSpecialty) {
-      this.setState({ isSelectionRequired: true, isLoading: false });
-      return;
-    }
     if (!this.state.endDate || !this.state.startDate) {
       return;
     }
-    this.setState({ reportData: [], isSelectionRequired: false, isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ reportData: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         const filter = this.getFilterLayout(this.state.reportType);
         const jsonBody = {
@@ -392,7 +384,7 @@ export default class Efficiency extends React.PureComponent {
           className="efficiency-tab"
         >
           <StyledTab label="My Hospital" />
-          <StyledTab label={<span><span><img style={{margin:'0 4px 4px 0'}}src={alphaTag}/></span>Global Comparison</span>} />
+          <StyledTab label={<span>Global Comparison<span><img style={{ margin: '0 0 4px 8px' }} src={alphaTag} /></span></span>} />
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType} ${!this.state.hasEMR && 'no-emr'}`}>
@@ -401,27 +393,26 @@ export default class Efficiency extends React.PureComponent {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
-            <Grid item xs={7} className="compare-text">Global Comparison is currently an <span><img style={{margin:'0 4px 4px 0'}}src={alphaTag}/></span> feature with more enhancements coming in the future. Please try this feature and share your feedback.</Grid>
+          <Grid item xs={12} className="compare-text">Global Comparison is an <span><img src={alphaTag} style={{ margin: '0 4px 4px 4px' }} /></span> feature with enhancements coming in the future.</Grid>
             {this.renderTiles(this.state.globalData, false)}
           </Grid>
         </TabPanel>
       </span>
     }
-    
-    if (this.state.reportType == 'firstCaseOnTimeStart' && !this.state.hasEMR){
+
+    if (this.state.reportType == 'firstCaseOnTimeStart' && !this.state.hasEMR) {
       return (<Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
         <Grid item xs={12} className="efficiency-select-filter">First Case On Time analysis cannot be completed due to unavailable EMR data.</Grid>
       </Grid>)
     }
     return <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
       {
-        this.state.isSelectionRequired //|| !selectedSpecialty
-          ? <Grid item xs={12} className="efficiency-select-filter">Select a Specialty using the filters above to see Case Analysis data!</Grid>
-          : (this.state.isLoading)
-            ?
-            <div></div>
-            :
-            this.renderTiles()}
+        (this.state.isLoading)
+          ?
+          <div></div>
+          :
+          this.renderTiles()
+      }
     </Grid>;
   }
 
@@ -498,7 +489,7 @@ export default class Efficiency extends React.PureComponent {
           horizontalLegend={true}
           orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'NODATA':
-        return <NoData {...tile}/>
+        return <NoData {...tile} />
     }
   }
 
