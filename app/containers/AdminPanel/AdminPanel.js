@@ -32,7 +32,7 @@ const StyledTab = withStyles((theme) => ({
     opacity:.8,
     fontWeight:'bold',
     color:'#000 !important',
-    marginRight: theme.spacing(1),
+    // marginRight: theme.spacing(1),
     '&:focus': {
       opacity: 1,
     },
@@ -112,7 +112,7 @@ export default class AdminPanel extends React.PureComponent {
           textColor="primary"
         >
           <StyledTab label="User Management" />
-          <StyledTab label="Efficiency Report" />
+          <StyledTab label="Efficiency" />
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
           <UserManagement/>

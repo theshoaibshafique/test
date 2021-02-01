@@ -103,7 +103,7 @@ export default class Efficiency extends React.PureComponent {
     //Last available data date is 2 months before the pending date
     this.state.startDate = this.pendingDate.clone().subtract(2, 'month').startOf('month');
     this.state.endDate = this.pendingDate.clone().subtract(2, 'month').endOf('month');
-    this.state.maxDate = process.env.DISPLAY_PENDING_REPORT == "true" ? moment().endOf('month') : this.state.endDate.clone();
+    this.state.latestEndDate = process.env.DISPLAY_PENDING_REPORT == "true" ? moment().endOf('month') : this.state.endDate.clone();
   }
 
   componentDidUpdate(prevProps) {
@@ -184,10 +184,18 @@ export default class Efficiency extends React.PureComponent {
         }
         result = JSON.parse(result)
         let startDate = this.state.startDate;
+        
         let earliestStartDate = moment(result.startDate);
         if (earliestStartDate.isSameOrAfter(startDate)) {
           startDate = earliestStartDate.utc();
         }
+        let endDate = this.state.endDate;
+        let latestEndDate = moment(result.endDate);
+        if (latestEndDate.isSameOrBefore(endDate)){
+          endDate = latestEndDate.utc();
+        }
+        this.state.pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
+
         const fcotsThresholdList = globalFuncs.formatSecsToTime(result.fcotsThreshold).split(":");
         const turnoverThresholdList = globalFuncs.formatSecsToTime(result.turnoverThreshold).split(":");
 
@@ -196,7 +204,7 @@ export default class Efficiency extends React.PureComponent {
         const outlierThresholdHrs = this.state.outlierThresholdHrs || turnoverThresholdList[0];
         const outlierThresholdMinute = this.state.outlierThresholdMinute || turnoverThresholdList[1];
         this.setState({
-          earliestStartDate, startDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold,
+          earliestStartDate, latestEndDate, startDate, endDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold,
           gracePeriodMinute, gracePeriodSec, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR
         }, () => {
           this.getReportLayout();
@@ -256,7 +264,7 @@ export default class Efficiency extends React.PureComponent {
     if (!this.state.endDate || !this.state.startDate) {
       return;
     }
-    this.setState({ reportData: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ reportData: [],globalData:[], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         const filter = this.getFilterLayout(this.state.reportType);
         const jsonBody = {
@@ -507,7 +515,7 @@ export default class Efficiency extends React.PureComponent {
                 startDate={this.state.startDate}
                 endDate={this.state.endDate}
                 minDate={this.state.earliestStartDate}
-                maxDate={this.state.maxDate}
+                maxDate={this.state.latestEndDate}
                 updateState={(key, value) => this.updateState(key, value)}
                 displayWarning={this.state.pendingWarning}
               />

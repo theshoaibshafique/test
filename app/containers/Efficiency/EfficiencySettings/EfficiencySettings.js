@@ -88,7 +88,7 @@ export default class EfficiencySettings extends React.PureComponent {
             Grace Period
           </div>
           <div className="content">
-            This setting will set the standard for the hospital’s grace period for identifying if the first case within block hours was started on time. All historical data will reflect this new standard as well.
+          Grace Period is applied to the case start time when classifying a first case as on-time. Changes in Grace Period will be reflected in historical data.
           </div>
           <div className="selectors">
             <FormControl variant="outlined" size="small" style={{ width: 85 }} >
@@ -110,7 +110,7 @@ export default class EfficiencySettings extends React.PureComponent {
                 ))}
               </Select>
             </FormControl>
-            <span className="unit">mins</span>
+            <span className="unit">min</span>
             <FormControl variant="outlined" size="small" style={{ width: 85 }} >
               <Select
                 MenuProps={{
@@ -130,7 +130,7 @@ export default class EfficiencySettings extends React.PureComponent {
                 ))}
               </Select>
             </FormControl>
-            <span className="unit">secs</span>
+            <span className="unit">sec</span>
           </div>
         </div>
         <Divider light style={{ marginBottom: 24 }} />
@@ -142,7 +142,7 @@ export default class EfficiencySettings extends React.PureComponent {
           Outlier Threshold
         </div>
         <div className="content">
-          This setting will set the standard for the hospital’s outlier threshold for identifying turnovers that exceed the regular amount of time. All historical data will reflect this new standard as well.
+          Outlier Threshold sets the cut-off for whether a turnover is considered for Turnover Time analytics. Changes in Outlier Threshold will be reflected in historical data.
         </div>
         <div className="selectors">
           <FormControl variant="outlined" size="small" style={{ width: 85 }} >
@@ -164,7 +164,7 @@ export default class EfficiencySettings extends React.PureComponent {
               ))}
             </Select>
           </FormControl>
-          <span className="unit">hrs</span>
+          <span className="unit">hr</span>
           <FormControl variant="outlined" size="small" style={{ width: 85 }} >
             <Select
               MenuProps={{
@@ -184,7 +184,7 @@ export default class EfficiencySettings extends React.PureComponent {
               ))}
             </Select>
           </FormControl>
-          <span className="unit">mins</span>
+          <span className="unit">min</span>
         </div>
         {this.renderSaveWarning()}
         <div className="buttons">
