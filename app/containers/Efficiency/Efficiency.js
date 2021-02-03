@@ -190,7 +190,7 @@ export default class Efficiency extends React.PureComponent {
           startDate = earliestStartDate.utc();
         }
         let endDate = this.state.endDate;
-        let latestEndDate = moment(result.endDate);
+        let latestEndDate = moment(result.endDate).endOf('day');
         if (latestEndDate.isSameOrBefore(endDate)){
           endDate = latestEndDate.utc();
         }
