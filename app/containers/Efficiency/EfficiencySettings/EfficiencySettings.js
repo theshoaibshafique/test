@@ -190,7 +190,7 @@ export default class EfficiencySettings extends React.PureComponent {
         <div className="buttons">
           <Button disableRipple className="reset" onClick={() => this.reset()}>Reset</Button>
           <Button disableRipple variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
-            {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button>
+            {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}</Button>
         </div>
       </section>
     );

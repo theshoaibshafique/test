@@ -167,14 +167,14 @@ export default class RequestEMM extends React.PureComponent {
       return;
     }
     var currentDate = this.state.operationDate;
-    var hours = parseInt(this.state.selectedHour.time);
+    var hours = parseInt(this.state.selectedHour);
     if (this.state.selectedAP == "AM" && hours == 12) {
       hours -= 12;
     } else if (this.state.selectedAP == "PM" && hours < 12) {
       hours += 12;
     }
     currentDate.setHours(hours);
-    currentDate.setMinutes(parseInt(this.state.selectedMinutes.time));
+    currentDate.setMinutes(parseInt(this.state.selectedMinutes));
     this.setState({ operationDate: currentDate })
   }
 
@@ -269,7 +269,7 @@ export default class RequestEMM extends React.PureComponent {
       });
       return;
     }
-
+    
     let jsonBody = {
       "roomName": this.state.selectedOperatingRoom.value,
       "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
