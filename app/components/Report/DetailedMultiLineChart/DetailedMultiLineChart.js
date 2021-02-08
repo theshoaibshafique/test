@@ -5,9 +5,9 @@ import './style.scss';
 import moment from 'moment/moment';
 import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import LineChart from '../LineChart/LineChart';
 import { NavLink } from 'react-router-dom';
 import globalFunctions from '../../../utils/global-functions';
+import LineChart from './LineChart/LineChart';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
