@@ -35,7 +35,7 @@ export default class TimeSeriesChart extends React.PureComponent {
           pattern: ['#028CC8', '#97E7B3', '#CFB9E4', '#004F6E']
         },
         tooltip: {
-          grouped: false,
+          // grouped: false,
           contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
         },
         axis: {
@@ -50,9 +50,9 @@ export default class TimeSeriesChart extends React.PureComponent {
               multiline: false,
               // rotate: 75,
               culling: {
-                max: 4 // or whatever value you need
+                max: 5 // or whatever value you need
               },
-              format: (x) => {return  `${x && moment(x).format('MMM DD')}`}
+              format: (x) => { return `${x && moment(x).format('MMM DD')}` },
             },
             // type: 'category'
           },
@@ -79,7 +79,15 @@ export default class TimeSeriesChart extends React.PureComponent {
         point: {
           // show: false
         },
-
+        subchart: {
+          show: true,
+          size: {
+            // height: 20
+          },
+        },
+        zoom: {
+          enabled: true,
+        },
       }
     }
 
@@ -96,45 +104,29 @@ export default class TimeSeriesChart extends React.PureComponent {
   }
 
   generateChartData() {
+    let { dataPoints } = this.props;
     if (!this.props.dataPoints) {
       return;
     }
-    let dataPoints = this.props.dataPoints;
-    let legendData = {}
-    let formattedData = { x: [] };
+    let formattedData = { x: ['x'], y: ['y'] };
+    let colours = [];
     let tooltipData = [];
-    dataPoints.map((point) => {
-      const valueX = point.valueX;
-      if (!formattedData.x.includes(valueX)) {
-        formattedData.x.push(valueX);
-      }
-      formattedData[point.title] = formattedData[point.title] || [];
-      formattedData[point.title].push(point.valueY == "-1" ? null : point.valueY);
-      legendData[point.title] = point.subTitle;
+    dataPoints.map((point, index) => {
+      formattedData.x.push(point.valueX);
+      colours.push(point.description)
+      formattedData.y.push(parseInt(point.valueY));
       tooltipData.push(point.toolTip);
     });
-    let columns = [];
-    Object.entries(formattedData).map(([key, value]) => {
-      columns.push([key, ...value]);
-    })
     let chartData = this.state.chartData;
-    //Set as 0 by default and "load" columns later for animation
-    chartData.data.columns = columns.map((arr) => {
-      return arr.map((x) => {
-        return parseInt(x) == x ? 0 : x;
-      })
-    });
-
+    chartData.data.columns = [formattedData.x, formattedData.y];
     let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData.data);
-    //Load actual data for animation
+
+    chart && chart.load(chartData);
     setTimeout(() => {
-      chartData.data.columns = columns
-      chart = this.chartRef.current && this.chartRef.current.chart;
-      chart && chart.load(chartData.data);
+      chart.zoom([this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")])
     }, 500);
 
-    this.setState({ chartData, legendData, isLoaded: true, tooltipData })
+    this.setState({ chartData, colours, tooltipData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
@@ -142,7 +134,7 @@ export default class TimeSeriesChart extends React.PureComponent {
     if (tooltipData.length == 0) {
       return;
     }
-    
+
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         {tooltipData.map((line) => {

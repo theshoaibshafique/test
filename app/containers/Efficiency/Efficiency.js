@@ -479,7 +479,7 @@ export default class Efficiency extends React.PureComponent {
           horizontalLegend={true}
           orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'TIMESERIESCHART':
-        return <TimeSeriesChart {...tile}/>
+        return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} />
       case 'NODATA':
         return <NoData {...tile} />
     }
