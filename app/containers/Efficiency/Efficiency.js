@@ -24,6 +24,7 @@ import InfographicParagraph from '../../components/Report/InfographicParagraph/I
 import CloseIcon from '@material-ui/icons/Close';
 import { NavLink } from 'react-router-dom';
 import NoData from '../../components/Report/NoData/NoData';
+import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
 
 const StyledTabs = withStyles({
   root: {
@@ -177,21 +178,21 @@ export default class Efficiency extends React.PureComponent {
   }
 
   async getConfig() {
-    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config?facilityName="+this.props.userFacility, 'get', this.props.userToken, {})
+    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config?facilityName=" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
         if (!result) {
           return;
         }
         result = JSON.parse(result)
         let startDate = this.state.startDate;
-        
+
         let earliestStartDate = moment(result.startDate);
         if (earliestStartDate.isSameOrAfter(startDate)) {
           startDate = earliestStartDate.utc();
         }
         let endDate = this.state.endDate;
         let latestEndDate = moment(result.endDate).endOf('day');
-        if (latestEndDate.isSameOrBefore(endDate)){
+        if (latestEndDate.isSameOrBefore(endDate)) {
           endDate = latestEndDate.utc();
         }
         this.state.pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
@@ -264,7 +265,7 @@ export default class Efficiency extends React.PureComponent {
     if (!this.state.endDate || !this.state.startDate) {
       return;
     }
-    this.setState({ reportData: [],globalData:[], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
+    this.setState({ reportData: [], globalData: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         const filter = this.getFilterLayout(this.state.reportType);
         const jsonBody = {
@@ -382,7 +383,7 @@ export default class Efficiency extends React.PureComponent {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
-          <Grid item xs={12} className="compare-text">Global Comparison is an <span><img src={alphaTag} style={{ margin: '0 4px 4px 4px' }} /></span> feature with enhancements coming in the future.</Grid>
+            <Grid item xs={12} className="compare-text">Global Comparison is an <span><img src={alphaTag} style={{ margin: '0 4px 4px 4px' }} /></span> feature with enhancements coming in the future.</Grid>
             {this.renderTiles(this.state.globalData, false)}
           </Grid>
         </TabPanel>
@@ -477,6 +478,8 @@ export default class Efficiency extends React.PureComponent {
           specialties={this.state.specialties}
           horizontalLegend={true}
           orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
+      case 'TIMESERIESCHART':
+        return <TimeSeriesChart {...tile}/>
       case 'NODATA':
         return <NoData {...tile} />
     }
@@ -490,6 +493,7 @@ export default class Efficiency extends React.PureComponent {
       case 'BARCHART':
       case 'HISTOGRAM':
       case 'NODATA':
+      case 'TIMESERIESCHART':
         return 6;
       case 'TABLE':
       case 'INFOGRAPHICPARAGRAPH':
