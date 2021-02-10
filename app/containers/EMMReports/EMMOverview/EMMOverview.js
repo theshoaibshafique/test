@@ -224,7 +224,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
               {(checklistScore) &&
                 <Grid item xs={12}>
                   <Paper className="Emm-Paper">
-                    <div className="Section-Title">Surigcal Safety Checklist</div>
+                    <div className="Section-Title">Surgical Safety Checklist</div>
                     <SurgicalSafetyChecklist
                       checklistScore={checklistScore.dataPoints}
                     />
