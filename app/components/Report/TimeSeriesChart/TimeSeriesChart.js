@@ -63,7 +63,7 @@ export default class TimeSeriesChart extends React.PureComponent {
               text: this.props.yAxis, //Dynamically populated
               position: 'outer-middle'
             },
-            min: 0,
+            // min: 0,
             padding: { top: 4, bottom: 4 },
 
           }
@@ -73,7 +73,7 @@ export default class TimeSeriesChart extends React.PureComponent {
           show: false
         },
         size: {
-          // height: 70,
+          height: 316,
           // width: 275
         },
         point: {
