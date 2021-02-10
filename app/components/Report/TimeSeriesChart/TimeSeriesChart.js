@@ -81,17 +81,33 @@ export default class TimeSeriesChart extends React.PureComponent {
         },
         subchart: {
           show: true,
+          onbrush: (d) => this.handleBrush(d),
           size: {
             // height: 20
           },
         },
         zoom: {
-          enabled: true,
+          enabled: false,
         },
       }
     }
 
   };
+
+  handleBrush(d){
+    const TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length *.3) ;
+    let chart = this.chartRef.current && this.chartRef.current.chart.element;
+    // var visibilityThreshold = chart.clientWidth / TICK_WIDTH;
+    var allTicks = document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`);
+    var visibleTicks = Array.from(allTicks)
+      .filter(tick => !tick.querySelector("line[y2='0']"));
+    if (visibleTicks.length < Math.max(TICK_WIDTH,10)) {
+      visibleTicks.forEach(tick => tick.querySelector("text").style.display = "none");
+      visibleTicks[0].querySelector("text").style.display = "block";
+      visibleTicks[Math.round(visibleTicks.length/2 - 1)].querySelector("text").style.display = "block";
+      visibleTicks[visibleTicks.length-1].querySelector("text").style.display = "block";
+    }
+  }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.dataPoints && this.props.dataPoints) {
@@ -124,6 +140,10 @@ export default class TimeSeriesChart extends React.PureComponent {
     chart && chart.load(chartData);
     setTimeout(() => {
       chart.zoom([this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")])
+      setTimeout(() => {
+        this.handleBrush()
+      }, 500)
+      
     }, 500);
 
     this.setState({ chartData, colours, tooltipData, isLoaded: true })

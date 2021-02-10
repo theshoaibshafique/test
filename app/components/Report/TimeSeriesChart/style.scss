@@ -96,4 +96,7 @@
     .c3-line {
         stroke-width: 2px;
     }
+    .c3-axis-x.c3-axis line[y2='0'] ~ text{
+        display: none !important;
+    }
 }
