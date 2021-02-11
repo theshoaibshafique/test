@@ -206,7 +206,7 @@ export default class Efficiency extends React.PureComponent {
         const outlierThresholdMinute = this.state.outlierThresholdMinute || turnoverThresholdList[1];
         this.setState({
           earliestStartDate, latestEndDate, startDate, endDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold,
-          gracePeriodMinute, gracePeriodSec, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR
+          gracePeriodMinute, gracePeriodSec, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR, hospitalAbbr: result.abbreviation
         }, () => {
           this.getReportLayout();
         });
@@ -532,6 +532,7 @@ export default class Efficiency extends React.PureComponent {
             <UniversalPicker
               specialties={this.state.specialties}
               userFacility={this.props.userFacility}
+              hospitalAbbr={this.state.hospitalAbbr}
               userToken={this.props.userToken}
               defaultState={this.state}
               apply={() => this.getReportLayout()}
