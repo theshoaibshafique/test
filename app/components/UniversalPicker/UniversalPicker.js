@@ -35,7 +35,6 @@ const dropdownStyles = (theme, props) => {
     }
   }
 };
-const ProcedureAutocomplete = withStyles((theme) => (dropdownStyles(theme)))(Autocomplete);
 const SpecialtyAutocomplete = withStyles((theme) => (dropdownStyles(theme, { width: 400 })))(Autocomplete);
 
 class UniversalPicker extends React.Component {
@@ -48,8 +47,6 @@ class UniversalPicker extends React.Component {
       selectedOperatingRoom: "",
       selectedWeekday: "",
       selectedSpecialty: "",
-      procedureOptions: [],
-      selectedProcedure: "",
       specialties: this.props.specialties || [],
       specialtyDisplay: this.props.isSpecialtyMandatory ? "Select a Specialty" : "All Specialties",
       defaultHours: Math.floor(defaultThreshold / 3600),
@@ -65,18 +62,12 @@ class UniversalPicker extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.defaultState != this.props.defaultState) {
       let selectedSpecialty = this.props.defaultState.selectedSpecialty;
-      let procedureOptions = selectedSpecialty && selectedSpecialty.procedures || [];
-      procedureOptions.sort((a, b) => ("" + a.name).localeCompare("" + b.name))
-      if (procedureOptions.length > 0) {
-        procedureOptions = [{ name: "All Procedures", value: "" }, ...procedureOptions];
-      }
       let specialtyDisplay = this.props.isSpecialtyMandatory ? "Select a Specialty" : "All Specialties";
       this.props.specialties.sort((a, b) => ("" + a.name).localeCompare("" + b.name))
       this.setState({
         ...this.props.defaultState,
         specialtyDisplay,
         specialties: [{ name: specialtyDisplay, value: "" }, ...this.props.specialties],
-        procedureOptions,
         ...this.getDisplayOptions()
       });
     }
@@ -96,13 +87,12 @@ class UniversalPicker extends React.Component {
   }
 
   getDisplayOptions() {
-    if (Boolean(this.props.showOR || this.props.showDays || this.props.showSpecialty || this.props.showProcedure || this.props.showOR2)) {
+    if (Boolean(this.props.showOR || this.props.showDays || this.props.showSpecialty || this.props.showOR2)) {
       return {
 
         showOR: this.props.showOR,
         showDays: this.props.showDays,
         showSpecialty: this.props.showSpecialty,
-        showProcedure: this.props.showProcedure,
         showGracePeriod: this.props.showGracePeriod,
         showOutlierThreshold: this.props.showOutlierThreshold,
         //Default to hiding
@@ -113,7 +103,6 @@ class UniversalPicker extends React.Component {
       showOR: true,
       showDays: true,
       showSpecialty: true,
-      showProcedure: true,
       //Default to hiding
       showOR2: false
     };
@@ -156,27 +145,13 @@ class UniversalPicker extends React.Component {
   }
 
   handleSelectedSpecialtyChange(e, selectedSpecialty) {
-    let procedureOptions = selectedSpecialty && selectedSpecialty.procedures || [];
-    procedureOptions.sort((a, b) => ("" + a.name).localeCompare("" + b.name));
-    if (procedureOptions.length > 0) {
-      procedureOptions = [{ name: "All Procedures", value: "" }, ...procedureOptions];
-    }
     this.setState({
       selectedSpecialty,
-      procedureOptions,
-      selectedProcedure: ""
     }, () => {
       this.props.updateState('selectedSpecialty', selectedSpecialty);
-      this.props.updateState('selectedProcedure', "");
     });
   }
-  handleSelectedProcedureChange(e, selectedProcedure) {
-    this.setState({
-      selectedProcedure
-    }, () => {
-      this.props.updateState('selectedProcedure', selectedProcedure);
-    });
-  }
+
   resetFilters() {
     const gracePeriodMinute = this.state.defaultMinutes.toString().padStart(2, 0);
     const gracePeriodSec = this.state.defaultSeconds.toString().padStart(2, 0);
@@ -186,8 +161,6 @@ class UniversalPicker extends React.Component {
       selectedOperatingRoom: "",
       selectedWeekday: "",
       selectedSpecialty: "",
-      procedureOptions: [],
-      selectedProcedure: "",
       gracePeriodMinute,
       gracePeriodSec,
       outlierThresholdHrs,
@@ -196,7 +169,6 @@ class UniversalPicker extends React.Component {
       this.props.updateState('selectedOperatingRoom', "");
       this.props.updateState('selectedWeekday', "");
       this.props.updateState('selectedSpecialty', "");
-      this.props.updateState('selectedProcedure', "");
       if (this.props.showGracePeriod){
         this.props.updateState('gracePeriodMinute', gracePeriodMinute);
         this.props.updateState('gracePeriodSec', gracePeriodSec);
@@ -293,32 +265,6 @@ class UniversalPicker extends React.Component {
                 name="specialty"
                 placeholder={this.state.specialtyDisplay}
                 className={this.state.selectedSpecialty && this.formatClass(this.state.selectedSpecialty.name) || this.props.isSpecialtyMandatory && "select-a-specialty"}
-              />
-            )}
-            renderOption={(option) => (<Typography noWrap>{option.name ? option.name : ''}</Typography>)}
-          />
-        </Grid>}
-        {this.state.showProcedure && <Grid item xs={3} style={{ maxWidth: 350 }}>
-          <InputLabel shrink className="filter-label">
-            Procedure
-          </InputLabel>
-          <ProcedureAutocomplete
-            size="small"
-            options={this.state.procedureOptions}
-            clearOnEscape
-            value={this.state.selectedProcedure}
-            onChange={(e, value) => this.handleSelectedProcedureChange(e, value)}
-            noOptionsText="Please select a specialty"
-            disabled={this.props.isSpecialtyMandatory && !specialtySelected}
-            getOptionLabel={option => option.name ? option.name : ''}
-            renderInput={params => (
-              <TextField
-                {...params}
-                error={false}
-                variant="outlined"
-                name="procedure"
-                placeholder="All Procedures"
-                className={this.state.selectedProcedure && this.formatClass(this.state.selectedProcedure.name)}
               />
             )}
             renderOption={(option) => (<Typography noWrap>{option.name ? option.name : ''}</Typography>)}

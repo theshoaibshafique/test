@@ -42,8 +42,6 @@ export default class SSChecklist extends React.PureComponent {
       selectedOperatingRoom: "",
       selectedWeekday: "",
       selectedSpecialty: "",
-      procedureOptions: [],
-      selectedProcedure: "",
       hasNoCases: false,
       isFilterApplied: true // Filter is applied right away by default
     }
@@ -177,9 +175,9 @@ export default class SSChecklist extends React.PureComponent {
       "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
       "days": this.state.selectedWeekday && [moment().isoWeekday(this.state.selectedWeekday).day()] || [],
       "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
-      "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
+      "procedureName": ""
     }
-    jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
+    jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName);
 
     if (tileRequest.tileType == 'InfographicMessage') {
       let pendingDate = this.pendingDate;
@@ -265,15 +263,14 @@ export default class SSChecklist extends React.PureComponent {
       "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
       "days": this.state.selectedWeekday && [moment().isoWeekday(this.state.selectedWeekday).day()] || [],
       "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
-      "procedureName": this.state.selectedProcedure && this.state.selectedProcedure.value
+      "procedureName": ""
     }
-    jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName || jsonBody.procedureName);
+    jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName);
     let modal = this.state.modalTile || {days:[]};
     //If nothing changed - open the tile
     if (modal.days.length === jsonBody.days.length && modal.days.every(function(value, index) { return value === jsonBody.days[index]})
       && modal.roomName == jsonBody.roomName
       && modal.specialtyName == jsonBody.specialtyName
-      && modal.procedureName == jsonBody.procedureName
       && moment.utc(modal.startDate).isSame(this.state.month.startOf('month'),'month')){
         this.setState({isOpen:true})
         return
@@ -329,8 +326,7 @@ export default class SSChecklist extends React.PureComponent {
         month: this.state.month,
         selectedOperatingRoom: this.state.selectedOperatingRoom,
         selectedWeekday: this.state.selectedWeekday,
-        selectedSpecialty: this.state.selectedSpecialty,
-        selectedProcedure: this.state.selectedProcedure
+        selectedSpecialty: this.state.selectedSpecialty
       }));
   }
 
