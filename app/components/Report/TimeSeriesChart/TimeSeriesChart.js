@@ -21,6 +21,8 @@ export default class TimeSeriesChart extends React.PureComponent {
     super(props);
 
     this.chartRef = React.createRef();
+    const { dataPoints } = this.props;
+    const valueYs = dataPoints && dataPoints.filter(point => point.valueY).map((point) => parseInt(point.valueY)) || [];
     this.state = {
       chartID: 'TimeSeriesChart',
       chartData: {
@@ -58,12 +60,12 @@ export default class TimeSeriesChart extends React.PureComponent {
           },
           y: {
             // show:false,
-            // max: pointCount <= 1 ? 100 : null,
+            max: dataPoints && Math.min(Math.max(...valueYs) + 10, 100) || 100,
             label: {
               text: this.props.yAxis, //Dynamically populated
               position: 'outer-middle'
             },
-            // min: 0,
+            min: dataPoints && Math.max(Math.min(...valueYs) - 10, 0) || 0,
             padding: { top: 4, bottom: 4 },
 
           }
@@ -95,17 +97,30 @@ export default class TimeSeriesChart extends React.PureComponent {
   };
 
   handleBrush(d){
-    const TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length *.3) ;
-    let chart = this.chartRef.current && this.chartRef.current.chart.element;
-    // var visibilityThreshold = chart.clientWidth / TICK_WIDTH;
-    var allTicks = document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`);
-    var visibleTicks = Array.from(allTicks)
+    // const MAX_TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length *.3) ;
+    const MAX_TICK_WIDTH = 128;
+    // let chart = this.chartRef.current && this.chartRef.current.chart.element;
+    // var visibilityThreshold = chart.clientWidth / MAX_TICK_WIDTH;
+    var allTicks = Array.from(document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`));
+    var whitelist = allTicks.filter((tick,index) => index % 16 == 0);
+    var visibleTicks = allTicks
       .filter(tick => !tick.querySelector("line[y2='0']"));
-    if (visibleTicks.length < Math.max(TICK_WIDTH,10)) {
-      visibleTicks.forEach(tick => tick.querySelector("text").style.display = "none");
-      visibleTicks[0].querySelector("text").style.display = "block";
-      visibleTicks[Math.round(visibleTicks.length/2 - 1)].querySelector("text").style.display = "block";
-      visibleTicks[visibleTicks.length-1].querySelector("text").style.display = "block";
+    
+    if (visibleTicks.length < MAX_TICK_WIDTH){
+      allTicks.forEach(tick => tick.querySelector("text").style.display = "none");
+    }
+
+    if (visibleTicks.length <= 8){
+      whitelist = allTicks.filter((tick,index) => index % 2 == 0);
+      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
+    } else if (visibleTicks.length <= 16){
+      whitelist = allTicks.filter((tick,index) => index % 4 == 0);
+      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
+    } else if (visibleTicks.length <= 64){
+      whitelist = allTicks.filter((tick,index) => index % 8 == 0);
+      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
+    } else if (visibleTicks.length < Math.max(MAX_TICK_WIDTH,10)) {
+      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
     }
   }
 
@@ -130,10 +145,12 @@ export default class TimeSeriesChart extends React.PureComponent {
     dataPoints.map((point, index) => {
       formattedData.x.push(point.valueX);
       colours.push(point.description)
-      formattedData.y.push(parseInt(point.valueY));
+      const valueY = parseInt(point.valueY);
+      formattedData.y.push(valueY);
       tooltipData.push(point.toolTip);
     });
     let chartData = this.state.chartData;
+
     chartData.data.columns = [formattedData.x, formattedData.y];
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
