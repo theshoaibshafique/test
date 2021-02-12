@@ -268,6 +268,7 @@ export default class Efficiency extends React.PureComponent {
     this.setState({ reportData: [], globalData: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         const filter = this.getFilterLayout(this.state.reportType);
+        const specialty = filter.showSpecialty && this.state.selectedSpecialty && this.state.selectedSpecialty.name;
         const jsonBody = {
           "dashboardName": this.state.reportType,
           "facilityName": this.props.userFacility,
@@ -276,7 +277,7 @@ export default class Efficiency extends React.PureComponent {
           "endDate": this.state.endDate && this.state.endDate.format('YYYY-MM-DD'),
 
           "roomName": (filter.showOR || filter.showOR2) && this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value || null,
-          "specialtyName": filter.showSpecialty && this.state.selectedSpecialty && this.state.selectedSpecialty.name,
+          "specialtyName": specialty == "All Specialties" ? "" : specialty,
           "procedureName": filter.showProcedure && this.state.selectedProcedure && this.state.selectedProcedure.name,
           "threshold": this.calculateThreshold(this.state.reportType)
         }
