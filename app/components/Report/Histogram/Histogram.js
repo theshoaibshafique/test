@@ -90,12 +90,13 @@ export default class Histogram extends React.PureComponent {
         },
         subchart: {
           show: true,
+          onbrush: (d) => this.handleBrush(d),
           size: {
             // height: 20
           },
         },
         zoom: {
-          enabled: true,
+          enabled: false,
         },
 
       }
@@ -107,6 +108,7 @@ export default class Histogram extends React.PureComponent {
     if (!prevProps.dataPoints && this.props.dataPoints) {
       this.generateChartData();
     }
+    this.handleBrush()
   }
 
   componentDidMount() {
@@ -138,6 +140,9 @@ export default class Histogram extends React.PureComponent {
     const rightSpan = Math.min(Math.round(formattedData.y.length * .2), 15)
     setTimeout(() => {
       chart.zoom([Math.max(0, indexOfMax - leftSpan), Math.min(formattedData.y.length - 1, indexOfMax + rightSpan)])
+      setTimeout(() => {
+        this.handleBrush()
+      }, 500)
     }, 500);
 
     this.setState({ chartData, colours, tooltipData, isLoaded: true })
@@ -158,6 +163,22 @@ export default class Histogram extends React.PureComponent {
 
   chooseColour(d) {
     return this.state.colours[d.x] || '#FF4D4D';
+  }
+
+  handleBrush(d){
+    const MAX_TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length *.3) ;
+    // let chart = this.chartRef.current && this.chartRef.current.chart.element;
+    // var visibilityThreshold = chart.clientWidth / MAX_TICK_WIDTH;
+    var allTicks = Array.from(document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`));
+    var whitelist = allTicks.filter((tick,index) => index % 2 == 0);
+    var visibleTicks = allTicks
+      .filter(tick => !tick.querySelector("line[y2='0']"));
+    
+
+    if (visibleTicks.length < MAX_TICK_WIDTH) {
+      allTicks.forEach(tick => tick.querySelector("text").style.display = "none");
+      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
+    }
   }
 
   render() {
