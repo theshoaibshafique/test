@@ -38,7 +38,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
         },
         tooltip: {
           grouped: true,
-          // contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
+          contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
         },
         axis: {
           x: {
@@ -60,12 +60,12 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
           },
           y: {
             // show:false,
-            // max: dataPoints && Math.min(Math.max(...valueYs) + 10, 100) || 100,
+            max: dataPoints && Math.min(Math.max(...valueYs) + 10, 100) || 100,
             label: {
               text: this.props.yAxis, //Dynamically populated
               position: 'outer-middle',
             },
-            // min: dataPoints && Math.max(Math.min(...valueYs) - 10, 0) || 0,
+            min: dataPoints && Math.max(Math.min(...valueYs) - 10, 0) || 0,
             padding: { top: 4, bottom: 4 },
 
           }
@@ -182,13 +182,18 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].index] || []
+    let tooltipData = d.map((point) => {
+      return this.state.tooltipData[point.id+moment(point.x).format("YYYY-MM-DD")];
+    })
+    
     if (tooltipData.length == 0) {
       return;
     }
+    const xValue = moment(d[0].x).format('MMM DD')
 
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div>{xValue}</div>
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}
