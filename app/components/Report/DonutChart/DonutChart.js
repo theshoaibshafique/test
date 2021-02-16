@@ -29,9 +29,11 @@ export default class DonutChart extends React.PureComponent {
         data: {
           columns: [], //Dynamically populated
           type: 'donut',
-          // labels: {
-          //   format: (v, id, i, j) => this.createCustomLabel(v, id, i, j)
-          // }
+          //Specifically for Turnover Outliers
+          colors: {
+            'Within Threshold': '#6EDE95',
+            'Outlier': '#FF4D4D'
+          }
         }, // End data
         color: {
           pattern: this.props.pattern || ['#A7E5FD', '#97E7B3', '#FFDB8C', '#FF7D7D', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD']
