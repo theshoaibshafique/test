@@ -120,7 +120,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     } else if (visibleTicks.length <= 64) {
       whitelist = allTicks.filter((tick, index) => index % 8 == 0);
       visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
-    } else if (visibleTicks.length < Math.max(MAX_TICK_WIDTH, 10)) {
+    } else if (visibleTicks.length < MAX_TICK_WIDTH) {
       visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     }
   }
