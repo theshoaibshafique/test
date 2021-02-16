@@ -31,7 +31,8 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
           x: 'x',
           columns: [], //Dynamically populated
           type: 'area',
-          labels: false
+          labels: false,
+          order: 'asc'
         }, // End data
         color: {
           pattern: ['#A7E5FD', '#97E7B3', '#FFDB8C', '#FF7D7D', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD']
@@ -191,11 +192,11 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     if (tooltipData.length == 0) {
       return;
     }
-    const xValue = moment(d[0].x).format('MMM DD')
-
+    const xValue = moment(d[0].x).format('MMM DD');
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{xValue}</div>
+        <div>Total Duration: {d.map(point => point.value).reduce((a,b) => a+b)} mins</div>
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}

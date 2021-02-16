@@ -131,7 +131,7 @@
         overflow: visible !important;
     }
     circle {
-        r: 1;
+        r: 0;
         stroke: unset !important;
     }
     .c3-line {
@@ -139,5 +139,11 @@
     }
     .c3-axis-x.c3-axis line[y2="0"] ~ text {
         display: none !important;
+    }
+    .c3-area{
+        opacity: 1 !important;
+    }
+    .c3-shapes.c3-lines {
+        opacity: 0;
     }
 }
