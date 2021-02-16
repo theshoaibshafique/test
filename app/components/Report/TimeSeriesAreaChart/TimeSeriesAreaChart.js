@@ -75,7 +75,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
           show: false
         },
         size: {
-          height: 275,
+          height: 283,
           // width: 275
         },
         point: {
@@ -129,6 +129,8 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     if (!prevProps.dataPoints && this.props.dataPoints) {
       this.generateChartData();
     }
+    //Need to manually redraw axis on update
+    this.handleBrush()
   }
 
   componentDidMount() {

@@ -52,7 +52,7 @@
         .area-time-series-legend {
             display: flex;
             justify-content: center;
-            margin-top: 16px;
+            margin-top: 8px;
         }
         .legend-item {
             margin: 0 4px !important;
@@ -116,9 +116,13 @@
         letter-spacing: 0;
         line-height: 24px;
     }
-    .c3-axis-y .tick:nth-child(odd),
-    .c3-ygrid:nth-child(even) {
+    .c3-axis-y .tick,
+    .c3-ygrid{
         opacity: 0 !important;
+    }
+    .c3-axis-y .tick:nth-child(3n-1),
+    .c3-ygrid:nth-child(3n) {
+        opacity: 1 !important;
     }
     .c3-axis-y-label {
         transform: translate(-8px, 10px) rotate(-90deg);
