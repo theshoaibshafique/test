@@ -25,6 +25,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { NavLink } from 'react-router-dom';
 import NoData from '../../components/Report/NoData/NoData';
 import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
+import TimeSeriesAreaChart from '../../components/Report/TimeSeriesAreaChart/TimeSeriesAreaChart';
 
 const StyledTabs = withStyles({
   root: {
@@ -481,6 +482,8 @@ export default class Efficiency extends React.PureComponent {
           orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'TIMESERIESCHART':
         return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} />
+      case 'TIMESERIESAREACHART':
+        return <TimeSeriesAreaChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'NODATA':
         return <NoData {...tile} />
     }
@@ -495,6 +498,7 @@ export default class Efficiency extends React.PureComponent {
       case 'HISTOGRAM':
       case 'NODATA':
       case 'TIMESERIESCHART':
+      case 'TIMESERIESAREACHART':
         return 6;
       case 'TABLE':
       case 'INFOGRAPHICPARAGRAPH':

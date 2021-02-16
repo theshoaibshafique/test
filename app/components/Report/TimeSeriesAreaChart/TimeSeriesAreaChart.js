@@ -16,7 +16,7 @@ const LightTooltip = withStyles((theme) => ({
     fontFamily: 'Noto Sans'
   }
 }))(Tooltip);
-export default class TimeSeriesChart extends React.PureComponent {
+export default class TimeSeriesAreaChart extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -24,20 +24,20 @@ export default class TimeSeriesChart extends React.PureComponent {
     const { dataPoints } = this.props;
     const valueYs = dataPoints && dataPoints.filter(point => point.valueY).map((point) => parseInt(point.valueY)) || [];
     this.state = {
-      chartID: 'TimeSeriesChart',
+      chartID: 'TimeSeriesAreaChart',
+      legendData: [],
       chartData: {
         data: {
           x: 'x',
           columns: [], //Dynamically populated
-          // type: 'spline',
-          type: 'line',
+          type: 'area',
           labels: false
         }, // End data
         color: {
-          pattern: ['#028CC8', '#97E7B3', '#CFB9E4', '#004F6E']
+          pattern: ['#A7E5FD', '#97E7B3', '#FFDB8C', '#FF7D7D', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD']
         },
         tooltip: {
-          // grouped: false,
+          grouped: true,
           contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
         },
         axis: {
@@ -63,7 +63,7 @@ export default class TimeSeriesChart extends React.PureComponent {
             max: dataPoints && Math.min(Math.max(...valueYs) + 10, 100) || 100,
             label: {
               text: this.props.yAxis, //Dynamically populated
-              position: 'outer-middle'
+              position: 'outer-middle',
             },
             min: dataPoints && Math.max(Math.min(...valueYs) - 10, 0) || 0,
             padding: { top: 4, bottom: 4 },
@@ -75,7 +75,7 @@ export default class TimeSeriesChart extends React.PureComponent {
           show: false
         },
         size: {
-          height: 316,
+          height: 283,
           // width: 275
         },
         point: {
@@ -91,36 +91,37 @@ export default class TimeSeriesChart extends React.PureComponent {
         zoom: {
           enabled: false,
         },
+        onrendered: () => this.chartRef.current && this.updateLegend(`.${this.state.chartID}`),
       }
     }
 
   };
 
-  handleBrush(d){
+  handleBrush(d) {
     // const MAX_TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length *.3) ;
     const MAX_TICK_WIDTH = 128;
     // let chart = this.chartRef.current && this.chartRef.current.chart.element;
     // var visibilityThreshold = chart.clientWidth / MAX_TICK_WIDTH;
     var allTicks = Array.from(document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`));
-    var whitelist = allTicks.filter((tick,index) => index % 16 == 0);
+    var whitelist = allTicks.filter((tick, index) => index % 16 == 0);
     var visibleTicks = allTicks
       .filter(tick => !tick.querySelector("line[y2='0']"));
-    
-    if (visibleTicks.length < MAX_TICK_WIDTH){
+
+    if (visibleTicks.length < MAX_TICK_WIDTH) {
       allTicks.forEach(tick => tick.querySelector("text").style.display = "none");
     }
 
-    if (visibleTicks.length <= 8){
-      whitelist = allTicks.filter((tick,index) => index % 2 == 0);
-      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
-    } else if (visibleTicks.length <= 16){
-      whitelist = allTicks.filter((tick,index) => index % 4 == 0);
-      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
-    } else if (visibleTicks.length <= 64){
-      whitelist = allTicks.filter((tick,index) => index % 8 == 0);
-      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
+    if (visibleTicks.length <= 8) {
+      whitelist = allTicks.filter((tick, index) => index % 2 == 0);
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
+    } else if (visibleTicks.length <= 16) {
+      whitelist = allTicks.filter((tick, index) => index % 4 == 0);
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
+    } else if (visibleTicks.length <= 64) {
+      whitelist = allTicks.filter((tick, index) => index % 8 == 0);
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     } else if (visibleTicks.length < MAX_TICK_WIDTH) {
-      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     }
   }
 
@@ -128,6 +129,8 @@ export default class TimeSeriesChart extends React.PureComponent {
     if (!prevProps.dataPoints && this.props.dataPoints) {
       this.generateChartData();
     }
+    //Need to manually redraw axis on update
+    this.handleBrush()
   }
 
   componentDidMount() {
@@ -139,45 +142,101 @@ export default class TimeSeriesChart extends React.PureComponent {
     if (!this.props.dataPoints) {
       return;
     }
-    let formattedData = { x: ['x'], y: ['y'] };
-    let colours = [];
-    let tooltipData = [];
-    dataPoints.map((point, index) => {
-      formattedData.x.push(point.valueX);
-      colours.push(point.description)
-      const valueY = parseInt(point.valueY);
-      formattedData.y.push(valueY);
-      tooltipData.push(point.toolTip);
-    });
-    let chartData = this.state.chartData;
+    let xData = [];
+    let formattedData = {};
+    let tooltipLegendData = {};
+    let tooltipData = {};
+    dataPoints.map((point) => {
+      let xValue = point.valueX;
+      if (!xData.includes(xValue)) {
+        xData.push(xValue);
+      }
 
-    chartData.data.columns = [formattedData.x, formattedData.y];
+      formattedData[point.title] = formattedData[point.title] || {};
+      formattedData[point.title][xValue] = formattedData[point.title][xValue] || 0
+      formattedData[point.title][xValue] = point.valueY;
+      tooltipLegendData[point.title] = point.note ? point.note : tooltipLegendData[point.title];
+      tooltipData[point.title + xValue] = point.toolTip;
+    });
+    let columns = [['x', ...xData]];
+    const orderBy = this.props.orderBy || {};
+    let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] });
+    legendData.map(([key, value]) => {
+      columns.push([key, ...xData.map((x) => {
+        return value[x];
+      })]);
+    })
+    let chartData = this.state.chartData;
+    chartData.data.columns = columns;
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
+    chart && chart.groups([Object.keys(formattedData)]);
     setTimeout(() => {
       chart.zoom([this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")])
       setTimeout(() => {
         this.handleBrush()
       }, 500)
-      
+
     }, 500);
 
-    this.setState({ chartData, colours, tooltipData, isLoaded: true })
+    this.setState({ chartData, tooltipData, legendData, tooltipLegendData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].index] || []
+    let tooltipData = d.map((point) => {
+      return this.state.tooltipData[point.id+moment(point.x).format("YYYY-MM-DD")];
+    })
+    
     if (tooltipData.length == 0) {
       return;
     }
+    const xValue = moment(d[0].x).format('MMM DD')
 
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div>{xValue}</div>
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}
       </div>);
+  }
+
+  updateLegend() {
+    let chart = this.chartRef.current.chart;
+    this.state.legendData.map(([id, value], index) => {
+      d3.select(`.area-time-series #${id.replace(/[^A-Z0-9]+/ig, "")}`)
+        .on('mouseover', () => {
+          chart.focus(id);
+        })
+        .on('mouseout', () => {
+          chart.revert();
+        })
+    })
+  }
+
+  renderLegend() {
+    if (!this.chartRef.current) {
+      return;
+    }
+    let chart = this.chartRef.current.chart;
+    return <div className={`time-series-area-horizontal`}>
+      <div className="area-time-series-legend">
+        {this.state.legendData.map(([id, value], index) => {
+          if (id == "N/A") {
+            return;
+          }
+          return (<div className="legend-item" id={id.replace(/[^A-Z0-9]+/ig, "")} key={index}>
+            <div className="legend-title">
+              <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
+              {this.state.tooltipLegendData[id] && <LightTooltip interactive arrow title={this.state.tooltipLegendData[id]} placement="top" fontSize="small">
+                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+              </LightTooltip>}
+            </div>
+          </div>)
+        })}
+      </div>
+    </div>
   }
 
   render() {
@@ -200,7 +259,7 @@ export default class TimeSeriesChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='center' className="time-series" style={{ textAlign: 'center' }}>
+        <Grid container spacing={0} justify='center' className="area-time-series" style={{ textAlign: 'center' }}>
           <Grid item xs className="chart-title">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
@@ -211,6 +270,7 @@ export default class TimeSeriesChart extends React.PureComponent {
           </Grid>
           <Grid item xs={12}>
             {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+            {this.renderLegend()}
           </Grid>
           <Grid item xs={12} className="chart-label">
             {this.props.xAxis}
