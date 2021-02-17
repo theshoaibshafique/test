@@ -67,7 +67,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
               position: 'outer-middle',
             },
             min: dataPoints && Math.max(Math.min(...valueYs) - 10, 0) || 0,
-            padding: { top: 4, bottom: 4 },
+            padding: { top: 4, bottom: 0 },
 
           }
         },
@@ -196,7 +196,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{xValue}</div>
-        <div>Total Duration: {d.map(point => point.value).reduce((a,b) => a+b)} mins</div>
+        <div>Total Duration: {d.map(point => point.value).reduce((a,b) => a+b)} min</div>
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}
