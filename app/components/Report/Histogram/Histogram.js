@@ -165,19 +165,34 @@ export default class Histogram extends React.PureComponent {
     return this.state.colours[d.x] || '#FF4D4D';
   }
 
-  handleBrush(d){
-    const MAX_TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length *.3) ;
+  displayTick(tick, tickOffset) {
+    tick.querySelector("text").style.display = "block";
+    tick.querySelector("text").style.transform = `translate(${tickOffset}px, 0)`;
+  }
+
+  handleBrush(d) {
+    const MAX_TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length * .4);
     // let chart = this.chartRef.current && this.chartRef.current.chart.element;
     // var visibilityThreshold = chart.clientWidth / MAX_TICK_WIDTH;
     var allTicks = Array.from(document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`));
-    var whitelist = allTicks.filter((tick,index) => index % 2 == 0);
+    const bar = document.querySelector(`.${this.state.chartID} .c3-event-rect`);
+    //Center tick between bars
+    const tickOffset = bar.getAttribute('width') / 2;
+    var whitelist = allTicks.filter((tick, index) => index % 10 == 0);
     var visibleTicks = allTicks
       .filter(tick => !tick.querySelector("line[y2='0']"));
-    
-
-    if (visibleTicks.length < MAX_TICK_WIDTH) {
+    if (visibleTicks.length < Math.max(MAX_TICK_WIDTH, 96)) {
       allTicks.forEach(tick => tick.querySelector("text").style.display = "none");
-      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
+    }
+    if (visibleTicks.length < 24) {
+      whitelist = allTicks.filter((tick, index) => index % 2 == 0);
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) this.displayTick(tick, tickOffset) });
+    } else if (visibleTicks.length <= 64) {
+      whitelist = allTicks.filter((tick, index) => index % 5 == 0);
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) this.displayTick(tick, tickOffset) });
+    } else if (visibleTicks.length < Math.max(MAX_TICK_WIDTH, 96)) {
+      allTicks.forEach(tick => tick.querySelector("text").style.display = "none");
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) this.displayTick(tick, tickOffset) });
     }
   }
 
