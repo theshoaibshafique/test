@@ -2,8 +2,8 @@ import React from 'react';
 import Modal from '@material-ui/core/Modal';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
-import globalFuncs from '../../../utils/global-functions';
 import './style.scss';
+import globalFuncs from '../../../../utils/global-functions';
 
 class DeleteModal extends React.Component {
   constructor(props) {
@@ -56,6 +56,7 @@ class DeleteModal extends React.Component {
         aria-describedby="simple-modal-description"
         open={this.props.deleteDialogOpen}
         disableBackdropClick={true}
+        className="user-modal"
       >
         <DialogContent>
           <div className="Modal Delete-Modal">

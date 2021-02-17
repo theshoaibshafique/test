@@ -4,9 +4,9 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { Grid } from '@material-ui/core';
-import UserFields from '../../../UserManager/UserFields/UserFields'
-import globalFuncs from '../../../../utils/global-functions';
 import LoadingOverlay from 'react-loading-overlay';
+import UserFields from '../../../UserFields/UserFields';
+import globalFuncs from '../../../../../utils/global-functions';
 
 class UserModalStep1 extends React.Component {
   constructor(props) {

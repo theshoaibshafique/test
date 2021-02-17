@@ -1,13 +1,9 @@
 import React from 'react';
-import { forwardRef } from 'react';
-import MaterialTable from 'material-table';
-import LoadingOverlay from 'react-loading-overlay';
-import globalFuncs from '../../utils/global-functions';
 import UserManagement from 'containers/UserManagement/Loadable';
-import EfficiencySettings from 'containers/Efficiency/EfficiencySettings/Loadable';
 import './style.scss';
 import { Tab, Tabs, withStyles } from '@material-ui/core';
 import globalFunctions from '../../utils/global-functions';
+import EfficiencySettings from './EfficiencySettings/EfficiencySettings';
 const StyledTabs = withStyles({
   root:{
     boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
@@ -32,6 +28,9 @@ const StyledTab = withStyles((theme) => ({
     opacity:.8,
     fontWeight:'bold',
     color:'#000 !important',
+    minWidth:'unset',
+    paddingLeft:16,
+    paddingRight:16,
     // marginRight: theme.spacing(1),
     '&:focus': {
       opacity: 1,

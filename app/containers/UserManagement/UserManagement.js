@@ -1,15 +1,10 @@
 import React from 'react';
 import { forwardRef } from 'react';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import MaterialTable from 'material-table';
 import LoadingOverlay from 'react-loading-overlay';
 import globalFuncs from '../../utils/global-functions';
 import './style.scss';
-
-import UserModal from '../../components/Modal/UserModal/UserModal';
-import DeleteModal from '../../components/Modal/DeleteModal';
 
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
@@ -19,6 +14,8 @@ import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
+import UserModal from './Modal/UserModal/UserModal';
+import DeleteModal from './Modal/DeleteModal/DeleteModal';
 
 const tableIcons = {
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
