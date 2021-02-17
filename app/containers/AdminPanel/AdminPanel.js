@@ -1,9 +1,9 @@
 import React from 'react';
-import UserManagement from 'containers/UserManagement/Loadable';
 import './style.scss';
 import { Tab, Tabs, withStyles } from '@material-ui/core';
 import globalFunctions from '../../utils/global-functions';
-import EfficiencySettings from './EfficiencySettings/EfficiencySettings';
+import EfficiencySettings from './EfficiencySettings/Loadable';
+import UserManagement from './UserManagement/Loadable';
 const StyledTabs = withStyles({
   root:{
     boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",

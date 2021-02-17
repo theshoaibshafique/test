@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import Button from '@material-ui/core/Button';
 import MaterialTable from 'material-table';
 import LoadingOverlay from 'react-loading-overlay';
-import globalFuncs from '../../utils/global-functions';
+import globalFuncs from 'utils/global-functions';
 import './style.scss';
 
 import ArrowDownward from '@material-ui/icons/ArrowDownward';

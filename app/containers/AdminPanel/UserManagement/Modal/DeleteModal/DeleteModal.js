@@ -3,7 +3,7 @@ import Modal from '@material-ui/core/Modal';
 import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 import './style.scss';
-import globalFuncs from '../../../../utils/global-functions';
+import globalFuncs from 'utils/global-functions';
 
 class DeleteModal extends React.Component {
   constructor(props) {
