@@ -177,6 +177,7 @@ class UniversalPicker extends React.Component {
         this.props.updateState('outlierThresholdHrs', outlierThresholdHrs);
         this.props.updateState('outlierThresholdMinute', outlierThresholdMinute);
       }
+      this.props.apply();
     })
   }
   formatClass(str) {
