@@ -1,0 +1,76 @@
+@import "../../../styles/global-styles";
+.ssc-settings-page {
+    .title {
+        font-size: 18px;
+        font-family: "Noto Sans";
+        opacity: 0.8;
+        color: #000000;
+        margin-bottom: 24px;
+    }
+    .subtitle {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .content {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 12px;
+        letter-spacing: 0;
+        line-height: 17px;
+        margin-bottom: 8px;
+        max-width: 680px;
+    }
+    .selectors {
+        margin-bottom: 24px;
+    }
+    .unit {
+        margin: 8px;
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        letter-spacing: 0;
+        line-height: 40px;
+    }
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+        .reset {
+            color: #028cc8;
+        }
+        button {
+            margin: 16px;
+        }
+    }
+    .warning {
+        opacity: 0.8;
+        color: #b47b00;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+}
+.phase {
+    .phase-header {
+        padding: 8px 16px;
+        .subtitle {
+            margin: auto 0;
+        }
+        display: flex;
+        justify-content: space-between;
+    }
+    .toggle-label {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+}

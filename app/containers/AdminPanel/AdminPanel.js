@@ -4,6 +4,7 @@ import { Tab, Tabs, withStyles } from '@material-ui/core';
 import globalFunctions from '../../utils/global-functions';
 import EfficiencySettings from './EfficiencySettings/Loadable';
 import UserManagement from './UserManagement/Loadable';
+import SSCSettings from './SSCSettings/Loadable';
 const StyledTabs = withStyles({
   root:{
     boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
@@ -68,7 +69,7 @@ export default class AdminPanel extends React.PureComponent {
     const { match: { params } } = this.props;
     const tabIndex = parseInt(params.index);
     if (tabIndex == params.index){
-      this.setState({tabIndex:Math.min(Math.max(tabIndex, 0), 1)})
+      this.setState({tabIndex:Math.min(Math.max(tabIndex, 0), 2)})
     }
     this.getConfig();
   }
@@ -112,6 +113,7 @@ export default class AdminPanel extends React.PureComponent {
         >
           <StyledTab label="User Management" />
           <StyledTab label="Efficiency" />
+          <StyledTab label="Surgical Safety Checklist" />
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
           <UserManagement/>
@@ -123,6 +125,9 @@ export default class AdminPanel extends React.PureComponent {
           hasEMR={this.state.hasEMR}
           submit={(updates) => this.submit(updates)}
           />
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={2}>
+          <SSCSettings/>
         </TabPanel>
 
       </div>
