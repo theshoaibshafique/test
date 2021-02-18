@@ -1,5 +1,6 @@
 @import "../../../styles/global-styles";
 .ssc-settings-page {
+    max-width: 1198px;
     .title {
         font-size: 18px;
         font-family: "Noto Sans";
@@ -19,10 +20,10 @@
         opacity: 0.8;
         color: #000000;
         font-family: "Noto Sans";
-        font-size: 12px;
+        font-size: 14px;
         letter-spacing: 0;
-        line-height: 17px;
-        margin-bottom: 8px;
+        line-height: 19px;
+        margin-bottom: 24px;
         max-width: 680px;
     }
     .selectors {
@@ -40,12 +41,30 @@
     .buttons {
         display: flex;
         justify-content: flex-end;
+        margin-top: 40px;
         .reset {
             color: #028cc8;
         }
         button {
             margin: 16px;
+            &:last-child {
+                margin-right: 0;
+            }
         }
+        .MuiButton-root.Mui-disabled {
+            color: #ffffff;
+            opacity: 0.3;
+        }
+    }
+
+    .error {
+        opacity: 0.8;
+        color: #ff0000;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+        margin-top: 8px;
     }
     .warning {
         opacity: 0.8;
@@ -54,9 +73,19 @@
         font-size: 14px;
         letter-spacing: 0;
         line-height: 19px;
+        margin-top: 40px;
+    }
+    .notice {
+        color: #004f6e;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+        margin-top: 8px;
     }
 }
 .phase {
+    border-radius: 8px;
     .phase-header {
         padding: 8px 16px;
         .subtitle {
@@ -72,5 +101,33 @@
         font-size: 14px;
         letter-spacing: 0;
         line-height: 19px;
+    }
+    &.inactive {
+        .divider {
+            display: none;
+            transition: 0.5s;
+        }
+        .phase-items {
+            max-height: 0;
+        }
+    }
+    .divider {
+        margin: 0 16px;
+    }
+    .phase-items {
+        max-height: 215px;
+        overflow-y: scroll;
+        padding: 0 16px;
+        transition: 0.2s;
+        .phase-item {
+            opacity: 0.8;
+            color: #000000;
+            font-family: "Noto Sans";
+        }
+    }
+    .SST-Checkbox:not([class*="disabled"]) {
+        svg {
+            color: $dark-grey;
+        }
     }
 }
