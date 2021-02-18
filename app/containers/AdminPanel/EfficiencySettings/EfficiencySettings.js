@@ -177,7 +177,7 @@ export default class EfficiencySettings extends React.PureComponent {
               value={this.state.outlierThresholdMinute}
               onChange={(e, v) => this.updateState("outlierThresholdMinute", e)}
             >
-              {globalFuncs.generatePaddedDigits(0, 60, 2, 0).map((index) => (
+              {["00","30"].map((index) => (
                 <MenuItem key={index} value={index}>
                   {index}
                 </MenuItem>

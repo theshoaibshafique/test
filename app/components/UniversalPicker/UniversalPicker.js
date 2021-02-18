@@ -378,7 +378,7 @@ class UniversalPicker extends React.Component {
                 value={this.state.outlierThresholdMinute || "00"}
                 onChange={(e, v) => this.updateState("outlierThresholdMinute", e)}
               >
-                {globalFunctions.generatePaddedDigits(0, 60, 2, 0).map((index) => (
+                {["00","30"].map((index) => (
                   <MenuItem key={index} value={index}>
                     {index}
                   </MenuItem>
