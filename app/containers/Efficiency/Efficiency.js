@@ -202,12 +202,11 @@ export default class Efficiency extends React.PureComponent {
         const turnoverThresholdList = globalFuncs.formatSecsToTime(result.turnoverThreshold).split(":");
 
         const gracePeriodMinute = this.state.gracePeriodMinute || fcotsThresholdList[1];
-        const gracePeriodSec = this.state.gracePeriodSec || fcotsThresholdList[2];
         const outlierThresholdHrs = this.state.outlierThresholdHrs || turnoverThresholdList[0];
         const outlierThresholdMinute = this.state.outlierThresholdMinute || turnoverThresholdList[1];
         this.setState({
           earliestStartDate, latestEndDate, startDate, endDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold,
-          gracePeriodMinute, gracePeriodSec, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR, hospitalAbbr: result.abbreviation
+          gracePeriodMinute, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR, hospitalAbbr: result.abbreviation
         }, () => {
           this.getReportLayout();
         });
@@ -242,7 +241,7 @@ export default class Efficiency extends React.PureComponent {
   calculateThreshold(reportType) {
     switch (`${reportType}`.toUpperCase()) {
       case 'FIRSTCASEONTIMESTART':
-        const gracePeriod = parseInt(this.state.gracePeriodMinute) * 60 + parseInt(this.state.gracePeriodSec);
+        const gracePeriod = parseInt(this.state.gracePeriodMinute) * 60;
         return gracePeriod >= 0 ? gracePeriod : this.state.fcotsThreshold;
       case 'TURNOVERTIME':
         const outlierThreshold = parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.outlierThresholdMinute) * 60;
@@ -354,7 +353,6 @@ export default class Efficiency extends React.PureComponent {
         selectedSpecialty: this.state.selectedSpecialty,
         selectedProcedure: this.state.selectedProcedure,
         gracePeriodMinute: this.state.gracePeriodMinute,
-        gracePeriodSec: this.state.gracePeriodSec,
         outlierThresholdHrs: this.state.outlierThresholdHrs,
         outlierThresholdMinute: this.state.outlierThresholdMinute
       }));

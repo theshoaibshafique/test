@@ -154,7 +154,6 @@ class UniversalPicker extends React.Component {
 
   resetFilters() {
     const gracePeriodMinute = this.state.defaultMinutes.toString().padStart(2, 0);
-    const gracePeriodSec = this.state.defaultSeconds.toString().padStart(2, 0);
     const outlierThresholdHrs = this.state.defaultHours.toString().padStart(2, 0);
     const outlierThresholdMinute = this.state.defaultMinutes.toString().padStart(2, 0);
     this.setState({
@@ -162,7 +161,6 @@ class UniversalPicker extends React.Component {
       selectedWeekday: "",
       selectedSpecialty: "",
       gracePeriodMinute,
-      gracePeriodSec,
       outlierThresholdHrs,
       outlierThresholdMinute
     }, () => {
@@ -171,7 +169,6 @@ class UniversalPicker extends React.Component {
       this.props.updateState('selectedSpecialty', "");
       if (this.props.showGracePeriod){
         this.props.updateState('gracePeriodMinute', gracePeriodMinute);
-        this.props.updateState('gracePeriodSec', gracePeriodSec);
       }
       if (this.props.showOutlierThreshold){
         this.props.updateState('outlierThresholdHrs', outlierThresholdHrs);
@@ -297,12 +294,12 @@ class UniversalPicker extends React.Component {
             )}
           />
         </Grid>}
-        {this.state.showGracePeriod && <Grid item xs={2} style={{ maxWidth: 180 }}>
+        {this.state.showGracePeriod && <Grid item xs={2} style={{ maxWidth: 100 }}>
           <InputLabel shrink className="filter-label">
-            Grace Period <span style={{ fontWeight: 'bold' }}>(mm:ss)</span>
+            Grace Period
           </InputLabel>
           <div>
-            <FormControl variant="outlined" size="small" style={{ width: 85, paddingRight: 2 }} >
+            <FormControl variant="outlined" size="small" style={{ width: 90 }} >
               <Select
                 MenuProps={{
                   PaperProps: {
@@ -321,27 +318,8 @@ class UniversalPicker extends React.Component {
                 ))}
               </Select>
             </FormControl>
-            <FormControl variant="outlined" size="small" style={{ width: 85, paddingLeft: 2 }} >
-              <Select
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 250,
-                    },
-                  },
-                }}
-                value={this.state.gracePeriodSec || "00"}
-                onChange={(e, v) => this.updateState("gracePeriodSec", e)}
-              >
-                {globalFunctions.generatePaddedDigits(0, 60, 2, 0).map((index) => (
-                  <MenuItem key={index} value={index}>
-                    {index}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
           </div>
-          <FormHelperText>{`${this.props.hospitalAbbr || ""} Standard`}: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "N/A"}</FormHelperText>
+          <FormHelperText style={{whiteSpace:'nowrap'}}>{`${this.props.hospitalAbbr || ""} Standard`}: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "N/A"}</FormHelperText>
         </Grid>}
         {this.state.showOutlierThreshold && <Grid item xs={2} style={{ maxWidth: 180 }}>
           <InputLabel shrink className="filter-label">

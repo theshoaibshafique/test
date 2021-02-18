@@ -12,7 +12,6 @@ export default class EfficiencySettings extends React.PureComponent {
     const turnoverThreshold = this.props.turnoverThreshold || 0;
     this.state = {
       gracePeriodMinute: Math.floor((fcotsThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
-      gracePeriodSec: Math.floor(fcotsThreshold % 3600 % 60).toString().padStart(2, 0) || "00",
       outlierThresholdHrs: Math.floor(turnoverThreshold / 3600).toString().padStart(2, 0) || "00",
       outlierThresholdMinute: Math.floor((turnoverThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
     }
@@ -23,7 +22,6 @@ export default class EfficiencySettings extends React.PureComponent {
       const turnoverThreshold = this.props.turnoverThreshold || 0;
       this.setState({
         gracePeriodMinute: Math.floor((fcotsThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
-        gracePeriodSec: Math.floor(fcotsThreshold % 3600 % 60).toString().padStart(2, 0) || "00",
         outlierThresholdHrs: Math.floor(turnoverThreshold / 3600).toString().padStart(2, 0) || "00",
         outlierThresholdMinute: Math.floor((turnoverThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
       })
@@ -38,13 +36,12 @@ export default class EfficiencySettings extends React.PureComponent {
 
     this.setState({
       gracePeriodMinute: Math.floor((fcotsThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
-      gracePeriodSec: Math.floor(fcotsThreshold % 3600 % 60).toString().padStart(2, 0) || "00",
       outlierThresholdHrs: Math.floor(turnoverThreshold / 3600).toString().padStart(2, 0) || "00",
       outlierThresholdMinute: Math.floor((turnoverThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
     })
   }
   async submit() {
-    const newFCOTThreshold = parseInt(this.state.gracePeriodMinute) * 60 + parseInt(this.state.gracePeriodSec);
+    const newFCOTThreshold = parseInt(this.state.gracePeriodMinute) * 60 ;
     const newOutlierThreshold = parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.outlierThresholdMinute) * 60;
     let updates = [];
     if (this.props.hasEMR){
@@ -65,7 +62,7 @@ export default class EfficiencySettings extends React.PureComponent {
 
 
   renderSaveWarning() {
-    const newFCOTThreshold = parseInt(this.state.gracePeriodMinute) * 60 + parseInt(this.state.gracePeriodSec);
+    const newFCOTThreshold = parseInt(this.state.gracePeriodMinute) * 60;
     const newOutlierThreshold = parseInt(this.state.outlierThresholdHrs) * (60 * 60) + parseInt(this.state.outlierThresholdMinute) * 60;
     const fcotsThreshold = this.props.fcotsThreshold;
     const turnoverThreshold = this.props.turnoverThreshold;
@@ -111,26 +108,6 @@ export default class EfficiencySettings extends React.PureComponent {
               </Select>
             </FormControl>
             <span className="unit">min</span>
-            <FormControl variant="outlined" size="small" style={{ width: 85 }} >
-              <Select
-                MenuProps={{
-                  PaperProps: {
-                    style: {
-                      maxHeight: 250,
-                    },
-                  },
-                }}
-                value={this.state.gracePeriodSec}
-                onChange={(e, v) => this.updateState("gracePeriodSec", e)}
-              >
-                {globalFuncs.generatePaddedDigits(0, 60, 2, 0).map((index) => (
-                  <MenuItem key={index} value={index}>
-                    {index}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <span className="unit">sec</span>
           </div>
         </div>
         <Divider light style={{ marginBottom: 24 }} />
