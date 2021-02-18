@@ -92,20 +92,10 @@ export default class Efficiency extends React.PureComponent {
       procedureOptions: [],
       selectedProcedure: "",
       hasNoCases: false,
-      isFilterApplied: true // Filter is applied right away by default,
+      isFilterApplied: true, // Filter is applied right away by default,
+      startDate: moment().subtract(1,'month').startOf('month'),
+      endDate: moment().subtract(1,'month').endOf('month'),
     }
-    this.pendingDate = moment();
-    this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY, this.pendingDate.daysInMonth()))
-    //If we're after this months pending date - we move on to the next
-    if (moment().isSameOrAfter(this.pendingDate.clone())) {
-      this.pendingDate = this.pendingDate.clone().add(1, 'month');
-    }
-    this.state.pendingWarning = `Data for ${this.pendingDate.clone().subtract(1, 'month').format('MMMM')} will be ready on ${this.pendingDate.format('LL')}`;
-
-    //Last available data date is 2 months before the pending date
-    this.state.startDate = this.pendingDate.clone().subtract(2, 'month').startOf('month');
-    this.state.endDate = this.pendingDate.clone().subtract(2, 'month').endOf('month');
-    this.state.latestEndDate = process.env.DISPLAY_PENDING_REPORT == "true" ? moment().endOf('month') : this.state.endDate.clone();
   }
 
   componentDidUpdate(prevProps) {
@@ -119,8 +109,8 @@ export default class Efficiency extends React.PureComponent {
       //if either are null then set to last valid date or latest date with data
       if (!startDate || !endDate) {
         const recentSearchCache = JSON.parse(localStorage.getItem('efficiencyFilter-' + this.props.userEmail));
-        startDate = moment(recentSearchCache.startDate) || this.pendingDate.clone().subtract(2, 'month').startOf('month');
-        endDate = moment(recentSearchCache.endDate) || this.pendingDate.clone().subtract(2, 'month').endOf('month');
+        startDate = moment(recentSearchCache.startDate) || moment().subtract(1,'month').startOf('month');
+        endDate = moment(recentSearchCache.endDate) || moment().subtract(1,'month').endOf('month');
       }
       this.setState({
         reportType: this.props.reportType,
@@ -194,7 +184,7 @@ export default class Efficiency extends React.PureComponent {
         let endDate = this.state.endDate;
         let latestEndDate = moment(result.endDate).endOf('day');
         if (latestEndDate.isSameOrBefore(endDate)) {
-          endDate = latestEndDate.utc();
+          endDate = latestEndDate.subtract(1,'hour');
         }
         this.state.pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
 

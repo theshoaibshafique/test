@@ -51,12 +51,17 @@ export default class MainLayout extends React.PureComponent {
       sscAccess:this.containsAny(roles,["SURGICAL CHECKLIST"]),
       efficiencyAccess:this.containsAny(roles,["EFFICIENCY"]),
     });
-
+    this.clearFilters();
     this.getPageAccess();
   };
 
   containsAny(arr1,arr2){
     return arr1.some(r=>arr2.includes(r.toUpperCase()));
+  }
+
+  clearFilters() {
+    localStorage.removeItem('efficiencyFilter-' + this.props.userEmail);
+    localStorage.removeItem('sscFilter-' + this.props.userEmail);
   }
 
   redirect() {
