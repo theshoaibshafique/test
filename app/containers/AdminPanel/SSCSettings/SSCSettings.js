@@ -74,7 +74,7 @@ function Phase(props) {
             control={
               <SSTSwitch checked={isActive} onChange={toggle} disableRipple />
             }
-            label={<span className="toggle-label">{isActive ? 'Active' : 'Inactive'}</span>}
+            label={<span className="toggle-label">{isActive ? 'Enabled' : 'Disabled'}</span>}
             labelPlacement='start'
           />
         </div>
@@ -94,14 +94,21 @@ function Phase(props) {
 export default class SSCSettings extends React.PureComponent {
   constructor(props) {
     super(props);
+    const { sscConfig } = this.props;
     this.state = {
-      checklists: SSC_CONFIG.checklists,
-      originalChecklist: SSC_CONFIG.checklists,
+      checklists: sscConfig && sscConfig.checklists || [],
+      originalChecklist: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists || [])),
       isChanged: false
     }
   }
   componentDidUpdate(prevProps) {
-
+    if (prevProps.sscConfig != this.props.sscConfig) {
+      const { sscConfig } = this.props;
+      this.setState({
+        checklists: sscConfig && sscConfig.checklists || [],
+        originalChecklist: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists || [])),
+      })
+    }
   }
   // Checklist index, Phase Index, Item Index
   togglePhase(cIndex = -1, pIndex = -1, iIndex = -1) {
@@ -119,7 +126,7 @@ export default class SSCSettings extends React.PureComponent {
   }
 
   renderNotice(hasCheckedPhase) {
-    
+
     if (!hasCheckedPhase) {
       return (
         <div className="error">
@@ -147,10 +154,21 @@ export default class SSCSettings extends React.PureComponent {
     )
   }
   submit() {
-    this.setState({
-      originalChecklist: JSON.parse(JSON.stringify(this.state.checklists)),
-      isChanged: false
+    const jsonBody = {
+      "facilityId": this.props.facilityName,
+      "checklists": this.state.checklists,
+      "configurations": []
+    }
+    this.setState({ isLoading: true }, () => {
+      this.props.submit(jsonBody).then(() => {
+        this.setState({
+          originalChecklist: JSON.parse(JSON.stringify(this.state.checklists)),
+          isChanged: false,
+          isLoading: false
+        })
+      })
     })
+
   }
   reset() {
     this.setState({
@@ -184,9 +202,9 @@ export default class SSCSettings extends React.PureComponent {
           This setting will allow you to configure the data displayed to only include the phases and items that are within your hospital’s standard of practice. All historical data will reflect this new standard as well.
         </div>
         {this.state.checklists.map((checklist, cIndex) => (
-          <Grid container spacing={3}>
+          <Grid container spacing={3} key={cIndex}>
             {checklist.phases.map((phase, pIndex) => (
-              <Grid item xs={4} >
+              <Grid item xs={4} key={`${cIndex}-${pIndex}`}>
                 <Phase {...phase} cIndex={cIndex} pIndex={pIndex} togglePhase={(c, p, i) => this.togglePhase(c, p, i)} />
               </Grid>
             ))}

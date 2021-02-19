@@ -6,14 +6,14 @@ import EfficiencySettings from './EfficiencySettings/Loadable';
 import UserManagement from './UserManagement/Loadable';
 import SSCSettings from './SSCSettings/Loadable';
 const StyledTabs = withStyles({
-  root:{
+  root: {
     boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
   },
   indicator: {
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    height:5,
+    height: 5,
     '& > span': {
       width: '100%',
       backgroundColor: '#028CC8',
@@ -26,12 +26,12 @@ const StyledTab = withStyles((theme) => ({
     textTransform: 'none',
     fontSize: 14,
     fontFamily: 'Noto Sans',
-    opacity:.8,
-    fontWeight:'bold',
-    color:'#000 !important',
-    minWidth:'unset',
-    paddingLeft:16,
-    paddingRight:16,
+    opacity: .8,
+    fontWeight: 'bold',
+    color: '#000 !important',
+    minWidth: 'unset',
+    paddingLeft: 16,
+    paddingRight: 16,
     // marginRight: theme.spacing(1),
     '&:focus': {
       opacity: 1,
@@ -62,31 +62,32 @@ export default class AdminPanel extends React.PureComponent {
       tabIndex: 0
     }
   }
-  handleChange(obj,tabIndex){
-    this.setState({tabIndex});
+  handleChange(obj, tabIndex) {
+    this.setState({ tabIndex });
   }
-  componentDidMount(){
+  componentDidMount() {
     const { match: { params } } = this.props;
     const tabIndex = parseInt(params.index);
-    if (tabIndex == params.index){
-      this.setState({tabIndex:Math.min(Math.max(tabIndex, 0), 2)})
+    if (tabIndex == params.index) {
+      this.setState({ tabIndex: Math.min(Math.max(tabIndex, 0), 2) })
     }
-    this.getConfig();
+    this.getEfficiencyConfig();
+    this.getSSCConfig();
   }
 
-  async getConfig() {
-    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config?facilityName="+this.props.facilityName, 'get', this.props.userToken, {})
+  async getEfficiencyConfig() {
+    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config?facilityName=" + this.props.facilityName, 'get', this.props.userToken, {})
       .then(result => {
         if (!result) {
           return;
         }
         result = JSON.parse(result)
-        this.setState({ fcotsThreshold:result.fcotsThreshold, turnoverThreshold:result.turnoverThreshold, hasEMR:result.hasEMR });
+        this.setState({ fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, hasEMR: result.hasEMR });
       });
 
   }
 
-  async submit(jsonBody) {
+  async submitEfficiencyConfig(jsonBody) {
     const url = `${process.env.EFFICIENCY_API}2/config`;
     return await globalFunctions.genericFetch(url, 'put', this.props.userToken, jsonBody)
       .then(result => {
@@ -95,6 +96,29 @@ export default class AdminPanel extends React.PureComponent {
         }
         result = JSON.parse(result)
         this.setState({ fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, hasEMR: result.hasEMR });
+      });
+  }
+
+  async getSSCConfig() {
+    return await globalFunctions.genericFetch(process.env.SSC_API + "2/config?facilityName=" + this.props.facilityName, 'get', this.props.userToken, {})
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        const sscConfig = JSON.parse(result);
+        this.setState({ sscConfig });
+      });
+  }
+
+  async submitSSCConfig(jsonBody) {
+    const url = `${process.env.SSC_API}2/config`;
+    return await globalFunctions.genericFetch(url, 'put', this.props.userToken, jsonBody)
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        const sscConfig = JSON.parse(result);
+        this.setState({ sscConfig });
       });
   }
 
@@ -107,7 +131,7 @@ export default class AdminPanel extends React.PureComponent {
         </div>
         <StyledTabs
           value={this.state.tabIndex}
-          onChange={(obj,value) => this.handleChange(obj,value)}
+          onChange={(obj, value) => this.handleChange(obj, value)}
           indicatorColor="primary"
           textColor="primary"
         >
@@ -116,18 +140,21 @@ export default class AdminPanel extends React.PureComponent {
           <StyledTab label="Surgical Safety Checklist" />
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
-          <UserManagement/>
+          <UserManagement />
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
           <EfficiencySettings
-          fcotsThreshold={this.state.fcotsThreshold} 
-          turnoverThreshold={this.state.turnoverThreshold}
-          hasEMR={this.state.hasEMR}
-          submit={(updates) => this.submit(updates)}
+            fcotsThreshold={this.state.fcotsThreshold}
+            turnoverThreshold={this.state.turnoverThreshold}
+            hasEMR={this.state.hasEMR}
+            submit={(updates) => this.submitEfficiencyConfig(updates)}
           />
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={2}>
-          <SSCSettings/>
+          <SSCSettings
+            sscConfig={this.state.sscConfig}
+            submit={(updates) => this.submitSSCConfig(updates)}
+          />
         </TabPanel>
 
       </div>
