@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import globalFuncs from '../../../utils/global-functions';
 import './style.scss';
-import { Card, Checkbox, Divider, FormControlLabel, Grid, Switch, withStyles } from '@material-ui/core';
+import { Card, Checkbox, Divider, FormControlLabel, Grid, Slider, Switch, Tooltip, withStyles } from '@material-ui/core';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react'
@@ -38,6 +38,64 @@ const SSTSwitch = withStyles((theme) => ({
     backgroundColor: '#C8C8C8'
   }
 }))(Switch);
+const SSTSlider = withStyles({
+  root: {
+    color: '#D8D8D8',
+    height: 8,
+    '& .MuiSlider-markLabel[data-index="0"]': {
+      transform: "translateX(0%)"
+    },
+    '& .MuiSlider-markLabel[data-index="1"]': {
+      transform: "translateX(-100%)"
+    }
+  },
+  thumb: {
+    height: 14,
+    width: 14,
+    backgroundColor: '#004F6E',
+    // border: '2px solid currentColor',
+    marginTop: -3,
+    marginLeft: -8,
+    '&:focus, &:hover, &$active': {
+      boxShadow: 'inherit',
+    },
+  },
+  active: {},
+  valueLabel: {
+    color: '#004F6E',
+    left: 'calc(-50% - 2px)',
+  },
+  mark: {
+    backgroundColor: '#bfbfbf',
+    height: 12,
+    width: 2,
+    marginTop: -2,
+  },
+  markLabel: {
+    fontSize: '14px',
+    fontFamily: 'Noto Sans'
+  },
+  markLabelActive: {
+    color: 'rgba(0, 0, 0, 0.54)'
+  },
+  track: {
+    height: 8,
+    borderRadius: 4,
+  },
+  rail: {
+    height: 8,
+    borderRadius: 4,
+  },
+})(Slider);
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    padding: '16px',
+    fontSize: '14px',
+    lineHeight: '19px',
+    fontFamily: 'Noto Sans'
+  }
+}))(Tooltip);
 
 function PhaseItem(props) {
   const { isActive, questionName, questionId, cIndex, pIndex, qIndex, togglePhase } = props;
@@ -91,22 +149,113 @@ function Phase(props) {
   )
 }
 
+function Goal(props) {
+  let { goal, currentGoal, title, tooltip, onChange } = props;
+  const clss = title && title.toLowerCase().replace(/\s/g, '');
+  if (currentGoal <= 5) {
+    let label = document.querySelector(`.${clss} .MuiSlider-markLabel`);
+    if (label)
+      label.style.transform = "translateX(0%)";
+  } else if (currentGoal >= 95) {
+    let label = document.querySelector(`.${clss} .MuiSlider-markLabel`);
+    if (label)
+      label.style.transform = "translateX(-100%)";
+  }
+  return (
+    <div className={`${clss}`}>
+      <div className="goal-title">
+        <span>
+          <span className="goal">{title}</span>
+          <LightTooltip interactive arrow
+            title={tooltip}
+            placement="top" fontSize="small"
+          >
+            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+          </LightTooltip>
+        </span>
+        <span className='goal-display'>{goal}</span>
+      </div>
+      <SSTSlider
+        valueLabelDisplay="auto"
+        defaultValue={currentGoal}
+        value={goal || 0}
+        // onChange={handleSliderChange}
+        onChange={(event, goal) => onChange(title, goal)}
+        marks={[currentGoal >= 0 ? { value: currentGoal, label: `Current: ${currentGoal}` } : {}]}
+      />
+    </div>
+  )
+}
+
+function Goals(props) {
+  const { complianceGoal, engagementGoal, qualityGoal, currentComplianceGoal, currentEngagementGoal, currentQualityGoal, updateGoal } = props;
+  const isActive = complianceGoal != null && engagementGoal != null && qualityGoal != null;
+  const toggle = () => updateGoal();
+  const onChange = (title, goal) => updateGoal(title, goal);
+  return (
+    <Card className={`goals ${isActive ? 'active' : 'inactive'}`} variant="outlined">
+      <div className="goal-header">
+        <div className="subtitle">Goals</div>
+        <div>
+          <FormControlLabel
+            control={
+              <SSTSwitch checked={isActive} onChange={toggle} disableRipple />
+            }
+            label={<span className="toggle-label">{isActive ? 'Enabled' : 'Disabled'}</span>}
+            labelPlacement='start'
+          />
+        </div>
+      </div>
+      <Divider light className="divider" />
+      <div className="goal-sliders">
+        <Goal
+          title={"Compliance Score"}
+          tooltip={"Compliance Score is the average of 1) the percentage of checklist phases performed and 2) the percentage of the checklist phases performed at the correct time. Each procedure requires one Briefing, one Timeout, and one Debriefing."}
+          goal={complianceGoal}
+          currentGoal={currentComplianceGoal}
+          onChange={onChange}
+        />
+        <Goal
+          title={"Engagement Score"}
+          tooltip={"Engagement Score is the average of 1) the attendance percentage out of the minimum number of people required during performed checklist phases and 2) the percentage of those in attendance who paused during performed checklist phases."}
+          goal={engagementGoal}
+          currentGoal={currentEngagementGoal}
+          onChange={onChange}
+        />
+        <Goal
+          title={"Quality Score"}
+          tooltip={"Quality Score is the percentage of priority items discussed for all performed checklist phases."}
+          goal={qualityGoal}
+          currentGoal={currentQualityGoal}
+          onChange={onChange}
+        />
+      </div>
+    </Card>
+  )
+}
+
 export default class SSCSettings extends React.PureComponent {
   constructor(props) {
     super(props);
     const { sscConfig } = this.props;
+    const { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
     this.state = {
-      checklists: sscConfig && sscConfig.checklists || [],
-      originalChecklist: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists || [])),
-      isChanged: false
+      checklists: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists || [])),
+      isChanged: false,
+      complianceGoal: complianceGoal,
+      engagementGoal: engagementGoal,
+      qualityGoal: qualityGoal
     }
   }
   componentDidUpdate(prevProps) {
     if (prevProps.sscConfig != this.props.sscConfig) {
       const { sscConfig } = this.props;
+      const { complianceGoal, engagementGoal, qualityGoal } = sscConfig;
       this.setState({
         checklists: sscConfig && sscConfig.checklists || [],
-        originalChecklist: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists || [])),
+        complianceGoal: complianceGoal,
+        engagementGoal: engagementGoal,
+        qualityGoal: qualityGoal
       })
     }
   }
@@ -123,6 +272,32 @@ export default class SSCSettings extends React.PureComponent {
       checklists,
       isChanged: true
     })
+  }
+
+  updateGoal(title, goal) {
+
+    switch (title) {
+      case "Compliance Score":
+        this.setState({ complianceGoal: goal })
+        break;
+      case "Engagement Score":
+        this.setState({ engagementGoal: goal })
+        break;
+      case "Quality Score":
+        this.setState({ qualityGoal: goal })
+        break;
+      default:
+        //Toggle on/off
+        let { complianceGoal, engagementGoal, qualityGoal } = this.state;
+        if (complianceGoal == null || engagementGoal == null || qualityGoal == null) {
+          const { sscConfig } = this.props;
+          let { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
+          this.setState({ complianceGoal, engagementGoal, qualityGoal })
+        } else {
+          this.setState({ complianceGoal: null, engagementGoal: null, qualityGoal: null })
+        }
+
+    }
   }
 
   renderNotice(hasCheckedPhase) {
@@ -154,15 +329,19 @@ export default class SSCSettings extends React.PureComponent {
     )
   }
   submit() {
+    const { complianceGoal, engagementGoal, qualityGoal } = this.state;
     const jsonBody = {
       "facilityId": this.props.facilityName,
       "checklists": this.state.checklists,
-      "configurations": []
+      "configurations": [
+        { name: "complianceGoal", "value": complianceGoal },
+        { name: "engagementGoal", "value": engagementGoal },
+        { name: "qualityGoal", "value": qualityGoal }
+      ]
     }
     this.setState({ isLoading: true }, () => {
       this.props.submit(jsonBody).then(() => {
         this.setState({
-          originalChecklist: JSON.parse(JSON.stringify(this.state.checklists)),
           isChanged: false,
           isLoading: false
         })
@@ -171,9 +350,14 @@ export default class SSCSettings extends React.PureComponent {
 
   }
   reset() {
+    const { sscConfig } = this.props;
+    const { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
     this.setState({
-      checklists: JSON.parse(JSON.stringify(this.state.originalChecklist)),
-      isChanged: false
+      checklists: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists)),
+      isChanged: false,
+      complianceGoal,
+      engagementGoal,
+      qualityGoal
     })
   }
 
@@ -190,8 +374,37 @@ export default class SSCSettings extends React.PureComponent {
         phase.isActive
       ))
     ));
+    const { sscConfig } = this.props;
+    const { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
+
     return (
       <section className={`ssc-settings-page ${this.props.hasEMR && 'has-emr'}`}>
+
+        <div className="title">
+          General
+        </div>
+        <div className="subtitle">
+          Setting Goals
+        </div>
+        <div className="content">
+          Set a target goal for each of the Surgical Safety Checklist scores.
+        </div>
+        <div>
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
+              <Goals
+                complianceGoal={this.state.complianceGoal}
+                engagementGoal={this.state.engagementGoal}
+                qualityGoal={this.state.qualityGoal}
+                currentComplianceGoal={complianceGoal}
+                currentEngagementGoal={engagementGoal}
+                currentQualityGoal={qualityGoal}
+                updateGoal={(title, goal) => this.updateGoal(title, goal)}
+              />
+            </Grid>
+          </Grid>
+        </div>
+
         <div className="title">
           Configuration
         </div>

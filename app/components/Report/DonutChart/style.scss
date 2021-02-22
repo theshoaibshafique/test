@@ -1,7 +1,7 @@
-@import '../../../styles/global-styles';
-.donut-chart{
+@import "../../../styles/global-styles";
+.donut-chart {
   margin-bottom: 20px;
-  .chart-title{
+  .chart-title {
     opacity: 0.8;
     color: #000000;
     font-family: "Noto Sans";
@@ -10,16 +10,16 @@
     line-height: 36px;
     text-align: center;
   }
-  .donut-chart-detailed-legend{
+  .donut-chart-detailed-legend {
     display: flex;
     margin-top: 32px;
     flex-direction: column;
     margin-left: 16px;
   }
-  .legend-title{
+  .legend-title {
     display: flex;
   }
-  .legend-item{
+  .legend-item {
     margin: 4px 0;
     opacity: 0.8;
     color: #000000;
@@ -28,7 +28,7 @@
     letter-spacing: 0;
     line-height: 19px;
   }
-  .donut-title{
+  .donut-title {
     opacity: 0.8;
     color: #000000;
     font-family: "Noto Sans";
@@ -37,28 +37,28 @@
     line-height: 24px;
   }
   .second-title {
-    color: #004F6E;
+    color: #004f6e;
     font-family: "Noto Sans";
     font-size: 42px;
     letter-spacing: 0;
     line-height: 42px;
   }
-  .donut-unit{
-    color: #004F6E;
+  .donut-unit {
+    color: #004f6e;
     font-family: "Noto Sans";
     font-size: 18px;
     letter-spacing: 0;
     line-height: 42px;
   }
-  .c3-tooltip-container .tooltip{
+  .c3-tooltip-container .tooltip {
     white-space: nowrap;
   }
   .circle:before {
-    content: ' \25CF';
+    content: " \25CF";
     font-size: 32px;
     line-height: 0;
   }
-  .tooltip{
+  .tooltip {
     color: #fff;
     padding: 16px;
     font-size: 14px;
@@ -70,7 +70,10 @@
     border-radius: 4px;
     background-color: rgba(97, 97, 97, 0.9);
   }
+  path {
+    stroke-width: 0;
+  }
 }
-.c3-arc-NA{
-  fill: #F3F3F3 !important;
+.c3-arc-NA {
+  fill: #f3f3f3 !important;
 }

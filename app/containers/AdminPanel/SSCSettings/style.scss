@@ -84,8 +84,34 @@
         margin-top: 8px;
     }
 }
+.goals{
+    margin-bottom: 32px;
+}
+.goals,
 .phase {
+    .goal {
+        opacity: 0.6;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+    .goal-title {
+        display: flex;
+        justify-content: space-between;
+    }
+    .goal-display {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
     border-radius: 8px;
+    .goal-header,
     .phase-header {
         padding: 8px 16px;
         .subtitle {
@@ -107,6 +133,7 @@
             display: none;
             transition: 0.5s;
         }
+        .goal-sliders,
         .phase-items {
             max-height: 0;
         }
@@ -114,9 +141,12 @@
     .divider {
         margin: 0 16px;
     }
+
+    .goal-sliders,
     .phase-items {
         max-height: 215px;
-        overflow-y: scroll;
+        overflow-y: auto;
+        overflow-x: hidden;
         padding: 0 16px;
         transition: 0.2s;
         .phase-item {
@@ -124,6 +154,11 @@
             color: #000000;
             font-family: "Noto Sans";
         }
+    }
+    .goal-sliders {
+        overflow: visible;
+        margin-top: 8px;
+        max-height: 300px;
     }
     .SST-Checkbox:not([class*="disabled"]) {
         svg {
