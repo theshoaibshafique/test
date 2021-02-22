@@ -103,16 +103,19 @@ function PhaseItem(props) {
 
   return (
     <FormControlLabel
+      style={{ display: 'table' }}
       control={
-        <Checkbox
-          disableRipple
-          className="SST-Checkbox"
-          icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-          checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-          onChange={toggle}
-          checked={isActive}
-          value={questionId}
-        />
+        <div style={{ display: 'table-cell' }}>
+          <Checkbox
+            disableRipple
+            className="SST-Checkbox"
+            icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+            checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
+            onChange={toggle}
+            checked={isActive}
+            value={questionId}
+          />
+        </div>
       }
       label={<div className="phase-item">{questionName}</div>}
     />
@@ -306,7 +309,7 @@ export default class SSCSettings extends React.PureComponent {
           this.setState({ complianceGoal: null, engagementGoal: null, qualityGoal: null })
         }
     }
-    this.setState({isChanged:true})
+    this.setState({ isChanged: true })
   }
 
   renderNotice(hasCheckedPhase) {

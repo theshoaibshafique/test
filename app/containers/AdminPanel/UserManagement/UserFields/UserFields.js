@@ -208,8 +208,8 @@ class UserFields extends React.Component {
               control={
                 <Checkbox
                   disableRipple
-                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
                   className="SST-Checkbox"
                   id="userManagement"
                   name="userManagement"
@@ -224,8 +224,8 @@ class UserFields extends React.Component {
               control={
                 <Checkbox
                   disableRipple
-                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
                   className="SST-Checkbox"
                   id="mmView"
                   name="mmView"
@@ -241,8 +241,8 @@ class UserFields extends React.Component {
               control={
                 <Checkbox
                   disableRipple
-                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
                   className="SST-Checkbox"
                   id="mmEdit"
                   name="mmEdit"
@@ -258,8 +258,8 @@ class UserFields extends React.Component {
               control={
                 <Checkbox
                   disableRipple
-                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
                   className="SST-Checkbox"
                   id="presenterAccess"
                   name="presenterAccess"
@@ -277,8 +277,8 @@ class UserFields extends React.Component {
               control={
                 <Checkbox
                   disableRipple
-                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
                   className="SST-Checkbox"
                   id="sscAccess"
                   name="sscAccess"
@@ -294,8 +294,8 @@ class UserFields extends React.Component {
               control={
                 <Checkbox
                   disableRipple
-                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
                   className="SST-Checkbox"
                   id="efficiencyAccess"
                   name="efficiencyAccess"

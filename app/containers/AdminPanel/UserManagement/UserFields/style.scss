@@ -8,8 +8,15 @@
     }
 }
 
-.SST-Checkbox:not([class*="disabled"]) {
-    svg { color: $dark-grey; }
+.SST-Checkbox {
+    &:not([class*="disabled"]) {
+        svg {
+            color: $dark-grey;
+        }
+    }
+    :checked ~ svg{
+        color: #004F6E
+    }
 }
 .MuiCheckbox-colorSecondary.Mui-disabled{
     opacity: .3;

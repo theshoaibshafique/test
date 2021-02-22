@@ -84,7 +84,7 @@
         margin-top: 8px;
     }
 }
-.goals{
+.goals {
     margin-bottom: 32px;
 }
 .goals,
@@ -160,9 +160,14 @@
         margin-top: 8px;
         max-height: 300px;
     }
-    .SST-Checkbox:not([class*="disabled"]) {
-        svg {
-            color: $dark-grey;
+    .SST-Checkbox {
+        &:not([class*="disabled"]) {
+            svg {
+                color: $dark-grey;
+            }
+        }
+        :checked ~ svg{
+            color: #004F6E
         }
     }
 }
