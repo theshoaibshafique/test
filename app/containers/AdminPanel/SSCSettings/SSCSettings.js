@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import globalFuncs from '../../../utils/global-functions';
 import './style.scss';
@@ -152,6 +152,15 @@ function Phase(props) {
 function Goal(props) {
   let { goal, currentGoal, title, tooltip, onChange } = props;
   const clss = title && title.toLowerCase().replace(/\s/g, '');
+  //Keep track of your own Value and only update Goal on Committed (Better performance)
+  let [value, setValue] = React.useState(goal);
+  useEffect(() => {
+    value = goal;
+  });
+  const handleSliderChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  //Adjust labels so the appear within the slider
   if (currentGoal <= 5) {
     let label = document.querySelector(`.${clss} .MuiSlider-markLabel`);
     if (label)
@@ -173,14 +182,14 @@ function Goal(props) {
             <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
           </LightTooltip>
         </span>
-        <span className='goal-display'>{goal}</span>
+        <span className='goal-display'>{value || goal}</span>
       </div>
       <SSTSlider
         valueLabelDisplay="auto"
-        defaultValue={currentGoal}
-        value={goal || 0}
-        // onChange={handleSliderChange}
-        onChange={(event, goal) => onChange(title, goal)}
+        defaultValue={50}
+        value={value || goal || 0}
+        onChange={handleSliderChange}
+        onChangeCommitted={(event, goal) => onChange(title, goal)}
         marks={[currentGoal >= 0 ? { value: currentGoal, label: `Current: ${currentGoal}` } : {}]}
       />
     </div>
@@ -296,8 +305,8 @@ export default class SSCSettings extends React.PureComponent {
         } else {
           this.setState({ complianceGoal: null, engagementGoal: null, qualityGoal: null })
         }
-
     }
+    this.setState({isChanged:true})
   }
 
   renderNotice(hasCheckedPhase) {
