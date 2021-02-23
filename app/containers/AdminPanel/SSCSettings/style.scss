@@ -89,6 +89,7 @@
 }
 .goals,
 .phase {
+    border-radius: 8px;
     .goal {
         opacity: 0.6;
         color: #000000;
@@ -110,7 +111,6 @@
         letter-spacing: 0;
         line-height: 19px;
     }
-    border-radius: 8px;
     .goal-header,
     .phase-header {
         padding: 8px 16px;
@@ -159,6 +159,9 @@
         overflow: visible;
         margin-top: 8px;
         max-height: 300px;
+    }
+    .phase-items{
+        padding-bottom: 8px;
     }
     .SST-Checkbox {
         &:not([class*="disabled"]) {

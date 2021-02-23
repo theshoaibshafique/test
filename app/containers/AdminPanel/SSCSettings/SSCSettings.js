@@ -159,20 +159,21 @@ function Goal(props) {
   let [value, setValue] = React.useState(goal);
   useEffect(() => {
     value = goal;
+    if (currentGoal <= 5) {
+      let label = document.querySelector(`.${clss} .MuiSlider-markLabel`);
+      if (label)
+        label.style.transform = "translateX(0%)";
+    } else if (currentGoal >= 95) {
+      let label = document.querySelector(`.${clss} .MuiSlider-markLabel`);
+      if (label)
+        label.style.transform = "translateX(-100%)";
+    }
   });
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
   };
   //Adjust labels so the appear within the slider
-  if (currentGoal <= 5) {
-    let label = document.querySelector(`.${clss} .MuiSlider-markLabel`);
-    if (label)
-      label.style.transform = "translateX(0%)";
-  } else if (currentGoal >= 95) {
-    let label = document.querySelector(`.${clss} .MuiSlider-markLabel`);
-    if (label)
-      label.style.transform = "translateX(-100%)";
-  }
+  
   return (
     <div className={`${clss}`}>
       <div className="goal-title">
@@ -193,7 +194,7 @@ function Goal(props) {
         value={value || goal || 0}
         onChange={handleSliderChange}
         onChangeCommitted={(event, goal) => onChange(title, goal)}
-        marks={[currentGoal >= 0 ? { value: currentGoal, label: `Current: ${currentGoal}` } : {}]}
+        marks={[currentGoal != null ? { value: currentGoal, label: `Current: ${currentGoal}` } : {}]}
       />
     </div>
   )
@@ -304,7 +305,7 @@ export default class SSCSettings extends React.PureComponent {
         if (complianceGoal == null || engagementGoal == null || qualityGoal == null) {
           const { sscConfig } = this.props;
           let { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
-          this.setState({ complianceGoal, engagementGoal, qualityGoal })
+          this.setState({ complianceGoal:complianceGoal||50, engagementGoal:engagementGoal||50, qualityGoal:qualityGoal||50  })
         } else {
           this.setState({ complianceGoal: null, engagementGoal: null, qualityGoal: null })
         }
