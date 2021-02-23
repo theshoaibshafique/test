@@ -22,6 +22,8 @@ import StackedBarChart from '../../components/Report/StackedBarChart';
 import Checklist from '../../components/Report/Checklist';
 import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDetail';
 import CloseIcon from '@material-ui/icons/Close';
+import { COMPLIANCE } from '../../constants';
+import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -55,8 +57,8 @@ export default class SSChecklist extends React.PureComponent {
       this.setState({ reportType: this.props.reportType, reportData: [] }, () => {
         this.getReportLayout();
       })
-    } else if (prevProps.specialties != this.props.specialties){
-      this.setState({specialties:this.props.specialties},()=>{
+    } else if (prevProps.specialties != this.props.specialties) {
+      this.setState({ specialties: this.props.specialties }, () => {
         clearTimeout(this.state.timeout);
         //Load the report once specialties list is changed/populated
         this.getReportLayout();
@@ -67,11 +69,11 @@ export default class SSChecklist extends React.PureComponent {
   componentDidMount() {
     this.loadFilter();
     //Give specialties list a max loading time of 10 seconds before loading the report
-    if (this.props.specialties.size == 0){
-      let timeout = setTimeout(()=>{
+    if (this.props.specialties.size == 0) {
+      let timeout = setTimeout(() => {
         this.getReportLayout()
-      },10000);
-      this.setState({timeout})
+      }, 10000);
+      this.setState({ timeout })
     } else {
       this.getReportLayout();
     }
@@ -119,7 +121,7 @@ export default class SSChecklist extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ tileRequest: [], isFilterApplied: true, isLoading: true, modalTile:null, source: axios.CancelToken.source() },
+    this.setState({ tileRequest: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
       () => {
         let jsonBody = {
           "reportType": this.state.reportType,
@@ -134,20 +136,12 @@ export default class SSChecklist extends React.PureComponent {
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
-              if (result.tileRequest && result.tileRequest.length > 0) {
-                let reportData = this.groupTiles(result.tileRequest.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
-                let tileRequest = result.tileRequest.filter((tile) => {
-                  return moment(tile.startDate).isSame(this.state.month, 'month');
-                });
-                this.setState({ pendingTileCount: this.state.pendingTileCount + result.tileRequest.length, reportData, tileRequest },
-                  () => {
-                    this.state.reportData.map((tileGroup, i) => {
-                      tileGroup.group.map((tile, j) => {
-                        this.getTile(tile, i, j);
-                      });
-                    })
+              result = COMPLIANCE;
+              if (result.tiles && result.tiles.length > 0) {
+                const reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
 
-                  });
+                this.setState({ reportData, isLoading: false });
+
               } else {
                 //report does not exist
                 this.notLoading();
@@ -266,31 +260,31 @@ export default class SSChecklist extends React.PureComponent {
       "procedureName": ""
     }
     jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName);
-    let modal = this.state.modalTile || {days:[]};
+    let modal = this.state.modalTile || { days: [] };
     //If nothing changed - open the tile
-    if (modal.days.length === jsonBody.days.length && modal.days.every(function(value, index) { return value === jsonBody.days[index]})
+    if (modal.days.length === jsonBody.days.length && modal.days.every(function (value, index) { return value === jsonBody.days[index] })
       && modal.roomName == jsonBody.roomName
       && modal.specialtyName == jsonBody.specialtyName
-      && moment.utc(modal.startDate).isSame(this.state.month.startOf('month'),'month')){
-        this.setState({isOpen:true})
-        return
+      && moment.utc(modal.startDate).isSame(this.state.month.startOf('month'), 'month')) {
+      this.setState({ isOpen: true })
+      return
     }
 
-    this.setState({isOpen:true, modalTile:this.state.modalTile || jsonBody});
+    this.setState({ isOpen: true, modalTile: this.state.modalTile || jsonBody });
     globalFuncs.axiosFetch(process.env.SSCTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
       .then(result => {
         result = result.data;
         if (result === 'error' || result === 'conflict') {
-          this.setState({isOpen:false, modalTile:null, isLoading:false});
+          this.setState({ isOpen: false, modalTile: null, isLoading: false });
         } else {
-          result = {...jsonBody, ...result, roomName:jsonBody.roomName};
-          if (moment.utc(tileRequest.dataDate).isSame(this.state.month.startOf('month'),'month')) {
+          result = { ...jsonBody, ...result, roomName: jsonBody.roomName };
+          if (moment.utc(tileRequest.dataDate).isSame(this.state.month.startOf('month'), 'month')) {
             this.setState({ modalTile: result });
           }
 
         }
       }).catch((error) => {
-        this.setState({isOpen:false, modalTile:null, isLoading:false});
+        this.setState({ isOpen: false, modalTile: null, isLoading: false });
       });
   }
 
@@ -330,49 +324,52 @@ export default class SSChecklist extends React.PureComponent {
       }));
   }
 
+  renderDashboard() {
 
-  renderTiles() {
-    //Tiles of the same type get a different colour
+    return this.renderTiles()
+
+    // return <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`} direction="column">
+    //   {
+    //     this.state.hasNoCases ?
+    //       (<Grid item xs={12} className="ssc-message">
+    //         No data available this month
+    //         <Grid item xs={12} className="ssc-message-subtitle">
+    //           (Try a different filter criteria)
+    //         </Grid>
+    //       </Grid>)
+    //       :
+    //       (!this.state.reportData.length)
+    //         ?
+    //         !isLoading && <Grid item xs={12} className="ssc-message">
+    //           No data available this month
+    //                 </Grid>
+    //         :
+    //         !isLoading && this.renderTiles()}
+    // </Grid>
+  }
+
+
+  renderTiles(reportData = this.state.reportData) {
     let tileTypeCount = {};
-    return this.state.reportData && this.state.reportData.map((tileGroup, index) => {
-      //Tiles in the same group are displayed in 1 "Card"
-      let tile = tileGroup.group[0];
-      if (tileGroup.group.length > 1) {
-        return (
-          <Grid item xs={12} key={`-${index}`}>
-            <Card className="ssc-card">
-              <CardContent>
-                <Grid container spacing={0} >
-                  {this.state.reportType == 'QualityScoreReport' && tile.tileType == 'BarChart' && <Grid className="ssc-chart-title" style={{ textAlign: 'center', marginBottom: 24 }} item xs={12}>{tile.total}</Grid>}
-                  {
-                    tileGroup.group.map((tile, i) => {
-                      tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
-                      tile.tileTypeCount = tileTypeCount[tile.tileType];
-                      let xs = this.getTileSize(tile.tileType);
-                      if (this.state.reportType == 'QualityScoreReport' && tile.tileType == 'BarChart' && tile.body) {
-                        return <div key={`${tile.tileType}${i}`}></div>
-                      } else if (tile.tileType == 'Checklist' && tile.body) {
-                        xs = 12;
-                      }
-                      return <Grid item xs={xs} key={`${tile.tileType}${i}`} className={tile.tileType}>{this.renderTile(tile)}</Grid>
-                    })
-                  }
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-        )
-      }
-      tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
-      tile.tileTypeCount = tileTypeCount[tile.tileType];
+    let result = reportData && reportData.map((tileGroup, index) => {
       return (
-        <Grid item xs={this.getTileSize(tile.tileType)} className={`${tile.tileType}-${tile.tileTypeCount}`} key={index}>
-          <Card className={`ssc-card ${tile.tileType}`}>
-            <CardContent>{this.renderTile(tile)}</CardContent>
-          </Card>
+        // xs should be max tilesize of group
+        <Grid item xs={8/(index+1)}> 
+          <Grid container spacing={3}>
+            {tileGroup.group.map((tile, i) => {
+              tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
+              tile.tileTypeCount = tileTypeCount[tile.tileType];
+              return <Grid item xs={this.getTileSize(tile.tileType, tile.tileOrder)} className={`grid-${tile.tileType}`} key={`${index}-${i}`}>
+                <Card className={`ssc-card ${tile.tileType}`}>
+                  <CardContent>{this.renderTile(tile)}</CardContent>
+                </Card>
+              </Grid>
+            })}
+          </Grid>
         </Grid>
       )
-    })
+    }) || [];
+    return <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`}>{result}</Grid>;
   }
 
   renderTile(tile) {
@@ -400,10 +397,10 @@ export default class SSChecklist extends React.PureComponent {
       case 'AREACHART':
         return <AreaChart {...tile} />
       case 'BARCHART':
-        if (this.state.reportType == 'QualityScoreReport'){
-          tile.tileTypeCount+=1;
+        if (this.state.reportType == 'QualityScoreReport') {
+          tile.tileTypeCount += 1;
         }
-        let pattern = this.state.chartColours.slice(tile.tileTypeCount-1, this.state.chartColours.length);
+        let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1, this.state.chartColours.length);
         return <BarChart
           pattern={pattern} id={tile.tileTypeCount}
           reportType={this.props.reportType}
@@ -421,6 +418,9 @@ export default class SSChecklist extends React.PureComponent {
         return <ChecklistDetail {...tile} closeModal={() => this.closeModal()} />
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} yAxis={tile.subTitle} xAxis={tile.footer} title={tile.description} description={''} />
+      case 'TIMESERIESCHART':
+        return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} />
+
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;
         //If the selected month is CURRENT month when this message is shown - Report will be ready next month
@@ -433,20 +433,9 @@ export default class SSChecklist extends React.PureComponent {
 
   getTileSize(tileType) {
     switch (`${tileType}`.toUpperCase()) {
-      case 'LIST':
-      case 'LISTDETAIL':
-      case 'LISTDETAILED':
-      case 'INFOGRAPHICTEXT':
-      case 'CHECKLIST':
-        return 4;
-      case 'BARCHART':
-      case 'AREACHART':
-      case 'LINECHART':
-      case 'BARCHARTDETAILED':
-      case 'STACKEDBARCHART':
-        return 8;
-      case 'INFOGRAPHICMESSAGE':
-      case 'INFOGRAPHICPARAGRAPH':
+      case 'TIMESERIESCHART':
+        return 12;
+      default:
         return 12;
     }
   }
@@ -458,7 +447,7 @@ export default class SSChecklist extends React.PureComponent {
   }
 
   render() {
-    let isLoading = this.state.isLoading || this.state.pendingTileCount > 0;
+    let isLoading = this.state.isLoading;
     return (
       <div className="ssc-page">
         <Grid container spacing={0} className="ssc-picker-container" >
@@ -511,30 +500,13 @@ export default class SSChecklist extends React.PureComponent {
             })
           }}
         >
-          <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`}>
-            {
-              this.state.hasNoCases ?
-                <Grid item xs={12} className="ssc-message">
-                  No data available this month
-                  <Grid item xs={12} className="ssc-message-subtitle">
-                    (Try a different filter criteria)
-                  </Grid>
-                </Grid>
-                :
-                (!this.state.tileRequest.length)
-                  ?
-                  !isLoading && <Grid item xs={12} className="ssc-message">
-                    No data available this month
-                    </Grid>
-                  :
-                  !isLoading && this.renderTiles()}
-          </Grid>
+          {this.renderDashboard()}
 
           <Modal
             open={this.state.isOpen}
             onClose={() => this.closeModal()}
           >
-            <DialogContent className="ssc Modal"  style={{ minHeight: 320, minWidth: 320 }}>
+            <DialogContent className="ssc Modal" style={{ minHeight: 320, minWidth: 320 }}>
               {this.renderTile(this.state.modalTile)}
             </DialogContent>
           </Modal>
