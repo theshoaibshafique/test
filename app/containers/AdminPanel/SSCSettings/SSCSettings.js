@@ -389,7 +389,7 @@ export default class SSCSettings extends React.PureComponent {
     ));
     const { sscConfig } = this.props;
     const { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
-
+    const orderBy = {"Briefing":1,"Timeout":2,"Debriefing":3};
     return (
       <section className={`ssc-settings-page ${this.props.hasEMR && 'has-emr'}`}>
 
@@ -429,7 +429,7 @@ export default class SSCSettings extends React.PureComponent {
         </div>
         {this.state.checklists.map((checklist, cIndex) => (
           <Grid container spacing={3} key={cIndex}>
-            {checklist.phases.map((phase, pIndex) => (
+            {checklist.phases.sort((a,b) => orderBy[a.phaseName] -orderBy[b.phaseName]).map((phase, pIndex) => (
               <Grid item xs={4} key={`${cIndex}-${pIndex}`}>
                 <Phase {...phase} cIndex={cIndex} pIndex={pIndex} togglePhase={(c, p, i) => this.togglePhase(c, p, i)} />
               </Grid>
