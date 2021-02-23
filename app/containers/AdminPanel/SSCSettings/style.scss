@@ -136,6 +136,8 @@
         .goal-sliders,
         .phase-items {
             max-height: 0;
+            overflow: hidden;
+            padding: 0;
         }
     }
     .divider {
