@@ -24,6 +24,7 @@ import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDe
 import CloseIcon from '@material-ui/icons/Close';
 import { COMPLIANCE } from '../../constants';
 import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
+import MultiDonutChart from '../../components/Report/MultiDonutChart/MultiDonutChart';
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -351,10 +352,19 @@ export default class SSChecklist extends React.PureComponent {
 
   renderTiles(reportData = this.state.reportData) {
     let tileTypeCount = {};
+    let xs = null;
+    switch (`${this.state.reportType}`.toUpperCase()) {
+      case 'OVERVIEW':
+        xs = [12];
+        break;
+      default:
+        xs = [4, 8];
+    }
+
     let result = reportData && reportData.map((tileGroup, index) => {
       return (
         // xs should be max tilesize of group
-        <Grid item xs={8/(index+1)}> 
+        <Grid item xs={xs[index]}>
           <Grid container spacing={3}>
             {tileGroup.group.map((tile, i) => {
               tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
@@ -371,6 +381,7 @@ export default class SSChecklist extends React.PureComponent {
     }) || [];
     return <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`}>{result}</Grid>;
   }
+
 
   renderTile(tile) {
     if (!tile) {
@@ -420,6 +431,8 @@ export default class SSChecklist extends React.PureComponent {
         return <StackedBarChart {...tile} specialties={this.props.specialties} yAxis={tile.subTitle} xAxis={tile.footer} title={tile.description} description={''} />
       case 'TIMESERIESCHART':
         return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} />
+      case 'DONUTBOX':
+        return <MultiDonutChart {...tile} />
 
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;

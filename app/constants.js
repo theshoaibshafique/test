@@ -11,7 +11,7 @@ export const COMPLIANCE = {
       "title": "Compliance Score Trend",
       "subTitle": "30-Day Moving Average",
       "tileType": "TimeSeriesChart",
-      "groupOrder": 1,
+      "groupOrder": 2,
       "tileOrder": 1,
       "dataPoints": [
         {
@@ -2475,12 +2475,23 @@ export const COMPLIANCE = {
       "yAxis": "Compliance Score"
     },
     {
-      "title": "Phase Completion",
+      "title": "Phases Performed",
       "subTitle": null,
       "tileType": "DonutBox",
-      "groupOrder": 1,
+      "groupOrder": 2,
       "tileOrder": 2,
       "dataPoints": [
+        // {
+        //   "title": "Briefing",
+        //   "subTitle": "Performed",
+        //   "description": null,
+        //   "note": null,
+        //   "valueX": "99",
+        //   "valueY": null,
+        //   "valueZ": null,
+        //   "color": null,
+        //   "toolTip": null
+        // },
         {
           "title": "Debriefing",
           "subTitle": "Performed",
@@ -2497,7 +2508,7 @@ export const COMPLIANCE = {
           "subTitle": "Performed",
           "description": null,
           "note": null,
-          "valueX": "100",
+          "valueX": "0",
           "valueY": null,
           "valueZ": null,
           "color": null,
@@ -2517,15 +2528,15 @@ export const COMPLIANCE = {
       "title": "Phase Timing",
       "subTitle": null,
       "tileType": "DonutBox",
-      "groupOrder": 1,
-      "tileOrder": 2,
+      "groupOrder": 2,
+      "tileOrder": 3,
       "dataPoints": [
         {
           "title": "Debriefing",
           "subTitle": "Correct Timing",
           "description": null,
           "note": null,
-          "valueX": null,
+          "valueX": "40",
           "valueY": null,
           "valueZ": null,
           "color": null,
@@ -2536,7 +2547,7 @@ export const COMPLIANCE = {
           "subTitle": "Correct Timing",
           "description": null,
           "note": null,
-          "valueX": null,
+          "valueX": "60",
           "valueY": null,
           "valueZ": null,
           "color": null,
@@ -2556,7 +2567,7 @@ export const COMPLIANCE = {
       "title": "Compliance Score",
       "subTitle": null,
       "tileType": "MeterInfographic",
-      "groupOrder": 2,
+      "groupOrder": 1,
       "tileOrder": 1,
       "dataPoints": [
         {
@@ -2584,7 +2595,7 @@ export const COMPLIANCE = {
       "title": "Specialty Scores",
       "subTitle": null,
       "tileType": "ScatterPlot",
-      "groupOrder": 2,
+      "groupOrder": 1,
       "tileOrder": 2,
       "dataPoints": [
         {
