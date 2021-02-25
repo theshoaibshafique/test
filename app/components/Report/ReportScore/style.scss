@@ -1,55 +1,52 @@
-@import '../../../styles/global-styles';
-
-.score-title {
+.ssc-score {
+  .score-title {
     opacity: 0.8;
     color: #000000;
-    font-size: 26px;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    font-weight: bold;
     letter-spacing: 0;
-    line-height: 36px;
-    margin-top: 16px !important;
+    line-height: 24px;
+    margin-bottom: 16px;
   }
-
-
-.score-display {
-    color: #004F6E;
-    font-size: 138px;
+  .score-display {
+    color: #004f6e;
+    font-family: "Noto Sans";
+    font-size: 74px;
     letter-spacing: 0;
-    line-height: 138px;
-    text-align: center;
-    margin: 8px 0 !important;
+    line-height: 74px;
+    &.large {
+      font-size: 138px;
+      letter-spacing: 0;
+      line-height: 134px;
+    }
   }
-
-  .report-score .link {
-    color: #00B3DE;
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 19px;
-    margin-top: 18px;
-    // margin-bottom: 16px;
+  .goal-slider {
+    text-align: right;
   }
-
-.score-message {
-  opacity: 0.8;
-  color: #000000;
-  font-family: "Noto Sans";
-  font-size: 18px;
-  letter-spacing: 0;
-  line-height: 24px;
-  text-align: center;
-}
-.score-subtitle {
-  opacity: 0.8;
-  color: #000000;
-  font-family: "Noto Sans";
-  font-size: 14px;
-  letter-spacing: 0;
-  line-height: 19px;
-  text-align: center;
-  margin-top: 8px !important;
-}
-.no-data-score{
-  min-height: 156px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  .compare {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #004f6e;
+    border-radius: 4px;
+    background-color: rgba(167, 229, 253,.3);
+    margin-top: 16px;
+    padding: 8px 24px !important;
+    .title {
+      font-family: "Noto Sans";
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 0;
+      line-height: 24px;
+      vertical-align: middle;
+      max-width: 170px;
+    }
+    .compare-score {
+      font-family: "Noto Sans";
+      font-size: 42px;
+      letter-spacing: 0;
+      line-height: 57px;
+    }
+  }
 }

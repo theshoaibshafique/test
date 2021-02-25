@@ -186,7 +186,7 @@ export default class Efficiency extends React.PureComponent {
         if (latestEndDate.isSameOrBefore(endDate)) {
           endDate = latestEndDate.subtract(1,'hour');
         }
-        this.state.pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
+        const pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
 
         const fcotsThresholdList = globalFuncs.formatSecsToTime(result.fcotsThreshold).split(":");
         const turnoverThresholdList = globalFuncs.formatSecsToTime(result.turnoverThreshold).split(":");
@@ -195,7 +195,7 @@ export default class Efficiency extends React.PureComponent {
         const outlierThresholdHrs = this.state.outlierThresholdHrs || turnoverThresholdList[0];
         const outlierThresholdMinute = this.state.outlierThresholdMinute || turnoverThresholdList[1];
         this.setState({
-          earliestStartDate, latestEndDate, startDate, endDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold,
+          earliestStartDate, latestEndDate, startDate, endDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, pendingWarning,
           gracePeriodMinute, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR, hospitalAbbr: result.abbreviation
         }, () => {
           this.getReportLayout();

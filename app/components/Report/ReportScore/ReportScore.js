@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Tooltip, withStyles } from '@material-ui/core';
+import { Grid, Slider, Tooltip, withStyles } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import './style.scss';
@@ -15,19 +15,74 @@ const LightTooltip = withStyles((theme) => ({
   }
 }))(Tooltip);
 
+const withStylesProps = styles =>
+  Component =>
+    props => {
+      const Comp = withStyles(styles(props))(Component);
+      return <Comp {...props} />;
+    };
+const styles = props => ({
+  root: {
+    color: '#FFC74D',
+    height: 8
+  },
+  disabled: {
+    color: `${props.color || '#FF4D4D'} !important`,
+  },
+  thumb: {
+    display: 'none'
+  },
+  active: {},
+  valueLabel: {
+    color: '#004F6E',
+    left: 'calc(-50% - 2px)',
+  },
+  mark: {
+    backgroundColor: '#592D82',
+    height: 2,
+    width: 12,
+    marginLeft: -4,
+  },
+  markLabel: {
+    fontSize: '12px',
+    fontFamily: 'Noto Sans',
+    left: '-24px !important',
+    color:'#592D82'
+  },
+  markLabelActive: {
+    color: 'rgba(0, 0, 0, 0.54)'
+  },
+  vertical: {
+    '& $track': {
+      width: 8,
+    },
+    '& $rail': {
+      width: 8,
+      color: '#F3F3F3'
+    },
+  },
+  track: {
+    borderRadius: '0 0 4px 4px',
+  },
+  rail: {
+    borderRadius: 4,
+  },
+});
+const SSTSlider = withStylesProps(styles)(props => (<Slider className={props.classes} {...props} />));
+
 export default class ReportScore extends React.PureComponent {
   constructor(props) {
     super(props);
   };
 
-  redirect() {
-    this.props.pushUrl(this.props.redirectLink);
-  }
+
 
   render() {
+    const { title, toolTip, total, dataPoints, goal } = this.props
+    let compareValue = dataPoints && dataPoints.length && dataPoints[0] || false;
     return (
       <LoadingOverlay
-        active={!this.props.score}
+        active={false}
         spinner
         className="overlays"
         styles={{
@@ -44,31 +99,34 @@ export default class ReportScore extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} style={{ textAlign: 'center', minHeight: 190 }} className="report-score">
-          <Grid item xs={12} className="score-title">
-            <span >
-              {this.props.title}
-              {this.props.tooltipText && <LightTooltip interactive arrow title={this.props.tooltipText} placement="top" fontSize="small">
+        <Grid container spacing={2} className="ssc-score">
+          <Grid item xs={8} >
+            <div className="score-title">
+              {title}
+              {toolTip && <LightTooltip interactive arrow
+                title={toolTip.map((line) => { return <div style={!line ? { margin: 8 } : {}}>{line}</div> })}
+                placement="top" fontSize="small"
+              >
                 <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
               </LightTooltip>}
-            </span>
+            </div>
+            <div className={`score-display ${compareValue && 'large'}`}>
+              {total}
+            </div>
           </Grid>
-          {this.props.message && <Grid item xs={12} className="no-data-score">
-            <div className="score-message">{this.props.message}</div>
-            {this.props.subTitle && <div className="score-subtitle">
-              {this.props.subTitle}
-            </div>}
+          <Grid itemx xs={4} className="goal-slider">
+            <SSTSlider
+              value={total}
+              orientation='vertical'
+              color='#FFC74D'
+              marks={goal != null ? [{ value: goal, label: 'Goal' } ] : []}
+              disabled />
+          </Grid>
+          {compareValue && <Grid item xs={12} className="compare">
+              <div className="title">{compareValue.title}</div>
+              <div className="compare-score">{compareValue.valueX}</div>
           </Grid>}
 
-
-          {this.props.score >= 0 && <Grid item xs={12} className="score-display">
-            {this.props.score}
-          </Grid>}
-          {this.props.redirectLink &&
-            <Grid item xs={12} className="link">
-              <a onClick={() => this.redirect()}>{this.props.redirectDisplay}</a>
-            </Grid>
-          }
         </Grid>
       </LoadingOverlay>
     );

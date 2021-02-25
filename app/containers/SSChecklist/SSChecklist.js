@@ -25,6 +25,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { COMPLIANCE } from '../../constants';
 import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
 import MultiDonutChart from '../../components/Report/MultiDonutChart/MultiDonutChart';
+import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -40,13 +41,13 @@ export default class SSChecklist extends React.PureComponent {
       tileRequest: [],
       reportData: [],
       chartColours: ['#004F6E', '#FF7D7D', '#FFDB8C', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3'],
-
-      month: moment().subtract(1, 'month').endOf('month'),
       selectedOperatingRoom: "",
       selectedWeekday: "",
       selectedSpecialty: "",
       hasNoCases: false,
-      isFilterApplied: true // Filter is applied right away by default
+      isFilterApplied: true, // Filter is applied right away by default
+      startDate: moment().subtract(1, 'month').startOf('month'),
+      endDate: moment().subtract(1, 'month').endOf('month'),
     }
     this.pendingDate = moment();
     this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY, this.pendingDate.daysInMonth()))
@@ -58,28 +59,44 @@ export default class SSChecklist extends React.PureComponent {
       this.setState({ reportType: this.props.reportType, reportData: [] }, () => {
         this.getReportLayout();
       })
-    } else if (prevProps.specialties != this.props.specialties) {
-      this.setState({ specialties: this.props.specialties }, () => {
-        clearTimeout(this.state.timeout);
-        //Load the report once specialties list is changed/populated
-        this.getReportLayout();
-      })
     }
   }
 
   componentDidMount() {
-    this.loadFilter();
-    //Give specialties list a max loading time of 10 seconds before loading the report
-    if (this.props.specialties.size == 0) {
-      let timeout = setTimeout(() => {
-        this.getReportLayout()
-      }, 10000);
-      this.setState({ timeout })
-    } else {
-      this.getReportLayout();
-    }
+    this.loadFilter(this.getConfig);
     this.openOnboarding()
   };
+
+  async getConfig() {
+    return await globalFunctions.genericFetch(process.env.SSC_API + "2/config?facilityName=" + this.props.userFacility, 'get', this.props.userToken, {})
+      .then(result => {
+        if (!result) {
+          return;
+        }
+        result = JSON.parse(result)
+        let startDate = this.state.startDate;
+
+        let earliestStartDate = moment(result.startDate);
+        if (earliestStartDate.isSameOrAfter(startDate)) {
+          startDate = earliestStartDate.utc();
+        }
+        let endDate = this.state.endDate;
+        let latestEndDate = moment(result.endDate).endOf('day');
+        if (latestEndDate.isSameOrBefore(endDate)) {
+          endDate = latestEndDate.subtract(1, 'hour');
+        }
+        const pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
+        const complianceGoal = result.complianceGoal;
+        const engagementGoal = result.engagementGoal;
+        const qualityGoal = result.qualityGoal;
+        this.setState({
+          earliestStartDate, latestEndDate, startDate, endDate, pendingWarning, complianceGoal, engagementGoal, qualityGoal
+        }, () => {
+          this.getReportLayout();
+        });
+      });
+
+  }
 
   openOnboarding() {
     //If they already did the onboard - Dont bother checking API
@@ -124,14 +141,19 @@ export default class SSChecklist extends React.PureComponent {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
     this.setState({ tileRequest: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
       () => {
-        let jsonBody = {
-          "reportType": this.state.reportType,
-          "TileRequest": [{
-            "startDate": globalFuncs.formatDateTime(this.state.month.startOf('month')),
-            "endDate": globalFuncs.formatDateTime(this.state.month.endOf('month')),
-          }]
-        };
-        globalFunctions.axiosFetch(process.env.SSC_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
+
+        const specialty = this.state.selectedSpecialty && this.state.selectedSpecialty.name;
+        const jsonBody = {
+          "dashboardName": this.state.reportType,
+          "facilityId": this.props.userFacility,
+
+          "startDate": this.state.startDate && this.state.startDate.format('YYYY-MM-DD'),
+          "endDate": this.state.endDate && this.state.endDate.format('YYYY-MM-DD'),
+
+          "roomId": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value || null,
+          "specialtyName": specialty == "All Specialties" ? "" : specialty,
+        }
+        globalFunctions.axiosFetch(process.env.SSC_API + "2/tile", 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
             result = result.data;
             if (result === 'error' || result === 'conflict') {
@@ -308,17 +330,24 @@ export default class SSChecklist extends React.PureComponent {
     });
   }
 
-  loadFilter() {
+  loadFilter(callback) {
     if (localStorage.getItem('sscFilter-' + this.props.userEmail)) {
       const recentSearchCache = JSON.parse(localStorage.getItem('sscFilter-' + this.props.userEmail));
-      this.setState({ ...recentSearchCache, month: moment(recentSearchCache.month) });
+      this.setState({
+        ...recentSearchCache,
+        startDate: moment(recentSearchCache.startDate),
+        endDate: moment(recentSearchCache.endDate)
+      }, callback);
+    } else {
+      this.setState({ isLoading: true }, callback)
     }
   }
 
   saveFilter() {
     localStorage.setItem('sscFilter-' + this.props.userEmail,
       JSON.stringify({
-        month: this.state.month,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
         selectedOperatingRoom: this.state.selectedOperatingRoom,
         selectedWeekday: this.state.selectedWeekday,
         selectedSpecialty: this.state.selectedSpecialty
@@ -382,7 +411,6 @@ export default class SSChecklist extends React.PureComponent {
     return <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`}>{result}</Grid>;
   }
 
-
   renderTile(tile) {
     if (!tile) {
       return <div></div>;
@@ -390,16 +418,7 @@ export default class SSChecklist extends React.PureComponent {
     switch (`${tile.tileType}`.toUpperCase()) {
       case 'LIST':
         return <HorizontalBarChart {...tile} specialties={this.props.specialties} />
-      case 'INFOGRAPHICTEXT':
-        return <ReportScore
-          pushUrl={this.props.pushUrl}
-          title={tile.title}
-          redirectDisplay={this.props.reportType == "SurgicalSafetyChecklistReport" && tile.subTitle}
-          redirectLink={this.props.reportType == "SurgicalSafetyChecklistReport" && tile.footer}
-          score={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].valueX}
-          message={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].title}
-          subTitle={tile.dataPoints && tile.dataPoints.length && tile.dataPoints[0].subTitle}
-          tooltipText={tile.description} />
+
       case 'BARCHARTDETAILED':
         return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
       case 'INFOGRAPHICPARAGRAPH':
@@ -433,13 +452,15 @@ export default class SSChecklist extends React.PureComponent {
         return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} />
       case 'DONUTBOX':
         return <MultiDonutChart {...tile} />
+      case 'METERINFOGRAPHIC':
+        return <ReportScore {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]}/>
 
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;
         //If the selected month is CURRENT month when this message is shown - Report will be ready next month
-        if (this.state.month.clone().isSameOrAfter(moment(), 'month')) {
-          pendingDate = pendingDate.clone().add(1, 'month');
-        }
+        // if (this.state.month.clone().isSameOrAfter(moment(), 'month')) {
+        //   pendingDate = pendingDate.clone().add(1, 'month');
+        // }
         return <div>{`We’re currently processing the data for this month’s report. Please come back on ${pendingDate.format('LL')} to view your report.`}</div>
     }
   }
@@ -465,7 +486,16 @@ export default class SSChecklist extends React.PureComponent {
       <div className="ssc-page">
         <Grid container spacing={0} className="ssc-picker-container" >
           <Grid item xs={12} className="ssc-picker">
-            <div style={{ maxWidth: 800, margin: 'auto' }}><MonthPicker month={this.state.month} maxDate={moment().endOf('month')} updateMonth={(month) => this.updateMonth(month)} /></div>
+            <div style={{ maxWidth: 800, margin: 'auto' }}>
+              <MonthRangePicker
+                startDate={this.state.startDate}
+                endDate={this.state.endDate}
+                minDate={this.state.earliestStartDate}
+                maxDate={this.state.latestEndDate}
+                updateState={(key, value) => this.updateState(key, value)}
+                displayWarning={this.state.pendingWarning}
+              />
+            </div>
           </Grid>
           <Grid item xs={12}>
             <Divider className="ssc-divider" />

@@ -2571,7 +2571,7 @@ export const COMPLIANCE = {
       "tileOrder": 1,
       "dataPoints": [
         {
-          "title": null,
+          "title": "OR Black Box® Network",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2582,8 +2582,8 @@ export const COMPLIANCE = {
           "toolTip": null
         }
       ],
-      "toolTip": null,
-      "total": null,
+      "toolTip": ["Compliance Score is the average of 1) the percentage of checklist phases performed and 2) the percentage of the checklist phases performed at the correct time. Each procedure requires one Briefing, one Timeout, and one Debriefing."],
+      "total": 77,
       "unit": null,
       "body": null,
       "url": null,
