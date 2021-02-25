@@ -1,0 +1,51 @@
+.scatter-plot {
+    .chart-title {
+        opacity: 0.8;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 24px;
+        margin-bottom: 24px;
+    }
+    .chart-subtitle {
+        font-size: 14px;
+        font-style: italic;
+        letter-spacing: 0;
+        line-height: 19px;
+        margin-bottom: 17px;
+        text-align: center;
+    }
+
+    circle {
+        r: 4;
+        // stroke: unset !important;
+        opacity: 1 !important;
+        fill: #004F6E !important;
+    }
+    .c3-axis,
+    .c3-axis-y-label,
+    .c3-axis-x-label {
+        font-family: "Noto Sans";
+        font-size: 12px;
+        letter-spacing: 0;
+        line-height: 17px;
+    }
+    .c3-axis-y-label,
+    .c3-axis-x-label {
+        font-size: 12px;
+    }
+    .c3 path,
+    .c3 line,
+    .c3-xgrid,
+    .c3-ygrid {
+        stroke-dasharray: unset;
+        stroke: #eaeaea;
+    }
+
+    .c3-axis-y-label {
+        position: absolute;
+        transform: translate(-20px, 100px) rotate(-90deg);
+    }
+}

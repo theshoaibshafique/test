@@ -125,7 +125,7 @@ export default class DonutChart extends React.PureComponent {
       .insert("tspan")
       .html(ReactDOMServer.renderToString(
         <tspan>
-          <tspan dy={10} x={0} className="donut-score">{this.props.valueX}<tspan className="donut-unit" dy={-10} baseline-shift="super">{this.props.unit || "%"}</tspan></tspan>
+          <tspan dy={10} x={0} className="donut-score">{this.props.valueX}<tspan className="donut-unit" dy={-10} baselineShift="super">{this.props.unit || "%"}</tspan></tspan>
           <tspan dy={30} x={0} className="donut-subtitle">{this.props.subTitle}</tspan>
         </tspan>
       ))

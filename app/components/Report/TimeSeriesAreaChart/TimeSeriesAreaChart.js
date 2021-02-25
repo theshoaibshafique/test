@@ -22,7 +22,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
 
     this.chartRef = React.createRef();
     const { dataPoints } = this.props;
-    const valueYs = dataPoints && dataPoints.filter(point => point.valueY).map((point) => parseInt(point.valueY)) || [];
+    const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
     this.state = {
       chartID: 'TimeSeriesAreaChart',
       legendData: [],

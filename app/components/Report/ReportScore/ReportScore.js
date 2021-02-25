@@ -58,7 +58,8 @@ const styles = props => ({
     },
     '& $rail': {
       width: 8,
-      color: '#F3F3F3'
+      color: '#F3F3F3',
+      opacity: 1
     },
   },
   track: {

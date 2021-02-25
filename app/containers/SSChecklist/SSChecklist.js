@@ -26,6 +26,7 @@ import { COMPLIANCE } from '../../constants';
 import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
 import MultiDonutChart from '../../components/Report/MultiDonutChart/MultiDonutChart';
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
+import ScatterPlot from '../../components/Report/ScatterPlot/ScatterPlot';
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -453,7 +454,9 @@ export default class SSChecklist extends React.PureComponent {
       case 'DONUTBOX':
         return <MultiDonutChart {...tile} />
       case 'METERINFOGRAPHIC':
-        return <ReportScore {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]}/>
+        return <ReportScore {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} />
+      case 'SCATTERPLOT':
+        return <ScatterPlot {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} />
 
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;

@@ -2599,37 +2599,37 @@ export const COMPLIANCE = {
       "tileOrder": 2,
       "dataPoints": [
         {
-          "title": null,
+          "title": "CARDIOTHORACIC",
           "subTitle": null,
           "description": null,
           "note": null,
-          "valueX": "12",
+          "valueX": "50",
           "valueY": "65",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "CARDIOTHORACIC",
             "Compliance Score: 65",
-            "Cases: 12"
+            "Cases: 50"
           ]
         },
         {
-          "title": null,
+          "title": "GENERAL",
           "subTitle": null,
           "description": null,
           "note": null,
-          "valueX": "30",
+          "valueX": "50",
           "valueY": "79",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "GENERAL",
             "Compliance Score: 79",
-            "Cases: 30"
+            "Cases: 50"
           ]
         },
         {
-          "title": null,
+          "title": "GI",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2644,7 +2644,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "GYNECOLOGY & OBSTETRICS",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2659,7 +2659,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "NOT PROVIDED",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2674,7 +2674,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "ORTHOPAEDIC",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2689,7 +2689,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "PLASTIC",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2704,7 +2704,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "UROLOGY",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2719,7 +2719,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "VASCULAR",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2735,13 +2735,13 @@ export const COMPLIANCE = {
         }
       ],
       "toolTip": null,
-      "total": null,
+      "total": 77,
       "unit": null,
       "body": null,
       "url": null,
       "urlText": null,
       "xAxis": "Number of Cases",
-      "yAxis": "Compliance Score"
+      "yAxis": "Score"
     }
   ]
 };
