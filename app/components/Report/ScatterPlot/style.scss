@@ -7,7 +7,7 @@
         font-weight: bold;
         letter-spacing: 0;
         line-height: 24px;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
     }
     .chart-subtitle {
         font-size: 14px;
@@ -17,12 +17,23 @@
         margin-bottom: 17px;
         text-align: center;
     }
-
-    circle {
-        r: 4;
-        // stroke: unset !important;
+    circle.c3-selected-circle {
+        fill: white !important;
+        stroke: #A77ECD !important;
+        r:4;
+        stroke-width: 1px;
+    }
+    .c3-circles circle {
+        r: 2;
         opacity: 1 !important;
-        fill: #004F6E !important;
+        fill: #004f6e !important;
+        &._selected_{
+            fill: #A77ECD !important;
+        }
+        &._expanded_{
+            stroke-width: 2px;
+            r:5;
+        }
     }
     .c3-axis,
     .c3-axis-y-label,

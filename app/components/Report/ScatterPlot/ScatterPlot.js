@@ -38,6 +38,11 @@ export default class ScatterPlot extends React.PureComponent {
             y: 'x'
           },
           columns: [], //Dynamically populated
+          selection: {
+            enabled: true,
+            multiple: false
+          },
+          onselected: (d) => this.onselected(d),
           type: 'scatter',
         }, // End data
         color: {
@@ -71,6 +76,9 @@ export default class ScatterPlot extends React.PureComponent {
         grid: {
           y: {
             lines: [{ value: total, text: 'Overall' }],
+          },
+          lines: {
+            front: false
           }
         },
 
@@ -84,9 +92,10 @@ export default class ScatterPlot extends React.PureComponent {
           show: false
         },
         size: {
-          // height: 230,
+          height: 230,
           // width: 310
         },
+        onrendered: () => this.chartRef.current && this.onrendered(),
       }
     }
 
@@ -103,29 +112,50 @@ export default class ScatterPlot extends React.PureComponent {
   }
 
   generateChartData() {
-    const { dataPoints } = this.props;
+    const { dataPoints, highlight } = this.props;
     if (!dataPoints || !dataPoints.length) {
       return;
     }
     let x = ['x'];
     let y = ['y'];
     let tooltipData = {};
+    let highlightedIndex = 0;
+    dataPoints.sort((a,b) => a.valueX - b.valueX);
     dataPoints.map((point, index) => {
-      const {valueX,valueY, toolTip} = point;
-      if (tooltipData[`${valueX}-${valueY}`]){
-        tooltipData[`${valueX}-${valueY}`] = tooltipData[`${valueX}-${valueY}`].concat(["",...toolTip]);
+      const { valueX, valueY, toolTip, title } = point;
+      if (tooltipData[`${valueX}-${valueY}`]) {
+        tooltipData[`${valueX}-${valueY}`] = tooltipData[`${valueX}-${valueY}`].concat(["", ...toolTip]);
       } else {
         tooltipData[`${valueX}-${valueY}`] = toolTip;
       }
       x.push(valueX);
       y.push(valueY);
+      if (highlight == title){
+        highlightedIndex = index;
+      }
     });
+
     let chartData = this.state.chartData;
     //Set as 0 by default and "load" columns later for animation
     chartData.data.columns = [x, y];
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-    this.setState({ chartData, tooltipData, isLoaded: true })
+
+    this.setState({ chartData, tooltipData, highlightedIndex, isLoaded: true })
+  }
+
+  onselected(d){
+    // const selected = d3 && d3.select(".scatter-plot circle._selected_")[0][0];
+    // selected && selected.parentNode.appendChild(selected);
+  }
+  onrendered(d) {
+    let chart = this.chartRef.current && this.chartRef.current.chart;
+    if (this.props.highlight){
+      chart && chart.select(['y'], [this.state.highlightedIndex]);
+    }
+    
+    //Remove manual select listener
+    d3 && d3.select(".scatter-plot").selectAll(".c3-event-rect").on("click", null);
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {

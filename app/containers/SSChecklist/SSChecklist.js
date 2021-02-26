@@ -456,7 +456,7 @@ export default class SSChecklist extends React.PureComponent {
       case 'METERINFOGRAPHIC':
         return <ReportScore {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} />
       case 'SCATTERPLOT':
-        return <ScatterPlot {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} />
+        return <ScatterPlot {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.name}/>
 
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;
