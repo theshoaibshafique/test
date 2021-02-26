@@ -120,6 +120,7 @@ export default class ScatterPlot extends React.PureComponent {
     let y = ['y'];
     let tooltipData = {};
     let highlightedIndex = 0;
+    //Sort to find the proper index of highlighted value
     dataPoints.sort((a,b) => a.valueX - b.valueX);
     dataPoints.map((point, index) => {
       const { valueX, valueY, toolTip, title } = point;
@@ -150,6 +151,7 @@ export default class ScatterPlot extends React.PureComponent {
   }
   onrendered(d) {
     let chart = this.chartRef.current && this.chartRef.current.chart;
+    //highlight after rendered
     if (this.props.highlight){
       chart && chart.select(['y'], [this.state.highlightedIndex]);
     }

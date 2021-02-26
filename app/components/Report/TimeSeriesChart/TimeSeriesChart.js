@@ -37,9 +37,6 @@ export default class TimeSeriesChart extends React.PureComponent {
           colors: {
             'NA': '#ABABAB',
           },
-          regions: {
-            // 'NA': [{ 'end': unavailableDate, 'style': 'dashed' }],
-          }
         }, // End data
         regions: [
           { axis: 'x', end: unavailableDate, class: 'regionX' },
@@ -161,19 +158,18 @@ export default class TimeSeriesChart extends React.PureComponent {
       formattedData.x.push(point.valueX);
       colours.push(point.description)
       const valueY = parseInt(point.valueY);
+      //We pad all NaN/Nulls with a Grey region for the Moving Average
       if (isNaN(valueY)) {
         na.push(valueYs[yIndex]);
         tooltipData.push([point.toolTip[0], "Not Available - Moving Average requires at least 30 days of data"]);
       } else {
         tooltipData.push(point.toolTip);
       }
+      //connect the last unavailable date with NA - Dont include NA tooltip
       if (point.valueX == unavailableEndDate.format("YYYY-MM-DD")){
         na.push(valueYs[yIndex]);
       }
       formattedData.y.push(valueY);
-      
-
-
     });
     let chartData = this.state.chartData;
 

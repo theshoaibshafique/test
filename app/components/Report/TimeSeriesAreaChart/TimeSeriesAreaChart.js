@@ -176,6 +176,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
       columns.push([key, ...xData.map((x) => {
         return value[x];
       })]);
+      //We add the NA category stand alone for custom styling
       columns.push([`${key}-NA`, ...xData.map((x) => {
         return value[x] == null || x == unavailableEndDate.format("YYYY-MM-DD") ? value[unavailableEndDate.format("YYYY-MM-DD")] : null;
       })]);
