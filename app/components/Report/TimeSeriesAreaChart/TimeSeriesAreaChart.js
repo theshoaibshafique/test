@@ -23,6 +23,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     this.chartRef = React.createRef();
     const { dataPoints } = this.props;
     const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
+    const unavailableDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
     this.state = {
       chartID: 'TimeSeriesAreaChart',
       legendData: [],
@@ -32,8 +33,16 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
           columns: [], //Dynamically populated
           type: 'area',
           labels: false,
-          order: 'asc'
+          order: 'asc',
+          colors: {
+            'Setup-NA': '#A7E5FD',
+            'Idle-NA': '#97E7B3',
+            'Clean-up-NA': '#FFDB8C',
+          }
         }, // End data
+        regions: [
+          { axis: 'x', end: unavailableDate, class: 'regionX' },
+        ],
         color: {
           pattern: ['#A7E5FD', '#97E7B3', '#FFDB8C', '#FF7D7D', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD']
         },
@@ -139,14 +148,15 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
   }
 
   generateChartData() {
-    let { dataPoints } = this.props;
-    if (!this.props.dataPoints) {
+    const { dataPoints } = this.props;
+    if (!dataPoints) {
       return;
     }
     let xData = [];
     let formattedData = {};
     let tooltipLegendData = {};
     let tooltipData = {};
+    const unavailableEndDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
     dataPoints.map((point) => {
       let xValue = point.valueX;
       if (!xData.includes(xValue)) {
@@ -166,13 +176,16 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
       columns.push([key, ...xData.map((x) => {
         return value[x];
       })]);
+      columns.push([`${key}-NA`, ...xData.map((x) => {
+        return value[x] == null || x == unavailableEndDate.format("YYYY-MM-DD") ? value[unavailableEndDate.format("YYYY-MM-DD")] : null;
+      })]);
     })
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
-    chart && chart.groups([Object.keys(formattedData)]);
+    chart && chart.groups([Object.keys(formattedData), ['Setup-NA', 'Idle-NA', "Clean-up-NA"]]);
     setTimeout(() => {
       chart.zoom([this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")])
       setTimeout(() => {
@@ -181,22 +194,30 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
 
     }, 500);
 
-    this.setState({ chartData, tooltipData, legendData, tooltipLegendData, isLoaded: true })
+    this.setState({ chartData, tooltipData, legendData, tooltipLegendData, unavailableEndDate, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
     let tooltipData = d.map((point) => {
-      return this.state.tooltipData[point.id+moment(point.x).format("YYYY-MM-DD")];
+      return this.state.tooltipData[point.id + moment(point.x).format("YYYY-MM-DD")];
     })
-    
+
     if (tooltipData.length == 0) {
       return;
     }
     const xValue = moment(d[0].x).format('MMM DD');
+    if (moment(d[0].x).isBefore(this.state.unavailableEndDate)) {
+      return ReactDOMServer.renderToString(
+        <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+          <div>{xValue}</div>
+          <div>Not Available - Moving Average requires at least 30 days of data</div>
+        </div>);
+    }
+    
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{xValue}</div>
-        <div>Total Duration: {d.map(point => point.value).reduce((a,b) => a+b)} min</div>
+        <div>Total Duration: {d.map(point => point.value).reduce((a, b) => a + b)} min</div>
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}

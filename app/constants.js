@@ -2619,12 +2619,12 @@ export const COMPLIANCE = {
           "description": null,
           "note": null,
           "valueX": "50",
-          "valueY": "79",
+          "valueY": "65",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "GENERAL",
-            "Compliance Score: 79",
+            "Compliance Score: 65",
             "Cases: 50"
           ]
         },

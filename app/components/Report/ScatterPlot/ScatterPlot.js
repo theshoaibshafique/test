@@ -109,11 +109,16 @@ export default class ScatterPlot extends React.PureComponent {
     }
     let x = ['x'];
     let y = ['y'];
-    let tooltipData = [];
+    let tooltipData = {};
     dataPoints.map((point, index) => {
-      tooltipData.push(point.toolTip);
-      x.push(point.valueX);
-      y.push(point.valueY);
+      const {valueX,valueY, toolTip} = point;
+      if (tooltipData[`${valueX}-${valueY}`]){
+        tooltipData[`${valueX}-${valueY}`] = tooltipData[`${valueX}-${valueY}`].concat(["",...toolTip]);
+      } else {
+        tooltipData[`${valueX}-${valueY}`] = toolTip;
+      }
+      x.push(valueX);
+      y.push(valueY);
     });
     let chartData = this.state.chartData;
     //Set as 0 by default and "load" columns later for animation
@@ -124,15 +129,14 @@ export default class ScatterPlot extends React.PureComponent {
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    console.log(d)
-    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].index-1] || []
+    let tooltipData = this.state.tooltipData && this.state.tooltipData[`${d[0].x}-${d[0].value}`] || []
     if (tooltipData.length == 0) {
       return;
     }
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         {tooltipData.map((line) => {
-          return <div>{line}</div>
+          return <div style={!line ? { margin: 8 } : {}}>{line}</div>
         })}
       </div>);
   }

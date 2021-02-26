@@ -6,6 +6,7 @@ import moment from 'moment/moment';
 import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ReactDOMServer from 'react-dom/server';
+import { ContactlessTwoTone } from '@material-ui/icons';
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -21,8 +22,9 @@ export default class TimeSeriesChart extends React.PureComponent {
     super(props);
 
     this.chartRef = React.createRef();
-    const { dataPoints } = this.props;
-    const valueYs = dataPoints && dataPoints.filter(point => point.valueY).map((point) => parseInt(point.valueY)) || [];
+    const { dataPoints, startDate } = this.props;
+    const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
+    const unavailableDate = dataPoints.length && moment(dataPoints[0].valueX).add(29,'days');
     this.state = {
       chartID: 'TimeSeriesChart',
       chartData: {
@@ -31,8 +33,14 @@ export default class TimeSeriesChart extends React.PureComponent {
           columns: [], //Dynamically populated
           // type: 'spline',
           type: 'line',
-          labels: false
+          labels: false,
+          regions: {
+            'y': [{ 'end': unavailableDate, 'style': 'dashed' }],
+          }
         }, // End data
+        regions: [
+          { axis: 'x', end: unavailableDate, class: 'regionX' },
+        ],
         color: {
           pattern: ['#028CC8', '#97E7B3', '#CFB9E4', '#004F6E']
         },
@@ -96,31 +104,31 @@ export default class TimeSeriesChart extends React.PureComponent {
 
   };
 
-  handleBrush(d){
+  handleBrush(d) {
     // const MAX_TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length *.3) ;
     const MAX_TICK_WIDTH = 128;
     // let chart = this.chartRef.current && this.chartRef.current.chart.element;
     // var visibilityThreshold = chart.clientWidth / MAX_TICK_WIDTH;
     var allTicks = Array.from(document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`));
-    var whitelist = allTicks.filter((tick,index) => index % 16 == 0);
+    var whitelist = allTicks.filter((tick, index) => index % 16 == 0);
     var visibleTicks = allTicks
       .filter(tick => !tick.querySelector("line[y2='0']"));
-    
-    if (visibleTicks.length < MAX_TICK_WIDTH){
+
+    if (visibleTicks.length < MAX_TICK_WIDTH) {
       allTicks.forEach(tick => tick.querySelector("text").style.display = "none");
     }
 
-    if (visibleTicks.length <= 8){
-      whitelist = allTicks.filter((tick,index) => index % 2 == 0);
-      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
-    } else if (visibleTicks.length <= 16){
-      whitelist = allTicks.filter((tick,index) => index % 4 == 0);
-      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
-    } else if (visibleTicks.length <= 64){
-      whitelist = allTicks.filter((tick,index) => index % 8 == 0);
-      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
+    if (visibleTicks.length <= 8) {
+      whitelist = allTicks.filter((tick, index) => index % 2 == 0);
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
+    } else if (visibleTicks.length <= 16) {
+      whitelist = allTicks.filter((tick, index) => index % 4 == 0);
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
+    } else if (visibleTicks.length <= 64) {
+      whitelist = allTicks.filter((tick, index) => index % 8 == 0);
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     } else if (visibleTicks.length < MAX_TICK_WIDTH) {
-      visibleTicks.forEach(tick => {if ( whitelist.includes(tick)) tick.querySelector("text").style.display = "block"});
+      visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     }
   }
 
@@ -135,19 +143,21 @@ export default class TimeSeriesChart extends React.PureComponent {
   }
 
   generateChartData() {
-    let { dataPoints } = this.props;
-    if (!this.props.dataPoints) {
+    const { dataPoints } = this.props;
+    if (!dataPoints) {
       return;
     }
     let formattedData = { x: ['x'], y: ['y'] };
     let colours = [];
     let tooltipData = [];
+    const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
+    const yIndex = valueYs.findIndex(e => !isNaN(e))
     dataPoints.map((point, index) => {
       formattedData.x.push(point.valueX);
       colours.push(point.description)
       const valueY = parseInt(point.valueY);
-      formattedData.y.push(valueY);
-      tooltipData.push(point.toolTip);
+      formattedData.y.push(isNaN(valueY) ? valueYs[yIndex] : valueY);
+      tooltipData.push(isNaN(valueY) ? [point.toolTip[0], "Not Available - Moving Average requires at least 30 days of data"] : point.toolTip);
     });
     let chartData = this.state.chartData;
 
@@ -160,7 +170,7 @@ export default class TimeSeriesChart extends React.PureComponent {
       setTimeout(() => {
         this.handleBrush()
       }, 500)
-      
+
     }, 500);
 
     this.setState({ chartData, colours, tooltipData, isLoaded: true })

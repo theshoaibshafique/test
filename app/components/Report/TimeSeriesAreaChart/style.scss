@@ -117,7 +117,7 @@
         line-height: 24px;
     }
     .c3-axis-y .tick,
-    .c3-ygrid{
+    .c3-ygrid {
         opacity: 0 !important;
     }
     .c3-axis-y .tick:nth-child(3n-1),
@@ -140,10 +140,28 @@
     .c3-axis-x.c3-axis line[y2="0"] ~ text {
         display: none !important;
     }
-    .c3-area{
+    .c3-area {
         opacity: 1 !important;
     }
-    .c3-shapes.c3-lines {
-        opacity: 0;
+    .c3-shapes {
+        &.c3-lines {
+            opacity: 0;
+            &.c3-lines-Setup-NA,
+            &.c3-lines-Clean-up-NA,
+            &.c3-lines-Idle-NA {
+                opacity: 1;
+                path {
+                    stroke-dasharray: 5, 5;
+                    stroke-width: 2px;
+                }
+            }
+        }
+        &.c3-areas{
+            &.c3-areas-Setup-NA,
+            &.c3-areas-Clean-up-NA,
+            &.c3-areas-Idle-NA {
+                opacity: 0;
+            }
+        }
     }
 }
