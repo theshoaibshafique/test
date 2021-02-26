@@ -89,7 +89,7 @@
         overflow: visible !important;
     }   
     circle {
-        r: 1;
+        r: 0;
         stroke: unset !important;
     }
     .c3-line {
@@ -97,5 +97,17 @@
     }
     .c3-axis-x.c3-axis line[y2='0'] ~ text{
         display: none !important;
+    }
+    .regionX rect{
+        fill: #000000 ;
+        fill-opacity: .05;
+    }
+    .extent {
+        fill: #3DB3E3 
+    }
+
+    .c3-target-NA path{
+        stroke-dasharray: 5, 5;
+        stroke-width: 1px;
     }
 }

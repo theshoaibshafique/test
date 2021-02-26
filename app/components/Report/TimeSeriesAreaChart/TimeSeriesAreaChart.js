@@ -35,9 +35,9 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
           labels: false,
           order: 'asc',
           colors: {
-            'Setup-NA': '#A7E5FD',
-            'Idle-NA': '#97E7B3',
-            'Clean-up-NA': '#FFDB8C',
+            'Setup-NA': '#ABABAB',
+            'Idle-NA': '#ABABAB',
+            'Clean-up-NA': '#ABABAB',
           }
         }, // End data
         regions: [

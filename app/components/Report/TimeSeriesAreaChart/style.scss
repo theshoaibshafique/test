@@ -92,9 +92,7 @@
         stroke-dasharray: unset;
         stroke: #eaeaea;
     }
-    .c3-xgrid-focus {
-        // visibility: hidden !important;
-    }
+    
     .tooltip {
         color: #fff;
         padding: 16px;
@@ -143,6 +141,13 @@
     .c3-area {
         opacity: 1 !important;
     }
+    .regionX rect{
+        fill: #000000 ;
+        fill-opacity: .05;
+    }
+    .extent {
+        fill: #3DB3E3 
+    }
     .c3-shapes {
         &.c3-lines {
             opacity: 0;
@@ -152,7 +157,7 @@
                 opacity: 1;
                 path {
                     stroke-dasharray: 5, 5;
-                    stroke-width: 2px;
+                    stroke-width: 1px;
                 }
             }
         }

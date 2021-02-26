@@ -24,7 +24,7 @@ export default class TimeSeriesChart extends React.PureComponent {
     this.chartRef = React.createRef();
     const { dataPoints, startDate } = this.props;
     const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
-    const unavailableDate = dataPoints.length && moment(dataPoints[0].valueX).add(29,'days');
+    const unavailableDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
     this.state = {
       chartID: 'TimeSeriesChart',
       chartData: {
@@ -34,8 +34,11 @@ export default class TimeSeriesChart extends React.PureComponent {
           // type: 'spline',
           type: 'line',
           labels: false,
+          colors: {
+            'NA': '#ABABAB',
+          },
           regions: {
-            'y': [{ 'end': unavailableDate, 'style': 'dashed' }],
+            // 'NA': [{ 'end': unavailableDate, 'style': 'dashed' }],
           }
         }, // End data
         regions: [
@@ -148,20 +151,33 @@ export default class TimeSeriesChart extends React.PureComponent {
       return;
     }
     let formattedData = { x: ['x'], y: ['y'] };
+    let na = ['NA'];
     let colours = [];
     let tooltipData = [];
     const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
+    const unavailableEndDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
     const yIndex = valueYs.findIndex(e => !isNaN(e))
     dataPoints.map((point, index) => {
       formattedData.x.push(point.valueX);
       colours.push(point.description)
       const valueY = parseInt(point.valueY);
-      formattedData.y.push(isNaN(valueY) ? valueYs[yIndex] : valueY);
-      tooltipData.push(isNaN(valueY) ? [point.toolTip[0], "Not Available - Moving Average requires at least 30 days of data"] : point.toolTip);
+      if (isNaN(valueY)) {
+        na.push(valueYs[yIndex]);
+        tooltipData.push([point.toolTip[0], "Not Available - Moving Average requires at least 30 days of data"]);
+      } else {
+        tooltipData.push(point.toolTip);
+      }
+      if (point.valueX == unavailableEndDate.format("YYYY-MM-DD")){
+        na.push(valueYs[yIndex]);
+      }
+      formattedData.y.push(valueY);
+      
+
+
     });
     let chartData = this.state.chartData;
 
-    chartData.data.columns = [formattedData.x, formattedData.y];
+    chartData.data.columns = [formattedData.x, formattedData.y, na];
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
