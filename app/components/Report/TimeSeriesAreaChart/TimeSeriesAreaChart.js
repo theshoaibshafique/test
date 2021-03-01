@@ -22,7 +22,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
 
     this.chartRef = React.createRef();
     const { dataPoints } = this.props;
-    const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
+    const valueYs = dataPoints && dataPoints.map((point) => point.valueY) || [];
     const unavailableDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
     this.state = {
       chartID: 'TimeSeriesAreaChart',

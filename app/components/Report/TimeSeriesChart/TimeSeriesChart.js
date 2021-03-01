@@ -6,7 +6,8 @@ import moment from 'moment/moment';
 import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ReactDOMServer from 'react-dom/server';
-import { ContactlessTwoTone } from '@material-ui/icons';
+import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
+import Icon from '@mdi/react'
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -92,7 +93,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         },
         subchart: {
           show: true,
-          onbrush: (d) => this.handleBrush(d),
+          onbrush: (d) => this.setState({ domain: d }),
           size: {
             // height: 20
           },
@@ -100,6 +101,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         zoom: {
           enabled: false,
         },
+        // onrendered: () => this.chartRef.current && this.handleBrush(),
       }
     }
 
@@ -131,12 +133,14 @@ export default class TimeSeriesChart extends React.PureComponent {
     } else if (visibleTicks.length < MAX_TICK_WIDTH) {
       visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     }
+
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.dataPoints && this.props.dataPoints) {
       this.generateChartData();
     }
+    this.handleBrush()
   }
 
   componentDidMount() {
@@ -157,20 +161,21 @@ export default class TimeSeriesChart extends React.PureComponent {
     const diff = unavailEndDate.diff(minDate, 'days');
     let padDate = minDate.clone();
     let greyRegion = [];
-    for (let i = 0; i <= diff; i++){
+    for (let i = 0; i <= diff; i++) {
       na.push(firstPointWithY.valueY)
       //Skip tooltip for overlapping value
-      const toolTip = i!=diff ? [padDate.format("MMM DD"), "Not Available - Moving Average requires at least 30 days of data"] :  []
-      greyRegion.push({valueX: padDate.format("YYYY-MM-DD"), toolTip:toolTip})
-      padDate.add(1,'day')
+      const toolTip = i != diff ? [padDate.format("MMM DD"), "Not Available - Moving Average requires at least 30 days of data"] : firstPointWithY.toolTip
+      greyRegion.push({ valueX: padDate.format("YYYY-MM-DD"), toolTip: toolTip })
+      padDate.add(1, 'day')
     }
-    
+    let changeCache = [];
     [...greyRegion, ...dataPoints].map((point, index) => {
       formattedData.x.push(point.valueX);
       colours.push(point.description)
       const valueY = parseInt(point.valueY);
       formattedData.y.push(valueY);
       tooltipData.push(point.toolTip);
+      changeCache.push({ valueX: moment(point.valueX), valueY: parseInt(valueY) })
     });
     let chartData = this.state.chartData;
 
@@ -178,15 +183,17 @@ export default class TimeSeriesChart extends React.PureComponent {
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
+    const domain = [this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")];
     setTimeout(() => {
-      chart.zoom([this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")])
+      chart.zoom(domain)
       setTimeout(() => {
         this.handleBrush()
       }, 500)
 
     }, 500);
 
-    this.setState({ chartData, colours, tooltipData, isLoaded: true })
+    changeCache = changeCache.sort((a, b) => a.valueX.valueOf() - b.valueX.valueOf());
+    this.setState({ chartData, colours, tooltipData, changeCache, reverseChangeCache: [].concat(changeCache).reverse(), domain, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
@@ -203,12 +210,38 @@ export default class TimeSeriesChart extends React.PureComponent {
       </div>);
   }
 
-  renderChangeValue(){
-    return (
-      <div className={``}>
 
+
+  renderChangeValue() {
+    const { domain, changeCache, reverseChangeCache } = this.state;
+    if (!domain || domain.length < 2) {
+      return ''
+    }
+
+    const startDate = moment(domain[0]).startOf('day');
+    const endDate = moment(domain[1]).endOf('day');
+    const firstPoint = changeCache && changeCache.find(point => point.valueX.isBetween(startDate, endDate) && !isNaN(point.valueY)) || {};
+    const lastPoint = reverseChangeCache && reverseChangeCache.find(point => point.valueX.isBetween(startDate, endDate) && !isNaN(point.valueY)) || {};
+    let diff = Math.round(((lastPoint.valueY - firstPoint.valueY) / firstPoint.valueY) * 100)
+    let tag = '';
+    let className = ''
+    
+    if (isNaN(diff) || diff == 0) {
+      diff = `—`;
+    } else if (diff < 0) {
+      className="trending-down";
+      tag = <Icon color="#FF0000" path={mdiTrendingDown} size={'32px'} />
+    } else {
+      className="trending-up";
+      tag = <Icon color="#009483" path={mdiTrendingUp} size={'32px'} />
+    }
+    return (
+      <div className={`change-value ${className}`}>
+        <span>{`${diff}%`}</span>
+        <span>{tag}</span>
       </div>
     )
+
   }
 
   render() {

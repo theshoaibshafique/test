@@ -329,6 +329,9 @@ export default class SSChecklist extends React.PureComponent {
       isFilterApplied: false
     }, () => {
       this.saveFilter();
+      if ((key == "endDate" || key == "startDate") && this.state.endDate && this.state.startDate) {
+        this.getReportLayout();
+      }
     });
   }
 
@@ -451,7 +454,7 @@ export default class SSChecklist extends React.PureComponent {
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} yAxis={tile.subTitle} xAxis={tile.footer} title={tile.description} description={''} />
       case 'TIMESERIESCHART':
-        return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.earliestStartDate} />
+        return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.earliestStartDate} showChange={true} />
       case 'DONUTBOX':
         return <MultiDonutChart {...tile} />
       case 'METERINFOGRAPHIC':
