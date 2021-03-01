@@ -24,7 +24,8 @@ export default class TimeSeriesChart extends React.PureComponent {
     this.chartRef = React.createRef();
     const { dataPoints, startDate } = this.props;
     const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
-    const unavailableDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
+
+    const firstPointWithY = dataPoints && dataPoints.find(point => point.valueY != null);
     this.state = {
       chartID: 'TimeSeriesChart',
       chartData: {
@@ -39,7 +40,7 @@ export default class TimeSeriesChart extends React.PureComponent {
           },
         }, // End data
         regions: [
-          { axis: 'x', end: unavailableDate, class: 'regionX' },
+          { axis: 'x', end: firstPointWithY && firstPointWithY.valueX, class: 'regionX' },
         ],
         color: {
           pattern: ['#028CC8', '#97E7B3', '#CFB9E4', '#004F6E']
@@ -143,7 +144,7 @@ export default class TimeSeriesChart extends React.PureComponent {
   }
 
   generateChartData() {
-    const { dataPoints } = this.props;
+    const { dataPoints, minDate } = this.props;
     if (!dataPoints) {
       return;
     }
@@ -151,25 +152,25 @@ export default class TimeSeriesChart extends React.PureComponent {
     let na = ['NA'];
     let colours = [];
     let tooltipData = [];
-    const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
-    const unavailableEndDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
-    const yIndex = valueYs.findIndex(e => !isNaN(e))
-    dataPoints.map((point, index) => {
+    const firstPointWithY = dataPoints && dataPoints.find(point => point.valueY != null) || {};
+    const unavailEndDate = moment(firstPointWithY.valueX);
+    const diff = unavailEndDate.diff(minDate, 'days');
+    let padDate = minDate.clone();
+    let greyRegion = [];
+    for (let i = 0; i <= diff; i++){
+      na.push(firstPointWithY.valueY)
+      //Skip tooltip for overlapping value
+      const toolTip = i!=diff ? [padDate.format("MMM DD"), "Not Available - Moving Average requires at least 30 days of data"] :  []
+      greyRegion.push({valueX: padDate.format("YYYY-MM-DD"), toolTip:toolTip})
+      padDate.add(1,'day')
+    }
+    
+    [...greyRegion, ...dataPoints].map((point, index) => {
       formattedData.x.push(point.valueX);
       colours.push(point.description)
       const valueY = parseInt(point.valueY);
-      //We pad all NaN/Nulls with a Grey region for the Moving Average
-      if (isNaN(valueY)) {
-        na.push(valueYs[yIndex]);
-        tooltipData.push([point.toolTip[0], "Not Available - Moving Average requires at least 30 days of data"]);
-      } else {
-        tooltipData.push(point.toolTip);
-      }
-      //connect the last unavailable date with NA - Dont include NA tooltip
-      if (point.valueX == unavailableEndDate.format("YYYY-MM-DD")){
-        na.push(valueYs[yIndex]);
-      }
       formattedData.y.push(valueY);
+      tooltipData.push(point.toolTip);
     });
     let chartData = this.state.chartData;
 
@@ -202,6 +203,14 @@ export default class TimeSeriesChart extends React.PureComponent {
       </div>);
   }
 
+  renderChangeValue(){
+    return (
+      <div className={``}>
+
+      </div>
+    )
+  }
+
   render() {
     return (
       <LoadingOverlay
@@ -227,6 +236,7 @@ export default class TimeSeriesChart extends React.PureComponent {
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
+            {this.props.showChange && this.renderChangeValue()}
           </Grid>
           <Grid item xs={12} className="chart-subtitle">
             {this.props.subTitle}

@@ -451,7 +451,7 @@ export default class SSChecklist extends React.PureComponent {
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} yAxis={tile.subTitle} xAxis={tile.footer} title={tile.description} description={''} />
       case 'TIMESERIESCHART':
-        return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} />
+        return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.earliestStartDate} />
       case 'DONUTBOX':
         return <MultiDonutChart {...tile} />
       case 'METERINFOGRAPHIC':
