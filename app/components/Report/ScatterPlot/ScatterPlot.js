@@ -28,7 +28,7 @@ export default class ScatterPlot extends React.PureComponent {
     const valueXs = dataPoints && dataPoints.map((point) => parseInt(point.valueX)) || [];
     const maxY = dataPoints && Math.min(Math.max(...valueYs) + 10, 100) || 100;
     const minY = dataPoints && Math.max(Math.min(...valueYs) - 10, 0) || 0
-    const maxX = Math.max(...valueXs) + 10;
+    const maxX = Math.max(...valueXs);
     const minX = Math.max(Math.min(...valueXs) - 10, 0)
     this.state = {
       chartID: 'scatterPlot',

@@ -140,7 +140,7 @@ export default class SSChecklist extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
-    this.setState({ tileRequest: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
+    this.setState({ tileRequest: [], reportData: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
       () => {
 
         const specialty = this.state.selectedSpecialty && this.state.selectedSpecialty.name;
@@ -160,7 +160,8 @@ export default class SSChecklist extends React.PureComponent {
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
-              result = COMPLIANCE;
+              // result = COMPLIANCE;
+              result = JSON.parse(result);
               if (result.tiles && result.tiles.length > 0) {
                 const reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
 

@@ -83,7 +83,7 @@ export default class DonutChart extends React.PureComponent {
       return;
     }
     let columns = [];
-    if (chartTitle == "Phases Performed") {
+    if (chartTitle == "Phase Completion") {
       columns = [[this.props.subTitle, valueX], ["other", 100 - valueX]]
     } else {
       columns = [[this.props.subTitle, valueX], ["Incorrect Timing", 100 - valueX]]

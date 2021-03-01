@@ -29,7 +29,7 @@ export default class MultiDonutChart extends React.PureComponent {
 
   renderLegend() {
     const { title, dataPoints } = this.props;
-    if (!this.state.chartRefs.length || title == "Phases Performed") {
+    if (!this.state.chartRefs.length || title == "Phase Completion") {
       return;
     }
     

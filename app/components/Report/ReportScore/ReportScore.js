@@ -47,7 +47,7 @@ const styles = props => ({
     fontSize: '12px',
     fontFamily: 'Noto Sans',
     left: '-24px !important',
-    color:'#592D82'
+    color: '#592D82'
   },
   markLabelActive: {
     color: 'rgba(0, 0, 0, 0.54)'
@@ -76,7 +76,18 @@ export default class ReportScore extends React.PureComponent {
     super(props);
   };
 
+  getColor() {
+    const { goal, total } = this.props;
+    const threshold = goal * .15;
+    if (total >= goal) {
+      return '#6EDE95'
+    } else if (total >= (goal - threshold)) {
+      return '#FFC74D'
+    } else {
+      return '#FF4D4D'
+    }
 
+  }
 
   render() {
     const { title, toolTip, total, dataPoints, goal } = this.props
@@ -119,13 +130,13 @@ export default class ReportScore extends React.PureComponent {
             <SSTSlider
               value={total}
               orientation='vertical'
-              color='#FFC74D'
-              marks={goal != null ? [{ value: goal, label: 'Goal' } ] : []}
+              color={this.getColor()}
+              marks={goal != null ? [{ value: goal, label: 'Goal' }] : []}
               disabled />
           </Grid>
           {compareValue && <Grid item xs={12} className="compare">
-              <div className="title">{compareValue.title}</div>
-              <div className="compare-score">{compareValue.valueX}</div>
+            <div className="title">{compareValue.title}</div>
+            <div className="compare-score">{compareValue.valueX}</div>
           </Grid>}
 
         </Grid>
