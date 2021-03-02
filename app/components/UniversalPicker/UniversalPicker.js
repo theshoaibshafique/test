@@ -101,7 +101,7 @@ class UniversalPicker extends React.Component {
     }
     return {//Default to showing
       showOR: true,
-      showDays: true,
+      // showDays: true,
       showSpecialty: true,
       //Default to hiding
       showOR2: false
