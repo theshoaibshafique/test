@@ -101,7 +101,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         zoom: {
           enabled: false,
         },
-        // onrendered: () => this.chartRef.current && this.handleBrush(),
+        onrendered: () => this.chartRef.current && this.handleBrush(),
       }
     }
 

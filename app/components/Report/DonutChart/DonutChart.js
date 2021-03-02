@@ -31,8 +31,8 @@ export default class DonutChart extends React.PureComponent {
           type: 'donut',
           //Specifically for Turnover Outliers
           colors: {
-            'Within Threshold': '#6EDE95',
-            'Outlier': '#FF4D4D'
+            'Within Threshold': '#97E7B3',
+            'Outlier': '#FF7D7D'
           }
         }, // End data
         color: {

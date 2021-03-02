@@ -458,7 +458,8 @@ export default class SSChecklist extends React.PureComponent {
       case 'DONUTBOX':
         return <MultiDonutChart {...tile} />
       case 'METERINFOGRAPHIC':
-        return <ReportScore {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} />
+        const goal =this.state.reportType.toLowerCase() == "overview" ? this.state[`${tile.title.toLowerCase()}Goal`] :  this.state[`${this.state.reportType.toLowerCase()}Goal`];
+        return <ReportScore {...tile} goal={goal} />
       case 'SCATTERPLOT':
         return <ScatterPlot {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.name}/>
 
@@ -473,6 +474,14 @@ export default class SSChecklist extends React.PureComponent {
   }
 
   getTileSize(tileType) {
+    if (this.state.reportType.toLowerCase() == "overview"){
+      switch (`${tileType}`.toUpperCase()) {
+        case 'METERINFOGRAPHIC':
+          return 3;
+        default:
+          return 12;
+      }
+    }
     switch (`${tileType}`.toUpperCase()) {
       case 'TIMESERIESCHART':
         return 12;
