@@ -27,6 +27,7 @@ import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesC
 import MultiDonutChart from '../../components/Report/MultiDonutChart/MultiDonutChart';
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
 import ScatterPlot from '../../components/Report/ScatterPlot/ScatterPlot';
+import ItemList from '../../components/Report/ItemList/ItemList';
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -462,6 +463,8 @@ export default class SSChecklist extends React.PureComponent {
         return <ReportScore {...tile} goal={goal} />
       case 'SCATTERPLOT':
         return <ScatterPlot {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.name}/>
+      case 'ITEMLIST':
+        return <ItemList {...tile}/>
 
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;

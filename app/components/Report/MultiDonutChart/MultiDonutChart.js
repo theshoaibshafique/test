@@ -71,7 +71,7 @@ export default class MultiDonutChart extends React.PureComponent {
       <Grid item xs={12}>
         <Grid container spacing={0} justify="center">
           {dataPoints.map((point, index) => (
-            <Grid item xs={4} >
+            <Grid item xs={4} key={index} >
               <DonutChart {...point} chartRef={this.state.chartRefs[index]} chartTitle={title} colors={colors}/>
             </Grid>
           ))}

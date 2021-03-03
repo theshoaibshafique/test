@@ -5,7 +5,7 @@ export const EMM_TECHNICAL_TOOLTIP = 'Performance Index consists of evidence-bas
 export const EMM_ADVERSEEVENT_TOOLTIP = 'Adverse Event Rate is the number of intraoperative adverse events that occured per hour of surgical procedure.';
 
 export const COMPLIANCE = {
-  "dashboardName": "compliance",
+  "dashboardName": "Compliance",
   "tiles": [
     {
       "title": "Compliance Score Trend",
@@ -15,399 +15,7 @@ export const COMPLIANCE = {
       "tileOrder": 1,
       "dataPoints": [
         {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-17",
-          "valueY": "75",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-17",
-            "30-Day Moving Average: 75"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-18",
-          "valueY": "68",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-18",
-            "30-Day Moving Average: 68"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-19",
-          "valueY": "68",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-19",
-            "30-Day Moving Average: 68"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-20",
-          "valueY": "66",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-20",
-            "30-Day Moving Average: 66"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-21",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-21",
-            "30-Day Moving Average: 65"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-22",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-22",
-            "30-Day Moving Average: 65"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-23",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-23",
-            "30-Day Moving Average: 65"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-24",
-          "valueY": "64",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-24",
-            "30-Day Moving Average: 64"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-25",
-          "valueY": "64",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-25",
-            "30-Day Moving Average: 64"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-26",
-          "valueY": "64",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-26",
-            "30-Day Moving Average: 64"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-27",
-          "valueY": "64",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-27",
-            "30-Day Moving Average: 64"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-28",
-          "valueY": "64",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-28",
-            "30-Day Moving Average: 64"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-29",
-          "valueY": "64",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-29",
-            "30-Day Moving Average: 64"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-30",
-          "valueY": "64",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-30",
-            "30-Day Moving Average: 64"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-08-31",
-          "valueY": "63",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-08-31",
-            "30-Day Moving Average: 63"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-01",
-          "valueY": "62",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-01",
-            "30-Day Moving Average: 62"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-02",
-          "valueY": "64",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-02",
-            "30-Day Moving Average: 64"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-03",
-          "valueY": "64",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-03",
-            "30-Day Moving Average: 64"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-04",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-04",
-            "30-Day Moving Average: 65"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-05",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-05",
-            "30-Day Moving Average: 65"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-06",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-06",
-            "30-Day Moving Average: 65"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-07",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-07",
-            "30-Day Moving Average: 65"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-08",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-08",
-            "30-Day Moving Average: 65"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-09",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-09",
-            "30-Day Moving Average: 65"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-10",
-          "valueY": "66",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-10",
-            "30-Day Moving Average: 66"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-11",
-          "valueY": "67",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-11",
-            "30-Day Moving Average: 67"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-12",
-          "valueY": "67",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-12",
-            "30-Day Moving Average: 67"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-09-13",
-          "valueY": "67",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-09-13",
-            "30-Day Moving Average: 67"
-          ]
-        },
-        {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -421,7 +29,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -435,7 +43,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -449,21 +57,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-09-17",
-          "valueY": "67",
+          "valueY": "68",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-09-17",
-            "30-Day Moving Average: 67"
+            "30-Day Moving Average: 68"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -477,21 +85,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-09-19",
-          "valueY": "67",
+          "valueY": "68",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-09-19",
-            "30-Day Moving Average: 67"
+            "30-Day Moving Average: 68"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -505,7 +113,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -519,7 +127,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -533,7 +141,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -547,21 +155,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-09-24",
-          "valueY": "69",
+          "valueY": "70",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-09-24",
-            "30-Day Moving Average: 69"
+            "30-Day Moving Average: 70"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -575,7 +183,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -589,7 +197,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -603,7 +211,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -617,7 +225,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -631,21 +239,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-09-30",
-          "valueY": "70",
+          "valueY": "71",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-09-30",
-            "30-Day Moving Average: 70"
+            "30-Day Moving Average: 71"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -659,7 +267,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -673,7 +281,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -687,7 +295,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -701,7 +309,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -715,7 +323,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -729,7 +337,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -743,7 +351,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -757,35 +365,35 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-10-09",
-          "valueY": "71",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-10-09",
-            "30-Day Moving Average: 71"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-10-10",
           "valueY": "72",
           "valueZ": null,
           "color": null,
           "toolTip": [
-            "2020-10-10",
+            "2020-10-09",
             "30-Day Moving Average: 72"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2020-10-10",
+          "valueY": "71",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2020-10-10",
+            "30-Day Moving Average: 71"
+          ]
+        },
+        {
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -799,7 +407,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -813,7 +421,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -827,21 +435,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-10-14",
-          "valueY": "71",
+          "valueY": "72",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-10-14",
-            "30-Day Moving Average: 71"
+            "30-Day Moving Average: 72"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -855,7 +463,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -869,7 +477,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -883,7 +491,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -897,7 +505,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -911,7 +519,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -925,7 +533,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -939,7 +547,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -953,7 +561,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -967,7 +575,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -981,7 +589,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -995,7 +603,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1009,7 +617,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1023,7 +631,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1037,7 +645,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1051,21 +659,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-10-30",
-          "valueY": "70",
+          "valueY": "69",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-10-30",
-            "30-Day Moving Average: 70"
+            "30-Day Moving Average: 69"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1079,7 +687,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1093,7 +701,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1107,7 +715,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1121,7 +729,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1135,7 +743,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1149,49 +757,49 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-11-06",
-          "valueY": "69",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-11-06",
-            "30-Day Moving Average: 69"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-11-07",
           "valueY": "68",
           "valueZ": null,
           "color": null,
           "toolTip": [
-            "2020-11-07",
+            "2020-11-06",
             "30-Day Moving Average: 68"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
-          "valueX": "2020-11-08",
+          "valueX": "2020-11-07",
           "valueY": "67",
           "valueZ": null,
           "color": null,
           "toolTip": [
-            "2020-11-08",
+            "2020-11-07",
             "30-Day Moving Average: 67"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2020-11-08",
+          "valueY": "68",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2020-11-08",
+            "30-Day Moving Average: 68"
+          ]
+        },
+        {
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1205,7 +813,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1219,7 +827,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1233,7 +841,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1247,7 +855,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1261,7 +869,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1275,7 +883,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1289,7 +897,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1303,7 +911,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1317,35 +925,35 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-11-18",
-          "valueY": "70",
+          "valueY": "69",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-11-18",
-            "30-Day Moving Average: 70"
+            "30-Day Moving Average: 69"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-11-19",
-          "valueY": "70",
+          "valueY": "71",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-11-19",
-            "30-Day Moving Average: 70"
+            "30-Day Moving Average: 71"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1359,35 +967,35 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-11-21",
-          "valueY": "72",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-11-21",
-            "30-Day Moving Average: 72"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-11-22",
           "valueY": "71",
           "valueZ": null,
           "color": null,
           "toolTip": [
-            "2020-11-22",
+            "2020-11-21",
             "30-Day Moving Average: 71"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2020-11-22",
+          "valueY": "72",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2020-11-22",
+            "30-Day Moving Average: 72"
+          ]
+        },
+        {
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1401,7 +1009,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1415,7 +1023,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1429,7 +1037,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1443,49 +1051,49 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-11-27",
-          "valueY": "73",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-11-27",
-            "30-Day Moving Average: 73"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-11-28",
           "valueY": "74",
           "valueZ": null,
           "color": null,
           "toolTip": [
-            "2020-11-28",
+            "2020-11-27",
             "30-Day Moving Average: 74"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
-          "valueX": "2020-11-29",
+          "valueX": "2020-11-28",
           "valueY": "73",
           "valueZ": null,
           "color": null,
           "toolTip": [
-            "2020-11-29",
+            "2020-11-28",
             "30-Day Moving Average: 73"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2020-11-29",
+          "valueY": "74",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2020-11-29",
+            "30-Day Moving Average: 74"
+          ]
+        },
+        {
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1499,7 +1107,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1513,35 +1121,35 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-12-02",
-          "valueY": "74",
+          "valueY": "75",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-12-02",
-            "30-Day Moving Average: 74"
+            "30-Day Moving Average: 75"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-12-03",
-          "valueY": "74",
+          "valueY": "75",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-12-03",
-            "30-Day Moving Average: 74"
+            "30-Day Moving Average: 75"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1555,7 +1163,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1569,21 +1177,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-12-06",
-          "valueY": "75",
+          "valueY": "76",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-12-06",
-            "30-Day Moving Average: 75"
+            "30-Day Moving Average: 76"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1597,7 +1205,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1611,7 +1219,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1625,21 +1233,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-12-10",
-          "valueY": "75",
+          "valueY": "76",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2020-12-10",
-            "30-Day Moving Average: 75"
+            "30-Day Moving Average: 76"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1653,7 +1261,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1667,7 +1275,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1681,7 +1289,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1695,7 +1303,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1709,7 +1317,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1723,7 +1331,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1737,35 +1345,35 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-12-18",
-          "valueY": "75",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-12-18",
-            "30-Day Moving Average: 75"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2020-12-19",
           "valueY": "76",
           "valueZ": null,
           "color": null,
           "toolTip": [
-            "2020-12-19",
+            "2020-12-18",
             "30-Day Moving Average: 76"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2020-12-19",
+          "valueY": "75",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2020-12-19",
+            "30-Day Moving Average: 75"
+          ]
+        },
+        {
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1779,7 +1387,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1793,7 +1401,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1807,7 +1415,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1821,7 +1429,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1835,7 +1443,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1849,7 +1457,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1863,7 +1471,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1877,7 +1485,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1891,7 +1499,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1905,7 +1513,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1919,35 +1527,35 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2020-12-31",
-          "valueY": "73",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "2020-12-31",
-            "30-Day Moving Average: 73"
-          ]
-        },
-        {
-          "title": null,
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "2021-01-01",
           "valueY": "74",
           "valueZ": null,
           "color": null,
           "toolTip": [
-            "2021-01-01",
+            "2020-12-31",
             "30-Day Moving Average: 74"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-01-01",
+          "valueY": "73",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-01-01",
+            "30-Day Moving Average: 73"
+          ]
+        },
+        {
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1961,7 +1569,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1975,7 +1583,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -1989,7 +1597,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2003,21 +1611,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2021-01-06",
-          "valueY": "74",
+          "valueY": "73",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2021-01-06",
-            "30-Day Moving Average: 74"
+            "30-Day Moving Average: 73"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2031,7 +1639,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2045,7 +1653,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2059,21 +1667,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2021-01-10",
-          "valueY": "73",
+          "valueY": "74",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2021-01-10",
-            "30-Day Moving Average: 73"
+            "30-Day Moving Average: 74"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2087,7 +1695,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2101,7 +1709,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2115,21 +1723,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2021-01-14",
-          "valueY": "74",
+          "valueY": "73",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2021-01-14",
-            "30-Day Moving Average: 74"
+            "30-Day Moving Average: 73"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2143,7 +1751,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2157,7 +1765,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2171,7 +1779,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2185,7 +1793,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2199,7 +1807,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2213,7 +1821,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2227,21 +1835,21 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
           "valueX": "2021-01-22",
-          "valueY": "74",
+          "valueY": "73",
           "valueZ": null,
           "color": null,
           "toolTip": [
             "2021-01-22",
-            "30-Day Moving Average: 74"
+            "30-Day Moving Average: 73"
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2255,7 +1863,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2269,7 +1877,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2283,7 +1891,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2297,7 +1905,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2311,7 +1919,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2325,7 +1933,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2339,7 +1947,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2353,7 +1961,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2367,7 +1975,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2381,7 +1989,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2395,7 +2003,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2409,7 +2017,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2423,7 +2031,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2437,7 +2045,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2451,7 +2059,7 @@ export const COMPLIANCE = {
           ]
         },
         {
-          "title": null,
+          "title": "Compliance",
           "subTitle": null,
           "description": null,
           "note": null,
@@ -2462,6 +2070,328 @@ export const COMPLIANCE = {
           "toolTip": [
             "2021-02-07",
             "30-Day Moving Average: 75"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-08",
+          "valueY": "75",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-08",
+            "30-Day Moving Average: 75"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-09",
+          "valueY": "75",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-09",
+            "30-Day Moving Average: 75"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-10",
+          "valueY": "76",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-10",
+            "30-Day Moving Average: 76"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-11",
+          "valueY": "76",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-11",
+            "30-Day Moving Average: 76"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-12",
+          "valueY": "76",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-12",
+            "30-Day Moving Average: 76"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-13",
+          "valueY": "76",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-13",
+            "30-Day Moving Average: 76"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-14",
+          "valueY": "76",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-14",
+            "30-Day Moving Average: 76"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-15",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-15",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-16",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-16",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-17",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-17",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-18",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-18",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-19",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-19",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-20",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-20",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-21",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-21",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-22",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-22",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-23",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-23",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-24",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-24",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-25",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-25",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-26",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-26",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-27",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-27",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-02-28",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-02-28",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-03-01",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-03-01",
+            "30-Day Moving Average: None"
+          ]
+        },
+        {
+          "title": "Compliance",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "2021-03-02",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "2021-03-02",
+            "30-Day Moving Average: None"
           ]
         }
       ],
@@ -2475,40 +2405,342 @@ export const COMPLIANCE = {
       "yAxis": "Compliance Score"
     },
     {
-      "title": "Phases Performed",
+      "title": "Specialty Scores",
       "subTitle": null,
-      "tileType": "DonutBox",
-      "groupOrder": 2,
+      "tileType": "ScatterPlot",
+      "groupOrder": 1,
       "tileOrder": 2,
       "dataPoints": [
-        // {
-        //   "title": "Briefing",
-        //   "subTitle": "Performed",
-        //   "description": null,
-        //   "note": null,
-        //   "valueX": "99",
-        //   "valueY": null,
-        //   "valueZ": null,
-        //   "color": null,
-        //   "toolTip": null
-        // },
         {
-          "title": "Debriefing",
-          "subTitle": "Performed",
+          "title": "CARDIOTHORACIC",
+          "subTitle": null,
           "description": null,
           "note": null,
-          "valueX": "72",
-          "valueY": null,
+          "valueX": "69",
+          "valueY": "68",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "CARDIOTHORACIC",
+            "Score: 68",
+            "Number of Cases: 69"
+          ]
+        },
+        {
+          "title": "GENERAL",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "220",
+          "valueY": "76",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "GENERAL",
+            "Score: 76",
+            "Number of Cases: 220"
+          ]
+        },
+        {
+          "title": "GI",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "8",
+          "valueY": "97",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "GI",
+            "Score: 97",
+            "Number of Cases: 8"
+          ]
+        },
+        {
+          "title": "GYNECOLOGY & OBSTETRICS",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "164",
+          "valueY": "78",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "GYNECOLOGY & OBSTETRICS",
+            "Score: 78",
+            "Number of Cases: 164"
+          ]
+        },
+        {
+          "title": "NOT PROVIDED",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "1",
+          "valueY": "50",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "NOT PROVIDED",
+            "Score: 50",
+            "Number of Cases: 1"
+          ]
+        },
+        {
+          "title": "ORTHOPAEDIC",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "5",
+          "valueY": "85",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "ORTHOPAEDIC",
+            "Score: 85",
+            "Number of Cases: 5"
+          ]
+        },
+        {
+          "title": "OTOLARYNGOLOGY",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "11",
+          "valueY": "76",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "OTOLARYNGOLOGY",
+            "Score: 76",
+            "Number of Cases: 11"
+          ]
+        },
+        {
+          "title": "PLASTIC",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "29",
+          "valueY": "76",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "PLASTIC",
+            "Score: 76",
+            "Number of Cases: 29"
+          ]
+        },
+        {
+          "title": "UROLOGY",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "625",
+          "valueY": "75",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "UROLOGY",
+            "Score: 75",
+            "Number of Cases: 625"
+          ]
+        },
+        {
+          "title": "VASCULAR",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "4",
+          "valueY": "56",
+          "valueZ": null,
+          "color": null,
+          "toolTip": [
+            "VASCULAR",
+            "Score: 56",
+            "Number of Cases: 4"
+          ]
+        }
+      ],
+      "toolTip": null,
+      "total": null,
+      "unit": null,
+      "body": null,
+      "url": null,
+      "urlText": null,
+      "xAxis": "Number of Cases",
+      "yAxis": "Quality Score"
+    },
+    {
+      "title": "Specialty Momentum",
+      "subTitle": null,
+      "tileType": "ItemList",
+      "groupOrder": 1,
+      "tileOrder": 3,
+      "dataPoints": [
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "NOT PROVIDED",
+          "valueY": -5,
           "valueZ": null,
           "color": null,
           "toolTip": null
         },
         {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "VASCULAR",
+          "valueY": 10,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "GYNECOLOGY & OBSTETRICS & OBSTETRICS & OBSTETRICS",
+          "valueY": 110,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "PLASTIC",
+          "valueY": -20,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "GI",
+          "valueY": -45,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "ORTHOPAEDIC",
+          "valueY": 5,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "CARDIOTHORACIC",
+          "valueY": 22,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "GENERAL",
+          "valueY": -100,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "OTOLARYNGOLOGY",
+          "valueY": 0,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        },
+        {
+          "title": null,
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "UROLOGY",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        }
+      ],
+      "toolTip": [
+        "The change in 30-day moving average during the selected date range."
+      ],
+      "total": null,
+      "unit": "%",
+      "body": null,
+      "url": null,
+      "urlText": null,
+      "xAxis": null,
+      "yAxis": null
+    },
+    {
+      "title": "Compliance Score",
+      "subTitle": null,
+      "tileType": "MeterInfographic",
+      "groupOrder": 1,
+      "tileOrder": 1,
+      "dataPoints": [
+        {
+          "title": "OR Black Box® Network",
+          "subTitle": null,
+          "description": null,
+          "note": null,
+          "valueX": "81",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        }
+      ],
+      "toolTip": [],
+      "total": "75",
+      "unit": null,
+      "body": null,
+      "url": null,
+      "urlText": null,
+      "xAxis": null,
+      "yAxis": null
+    },
+    {
+      "title": "Phase Completion",
+      "subTitle": null,
+      "tileType": "DonutBox",
+      "groupOrder": 2,
+      "tileOrder": 2,
+      "dataPoints": [
+        {
           "title": "Timeout",
           "subTitle": "Performed",
           "description": null,
           "note": null,
-          "valueX": "0",
+          "valueX": "100",
           "valueY": null,
           "valueZ": null,
           "color": null,
@@ -2532,22 +2764,11 @@ export const COMPLIANCE = {
       "tileOrder": 3,
       "dataPoints": [
         {
-          "title": "Debriefing",
-          "subTitle": "Correct Timing",
-          "description": null,
-          "note": null,
-          "valueX": "40",
-          "valueY": null,
-          "valueZ": null,
-          "color": null,
-          "toolTip": null
-        },
-        {
           "title": "Timeout",
           "subTitle": "Correct Timing",
           "description": null,
           "note": null,
-          "valueX": "60",
+          "valueX": "100",
           "valueY": null,
           "valueZ": null,
           "color": null,
@@ -2562,186 +2783,6 @@ export const COMPLIANCE = {
       "urlText": null,
       "xAxis": null,
       "yAxis": null
-    },
-    {
-      "title": "Compliance Score",
-      "subTitle": null,
-      "tileType": "MeterInfographic",
-      "groupOrder": 1,
-      "tileOrder": 1,
-      "dataPoints": [
-        {
-          "title": "OR Black Box® Network",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "78",
-          "valueY": null,
-          "valueZ": null,
-          "color": null,
-          "toolTip": null
-        }
-      ],
-      "toolTip": ["Compliance Score is the average of 1) the percentage of checklist phases performed and 2) the percentage of the checklist phases performed at the correct time. Each procedure requires one Briefing, one Timeout, and one Debriefing."],
-      "total": 77,
-      "unit": null,
-      "body": null,
-      "url": null,
-      "urlText": null,
-      "xAxis": null,
-      "yAxis": null
-    },
-    {
-      "title": "Specialty Scores",
-      "subTitle": null,
-      "tileType": "ScatterPlot",
-      "groupOrder": 1,
-      "tileOrder": 2,
-      "dataPoints": [
-        {
-          "title": "CARDIOTHORACIC",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "50",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "CARDIOTHORACIC",
-            "Compliance Score: 65",
-            "Cases: 50"
-          ]
-        },
-        {
-          "title": "GENERAL",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "50",
-          "valueY": "65",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "GENERAL",
-            "Compliance Score: 65",
-            "Cases: 50"
-          ]
-        },
-        {
-          "title": "GI",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "5",
-          "valueY": "100",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "GI",
-            "Compliance Score: 100",
-            "Cases: 5"
-          ]
-        },
-        {
-          "title": "GYNECOLOGY & OBSTETRICS",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "27",
-          "valueY": "79",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "GYNECOLOGY & OBSTETRICS",
-            "Compliance Score: 79",
-            "Cases: 27"
-          ]
-        },
-        {
-          "title": "NOT PROVIDED",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "1",
-          "valueY": "50",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "NOT PROVIDED",
-            "Compliance Score: 50",
-            "Cases: 1"
-          ]
-        },
-        {
-          "title": "ORTHOPAEDIC",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "1",
-          "valueY": "100",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "ORTHOPAEDIC",
-            "Compliance Score: 100",
-            "Cases: 1"
-          ]
-        },
-        {
-          "title": "PLASTIC",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "6",
-          "valueY": "91",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "PLASTIC",
-            "Compliance Score: 91",
-            "Cases: 6"
-          ]
-        },
-        {
-          "title": "UROLOGY",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "120",
-          "valueY": "77",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "UROLOGY",
-            "Compliance Score: 77",
-            "Cases: 120"
-          ]
-        },
-        {
-          "title": "VASCULAR",
-          "subTitle": null,
-          "description": null,
-          "note": null,
-          "valueX": "1",
-          "valueY": "50",
-          "valueZ": null,
-          "color": null,
-          "toolTip": [
-            "VASCULAR",
-            "Compliance Score: 50",
-            "Cases: 1"
-          ]
-        }
-      ],
-      "toolTip": null,
-      "total": 77,
-      "unit": null,
-      "body": null,
-      "url": null,
-      "urlText": null,
-      "xAxis": "Number of Cases",
-      "yAxis": "Score"
     }
   ]
-};
+}

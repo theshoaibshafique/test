@@ -27,7 +27,7 @@ const styles = props => ({
     height: 8
   },
   disabled: {
-    color: `${props.color || '#FF4D4D'} !important`,
+    color: `${props.colour || '#FF4D4D'} !important`,
   },
   thumb: {
     display: 'none'
@@ -126,11 +126,11 @@ export default class ReportScore extends React.PureComponent {
               {total}
             </div>
           </Grid>
-          <Grid itemx xs={4} className="goal-slider">
+          <Grid item xs={4} className="goal-slider">
             <SSTSlider
               value={total}
               orientation='vertical'
-              color={this.getColor()}
+              colour={this.getColor()}
               marks={goal != null ? [{ value: goal, label: 'Goal' }] : []}
               disabled />
           </Grid>

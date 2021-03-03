@@ -225,21 +225,30 @@ export default class TimeSeriesChart extends React.PureComponent {
     let diff = Math.round(((lastPoint.valueY - firstPoint.valueY) / firstPoint.valueY) * 100)
     let tag = '';
     let className = ''
-    
+    let tooltip = '';
     if (isNaN(diff) || diff == 0) {
       diff = `—`;
+      tooltip = "No Change";
     } else if (diff < 0) {
-      className="trending-down";
+      className = "trending-down";
+      tooltip = "Negative Trend";
       tag = <Icon color="#FF0000" path={mdiTrendingDown} size={'32px'} />
     } else {
-      className="trending-up";
+      tooltip = "Positive Trend";
+      className = "trending-up";
       tag = <Icon color="#009483" path={mdiTrendingUp} size={'32px'} />
     }
     return (
-      <div className={`change-value ${className}`}>
-        <span>{`${diff}%`}</span>
-        <span>{tag}</span>
-      </div>
+      <LightTooltip interactive arrow
+        title={tooltip}
+        placement="top" fontSize="small"
+      >
+        <div className={`change-value ${className}`}>
+          <span>{`${diff}%`}</span>
+          <span>{tag}</span>
+        </div>
+      </LightTooltip>
+
     )
 
   }
