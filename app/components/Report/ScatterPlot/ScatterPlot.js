@@ -61,7 +61,7 @@ export default class ScatterPlot extends React.PureComponent {
               outer: false
             },
             min: 0,
-            padding: { left: 0, right: 10 },
+            padding: { left: 0, right: Math.round(maxX*.1) },
           },
           y: {
             max: maxY,
@@ -176,7 +176,7 @@ export default class ScatterPlot extends React.PureComponent {
   render() {
     return (
       <LoadingOverlay
-        active={!this.props.dataPoints}
+        active={false}
         spinner
         className="overlays"
         styles={{

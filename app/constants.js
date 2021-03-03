@@ -2745,6 +2745,17 @@ export const COMPLIANCE = {
           "valueZ": null,
           "color": null,
           "toolTip": null
+        },
+        {
+          "title": "Debriefing",
+          "subTitle": "Performed",
+          "description": null,
+          "note": null,
+          "valueX": "0",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
         }
       ],
       "toolTip": null,
@@ -2769,6 +2780,17 @@ export const COMPLIANCE = {
           "description": null,
           "note": null,
           "valueX": "100",
+          "valueY": null,
+          "valueZ": null,
+          "color": null,
+          "toolTip": null
+        },
+        {
+          "title": "Debriefing",
+          "subTitle": "Correct Timing",
+          "description": null,
+          "note": null,
+          "valueX": null,
           "valueY": null,
           "valueZ": null,
           "color": null,

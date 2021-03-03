@@ -152,21 +152,11 @@ export default class ChecklistDetail extends React.PureComponent {
         }}
       >
         <Grid container spacing={0} justify='space-between' direction="column" className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length || 1}`} style={{ minHeight: 600, minWidth: 600 }}>
-          <Grid container spacing={0}>
-            <Grid item xs={10} className="chart-title">
-              {this.props.title}
-            </Grid>
-            <Grid item xs={2} style={{ textAlign: 'right', padding: '40px 24px 0 40px' }}>
-              <IconButton disableRipple disableFocusRipple onClick={this.props.closeModal} className='close-button'><CloseIcon fontSize='small' /></IconButton>
-            </Grid>
+          <Grid item xs={12} className="chart-title">
+            {this.props.title}
           </Grid>
 
-          <Grid container spacing={0} justify="center" style={{ minHeight: 420 }} >
-            {this.renderData()}
-          </Grid>
-          <Grid item xs={12} style={{ textAlign: 'right' }}>
-            <Button disableElevation disableRipple variant="contained" className="secondary" style={{ marginRight: 40, marginBottom: 40 }} onClick={(e) => this.props.closeModal()}>Close</Button>
-          </Grid>
+          {this.renderData()}
         </Grid>
       </LoadingOverlay >
     );

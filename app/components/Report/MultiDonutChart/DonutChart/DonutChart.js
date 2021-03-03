@@ -78,12 +78,12 @@ export default class DonutChart extends React.PureComponent {
   }
 
   generateChartData() {
-    let { valueX, subTitle, chartTitle } = this.props;
-    if (valueX == null){
-      valueX = 0;
-    }
+    const { valueX, chartTitle } = this.props;
+
     let columns = [];
-    if (chartTitle == "Phase Completion") {
+    if (valueX == null) {
+      columns = [['other', 100]];
+    } else if (chartTitle == "Phase Completion") {
       columns = [[this.props.subTitle, valueX], ["other", 100 - valueX]]
     } else {
       columns = [[this.props.subTitle, valueX], ["Incorrect Timing", 100 - valueX]]
@@ -125,7 +125,13 @@ export default class DonutChart extends React.PureComponent {
       .insert("tspan")
       .html(ReactDOMServer.renderToString(
         <tspan>
-          <tspan dy={10} x={0} className="donut-score">{this.props.valueX || 0}<tspan className="donut-unit" dy={-10} baselineShift="super">{this.props.unit || "%"}</tspan></tspan>
+          {this.props.valueX == null ? (
+            <tspan dy={10} x={0} className="donut-score">N/A</tspan>
+          ) :
+            (
+              <tspan dy={10} x={0} className="donut-score">{this.props.valueX || 0}<tspan className="donut-unit" dy={-10} baselineShift="super">{this.props.unit || "%"}</tspan></tspan>
+            )}
+
           <tspan dy={30} x={0} className="donut-subtitle">{this.props.subTitle}</tspan>
         </tspan>
       ))

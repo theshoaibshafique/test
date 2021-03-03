@@ -126,14 +126,14 @@ export default class ReportScore extends React.PureComponent {
               {total}
             </div>
           </Grid>
-          <Grid item xs={4} className="goal-slider">
+          {goal && <Grid item xs={4} className="goal-slider">
             <SSTSlider
               value={total}
               orientation='vertical'
               colour={this.getColor()}
               marks={goal != null ? [{ value: goal, label: 'Goal' }] : []}
               disabled />
-          </Grid>
+          </Grid>}
           {compareValue && <Grid item xs={12} className="compare">
             <div className="title">{compareValue.title}</div>
             <div className="compare-score">{compareValue.valueX}</div>

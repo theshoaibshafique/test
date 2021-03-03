@@ -40,9 +40,9 @@ export default class TimeSeriesChart extends React.PureComponent {
             'NA': '#ABABAB',
           },
         }, // End data
-        regions: [
-          { axis: 'x', end: firstPointWithY && firstPointWithY.valueX, class: 'regionX' },
-        ],
+        regions: firstPointWithY && [
+          { axis: 'x', end: firstPointWithY.valueX, class: 'regionX' },
+        ] || [],
         color: {
           pattern: ['#028CC8', '#97E7B3', '#CFB9E4', '#004F6E']
         },
@@ -162,7 +162,7 @@ export default class TimeSeriesChart extends React.PureComponent {
     let padDate = minDate.clone();
     let greyRegion = [];
     for (let i = 0; i <= diff; i++) {
-      na.push(firstPointWithY.valueY)
+      na.push(firstPointWithY.valueY || null)
       //Skip tooltip for overlapping value
       const toolTip = i != diff ? [padDate.format("MMM DD"), "Not Available - Moving Average requires at least 30 days of data"] : firstPointWithY.toolTip
       greyRegion.push({ valueX: padDate.format("YYYY-MM-DD"), toolTip: toolTip })
@@ -178,7 +178,6 @@ export default class TimeSeriesChart extends React.PureComponent {
       changeCache.push({ valueX: moment(point.valueX), valueY: parseInt(valueY) })
     });
     let chartData = this.state.chartData;
-
     chartData.data.columns = [formattedData.x, formattedData.y, na];
     let chart = this.chartRef.current && this.chartRef.current.chart;
 

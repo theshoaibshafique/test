@@ -21,6 +21,7 @@ import ListDetailed from '../../components/Report/ListDetailed/ListDetailed';
 import StackedBarChart from '../../components/Report/StackedBarChart';
 import Checklist from '../../components/Report/Checklist';
 import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDetail';
+import CompareInfographic from '../../components/Report/CompareInfographic/CompareInfographic';
 import CloseIcon from '@material-ui/icons/Close';
 import { COMPLIANCE } from '../../constants';
 import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
@@ -28,6 +29,7 @@ import MultiDonutChart from '../../components/Report/MultiDonutChart/MultiDonutC
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
 import ScatterPlot from '../../components/Report/ScatterPlot/ScatterPlot';
 import ItemList from '../../components/Report/ItemList/ItemList';
+import NoData from '../../components/Report/NoData/NoData';
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -450,8 +452,9 @@ export default class SSChecklist extends React.PureComponent {
         return <ListDetailed {...tile} specialties={this.props.specialties} />
       case 'CHECKLIST':
         return <Checklist {...tile} openModal={(tileRequest) => this.openModal(tileRequest)} />
+      case 'ITEMLISTS':
       case 'CHECKLISTDETAIL':
-        return <ChecklistDetail {...tile} closeModal={() => this.closeModal()} />
+        return <ChecklistDetail {...tile} />
       case 'STACKEDBARCHART':
         return <StackedBarChart {...tile} specialties={this.props.specialties} yAxis={tile.subTitle} xAxis={tile.footer} title={tile.description} description={''} />
       case 'TIMESERIESCHART':
@@ -459,12 +462,16 @@ export default class SSChecklist extends React.PureComponent {
       case 'DONUTBOX':
         return <MultiDonutChart {...tile} />
       case 'METERINFOGRAPHIC':
-        const goal =this.state.reportType.toLowerCase() == "overview" ? this.state[`${tile.title.toLowerCase()}Goal`] :  this.state[`${this.state.reportType.toLowerCase()}Goal`];
+        const goal = this.state.reportType.toLowerCase() == "overview" ? this.state[`${tile.title.toLowerCase()}Goal`] : this.state[`${this.state.reportType.toLowerCase()}Goal`];
         return <ReportScore {...tile} goal={goal} />
       case 'SCATTERPLOT':
-        return <ScatterPlot {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.name}/>
+        return <ScatterPlot {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.name} />
       case 'ITEMLIST':
-        return <ItemList {...tile}/>
+        return <ItemList {...tile} />
+      case 'COMPAREINFOGRAPHIC':
+        return <CompareInfographic {...tile} />
+      case 'NODATA':
+        return <NoData {...tile} />
 
       case 'INFOGRAPHICMESSAGE':
         let pendingDate = this.pendingDate;
@@ -477,10 +484,12 @@ export default class SSChecklist extends React.PureComponent {
   }
 
   getTileSize(tileType) {
-    if (this.state.reportType.toLowerCase() == "overview"){
+    if (this.state.reportType.toLowerCase() == "overview") {
       switch (`${tileType}`.toUpperCase()) {
+        case 'COMPAREINFOGRAPHIC':
+          return 4;
         case 'METERINFOGRAPHIC':
-          return 3;
+          return 0;
         default:
           return 12;
       }

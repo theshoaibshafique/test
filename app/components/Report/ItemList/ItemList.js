@@ -73,12 +73,12 @@ export default class ItemList extends React.PureComponent {
     let tooltip = '';
     if (isNaN(valueY)) {
       valueY = `—`;
-      tooltip = "No Change";
-    } else if (valueY == 0) {
-      valueY = `—`;
       className = "trending-up";
       tooltip = "Positive Trend (Percent change is not available if the previous score was 0)";
       tag = <Icon color="#009483" path={mdiTrendingUp} size={'24px'} />
+    } else if (valueY == 0) {
+      valueY = `—`;
+      tooltip = "No Change";
     } else if (valueY < 0) {
       className = "trending-down";
       tooltip = "Negative Trend";

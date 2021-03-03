@@ -1,3 +1,8 @@
+.Overview .MeterInfographic{
+  .MuiCardContent-root{
+    min-width: 240px;
+  }
+}
 .ssc-score {
   .score-title {
     opacity: 0.8;
@@ -8,6 +13,7 @@
     letter-spacing: 0;
     line-height: 24px;
     margin-bottom: 16px;
+    white-space: nowrap;
   }
   .score-display {
     color: #004f6e;
