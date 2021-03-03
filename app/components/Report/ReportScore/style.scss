@@ -2,6 +2,10 @@
   .MuiCardContent-root{
     min-width: 240px;
   }
+  .goal-slider{
+    position: relative;
+    right: -16px;
+  }
 }
 .ssc-score {
   .score-title {
@@ -29,7 +33,9 @@
   }
   .goal-slider {
     text-align: right;
-    margin-top:16px
+    margin-top:16px;
+    padding-right: 0 !important;
+    margin-right: -16px;
   }
   .compare {
     display: flex;

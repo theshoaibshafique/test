@@ -4,10 +4,8 @@ import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
-import moment from 'moment/moment';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import globalFunctions from '../../../utils/global-functions';
-import { NavLink } from 'react-router-dom';
+
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
@@ -119,7 +117,7 @@ export default class ScatterPlot extends React.PureComponent {
     let x = ['x'];
     let y = ['y'];
     let tooltipData = {};
-    let highlightedIndex = 0;
+    let highlightedIndex = null;
     //Sort to find the proper index of highlighted value
     dataPoints.sort((a,b) => a.valueX - b.valueX);
     dataPoints.map((point, index) => {
