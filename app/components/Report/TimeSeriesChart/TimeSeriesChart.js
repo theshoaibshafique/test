@@ -76,7 +76,7 @@ export default class TimeSeriesChart extends React.PureComponent {
               position: 'outer-middle'
             },
             min: dataPoints && Math.max(Math.min(...valueYs) - 10, 0) || 0,
-            padding: { top: 4, bottom: 4 },
+            padding: { top: 4, bottom: 0 },
 
           }
         },
@@ -155,7 +155,7 @@ export default class TimeSeriesChart extends React.PureComponent {
     let formattedData = { x: ['x'], y: ['y'] };
     let na = ['NA'];
     let colours = [];
-    let tooltipData = [];
+    let tooltipData = {};
     const firstPointWithY = dataPoints && dataPoints.find(point => point.valueY != null) || {};
     const unavailEndDate = moment(firstPointWithY.valueX);
     const diff = unavailEndDate.diff(minDate, 'days');
@@ -163,19 +163,21 @@ export default class TimeSeriesChart extends React.PureComponent {
     let greyRegion = [];
     for (let i = 0; i <= diff; i++) {
       na.push(firstPointWithY.valueY || null)
-      //Skip tooltip for overlapping value
-      const toolTip = i != diff ? [padDate.format("MMM DD"), "Not Available - Moving Average requires at least 30 days of data"] : firstPointWithY.toolTip
-      greyRegion.push({ valueX: padDate.format("YYYY-MM-DD"), toolTip: toolTip })
+      greyRegion.push({ valueX: padDate.format("YYYY-MM-DD")})
       padDate.add(1, 'day')
     }
+    na.push(null)
     let changeCache = [];
     [...greyRegion, ...dataPoints].map((point, index) => {
       formattedData.x.push(point.valueX);
       colours.push(point.description)
       const valueY = parseInt(point.valueY);
       formattedData.y.push(valueY);
-      tooltipData.push(point.toolTip);
+      if (!isNaN(valueY)){
+        tooltipData[moment(point.valueX).format("YYYY-MM-DD")] = point.toolTip;
+      }
       changeCache.push({ valueX: moment(point.valueX), valueY: parseInt(valueY) })
+      na.push(0)
     });
     let chartData = this.state.chartData;
     chartData.data.columns = [formattedData.x, formattedData.y, na];
@@ -196,9 +198,14 @@ export default class TimeSeriesChart extends React.PureComponent {
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].index] || []
+    const xValue = moment(d[0].x);
+    let tooltipData = this.state.tooltipData && this.state.tooltipData[xValue.format("YYYY-MM-DD")] || []
     if (tooltipData.length == 0) {
-      return;
+      return ReactDOMServer.renderToString(
+        <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+          <div>{xValue.format('MMM DD')}</div>
+          <div>Not Available - Moving Average requires at least 30 days of data</div>
+        </div>);
     }
 
     return ReactDOMServer.renderToString(

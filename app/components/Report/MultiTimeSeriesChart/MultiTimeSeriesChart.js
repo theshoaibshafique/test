@@ -209,7 +209,6 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{xValue}</div>
-        <div>Total Duration: {d.map(point => point.value).reduce((a, b) => a + b)} min</div>
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}
