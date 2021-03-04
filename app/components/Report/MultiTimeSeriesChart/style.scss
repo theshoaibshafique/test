@@ -1,172 +1,175 @@
 .multi-time-series {
-  .chart-title {
-      font-size: 26px;
-      letter-spacing: 0;
-      line-height: 36px;
-  }
-  .chart-subtitle {
-      font-size: 14px;
-      font-style: italic;
-      letter-spacing: 0;
-      line-height: 19px;
-  }
-  .chart-label {
-      opacity: 0.6;
-      color: #000000;
-      font-family: "Noto Sans";
-      font-size: 12px;
-      letter-spacing: 0;
-      line-height: 17px;
-      position: absolute;
-      bottom: 4px;
-  }
-  .c3-axis .tick line {
-      // opacity: 0;
-  }
-  .c3-text {
-      fill: #004f6e !important;
-      font-family: "Noto Sans";
-      font-size: 18px;
-      font-weight: bold;
-      letter-spacing: 0;
-      line-height: 24px;
-  }
+    .chart-title {
+        font-size: 26px;
+        letter-spacing: 0;
+        line-height: 36px;
+    }
+    .chart-subtitle {
+        font-size: 14px;
+        font-style: italic;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+    .chart-label {
+        opacity: 0.6;
+        color: #000000;
+        font-family: "Noto Sans";
+        font-size: 12px;
+        letter-spacing: 0;
+        line-height: 17px;
+        position: absolute;
+        bottom: 4px;
+    }
+    .c3-axis .tick line {
+        // opacity: 0;
+    }
+    .c3-text {
+        fill: #004f6e !important;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 24px;
+    }
 
-  .area-time-series-legend {
-      display: flex;
-      margin-top: 32px;
-      flex-direction: column;
-      margin-left: 8px;
-      margin-right: 40px;
-      text-align: left;
-  }
-  .legend-title {
-      display: flex;
-  }
-  .time-series-area-horizontal {
-      .area-time-series-legend {
-          margin: 0;
-          flex-direction: row;
-      }
+    .area-time-series-legend {
+        display: flex;
+        margin-top: 32px;
+        flex-direction: column;
+        margin-left: 8px;
+        margin-right: 40px;
+        text-align: left;
+    }
+    .legend-title {
+        display: flex;
+    }
+    .time-series-area-horizontal {
+        .area-time-series-legend {
+            margin: 0;
+            flex-direction: row;
+        }
 
-      .area-time-series-legend {
-          display: flex;
-          justify-content: center;
-          margin-top: 8px;
-      }
-      .legend-item {
-          margin: 0 4px !important;
-      }
-  }
+        .area-time-series-legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .legend-item {
+            margin: 0 4px !important;
+        }
+    }
 
-  .legend-item {
-      margin: 4px 0;
-  }
-  .circle:before {
-      content: " \25CF";
-      font-size: 32px;
-      line-height: 0;
-  }
+    .legend-item {
+        margin: 4px 0;
+    }
+    .circle:before {
+        content: " \25CF";
+        font-size: 32px;
+        line-height: 0;
+    }
 
-  .legend-title,
-  .c3-axis,
-  .c3-axis-y-label,
-  .c3-axis-x-label {
-      font-family: "Noto Sans";
-      font-size: 14px;
-      letter-spacing: 0;
-      line-height: 19px;
-  }
-  .c3-axis-y-label,
-  .c3-axis-x-label {
-      font-size: 15px;
-  }
-  .c3-axis-x .tick {
-      font-weight: bold;
-  }
+    .legend-title,
+    .c3-axis,
+    .c3-axis-y-label,
+    .c3-axis-x-label {
+        font-family: "Noto Sans";
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+    .c3-axis-y-label,
+    .c3-axis-x-label {
+        font-size: 15px;
+    }
+    .c3-axis-x .tick {
+        font-weight: bold;
+    }
 
-  .c3 path,
-  .c3 line,
-  .c3-xgrid,
-  .c3-ygrid {
-      stroke-dasharray: unset;
-      stroke: #eaeaea;
-  }
-  
-  .tooltip {
-      color: #fff;
-      padding: 16px;
-      text-align: left;
-      font-size: 14px;
-      max-width: 300px;
-      word-wrap: break-word;
-      font-family: "Noto Sans";
-      font-weight: 500 !important;
-      line-height: 19px;
-      border-radius: 4px;
-      background-color: rgba(97, 97, 97, 0.9);
-  }
-  .display-text {
-      color: #004f6e;
-      font-family: "Noto Sans";
-      font-size: 18px;
-      font-style: italic;
-      letter-spacing: 0;
-      line-height: 24px;
-  }
-  .c3-axis-y .tick,
-  .c3-ygrid {
-      opacity: 0 !important;
-  }
-  .c3-axis-y .tick:nth-child(3n-1),
-  .c3-ygrid:nth-child(3n) {
-      opacity: 1 !important;
-  }
-  .c3-axis-y-label {
-      transform: translate(-8px, 10px) rotate(-90deg);
-  }
-  svg {
-      overflow: visible !important;
-  }
-  circle {
-      r: 0;
-      stroke: unset !important;
-  }
-  .c3-line {
-      stroke-width: 2px;
-  }
-  .c3-axis-x.c3-axis line[y2="0"] ~ text {
-    //   display: none !important;
-  }
-  .c3-area {
-      opacity: 1 !important;
-  }
-  .regionX rect{
-      fill: #000000 ;
-      fill-opacity: .05;
-  }
-  .extent {
-      fill: #3DB3E3 
-  }
-  .c3-shapes {
-      &.c3-lines {
-          // opacity: 0;
-          &.c3-lines-Setup-NA,
-          &.c3-lines-Clean-up-NA,
-          &.c3-lines-Idle-NA {
-              opacity: 1;
-              path {
-                  stroke-dasharray: 5, 5;
-                  stroke-width: 1px;
-              }
-          }
-      }
-      &.c3-areas{
-          &.c3-areas-Setup-NA,
-          &.c3-areas-Clean-up-NA,
-          &.c3-areas-Idle-NA {
-              opacity: 0;
-          }
-      }
-  }
+    .c3 path,
+    .c3 line,
+    .c3-xgrid,
+    .c3-ygrid {
+        stroke-dasharray: unset;
+        stroke: #eaeaea;
+    }
+
+    .tooltip {
+        color: #fff;
+        padding: 16px;
+        text-align: left;
+        font-size: 14px;
+        max-width: 300px;
+        word-wrap: break-word;
+        font-family: "Noto Sans";
+        font-weight: 500 !important;
+        line-height: 19px;
+        border-radius: 4px;
+        background-color: rgba(97, 97, 97, 0.9);
+    }
+    .display-text {
+        color: #004f6e;
+        font-family: "Noto Sans";
+        font-size: 18px;
+        font-style: italic;
+        letter-spacing: 0;
+        line-height: 24px;
+    }
+    .c3-axis-y .tick,
+    .c3-ygrid {
+        opacity: 0 !important;
+    }
+    .c3-axis-y .tick:nth-child(3n-1),
+    .c3-ygrid:nth-child(3n) {
+        opacity: 1 !important;
+    }
+    .c3-axis-y-label {
+        transform: translate(-8px, 10px) rotate(-90deg);
+    }
+    svg {
+        overflow: visible !important;
+    }
+    circle {
+        r: 1.5;
+        stroke: unset !important;
+        &._expanded_ {
+            r: 3;
+        }
+    }
+    .c3-line {
+        stroke-width: 3px;
+    }
+    .c3-axis-x.c3-axis line[y2="0"] ~ text {
+        //   display: none !important;
+    }
+    .c3-area {
+        opacity: 1 !important;
+    }
+    .regionX rect {
+        fill: #000000;
+        fill-opacity: 0.05;
+    }
+    .extent {
+        fill: #3db3e3;
+    }
+    .c3-shapes {
+        &.c3-lines {
+            // opacity: 0;
+            &.c3-lines-Setup-NA,
+            &.c3-lines-Clean-up-NA,
+            &.c3-lines-Idle-NA {
+                opacity: 1;
+                path {
+                    stroke-dasharray: 5, 5;
+                    stroke-width: 1px;
+                }
+            }
+        }
+        &.c3-areas {
+            &.c3-areas-Setup-NA,
+            &.c3-areas-Clean-up-NA,
+            &.c3-areas-Idle-NA {
+                opacity: 0;
+            }
+        }
+    }
 }

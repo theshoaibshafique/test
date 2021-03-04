@@ -22,7 +22,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
 
     this.chartRef = React.createRef();
     const { dataPoints } = this.props;
-    const valueYs = dataPoints && dataPoints.map((point) => point.valueY) || [];
+    const valueYs = dataPoints && dataPoints.map((point) => point.valueY).filter((y) => y) || [];
     const unavailableDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
     this.state = {
       chartID: 'MultiTimeSeriesChart',
@@ -34,11 +34,6 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
           // type: 'line',
           labels: false,
           order: 'asc',
-          colors: {
-            'Setup-NA': '#ABABAB',
-            'Idle-NA': '#ABABAB',
-            'Clean-up-NA': '#ABABAB',
-          }
         }, // End data
         regions: [
           // { axis: 'x', end: unavailableDate, class: 'regionX' },
@@ -147,6 +142,8 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
     let tooltipLegendData = {};
     let tooltipData = {};
     const unavailableEndDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
+    //Create a 0 y axis for tooltips
+    let na = ['NA'];
     dataPoints.map((point) => {
       let xValue = point.valueX;
       if (!xData.includes(xValue)) {
@@ -158,8 +155,9 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
       formattedData[point.title][xValue] = point.valueY;
       tooltipLegendData[point.title] = point.note ? point.note : tooltipLegendData[point.title];
       tooltipData[point.title + xValue] = point.toolTip;
+      na.push(0)
     });
-    let columns = [['x', ...xData]];
+    let columns = [['x', ...xData], na];
     const orderBy = this.props.orderBy || {};
     let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] });
     legendData.map(([key, value]) => {
@@ -190,29 +188,33 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    let tooltipData = d.map((point) => {
-      return this.state.tooltipData[point.id + moment(point.x).format("YYYY-MM-DD")];
-    })
-
-    if (tooltipData.length == 0) {
-      return;
-    }
     const xValue = moment(d[0].x).format('MMM DD');
-    // if (moment(d[0].x).isBefore(this.state.unavailableEndDate)) {
-    //   return ReactDOMServer.renderToString(
-    //     <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-    //       <div>{xValue}</div>
-    //       <div>Not Available - Moving Average requires at least 30 days of data</div>
-    //     </div>);
-    // }
-
+    let na = d.filter((point) => point.value == null && point.id != "NA").map((point) => point.id) || [];
+    if (na.length == d.length - 1) {
+      return ReactDOMServer.renderToString(
+        <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+          <div>{xValue}</div>
+          <div>Not Available - Moving Average requires at least 30 days of data</div>
+        </div>);
+    }
+    // debugger;
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{xValue}</div>
-        {tooltipData.map((line) => {
-          return <div>{line}</div>
-        })}
+        {d.filter((point) => point.value != null && point.id != "NA").map(point => (
+          <div>{`${point.id}: ${point.value}`}</div>
+        ))}
+
+        {na.length != 0 && (
+          <div style={{ marginTop: 12 }}>
+            {`${na.join(", ")}:`}
+            <div>Not Available - Moving Average requires at least 30 days of data</div>
+          </div>
+        )}
+
       </div>);
+
+
   }
 
   renderLegend() {

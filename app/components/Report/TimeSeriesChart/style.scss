@@ -89,11 +89,14 @@
         overflow: visible !important;
     }
     circle {
-        r: 0;
+        r: 1.5;
         stroke: unset !important;
+        &._expanded_ {
+            r: 3;
+        }
     }
     .c3-line {
-        stroke-width: 2px;
+        stroke-width: 3px;
     }
     .c3-axis-x.c3-axis line[y2="0"] ~ text {
         display: none !important;
@@ -106,9 +109,15 @@
         fill: #3db3e3;
     }
 
-    .c3-target-NA path {
-        stroke-dasharray: 5, 5;
-        stroke-width: 1px;
+    .c3-target-NA {
+        path {
+            stroke-dasharray: 5, 5;
+            stroke-width: 1px;
+        }
+
+        circle {
+            display: none;
+        }
     }
     .change-value {
         position: absolute;
@@ -118,16 +127,16 @@
         font-family: "Noto Sans";
         font-size: 26px;
         letter-spacing: 0;
-        line-height: 36px;;
+        line-height: 36px;
         border-radius: 4px;
-        background-color:rgba(200, 200, 200,.3);
-        &.trending-down{
+        background-color: rgba(200, 200, 200, 0.3);
+        &.trending-down {
             color: #ff0000;
-            background-color: rgba(255, 125, 125,.3);
+            background-color: rgba(255, 125, 125, 0.3);
         }
-        &.trending-up{
+        &.trending-up {
             color: #009483;
-            background-color: rgba(151, 231, 179,.3);
+            background-color: rgba(151, 231, 179, 0.3);
         }
         span {
             padding: 2px;
