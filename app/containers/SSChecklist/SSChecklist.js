@@ -30,6 +30,7 @@ import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker
 import ScatterPlot from '../../components/Report/ScatterPlot/ScatterPlot';
 import ItemList from '../../components/Report/ItemList/ItemList';
 import NoData from '../../components/Report/NoData/NoData';
+import MultiTimeSeriesChart from '../../components/Report/MultiTimeSeriesChart';
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -459,6 +460,8 @@ export default class SSChecklist extends React.PureComponent {
         return <StackedBarChart {...tile} specialties={this.props.specialties} yAxis={tile.subTitle} xAxis={tile.footer} title={tile.description} description={''} />
       case 'TIMESERIESCHART':
         return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.earliestStartDate} showChange={true} />
+      case 'MULTITIMESERIESCHART':
+        return <MultiTimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.earliestStartDate} showChange={true} />
       case 'DONUTBOX':
         return <MultiDonutChart {...tile} />
       case 'METERINFOGRAPHIC':

@@ -50,8 +50,8 @@ export default class ChecklistDetail extends React.PureComponent {
   }
 
   prepareData() {
-    let dataPoints = this.props.dataPoints && this.props.dataPoints.sort((a, b) => { return parseInt(b.valueX.replace('%', '')) - parseInt(a.valueX.replace('%', '')) || ('' + a.subTitle).localeCompare(b.subTitle) }) || [];
-
+    let dataPoints = this.props.dataPoints && this.props.dataPoints
+    
     let topItems = dataPoints.filter(point => point.subTitle)
       .slice(0, 5)
       .map((point) => point.title + point.subTitle + point.valueX);
@@ -71,7 +71,7 @@ export default class ChecklistDetail extends React.PureComponent {
   }
 
   groupTiles(dataPoints) {
-    const orderBy = { "Briefing": 1, "Time Out": 2, "Postop Debrief": 3 };
+    const orderBy = { "Briefing": 1, "Time Out": 2, "Debriefing": 3 };
     //Group data by "Group"
     return [...dataPoints.reduce((hash, data) => {
       const current = hash.get(data.title) || { title: data.title, group: [] }
@@ -90,7 +90,7 @@ export default class ChecklistDetail extends React.PureComponent {
       return (
         <Grid item xs key={i} className={"checklist-list"}>
           {dataGroup.group.map((point, j) => {
-            let value = parseInt(point.valueX.replace('%', ''));
+            let value = parseInt(point.valueX && point.valueX.replace('%', ''));
             let isTopItem = this.state.topItems.includes(point.title + point.subTitle + point.valueX);
             return (
               <Grid container spacing={0} key={`${i}-${j}`}
@@ -151,7 +151,7 @@ export default class ChecklistDetail extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='space-between' direction="column" className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length || 1}`} style={{ minHeight: 600, minWidth: 600 }}>
+        <Grid container spacing={3} justify='space-between'  className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length || 1}`} style={{ minHeight: 600, minWidth: 600 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>

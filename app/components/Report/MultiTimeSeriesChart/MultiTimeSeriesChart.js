@@ -6,8 +6,6 @@ import moment from 'moment/moment';
 import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ReactDOMServer from 'react-dom/server';
-import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
-import Icon from '@mdi/react'
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -18,36 +16,38 @@ const LightTooltip = withStyles((theme) => ({
     fontFamily: 'Noto Sans'
   }
 }))(Tooltip);
-export default class TimeSeriesChart extends React.PureComponent {
+export default class MultiTimeSeriesChart extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.chartRef = React.createRef();
-    const { dataPoints, startDate } = this.props;
-    const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
-
-    const firstPointWithY = dataPoints && dataPoints.find(point => point.valueY != null);
+    const { dataPoints } = this.props;
+    const valueYs = dataPoints && dataPoints.map((point) => point.valueY) || [];
+    const unavailableDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
     this.state = {
-      chartID: 'TimeSeriesChart',
+      chartID: 'MultiTimeSeriesChart',
+      legendData: [],
       chartData: {
         data: {
           x: 'x',
           columns: [], //Dynamically populated
-          // type: 'spline',
-          type: 'line',
+          // type: 'line',
           labels: false,
+          order: 'asc',
           colors: {
-            'NA': '#ABABAB',
-          },
+            'Setup-NA': '#ABABAB',
+            'Idle-NA': '#ABABAB',
+            'Clean-up-NA': '#ABABAB',
+          }
         }, // End data
-        // regions: firstPointWithY && [
-        //   { axis: 'x', end: firstPointWithY.valueX, class: 'regionX' },
-        // ] || [],
+        regions: [
+          // { axis: 'x', end: unavailableDate, class: 'regionX' },
+        ],
         color: {
-          pattern: ['#028CC8', '#97E7B3', '#CFB9E4', '#004F6E']
+          pattern: ['#A7E5FD', '#97E7B3', '#FFDB8C', '#FF7D7D', '#CFB9E4', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD']
         },
         tooltip: {
-          // grouped: false,
+          grouped: true,
           contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
         },
         axis: {
@@ -62,7 +62,7 @@ export default class TimeSeriesChart extends React.PureComponent {
               multiline: false,
               // rotate: 75,
               culling: {
-                max: 5 // or whatever value you need
+                // max: 8 // or whatever value you need
               },
               format: (x) => { return `${x && moment(x).format('MMM DD')}` },
             },
@@ -73,10 +73,10 @@ export default class TimeSeriesChart extends React.PureComponent {
             max: dataPoints && Math.min(Math.max(...valueYs) + 10, 100) || 100,
             label: {
               text: this.props.yAxis, //Dynamically populated
-              position: 'outer-middle'
+              position: 'outer-middle',
             },
             min: dataPoints && Math.max(Math.min(...valueYs) - 10, 0) || 0,
-            padding: { top: 4, bottom: 4 },
+            padding: { top: 4, bottom: 0 },
 
           }
         },
@@ -85,23 +85,13 @@ export default class TimeSeriesChart extends React.PureComponent {
           show: false
         },
         size: {
-          height: 316,
+          height: 283,
           // width: 275
         },
         point: {
           // show: false
         },
-        subchart: {
-          show: true,
-          onbrush: (d) => this.setState({ domain: d }),
-          size: {
-            // height: 20
-          },
-        },
-        zoom: {
-          enabled: false,
-        },
-        onrendered: () => this.chartRef.current && this.handleBrush(),
+        // onrendered: () => this.chartRef.current && this.updateLegend(`.${this.state.chartID}`),
       }
     }
 
@@ -133,14 +123,14 @@ export default class TimeSeriesChart extends React.PureComponent {
     } else if (visibleTicks.length < MAX_TICK_WIDTH) {
       visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     }
-
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.dataPoints && this.props.dataPoints) {
       this.generateChartData();
     }
-    this.handleBrush()
+    //Need to manually redraw axis on update
+    // this.handleBrush()
   }
 
   componentDidMount() {
@@ -148,108 +138,118 @@ export default class TimeSeriesChart extends React.PureComponent {
   }
 
   generateChartData() {
-    const { dataPoints, minDate } = this.props;
+    const { dataPoints } = this.props;
     if (!dataPoints) {
       return;
     }
-    let formattedData = { x: ['x'], y: ['y'] };
-    let na = ['NA'];
-    let colours = [];
-    let tooltipData = [];
-    const firstPointWithY = dataPoints && dataPoints.find(point => point.valueY != null) || {};
-    const unavailEndDate = moment(firstPointWithY.valueX);
-    const diff = unavailEndDate.diff(minDate, 'days');
-    let padDate = minDate.clone();
-    let greyRegion = [];
-    for (let i = 0; i <= diff; i++) {
-      na.push(firstPointWithY.valueY || null)
-      //Skip tooltip for overlapping value
-      const toolTip = i != diff ? [padDate.format("MMM DD"), "Not Available - Moving Average requires at least 30 days of data"] : firstPointWithY.toolTip
-      greyRegion.push({ valueX: padDate.format("YYYY-MM-DD"), toolTip: toolTip })
-      padDate.add(1, 'day')
-    }
-    let changeCache = [];
-    [...greyRegion, ...dataPoints].map((point, index) => {
-      formattedData.x.push(point.valueX);
-      colours.push(point.description)
-      const valueY = parseInt(point.valueY);
-      formattedData.y.push(valueY);
-      tooltipData.push(point.toolTip);
-      changeCache.push({ valueX: moment(point.valueX), valueY: parseInt(valueY) })
+    let xData = [];
+    let formattedData = {};
+    let tooltipLegendData = {};
+    let tooltipData = {};
+    const unavailableEndDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
+    dataPoints.map((point) => {
+      let xValue = point.valueX;
+      if (!xData.includes(xValue)) {
+        xData.push(xValue);
+      }
+
+      formattedData[point.title] = formattedData[point.title] || {};
+      formattedData[point.title][xValue] = formattedData[point.title][xValue] || 0
+      formattedData[point.title][xValue] = point.valueY;
+      tooltipLegendData[point.title] = point.note ? point.note : tooltipLegendData[point.title];
+      tooltipData[point.title + xValue] = point.toolTip;
     });
+    let columns = [['x', ...xData]];
+    const orderBy = this.props.orderBy || {};
+    let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] });
+    legendData.map(([key, value]) => {
+      columns.push([key, ...xData.map((x) => {
+        return value[x];
+      })]);
+      //We add the NA category stand alone for custom styling
+      // columns.push([`${key}-NA`, ...xData.map((x) => {
+      //   return value[x] == null || x == unavailableEndDate.format("YYYY-MM-DD") ? value[unavailableEndDate.format("YYYY-MM-DD")] : null;
+      // })]);
+    })
+
     let chartData = this.state.chartData;
-    chartData.data.columns = [formattedData.x, formattedData.y, na];
+    chartData.data.columns = columns;
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
-    const domain = [this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")];
+    // chart && chart.groups([Object.keys(formattedData), ['Setup-NA', 'Idle-NA', "Clean-up-NA"]]);
     setTimeout(() => {
-      chart.zoom(domain)
+      // chart.zoom([this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")])
       setTimeout(() => {
-        this.handleBrush()
+        // this.handleBrush()
       }, 500)
 
     }, 500);
 
-    changeCache = changeCache.sort((a, b) => a.valueX.valueOf() - b.valueX.valueOf());
-    this.setState({ chartData, colours, tooltipData, changeCache, reverseChangeCache: [].concat(changeCache).reverse(), domain, isLoaded: true })
+    this.setState({ chartData, tooltipData, legendData, tooltipLegendData, unavailableEndDate, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].index] || []
+    let tooltipData = d.map((point) => {
+      return this.state.tooltipData[point.id + moment(point.x).format("YYYY-MM-DD")];
+    })
+
     if (tooltipData.length == 0) {
       return;
     }
+    const xValue = moment(d[0].x).format('MMM DD');
+    // if (moment(d[0].x).isBefore(this.state.unavailableEndDate)) {
+    //   return ReactDOMServer.renderToString(
+    //     <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+    //       <div>{xValue}</div>
+    //       <div>Not Available - Moving Average requires at least 30 days of data</div>
+    //     </div>);
+    // }
 
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div>{xValue}</div>
+        <div>Total Duration: {d.map(point => point.value).reduce((a, b) => a + b)} min</div>
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}
       </div>);
   }
 
-
-
-  renderChangeValue() {
-    const { domain, changeCache, reverseChangeCache } = this.state;
-    if (!domain || domain.length < 2) {
-      return ''
+  renderLegend() {
+    if (!this.chartRef.current) {
+      return;
     }
-
-    const startDate = moment(domain[0]).startOf('day');
-    const endDate = moment(domain[1]).endOf('day');
-    const firstPoint = changeCache && changeCache.find(point => point.valueX.isBetween(startDate, endDate) && !isNaN(point.valueY)) || {};
-    const lastPoint = reverseChangeCache && reverseChangeCache.find(point => point.valueX.isBetween(startDate, endDate) && !isNaN(point.valueY)) || {};
-    let diff = Math.round(((lastPoint.valueY - firstPoint.valueY) / firstPoint.valueY) * 100)
-    let tag = '';
-    let className = ''
-    let tooltip = '';
-    if (isNaN(diff) || diff == 0) {
-      diff = `—`;
-      tooltip = "No Change";
-    } else if (diff < 0) {
-      className = "trending-down";
-      tooltip = "Negative Trend";
-      tag = <Icon color="#FF0000" path={mdiTrendingDown} size={'32px'} />
-    } else {
-      tooltip = "Positive Trend";
-      className = "trending-up";
-      tag = <Icon color="#009483" path={mdiTrendingUp} size={'32px'} />
-    }
-    return (
-      <LightTooltip interactive arrow
-        title={tooltip}
-        placement="top" fontSize="small"
-      >
-        <div className={`change-value ${className}`}>
-          <span>{`${diff}%`}</span>
-          <span>{tag}</span>
-        </div>
-      </LightTooltip>
-
-    )
-
+    let chart = this.chartRef.current.chart;
+    return <div className={`time-series-area-horizontal`}>
+      <div className="area-time-series-legend">
+        {this.state.legendData.map(([id, value], index) => {
+          if (id == "N/A") {
+            return;
+          }
+          return (
+            <div
+              className="legend-item"
+              id={id.replace(/[^A-Z0-9]+/ig, "")}
+              key={index}
+              onMouseOver={() => {
+                chart && chart.focus(id);
+              }}
+              onMouseOut={() => {
+                chart && chart.revert();
+              }}
+            >
+              <div className="legend-title">
+                <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
+                {this.state.tooltipLegendData[id] && <LightTooltip interactive arrow title={this.state.tooltipLegendData[id]} placement="top" fontSize="small">
+                  <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                </LightTooltip>}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
   }
 
   render() {
@@ -272,18 +272,18 @@ export default class TimeSeriesChart extends React.PureComponent {
           })
         }}
       >
-        <Grid container spacing={0} justify='center' className="time-series" style={{ textAlign: 'center' }}>
+        <Grid container spacing={0} justify='center' className="multi-time-series" style={{ textAlign: 'center' }}>
           <Grid item xs className="chart-title">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
-            {this.props.showChange && this.renderChangeValue()}
           </Grid>
           <Grid item xs={12} className="chart-subtitle">
             {this.props.subTitle}
           </Grid>
           <Grid item xs={12}>
             {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
+            {this.renderLegend()}
           </Grid>
           <Grid item xs={12} className="chart-label">
             {this.props.xAxis}
