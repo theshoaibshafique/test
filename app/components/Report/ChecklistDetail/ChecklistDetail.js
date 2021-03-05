@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, withStyles, LinearProgress, IconButton, Divider, Button } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { mdiCheck } from '@mdi/js';
+import Icon from '@mdi/react'
 
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
@@ -51,12 +52,12 @@ export default class ChecklistDetail extends React.PureComponent {
 
   prepareData() {
     let dataPoints = this.props.dataPoints && this.props.dataPoints
-    
-    let topItems = dataPoints.filter(point => point.subTitle)
-      .slice(0, 5)
-      .map((point) => point.title + point.subTitle + point.valueX);
+
+    // let topItems = dataPoints.filter(point => point.subTitle)
+    //   .slice(0, 5)
+    //   .map((point) => point.title + point.subTitle + point.valueX);
     dataPoints = this.groupTiles(dataPoints);
-    this.setState({ dataPoints, topItems });
+    this.setState({ dataPoints });
   }
 
   componentDidMount() {
@@ -77,16 +78,25 @@ export default class ChecklistDetail extends React.PureComponent {
       const current = hash.get(data.title) || { title: data.title, group: [] }
       if (!data.subTitle) {
         current.total = data.valueX;
+      } else if (data.valueX == 100) {
+        current.completedCount = current.completedCount ? current.completedCount + 1 : 1;
       }
       current.group.push(data)
 
       return hash.set(data.title, current);
     }, new Map).values()].sort((a, b) => orderBy[a.title] - orderBy[b.title]);
   }
+  arrayRotate(arr, count) {
+    count -= arr.length * Math.floor(count / arr.length);
+    arr.push.apply(arr, arr.splice(0, count));
+    return arr;
+  }
 
   renderData() {
     // let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX });
     return this.state.dataPoints && this.state.dataPoints.map((dataGroup, i) => {
+      const header = dataGroup.group.shift();
+      dataGroup.group = [header, ...this.arrayRotate(dataGroup.group, dataGroup.completedCount || 0)]
       return (
         <Grid item xs key={i} className={"checklist-list"}>
           {dataGroup.group.map((point, j) => {
@@ -94,7 +104,7 @@ export default class ChecklistDetail extends React.PureComponent {
             let isTopItem = this.state.topItems.includes(point.title + point.subTitle + point.valueX);
             return (
               <Grid container spacing={0} key={`${i}-${j}`}
-                className={`${isTopItem ? 'top-item' : ''} ${value <= 0 ? 'complete-item' : ''}`}
+                className={`${isTopItem ? 'top-item' : ''} ${value >= 100 ? 'complete-item' : ''}`}
               >
                 <Grid item xs={8} className={point.subTitle ? "list-subtitle" : "list-title"}  >
                   {point.subTitle || point.title}
@@ -102,12 +112,12 @@ export default class ChecklistDetail extends React.PureComponent {
                 {point.valueZ
                   ? <Grid item xs={4} className="list-subtitle-no-data">{point.valueZ}</Grid>
                   : <Grid item xs={4} className={point.subTitle ? "list-subtitle-value" : "list-title-value"}>
-                    {point.valueX}
+                    {point.valueX == 100 ? <Icon color="#009483" path={mdiCheck} size={'16px'} /> : point.valueX && `${point.valueX}%`}
                   </Grid>}
 
-                {!point.subTitle && <Grid item xs={12}><Divider className="ssc-divider" /></Grid>}
+                {/* {!point.subTitle && <Grid item xs={12}><Divider className="ssc-divider" /></Grid>} */}
                 {point.subTitle && <Grid item xs={12} style={{ marginBottom: 24 }}>
-                  {value ?
+                  {value < 100 ?
                     <BorderLinearProgress
                       variant="determinate"
                       value={value}
@@ -132,33 +142,15 @@ export default class ChecklistDetail extends React.PureComponent {
 
   render() {
     return (
-      <LoadingOverlay
-        active={!this.props.dataPoints}
-        spinner
-        text='Loading your content...'
-        className="overlays"
-        styles={{
-          overlay: (base) => ({
-            ...base,
-            background: 'none',
-            color: '#000'
-          }),
-          spinner: (base) => ({
-            ...base,
-            '& svg circle': {
-              stroke: 'rgba(0, 0, 0, 0.5)'
-            }
-          })
-        }}
-      >
-        <Grid container spacing={3} justify='space-between'  className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length || 1}`} style={{ minHeight: 600, minWidth: 600 }}>
-          <Grid item xs={12} className="chart-title">
-            {this.props.title}
-          </Grid>
-
+      <Grid container spacing={3} justify='space-between' className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length || 1}`} >
+        <Grid item xs={12} className="chart-title">
+          {this.props.title}
+        </Grid>
+        <Grid container spacing={3} className="checklist-lists">
           {this.renderData()}
         </Grid>
-      </LoadingOverlay >
+
+      </Grid>
     );
   }
 }

@@ -21,11 +21,12 @@ export default class ScatterPlot extends React.PureComponent {
 
     this.chartRef = React.createRef();
     this.id = `scatter-plot-${this.props.id}`;
-    const { dataPoints, total } = this.props;
+    let { dataPoints, score } = this.props;
+    score = score || null
     const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
     const valueXs = dataPoints && dataPoints.map((point) => parseInt(point.valueX)) || [];
-    const maxY = dataPoints && Math.min(Math.max(...valueYs) + 10, 100) || 100;
-    const minY = dataPoints && Math.max(Math.min(...valueYs) - 10, 0) || 0
+    const maxY = dataPoints && Math.min(Math.max(...valueYs, score)+10, 100) || 100;
+    const minY = dataPoints && Math.max(Math.min(...valueYs, score)-10, 0) || 0
     const maxX = Math.max(...valueXs);
     const minX = Math.max(Math.min(...valueXs) - 10, 0)
     this.state = {
@@ -62,18 +63,22 @@ export default class ScatterPlot extends React.PureComponent {
             padding: { left: 0, right: Math.round(maxX*.1) },
           },
           y: {
+            label: {
+              text: this.props.yAxis, //Dynamically populated
+              position: 'outer-middle'
+            },
             max: maxY,
             min: minY,
-            padding: { top: 4, bottom: 0 },
+            padding: { top: 10, bottom: 0 },
             tick: {
-              values: [maxY, minY, total],
+              values: [maxY, minY, score],
               outer: false
             }
           }
         },
         grid: {
           y: {
-            lines: [{ value: total, text: 'Overall' }],
+            lines: [{ value: score, text: 'Overall' }],
           },
           lines: {
             front: false
@@ -200,7 +205,6 @@ export default class ScatterPlot extends React.PureComponent {
             </LightTooltip>}
           </Grid>
           <Grid item xs={12} >
-            <div className="c3-axis-y-label">{this.props.yAxis}</div>
             <C3Chart ref={this.chartRef} {...this.state.chartData} />
           </Grid>
         </Grid>

@@ -168,7 +168,6 @@ export default class SSChecklist extends React.PureComponent {
               result = JSON.parse(result);
               if (result.tiles && result.tiles.length > 0) {
                 const reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
-
                 this.setState({ reportData, isLoading: false });
 
               } else {
@@ -257,12 +256,14 @@ export default class SSChecklist extends React.PureComponent {
         // console.error("tile",error)
       });
   }
-
   groupTiles(tileData) {
     //Group data by "Group"
     return [...tileData.reduce((hash, data) => {
       const current = hash.get(data.groupOrder) || { groupOrder: data.groupOrder, group: [] }
       current.group.push(data)
+      if (`${data.tileType}`.toUpperCase() == 'METERINFOGRAPHIC') {
+        this.setState({ [`${this.state.reportType.toLowerCase()}Score`]: data.total });
+      }
       return hash.set(data.groupOrder, current);
     }, new Map).values()];
   }
@@ -468,7 +469,10 @@ export default class SSChecklist extends React.PureComponent {
         const goal = this.state.reportType.toLowerCase() == "overview" ? this.state[`${tile.title.toLowerCase()}Goal`] : this.state[`${this.state.reportType.toLowerCase()}Goal`];
         return <ReportScore {...tile} goal={goal} />
       case 'SCATTERPLOT':
-        return <ScatterPlot {...tile} goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]} highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.name} />
+        return <ScatterPlot {...tile}
+          goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]}
+          score={this.state[`${this.state.reportType.toLowerCase()}Score`]}
+          highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.name} />
       case 'ITEMLIST':
         return <ItemList {...tile} />
       case 'COMPAREINFOGRAPHIC':

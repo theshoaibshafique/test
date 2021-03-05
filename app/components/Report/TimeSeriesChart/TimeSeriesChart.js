@@ -94,7 +94,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         },
         subchart: {
           show: true,
-          onbrush: (d) => this.setState({ domain: d }),
+          onbrush: (d) => this.props.showChange && this.setState({ domain: d }),
           size: {
             // height: 20
           },
@@ -141,7 +141,7 @@ export default class TimeSeriesChart extends React.PureComponent {
     if (!prevProps.dataPoints && this.props.dataPoints) {
       this.generateChartData();
     }
-    this.handleBrush()
+    // this.handleBrush()
   }
 
   componentDidMount() {
@@ -169,7 +169,7 @@ export default class TimeSeriesChart extends React.PureComponent {
     }
     na.push(null)
     let changeCache = [];
-    [...greyRegion, ...dataPoints].map((point, index) => {
+    dataPoints.map((point, index) => {
       formattedData.x.push(point.valueX);
       colours.push(point.description)
       const valueY = parseInt(point.valueY);
