@@ -9,49 +9,34 @@ import { NavLink } from 'react-router-dom';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
-    padding: '16px',
+    // padding: '16px',
     fontSize: '14px',
     lineHeight: '19px',
     fontFamily: 'Noto Sans'
   }
 }))(Tooltip);
-function ValueLabelComponent(props, isOpen, goal) {
-  const { children, open, value } = props;
-  if (value != goal) {
-    return "";
-  }
-  return (
-    <Tooltip open={open || isOpen} enterTouchDelay={0} arrow placement="right" title={`Goal: ${value}`}>
-      {children}
-    </Tooltip>
-  );
-}
+
 const withStylesProps = styles =>
   Component =>
     props => {
       const Comp = withStyles(styles(props))(Component);
       return <Comp {...props} />;
     };
-const styles = props => ({
+const sliderStyles = props => ({
   root: {
     color: '#FFC74D',
-    height: 8,
-    cursor: 'unset'
+    height: 8
   },
   disabled: {
     color: `${props.colour || '#FF4D4D'} !important`,
   },
   thumb: {
-    width: 0,
-    marginBottom: "-5px !important",
-    marginLeft: "4px !important",
-    '&:focus, &:hover, &$active': {
-      boxShadow: 'inherit',
-    },
+    display: 'none'
   },
   active: {},
   valueLabel: {
-
+    color: '#004F6E',
+    left: 'calc(-50% - 2px)',
   },
   mark: {
     backgroundColor: '#592D82',
@@ -85,8 +70,22 @@ const styles = props => ({
     borderRadius: 4,
   },
 });
-const SSTSlider = withStylesProps(styles)(props => (<Slider className={props.classes} {...props} />));
-
+const SSTSlider = withStylesProps(sliderStyles)(props => (<Slider className={props.classes} {...props} />));
+const sliderTooltipStyles = props => ({
+  popper: {
+    top: "-2px !important"
+  },
+  tooltipPlacementRight: {
+    marginLeft:"28px !important",
+  },
+  tooltip: {
+    // padding: '16px',
+    fontSize: '14px',
+    lineHeight: '19px',
+    fontFamily: 'Noto Sans'
+  }
+});
+const SliderTooltip = withStylesProps(sliderTooltipStyles)(props => (<Tooltip className={props.classes} {...props} />));
 export default class ReportScore extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -110,7 +109,6 @@ export default class ReportScore extends React.PureComponent {
 
   render() {
     const { title, toolTip, total, dataPoints, goal } = this.props
-    const { isOpen } = this.state;
     let compareValue = dataPoints && dataPoints.length && dataPoints[0] || false;
     return (
       <LoadingOverlay
@@ -151,16 +149,23 @@ export default class ReportScore extends React.PureComponent {
               </NavLink>}
             </div>
           </Grid>
-          {goal && <Grid item xs={4} className="goal-slider" onMouseOver={() => this.setState({ isOpen: true })} onMouseLeave={() => this.setState({ isOpen: false })}>
-            <SSTSlider
-              value={[total, goal, 0]}
-              orientation='vertical'
-              colour={this.getColor()}
-              marks={goal != null ? [{ value: goal, label: 'Goal' }] : []}
-              valueLabelDisplay="auto"
-              ValueLabelComponent={(d) => ValueLabelComponent(d, isOpen, goal)}
-              onChange={() => {return ''}} />
-          </Grid>}
+
+          {goal && 
+            <Grid item xs={4} className="goal-slider" onMouseOver={() => this.setState({ isOpen: true })} onMouseLeave={() => this.setState({ isOpen: false })}>
+              <SSTSlider
+                value={total}
+                orientation='vertical'
+                colour={this.getColor()}
+                marks={goal != null ? [{ value: goal, label: <SliderTooltip interactive arrow
+                  title={`Goal: ${goal}`}
+                  open={this.state.isOpen}
+                  placement="right" fontSize="small"
+                >
+                  <div>Goal</div>
+                </SliderTooltip> }] : []}
+                disabled />
+            </Grid>
+          }
           {compareValue && <Grid item xs={12} className="compare">
             <div className="title">{compareValue.title}</div>
             <div className="compare-score">{compareValue.valueX}</div>
