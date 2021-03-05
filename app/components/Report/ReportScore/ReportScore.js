@@ -15,7 +15,17 @@ const LightTooltip = withStyles((theme) => ({
     fontFamily: 'Noto Sans'
   }
 }))(Tooltip);
-
+function ValueLabelComponent(props, isOpen, goal) {
+  const { children, open, value } = props;
+  if (value != goal) {
+    return "";
+  }
+  return (
+    <Tooltip open={open || isOpen} enterTouchDelay={0} arrow placement="right" title={`Goal: ${value}`}>
+      {children}
+    </Tooltip>
+  );
+}
 const withStylesProps = styles =>
   Component =>
     props => {
@@ -25,18 +35,23 @@ const withStylesProps = styles =>
 const styles = props => ({
   root: {
     color: '#FFC74D',
-    height: 8
+    height: 8,
+    cursor: 'unset'
   },
   disabled: {
     color: `${props.colour || '#FF4D4D'} !important`,
   },
   thumb: {
-    display: 'none'
+    width: 0,
+    marginBottom: "-5px !important",
+    marginLeft: "4px !important",
+    '&:focus, &:hover, &$active': {
+      boxShadow: 'inherit',
+    },
   },
   active: {},
   valueLabel: {
-    color: '#004F6E',
-    left: 'calc(-50% - 2px)',
+
   },
   mark: {
     backgroundColor: '#592D82',
@@ -75,6 +90,9 @@ const SSTSlider = withStylesProps(styles)(props => (<Slider className={props.cla
 export default class ReportScore extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      isOpen: false
+    }
   };
 
   getColor() {
@@ -92,6 +110,7 @@ export default class ReportScore extends React.PureComponent {
 
   render() {
     const { title, toolTip, total, dataPoints, goal } = this.props
+    const { isOpen } = this.state;
     let compareValue = dataPoints && dataPoints.length && dataPoints[0] || false;
     return (
       <LoadingOverlay
@@ -132,13 +151,15 @@ export default class ReportScore extends React.PureComponent {
               </NavLink>}
             </div>
           </Grid>
-          {goal && <Grid item xs={4} className="goal-slider">
+          {goal && <Grid item xs={4} className="goal-slider" onMouseOver={() => this.setState({ isOpen: true })} onMouseLeave={() => this.setState({ isOpen: false })}>
             <SSTSlider
-              value={total}
+              value={[total, goal, 0]}
               orientation='vertical'
               colour={this.getColor()}
               marks={goal != null ? [{ value: goal, label: 'Goal' }] : []}
-              disabled />
+              valueLabelDisplay="auto"
+              ValueLabelComponent={(d) => ValueLabelComponent(d, isOpen, goal)}
+              onChange={() => {return ''}} />
           </Grid>}
           {compareValue && <Grid item xs={12} className="compare">
             <div className="title">{compareValue.title}</div>
