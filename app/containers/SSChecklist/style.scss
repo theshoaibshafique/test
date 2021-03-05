@@ -92,20 +92,12 @@ $ssc-picker-height: 200px;
         }
     }
 
-    .InfographicParagraph-1,
-    .InfographicParagraph-1 .MuiCardContent-root {
-        padding-bottom: 0 !important;
-    }
-    .InfographicParagraph-2,
-    .InfographicParagraph-2 .MuiCardContent-root {
-        padding-top: 6px !important;
-    }
 
     .ssc-card.InfographicParagraph .MuiCardContent-root,
     .ssc-card.MuiCard-root.InfographicParagraph {
         box-shadow: none;
         background-color: unset;
-        padding-left: 0;
+        padding: 0;
     }
     .ssc-card.InfographicMessage {
         opacity: 0.8;

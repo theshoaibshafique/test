@@ -407,6 +407,8 @@ export default class SSChecklist extends React.PureComponent {
       return <div></div>;
     }
     switch (`${tile.tileType}`.toUpperCase()) {
+      case 'INFOGRAPHICPARAGRAPH':
+        return <InfographicParagraph {...tile} />
       case 'ITEMLISTS':
       case 'CHECKLISTDETAIL':
         return <ChecklistDetail {...tile} />
