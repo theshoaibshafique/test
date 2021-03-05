@@ -44,6 +44,9 @@
         display: flex;
     }
     .time-series-area-horizontal {
+        position: absolute;
+        top: 0;
+        right: 0;
         .area-time-series-legend {
             margin: 0;
             flex-direction: row;
@@ -55,7 +58,7 @@
             margin-top: 8px;
         }
         .legend-item {
-            margin: 0 4px !important;
+            margin: 0 12px !important;
         }
     }
 
@@ -151,25 +154,39 @@
     .extent {
         fill: #3db3e3;
     }
-    .c3-shapes {
-        &.c3-lines {
-            // opacity: 0;
-            &.c3-lines-Setup-NA,
-            &.c3-lines-Clean-up-NA,
-            &.c3-lines-Idle-NA {
-                opacity: 1;
-                path {
-                    stroke-dasharray: 5, 5;
-                    stroke-width: 1px;
-                }
-            }
+    .c3-target-NA {
+        path {
+            stroke-dasharray: 5, 5;
+            stroke-width: 1px;
         }
-        &.c3-areas {
-            &.c3-areas-Setup-NA,
-            &.c3-areas-Clean-up-NA,
-            &.c3-areas-Idle-NA {
-                opacity: 0;
-            }
+
+        circle {
+            display: none;
         }
     }
+
+    .change-value {
+        width: fit-content;
+        float: right;
+        opacity: 0.8;
+        border-radius: 4px;
+        min-height: 24px;
+        background-color: rgba(200, 200, 200, 0.3);
+        &.trending-down {
+          color: #ff0000;
+          background-color: rgba(255, 125, 125, 0.3);
+        }
+        &.trending-up {
+          color: #009483;
+          background-color: rgba(151, 231, 179, 0.3);
+        }
+        .change-header {
+          float: right;
+          text-align: right;
+        }
+        span {
+          padding: 2px;
+        }
+        padding: 0 2px;
+      }
 }

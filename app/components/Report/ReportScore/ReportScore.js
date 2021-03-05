@@ -4,6 +4,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
+import { NavLink } from 'react-router-dom';
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -119,11 +120,16 @@ export default class ReportScore extends React.PureComponent {
                 title={toolTip.map((line) => { return <div style={!line ? { margin: 8 } : {}}>{line}</div> })}
                 placement="top" fontSize="small"
               >
-                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 2px 4px' }} />
               </LightTooltip>}
             </div>
             <div className={`score-display ${compareValue && 'large'}`}>
               {total}
+            </div>
+            <div >
+              {this.props.url && <NavLink to={this.props.url} className='link'>
+                {this.props.urlText}
+              </NavLink>}
             </div>
           </Grid>
           {goal && <Grid item xs={4} className="goal-slider">

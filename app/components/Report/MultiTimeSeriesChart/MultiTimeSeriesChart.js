@@ -6,6 +6,8 @@ import moment from 'moment/moment';
 import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ReactDOMServer from 'react-dom/server';
+import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
+import Icon from '@mdi/react'
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -61,6 +63,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
               },
               format: (x) => { return `${x && moment(x).format('MMM DD')}` },
             },
+            padding: { left: 0, right: 0},
             // type: 'category'
           },
           y: {
@@ -80,7 +83,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
           show: false
         },
         size: {
-          height: 283,
+          height: 375,
           // width: 275
         },
         point: {
@@ -160,16 +163,17 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
     let columns = [['x', ...xData], na];
     const orderBy = this.props.orderBy || {};
     let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] });
+    // xData = xData.sort((a,b) => moment(b).diff(moment(a)));
     legendData.map(([key, value]) => {
-      columns.push([key, ...xData.map((x) => {
-        return value[x];
-      })]);
-      //We add the NA category stand alone for custom styling
-      // columns.push([`${key}-NA`, ...xData.map((x) => {
-      //   return value[x] == null || x == unavailableEndDate.format("YYYY-MM-DD") ? value[unavailableEndDate.format("YYYY-MM-DD")] : null;
-      // })]);
+      const xValues = xData.map((x) => {
+        return value[x] || null;
+      })
+      columns.push([key, ...xValues]);
+      const firstPoint = xValues.find(v => v != null);
+      const lastPoint = xValues.reverse().find(v => v != null);
+      const diff = firstPoint == lastPoint ? 0 : Math.round(((lastPoint - firstPoint) / firstPoint) * 100);
+      this.setState({[`${key.toLowerCase()}Trend`]: diff})
     })
-
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
     let chart = this.chartRef.current && this.chartRef.current.chart;
@@ -197,7 +201,6 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
           <div>Not Available - Moving Average requires at least 30 days of data</div>
         </div>);
     }
-    // debugger;
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{xValue}</div>
@@ -215,6 +218,41 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
       </div>);
 
 
+  }
+  renderChange(id){
+    let diff = this.state[`${id.toLowerCase()}Trend`];
+    let tag = '';
+    let className = ''
+    let tooltip = '';
+    if (isNaN(diff)) {
+      diff = `—`;
+      className = "trending-up";
+      tooltip = "Positive Trend (Percent change is not available if the previous score was 0)";
+      tag = <Icon color="#009483" path={mdiTrendingUp} size={'24px'} />
+    } else if (diff == 0) {
+      diff = `—`;
+      tooltip = "No Change";
+    } else if (diff < 0) {
+      className = "trending-down";
+      tooltip = "Negative Trend";
+      tag = <Icon color="#FF0000" path={mdiTrendingDown} size={'24px'} />
+    } else {
+      tooltip = "Positive Trend";
+      className = "trending-up";
+      tag = <Icon color="#009483" path={mdiTrendingUp} size={'24px'} />
+    }
+    return (
+      <LightTooltip interactive arrow
+        title={tooltip}
+        placement="top" fontSize="small"
+      >
+        <div className={`change-value ${className}`}>
+          <span>{`${diff}%`}</span>
+          <span>{tag}</span>
+        </div>
+      </LightTooltip>
+
+    )
   }
 
   renderLegend() {
@@ -246,6 +284,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
                   <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
                 </LightTooltip>}
               </div>
+              {this.renderChange(id)}
             </div>
           )
         })}

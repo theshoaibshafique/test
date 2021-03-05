@@ -66,6 +66,7 @@ export default class TimeSeriesChart extends React.PureComponent {
               },
               format: (x) => { return `${x && moment(x).format('MMM DD')}` },
             },
+            padding: { left: 0, right: 0},
             // type: 'category'
           },
           y: {

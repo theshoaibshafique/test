@@ -1,8 +1,8 @@
-.Overview .MeterInfographic{
-  .MuiCardContent-root{
+.Overview .MeterInfographic {
+  .MuiCardContent-root {
     min-width: 240px;
   }
-  .goal-slider{
+  .goal-slider {
     position: relative;
     right: -16px;
   }
@@ -33,7 +33,7 @@
   }
   .goal-slider {
     text-align: right;
-    margin-top:16px;
+    margin-top: 16px;
     padding-right: 0 !important;
     margin-right: -16px;
   }
@@ -43,7 +43,7 @@
     align-items: center;
     color: #004f6e;
     border-radius: 4px;
-    background-color: rgba(167, 229, 253,.3);
+    background-color: rgba(167, 229, 253, 0.3);
     margin-top: 16px;
     padding: 8px 24px !important;
     .title {
@@ -61,5 +61,14 @@
       letter-spacing: 0;
       line-height: 57px;
     }
+  }
+
+  .link {
+    text-decoration: none;
+    color: #028cc8;
+    font-family: "Noto Sans";
+    font-size: 12px;
+    letter-spacing: 0;
+    line-height: 17px;
   }
 }

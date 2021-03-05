@@ -9,7 +9,7 @@ import LoadingOverlay from 'react-loading-overlay';
 class SSTNav extends React.Component {
   constructor(props) {
     super(props);
-    this.sscLinks = ["/sschecklist", "/complianceScore", "/engagementScore", "/qualityScore"]
+    this.sscLinks = ["/sschecklist", "/compliance", "/engagement", "/quality"]
     this.efficiencyLinks = ["/efficiency", "/daysStarting", "/turnoverTime", "/orUtilization", "/caseAnalysis"]
     this.state = {
       pathname: this.props.pathname,
@@ -120,9 +120,9 @@ class SSTNav extends React.Component {
             }
             {(this.props.sscAccess) &&
               <Collapse in={this.state.isSSCOpen} timeout="auto" unmountOnExit>
-                <ListItem disableGutters><NavLink to="/complianceScore" className='text-link sub-item' >Compliance Score</NavLink></ListItem>
-                <ListItem disableGutters><NavLink to="/engagementScore" className='text-link sub-item' >Engagement Score</NavLink></ListItem>
-                <ListItem disableGutters><NavLink to="/qualityScore" className='text-link sub-item' >Quality Score</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/compliance" className='text-link sub-item' >Compliance</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/engagement" className='text-link sub-item' >Engagement</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/quality" className='text-link sub-item' >Quality</NavLink></ListItem>
               </Collapse>
             }
           </List>
