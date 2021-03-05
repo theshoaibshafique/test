@@ -31,6 +31,7 @@ import ScatterPlot from '../../components/Report/ScatterPlot/ScatterPlot';
 import ItemList from '../../components/Report/ItemList/ItemList';
 import NoData from '../../components/Report/NoData/NoData';
 import MultiTimeSeriesChart from '../../components/Report/MultiTimeSeriesChart';
+import DonutHistogram from '../../components/Report/DonutHistogram/DonutHistogram';
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -364,31 +365,6 @@ export default class SSChecklist extends React.PureComponent {
       }));
   }
 
-  renderDashboard() {
-
-    return this.renderTiles()
-
-    // return <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`} direction="column">
-    //   {
-    //     this.state.hasNoCases ?
-    //       (<Grid item xs={12} className="ssc-message">
-    //         No data available this month
-    //         <Grid item xs={12} className="ssc-message-subtitle">
-    //           (Try a different filter criteria)
-    //         </Grid>
-    //       </Grid>)
-    //       :
-    //       (!this.state.reportData.length)
-    //         ?
-    //         !isLoading && <Grid item xs={12} className="ssc-message">
-    //           No data available this month
-    //                 </Grid>
-    //         :
-    //         !isLoading && this.renderTiles()}
-    // </Grid>
-  }
-
-
   renderTiles(reportData = this.state.reportData) {
     let tileTypeCount = {};
     let xs = null;
@@ -418,7 +394,12 @@ export default class SSChecklist extends React.PureComponent {
         </Grid>
       )
     }) || [];
-    return <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`}>{result}</Grid>;
+    return (
+      <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`}>
+        {!this.state.isLoading && <Grid item xs={12} className="ssc-title">{this.state.reportType}</Grid>}
+        {result}
+      </Grid>
+    );
   }
 
   renderTile(tile) {
@@ -426,41 +407,17 @@ export default class SSChecklist extends React.PureComponent {
       return <div></div>;
     }
     switch (`${tile.tileType}`.toUpperCase()) {
-      case 'LIST':
-        return <HorizontalBarChart {...tile} specialties={this.props.specialties} />
-
-      case 'BARCHARTDETAILED':
-        return <BarChartDetailed {...tile} pushUrl={this.props.pushUrl} />
-      case 'INFOGRAPHICPARAGRAPH':
-        return <InfographicParagraph {...tile} />
-      case 'LINECHART':
-      case 'AREACHART':
-        return <AreaChart {...tile} />
-      case 'BARCHART':
-        if (this.state.reportType == 'QualityScoreReport') {
-          tile.tileTypeCount += 1;
-        }
-        let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1, this.state.chartColours.length);
-        return <BarChart
-          pattern={pattern} id={tile.tileTypeCount}
-          reportType={this.props.reportType}
-          {...tile}
-          unit={'%'}
-          footer={''}
-          yAxis={tile.subTitle}
-          xAxis={tile.footer} />
-      case 'LISTDETAIL':
-      case 'LISTDETAILED':
-        return <ListDetailed {...tile} specialties={this.props.specialties} />
-      case 'CHECKLIST':
-        return <Checklist {...tile} openModal={(tileRequest) => this.openModal(tileRequest)} />
       case 'ITEMLISTS':
       case 'CHECKLISTDETAIL':
         return <ChecklistDetail {...tile} />
-      case 'STACKEDBARCHART':
-        return <StackedBarChart {...tile} specialties={this.props.specialties} yAxis={tile.subTitle} xAxis={tile.footer} title={tile.description} description={''} />
       case 'TIMESERIESCHART':
-        return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.earliestStartDate} showChange={true} />
+        return <TimeSeriesChart {...tile}
+          startDate={this.state.startDate}
+          endDate={this.state.endDate}
+          minDate={this.state.earliestStartDate}
+          showChange={true}
+          nullMessage={"Unavailable - at least 10 performed phases required in last 30 days"}
+        />
       case 'MULTITIMESERIESCHART':
         return <MultiTimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.earliestStartDate} showChange={true} />
       case 'DONUTBOX':
@@ -477,16 +434,11 @@ export default class SSChecklist extends React.PureComponent {
         return <ItemList {...tile} />
       case 'COMPAREINFOGRAPHIC':
         return <CompareInfographic {...tile} />
+      case 'DONUTHISTOGRAM':
+        return <DonutHistogram {...tile} />
       case 'NODATA':
         return <NoData {...tile} />
 
-      case 'INFOGRAPHICMESSAGE':
-        let pendingDate = this.pendingDate;
-        //If the selected month is CURRENT month when this message is shown - Report will be ready next month
-        // if (this.state.month.clone().isSameOrAfter(moment(), 'month')) {
-        //   pendingDate = pendingDate.clone().add(1, 'month');
-        // }
-        return <div>{`We’re currently processing the data for this month’s report. Please come back on ${pendingDate.format('LL')} to view your report.`}</div>
     }
   }
 
@@ -578,7 +530,8 @@ export default class SSChecklist extends React.PureComponent {
             })
           }}
         >
-          {this.renderDashboard()}
+
+          {this.renderTiles()}
 
           <Modal
             open={this.state.isOpen}

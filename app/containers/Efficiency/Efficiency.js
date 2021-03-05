@@ -93,8 +93,8 @@ export default class Efficiency extends React.PureComponent {
       selectedProcedure: "",
       hasNoCases: false,
       isFilterApplied: true, // Filter is applied right away by default,
-      startDate: moment().subtract(1,'month').startOf('month'),
-      endDate: moment().subtract(1,'month').endOf('month'),
+      startDate: moment().subtract(1, 'month').startOf('month'),
+      endDate: moment().subtract(1, 'month').endOf('month'),
     }
   }
 
@@ -109,8 +109,8 @@ export default class Efficiency extends React.PureComponent {
       //if either are null then set to last valid date or latest date with data
       if (!startDate || !endDate) {
         const recentSearchCache = JSON.parse(localStorage.getItem('efficiencyFilter-' + this.props.userEmail));
-        startDate = moment(recentSearchCache.startDate) || moment().subtract(1,'month').startOf('month');
-        endDate = moment(recentSearchCache.endDate) || moment().subtract(1,'month').endOf('month');
+        startDate = moment(recentSearchCache.startDate) || moment().subtract(1, 'month').startOf('month');
+        endDate = moment(recentSearchCache.endDate) || moment().subtract(1, 'month').endOf('month');
       }
       this.setState({
         reportType: this.props.reportType,
@@ -184,7 +184,7 @@ export default class Efficiency extends React.PureComponent {
         let endDate = this.state.endDate;
         let latestEndDate = moment(result.endDate).endOf('day');
         if (latestEndDate.isSameOrBefore(endDate)) {
-          endDate = latestEndDate.subtract(1,'hour');
+          endDate = latestEndDate.subtract(1, 'hour');
         }
         const pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
 
@@ -469,7 +469,12 @@ export default class Efficiency extends React.PureComponent {
           horizontalLegend={true}
           orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'TIMESERIESCHART':
-        return <TimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.earliestStartDate} />
+        return <TimeSeriesChart
+          {...tile}
+          startDate={this.state.startDate}
+          endDate={this.state.endDate}
+          nullMessage={"Not Available - Moving Average requires at least 30 days of data"}
+          minDate={this.state.earliestStartDate} />
       case 'TIMESERIESAREACHART':
         return <TimeSeriesAreaChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} minDate={this.state.earliestStartDate} />
       case 'NODATA':

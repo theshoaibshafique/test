@@ -1,0 +1,60 @@
+.sub-donut-chart {
+  .donut{
+    display: flex;
+    justify-content: center;
+    margin-bottom: -20px;
+  }
+  .donut-title {
+    opacity: 0.8;
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: 24px;
+    margin: auto;
+  }
+  .donut-score {
+    color: #004f6e;
+    font-family: "Noto Sans";
+    font-size: 42px;
+    letter-spacing: 0;
+    line-height: 42px;
+  }
+  
+  .donut-subtitle,
+  .donut-unit {
+    font-family: "Noto Sans";
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 19px;
+  }
+  .donut-unit{
+    color: #004f6e;
+  }
+  .c3-tooltip-container .tooltip {
+    white-space: nowrap;
+  }
+  .circle:before {
+    content: " \25CF";
+    font-size: 32px;
+    line-height: 0;
+  }
+  .tooltip {
+    color: #fff;
+    padding: 16px;
+    font-size: 14px;
+    max-width: 300px;
+    word-wrap: break-word;
+    font-family: "Noto Sans";
+    font-weight: 500 !important;
+    line-height: 19px;
+    border-radius: 4px;
+    background-color: rgba(97, 97, 97, 0.9);
+  }
+  path {
+    stroke-width: 0;
+  }
+}
+.c3-arc-NA {
+  fill: #f3f3f3 !important;
+}

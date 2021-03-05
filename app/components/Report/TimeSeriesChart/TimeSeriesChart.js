@@ -24,7 +24,7 @@ export default class TimeSeriesChart extends React.PureComponent {
 
     this.chartRef = React.createRef();
     const { dataPoints, startDate } = this.props;
-    const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
+    const valueYs = dataPoints && dataPoints.map((point) => point.valueY).filter((y) => y) || [] || [];
 
     const firstPointWithY = dataPoints && dataPoints.find(point => point.valueY != null);
     this.state = {
@@ -157,17 +157,7 @@ export default class TimeSeriesChart extends React.PureComponent {
     let na = ['NA'];
     let colours = [];
     let tooltipData = {};
-    const firstPointWithY = dataPoints && dataPoints.find(point => point.valueY != null) || {};
-    const unavailEndDate = moment(firstPointWithY.valueX);
-    const diff = unavailEndDate.diff(minDate, 'days');
-    let padDate = minDate.clone();
-    let greyRegion = [];
-    for (let i = 0; i <= diff; i++) {
-      na.push(firstPointWithY.valueY || null)
-      greyRegion.push({ valueX: padDate.format("YYYY-MM-DD")})
-      padDate.add(1, 'day')
-    }
-    na.push(null)
+
     let changeCache = [];
     dataPoints.map((point, index) => {
       formattedData.x.push(point.valueX);
@@ -205,7 +195,7 @@ export default class TimeSeriesChart extends React.PureComponent {
       return ReactDOMServer.renderToString(
         <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
           <div>{xValue.format('MMM DD')}</div>
-          <div>Not Available - Moving Average requires at least 30 days of data</div>
+          <div>{this.props.nullMessage}</div>
         </div>);
     }
 

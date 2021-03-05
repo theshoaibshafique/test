@@ -66,7 +66,6 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
               },
               format: (x) => { return `${x && moment(x).format('MMM DD')}` },
             },
-            padding: { left: 0, right: 0},
             // type: 'category'
           },
           y: {
@@ -158,10 +157,12 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     let tooltipLegendData = {};
     let tooltipData = {};
     const unavailableEndDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
+    let na = ['NA'];
     dataPoints.map((point) => {
       let xValue = point.valueX;
       if (!xData.includes(xValue)) {
         xData.push(xValue);
+        na.push(0);
       }
 
       formattedData[point.title] = formattedData[point.title] || {};
@@ -177,17 +178,13 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
       columns.push([key, ...xData.map((x) => {
         return value[x];
       })]);
-      //We add the NA category stand alone for custom styling
-      columns.push([`${key}-NA`, ...xData.map((x) => {
-        return value[x] == null || x == unavailableEndDate.format("YYYY-MM-DD") ? value[unavailableEndDate.format("YYYY-MM-DD")] : null;
-      })]);
     })
     let chartData = this.state.chartData;
-    chartData.data.columns = columns;
+    chartData.data.columns = [...columns, na];
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
-    chart && chart.groups([Object.keys(formattedData), ['Setup-NA', 'Idle-NA', "Clean-up-NA"]]);
+    chart && chart.groups([Object.keys(formattedData)]);
     setTimeout(() => {
       chart.zoom([this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")])
       setTimeout(() => {

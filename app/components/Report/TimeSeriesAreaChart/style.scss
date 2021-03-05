@@ -151,9 +151,7 @@
     .c3-shapes {
         &.c3-lines {
             opacity: 0;
-            &.c3-lines-Setup-NA,
-            &.c3-lines-Clean-up-NA,
-            &.c3-lines-Idle-NA {
+            &.c3-lines-NA{
                 opacity: 1;
                 path {
                     stroke-dasharray: 5, 5;
@@ -162,9 +160,7 @@
             }
         }
         &.c3-areas{
-            &.c3-areas-Setup-NA,
-            &.c3-areas-Clean-up-NA,
-            &.c3-areas-Idle-NA {
+            &.c3-areas-NA{
                 opacity: 0;
             }
         }
