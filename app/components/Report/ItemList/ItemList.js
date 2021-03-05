@@ -92,7 +92,7 @@ export default class ItemList extends React.PureComponent {
     return (
       <LightTooltip interactive arrow
         title={tooltip}
-        placement="top" fontSize="small"
+        placement="right" fontSize="small"
       >
         <div className={`change-value ${className}`}>
           <span>{`${valueY}%`}</span>
