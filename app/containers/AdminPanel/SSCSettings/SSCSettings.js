@@ -155,64 +155,34 @@ function Phase(props) {
 function Goal(props) {
   let { goal, currentGoal, title, tooltip, onChange } = props;
   const clss = title && title.toLowerCase().replace(/\s/g, '');
+
   //Keep track of your own Value and only update Goal on Committed (Better performance)
   let [value, setValue] = React.useState(goal);
   useEffect(() => {
-    value = goal;
-    if (currentGoal <= 5) {
-      let label = document.querySelector(`.${clss} .MuiSlider-markLabel`);
-      if (label)
-        label.style.transform = "translateX(0%)";
-    } else if (currentGoal >= 95) {
-      let label = document.querySelector(`.${clss} .MuiSlider-markLabel`);
-      if (label)
-        label.style.transform = "translateX(-100%)";
-    }
-  });
+    setValue(goal);
+  },[props.goal]);
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
   };
-  //Adjust labels so the appear within the slider
   
+  //Adjust labels so the appear within the slider
+  let isActive = goal != null
   return (
-    <div className={`${clss}`}>
-      <div className="goal-title">
-        <span>
-          <span className="goal">{title}</span>
+    <Card className={`goals ${isActive ? 'active' : 'inactive'} ${clss}`} variant="outlined">
+      <div className="goal-header">
+        <div className="subtitle">
+          {title}
           <LightTooltip interactive arrow
             title={tooltip}
             placement="top" fontSize="small"
           >
             <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
           </LightTooltip>
-        </span>
-        <span className='goal-display'>{value || goal}</span>
-      </div>
-      <SSTSlider
-        valueLabelDisplay="auto"
-        defaultValue={50}
-        value={value || goal || 0}
-        onChange={handleSliderChange}
-        onChangeCommitted={(event, goal) => onChange(title, goal)}
-        marks={[currentGoal != null ? { value: currentGoal, label: `Current: ${currentGoal}` } : {}]}
-      />
-    </div>
-  )
-}
-
-function Goals(props) {
-  const { complianceGoal, engagementGoal, qualityGoal, currentComplianceGoal, currentEngagementGoal, currentQualityGoal, updateGoal } = props;
-  const isActive = complianceGoal != null && engagementGoal != null && qualityGoal != null;
-  const toggle = () => updateGoal();
-  const onChange = (title, goal) => updateGoal(title, goal);
-  return (
-    <Card className={`goals ${isActive ? 'active' : 'inactive'}`} variant="outlined">
-      <div className="goal-header">
-        <div className="subtitle">Goals</div>
+        </div>
         <div>
           <FormControlLabel
             control={
-              <SSTSwitch checked={isActive} onChange={toggle} disableRipple />
+              <SSTSwitch checked={isActive} onChange={() => onChange(title, isActive ? null : currentGoal)} disableRipple />
             }
             label={<span className="toggle-label">{isActive ? 'Enabled' : 'Disabled'}</span>}
             labelPlacement='start'
@@ -220,29 +190,21 @@ function Goals(props) {
         </div>
       </div>
       <Divider light className="divider" />
-      <div className="goal-sliders">
-        <Goal
-          title={"Compliance Score"}
-          tooltip={"Compliance Score is the average of 1) the percentage of checklist phases performed and 2) the percentage of the checklist phases performed at the correct time. Each procedure requires one Briefing, one Timeout, and one Debriefing."}
-          goal={complianceGoal}
-          currentGoal={currentComplianceGoal}
-          onChange={onChange}
-        />
-        <Goal
-          title={"Engagement Score"}
-          tooltip={"Engagement Score is the average of 1) the attendance percentage out of the minimum number of people required during performed checklist phases and 2) the percentage of those in attendance who paused during performed checklist phases."}
-          goal={engagementGoal}
-          currentGoal={currentEngagementGoal}
-          onChange={onChange}
-        />
-        <Goal
-          title={"Quality Score"}
-          tooltip={"Quality Score is the percentage of priority items discussed for all performed checklist phases."}
-          goal={qualityGoal}
-          currentGoal={currentQualityGoal}
-          onChange={onChange}
+      <div className={`goal-slider ${isActive ? 'active' : 'inactive'}`}>
+        <div className="goal-title">
+          <span className="goal">Current: {currentGoal}</span>
+          <span className='goal-display'>{value || goal}</span>
+        </div>
+        <SSTSlider
+          valueLabelDisplay="auto"
+          defaultValue={50}
+          value={value || goal || 0}
+          onChange={handleSliderChange}
+          onChangeCommitted={(event, goal) => onChange(title, goal)}
+        // marks={[currentGoal != null ? { value: currentGoal, label: `Current: ${currentGoal}` } : {}]}
         />
       </div>
+
     </Card>
   )
 }
@@ -287,8 +249,7 @@ export default class SSCSettings extends React.PureComponent {
     })
   }
 
-  updateGoal(title, goal) {
-
+  updateGoal(title, goal = null) {
     switch (title) {
       case "Compliance Score":
         this.setState({ complianceGoal: goal })
@@ -300,15 +261,7 @@ export default class SSCSettings extends React.PureComponent {
         this.setState({ qualityGoal: goal })
         break;
       default:
-        //Toggle on/off
-        let { complianceGoal, engagementGoal, qualityGoal } = this.state;
-        if (complianceGoal == null || engagementGoal == null || qualityGoal == null) {
-          const { sscConfig } = this.props;
-          let { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
-          this.setState({ complianceGoal:complianceGoal||50, engagementGoal:engagementGoal||50, qualityGoal:qualityGoal||50  })
-        } else {
-          this.setState({ complianceGoal: null, engagementGoal: null, qualityGoal: null })
-        }
+
     }
     this.setState({ isChanged: true })
   }
@@ -389,7 +342,7 @@ export default class SSCSettings extends React.PureComponent {
     ));
     const { sscConfig } = this.props;
     const { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
-    const orderBy = {"Briefing":1,"Timeout":2,"Debriefing":3};
+    const orderBy = { "Briefing": 1, "Timeout": 2, "Debriefing": 3 };
     return (
       <section className={`ssc-settings-page ${this.props.hasEMR && 'has-emr'}`}>
 
@@ -405,14 +358,26 @@ export default class SSCSettings extends React.PureComponent {
         <div>
           <Grid container spacing={3}>
             <Grid item xs={4}>
-              <Goals
-                complianceGoal={this.state.complianceGoal}
-                engagementGoal={this.state.engagementGoal}
-                qualityGoal={this.state.qualityGoal}
-                currentComplianceGoal={complianceGoal}
-                currentEngagementGoal={engagementGoal}
-                currentQualityGoal={qualityGoal}
-                updateGoal={(title, goal) => this.updateGoal(title, goal)}
+              <Goal
+                title={"Compliance Score"}
+                tooltip={"Compliance Score is the average of 1) the percentage of checklist phases performed and 2) the percentage of the checklist phases performed at the correct time. Each procedure requires one Briefing, one Timeout, and one Debriefing."}
+                goal={this.state.complianceGoal}
+                currentGoal={complianceGoal}
+                onChange={(title, goal) => this.updateGoal(title, goal)}
+              />
+              <Goal
+                title={"Engagement Score"}
+                tooltip={"Engagement Score is the average of 1) the attendance percentage out of the minimum number of people required during performed checklist phases and 2) the percentage of those in attendance who paused during performed checklist phases."}
+                goal={this.state.engagementGoal}
+                currentGoal={engagementGoal}
+                onChange={(title, goal) => this.updateGoal(title, goal)}
+              />
+              <Goal
+                title={"Quality Score"}
+                tooltip={"Quality Score is the percentage of priority items discussed for all performed checklist phases."}
+                goal={this.state.qualityGoal}
+                currentGoal={qualityGoal}
+                onChange={(title, goal) => this.updateGoal(title, goal)}
               />
             </Grid>
           </Grid>
@@ -429,7 +394,7 @@ export default class SSCSettings extends React.PureComponent {
         </div>
         {this.state.checklists.map((checklist, cIndex) => (
           <Grid container spacing={3} key={cIndex}>
-            {checklist.phases.sort((a,b) => orderBy[a.phaseName] -orderBy[b.phaseName]).map((phase, pIndex) => (
+            {checklist.phases.sort((a, b) => orderBy[a.phaseName] - orderBy[b.phaseName]).map((phase, pIndex) => (
               <Grid item xs={4} key={`${cIndex}-${pIndex}`}>
                 <Phase {...phase} cIndex={cIndex} pIndex={pIndex} togglePhase={(c, p, i) => this.togglePhase(c, p, i)} />
               </Grid>
