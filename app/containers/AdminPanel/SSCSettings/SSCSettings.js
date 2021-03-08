@@ -182,7 +182,7 @@ function Goal(props) {
         <div>
           <FormControlLabel
             control={
-              <SSTSwitch checked={isActive} onChange={() => onChange(title, isActive ? null : currentGoal)} disableRipple />
+              <SSTSwitch checked={isActive} onChange={() => onChange(title, isActive ? null : (currentGoal || 50))} disableRipple />
             }
             label={<span className="toggle-label">{isActive ? 'Enabled' : 'Disabled'}</span>}
             labelPlacement='start'
