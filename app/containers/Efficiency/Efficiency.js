@@ -179,7 +179,7 @@ export default class Efficiency extends React.PureComponent {
         let earliestStartDate = moment(result.startDate);
         let startDate = earliestStartDate.utc().clone();
         let latestEndDate = moment(result.endDate).endOf('day');
-        let endDate = endDate = latestEndDate.subtract(1, 'hour').clone();
+        let endDate = latestEndDate.clone().subtract(12, 'hour');
 
         const pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
 

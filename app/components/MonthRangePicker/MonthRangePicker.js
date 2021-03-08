@@ -32,9 +32,10 @@ class MonthRangePicker extends React.Component {
   }
 
   getMaxRange(startDate) {
-    if (startDate) {
-      return moment.min(startDate.clone().add(6, 'months'), this.state.maxDate);
-    }
+    //TODO: maybe we need to cap date range for performance issues
+    // if (startDate) {
+    //   return moment.min(startDate.clone().add(6, 'months'), this.state.maxDate);
+    // }
     return this.state.maxDate;
   }
 

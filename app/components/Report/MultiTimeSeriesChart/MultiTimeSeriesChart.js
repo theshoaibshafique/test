@@ -179,14 +179,6 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
-    // chart && chart.groups([Object.keys(formattedData), ['Setup-NA', 'Idle-NA', "Clean-up-NA"]]);
-    setTimeout(() => {
-      // chart.zoom([this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")])
-      setTimeout(() => {
-        // this.handleBrush()
-      }, 500)
-
-    }, 500);
 
     this.setState({ chartData, tooltipData, legendData, tooltipLegendData, unavailableEndDate, isLoaded: true })
   }
@@ -198,7 +190,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
       return ReactDOMServer.renderToString(
         <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
           <div>{xValue}</div>
-          <div>Not Available - Moving Average requires at least 30 days of data</div>
+          <div>Unavailable - at least 10 performed phases required in last 30 days</div>
         </div>);
     }
     return ReactDOMServer.renderToString(
@@ -211,7 +203,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
         {na.length != 0 && (
           <div style={{ marginTop: 12 }}>
             {`${na.join(", ")}:`}
-            <div>Not Available - Moving Average requires at least 30 days of data</div>
+            <div>Unavailable - at least 10 performed phases required in last 30 days</div>
           </div>
         )}
 

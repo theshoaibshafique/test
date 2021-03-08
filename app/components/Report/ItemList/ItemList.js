@@ -22,7 +22,7 @@ const tableIcons = {
 };
 import './style.scss';
 
-import MaterialTable from 'material-table';
+import MaterialTable, { MTableHeader } from 'material-table';
 import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react'
@@ -114,7 +114,7 @@ export default class ItemList extends React.PureComponent {
             {
               field: "valueX",
               title: "Specialty",
-              render: rowData => <div className="specialty-col">{rowData.valueX}</div>
+              render: rowData => <div className="specialty-col" onClick={() => {this.props.selectOption({name:rowData.valueX, value:rowData.valueX})}}>{rowData.valueX}</div>
             },
             {
               field: "valueY",
@@ -139,6 +139,7 @@ export default class ItemList extends React.PureComponent {
               width: 'unset',
               top: 0
             },
+            thirdSortClick: false,
             draggable: false
           }}
           localization={{
@@ -149,7 +150,12 @@ export default class ItemList extends React.PureComponent {
           data={this.props.dataPoints}
           icons={tableIcons}
           components={{
-            Container: props => <Paper {...props} elevation={0} />
+            Container: props => (<Paper {...props} elevation={0} />),
+            // Header: props => (
+            //   <div>
+            //     <MTableHeader {...props} />
+            //   </div>
+            // ),
           }}
         />
       </div>

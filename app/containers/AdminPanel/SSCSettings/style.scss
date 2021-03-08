@@ -133,7 +133,6 @@
             display: none;
             transition: 0.5s;
         }
-        .goal-sliders,
         .phase-items {
             max-height: 0;
             overflow: hidden;
@@ -143,8 +142,7 @@
     .divider {
         margin: 0 16px;
     }
-
-    .goal-sliders,
+    
     .phase-items {
         max-height: 215px;
         overflow-y: auto;
@@ -157,11 +155,6 @@
             font-family: "Noto Sans";
         }
     }
-    .goal-sliders {
-        overflow: visible;
-        margin-top: 8px;
-        max-height: 300px;
-    }
     .phase-items{
         padding-bottom: 8px;
     }
@@ -173,6 +166,18 @@
         }
         :checked ~ svg{
             color: #004F6E
+        }
+    }
+    
+    .goal-slider{
+        padding: 16px;
+        padding-bottom: 0;
+        transition: .2s;
+        max-height: 250px;
+        &.inactive {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 16px;
         }
     }
 }

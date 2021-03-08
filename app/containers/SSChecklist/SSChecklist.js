@@ -78,7 +78,7 @@ export default class SSChecklist extends React.PureComponent {
         let earliestStartDate = moment(result.startDate);
         let startDate = earliestStartDate.utc().clone();
         let latestEndDate = moment(result.endDate).endOf('day');
-        let endDate = endDate = latestEndDate.subtract(1, 'hour').clone();
+        let endDate = latestEndDate.clone().subtract(12, 'hour');
 
         const pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
         const complianceGoal = result.complianceGoal;
@@ -318,13 +318,15 @@ export default class SSChecklist extends React.PureComponent {
     });
   }
 
-  updateState(key, value) {
+  updateState(key, value, shouldApply=false) {
+    
     this.setState({
       [key]: value,
       isFilterApplied: false
     }, () => {
       this.saveFilter();
-      if ((key == "endDate" || key == "startDate") && this.state.endDate && this.state.startDate) {
+      const apply = (key == "endDate" || key == "startDate") && this.state.endDate && this.state.startDate || shouldApply;
+      if (apply) {
         this.getReportLayout();
       }
     });
@@ -422,7 +424,7 @@ export default class SSChecklist extends React.PureComponent {
           score={this.state[`${this.state.reportType.toLowerCase()}Score`]}
           highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.name} />
       case 'ITEMLIST':
-        return <ItemList {...tile} />
+        return <ItemList {...tile} selectOption={(value) => this.updateState('selectedSpecialty', value, true)} />
       case 'COMPAREINFOGRAPHIC':
         return <CompareInfographic {...tile} />
       case 'DONUTHISTOGRAM':
