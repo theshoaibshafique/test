@@ -119,7 +119,7 @@ export default class ItemList extends React.PureComponent {
             {
               field: "valueY",
               title: "% Change",
-              defaultSort: 'asc',
+              defaultSort: 'desc',
               headerStyle: { textAlign: 'right' },
               customSort: (a, b) => (a.valueY == null ? -.1 : a.valueY) - (b.valueY == null ? -.1 : b.valueY),
               render: rowData => this.renderChangeValue(rowData)

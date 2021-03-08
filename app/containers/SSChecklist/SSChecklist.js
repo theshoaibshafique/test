@@ -6,24 +6,15 @@ import './style.scss';
 import SscOnboard from './img/SSC_ONBOARD.png';
 import globalFuncs from '../../utils/global-functions';
 import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, Button } from '@material-ui/core';
-import MonthPicker from '../../components/MonthPicker/MonthPicker';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import ReportScore from '../../components/Report/ReportScore/ReportScore';
 import globalFunctions from '../../utils/global-functions';
-import HorizontalBarChart from '../../components/Report/HorizontalBarChart/HorizantalBarChart';
-import BarChartDetailed from '../../components/Report/BarChartDetailed/BarChartDetailed';
 import LoadingOverlay from 'react-loading-overlay';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
-import AreaChart from '../../components/Report/AreaChart/AreaChart';
-import BarChart from '../../components/Report/BarChart/BarChart';
-import ListDetailed from '../../components/Report/ListDetailed/ListDetailed';
-import StackedBarChart from '../../components/Report/StackedBarChart';
-import Checklist from '../../components/Report/Checklist';
 import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDetail';
 import CompareInfographic from '../../components/Report/CompareInfographic/CompareInfographic';
 import CloseIcon from '@material-ui/icons/Close';
-import { COMPLIANCE } from '../../constants';
 import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
 import MultiDonutChart from '../../components/Report/MultiDonutChart/MultiDonutChart';
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
@@ -32,6 +23,9 @@ import ItemList from '../../components/Report/ItemList/ItemList';
 import NoData from '../../components/Report/NoData/NoData';
 import MultiTimeSeriesChart from '../../components/Report/MultiTimeSeriesChart';
 import DonutHistogram from '../../components/Report/DonutHistogram/DonutHistogram';
+import { NavLink } from 'react-router-dom';
+import { mdiCogOutline } from '@mdi/js';
+import Icon from '@mdi/react'
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -482,7 +476,7 @@ export default class SSChecklist extends React.PureComponent {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <Divider className="ssc-divider" />
+            {/* <Divider className="ssc-divider" /> */}
           </Grid>
           <Grid item xs={12} className="ssc-picker">
             <UniversalPicker
@@ -501,6 +495,11 @@ export default class SSChecklist extends React.PureComponent {
           <div className="sscOnboard-link link" onClick={() => this.openOnboardModal()}>
             What's this report about?
           </div>
+          {this.props.isAdmin && <div className="ssc-settings">
+            <NavLink to={"/adminPanel/2"} className='link'>
+              <span className="settings-icon"><Icon color="#028CC8" style={{ marginRight: 4 }} path={mdiCogOutline} size={'24px'} /></span>Settings
+            </NavLink>
+          </div>}
         </Grid>
         <LoadingOverlay
           active={isLoading}

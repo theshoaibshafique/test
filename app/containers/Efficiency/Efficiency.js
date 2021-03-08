@@ -518,9 +518,9 @@ export default class Efficiency extends React.PureComponent {
               />
             </div>
           </Grid>
-          <Grid item xs={12}>
+          {this.state.isLandingPage && <Grid item xs={12}>
             <Divider className="efficiency-divider" />
-          </Grid>
+          </Grid>}
           {!this.state.isLandingPage && <Grid item xs={12} className="efficiency-picker">
             <UniversalPicker
               specialties={this.state.specialties}
