@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     boxShadow: theme.shadows[1],
-    // padding: '16px',
+    padding: '16px',
     fontSize: '14px',
     lineHeight: '19px',
     fontFamily: 'Noto Sans'
@@ -79,7 +79,7 @@ const sliderTooltipStyles = props => ({
     marginLeft:"28px !important",
   },
   tooltip: {
-    // padding: '16px',
+    padding: '16px',
     fontSize: '14px',
     lineHeight: '19px',
     fontFamily: 'Noto Sans'

@@ -80,17 +80,12 @@ export default class SSChecklist extends React.PureComponent {
           return;
         }
         result = JSON.parse(result)
-        let startDate = this.state.startDate;
-
+        
         let earliestStartDate = moment(result.startDate);
-        if (earliestStartDate.isSameOrAfter(startDate)) {
-          startDate = earliestStartDate.utc();
-        }
-        let endDate = this.state.endDate;
+        let startDate = earliestStartDate.utc().clone();
         let latestEndDate = moment(result.endDate).endOf('day');
-        if (latestEndDate.isSameOrBefore(endDate)) {
-          endDate = latestEndDate.subtract(1, 'hour');
-        }
+        let endDate = endDate = latestEndDate.subtract(1, 'hour').clone();
+
         const pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
         const complianceGoal = result.complianceGoal;
         const engagementGoal = result.engagementGoal;

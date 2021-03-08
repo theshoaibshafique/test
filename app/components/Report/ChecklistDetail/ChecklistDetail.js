@@ -96,7 +96,8 @@ export default class ChecklistDetail extends React.PureComponent {
     // let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX });
     return this.state.dataPoints && this.state.dataPoints.map((dataGroup, i) => {
       const header = dataGroup.group.shift();
-      dataGroup.group = [header, ...this.arrayRotate(dataGroup.group, dataGroup.completedCount || 0)]
+      dataGroup.group.reverse()
+      dataGroup.group = [header, ...dataGroup.group]
       return (
         <Grid item xs key={i} className={"checklist-list"}>
           {dataGroup.group.map((point, j) => {
