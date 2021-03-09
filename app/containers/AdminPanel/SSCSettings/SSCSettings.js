@@ -160,13 +160,14 @@ function Goal(props) {
   let [value, setValue] = React.useState(goal);
   useEffect(() => {
     setValue(goal);
-  },[props.goal]);
+  }, [props.goal]);
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
   };
-  
+
   //Adjust labels so the appear within the slider
   let isActive = goal != null
+  console.log(title, currentGoal)
   return (
     <Card className={`goals ${isActive ? 'active' : 'inactive'} ${clss}`} variant="outlined">
       <div className="goal-header">
@@ -192,13 +193,13 @@ function Goal(props) {
       <Divider light className="divider" />
       <div className={`goal-slider ${isActive ? 'active' : 'inactive'}`}>
         <div className="goal-title">
-          <span className="goal">Current: {currentGoal || "N/A"}</span>
+          <span className="goal">Current: {isNaN(parseInt(currentGoal)) ? "N/A" : currentGoal}</span>
           <span className='goal-display'>{value || goal}</span>
         </div>
         <SSTSlider
           valueLabelDisplay="auto"
           defaultValue={50}
-          value={value || goal || 0}
+          value={(value >= 0 ? value : goal) || 0}
           onChange={handleSliderChange}
           onChangeCommitted={(event, goal) => onChange(title, goal)}
         // marks={[currentGoal != null ? { value: currentGoal, label: `Current: ${currentGoal}` } : {}]}

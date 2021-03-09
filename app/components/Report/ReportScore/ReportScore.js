@@ -76,7 +76,7 @@ const sliderTooltipStyles = props => ({
     top: "-2px !important"
   },
   tooltipPlacementRight: {
-    marginLeft:"28px !important",
+    marginLeft: "28px !important",
   },
   tooltip: {
     padding: '16px',
@@ -96,6 +96,9 @@ export default class ReportScore extends React.PureComponent {
 
   getColor() {
     const { goal, total } = this.props;
+    if (isNaN(parseInt(goal))){
+      return '#028CC8';
+    }
     const threshold = goal * .15;
     if (total >= goal) {
       return '#6EDE95'
@@ -150,22 +153,24 @@ export default class ReportScore extends React.PureComponent {
             </div>
           </Grid>
 
-          {goal && 
-            <Grid item xs={4} className="goal-slider" onMouseOver={() => this.setState({ isOpen: true })} onMouseLeave={() => this.setState({ isOpen: false })}>
-              <SSTSlider
-                value={total}
-                orientation='vertical'
-                colour={this.getColor()}
-                marks={goal != null ? [{ value: goal, label: <SliderTooltip interactive arrow
+
+          <Grid item xs={4} className={`${isNaN(parseInt(goal)) ? '' : 'has-goal'} goal-slider`} onMouseOver={() => this.setState({ isOpen: true })} onMouseLeave={() => this.setState({ isOpen: false })}>
+            <SSTSlider
+              value={total}
+              orientation='vertical'
+              colour={this.getColor()}
+              marks={!isNaN(parseInt(goal)) ? [{
+                value: goal, label: <SliderTooltip interactive arrow
                   title={`Goal: ${goal}`}
                   open={this.state.isOpen}
                   placement="right" fontSize="small"
                 >
                   <div>Goal</div>
-                </SliderTooltip> }] : []}
-                disabled />
-            </Grid>
-          }
+                </SliderTooltip>
+              }] : []}
+              disabled />
+          </Grid>
+
           {compareValue && <Grid item xs={12} className="compare">
             <div className="title">{compareValue.title}</div>
             <div className="compare-score">{compareValue.valueX}</div>

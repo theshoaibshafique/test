@@ -66,7 +66,7 @@ export default class TimeSeriesChart extends React.PureComponent {
               },
               format: (x) => { return `${x && moment(x).format('MMM DD')}` },
             },
-            padding: { left: 0, right: 0},
+            padding: { left: 0, right: 0 },
             // type: 'category'
           },
           y: {
@@ -94,7 +94,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         },
         subchart: {
           show: true,
-          onbrush: (d) => this.props.showChange && this.setState({ domain: d }),
+          onbrush: (d) => this.props.showChange && this.handleBrush() && this._doActionNoSpam(d),
           size: {
             // height: 20
           },
@@ -102,11 +102,22 @@ export default class TimeSeriesChart extends React.PureComponent {
         zoom: {
           enabled: false,
         },
-        onrendered: () => this.chartRef.current && this.handleBrush(),
+        // onrendered: () => this.chartRef.current && this.handleBrush(),
       }
     }
 
   };
+
+  _doActionNoSpam(d) {
+    //Reset Timeout if function is called before it ends
+    if (!(this.timerId == null)) {
+      clearTimeout(this.timerId);
+    }
+    this.timerId = setTimeout(() => {
+      this.setState({ domain: d })
+      this.handleBrush();
+    }, 200);
+  }
 
   handleBrush(d) {
     // const MAX_TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length *.3) ;
@@ -134,7 +145,7 @@ export default class TimeSeriesChart extends React.PureComponent {
     } else if (visibleTicks.length < MAX_TICK_WIDTH) {
       visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     }
-
+    return true
   }
 
   componentDidUpdate(prevProps) {
@@ -164,7 +175,7 @@ export default class TimeSeriesChart extends React.PureComponent {
       colours.push(point.description)
       const valueY = parseInt(point.valueY);
       formattedData.y.push(valueY);
-      if (!isNaN(valueY)){
+      if (!isNaN(valueY)) {
         tooltipData[moment(point.valueX).format("YYYY-MM-DD")] = point.toolTip;
       }
       changeCache.push({ valueX: moment(point.valueX), valueY: parseInt(valueY) })
