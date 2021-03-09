@@ -79,7 +79,7 @@ export default class Histogram extends React.PureComponent {
             show: true
           }
         },
-        padding: { top: 8, bottom: 8 },
+        padding: { top: 8, bottom: 16 },
         legend: {
           show: false
         },

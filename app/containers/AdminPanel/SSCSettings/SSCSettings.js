@@ -192,7 +192,7 @@ function Goal(props) {
       <Divider light className="divider" />
       <div className={`goal-slider ${isActive ? 'active' : 'inactive'}`}>
         <div className="goal-title">
-          <span className="goal">Current: {currentGoal}</span>
+          <span className="goal">Current: {currentGoal || "N/A"}</span>
           <span className='goal-display'>{value || goal}</span>
         </div>
         <SSTSlider

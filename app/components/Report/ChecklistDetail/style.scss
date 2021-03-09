@@ -1,8 +1,12 @@
 @import "../../../styles/global-styles";
-
+.ItemLists{
+  .MuiCardContent-root{
+    padding: 0 !important;
+  }
+}
 .checklistdetail {
   .checklist-lists {
-    padding: 12px 12px;
+    margin: 0 12px;
     max-height: 600px;
     overflow-y: auto;
     
@@ -37,6 +41,8 @@
   letter-spacing: 0;
   line-height: 36px;
   text-align: center;
+  margin-top: 24px;
+  padding-bottom: 0;
 }
 
 .checklistdetail .chart-subtitle {
