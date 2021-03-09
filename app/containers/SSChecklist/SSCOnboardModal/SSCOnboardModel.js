@@ -149,7 +149,7 @@ export function SSCOnboardModal(props) {
           </Grid>
 
           <Grid item xs={12} style={{ textAlign: 'right', marginTop: 40 }}>
-            <Button disableElevation disableRipple variant="contained" className="primary" style={{ marginRight: 40, marginBottom: 40 }} onClick={() => onClose()}>Close</Button>
+            <Button disableElevation disableRipple variant="contained" className="primary" style={{ marginRight: 40, marginBottom: 40, position: 'absolute', right: 0, bottom:0 }} onClick={() => onClose()}>Close</Button>
           </Grid>
         </Grid>
       </DialogContent>
