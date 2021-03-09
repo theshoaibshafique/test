@@ -3,9 +3,9 @@ import axios from 'axios';
 
 import 'c3/c3.css';
 import './style.scss';
-import SscOnboard from './img/SSC_ONBOARD.png';
+
 import globalFuncs from '../../utils/global-functions';
-import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, Button } from '@material-ui/core';
+import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, Button, withStyles, Tabs, Tab } from '@material-ui/core';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import ReportScore from '../../components/Report/ReportScore/ReportScore';
@@ -14,7 +14,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDetail';
 import CompareInfographic from '../../components/Report/CompareInfographic/CompareInfographic';
-import CloseIcon from '@material-ui/icons/Close';
+
 import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
 import MultiDonutChart from '../../components/Report/MultiDonutChart/MultiDonutChart';
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
@@ -26,6 +26,9 @@ import DonutHistogram from '../../components/Report/DonutHistogram/DonutHistogra
 import { NavLink } from 'react-router-dom';
 import { mdiCogOutline } from '@mdi/js';
 import Icon from '@mdi/react'
+import { SSCOnboardModal } from './SSCOnboardModal/SSCOnboardModel';
+
+
 
 export default class SSChecklist extends React.PureComponent {
   constructor(props) {
@@ -74,7 +77,7 @@ export default class SSChecklist extends React.PureComponent {
           return;
         }
         result = JSON.parse(result)
-        
+
         let earliestStartDate = moment(result.startDate);
         let startDate = earliestStartDate.utc().clone();
         let latestEndDate = moment(result.endDate).endOf('day');
@@ -318,8 +321,8 @@ export default class SSChecklist extends React.PureComponent {
     });
   }
 
-  updateState(key, value, shouldApply=false) {
-    
+  updateState(key, value, shouldApply = false) {
+
     this.setState({
       [key]: value,
       isFilterApplied: false
@@ -495,7 +498,7 @@ export default class SSChecklist extends React.PureComponent {
             <Divider className="ssc-divider" />
           </Grid>
           <div className="sscOnboard-link link" onClick={() => this.openOnboardModal()}>
-            What's this report about?
+            What's this dashboard about?
           </div>
           {this.props.isAdmin && <div className="ssc-settings">
             <NavLink to={"/adminPanel/2"} className='link'>
@@ -539,63 +542,11 @@ export default class SSChecklist extends React.PureComponent {
               {this.renderTile(this.state.modalTile)}
             </DialogContent>
           </Modal>
-          <Modal
+          <SSCOnboardModal
             open={this.state.isOnboardModalOpen}
             onClose={() => this.closeOnboardModal()}
-          >
-            <DialogContent className="sscOnboarding Modal">
-              <Grid container spacing={0} justify='center' className="onboard-modal" >
-                <Grid item xs={10} className="sscOnboard-title">
-                  What is the Surgical Safety Checklist Report?
-                </Grid>
-                <Grid item xs={2} style={{ textAlign: 'right', padding: '40px 24px 0 40px' }}>
-                  <IconButton disableRipple disableFocusRipple onClick={() => this.closeOnboardModal()} className='close-button'><CloseIcon fontSize='small' /></IconButton>
-                </Grid>
-                <Grid item xs={6} className="sscOnboard-paragraph">
-                  <div className="sscOnboard-paragraph-block1">
-                    This report offers insights into the three phases (Briefing, Time Out, Postop Debrief) of the Surgical Safety Checklist with respect to three main scores: Compliance, Engagement, and Quality.
-                  </div>
-                  <div className="sscOnboard-paragraph-block2">
-                    Each score targets a different aspect of the conduct of the checklist that teams can improve upon to promote its usage and develop a shared understanding of the surgery being performing.
-                  </div>
-                  <div style={{ marginTop: 'auto' }}>
-                    <div className="ssc-Onboard-report-info Compliance">
-                      <span className="sscOnboard-hex">&#x2B22;</span>
-                      <span className="sscOnboard-report-title">Compliance Score </span>
-                    is a measure of how often, and when, the each phase of the checklist was conducted.
-                    </div>
-                    <div className="ssc-Onboard-report-info Engagement">
-                      <span className="sscOnboard-hex">&#x2B22;</span>
-                      <span className="sscOnboard-report-title">Engagement Score </span>
-                    is a measure of the team’s focus during each phase of the checklist.
-                    </div>
-                    <div className="ssc-Onboard-report-info Quality">
-                      <span className="sscOnboard-hex">&#x2B22;</span>
-                      <span className="sscOnboard-report-title">Quality Score </span>
-                    is a measure of the information being exchanged during the briefing, time out and postop debrief.
-                    </div>
-                  </div>
-                </Grid>
-                <Grid item xs={6}>
-                  <div className="sscOnboard-segment">
-                    <div className="sscOnboard-subtitle">
-                      Segmenting the data:
-                    </div>
-                    <div>
-                      Data can be filtered by date, OR, and specialty, as applicable to facilitate the identification of areas for improvement.
-                    </div>
-                  </div>
-                  <div className="sscOnboard-image">
-                    <img src={SscOnboard} />
-                  </div>
-                </Grid>
-
-                <Grid item xs={12} style={{ textAlign: 'right', marginTop: 40 }}>
-                  <Button disableElevation disableRipple variant="contained" className="secondary" style={{ marginRight: 40, marginBottom: 40 }} onClick={() => this.closeOnboardModal()}>Close</Button>
-                </Grid>
-              </Grid>
-            </DialogContent>
-          </Modal>
+            reportType={this.state.reportType}
+          />
         </LoadingOverlay>
       </div>
     );

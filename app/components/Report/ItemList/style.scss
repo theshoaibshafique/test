@@ -28,6 +28,9 @@
     display: -webkit-box;
     -webkit-line-clamp: 2; /* number of lines to show */
     -webkit-box-orient: vertical;
+    &:hover{
+      text-decoration: underline;
+    }
   }
   .title {
     opacity: 0.8;

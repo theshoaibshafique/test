@@ -1,0 +1,79 @@
+.sscOnboarding.Modal,
+.ssc.Modal {
+    min-width: unset;
+    padding: 0;
+}
+.sscOnboarding {
+    color: #000000;
+    font-family: "Noto Sans";
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 19px;
+    max-width: 800px;
+    .sscOnboard-title {
+        font-size: 26px;
+        letter-spacing: 0;
+        line-height: 36px;
+        padding: 40px 40px 0 40px;
+        margin-bottom: 29px;
+    }
+    .sscOnboard-paragraph {
+        padding: 0 0 0 40px;
+        display: flex;
+        flex-direction: column;
+    }
+    .sscOnboard-paragraph-block1 {
+        margin-bottom: 24px;
+        span {
+            padding-left: 4px;
+        }
+    }
+    .sscOnboard-paragraph-block2 {
+        margin-bottom: 24px;
+    }
+    .tab{
+        padding:24px 16px;
+        div:first-child{
+            margin-bottom: 16px;
+        }
+        ul{
+            margin: 8px 0;
+            li {
+                margin: 8px 0;
+                color: inherit;
+                font-size: 16px;
+                span{
+                    color: #000000;
+                    font-size: 14px;
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+
+    .compliance {
+        color: #477b78;
+        font-weight: bold;
+    }
+    .engagement {
+        color: #476a7c;
+        font-weight: bold;
+    }
+    .quality {
+        color: #736545;
+        font-weight: bold;
+    }
+
+    .sscOnboard-image {
+        text-align: center;
+    }
+    .sscOnboard-image img {
+        max-height: 300px;
+    }
+    .close-button {
+        padding-top: 0;
+    }
+    .close-button:hover {
+        background-color: unset;
+    }
+}
