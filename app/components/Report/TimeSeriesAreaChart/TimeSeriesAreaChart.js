@@ -209,7 +209,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
       return ReactDOMServer.renderToString(
         <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
           <div>{xValue}</div>
-          <div>Not Available - Moving Average requires at least 30 days of data</div>
+          <div>Unavailable - at least five turnovers required in last 30 days</div>
         </div>);
     }
     
@@ -218,7 +218,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
         <div>{xValue}</div>
         <div>Total Duration: {d.map(point => point.value).reduce((a, b) => a + b)} min</div>
         {tooltipData.map((line) => {
-          return <div>{line}</div>
+          return line && line.map((line) => { return <div style={!line ? { margin: 8 } : {}}>{line}</div> })
         })}
       </div>);
   }

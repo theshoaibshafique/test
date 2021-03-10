@@ -190,7 +190,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
       return ReactDOMServer.renderToString(
         <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
           <div>{xValue}</div>
-          <div>Unavailable - at least 10 performed phases required in last 30 days</div>
+          <div>Unavailable - no data in last 30 days</div>
         </div>);
     }
     return ReactDOMServer.renderToString(
@@ -203,7 +203,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
         {na.length != 0 && (
           <div style={{ marginTop: 12 }}>
             {`${na.join(", ")}:`}
-            <div>Unavailable - at least 10 performed phases required in last 30 days</div>
+            <div>Unavailable - no data in last 30 days</div>
           </div>
         )}
 

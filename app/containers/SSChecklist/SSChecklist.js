@@ -51,6 +51,8 @@ export default class SSChecklist extends React.PureComponent {
       isFilterApplied: true, // Filter is applied right away by default
       startDate: moment().subtract(1, 'month').startOf('month'),
       endDate: moment().subtract(1, 'month').endOf('month'),
+      specialties: [],
+      ors: []
     }
     this.pendingDate = moment();
     this.pendingDate.date(Math.min(process.env.SSC_REPORT_READY_DAY, this.pendingDate.daysInMonth()))
@@ -79,16 +81,22 @@ export default class SSChecklist extends React.PureComponent {
         result = JSON.parse(result)
 
         let earliestStartDate = moment(result.startDate);
-        let startDate = earliestStartDate.utc().clone();
         let latestEndDate = moment(result.endDate).endOf('day');
+        let startDate = latestEndDate.clone().subtract(3, 'month');
+        if (startDate.isBefore(earliestStartDate)){
+          startDate = earilestStartDate.clone();
+        }
         let endDate = latestEndDate.clone().subtract(12, 'hour');
 
         const pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
         const complianceGoal = result.complianceGoal;
         const engagementGoal = result.engagementGoal;
         const qualityGoal = result.qualityGoal;
+        const specialties = result.filters.Specialties;
+        const ors = result.filters.ORs;
         this.setState({
-          earliestStartDate, latestEndDate, startDate, endDate, pendingWarning, complianceGoal, engagementGoal, qualityGoal
+          earliestStartDate, latestEndDate, startDate, endDate, pendingWarning, complianceGoal, engagementGoal, qualityGoal,
+          specialties,ors
         }, () => {
           this.getReportLayout();
         });
@@ -140,7 +148,7 @@ export default class SSChecklist extends React.PureComponent {
     this.setState({ tileRequest: [], reportData: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
       () => {
 
-        const specialty = this.state.selectedSpecialty && this.state.selectedSpecialty.name;
+        const specialty = this.state.selectedSpecialty && this.state.selectedSpecialty.id;
         const jsonBody = {
           "dashboardName": this.state.reportType,
           "facilityId": this.props.userFacility,
@@ -148,7 +156,7 @@ export default class SSChecklist extends React.PureComponent {
           "startDate": this.state.startDate && this.state.startDate.format('YYYY-MM-DD'),
           "endDate": this.state.endDate && this.state.endDate.format('YYYY-MM-DD'),
 
-          "roomId": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value || null,
+          "roomId": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.id || null,
           "specialtyName": specialty == "All Specialties" ? "" : specialty,
         }
         globalFunctions.axiosFetch(process.env.SSC_API + "2/tile", 'post', this.props.userToken, jsonBody, this.state.source.token)
@@ -412,7 +420,7 @@ export default class SSChecklist extends React.PureComponent {
           endDate={this.state.endDate}
           minDate={this.state.earliestStartDate}
           showChange={true}
-          nullMessage={"Unavailable - at least 10 performed phases required in last 30 days"}
+          nullMessage={"Unavailable - no data in last 30 days"}
         />
       case 'MULTITIMESERIESCHART':
         return <MultiTimeSeriesChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} minDate={this.state.earliestStartDate} showChange={true} />
@@ -485,7 +493,8 @@ export default class SSChecklist extends React.PureComponent {
           </Grid>
           <Grid item xs={12} className="ssc-picker">
             <UniversalPicker
-              specialties={this.props.specialties}
+              specialties={this.state.specialties}
+              ors={this.state.ors}
               userFacility={this.props.userFacility}
               userToken={this.props.userToken}
               defaultState={this.state}

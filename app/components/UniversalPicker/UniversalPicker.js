@@ -67,7 +67,8 @@ class UniversalPicker extends React.Component {
       this.setState({
         ...this.props.defaultState,
         specialtyDisplay,
-        specialties: [{ name: specialtyDisplay, value: "" }, ...this.props.specialties],
+        specialties: [{ display: specialtyDisplay, id: "" }, ...this.props.specialties],
+        operatingRooms: [{ display: "All ORs", id: "" }, ...this.props.ors],
         ...this.getDisplayOptions()
       });
     }
@@ -83,7 +84,7 @@ class UniversalPicker extends React.Component {
   }
 
   componentDidMount() {
-    this.populateOperatingRooms();
+    // this.populateOperatingRooms();
   }
 
   getDisplayOptions() {
@@ -130,7 +131,7 @@ class UniversalPicker extends React.Component {
   handleORChange(e, value) {
     this.setState({
       selectedOperatingRoom: value,
-      departmentName: value && value.departmentName
+      // departmentName: id && id.departmentName
     }, () => {
       this.props.updateState('selectedOperatingRoom', value);
     });
@@ -205,10 +206,10 @@ class UniversalPicker extends React.Component {
             options={this.state.operatingRooms}
             loading={this.state.isORLoading}
             clearOnEscape
-            getOptionLabel={option => option.label ? option.label : ''}
+            getOptionLabel={option => option.display ? option.display : ''}
             value={this.state.selectedOperatingRoom}
             onChange={(e, value) => this.handleORChange(e, value)}
-            groupBy={option => option.departmentTitle}
+            // groupBy={option => option.departmentTitle}
             renderInput={params => (
               <TextField
                 {...params}
@@ -216,7 +217,7 @@ class UniversalPicker extends React.Component {
                 variant="outlined"
                 name="operatingRoom"
                 placeholder="All ORs"
-                className={this.state.selectedOperatingRoom && this.formatClass(this.state.selectedOperatingRoom.label)}
+                className={this.state.selectedOperatingRoom && this.formatClass(this.state.selectedOperatingRoom.display)}
               />
             )}
           />
@@ -252,7 +253,7 @@ class UniversalPicker extends React.Component {
             size="small"
             options={this.state.specialties}
             clearOnEscape
-            getOptionLabel={option => option.name ? option.name : ''}
+            getOptionLabel={option => option.display ? option.display : ''}
             value={this.state.selectedSpecialty}
             onChange={(e, value) => this.handleSelectedSpecialtyChange(e, value)}
             renderInput={params => (
@@ -262,10 +263,10 @@ class UniversalPicker extends React.Component {
                 variant="outlined"
                 name="specialty"
                 placeholder={this.state.specialtyDisplay}
-                className={this.state.selectedSpecialty && this.formatClass(this.state.selectedSpecialty.name) || this.props.isSpecialtyMandatory && "select-a-specialty"}
+                className={this.state.selectedSpecialty && this.formatClass(this.state.selectedSpecialty.display) || this.props.isSpecialtyMandatory && "select-a-specialty"}
               />
             )}
-            renderOption={(option) => (<Typography noWrap>{option.name ? option.name : ''}</Typography>)}
+            renderOption={(option) => (<Typography noWrap>{option.display ? option.display : ''}</Typography>)}
           />
         </Grid>}
         {this.state.showOR2 && <Grid item xs={1} style={{ minWidth: 150 }}>
@@ -277,10 +278,10 @@ class UniversalPicker extends React.Component {
             options={this.state.operatingRooms}
             loading={this.state.isORLoading}
             clearOnEscape
-            getOptionLabel={option => option.label ? option.label : ''}
+            getOptionLabel={option => option.display ? option.display : ''}
             value={this.state.selectedOperatingRoom}
             onChange={(e, value) => this.handleORChange(e, value)}
-            groupBy={option => option.departmentTitle}
+            // groupBy={option => option.departmentTitle}
             disabled={this.props.isSpecialtyMandatory && !specialtySelected}
             renderInput={params => (
               <TextField
@@ -289,7 +290,7 @@ class UniversalPicker extends React.Component {
                 variant="outlined"
                 name="operatingRoom"
                 placeholder="All ORs"
-                className={this.state.selectedOperatingRoom && this.formatClass(this.state.selectedOperatingRoom.label)}
+                className={this.state.selectedOperatingRoom && this.formatClass(this.state.selectedOperatingRoom.display)}
               />
             )}
           />

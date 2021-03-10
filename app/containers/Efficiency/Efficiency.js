@@ -86,7 +86,6 @@ export default class Efficiency extends React.PureComponent {
       isLoading: true,
       reportData: [],
       chartColours: ['#CFB9E4', '#FF7D7D', '#FFDB8C', '#50CBFB', '#6EDE95', '#FFC74D', '#FF4D4D', '#A77ECD', '#A7E5FD', '#97E7B3', '#004F6E'],
-      specialties: this.props.specialties || [],
       selectedOperatingRoom: "",
       selectedSpecialty: "",
       procedureOptions: [],
@@ -95,6 +94,8 @@ export default class Efficiency extends React.PureComponent {
       isFilterApplied: true, // Filter is applied right away by default,
       startDate: moment().subtract(1, 'month').startOf('month'),
       endDate: moment().subtract(1, 'month').endOf('month'),
+      specialties: [],
+      ors: []
     }
   }
 
@@ -122,13 +123,7 @@ export default class Efficiency extends React.PureComponent {
       }, () => {
         this.getReportLayout();
       })
-    } else if (prevProps.specialties != this.props.specialties) {
-      this.setState({ specialties: this.props.specialties }, () => {
-        clearTimeout(this.state.timeout);
-        //Load the report once specialties list is changed/populated
-        this.getReportLayout();
-      })
-    }
+    } 
   }
 
   componentDidMount() {
@@ -177,8 +172,11 @@ export default class Efficiency extends React.PureComponent {
         result = JSON.parse(result)
 
         let earliestStartDate = moment(result.startDate);
-        let startDate = earliestStartDate.utc().clone();
         let latestEndDate = moment(result.endDate).endOf('day');
+        let startDate = latestEndDate.clone().subtract(3, 'month');
+        if (startDate.isBefore(earliestStartDate)){
+          startDate = earilestStartDate.clone();
+        }
         let endDate = latestEndDate.clone().subtract(12, 'hour');
 
         const pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
@@ -189,9 +187,12 @@ export default class Efficiency extends React.PureComponent {
         const gracePeriodMinute = this.state.gracePeriodMinute || fcotsThresholdList[1];
         const outlierThresholdHrs = this.state.outlierThresholdHrs || turnoverThresholdList[0];
         const outlierThresholdMinute = this.state.outlierThresholdMinute || turnoverThresholdList[1];
+        const specialties = result.filters.Specialties;
+        const ors = result.filters.ORs;
         this.setState({
           earliestStartDate, latestEndDate, startDate, endDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, pendingWarning,
-          gracePeriodMinute, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR, hospitalAbbr: result.abbreviation
+          gracePeriodMinute, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR, hospitalAbbr: result.abbreviation,
+          specialties,ors
         }, () => {
           this.getReportLayout();
         });
@@ -236,6 +237,17 @@ export default class Efficiency extends React.PureComponent {
     }
   }
 
+  getUnavaliableMessage(reportType) {
+    switch (`${reportType}`.toUpperCase()) {
+      case 'FIRSTCASEONTIMESTART':
+        return "Unavailable - at least five cases required in last 30 days"
+      case 'BLOCKUTILIZATION':
+        return "Unavailable - at least five blocks required in last 30 days"
+      default:
+        return "";
+    }
+  }
+
   openOnboardModal() {
     this.setState({ isOnboardModalOpen: true })
   }
@@ -253,7 +265,7 @@ export default class Efficiency extends React.PureComponent {
     this.setState({ reportData: [], globalData: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         const filter = this.getFilterLayout(this.state.reportType);
-        const specialty = filter.showSpecialty && this.state.selectedSpecialty && this.state.selectedSpecialty.name;
+        const specialty = filter.showSpecialty && this.state.selectedSpecialty && this.state.selectedSpecialty.id;
         const jsonBody = {
           "dashboardName": this.state.reportType,
           "facilityName": this.props.userFacility,
@@ -261,9 +273,9 @@ export default class Efficiency extends React.PureComponent {
           "startDate": this.state.startDate && this.state.startDate.format('YYYY-MM-DD'),
           "endDate": this.state.endDate && this.state.endDate.format('YYYY-MM-DD'),
 
-          "roomName": (filter.showOR || filter.showOR2) && this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value || null,
+          "roomName": (filter.showOR || filter.showOR2) && this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.id || null,
           "specialtyName": specialty == "All Specialties" ? "" : specialty,
-          "procedureName": filter.showProcedure && this.state.selectedProcedure && this.state.selectedProcedure.name,
+          "procedureName": filter.showProcedure && this.state.selectedProcedure && this.state.selectedProcedure.id,
           "threshold": this.calculateThreshold(this.state.reportType)
         }
 
@@ -468,7 +480,7 @@ export default class Efficiency extends React.PureComponent {
           {...tile}
           startDate={this.state.startDate}
           endDate={this.state.endDate}
-          nullMessage={"Not Available - Moving Average requires at least 30 days of data"}
+          nullMessage={this.getUnavaliableMessage(this.state.reportType)}
           minDate={this.state.earliestStartDate} />
       case 'TIMESERIESAREACHART':
         return <TimeSeriesAreaChart {...tile} startDate={this.state.startDate} endDate={this.state.endDate} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} minDate={this.state.earliestStartDate} />
@@ -524,6 +536,7 @@ export default class Efficiency extends React.PureComponent {
           {!this.state.isLandingPage && <Grid item xs={12} className="efficiency-picker">
             <UniversalPicker
               specialties={this.state.specialties}
+              ors={this.state.ors}
               userFacility={this.props.userFacility}
               hospitalAbbr={this.state.hospitalAbbr}
               userToken={this.props.userToken}

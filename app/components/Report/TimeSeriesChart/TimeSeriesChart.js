@@ -94,7 +94,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         },
         subchart: {
           show: true,
-          onbrush: (d) => this.props.showChange && this.handleBrush() && this._doActionNoSpam(d),
+          onbrush: (d) => this.handleBrush() && this.props.showChange && this._doActionNoSpam(d),
           size: {
             // height: 20
           },
