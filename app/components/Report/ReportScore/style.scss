@@ -4,10 +4,11 @@
   }
   .goal-slider {
     position: relative;
-    right: -4px;
+    right: 4px;
     &.has-goal{
       right:-16px;
     }
+    
   }
 }
 .ssc-score {
@@ -42,6 +43,11 @@
     margin-top: 16px;
     padding-right: 0 !important;
     margin-right: -16px;
+    position: relative;
+    right: 24px;
+    &.has-goal{
+      right:0px;
+    }
   }
   .compare {
     display: flex;

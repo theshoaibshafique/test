@@ -175,7 +175,7 @@ export default class Efficiency extends React.PureComponent {
         let latestEndDate = moment(result.endDate).endOf('day');
         let startDate = latestEndDate.clone().subtract(3, 'month');
         if (startDate.isBefore(earliestStartDate)){
-          startDate = earilestStartDate.clone();
+          startDate = earliestStartDate.clone();
         }
         let endDate = latestEndDate.clone().subtract(12, 'hour');
 

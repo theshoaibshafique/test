@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Tooltip, withStyles } from '@material-ui/core';
+import { Divider, Grid, Tooltip, withStyles } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
@@ -171,7 +171,7 @@ export default class ScatterPlot extends React.PureComponent {
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         {tooltipData.map((line) => {
-          return <div style={!line ? { margin: 8 } : {}}>{line}</div>
+          return <div style={!line ? { margin: '16px 0', width:'100%' } : {}}>{!line ? <Divider style={{ backgroundColor: '#C8C8C8' }} /> : line}</div>
         })}
       </div>);
   }

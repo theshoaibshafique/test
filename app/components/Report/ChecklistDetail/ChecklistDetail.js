@@ -1,7 +1,5 @@
 import React from 'react';
 import { Grid, withStyles, LinearProgress, IconButton, Divider, Button } from '@material-ui/core';
-import { mdiCheck } from '@mdi/js';
-import Icon from '@mdi/react'
 
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
@@ -92,7 +90,7 @@ export default class ChecklistDetail extends React.PureComponent {
                 {point.valueZ
                   ? <Grid item xs={2} className="list-subtitle-no-data">{point.valueZ}</Grid>
                   : <Grid item xs={2} className={point.subTitle ? "list-subtitle-value" : "list-title-value"}>
-                    {point.valueX == 100 ? <Icon color="#028CC8" path={mdiCheck} size={'16px'} /> : point.valueX && `${point.valueX}%`}
+                    {point.valueX && `${point.valueX}%`}
                   </Grid>}
 
                 {/* {!point.subTitle && <Grid item xs={12}><Divider className="ssc-divider" /></Grid>} */}
