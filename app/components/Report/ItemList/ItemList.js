@@ -114,7 +114,7 @@ export default class ItemList extends React.PureComponent {
             {
               field: "valueX",
               title: "Specialty",
-              render: rowData => <div className="specialty-col" onClick={() => {this.props.selectOption({name:rowData.valueX, value:rowData.valueX})}}>{rowData.valueX}</div>
+              render: rowData => <div className="specialty-col" onClick={() => {this.props.selectOption({display:rowData.valueX, id:rowData.valueX})}}>{rowData.valueX}</div>
             },
             {
               field: "valueY",

@@ -27,6 +27,7 @@ import { NavLink } from 'react-router-dom';
 import { mdiCogOutline } from '@mdi/js';
 import Icon from '@mdi/react'
 import { SSCOnboardModal } from './SSCOnboardModal/SSCOnboardModel';
+import { GenericInformationPage } from './GenericInformationPage/GenericInformationPage';
 
 
 
@@ -83,10 +84,18 @@ export default class SSChecklist extends React.PureComponent {
         let earliestStartDate = moment(result.startDate);
         let latestEndDate = moment(result.endDate).endOf('day');
         let startDate = latestEndDate.clone().subtract(3, 'month');
-        if (startDate.isBefore(earliestStartDate)){
+        if (startDate.isBefore(earliestStartDate)) {
           startDate = earliestStartDate.clone();
         }
         let endDate = latestEndDate.clone().subtract(12, 'hour');
+
+        const hasItemChecked = result.checklists && result.checklists.some((checklist) => (
+          checklist.phases.some((phase) => (
+            phase.isActive && phase.questions.some((question) => (
+              question.isActive
+            ))
+          ))
+        ));
 
         const pendingWarning = `Data up until ${latestEndDate.clone().add(8, 'day').format('LL')} will be available on ${latestEndDate.clone().add(22, 'day').format('LL')}. Updates are made every Monday.`;
         const complianceGoal = result.complianceGoal;
@@ -96,9 +105,14 @@ export default class SSChecklist extends React.PureComponent {
         const ors = result.filters.ORs;
         this.setState({
           earliestStartDate, latestEndDate, startDate, endDate, pendingWarning, complianceGoal, engagementGoal, qualityGoal,
-          specialties,ors
+          specialties, ors, hasItemChecked
         }, () => {
+          if (this.state.reportType.toLowerCase() == "quality" && !hasItemChecked) {
+            this.notLoading();
+            return;
+          }
           this.getReportLayout();
+
         });
       });
 
@@ -377,28 +391,45 @@ export default class SSChecklist extends React.PureComponent {
       default:
         xs = [4, 8];
     }
+    let result = "";
+    if (this.state.reportType.toLowerCase() == "quality" && !this.state.hasItemChecked) {
+      let content = "The Quality Score analysis has been disabled. Please contact your administrator to enable them.";
+      if (this.props.isAdmin) {
+        content = (
+          <div>
+            The Quality Score analysis has been disabled. To enable this, go to <NavLink to={"/adminPanel/2"} className='link settings'>
+              <span className="settings-icon"><Icon color="#028CC8" style={{ marginRight: 4 }} path={mdiCogOutline} size={'24px'} /></span>Settings
+            </NavLink> and ensure at least 1 item is checked for any phase.
 
-    let result = reportData && reportData.map((tileGroup, index) => {
-      return (
-        // xs should be max tilesize of group
-        <Grid item xs={xs[index]}>
-          <Grid container spacing={3}>
-            {tileGroup.group.map((tile, i) => {
-              tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
-              tile.tileTypeCount = tileTypeCount[tile.tileType];
-              return <Grid item xs={this.getTileSize(tile.tileType, tile.tileOrder)} className={`grid-${tile.tileType}`} key={`${index}-${i}`}>
-                <Card className={`ssc-card ${tile.tileType}`}>
-                  <CardContent>{this.renderTile(tile)}</CardContent>
-                </Card>
-              </Grid>
-            })}
+          </div>
+        )
+      }
+      result = <GenericInformationPage title="Analysis Unavailable" content={content} />
+
+    } else {
+      result = reportData && reportData.map((tileGroup, index) => {
+        return (
+          // xs should be max tilesize of group
+          <Grid item xs={xs[index]}>
+            <Grid container spacing={3}>
+              {tileGroup.group.map((tile, i) => {
+                tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
+                tile.tileTypeCount = tileTypeCount[tile.tileType];
+                return <Grid item xs={this.getTileSize(tile.tileType, tile.tileOrder)} className={`grid-${tile.tileType}`} key={`${index}-${i}`}>
+                  <Card className={`ssc-card ${tile.tileType}`}>
+                    <CardContent>{this.renderTile(tile)}</CardContent>
+                  </Card>
+                </Grid>
+              })}
+            </Grid>
           </Grid>
-        </Grid>
-      )
-    }) || [];
+        )
+      }) || [];
+      result = [!this.state.isLoading && <Grid item xs={12} className="ssc-title">{this.state.reportType}</Grid>, ...result]
+    }
     return (
       <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`}>
-        {!this.state.isLoading && <Grid item xs={12} className="ssc-title">{this.state.reportType}</Grid>}
+
         {result}
       </Grid>
     );
@@ -433,7 +464,7 @@ export default class SSChecklist extends React.PureComponent {
         return <ScatterPlot {...tile}
           goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]}
           score={this.state[`${this.state.reportType.toLowerCase()}Score`]}
-          highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.name} />
+          highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.display} />
       case 'ITEMLIST':
         return <ItemList {...tile} selectOption={(value) => this.updateState('selectedSpecialty', value, true)} />
       case 'COMPAREINFOGRAPHIC':
