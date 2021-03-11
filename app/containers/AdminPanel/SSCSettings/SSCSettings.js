@@ -238,6 +238,7 @@ export default class SSCSettings extends React.PureComponent {
   // Checklist index, Phase Index, Item Index
   togglePhase(cIndex = -1, pIndex = -1, iIndex = -1) {
     let checklists = [].concat(this.state.checklists);
+    //Change item vs change phase
     if (iIndex >= 0) {
       checklists[cIndex].phases[pIndex].questions[iIndex].isActive = !checklists[cIndex].phases[pIndex].questions[iIndex].isActive;
     } else if (pIndex >= 0) {
@@ -361,14 +362,14 @@ export default class SSCSettings extends React.PureComponent {
             <Grid item xs={4}>
               <Goal
                 title={"Compliance Score"}
-                tooltip={"Compliance Score is the average of 1) the percentage of checklist phases performed and 2) the percentage of the checklist phases performed at the correct time. Each procedure requires one Briefing, one Timeout, and one Debriefing."}
+                tooltip={"Compliance Score is based on the frequency that required checklists are completed, and if they are completed at the correct time."}
                 goal={this.state.complianceGoal}
                 currentGoal={complianceGoal}
                 onChange={(title, goal) => this.updateGoal(title, goal)}
               />
               <Goal
                 title={"Engagement Score"}
-                tooltip={"Engagement Score is the average of 1) the attendance percentage out of the minimum number of people required during performed checklist phases and 2) the percentage of those in attendance who paused during performed checklist phases."}
+                tooltip={"Engagement Score is based on the frequency with which the full team is present and visibly attentive when a checklist is performed."}
                 goal={this.state.engagementGoal}
                 currentGoal={engagementGoal}
                 onChange={(title, goal) => this.updateGoal(title, goal)}

@@ -15,14 +15,24 @@
     padding: 156px 0;
   }
 }
-.no-emr{
-  .no-data-tile{
+.no-emr {
+  .no-data-tile {
     padding: 139px 0;
-    .body{
+    .body {
       padding: 16px;
       color: #000;
-      opacity: .8;
+      opacity: 0.8;
     }
   }
-  
+}
+.SpecialtyScores .title {
+  opacity: 0.8;
+  color: #000000;
+  font-family: "Noto Sans";
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 24px;
+  margin-bottom: 16px;
+  text-align: left;
 }

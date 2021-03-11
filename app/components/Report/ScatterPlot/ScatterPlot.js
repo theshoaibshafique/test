@@ -90,7 +90,7 @@ export default class ScatterPlot extends React.PureComponent {
           contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
         },
 
-        padding: { top: 8, bottom: 8 },
+        padding: { top: 8, bottom: 8},
         legend: {
           show: false
         },

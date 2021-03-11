@@ -392,7 +392,7 @@ export default class SSChecklist extends React.PureComponent {
         xs = [4, 8];
     }
     let result = "";
-    if (this.state.reportType.toLowerCase() == "quality" && !this.state.hasItemChecked) {
+    if (this.state.reportType.toLowerCase() == "quality" && !this.state.hasItemChecked && !this.state.isLoading) {
       let content = "The Quality Score analysis has been disabled. Please contact your administrator to enable them.";
       if (this.props.isAdmin) {
         content = (

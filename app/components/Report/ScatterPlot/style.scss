@@ -1,3 +1,11 @@
+.Quality,
+.Compliance  {
+    .scatter-plot {
+        .c3-axis-y-label {
+            transform: translate(-10px, 0px) rotate(-90deg);
+        }
+    }
+}
 .scatter-plot {
     .chart-title {
         opacity: 0.8;
@@ -19,20 +27,20 @@
     }
     circle.c3-selected-circle {
         fill: white !important;
-        stroke: #A77ECD !important;
-        r:4;
+        stroke: #a77ecd !important;
+        r: 4;
         stroke-width: 1px;
     }
     .c3-circles circle {
         r: 2;
         opacity: 1 !important;
         fill: #004f6e !important;
-        &._selected_{
-            fill: #A77ECD !important;
+        &._selected_ {
+            fill: #a77ecd !important;
         }
-        &._expanded_{
+        &._expanded_ {
             stroke-width: 2px;
-            r:5;
+            r: 5;
         }
     }
     .c3-axis,
@@ -53,9 +61,5 @@
     .c3-ygrid {
         stroke-dasharray: unset;
         stroke: #eaeaea;
-    }
-
-    .c3-axis-y-label {
-        transform: translate(-16px, 0px) rotate(-90deg);
     }
 }

@@ -113,7 +113,7 @@ export function SSCOnboardModal(props) {
                   The score will be the average of the following criteria:
                 </div>
                 <ul className="compliance">
-                  <li><span>The percentage of checklist phases performed</span></li>
+                  <li><span>The percentage of checklist phases performed.</span></li>
                   <li><span>The percentage of the checklist phases performed at the correct time.</span></li>
                 </ul>
               </TabPanel>

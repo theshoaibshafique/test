@@ -17,7 +17,7 @@ const LightTooltip = withStyles((theme) => ({
 
 export default function NoData(props) {
   return (
-    <Grid container spacing={0} className="no-data-tile" direction="column">
+    <Grid container spacing={0} className={`no-data-tile ${props.title && props.title.replace(/[^A-Z0-9]+/ig, "")}`} direction="column">
       <Grid item xs className="title">
         {props.title}{props.toolTip && <LightTooltip interactive arrow title={Array.isArray(props.toolTip) ? props.toolTip.map((line) => { return <div>{line}</div> }) : props.toolTip} placement="top" fontSize="small">
           <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
