@@ -185,8 +185,12 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
 
     chart && chart.load(chartData);
     chart && chart.groups([Object.keys(formattedData)]);
+    let domain = [this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")];
+    if (this.props.startDate.format("YYYY-MM-DD") == this.props.endDate.format("YYYY-MM-DD")) {
+      domain = [this.props.startDate.clone().add(-1, 'day').format("YYYY-MM-DD"), this.props.endDate.clone().add(1, 'day').format("YYYY-MM-DD")]
+    }
     setTimeout(() => {
-      chart.zoom([this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")])
+      chart.zoom(domain)
       setTimeout(() => {
         this.handleBrush()
       }, 500)
@@ -212,7 +216,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
           <div>Unavailable - at least five turnovers required in last 30 days</div>
         </div>);
     }
-    
+
     return ReactDOMServer.renderToString(
       <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         <div>{xValue}</div>

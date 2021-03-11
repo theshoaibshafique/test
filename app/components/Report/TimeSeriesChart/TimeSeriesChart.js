@@ -186,7 +186,10 @@ export default class TimeSeriesChart extends React.PureComponent {
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
-    const domain = [this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")];
+    let domain = [this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")];
+    if (this.props.startDate.format("YYYY-MM-DD") == this.props.endDate.format("YYYY-MM-DD")){
+      domain = [this.props.startDate.clone().add(-1,'day').format("YYYY-MM-DD"), this.props.endDate.clone().add(1,'day').format("YYYY-MM-DD")]
+    }
     setTimeout(() => {
       chart.zoom(domain)
       setTimeout(() => {

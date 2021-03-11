@@ -371,7 +371,7 @@ export default class Efficiency extends React.PureComponent {
           className="efficiency-tab"
         >
           <StyledTab label="My Hospital" />
-          <StyledTab label={<span>Global Comparison<span><img style={{ margin: '0 0 4px 8px' }} src={alphaTag} /></span></span>} />
+          <StyledTab label={<span>Global Comparison</span>} />
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType} ${!this.state.hasEMR && 'no-emr'}`}>
@@ -380,7 +380,6 @@ export default class Efficiency extends React.PureComponent {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
           <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
-            <Grid item xs={12} className="compare-text">Global Comparison is an <span><img src={alphaTag} style={{ margin: '0 4px 4px 4px' }} /></span> feature with enhancements coming in the future.</Grid>
             {this.renderTiles(this.state.globalData, false)}
           </Grid>
         </TabPanel>
