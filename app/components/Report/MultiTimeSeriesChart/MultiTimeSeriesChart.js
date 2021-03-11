@@ -25,7 +25,6 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
     this.chartRef = React.createRef();
     const { dataPoints } = this.props;
     const valueYs = dataPoints && dataPoints.map((point) => point.valueY).filter((y) => y) || [];
-    const unavailableDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
     this.state = {
       chartID: 'MultiTimeSeriesChart',
       legendData: [],
@@ -37,6 +36,9 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
           labels: false,
           order: 'asc',
         }, // End data
+        transition: {
+          duration: 500
+        },
         regions: [
           // { axis: 'x', end: unavailableDate, class: 'regionX' },
         ],
@@ -175,10 +177,18 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
       this.setState({[`${key.toLowerCase()}Trend`]: diff})
     })
     let chartData = this.state.chartData;
-    chartData.data.columns = columns;
+    chartData.data.columns = columns.map((arr) => {
+      return arr.map((x) => {
+        return parseInt(x) == x ? 0 : x;
+      })
+    });
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
+    setTimeout(() => {
+      chartData.data.columns = columns;
+      chart && chart.load(chartData.data);
+    }, 500);
 
     this.setState({ chartData, tooltipData, legendData, tooltipLegendData, unavailableEndDate, isLoaded: true })
   }

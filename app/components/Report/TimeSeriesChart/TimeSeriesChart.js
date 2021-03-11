@@ -182,7 +182,7 @@ export default class TimeSeriesChart extends React.PureComponent {
       na.push(0)
     });
     let chartData = this.state.chartData;
-    chartData.data.columns = [formattedData.x, formattedData.y, na];
+    chartData.data.columns = [formattedData.x, ['y', ...new Array(formattedData.y.length).fill(0)]];
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
@@ -191,12 +191,16 @@ export default class TimeSeriesChart extends React.PureComponent {
       domain = [this.props.startDate.clone().add(-1,'day').format("YYYY-MM-DD"), this.props.endDate.clone().add(1,'day').format("YYYY-MM-DD")]
     }
     setTimeout(() => {
-      chart.zoom(domain)
+      chartData.data.columns = [formattedData.x, formattedData.y, na];
+      chart && chart.load(chartData.data);
       setTimeout(() => {
-        this.handleBrush()
-      }, 500)
-
+        chart.zoom(domain)
+        setTimeout(() => {
+          this.handleBrush()
+        }, 500);
+      }, 500);
     }, 500);
+    
 
     changeCache = changeCache.sort((a, b) => a.valueX.valueOf() - b.valueX.valueOf());
     this.setState({ chartData, colours, tooltipData, changeCache, reverseChangeCache: [].concat(changeCache).reverse(), domain, isLoaded: true })

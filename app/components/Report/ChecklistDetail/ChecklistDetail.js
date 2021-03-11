@@ -20,6 +20,16 @@ const BorderLinearProgress = withStyles((theme) => ({
   },
 }))(LinearProgress);
 
+function AnimatedLinearProgress(props){
+  const [progress, setProgress] = React.useState(0);
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress(props.value)
+    }, 100);
+  }, props.value);
+  return <BorderLinearProgress variant="determinate" value={progress} />
+}
+
 export default class ChecklistDetail extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -95,7 +105,7 @@ export default class ChecklistDetail extends React.PureComponent {
 
                 {/* {!point.subTitle && <Grid item xs={12}><Divider className="ssc-divider" /></Grid>} */}
                 {point.subTitle && <Grid item xs={12} style={{ marginBottom: 24 }}>
-                    <BorderLinearProgress
+                    <AnimatedLinearProgress
                       variant="determinate"
                       value={value}
                     />

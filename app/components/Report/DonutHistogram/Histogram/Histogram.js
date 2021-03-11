@@ -33,6 +33,9 @@ export default class Histogram extends React.PureComponent {
             y: this.props.colors || '#A7E5FD'
           },
         }, 
+        transition: {
+          duration: 500
+        },
         bar: {
           width: {
             ratio: .9
@@ -84,7 +87,7 @@ export default class Histogram extends React.PureComponent {
           show: false
         },
         size: {
-          height:205
+          height: 205
         },
 
       }
@@ -114,7 +117,7 @@ export default class Histogram extends React.PureComponent {
     var allTicks = Array.from(document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`));
     const bar = document.querySelector(`.${this.state.chartID} .c3-event-rect`);
     //Center tick between bars
-    const tickOffset = bar.getAttribute('width') / 2;
+    const tickOffset = bar && bar.getAttribute('width') / 2;
     var whitelist = allTicks.filter((tick, index) => index % 10 == 0);
     var visibleTicks = allTicks
       .filter(tick => !tick.querySelector("line[y2='0']"));
@@ -146,10 +149,14 @@ export default class Histogram extends React.PureComponent {
       tooltipData.push(point.toolTip);
     });
     let chartData = this.state.chartData;
-    chartData.data.columns = [formattedData.x, formattedData.y];
+    chartData.data.columns = [formattedData.x, ['y', ...new Array(formattedData.y.length).fill(0)]];
     let chart = this.chartRef.current && this.chartRef.current.chart;
 
     chart && chart.load(chartData);
+    setTimeout(() => {
+      chartData.data.columns = [formattedData.x, formattedData.y];
+      chart && chart.load(chartData.data);
+    }, 500);
 
     this.setState({ chartData, colours, tooltipData, isLoaded: true })
   }

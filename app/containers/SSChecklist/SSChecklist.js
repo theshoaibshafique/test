@@ -481,7 +481,7 @@ export default class SSChecklist extends React.PureComponent {
     if (this.state.reportType.toLowerCase() == "overview") {
       switch (`${tileType}`.toUpperCase()) {
         case 'COMPAREINFOGRAPHIC':
-          return 4;
+          return 3;
         case 'METERINFOGRAPHIC':
           return 0;
         default:

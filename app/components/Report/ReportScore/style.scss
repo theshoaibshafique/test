@@ -84,3 +84,10 @@
     line-height: 17px;
   }
 }
+
+.MuiSlider-thumb:not(.MuiSlider-active) {
+  transition: .4s linear;
+}
+.MuiSlider-track {
+  transition: .4s linear;
+}
