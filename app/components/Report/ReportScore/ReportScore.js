@@ -155,7 +155,7 @@ export default class ReportScore extends React.PureComponent {
 
 
           <Grid item xs={4} className={`${isNaN(parseInt(goal)) ? '' : 'has-goal'} goal-slider`} onMouseOver={() => this.setState({ isOpen: true })} onMouseLeave={() => this.setState({ isOpen: false })}>
-            <SSTSlider
+            {!isNaN(parseInt(total)) && <SSTSlider
               value={total}
               orientation='vertical'
               colour={this.getColor()}
@@ -168,7 +168,7 @@ export default class ReportScore extends React.PureComponent {
                   <div>Goal</div>
                 </SliderTooltip>
               }] : []}
-              disabled />
+              disabled />}
           </Grid>
 
           {compareValue && <Grid item xs={12} className="compare">

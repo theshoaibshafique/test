@@ -171,7 +171,7 @@ export default class SSChecklist extends React.PureComponent {
           "endDate": this.state.endDate && this.state.endDate.format('YYYY-MM-DD'),
 
           "roomId": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.id || null,
-          "specialtyName": specialty == "All Specialties" ? "" : specialty,
+          "specialtyName": specialty == "" ? null : specialty,
         }
         globalFunctions.axiosFetch(process.env.SSC_API + "2/tile", 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
@@ -481,7 +481,7 @@ export default class SSChecklist extends React.PureComponent {
     if (this.state.reportType.toLowerCase() == "overview") {
       switch (`${tileType}`.toUpperCase()) {
         case 'COMPAREINFOGRAPHIC':
-          return 3;
+          return 4;
         case 'METERINFOGRAPHIC':
           return 0;
         default:

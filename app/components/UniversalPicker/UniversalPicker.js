@@ -67,8 +67,8 @@ class UniversalPicker extends React.Component {
       this.setState({
         ...this.props.defaultState,
         specialtyDisplay,
-        specialties: [{ display: specialtyDisplay, id: "" }, ...this.props.specialties],
-        operatingRooms: [{ display: "All ORs", id: "" }, ...this.props.ors],
+        specialties: [{ display: specialtyDisplay, id: null }, ...this.props.specialties],
+        operatingRooms: [{ display: "All ORs", id: null }, ...this.props.ors],
         ...this.getDisplayOptions()
       });
     }

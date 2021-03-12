@@ -274,7 +274,7 @@ export default class Efficiency extends React.PureComponent {
           "endDate": this.state.endDate && this.state.endDate.format('YYYY-MM-DD'),
 
           "roomName": (filter.showOR || filter.showOR2) && this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.id || null,
-          "specialtyName": specialty == "All Specialties" ? "" : specialty,
+          "specialtyName": specialty == "" ? null : specialty,
           "procedureName": filter.showProcedure && this.state.selectedProcedure && this.state.selectedProcedure.id,
           "threshold": this.calculateThreshold(this.state.reportType)
         }
