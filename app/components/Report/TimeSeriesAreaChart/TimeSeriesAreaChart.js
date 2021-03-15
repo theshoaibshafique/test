@@ -156,7 +156,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     let formattedData = {};
     let tooltipLegendData = {};
     let tooltipData = {};
-    const unavailableEndDate = dataPoints.length && moment(dataPoints[0].valueX).add(29, 'days');
+
     let na = ['NA'];
     dataPoints.map((point) => {
       let xValue = point.valueX;
@@ -197,19 +197,16 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
 
     }, 500);
 
-    this.setState({ chartData, tooltipData, legendData, tooltipLegendData, unavailableEndDate, isLoaded: true })
+    this.setState({ chartData, tooltipData, legendData, tooltipLegendData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
     let tooltipData = d.map((point) => {
       return this.state.tooltipData[point.id + moment(point.x).format("YYYY-MM-DD")];
     })
-
-    if (tooltipData.length == 0) {
-      return;
-    }
     const xValue = moment(d[0].x).format('MMM DD');
-    if (moment(d[0].x).isBefore(this.state.unavailableEndDate)) {
+    let na = d.filter((point) => point.value == null && point.id != "NA").map((point) => point.id) || [];
+    if (na.length == d.length - 1) {
       return ReactDOMServer.renderToString(
         <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
           <div>{xValue}</div>

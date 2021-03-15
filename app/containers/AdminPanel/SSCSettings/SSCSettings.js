@@ -167,7 +167,6 @@ function Goal(props) {
 
   //Adjust labels so the appear within the slider
   let isActive = goal != null
-  console.log(title, currentGoal)
   return (
     <Card className={`goals ${isActive ? 'active' : 'inactive'} ${clss}`} variant="outlined">
       <div className="goal-header">
