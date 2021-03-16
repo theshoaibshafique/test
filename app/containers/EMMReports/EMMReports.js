@@ -23,7 +23,7 @@ const ConfirmPublishDialog = (props) => {
     >
       <DialogTitle>Are you sure you want to publish?</DialogTitle>
       <DialogContent>
-        <DialogContentText className="confirm-publish-text">
+        <DialogContentText className="confirm-publish-text subtle-subtext">
           Publishing a report will allow customers to access it from eM&M Cases. This action cannot be undone.
         </DialogContentText>
       </DialogContent>
@@ -51,7 +51,7 @@ const ConfirmPresenterDialog = (props) => {
     >
       <DialogTitle className="red">Warning</DialogTitle>
       <DialogContent>
-        <DialogContentText className="confirm-publish-text">
+        <DialogContentText className="confirm-publish-text subtle-subtext">
           By enabling Presentation Mode, this report will no longer be protected by Digital Rights Management (DRM). The Presentation Mode feature will allow you to broadcast this report over web conferencing apps such as MS Teams, however, as a result, it will also decrease the level of protection. Please ensure you enable Presentation Mode only prior to your presentation and disable it immediately thereafter. Do you wish to proceed?
         </DialogContentText>
       </DialogContent>
@@ -78,7 +78,7 @@ const OnBoardDialog = (props) => {
       <DialogContent className="onboarding-dialog-content relative">
         <IconButton disableRipple disableFocusRipple onClick={() => dialogClose()} className='close-button absolute'><CloseIcon fontSize='small' /></IconButton>
         <h2>What is the Enhanced M&M Report</h2>
-        <p className="title-p">The Enhanced M&M report offers video-based insights into a specific case.<br />The report is broken down into two key sections: Overview and Phase Analysis.</p>
+        <p className="title-p subtle-subtext">The Enhanced M&M report offers video-based insights into a specific case.<br />The report is broken down into two key sections: Overview and Phase Analysis.</p>
         <div className="content-container flex">
           <div className="content-tile">
             <h5>Overview</h5>
@@ -249,10 +249,10 @@ export default class EMMReports extends React.PureComponent {
         {(emmReportData) &&
           <div className={`EMM-REPORTS ${(isSafari || emmPresenterMode) && 'banner-present'}`}>
             <div className="EMM-REPORTS-WRAPPER relative">
-              <div className="close-emm" onClick={()=>this.closeEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
+              <div className="close-emm subtle-subtext" onClick={()=>this.closeEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
               <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
                 <img className="absolute" src={emmLogo} />
-                <div className="onboarding-open absolute" onClick={()=>this.setState({ onBoardDialogOpen: true })}>What’s this report about?</div>
+                <div className="onboarding-open subtle-subtext absolute" onClick={()=>this.setState({ onBoardDialogOpen: true })}>What’s this report about?</div>
                 {
                   (showPublishButton) &&
                     <Button variant="outlined" className="primary publish-button" onClick={() => this.setState({ publishDialogOpen : true })}>{(isPublished) ? 'Unpublish' : 'Publish'} Report</Button>

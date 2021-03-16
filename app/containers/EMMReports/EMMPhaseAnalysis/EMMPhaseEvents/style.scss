@@ -1,28 +1,19 @@
 @import '../../../../styles/global-styles';
-.show-only-ae {
-  font-size: 14px;
-  line-height: 19px;
-  opacity: 0.8;
-}
+
 .phase-events-title {
   border-bottom: 1px solid #F3F3F3;
   padding: 16px;
-  font-size: 14px;
 }
 .phase-events {
   padding: 24px 16px;
   border-bottom: 1px solid #F3F3F3;
   .time-select {
     color: #028CC8;
-    font-size: 14px;
-    line-height: 19px;
     margin-bottom: 8px;
     cursor: pointer;
   }
   .event {
     color: #028CC8;
-    font-size: 14px;
-    line-height: 19px;
     margin-top: 16px;
     cursor: pointer;
   }

@@ -19,7 +19,7 @@ class ChecklistStatus extends React.Component {
     const checkListMissed = checklists.filter((checklist) => checklist.title.indexOf('was missed') >= 0)
 
     return (
-      <div className="checklist-status flex">
+      <div className="checklist-status subtle-subtext flex">
         <div className="checklist-happened-container flex">
           {
             checkListHappened.map((happened, index) => {

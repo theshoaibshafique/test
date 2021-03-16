@@ -119,7 +119,7 @@ function Phase(props) {
   return (
     <Card className={`phase ${isActive ? 'active' : 'inactive'}`} variant="outlined">
       <div className="phase-header">
-        <div className="subtitle">{phaseName}</div>
+        <div className="subtitle subtle-subtext">{phaseName}</div>
         <div>
           <FormControlLabel
             control={
@@ -160,7 +160,7 @@ function Goal(props) {
   return (
     <Card className={`goals ${isActive ? 'active' : 'inactive'} ${clss}`} variant="outlined">
       <div className="goal-header">
-        <div className="subtitle">
+        <div className="subtitle subtle-subtext">
           {title}
           <LightTooltip interactive arrow
             title={tooltip}
@@ -174,7 +174,7 @@ function Goal(props) {
             control={
               <SSTSwitch checked={isActive} onChange={() => onChange(title, isActive ? null : (currentGoal || 50))} disableRipple />
             }
-            label={<span className="toggle-label">{isActive ? 'Enabled' : 'Disabled'}</span>}
+            label={<span className="toggle-label subtle-subtext">{isActive ? 'Enabled' : 'Disabled'}</span>}
             labelPlacement='start'
           />
         </div>
@@ -182,8 +182,8 @@ function Goal(props) {
       <Divider light className="divider" />
       <div className={`goal-slider ${isActive ? 'active' : 'inactive'}`}>
         <div className="goal-title">
-          <span className="goal">Current: {isNaN(parseInt(currentGoal)) ? "N/A" : currentGoal}</span>
-          <span className='goal-display'>{value || goal}</span>
+          <span className="goal subtle-subtext">Current: {isNaN(parseInt(currentGoal)) ? "N/A" : currentGoal}</span>
+          <span className='goal-display subtle-subtext'>{value || goal}</span>
         </div>
         <SSTSlider
           valueLabelDisplay="auto"
@@ -261,7 +261,7 @@ export default class SSCSettings extends React.PureComponent {
 
     if (!hasCheckedPhase) {
       return (
-        <div className="error">
+        <div className="error subtle-subtext">
           At least 1 phase must be set to Active for the Surgical Safety Checklist
         </div>
       )
@@ -280,7 +280,7 @@ export default class SSCSettings extends React.PureComponent {
       return ''
     }
     return (
-      <div className="notice">
+      <div className="notice subtle-subtext">
         <InfoOutlinedIcon style={{ fontSize: 16, margin: '0px 4px 4px 4px' }} />Quality Score analysis will be disabled when all checklist items are unchecked.
       </div>
     )
@@ -320,7 +320,7 @@ export default class SSCSettings extends React.PureComponent {
 
   renderSaveWarning() {
     if (this.state.isChanged) {
-      return <div className="warning">If you leave without saving, changes will be discarded</div>
+      return <div className="warning subtle-subtext">If you leave without saving, changes will be discarded</div>
     }
     return <div></div>
   }
@@ -340,10 +340,10 @@ export default class SSCSettings extends React.PureComponent {
         <div className="title">
           General
         </div>
-        <div className="subtitle">
+        <div className="subtitle subtle-subtext">
           Setting Goals
         </div>
-        <div className="content">
+        <div className="content subtle-subtext">
           Set a target goal for each of the Surgical Safety Checklist scores.
         </div>
         <div>
@@ -377,10 +377,10 @@ export default class SSCSettings extends React.PureComponent {
         <div className="title">
           Configuration
         </div>
-        <div className="subtitle">
+        <div className="subtitle subtle-subtext">
           Checklist Phases and Items
         </div>
-        <div className="content">
+        <div className="content subtle-subtext">
           This setting will allow you to configure the data displayed to only include the phases and items that are within your hospital’s standard of practice. All historical data will reflect this new standard as well.
         </div>
         {this.state.checklists.map((checklist, cIndex) => (

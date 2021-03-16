@@ -406,7 +406,7 @@ export default class RequestEMM extends React.PureComponent {
   render() {
 
     return (
-      <section className="request-emm-page">
+      <section className="request-emm-page subtle-subtext">
         {this.state.emmID ?
           //Submitted view
           <Grid container spacing={2}>

@@ -21,12 +21,6 @@
   }
   .legend-item {
     margin: 4px 0;
-    opacity: 0.8;
-    color: #000000;
-    font-family: "Noto Sans";
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 19px;
   }
   .donut-title {
     opacity: 0.8;
@@ -61,12 +55,10 @@
   .tooltip {
     color: #fff;
     padding: 16px;
-    font-size: 14px;
     max-width: 300px;
     word-wrap: break-word;
     font-family: "Noto Sans";
     font-weight: 500 !important;
-    line-height: 19px;
     border-radius: 4px;
     background-color: rgba(97, 97, 97, 0.9);
   }

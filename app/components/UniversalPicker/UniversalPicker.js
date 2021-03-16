@@ -369,8 +369,8 @@ class UniversalPicker extends React.Component {
           <FormHelperText>{`${this.props.hospitalAbbr || ""} Standard`}: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "N/A"}</FormHelperText>
         </Grid>}
         <Grid item xs={2} className="buttons" >
-          <Button disabled={disabled} variant="outlined" className="primary" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>
-          <Button disableRipple className="clear" onClick={() => this.resetFilters()}>Clear Filters</Button>
+          <Button disabled={disabled} variant="outlined" className="primary normal-text" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>
+          <Button disableRipple className="clear subtle-subtext" onClick={() => this.resetFilters()}>Clear Filters</Button>
         </Grid>
 
       </Grid>

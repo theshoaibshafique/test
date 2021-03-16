@@ -41,7 +41,7 @@ export default class MultiDonutChart extends React.PureComponent {
       {legendData.map((id, index) => {
         const chart = this.state.chartRefs[0].current && this.state.chartRefs[0].current.chart;
         return (
-          <div className="legend-item" id={id.replace(/[^A-Z0-9]+/ig, "")}
+          <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")}
             onMouseOver={() => {
               this.state.chartRefs.map((chartRef) => {
                 let chart = chartRef.current.chart;
@@ -55,7 +55,7 @@ export default class MultiDonutChart extends React.PureComponent {
               })
             }}
             key={index}>
-            <div className="legend-title">
+            <div className="legend-title subtle-subtext">
               <span className="circle" style={{ color: colors[id] }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
             </div>
           </div>)

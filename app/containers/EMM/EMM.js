@@ -130,7 +130,7 @@ export default class EMM extends React.PureComponent {
           <div><span className="pad">Enhanced M&M</span></div>
           {(isReportReady) ?
             <Button variant="outlined" className="primary" onClick={() => this.openReport()}>Open Report</Button> :
-            <span className="report-status">(Report Status: In Progress)</span>
+            <span className="report-status subtle-subtext">(Report Status: In Progress)</span>
           }
         </div>
         {(isSafari) && <SafariWarningBanner />}

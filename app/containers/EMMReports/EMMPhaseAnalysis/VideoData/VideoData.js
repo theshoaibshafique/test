@@ -23,7 +23,7 @@ class VideoData extends React.Component { // eslint-disable-line react/prefer-st
     return this.props.videoData && this.props.videoData.slice(0,5).map((entry,index) =>
       <Grid item xs className={`${this.state.isOpen ? '' : 'hidden'}`} key={index}>
         <div className="title subtle-text" >{entry.dataType}</div>
-        <div className="value subtext">{this.getDataValue(entry)}</div>
+        <div className="value subtle-subtext">{this.getDataValue(entry)}</div>
       </Grid>
     )
   }
@@ -65,7 +65,7 @@ class VideoData extends React.Component { // eslint-disable-line react/prefer-st
     return (
        <div className={`video-data ${this.state.isOpen ? 'isOpen' : ''}`} >
         <Grid spacing={2} className='data-grid' container>
-          <Grid item className={`subtext pointer`} onClick={() => this.onClick()}>
+          <Grid item className={`subtle-subtext pointer`} onClick={() => this.onClick()}>
             Vitals<InfoOutlinedIcon style={{ fontSize: 14, marginLeft: 4 }} />
           </Grid>
           {this.renderData()}

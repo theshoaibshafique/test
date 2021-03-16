@@ -56,7 +56,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
           </Grid>
-          <Grid item xs={12} className="chart-subtitle">
+          <Grid item xs={12} className="chart-subtitle subtle-subtext">
             {this.props.subTitle}
           </Grid>
           <Grid item xs={12} className="sub-chart-container">
@@ -68,7 +68,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                       <Grid item xs className="row-title">
                         {globalFunctions.getName(this.props.labelList, reportData.title)}
                       </Grid>
-                      {/* <Grid item xs className="row-subtitle">
+                      {/* <Grid item xs className="row-subtitle subtle-subtext">
                         {reportData.subTitle}
                       </Grid> */}
                     </Grid>
@@ -81,7 +81,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                       <Grid item xs>
                         {reportData.total}{reportData.unit}
                       </Grid>
-                      <Grid item xs className="row-score-title">
+                      <Grid item xs className="row-score-title subtle-text"> 
                         {reportData.footer}
                       </Grid>
                     </Grid>

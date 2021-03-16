@@ -88,7 +88,7 @@ class MonthRangePicker extends React.Component {
           <a className="link" onClick={e => this.resetDates()}>Clear dates</a>
         </Grid>
         <Divider style={{ backgroundColor: '#C8C8C8' }} />
-        <Grid item xs className="display-warning">
+        <Grid item xs className="display-warning subtle-subtext">
           {this.props.displayWarning || "Each month’s data will become available on the 15th of the following month."}
         </Grid>
       </Grid>
@@ -98,7 +98,7 @@ class MonthRangePicker extends React.Component {
   render() {
     return (
       <Grid container justify="center" alignItems="center" direction="column" className="month-range-picker">
-        <Grid item xs className="report-date">
+        <Grid item xs className="report-date subtle-subtext">
           Date Range
         </Grid>
         <DateRangePicker

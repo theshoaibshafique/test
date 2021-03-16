@@ -29,7 +29,7 @@ export function SSCOnboardModal(props) {
   };
   return (
     <Modal open={open} onClose={onClose}>
-      <DialogContent className="sscOnboarding Modal">
+      <DialogContent className="sscOnboarding subtle-subtext Modal">
         <Grid container spacing={0} justify='center' className="onboard-modal" >
           <Grid item xs={10} className="sscOnboard-title">
             What is the Surgical Safety Checklist Report?

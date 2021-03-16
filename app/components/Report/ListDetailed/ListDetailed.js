@@ -1,3 +1,9 @@
+/* 
+  DEPRECATED
+  Originaly used in Specialties of Interest for SSC
+  Displays list of Specialties and sublists
+*/
+
 import React from 'react';
 import './style.scss';
 import { Grid } from '@material-ui/core';
@@ -30,19 +36,19 @@ export default class ListDetailed extends React.PureComponent {
 
     return this.props.dataPoints && this.props.dataPoints.map((point, index) => {
       return (<Grid container spacing={0} key={index}>
-        <Grid item xs={10} className={point.subTitle ? "list-subtitle" : "list-title"}>
+        <Grid item xs={10} className={point.subTitle ? "list-subtitle subtle-subtext" : "list-title"}>
           {
             point.subTitle
               ?
-              point.subTitle == "Other Procedures" ? <div className="list-subtitle">{globalFunctions.getName(this.state.procedures, point.subTitle)}</div> :
+              point.subTitle == "Other Procedures" ? <div className="list-subtitle subtle-subtext">{globalFunctions.getName(this.state.procedures, point.subTitle)}</div> :
                 <LightTooltip interactive arrow title={globalFunctions.getName(this.state.procedures, point.subTitle)} placement="left" fontSize="small">
-                  <div className="list-subtitle">{globalFunctions.getName(this.state.procedures, point.subTitle)}</div>
+                  <div className="list-subtitle subtle-subtext">{globalFunctions.getName(this.state.procedures, point.subTitle)}</div>
                 </LightTooltip>
               : globalFunctions.getName(this.props.specialties, point.title) || point.subTitle
           }
 
         </Grid>
-        <Grid item xs={2} className={point.subTitle ? "list-subtitle-value" : "list-title-value"}>
+        <Grid item xs={2} className={point.subTitle ? "list-subtitle-value subtle-subtext" : "list-title-value"}>
           {point.valueX}
         </Grid>
       </Grid>)
@@ -74,7 +80,7 @@ export default class ListDetailed extends React.PureComponent {
           <Grid item xs={12} className="chart-title">
             {this.props.title}
           </Grid>
-          {!this.props.body && <Grid item xs={12} className="chart-subtitle">
+          {!this.props.body && <Grid item xs={12} className="chart-subtitle subtle-subtext">
             {this.props.subTitle}
           </Grid>}
           <Grid item xs={12} >

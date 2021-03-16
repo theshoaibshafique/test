@@ -184,14 +184,14 @@ export default class BarChart extends React.PureComponent {
     let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].x] || []
     if (tooltipData.length == 0) {
       return ReactDOMServer.renderToString(
-        <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div className="MuiTooltip-tooltip tooltip subtle-subtext" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
           <div>{`${x}${this.props.footer ? this.props.footer : ''}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
           {z != null && <div>{`Occurence(s): ${z}`}</div>}
           {desc != null && <div>{`${desc}`}</div>}
         </div>);
     } else {
       return ReactDOMServer.renderToString(
-        <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div className="MuiTooltip-tooltip tooltip subtle-subtext" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
           {tooltipData.map((line) => {
             return <div>{line}</div>
           })}
@@ -237,7 +237,7 @@ export default class BarChart extends React.PureComponent {
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
           </Grid>
-          <Grid item xs={12} className="chart-subtitle">
+          <Grid item xs={12} className="chart-subtitle subtle-subtext">
             {this.props.subTitle}
           </Grid>
           <Grid item xs>

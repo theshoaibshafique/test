@@ -190,13 +190,13 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
     let na = d.filter((point) => point.value == null && point.id != "NA").map((point) => point.id) || [];
     if (na.length == d.length - 1) {
       return ReactDOMServer.renderToString(
-        <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div className="tooltip subtle-subtext" >
           <div>{xValue}</div>
           <div>Unavailable - no data in last 30 days</div>
         </div>);
     }
     return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="tooltip subtle-subtext" >
         <div>{xValue}</div>
         {d.filter((point) => point.value != null && point.id != "NA").map(point => (
           <div>{`${point.id}: ${point.value}`}</div>
@@ -312,14 +312,14 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
           </Grid>
-          <Grid item xs={12} className="chart-subtitle">
+          <Grid item xs={12} className="chart-subtitle subtle-subtext">
             {this.props.subTitle}
           </Grid>
           <Grid item xs={12}>
             {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
             {this.renderLegend()}
           </Grid>
-          <Grid item xs={12} className="chart-label">
+          <Grid item xs={12} className="chart-label subtle-text">
             {this.props.xAxis}
           </Grid>
         </Grid>

@@ -161,7 +161,7 @@ export default class ScatterPlot extends React.PureComponent {
       return;
     }
     return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         {tooltipData.map((line) => {
           return <div style={!line ? { margin: '16px 0', width:'100%' } : {}}>{!line ? <Divider style={{ backgroundColor: '#C8C8C8' }} /> : line}</div>
         })}

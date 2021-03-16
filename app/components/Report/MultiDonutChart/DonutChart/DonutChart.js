@@ -29,8 +29,8 @@ export default class DonutChart extends React.PureComponent {
         },
 
         tooltip: {
+          show:false,
           grouped: false,
-          contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
         },
 
         padding: { top: 8, bottom: 8 },
@@ -86,22 +86,6 @@ export default class DonutChart extends React.PureComponent {
     this.setState({ chartData, isLoaded: true })
   }
 
-  createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    if (d[0].id == "NA") {
-      return;
-    }
-    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].id] || []
-    if (tooltipData.length == 0) {
-      return;
-    }
-    return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        {tooltipData.map((line) => {
-          return <div>{line}</div>
-        })}
-      </div>);
-  }
-
   renderCustomTitle() {
     if (!this.chartRef.current) {
       return;
@@ -119,10 +103,10 @@ export default class DonutChart extends React.PureComponent {
             <tspan dy={10} x={0} className="donut-score">N/A</tspan>
           ) :
             (
-              <tspan dy={10} x={0} className="donut-score">{this.props.valueX || 0}<tspan className="donut-unit" dy={-10} baselineShift="super">{this.props.unit || "%"}</tspan></tspan>
+              <tspan dy={10} x={0} className="donut-score">{this.props.valueX || 0}<tspan className="donut-unit subtle-subtext" dy={-10} baselineShift="super">{this.props.unit || "%"}</tspan></tspan>
             )}
 
-          <tspan dy={30} x={0} className="donut-subtitle">{this.props.subTitle}</tspan>
+          <tspan dy={30} x={0} className="donut-subtitle subtle-subtext">{this.props.subTitle}</tspan>
         </tspan>
       ))
 

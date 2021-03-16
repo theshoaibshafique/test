@@ -20,8 +20,8 @@ export default class DonutChart extends React.PureComponent {
         }, // End data
 
         tooltip: {
+          show:false,
           grouped: false,
-          contents: (d, defaultTitleFormat, defaultValueFormat, color) => this.createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
         },
 
         padding: { top: 8, bottom: 8 },
@@ -71,21 +71,6 @@ export default class DonutChart extends React.PureComponent {
     this.setState({ chartData, isLoaded: true })
   }
 
-  createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
-    if (d[0].id == "NA") {
-      return;
-    }
-    let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].id] || []
-    if (tooltipData.length == 0) {
-      return;
-    }
-    return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
-        {tooltipData.map((line) => {
-          return <div>{line}</div>
-        })}
-      </div>);
-  }
   wrap(text, width) {
     text.each(function () {
       var text = d3.select(this),
@@ -136,12 +121,12 @@ export default class DonutChart extends React.PureComponent {
             <tspan dy={10} x={0} className="donut-score">N/A</tspan>
           ) :
             (
-              <tspan dy={10} x={0} className="donut-score">{this.props.total || 0}<tspan className="donut-unit" dy={-10} baselineShift="super">{this.props.unit || "%"}</tspan></tspan>
+              <tspan dy={10} x={0} className="donut-score">{this.props.total || 0}<tspan className="donut-unit subtle-subtext" dy={-10} baselineShift="super">{this.props.unit || "%"}</tspan></tspan>
             )}
 
         {/* <tspan dy={30} x={0} className="donut-subtitle">{this.props.body}</tspan> */}
         </tspan>
-      )).append("tspan").attr("y", 22).attr('x',0).attr('class','donut-subtitle').text(this.props.body).call(this.wrap,110)
+      )).append("tspan").attr("y", 22).attr('x',0).attr('class','donut-subtitle subtle-subtext').text(this.props.body).call(this.wrap,110)
   }
   render() {
     return (

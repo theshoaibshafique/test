@@ -203,14 +203,14 @@ export default class TimeSeriesChart extends React.PureComponent {
     let tooltipData = this.state.tooltipData && this.state.tooltipData[xValue.format("YYYY-MM-DD")] || []
     if (tooltipData.length == 0) {
       return ReactDOMServer.renderToString(
-        <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div className="tooltip subtle-subtext" >
           <div>{xValue.format('MMM DD')}</div>
           <div>{this.props.nullMessage}</div>
         </div>);
     }
 
     return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}
@@ -287,13 +287,13 @@ export default class TimeSeriesChart extends React.PureComponent {
             </LightTooltip>}
             {this.props.showChange && this.renderChangeValue()}
           </Grid>
-          <Grid item xs={12} className="chart-subtitle">
+          <Grid item xs={12} className="chart-subtitle subtle-subtext">
             {this.props.subTitle}
           </Grid>
           <Grid item xs={12}>
             {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
-          <Grid item xs={12} className="chart-label">
+          <Grid item xs={12} className="chart-label subtle-text">
             {this.props.xAxis}
           </Grid>
         </Grid>

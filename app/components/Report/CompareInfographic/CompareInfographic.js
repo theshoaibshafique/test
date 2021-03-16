@@ -18,7 +18,7 @@ export default class CompareInfographic extends React.PureComponent {
           <div className="score">
             {point.valueX}
           </div>
-          <div className="subtitle">
+          <div className="subtitle subtle-text">
             {point.title}
           </div>
         </Grid>

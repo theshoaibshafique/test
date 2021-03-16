@@ -137,7 +137,7 @@ export default class ReportScore extends React.PureComponent {
               {total}
             </div>
             <div >
-              {this.props.url && <NavLink to={this.props.url} className='link'>
+              {this.props.url && <NavLink to={this.props.url} className='link subtle-text'>
                 {this.props.urlText}
               </NavLink>}
             </div>

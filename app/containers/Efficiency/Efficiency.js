@@ -542,7 +542,7 @@ export default class Efficiency extends React.PureComponent {
             open={this.state.isOnboardModalOpen}
             onClose={() => this.closeOnboardModal()}
           >
-            <DialogContent className="efficiencyOnBoarding Modal">
+            <DialogContent className="efficiencyOnBoarding Modal subtle-subtext">
               <Grid container spacing={0} justify='center' className="onboard-modal" >
                 <Grid item xs={10} className="efficiencyOnBoard-title">
                   What is the Efficiency Dashboard?

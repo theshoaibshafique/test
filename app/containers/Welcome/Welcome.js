@@ -31,7 +31,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
           </Grid>
           <div className="title-break"></div>
         </Grid>
-        <div className="footer">Can’t find what you’re looking for? Contact your administrator for assistance.</div>
+        <div className="footer subtle-subtext">Can’t find what you’re looking for? Contact your administrator for assistance.</div>
       </div>
     );
   }

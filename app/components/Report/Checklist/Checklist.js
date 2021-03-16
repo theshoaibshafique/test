@@ -1,3 +1,8 @@
+/*
+  DEPRECATED
+  Used to be used for Top 5 Missed checklist items in SSC Quality Score
+  Had the ability to open modal for more information
+*/
 import React from 'react';
 import './style.scss';
 import { Grid } from '@material-ui/core';
@@ -27,13 +32,13 @@ export default class Checklist extends React.PureComponent {
 
     return this.state.dataPoints && this.state.dataPoints.map((point, index) => {
       return (<Grid container spacing={0} key={index}>
-        <Grid item xs={10} className="list-title">
+        <Grid item xs={10} className="list-title subtle-text">
           {point.title}
         </Grid>
-        <Grid item xs={2} className="list-title-value">
+        <Grid item xs={2} className="list-title-value subtle-subtext">
           {point.valueX}
         </Grid>
-        <Grid item xs={12} className="list-subtitle">
+        <Grid item xs={12} className="list-subtitle subtle-text">
           {point.subTitle}
         </Grid>
       </Grid>)
@@ -72,7 +77,7 @@ export default class Checklist extends React.PureComponent {
               <div className="display-text">{this.props.body}</div>
               : this.renderList()}
           </Grid>
-          <Grid item xs={12} className="link" onClick={() => this.props.openModal({...this.props,tileType:this.props.footer,reportName:this.props.total})}>
+          <Grid item xs={12} className="link subtle-text" onClick={() => this.props.openModal({...this.props,tileType:this.props.footer,reportName:this.props.total})}>
               {this.props.description}
           </Grid>
 

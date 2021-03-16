@@ -10,10 +10,7 @@
         line-height: 36px;
     }
     .chart-subtitle {
-        font-size: 14px;
         font-style: italic;
-        letter-spacing: 0;
-        line-height: 19px;
         margin-bottom: 17px;
         text-align: center;
     }
@@ -46,12 +43,6 @@
         line-height: 26px;
     }
     .row-subtitle {
-        opacity: 0.8;
-        color: #000000;
-        font-family: "Noto Sans";
-        font-size: 14px;
-        letter-spacing: 0;
-        line-height: 19px;
         //TODO:show case count
         display: none;
     }
@@ -62,14 +53,6 @@
         letter-spacing: 0;
         line-height: 26px;
         text-align: right;
-    }
-    .row-score-title {
-        opacity: 0.8;
-        color: #000000;
-        font-family: "Noto Sans";
-        font-size: 12px;
-        letter-spacing: 0;
-        line-height: 17px;
     }
     .c3-line {
         stroke-width: 2px;

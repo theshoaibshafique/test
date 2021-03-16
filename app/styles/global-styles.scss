@@ -68,20 +68,49 @@ label {
 .grey { color: $grey; }
 .red { color: $red; }
 
-.small { font-size: 0.875rem; }
-.smaller { font-size: 0.75rem; }
-.large { @include fontSizeLineHeight(1.25); }
-.larger {
-  @include fontSizeLineHeight(1.5);
-  .highlight { @include fontSizeLineHeight(2.5) }
+.link{
+  color: #028cc8;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 19px;
+  padding: 0;
+  cursor: pointer;
 }
-.largest {
-  @include fontSizeLineHeight(2.5);
+
+.link:hover{
+  text-decoration: underline;
 }
+
+.subtle-text{
+  font-size: 12px;
+  line-height: 17px;
+  color: rgba(0, 0, 0, 0.8);
+}
+.subtle-subtext{
+  font-size: 14px;
+  line-height: 19px;
+  color: rgba(0, 0, 0, 0.8);
+}
+.subtext{
+  font-size: 16px;
+  line-height: 22px;
+}
+.normal-text{
+  font-size: 18px;
+  line-height: 24px;
+}
+.header-2{
+  font-size: 26px;
+  line-height: 36px;
+}
+.header-1{
+  font-size: 42px;
+  line-height: 57px;
+}
+
 
 .bold { font-weight: bold; }
 .semibold { font-weight: 700; }
-.small { @include fontSizeLineHeight(0.9); }
 .capitalize { text-transform: uppercase; }
 
 .left-align { text-align: left; }
@@ -187,18 +216,7 @@ a hr { border-bottom: none; }
   margin: 30px auto;
 }
 
-.link{
-  color: #028cc8;
-  font-size: 14px;
-  letter-spacing: 0;
-  line-height: 19px;
-  padding: 0;
-  cursor: pointer;
-}
 
-.link:hover{
-  text-decoration: underline;
-}
 
 /*************************************************************************/
 /**                                                                     **/

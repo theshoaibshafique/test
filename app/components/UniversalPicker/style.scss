@@ -8,10 +8,6 @@
     .MuiOutlinedInput-notchedOutline {
         border: none;
     }
-    .MuiListSubheader-root {
-        font-size: 14px !important;
-        line-height: 19px !important;
-    }
 
     .all-days,
     .all-specialties .MuiAutocomplete-input,
@@ -35,9 +31,6 @@
         color: #000000;
         font-family: "Noto Sans";
         width: 210px;
-        // font-size: 12px;
-        // letter-spacing: 0;
-        // line-height: 17px;
     }
     .buttons {
         display: flex;

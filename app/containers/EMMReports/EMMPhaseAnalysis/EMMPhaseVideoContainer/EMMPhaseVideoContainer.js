@@ -204,7 +204,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
         {
           procedureTabTitles.map((tabTitle, index) => {
             return <div
-              className={`Surgical-Procedure-Tab ${(selectedSurgicalTab == index) && 'selected'}`}
+              className={`Surgical-Procedure-Tab subtle-subtext ${(selectedSurgicalTab == index) && 'selected'}`}
               onClick={() => this.updateSelectedSurgicalTab(index)}
             >
               {tabTitle} Video</div>

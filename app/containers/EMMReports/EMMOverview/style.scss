@@ -129,8 +129,6 @@ hr {
 }
 
 .checklist-status {
-  font-size: 14px;
-  line-height: 19px;
   .checklist-happened-container {
     flex-grow: 1;
   }
@@ -170,11 +168,6 @@ hr {
     margin-bottom: 8px;
     color: #028cc8;
     cursor: pointer;
-  }
-  .phase-event {
-    font-size: 14px;
-    line-height: 19px;
-    color: #000;
   }
 }
 

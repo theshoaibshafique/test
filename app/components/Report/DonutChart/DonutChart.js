@@ -114,7 +114,7 @@ export default class DonutChart extends React.PureComponent {
       return;
     }
     return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="tooltip subtle-subtext" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}
@@ -132,7 +132,7 @@ export default class DonutChart extends React.PureComponent {
             return;
           }
           return (
-            <div className="legend-item" id={id.replace(/[^A-Z0-9]+/ig, "")}
+            <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")}
               onMouseOver={() => {
                 chart && chart.focus(id);
               }}

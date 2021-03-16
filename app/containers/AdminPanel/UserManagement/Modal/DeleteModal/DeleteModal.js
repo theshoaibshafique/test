@@ -62,10 +62,10 @@ class DeleteModal extends React.Component {
           <div className="Modal Delete-Modal">
             <p className="Title">{this.props.userValue.active ? 'Disable User' : 'Enable User'}</p>
             {this.state.errorMsgVisible &&
-              <p className="Paragraph-Error">{this.props.errorMsg}</p>
+              <p className="Paragraph-Error subtle-subtext">{this.props.errorMsg}</p>
             }
-            <p className="Paragraph">Are you sure you want to {this.props.userValue.active ? 'disable' : 'enable'} this user {this.props.userValue.firstName} {this.props.userValue.lastName}?</p>
-            <p className="Paragraph">{this.props.userValue.active ? 'Disabled users will not be able to access Insights.' : ''}</p>
+            <p className="Paragraph subtle-subtext">Are you sure you want to {this.props.userValue.active ? 'disable' : 'enable'} this user {this.props.userValue.firstName} {this.props.userValue.lastName}?</p>
+            <p className="Paragraph subtle-subtext">{this.props.userValue.active ? 'Disabled users will not be able to access Insights.' : ''}</p>
             <div className="Button-Row right-align">
               <Button style={{color : "#3db3e3",marginRight:25}} onClick={() => { this.props.handleClose(); this.setState({ errorMsgVisible: false }); }}>Cancel</Button>
               <Button disableElevation variant="contained" className="secondary" disabled={(this.state.isLoading)} onClick={() => this.enableDisableUser()}>{ (this.state.isLoading) ? <div className="secondary-loader"></div> : (this.props.userValue.active ? 'Disable' : 'Enable')}</Button>

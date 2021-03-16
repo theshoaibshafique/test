@@ -145,7 +145,7 @@ export default class Histogram extends React.PureComponent {
       return;
     }
     return ReactDOMServer.renderToString(
-      <div className="MuiTooltip-tooltip tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="tooltip subtle-subtext" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}
@@ -216,7 +216,7 @@ export default class Histogram extends React.PureComponent {
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
           </Grid>
-          <Grid item xs={12} className="chart-subtitle">
+          <Grid item xs={12} className="chart-subtitle subtle-subtext">
             {this.props.subTitle}
           </Grid>
           <Grid item xs>

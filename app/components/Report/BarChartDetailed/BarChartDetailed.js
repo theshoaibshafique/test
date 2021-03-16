@@ -1,3 +1,10 @@
+/*
+  DEPRECATED
+  Was used for the original SSC Overview pages
+  Multi bar chart
+  Horizontal bottom legend with clickable links
+  line chart for average of bars
+*/
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
@@ -135,7 +142,7 @@ export default class BarChartDetailed extends React.PureComponent {
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
     return ReactDOMServer.renderToString(
-      <div className="tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="tooltip subtle-subtext" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
         {`${d[0].id}: ${d[0].value}`}
       </div>
     );
@@ -163,7 +170,7 @@ export default class BarChartDetailed extends React.PureComponent {
                 <div className="legend-title" id={id.replace(/[^A-Z0-9]+/ig, "")}>
                   <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
                 </div>
-                <div className={`link ${value && value.substring(1)}`} >
+                <div className={`link subtle-text ${value && value.substring(1)}`} >
                   <a>Learn More</a>
                 </div>
               </div>)

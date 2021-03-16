@@ -79,7 +79,7 @@ export default class HorizontalBarChart extends React.PureComponent {
               <StarsIcon style={{ color: '#FFB71B', fontSize: 26, marginBottom: 8 }} />
               <span className="chart-title">{this.props.title}</span>
             </Grid>
-            <Grid item xs={12} className="chart-subtitle" style={{ textAlign: 'center', marginBottom: 40 }}>
+            <Grid item xs={12} className="chart-subtitle subtle-subtext" style={{ textAlign: 'center', marginBottom: 40 }}>
               {this.props.subTitle}
             </Grid>
             {this.props.dataPoints && this.props.dataPoints.map((point) => {
@@ -102,7 +102,7 @@ export default class HorizontalBarChart extends React.PureComponent {
                 </Grid>)
             })}
           </Grid>
-          <div className="horizontal-footer">
+          <div className="horizontal-footer subtle-subtext">
             {this.props.footer}
           </div>
         </div>

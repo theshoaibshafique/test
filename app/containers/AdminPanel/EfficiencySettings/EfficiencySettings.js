@@ -3,7 +3,6 @@ import Button from '@material-ui/core/Button';
 import globalFuncs from '../../../utils/global-functions';
 import './style.scss';
 import { Divider, FormControl, MenuItem, Select } from '@material-ui/core';
-import globalFunctions from '../../../utils/global-functions';
 
 export default class EfficiencySettings extends React.PureComponent {
   constructor(props) {
@@ -67,7 +66,7 @@ export default class EfficiencySettings extends React.PureComponent {
     const fcotsThreshold = this.props.fcotsThreshold;
     const turnoverThreshold = this.props.turnoverThreshold;
     if ((newFCOTThreshold != fcotsThreshold && this.props.hasEMR) || newOutlierThreshold != turnoverThreshold) {
-      return <div className="warning">If you leave without saving, changes will be discarded</div>
+      return <div className="warning subtle-subtext">If you leave without saving, changes will be discarded</div>
     }
     return <div></div>
   }
@@ -79,12 +78,12 @@ export default class EfficiencySettings extends React.PureComponent {
         <div className="title">
           First Case On-Time Settings
         </div>
-        <div className="no-emr">Settings are unavailable without case schedule data.</div>
+        <div className="no-emr subtle-subtext">Settings are unavailable without case schedule data.</div>
         <div className="grace-period">
-          <div className="subtitle">
+          <div className="subtitle subtle-subtext">
             Grace Period
           </div>
-          <div className="content">
+          <div className="content subtle-subtext">
           Grace Period is applied to the case start time when classifying a first case as on-time. Changes in Grace Period will be reflected in historical data.
           </div>
           <div className="selectors">
@@ -115,10 +114,10 @@ export default class EfficiencySettings extends React.PureComponent {
         <div className="title">
           Turnover Time Settings
         </div>
-        <div className="subtitle">
+        <div className="subtitle subtle-subtext">
           Outlier Threshold
         </div>
-        <div className="content">
+        <div className="content subtle-subtext">
           Outlier Threshold sets the cut-off for whether a turnover is considered for Turnover Time analytics. Changes in Outlier Threshold will be reflected in historical data.
         </div>
         <div className="selectors">

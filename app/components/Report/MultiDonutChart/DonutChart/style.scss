@@ -21,13 +21,6 @@
     line-height: 42px;
   }
   
-  .donut-subtitle,
-  .donut-unit {
-    font-family: "Noto Sans";
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 19px;
-  }
   .donut-unit{
     color: #004f6e;
   }
@@ -38,18 +31,6 @@
     content: " \25CF";
     font-size: 32px;
     line-height: 0;
-  }
-  .tooltip {
-    color: #fff;
-    padding: 16px;
-    font-size: 14px;
-    max-width: 300px;
-    word-wrap: break-word;
-    font-family: "Noto Sans";
-    font-weight: 500 !important;
-    line-height: 19px;
-    border-radius: 4px;
-    background-color: rgba(97, 97, 97, 0.9);
   }
   path {
     stroke-width: 0;

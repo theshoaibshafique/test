@@ -4,13 +4,6 @@
     cursor: pointer;
 }
 .month-range-picker{
-    .report-date{
-        opacity: 0.8;
-        color: #000000;
-        font-size: 14px;
-        letter-spacing: 0;
-        line-height: 19px;
-    }
     .DateRangePickerInput *{
         font-family: "Noto Sans" !important;
     }
@@ -25,11 +18,7 @@
     }
     .display-warning{
         padding: 16px;
-        font-size: 14px;
         font-weight: bold;
-        letter-spacing: 0;
-        line-height: 19px;
-        opacity: 0.8;
       }
 
     .DateRangePickerInput,

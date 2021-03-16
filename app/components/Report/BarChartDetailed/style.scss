@@ -7,14 +7,7 @@
     line-height: 36px;
     margin-bottom: 16px !important;
   }
-  
-  .chart-subtitle{
-    font-size: 14px;
-    font-style: italic;
-    letter-spacing: 0;
-    line-height: 19px;
-    margin-bottom: 32px;
-  }
+
   .chart-score{
     color: #005979;
     font-family: "Noto Sans";
@@ -28,9 +21,6 @@
   .link{
     color: #028CC8;
     font-family: "Noto Sans";
-    font-size: 12px;
-    letter-spacing: 0;
-    line-height: 17px;
     text-align: left;
     margin-left: 24px;
   }
@@ -92,12 +82,10 @@
   .tooltip{
     color: #fff;
     padding: 16px;
-    font-size: 14px;
     max-width: 300px;
     word-wrap: break-word;
     font-family: "Noto Sans";
     font-weight: 500 !important;
-    line-height: 19px;
     border-radius: 4px;
     background-color: rgba(97, 97, 97, 0.9);
   }

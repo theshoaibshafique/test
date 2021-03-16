@@ -35,7 +35,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
                     icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
                     checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                     />}
-                label={<div className="show-only-ae">Only show steps with AE</div>}
+                label={<div className="show-only-ae subtle-subtext">Only show steps with AE</div>}
               />
              </div>
     } else if (isOpenProcedure){
@@ -84,7 +84,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
     let dataToShow = (isOpenProcedure) ? enhancedMMOpenData : phaseData;
     return (
       <div>
-        <div className="phase-events-title">
+        <div className="phase-events-title subtle-subtext">
           {this.getEventsTitle(isOpenProcedure)}
         </div>
         <div>
@@ -93,7 +93,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
             if (!showOnlyAE || (showOnlyAE && data.dataPoints.length > 0)) {
               return <div className={`phase-events ${this.shouldHighlight(data.startTime, data.endTime, index, isLapProcedure)}`} key={`dataPoints${index}`}>
                         <div key={`phaseEvent${index}`}
-                          className="time-select"
+                          className="time-select subtle-subtext"
                           onClick={() => this.aeSelected(data.startTime, data.assets[0], index, isLapProcedure)}>
                             {this.getAEEventTitle(data, index, isOpenProcedure)}
                         </div>
@@ -103,7 +103,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
                             <div className="event flex" onClick={() => this.aeSelected(data.startTime, data.assets[0], index)}><div className="event-circle" />{data.title}</div>
                         }
                         {data.dataPoints.map((aeEvent, index) => {
-                          return <div key={`aeEvent${index}`} className="event flex" onClick={()=>this.props.seekVideo(parseInt(aeEvent.valueX))}>
+                          return <div key={`aeEvent${index}`} className="event subtle-subtext flex" onClick={()=>this.props.seekVideo(parseInt(aeEvent.valueX))}>
                                   <div className="event-circle" />{aeEvent.title}
                                 </div>
                           })

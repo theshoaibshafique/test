@@ -54,7 +54,7 @@ const ChecklistAnalysis = (props) => {
                   key={`checklistData${index}`}
                   className="checklist-data">
                   <h3 className="main-text center-align">{title}</h3>
-                  <h5 className="main-text center-align"><em>{subTitle}</em></h5>
+                  <h5 className="main-text subtle-subtext center-align"><em>{subTitle}</em></h5>
                   <Grid container spacing={0}>
                     <Grid item xs={6}>
                       <CheckListData data={enhancedMMData[0]} showInRed={showInRed} />

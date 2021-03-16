@@ -139,7 +139,7 @@ export default class LineChart extends React.PureComponent {
           <Grid item xs={12}>
             {<C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />}
           </Grid>
-          <Grid item xs={12} className="chart-label">
+          <Grid item xs={12} className="chart-label subtle-text">
             {this.props.xAxis}
           </Grid>
         </Grid>

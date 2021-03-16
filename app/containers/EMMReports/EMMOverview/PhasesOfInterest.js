@@ -23,7 +23,7 @@ class PhasesOfInterest extends React.Component {
           filteredPhases.map((phase, index) => {
             return <div className="phase-of-interest" key={`phaseOfInterest${index}`}>
                     <div className="phase-title text-ellipsis" title={phase.title} onClick={()=>this.selectPhaseOfInterest(phase.valueX)}>{phase.title}</div>
-                    <div className="phase-event main-text flex"><div className="event-circle"></div>{phase.valueY}</div>
+                    <div className="phase-event subtle-subtext main-text flex"><div className="event-circle"></div>{phase.valueY}</div>
                    </div>
           })
         }

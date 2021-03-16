@@ -184,14 +184,14 @@ export default class StackedBarChart extends React.PureComponent {
     if (tooltipData.length == 0) {
       let x = this.state.xData[d[0].x];
       return ReactDOMServer.renderToString(
-        <div className="chartTooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div className="chartTooltip subtle-subtext" >
           <div>{`${this.props.description ? this.props.description : ''}${d[0].id}`}</div>
           <div>{`${x}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
         </div>
       );
     } else {
       return ReactDOMServer.renderToString(
-        <div className="chartTooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div className="chartTooltip subtle-subtext" >
           {tooltipData.map((line) => {
             return <div>{line}</div>
           })}

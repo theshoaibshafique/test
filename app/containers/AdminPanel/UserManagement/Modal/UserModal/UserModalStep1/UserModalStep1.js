@@ -343,7 +343,7 @@ class UserModalStep1 extends React.Component {
             </Grid>
 
             {(this.props.errorMsgVisible || this.state.errorMsgVisible) &&
-              <Grid item xs={12}><p className="Paragraph-Error">{this.props.errorMsg}</p></Grid>
+              <Grid item xs={12}><p className="Paragraph-Error subtle-subtext">{this.props.errorMsg}</p></Grid>
             }
             <Grid item xs={12}>
               <Grid container justify="flex-end">

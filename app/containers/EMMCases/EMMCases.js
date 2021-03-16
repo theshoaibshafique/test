@@ -31,7 +31,7 @@ const EMMCasesTable = (props) => {
                   <TableCell style={{width:"20%"}} align="left">
                     {(cases.reportPublished) ?
                       <Button type="submit" variant="outlined" className="open-report" onClick={() => openReport(cases.enhancedMMReferenceName)}><span>Open Report</span></Button> :
-                      <span className="in-progress">In-Progress</span>}
+                      <span className="in-progress subtle-subtext">In-Progress</span>}
                   </TableCell>
                 </TableRow>
               })

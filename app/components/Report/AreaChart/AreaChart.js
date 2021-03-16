@@ -1,3 +1,8 @@
+/*
+  DEPRECATED
+  A Line chart with a gradient underneath and numbers above the points
+*/
+
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
