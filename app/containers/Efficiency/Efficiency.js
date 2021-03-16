@@ -4,11 +4,10 @@ import axios from 'axios';
 import 'c3/c3.css';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
-import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, Button, Tab, Tabs, withStyles } from '@material-ui/core';
+import { Grid, Divider, CardContent, Card, Modal, DialogContent, IconButton, Button } from '@material-ui/core';
 import { mdiCogOutline } from '@mdi/js';
 import Icon from '@mdi/react'
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
-import alphaTag from 'images/alpha-tag.svg';
 import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import LoadingOverlay from 'react-loading-overlay';
@@ -26,53 +25,7 @@ import { NavLink } from 'react-router-dom';
 import NoData from '../../components/Report/NoData/NoData';
 import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
 import TimeSeriesAreaChart from '../../components/Report/TimeSeriesAreaChart/TimeSeriesAreaChart';
-
-const StyledTabs = withStyles({
-  root: {
-    boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
-    marginTop: 8
-  },
-  indicator: {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    height: 5,
-    '& > span': {
-      width: '100%',
-      backgroundColor: '#028CC8',
-    },
-  },
-})((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
-
-const StyledTab = withStyles((theme) => ({
-  root: {
-    textTransform: 'none',
-    fontSize: 14,
-    fontFamily: 'Noto Sans',
-    fontWeight: 'bold',
-    color: 'rgba(0,0,0,.8) !important',
-    marginRight: theme.spacing(1),
-    '&:focus': {
-      opacity: 1,
-    },
-  },
-}))((props) => <Tab disableRipple {...props} />);
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`nav-tabpanel-${index}`}
-      aria-labelledby={`nav-tab-${index}`}
-      {...other}
-    >
-      {value === index && children}
-    </div>
-  );
-}
+import { StyledTab, StyledTabs, TabPanel } from '../../components/SharedComponents/SharedComponents';
 
 export default class Efficiency extends React.PureComponent {
   constructor(props) {
