@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
-import globalFuncs from '../../../utils/global-functions';
 import './style.scss';
-import { Card, Checkbox, Divider, FormControlLabel, Grid, Slider, Switch, Tooltip, withStyles } from '@material-ui/core';
+import { Card, Checkbox, Divider, FormControlLabel, Grid, Slider, Switch, withStyles } from '@material-ui/core';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react'
-import { SSC_CONFIG } from '../../../constants';
+import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 
 const SSTSwitch = withStyles((theme) => ({
   root: {
@@ -87,15 +86,6 @@ const SSTSlider = withStyles({
     borderRadius: 4,
   },
 })(Slider);
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
 
 function PhaseItem(props) {
   const { isActive, questionName, questionId, cIndex, pIndex, qIndex, togglePhase } = props;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Tooltip, withStyles } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import './style.scss';
 import moment from 'moment/moment';
@@ -8,16 +8,8 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ReactDOMServer from 'react-dom/server';
 import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
 import Icon from '@mdi/react'
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
 export default class MultiTimeSeriesChart extends React.PureComponent {
   constructor(props) {
     super(props);

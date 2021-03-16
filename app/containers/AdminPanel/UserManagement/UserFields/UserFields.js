@@ -4,22 +4,11 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Grid, Tooltip, withStyles} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Icon from '@mdi/react'
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
-
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
-
-
+import { LightTooltip } from '../../../../components/SharedComponents/SharedComponents';
 class UserFields extends React.Component {
   constructor(props) {
     super(props);

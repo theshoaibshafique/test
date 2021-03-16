@@ -7,15 +7,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import moment from 'moment/moment';
 import globalFunctions from '../../../utils/global-functions';
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 
 export default class StackedBarChart extends React.PureComponent {
   constructor(props) {

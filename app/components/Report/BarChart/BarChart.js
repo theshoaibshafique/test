@@ -8,15 +8,7 @@ import moment from 'moment/moment';
 import { NavLink } from 'react-router-dom';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import globalFunctions from '../../../utils/global-functions';
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 export default class BarChart extends React.PureComponent {
   constructor(props) {
     super(props);

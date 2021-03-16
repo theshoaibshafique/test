@@ -4,16 +4,7 @@ import './style.scss';
 import DonutChart from './DonutChart/DonutChart';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Histogram from './Histogram/Histogram';
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
-
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 const colors = {
   'other': '#F3F3F3',
   "Timeout Engagement": "#97E7B3",

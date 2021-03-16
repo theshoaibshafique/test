@@ -1,20 +1,10 @@
 import React from 'react';
-import { Grid, Tooltip, withStyles } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import './style.scss';
 import { NavLink } from 'react-router-dom';
-
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
-
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 export default function NoData(props) {
   return (
     <Grid container spacing={0} className={`no-data-tile ${props.title && props.title.replace(/[^A-Z0-9]+/ig, "")}`} direction="column">

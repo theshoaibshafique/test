@@ -1,18 +1,9 @@
 import React from 'react';
 import './style.scss';
-import { Grid, withStyles, Tooltip } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 import globalFunctions from '../../../utils/global-functions';
-
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 
 export default class ListDetailed extends React.PureComponent {
   constructor(props) {

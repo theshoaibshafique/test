@@ -1,6 +1,6 @@
 import React from 'react';
 import './style.scss';
-import { Grid, Paper, Tooltip, withStyles } from '@material-ui/core';
+import { Grid, Paper, withStyles } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { mdiVolumeVibrate, mdiDivingScubaTank, mdiResistor, mdiThermometerLow, mdiTrendingUp, mdiWater, mdiAlertRhombusOutline, mdiSpeedometer, mdiSpeedometerMedium, mdiSpeedometerSlow } from '@mdi/js';
 import { EMM_DISTRACTION_TOOLTIP, EMM_TECHNICAL_TOOLTIP, EMM_ADVERSEEVENT_TOOLTIP, HL7_DATA } from '../../../constants'
@@ -11,17 +11,13 @@ import SurgicalSafetyChecklist from './SurgicalSafetyChecklist';
 import globalFuncs from '../../../utils/global-functions';
 import Icon from '@mdi/react'
 import HorizontalBarChart from './HorizontalBarChart';
+import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 
-const LightTooltip = withStyles((theme) => ({
+const CustomLightTooltip = withStyles((theme) => ({
   tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    font: 'Noto Sans',
     maxWidth: 500
   },
-}))(Tooltip);
+}))(LightTooltip);
 
 export default class EMMOverview extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -104,9 +100,9 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                 <Paper className="Emm-Paper Score">
                   <div className="Section-Title">
                     {distractionScore.title}
-                    <LightTooltip interactive arrow title={EMM_DISTRACTION_TOOLTIP} placement="top" fontSize="small">
+                    <CustomLightTooltip interactive arrow title={EMM_DISTRACTION_TOOLTIP} placement="top" fontSize="small">
                       <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
-                    </LightTooltip>
+                    </CustomLightTooltip>
                   </div>
                   <div>
                     <span className="EMM-Score">{distractionScore.dataPoints[0].valueX}</span>
@@ -118,9 +114,9 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                 <Paper className="Emm-Paper Score">
                   <div className="Section-Title">
                     {technicalPerformanceScore.title}
-                    <LightTooltip interactive arrow title={EMM_TECHNICAL_TOOLTIP} placement="top" fontSize="small">
+                    <CustomLightTooltip interactive arrow title={EMM_TECHNICAL_TOOLTIP} placement="top" fontSize="small">
                       <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
-                    </LightTooltip>
+                    </CustomLightTooltip>
                   </div>
                   <div>
                     <span className="EMM-Score">{
@@ -137,9 +133,9 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                 <Paper className="Emm-Paper Score">
                   <div className="Section-Title">
                     {adverseEventRate.title}
-                    <LightTooltip interactive arrow title={EMM_ADVERSEEVENT_TOOLTIP} placement="top" fontSize="small">
+                    <CustomLightTooltip interactive arrow title={EMM_ADVERSEEVENT_TOOLTIP} placement="top" fontSize="small">
                       <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
-                    </LightTooltip>
+                    </CustomLightTooltip>
                   </div>
                   <div>
                     <span className="EMM-Score">{adverseEventRateTitle}<span style={{ fontSize: '26px' }}>/hr</span></span>
@@ -152,14 +148,14 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                 <Paper className="Emm-Paper Score">
                   <Grid container spacing={9}>
                     <Grid item xs={4} className="EMM-HL7 relative">
-                      {hasHypotension ? <LightTooltip interactive arrow title={hypotension.body} placement="top" fontSize="small">
+                      {hasHypotension ? <CustomLightTooltip interactive arrow title={hypotension.body} placement="top" fontSize="small">
                         <span className="Score-Speedometer">{this.getSpeedometer(hypotension.description)}</span>
-                      </LightTooltip> : ''}
+                      </CustomLightTooltip> : ''}
                       <div className="Section-Title">
                         Hypotension
-                        {hasHypotension ? <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypotension.dataPoints} title={hypotension.subTitle} />} placement="top" fontSize="small">
+                        {hasHypotension ? <CustomLightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypotension.dataPoints} title={hypotension.subTitle} />} placement="top" fontSize="small">
                           <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
-                        </LightTooltip> : ''}
+                        </CustomLightTooltip> : ''}
                       </div>
                       <div>
                         <span className="EMM-Score">{
@@ -175,15 +171,15 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                       </div>
                     </Grid>
                     <Grid item xs={4} className="EMM-HL7 relative">
-                      {hasHypothermia ? <LightTooltip interactive arrow title={hypothermia.body} placement="top" fontSize="small">
+                      {hasHypothermia ? <CustomLightTooltip interactive arrow title={hypothermia.body} placement="top" fontSize="small">
                         <span className="Score-Speedometer">{this.getSpeedometer(hypothermia.description)}</span>
-                      </LightTooltip> : ''}
+                      </CustomLightTooltip> : ''}
                       <div className="Section-Divider" />
                       <div className="Section-Title">
                         Hypothermia
-                        {hasHypothermia ? <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypothermia.dataPoints} title={hypothermia.subTitle} />} placement="top" fontSize="small">
+                        {hasHypothermia ? <CustomLightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypothermia.dataPoints} title={hypothermia.subTitle} />} placement="top" fontSize="small">
                           <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
-                        </LightTooltip> : ''}
+                        </CustomLightTooltip> : ''}
                       </div>
                       <div>
                         <span className="EMM-Score">{
@@ -195,15 +191,15 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                       </div>
                     </Grid>
                     <Grid item xs={4} className="EMM-HL7 relative">
-                      {hasHypoxia ? <LightTooltip interactive arrow title={hypoxia.body} placement="top" fontSize="small">
+                      {hasHypoxia ? <CustomLightTooltip interactive arrow title={hypoxia.body} placement="top" fontSize="small">
                         <span className="Score-Speedometer" style={{ marginRight: 10 }}>{this.getSpeedometer(hypoxia.description)}</span>
-                      </LightTooltip> : ''}
+                      </CustomLightTooltip> : ''}
                       <div className="Section-Divider" />
                       <div className="Section-Title">
                         Hypoxia
-                        {hasHypoxia ? <LightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypoxia.dataPoints} title={hypoxia.subTitle} />} placement="top" fontSize="small">
+                        {hasHypoxia ? <CustomLightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypoxia.dataPoints} title={hypoxia.subTitle} />} placement="top" fontSize="small">
                           <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
-                        </LightTooltip> : ''}
+                        </CustomLightTooltip> : ''}
                       </div>
                       <div>
                         <span className="EMM-Score">{

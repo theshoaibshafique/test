@@ -1,20 +1,12 @@
 import React from 'react';
-import { Divider, Grid, Tooltip, withStyles } from '@material-ui/core';
+import { Divider, Grid } from '@material-ui/core';
 import C3Chart from 'react-c3js';
 import ReactDOMServer from 'react-dom/server';
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
 export default class ScatterPlot extends React.PureComponent {
   constructor(props) {
     super(props);

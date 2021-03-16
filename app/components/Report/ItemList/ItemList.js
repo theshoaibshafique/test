@@ -22,20 +22,12 @@ const tableIcons = {
 };
 import './style.scss';
 
-import MaterialTable, { MTableHeader } from 'material-table';
+import MaterialTable from 'material-table';
 import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react'
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
 export default class ItemList extends React.PureComponent {
   constructor(props) {
     super(props);

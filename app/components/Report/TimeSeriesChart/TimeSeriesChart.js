@@ -8,16 +8,8 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ReactDOMServer from 'react-dom/server';
 import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
 import Icon from '@mdi/react'
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
 export default class TimeSeriesChart extends React.PureComponent {
   constructor(props) {
     super(props);

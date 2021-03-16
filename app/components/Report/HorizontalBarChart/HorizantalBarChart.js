@@ -1,9 +1,10 @@
 import React from 'react';
-import { Grid, withStyles, LinearProgress, Tooltip } from '@material-ui/core';
+import { Grid, withStyles, LinearProgress } from '@material-ui/core';
 import StarsIcon from '@material-ui/icons/Stars';
 
 import './style.scss';
 import LoadingOverlay from 'react-loading-overlay';
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 
 const BorderLinearProgress = withStyles({
   root: {
@@ -14,17 +15,11 @@ const BorderLinearProgress = withStyles({
     backgroundColor: '#FFDB8C',
   },
 })(LinearProgress);
-
-const LightTooltip = withStyles((theme) => ({
+const CustomLightTooltip = withStyles((theme) => ({
   tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans',
     maxWidth: 200
-  }
-}))(Tooltip);
+  },
+}))(LightTooltip);
 
 export default class HorizontalBarChart extends React.PureComponent {
   constructor(props) {
@@ -97,12 +92,12 @@ export default class HorizontalBarChart extends React.PureComponent {
                     {point.description}
                   </Grid>
                   <Grid item xs={12} className="horizontal-bar" style={{ marginBottom: 40 }}>
-                    <LightTooltip title={this.renderTooltip(point)} placement="top" fontSize="small">
+                    <CustomLightTooltip title={this.renderTooltip(point)} placement="top" fontSize="small">
                       <BorderLinearProgress
                         variant="determinate"
                         value={parseInt(point.description)}
                       />
-                    </LightTooltip>
+                    </CustomLightTooltip>
                   </Grid>
                 </Grid>)
             })}

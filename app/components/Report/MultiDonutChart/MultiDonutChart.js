@@ -1,17 +1,9 @@
 import React from 'react';
-import { Grid, Tooltip, withStyles, Divider } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import './style.scss';
 import DonutChart from './DonutChart/DonutChart';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 
 const colors = {
   'other': '#F3F3F3',

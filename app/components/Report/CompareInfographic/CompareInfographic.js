@@ -3,17 +3,7 @@ import { Grid, Tooltip, withStyles } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import './style.scss';
-import LoadingOverlay from 'react-loading-overlay';
-
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    boxShadow: theme.shadows[1],
-    padding: '16px',
-    fontSize: '14px',
-    lineHeight: '19px',
-    fontFamily: 'Noto Sans'
-  }
-}))(Tooltip);
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 
 export default class CompareInfographic extends React.PureComponent {
   constructor(props) {
