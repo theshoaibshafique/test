@@ -164,12 +164,12 @@ export default class Efficiency extends React.PureComponent {
   }
 
   async getConfig() {
-    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config?facilityName=" + this.props.userFacility, 'get', this.props.userToken, {})
+    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "/config?facility_id=" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
         if (!result) {
           return;
         }
-        result = JSON.parse(result)
+        // result = JSON.parse(result)
 
         let earliestStartDate = moment(result.startDate);
         let latestEndDate = moment(result.endDate).endOf('day');
@@ -285,7 +285,7 @@ export default class Efficiency extends React.PureComponent {
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
-              result = JSON.parse(result);
+              // result = JSON.parse(result);
 
               if (result.tiles && result.tiles.length > 0) {
                 const reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));

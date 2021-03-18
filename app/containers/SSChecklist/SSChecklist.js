@@ -74,12 +74,12 @@ export default class SSChecklist extends React.PureComponent {
   };
 
   async getConfig() {
-    return await globalFunctions.genericFetch(process.env.SSC_API + "2/config?facilityName=" + this.props.userFacility, 'get', this.props.userToken, {})
+    return await globalFunctions.genericFetch(process.env.SSC_API + "/config?facility_id=" + this.props.userFacility, 'get', this.props.userToken, {})
       .then(result => {
         if (!result) {
           return;
         }
-        result = JSON.parse(result)
+        // result = JSON.parse(result)
 
         let earliestStartDate = moment(result.startDate);
         let latestEndDate = moment(result.endDate).endOf('day');
@@ -173,14 +173,14 @@ export default class SSChecklist extends React.PureComponent {
           "roomId": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.id || null,
           "specialtyName": specialty == "" ? null : specialty,
         }
-        globalFunctions.axiosFetch(process.env.SSC_API + "2/tile", 'post', this.props.userToken, jsonBody, this.state.source.token)
+        globalFunctions.axiosFetch(process.env.SSC_API + "/tile", 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
             result = result.data;
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
               // result = COMPLIANCE;
-              result = JSON.parse(result);
+              // result = JSON.parse(result);
               if (result.tiles && result.tiles.length > 0) {
                 const reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
                 this.setState({ reportData, isLoading: false });

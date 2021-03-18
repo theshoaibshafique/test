@@ -76,48 +76,48 @@ export default class AdminPanel extends React.PureComponent {
   }
 
   async getEfficiencyConfig() {
-    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "2/config?facilityName=" + this.props.facilityName, 'get', this.props.userToken, {})
+    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "/config?facility_id=" + this.props.facilityName, 'get', this.props.userToken, {})
       .then(result => {
         if (!result) {
           return;
         }
-        result = JSON.parse(result)
+        // result = JSON.parse(result)
         this.setState({ fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, hasEMR: result.hasEMR });
       });
 
   }
 
   async submitEfficiencyConfig(jsonBody) {
-    const url = `${process.env.EFFICIENCY_API}2/config`;
+    const url = `${process.env.EFFICIENCY_API}/config`;
     return await globalFunctions.genericFetch(url, 'put', this.props.userToken, jsonBody)
       .then(result => {
         if (!result) {
           return;
         }
-        result = JSON.parse(result)
+        // result = JSON.parse(result)
         this.setState({ fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, hasEMR: result.hasEMR });
       });
   }
 
   async getSSCConfig() {
-    return await globalFunctions.genericFetch(process.env.SSC_API + "2/config?facilityName=" + this.props.facilityName, 'get', this.props.userToken, {})
-      .then(result => {
-        if (!result) {
+    return await globalFunctions.genericFetch(process.env.SSC_API + "/config?facility_id=" + this.props.facilityName, 'get', this.props.userToken, {})
+      .then(sscConfig => {
+        if (!sscConfig) {
           return;
         }
-        const sscConfig = JSON.parse(result);
+        // const sscConfig = JSON.parse(result);
         this.setState({ sscConfig });
       });
   }
 
   async submitSSCConfig(jsonBody) {
-    const url = `${process.env.SSC_API}2/config`;
+    const url = `${process.env.SSC_API}/config`;
     return await globalFunctions.genericFetch(url, 'put', this.props.userToken, jsonBody)
-      .then(result => {
-        if (!result) {
+      .then(sscConfig => {
+        if (!sscConfig) {
           return;
         }
-        const sscConfig = JSON.parse(result);
+        // const sscConfig = JSON.parse(result);
         this.setState({ sscConfig });
       });
   }
