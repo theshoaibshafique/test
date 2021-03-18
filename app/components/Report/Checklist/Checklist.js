@@ -67,14 +67,14 @@ export default class Checklist extends React.PureComponent {
         }}
       >
         <Grid container className={`checklist ${this.props.body ? 'checklist-complete' : ''}`} direction="column" spacing={0} >
-          {!this.props.body && <Grid item xs={12} className="chart-title">
+          {!this.props.body && <Grid item xs={12} className="chart-title normal-text">
             {this.props.subTitle}
           </Grid>}
           <Grid item xs={12} >
             {this.props.body && this.props.subTitle
             ? <div><div className="no-data">{this.props.body}</div> <div className="no-data-subtitle">{this.props.subTitle}</div></div>
             : this.props.body ? 
-              <div className="display-text">{this.props.body}</div>
+              <div className="display-text normal-text">{this.props.body}</div>
               : this.renderList()}
           </Grid>
           <Grid item xs={12} className="link subtle-text" onClick={() => this.props.openModal({...this.props,tileType:this.props.footer,reportName:this.props.total})}>

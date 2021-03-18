@@ -11,7 +11,7 @@ export function GenericInformationPage(props) {
           {title}
         </Grid>
         <div item xs className="title-break"></div>
-        <Grid item xs className="content">
+        <Grid item xs className="content normal-text">
           {content}
         </Grid>
       </Grid>

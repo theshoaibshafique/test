@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import Icon from '@mdi/react'
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
@@ -188,7 +188,7 @@ class UserFields extends React.Component {
             helperText={!this.state.validTitle ? 'Please enter a title' : this.props.fieldErrors.title}
           />
         </Grid>
-        <Grid item xs={12} className="subtitle">
+        <Grid item xs={12} className="subtitle normal-text">
           Permissions (Optional)
         </Grid>
         <Grid item xs={12} style={{ paddingTop: 0 }}>
@@ -207,7 +207,7 @@ class UserFields extends React.Component {
                   value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
                 />
               }
-              label="Admin"
+              label={<Typography className="subtext">Admin</Typography>}
             />}
             {this.includesRole("Enhanced M&M View") && <FormControlLabel
               control={
@@ -224,7 +224,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View"
                 />
               }
-              label="Enhanced M&M View Report"
+              label={<Typography className="subtext">Enhanced M&M View Report</Typography>}
             />}
             {this.includesRole("Enhanced M&M Edit") && <FormControlLabel
               control={
@@ -241,7 +241,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
                 />
               }
-              label="Enhanced M&M Request"
+              label={<Typography className="subtext">Enhanced M&M Request</Typography>}
             />}
             {this.includesRole("Enhanced M&M Presenter") && <FormControlLabel
               control={
@@ -258,7 +258,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter"
                 />
               }
-              label={<div>Enhanced M&M Presenter<LightTooltip interactive arrow title={"This permission enables the user to access Presentation Mode for Enhanced M&M Reports. Presentation Mode will cause the videos to no longer be secured but will enable sharing over video conferencing tools. This feature can be found above the video player for each report."} placement="top" fontSize="small">
+              label={<div className="subtext">Enhanced M&M Presenter<LightTooltip interactive arrow title={"This permission enables the user to access Presentation Mode for Enhanced M&M Reports. Presentation Mode will cause the videos to no longer be secured but will enable sharing over video conferencing tools. This feature can be found above the video player for each report."} placement="top" fontSize="small">
                 <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
               </LightTooltip></div>}
             />}
@@ -277,7 +277,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist"
                 />
               }
-              label="Surgical Safety Checklist"
+              label={<Typography className="subtext">Surgical Safety Checklist</Typography>}
             />}
             {this.includesRole("Efficiency") && <FormControlLabel
               control={
@@ -294,7 +294,7 @@ class UserFields extends React.Component {
                   value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Efficiency"
                 />
               }
-              label="Efficiency"
+              label={<Typography className="subtext">Efficiency</Typography>}
             />}
           </FormControl>
         </Grid>

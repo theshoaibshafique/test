@@ -8,13 +8,7 @@
 }
 .scatter-plot {
     .chart-title {
-        opacity: 0.8;
-        color: #000000;
-        font-family: "Noto Sans";
-        font-size: 18px;
         font-weight: bold;
-        letter-spacing: 0;
-        line-height: 24px;
         margin-bottom: 16px;
     }
     circle.c3-selected-circle {
@@ -54,4 +48,15 @@
         stroke-dasharray: unset;
         stroke: #eaeaea;
     }
+    .tooltip {
+        color: #fff;
+        padding: 16px;
+        text-align: left;
+        max-width: 300px;
+        word-wrap: break-word;
+        font-family: "Noto Sans";
+        font-weight: 500 !important;
+        border-radius: 4px;
+        background-color: rgba(97, 97, 97, 0.9);
+      }
 }

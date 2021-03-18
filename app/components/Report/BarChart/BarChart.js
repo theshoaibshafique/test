@@ -184,14 +184,14 @@ export default class BarChart extends React.PureComponent {
     let tooltipData = this.state.tooltipData && this.state.tooltipData[d[0].x] || []
     if (tooltipData.length == 0) {
       return ReactDOMServer.renderToString(
-        <div className="MuiTooltip-tooltip tooltip subtle-subtext" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div className="tooltip subtle-subtext">
           <div>{`${x}${this.props.footer ? this.props.footer : ''}: ${d[0].value}${this.props.unit ? this.props.unit : ''}`}</div>
           {z != null && <div>{`Occurence(s): ${z}`}</div>}
           {desc != null && <div>{`${desc}`}</div>}
         </div>);
     } else {
       return ReactDOMServer.renderToString(
-        <div className="MuiTooltip-tooltip tooltip subtle-subtext" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+        <div className="tooltip subtle-subtext">
           {tooltipData.map((line) => {
             return <div>{line}</div>
           })}
@@ -206,7 +206,7 @@ export default class BarChart extends React.PureComponent {
       return <div><div className="no-data">{body}</div> <div className="no-data-subtitle">{subTitle}</div></div>
     }
     if (body || description){
-      return <div className="display-text">{body || description}</div>
+      return <div className="display-text normal-text">{body || description}</div>
     }
     return <C3Chart className={this.state.chartID} ref={this.chartRef} {...this.state.chartData} />
   }
@@ -244,7 +244,7 @@ export default class BarChart extends React.PureComponent {
             {this.renderBody()}
           </Grid>
           <Grid item xs>
-            {this.props.url && <NavLink to={this.props.url} className='link'>
+            {this.props.url && <NavLink to={this.props.url} className='link normal-text'>
               {this.props.urlText}
             </NavLink>}
           </Grid>

@@ -5,6 +5,11 @@
   line-height: ($property + 0.2) + rem;
 }
 
+@mixin fontFamily() {
+  font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: rgba(0, 0, 0, 0.8);
+}
+
 $dark-blue : #004f6e;
 $blue: #028CC8;
 $light-blue : #3db3e3;
@@ -84,28 +89,32 @@ label {
 .subtle-text{
   font-size: 12px;
   line-height: 17px;
-  color: rgba(0, 0, 0, 0.8);
+  @include fontFamily();
 }
 .subtle-subtext{
   font-size: 14px;
   line-height: 19px;
-  color: rgba(0, 0, 0, 0.8);
+  @include fontFamily();
 }
 .subtext{
   font-size: 16px;
   line-height: 22px;
+  @include fontFamily();
 }
 .normal-text{
   font-size: 18px;
   line-height: 24px;
+  @include fontFamily();
 }
 .header-2{
   font-size: 26px;
   line-height: 36px;
+  @include fontFamily();
 }
 .header-1{
   font-size: 42px;
   line-height: 57px;
+  @include fontFamily();
 }
 
 

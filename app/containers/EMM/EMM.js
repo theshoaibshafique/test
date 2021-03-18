@@ -106,7 +106,7 @@ export default class EMM extends React.PureComponent {
   renderSpecialtiesProcedures() {
     if (this.state.procedureNames.length) {
       return this.state.procedureNames.map((procedure, index) => {
-        return  <div className="table-row row-font" key={index}>
+        return  <div className="table-row row-font normal-text" key={index}>
                   <div>{procedure}</div>
                 </div>
       });
@@ -139,7 +139,7 @@ export default class EMM extends React.PureComponent {
           <div className="first-column">Date of Complications</div> <div>Operating Room</div>
         </div>
 
-        <div className="table-row table-row-font">
+        <div className="table-row table-row-font normal-text">
           <div className="first-column">{this.state.compDate}</div> <div>{this.state.operatingRoom}</div>
         </div>
 
@@ -153,7 +153,7 @@ export default class EMM extends React.PureComponent {
           <div className="first-column margin-top info-title">Complications</div>
         </div>
 
-        <div className="table-row-font">
+        <div className="table-row-font normal-text">
           <div className="first-column">{this.state.complicationNames}</div>
         </div>
 

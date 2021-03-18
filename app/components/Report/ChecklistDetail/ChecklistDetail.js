@@ -94,12 +94,12 @@ export default class ChecklistDetail extends React.PureComponent {
               <Grid container spacing={0} key={`${i}-${j}`}
                 className={`${isTopItem ? 'top-item' : ''} ${value >= 100 ? 'complete-item' : ''}`}
               >
-                <Grid item xs={10} className={point.subTitle ? "list-subtitle subtle-subtext" : "list-title"}  >
+                <Grid item xs={10} className={point.subTitle ? "list-subtitle subtle-subtext" : "list-title normal-text"}  >
                   {point.subTitle || point.title}
                 </Grid>
                 {point.valueZ
-                  ? <Grid item xs={2} className="list-subtitle-no-data">{point.valueZ}</Grid>
-                  : <Grid item xs={2} className={point.subTitle ? "list-subtitle-value subtle-subtext" : "list-title-value"}>
+                  ? <Grid item xs={2} className="list-subtitle-no-data normal-text">{point.valueZ}</Grid>
+                  : <Grid item xs={2} className={point.subTitle ? "list-subtitle-value subtle-subtext" : "list-title-value normal-text"}>
                     {point.valueX && `${point.valueX}%`}
                   </Grid>}
 
@@ -110,7 +110,7 @@ export default class ChecklistDetail extends React.PureComponent {
                       value={value}
                     />
                 </Grid>}
-                {point.description && <Grid item xs={12} className="list-text">
+                {point.description && <Grid item xs={12} className="list-text normal-text">
                   {point.description}
                 </Grid>}
 

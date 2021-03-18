@@ -26,7 +26,7 @@ export default class NoAccess extends React.PureComponent {
             Access Denied
         </Grid>
           <div item xs className="title-break"></div>
-          <Grid item xs className="content">
+          <Grid item xs className="content normal-text">
             You do not have access to this page. This could be due to a connection issue or a missing permission. Please logout and log back in to try again or contact your administrator.
         </Grid>
         </Grid>

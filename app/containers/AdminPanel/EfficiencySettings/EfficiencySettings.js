@@ -75,7 +75,7 @@ export default class EfficiencySettings extends React.PureComponent {
 
     return (
       <section className={`efficiency-settings-page ${this.props.hasEMR && 'has-emr'}`}>
-        <div className="title">
+        <div className="title normal-text">
           First Case On-Time Settings
         </div>
         <div className="no-emr subtle-subtext">Settings are unavailable without case schedule data.</div>
@@ -106,7 +106,7 @@ export default class EfficiencySettings extends React.PureComponent {
                 ))}
               </Select>
             </FormControl>
-            <span className="unit">min</span>
+            <span className="unit normal-text">min</span>
           </div>
         </div>
         <Divider light style={{ marginBottom: 24 }} />
@@ -140,7 +140,7 @@ export default class EfficiencySettings extends React.PureComponent {
               ))}
             </Select>
           </FormControl>
-          <span className="unit">hr</span>
+          <span className="unit normal-text">hr</span>
           <FormControl variant="outlined" size="small" style={{ width: 85 }} >
             <Select
               MenuProps={{
@@ -160,7 +160,7 @@ export default class EfficiencySettings extends React.PureComponent {
               ))}
             </Select>
           </FormControl>
-          <span className="unit">min</span>
+          <span className="unit normal-text">min</span>
         </div>
         {this.renderSaveWarning()}
         <div className="buttons">

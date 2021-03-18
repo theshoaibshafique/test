@@ -114,7 +114,7 @@ export default class DonutChart extends React.PureComponent {
       return;
     }
     return ReactDOMServer.renderToString(
-      <div className="tooltip subtle-subtext" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {
           return <div>{line}</div>
         })}
@@ -160,9 +160,9 @@ export default class DonutChart extends React.PureComponent {
     }
     d3.select(".donut-chart .c3-chart-arcs-title")
       .attr("dy", -10)
-    d3.select(".donut-chart .c3-chart-arcs-title").attr('class', 'donut-title')
+    d3.select(".donut-chart .c3-chart-arcs-title").attr('class', 'donut-title normal-text')
       .insert("tspan")
-      .html(ReactDOMServer.renderToString(<tspan dy={44} x={0} className="second-title">{this.props.total}<tspan className="donut-unit">{this.props.unit}</tspan></tspan>))
+      .html(ReactDOMServer.renderToString(<tspan dy={44} x={0} className="second-title">{this.props.total}<tspan className="donut-unit normal-text">{this.props.unit}</tspan></tspan>))
 
   }
   render() {

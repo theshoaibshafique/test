@@ -258,7 +258,7 @@ export default class StackedBarChart extends React.PureComponent {
         }}
       >
         <Grid container spacing={0} justify='center' className="stacked-barchart-detailed" style={{ textAlign: 'center', minHeight: 320 }}>
-          <Grid item xs={this.props.horizontalLegend ? 12 : 9} className="chart-title">
+          <Grid item xs={this.props.horizontalLegend ? 12 : 9} className="chart-title normal-text">
             {this.props.title}
           </Grid>
           <Grid item xs={3}></Grid>

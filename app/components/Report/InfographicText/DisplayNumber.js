@@ -32,7 +32,7 @@ export default class DisplayNumber extends React.PureComponent {
         }}
       >
         <Grid container spacing={1} className="display-number-main" direction="column">
-          <Grid item xs className="display-number-title">
+          <Grid item xs className="display-number-title normal-text">
             <span >
               {this.props.title}
               {this.props.tooltipText && <LightTooltip interactive arrow
@@ -47,13 +47,13 @@ export default class DisplayNumber extends React.PureComponent {
           {
             this.props.message
               ?
-              <Grid item xs className="display-number-message">
+              <Grid item xs className="display-number-message normal-text">
                 {this.props.message}
               </Grid>
               :
               <Grid item xs>
-                <span className="display-number">{this.props.number}</span>{this.props.unit && <span className="display-number-unit">{this.props.unit}</span>}
-                {this.props.footer && <span className="display-number-footer">{this.props.footer}</span>}
+                <span className="display-number">{this.props.number}</span>{this.props.unit && <span className="display-number-unit normal-text">{this.props.unit}</span>}
+                {this.props.footer && <span className="display-number-footer normal-text">{this.props.footer}</span>}
               </Grid>
           }
         </Grid>

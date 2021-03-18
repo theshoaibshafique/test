@@ -31,6 +31,6 @@ export default class InfographicParagraph extends React.PureComponent {
 
     render() {
 
-        return <span className="ssc-info">{this.renderFormattedText()}</span>
+        return <span className="ssc-info normal-text">{this.renderFormattedText()}</span>
     }
 }

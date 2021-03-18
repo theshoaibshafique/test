@@ -8,15 +8,6 @@
     letter-spacing: 0;
     line-height: 36px;
   }
-  .chart-score {
-    color: #005979;
-    font-family: "Noto Sans";
-    font-size: 18px;
-    font-weight: bold;
-    letter-spacing: 0;
-    line-height: 24px;
-    text-align: right;
-  }
 
   .c3-axis .tick line {
     opacity: 0;
@@ -69,14 +60,6 @@
     font-weight: 500 !important;
     border-radius: 4px;
     background-color: rgba(97, 97, 97, 0.9);
-  }
-  .display-text {
-    color: #004f6e;
-    font-family: "Noto Sans";
-    font-size: 18px;
-    font-style: italic;
-    letter-spacing: 0;
-    line-height: 24px;
   }
   .c3-axis-y .tick:nth-child(odd),
   .c3-ygrid:nth-child(even) {

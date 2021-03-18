@@ -30,7 +30,7 @@ const EMMCasesTable = (props) => {
                   <TableCell style={{width:"15%"}} onClick={() => redirect(cases.requestId)}>{cases.operatingRoom}</TableCell>
                   <TableCell style={{width:"20%"}} align="left">
                     {(cases.reportPublished) ?
-                      <Button type="submit" variant="outlined" className="open-report" onClick={() => openReport(cases.enhancedMMReferenceName)}><span>Open Report</span></Button> :
+                      <Button type="submit" variant="outlined" className="open-report normal-text" onClick={() => openReport(cases.enhancedMMReferenceName)}><span>Open Report</span></Button> :
                       <span className="in-progress subtle-subtext">In-Progress</span>}
                   </TableCell>
                 </TableRow>
@@ -225,7 +225,7 @@ export default class EMMCases extends React.PureComponent {
             </Grid>
           </form>
           {(this.state.report.requestId || this.state.noMatch) &&
-          <Grid item xs={12} className="search">Search Result</Grid>
+          <Grid item xs={12} className="search normal-text">Search Result</Grid>
           }
           <Grid item xs={12}>
             {(this.state.report.requestId) &&
@@ -242,7 +242,7 @@ export default class EMMCases extends React.PureComponent {
           </Grid>
 
           {(this.state.recentSearch.length > 0) &&
-          <Grid item xs={12}><p className="recent">Recently accessed cases</p></Grid>
+          <Grid item xs={12}><p className="recent normal-text">Recently accessed cases</p></Grid>
           }
           <Grid item xs={12}>
             {(this.state.recentSearch.length > 0) &&

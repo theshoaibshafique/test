@@ -397,7 +397,7 @@ export default class SSChecklist extends React.PureComponent {
       if (this.props.isAdmin) {
         content = (
           <div>
-            The Quality Score analysis has been disabled. To enable this, go to <NavLink to={"/adminPanel/2"} className='link settings'>
+            The Quality Score analysis has been disabled. To enable this, go to <NavLink to={"/adminPanel/2"} className='link settings normal-text'>
               <span className="settings-icon"><Icon color="#028CC8" style={{ marginRight: 4 }} path={mdiCogOutline} size={'24px'} /></span>Settings
             </NavLink> and ensure at least 1 item is checked for any phase.
 

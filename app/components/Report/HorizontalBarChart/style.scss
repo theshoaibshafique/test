@@ -1,5 +1,3 @@
-@import '../../../styles/global-styles';
-
 .horizontal-chart .chart-title{
   font-size: 26px;
   letter-spacing: 0;
@@ -12,11 +10,7 @@
 }
 .horizontal-chart .chart-score{
   color: #005979;
-  font-family: "Noto Sans";
-  font-size: 18px;
   font-weight: bold;
-  letter-spacing: 0;
-  line-height: 24px;
   text-align: right;
 }
 .horizontal-chart .horizontal-bar:hover{

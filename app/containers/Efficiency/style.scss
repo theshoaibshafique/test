@@ -39,10 +39,6 @@ $ssc-picker-height: 150px;
         .link {
             text-decoration: unset;
             color: #028cc8;
-            font-family: "Noto Sans";
-            font-size: 18px;
-            letter-spacing: 0;
-            line-height: 24px;
             text-align: center;
         }
         .bar-chart .display-text {
@@ -74,12 +70,6 @@ $ssc-picker-height: 150px;
     }
 
     .efficiency-select-filter {
-        opacity: 0.8;
-        color: #000000;
-        font-family: "Noto Sans";
-        font-size: 18px;
-        letter-spacing: 0;
-        line-height: 24px;
         text-align: center;
     }
 
@@ -96,13 +86,6 @@ $ssc-picker-height: 150px;
         font-size: 26px;
         letter-spacing: 0;
         line-height: 36px;
-        text-align: center;
-    }
-    .efficiency-message-subtitle {
-        font-family: "Noto Sans";
-        font-size: 18px;
-        letter-spacing: 0;
-        line-height: 24px;
         text-align: center;
     }
     .efficiency-divider {
@@ -140,14 +123,6 @@ $ssc-picker-height: 150px;
     }
     .DonutChart .MuiCardContent-root {
         padding-bottom: 0;
-    }
-    .compare-text {
-        padding-top: 0;
-        color: rgba(0,0,0,.8);
-        font-family: "Noto Sans";
-        font-size: 18px;
-        letter-spacing: 0;
-        line-height: 24px;
     }
     .efficiencyOnboard-link {
         position: absolute;

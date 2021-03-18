@@ -341,7 +341,7 @@ export default class Efficiency extends React.PureComponent {
 
     if (this.state.reportType == 'firstCaseOnTimeStart' && !this.state.hasEMR) {
       return (<Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>
-        <Grid item xs={12} className="efficiency-select-filter">Analysis cannot be performed due to unavailable case schedule.</Grid>
+        <Grid item xs={12} className="efficiency-select-filter normal-text">Analysis cannot be performed due to unavailable case schedule.</Grid>
       </Grid>)
     }
     return <Grid container spacing={3} className={`efficiency-main ${this.state.reportType}`}>

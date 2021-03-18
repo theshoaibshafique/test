@@ -26,7 +26,7 @@ export default class NotFoundPage extends React.PureComponent { // eslint-disabl
             Page Not Found
         </Grid>
           <div item xs className="title-break"></div>
-          <Grid item xs className="content">
+          <Grid item xs className="content normal-text">
             The page you are looking for might have been removed, had its name changed, or temporarily unavailable. Contact your administrator or go back to the previous page.
         </Grid>
         </Grid>

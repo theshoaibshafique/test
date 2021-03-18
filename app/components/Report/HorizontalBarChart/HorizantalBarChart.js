@@ -1,3 +1,8 @@
+/*
+  DEPRECATED
+  Originally used for Top 3 Specialties showing 3 horizontal bars for Specialties
+*/
+
 import React from 'react';
 import { Grid, withStyles, LinearProgress } from '@material-ui/core';
 import StarsIcon from '@material-ui/icons/Stars';
@@ -88,7 +93,7 @@ export default class HorizontalBarChart extends React.PureComponent {
                   <Grid item xs={8}>
                     {this.getName(this.props.specialties, point.title || "")}
                   </Grid>
-                  <Grid item xs={4} className="chart-score">
+                  <Grid item xs={4} className="chart-score normal-text">
                     {point.description}
                   </Grid>
                   <Grid item xs={12} className="horizontal-bar" style={{ marginBottom: 40 }}>

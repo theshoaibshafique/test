@@ -14,18 +14,20 @@
 }
 
 
-.Modal .permissions-checkbox{
-    margin-top: 0;
-}
-.Modal .subtitle{
-    font-size: 18px;
-    letter-spacing: 0;
-    line-height: 24px;
-    padding-bottom: 0 !important;
-}
-.Modal .link:hover{
-    text-decoration: none;
-}
-.user-modal .MuiDialogContent-root {
-    padding: 0 !important;
+.User-Modal{
+    .permissions-checkbox{
+        margin-top: 0;
+    }
+    .subtitle{
+        padding-bottom: 0 !important;
+    }
+    .MuiDialogContent-root {
+        padding: 0 !important;
+    }
+    .link:hover{
+        text-decoration: none;
+    }
+    .Mui-disabled .subtext{
+        opacity: .3;
+    }
 }

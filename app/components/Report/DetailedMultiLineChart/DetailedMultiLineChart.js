@@ -90,12 +90,12 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                 </Grid>
               )
             })}
-            {subReportData.length == 0 && <Grid item xs={12} className="display-text">
+            {subReportData.length == 0 && <Grid item xs={12} className="display-text normal-text">
               {this.props.body}
             </Grid>}
           </Grid>
           <Grid item xs={12} style={{ textAlign: 'center', marginTop: 15 }}>
-            {this.props.url && <NavLink to={this.props.url} className='link'>
+            {this.props.url && <NavLink to={this.props.url} className='link normal-text'>
               {this.props.urlText}
             </NavLink>}
           </Grid>

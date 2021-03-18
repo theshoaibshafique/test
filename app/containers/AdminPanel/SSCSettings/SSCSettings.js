@@ -337,7 +337,7 @@ export default class SSCSettings extends React.PureComponent {
     return (
       <section className={`ssc-settings-page ${this.props.hasEMR && 'has-emr'}`}>
 
-        <div className="title">
+        <div className="title normal-text">
           General
         </div>
         <div className="subtitle subtle-subtext">
@@ -374,7 +374,7 @@ export default class SSCSettings extends React.PureComponent {
           </Grid>
         </div>
 
-        <div className="title">
+        <div className="title normal-text">
           Configuration
         </div>
         <div className="subtitle subtle-subtext">

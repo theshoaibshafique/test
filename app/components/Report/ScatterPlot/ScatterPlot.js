@@ -161,7 +161,7 @@ export default class ScatterPlot extends React.PureComponent {
       return;
     }
     return ReactDOMServer.renderToString(
-      <div className="tooltip" style={{ fontSize: '14px', lineHeight: '19px', font: 'Noto Sans' }}>
+      <div className="tooltip  subtle-subtext">
         {tooltipData.map((line) => {
           return <div style={!line ? { margin: '16px 0', width:'100%' } : {}}>{!line ? <Divider style={{ backgroundColor: '#C8C8C8' }} /> : line}</div>
         })}
@@ -189,7 +189,7 @@ export default class ScatterPlot extends React.PureComponent {
         }}
       >
         <Grid container spacing={0} className={`scatter-plot ${this.id}`} style={{ maxHeight: 350 }}>
-          <Grid item xs={12} className="chart-title">
+          <Grid item xs={12} className="chart-title normal-text">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow placement="top" fontSize="small"
               title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip}
             >

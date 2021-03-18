@@ -124,7 +124,7 @@ export default class ReportScore extends React.PureComponent {
       >
         <Grid container spacing={2} className="ssc-score">
           <Grid item xs={8} >
-            <div className="score-title">
+            <div className="score-title normal-text">
               {title}
               {toolTip && <LightTooltip interactive arrow
                 title={toolTip.map((line) => { return <div style={!line ? { margin: 8 } : {}}>{line}</div> })}
@@ -162,7 +162,7 @@ export default class ReportScore extends React.PureComponent {
           </Grid>
 
           {compareValue && <Grid item xs={12} className="compare">
-            <div className="title">{compareValue.title}</div>
+            <div className="title normal-text">{compareValue.title}</div>
             <div className="compare-score">{compareValue.valueX}</div>
           </Grid>}
 

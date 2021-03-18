@@ -16,7 +16,7 @@ export default function NoData(props) {
       {props.subTitle && <Grid item xs className="subtitle">
         {props.subTitle}
       </Grid>}
-      <Grid item xs className="body">
+      <Grid item xs className="body normal-text">
         {props.body}
       </Grid>
       <Grid item xs>

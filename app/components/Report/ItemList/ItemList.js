@@ -86,7 +86,7 @@ export default class ItemList extends React.PureComponent {
         title={tooltip}
         placement="right" fontSize="small"
       >
-        <div className={`change-value ${className}`}>
+        <div className={`change-value normal-text ${className}`}>
           <span>{`${valueY}%`}</span>
           <span>{tag}</span>
         </div>
@@ -106,7 +106,7 @@ export default class ItemList extends React.PureComponent {
             {
               field: "valueX",
               title: "Specialty",
-              render: rowData => <div className="specialty-col" onClick={() => {this.props.selectOption({display:rowData.valueX, id:rowData.valueX})}}>{rowData.valueX}</div>
+              render: rowData => <div className="specialty-col normal-text" onClick={() => {this.props.selectOption({display:rowData.valueX, id:rowData.valueX})}}>{rowData.valueX}</div>
             },
             {
               field: "valueY",

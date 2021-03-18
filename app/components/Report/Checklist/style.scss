@@ -1,5 +1,3 @@
-@import '../../../styles/global-styles';
-
 .checklist{
   min-height: 210;
 }
@@ -14,11 +12,7 @@
 }
 
 .checklist .chart-title{
-    font-family: "Noto Sans";
-    font-size: 18px;
     font-weight: bold;
-    letter-spacing: 0;
-    line-height: 24px;
     margin-bottom: 16px !important;
 }
   
@@ -41,11 +35,7 @@
 
 .checklist .display-text{
     color: #004F6E;
-    font-family: "Noto Sans";
-    font-size: 18px;
     font-style: italic;
-    letter-spacing: 0;
-    line-height: 24px;
 }
 .checklist .link{
   color: #00AAD9;
