@@ -282,7 +282,7 @@ export default class TimeSeriesChart extends React.PureComponent {
       >
         <Grid container spacing={0} justify='center' className="time-series" style={{ textAlign: 'center' }}>
           <Grid item xs className="chart-title">
-            {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
+            {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line,index) => { return <div key={index}>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}
             {this.props.showChange && this.renderChangeValue()}

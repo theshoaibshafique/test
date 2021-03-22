@@ -398,20 +398,20 @@ class UserModalStep1 extends React.Component {
               <Grid container spacing={0}>
                 <Grid item xs={6}>
                   {this.props.currentView === 'edit' &&
-                    <Button disableElevation disableRipple variant="contained" className="secondary" style={{ float: "left" }} onClick={() => this.props.deleteUser()}>{this.props.userValue.active ? 'Disable User' : 'Enable User'}</Button>
+                    <Button id="disable" disableElevation disableRipple variant="contained" className="secondary" style={{ float: "left" }} onClick={() => this.props.deleteUser()}>{this.props.userValue.active ? 'Disable User' : 'Enable User'}</Button>
                   }
                 </Grid>
                 <Grid item xs={6}>
                   <Grid container justify="flex-end">
                     <Grid item xs={12}>
                       <Grid container justify="flex-end" >
-                        <Button style={{ color: "#3db3e3", marginRight: 40 }} onClick={() => this.props.closeModal()}>Cancel</Button>
+                        <Button id="cancel" style={{ color: "#3db3e3", marginRight: 40 }} onClick={() => this.props.closeModal()}>Cancel</Button>
                         {this.props.currentView === 'add' ? (
-                          <Button variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.addUser()}>
+                          <Button id="add" variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.addUser()}>
                             {(this.state.isLoading) ? <div className="loader"></div> : 'Add'}
                           </Button>
                         ) : (
-                            <Button variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
+                            <Button id="save" variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.save()}>
                               {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}
                             </Button>
                           )}

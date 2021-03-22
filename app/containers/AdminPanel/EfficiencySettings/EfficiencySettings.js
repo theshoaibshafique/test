@@ -89,6 +89,7 @@ export default class EfficiencySettings extends React.PureComponent {
           <div className="selectors">
             <FormControl variant="outlined" size="small" style={{ width: 85 }} >
               <Select
+                id="grace-mins"
                 MenuProps={{
                   PaperProps: {
                     style: {
@@ -123,6 +124,7 @@ export default class EfficiencySettings extends React.PureComponent {
         <div className="selectors">
           <FormControl variant="outlined" size="small" style={{ width: 85 }} >
             <Select
+              id="outlier-hrs"
               MenuProps={{
                 PaperProps: {
                   style: {
@@ -143,6 +145,7 @@ export default class EfficiencySettings extends React.PureComponent {
           <span className="unit normal-text">hr</span>
           <FormControl variant="outlined" size="small" style={{ width: 85 }} >
             <Select
+              id="outlier-minute"
               MenuProps={{
                 PaperProps: {
                   style: {
@@ -164,8 +167,8 @@ export default class EfficiencySettings extends React.PureComponent {
         </div>
         {this.renderSaveWarning()}
         <div className="buttons">
-          <Button disableRipple className="reset" onClick={() => this.reset()}>Reset</Button>
-          <Button disableRipple variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
+          <Button disableRipple id="reset" className="reset" onClick={() => this.reset()}>Reset</Button>
+          <Button disableRipple id="save" variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
             {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}</Button>
         </div>
       </section>

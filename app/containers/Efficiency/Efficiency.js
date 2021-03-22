@@ -371,7 +371,7 @@ export default class Efficiency extends React.PureComponent {
         })
       )
     }) || [];
-    includeExcludedMessage && result.length && result.push(<Grid item xs={12} style={{ paddingTop: 0 }}>
+    includeExcludedMessage && result.length && result.push(<Grid item xs={12} style={{ paddingTop: 0 }} key={'no-ors'}>
       <InfographicParagraph description={"ORs with no data available are excluded from the report"} />
     </Grid>);
     return result;
@@ -456,6 +456,8 @@ export default class Efficiency extends React.PureComponent {
       case 'INFOGRAPHICPARAGRAPH':
       case 'INFOGRAPHICTEXT':
         return 12;
+      default:
+        return 1
     }
   }
 

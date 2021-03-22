@@ -13,8 +13,8 @@ export default class CompareInfographic extends React.PureComponent {
   renderData() {
     const { dataPoints } = this.props;
     return (
-      dataPoints && dataPoints.map((point) => (
-        <Grid item xs>
+      dataPoints && dataPoints.map((point,index) => (
+        <Grid item xs key={index}>
           <div className="score">
             {point.valueX}
           </div>
@@ -31,7 +31,7 @@ export default class CompareInfographic extends React.PureComponent {
     return (
       <Grid container spacing={0} className="compare-infographic">
         <Grid item xs={12} className="title normal-text">
-          {title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
+          {title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line,index) => { return <div key={index}>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
             <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
           </LightTooltip>}
         </Grid>

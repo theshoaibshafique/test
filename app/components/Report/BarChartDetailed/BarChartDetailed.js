@@ -219,7 +219,7 @@ export default class BarChartDetailed extends React.PureComponent {
         }}
       >
         <Grid container spacing={0} justify='center' className="bar-chart-detailed" style={{ textAlign: 'center', minHeight: 320, marginBottom: 50 }}>
-          <Grid item xs={12} className="chart-title">
+          <Grid item xs={12} className="chart-title header-2">
             {this.props.title}
           </Grid>
 

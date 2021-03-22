@@ -210,7 +210,7 @@ export default class Histogram extends React.PureComponent {
         <Grid container spacing={0} direction="column" className={`histogram ${this.id}`} >
           <Grid item xs className="chart-title">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow
-              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div style={!line ? { margin: 8 } : {}}>{line}</div> }) : this.props.toolTip}
+              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line, index) => { return <div key={index} style={!line ? { margin: 8 } : {}}>{line}</div> }) : this.props.toolTip}
               placement="top" fontSize="small"
             >
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />

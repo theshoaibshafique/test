@@ -126,7 +126,7 @@ export default class ChecklistDetail extends React.PureComponent {
   render() {
     return (
       <Grid container spacing={3} justify='space-between' className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length || 1}`} >
-        <Grid item xs={12} className="chart-title">
+        <Grid item xs={12} className="chart-title header-2">
           {this.props.title}
         </Grid>
         <Grid container spacing={6} className="checklist-lists">

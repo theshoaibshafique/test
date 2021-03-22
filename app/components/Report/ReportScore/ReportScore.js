@@ -60,7 +60,7 @@ const sliderStyles = props => ({
     borderRadius: 4,
   },
 });
-const SSTSlider = withStylesProps(sliderStyles)(props => (<Slider className={props.classes} {...props} />));
+const SSTSlider = withStylesProps(sliderStyles)(props => (<Slider {...props} />));
 const sliderTooltipStyles = props => ({
   popper: {
     top: "-2px !important"
@@ -127,7 +127,7 @@ export default class ReportScore extends React.PureComponent {
             <div className="score-title normal-text">
               {title}
               {toolTip && <LightTooltip interactive arrow
-                title={toolTip.map((line) => { return <div style={!line ? { margin: 8 } : {}}>{line}</div> })}
+                title={toolTip.map((line,index) => { return <div key={index} style={!line ? { margin: 8 } : {}}>{line}</div> })}
                 placement="top" fontSize="small"
               >
                 <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 2px 4px' }} />

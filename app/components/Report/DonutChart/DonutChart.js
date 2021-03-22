@@ -188,7 +188,7 @@ export default class DonutChart extends React.PureComponent {
         <Grid container spacing={0} className={`donut-chart ${this.id}`} style={{ minHeight: 150 }}>
           <Grid item xs={12} className="chart-title">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow placement="top" fontSize="small"
-              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip}
+              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line,index) => { return <div key={index}>{line}</div> }) : this.props.toolTip}
             >
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
             </LightTooltip>}

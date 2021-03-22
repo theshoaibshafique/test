@@ -1,13 +1,6 @@
-@import "../../../styles/global-styles";
-
 .detailed-multi-line-chart {
     .chart-title {
-        opacity: 0.8;
-        color: #000000;
-        font-family: "Noto Sans";
-        font-size: 26px;
-        letter-spacing: 0;
-        line-height: 36px;
+        text-align: center;
     }
     .chart-subtitle {
         font-style: italic;
@@ -33,7 +26,6 @@
         flex-direction: column;
         justify-content: center;
         height: 100%;
-        font-size: 26px;
         line-height: 26px;
     }
     .row-subtitle {
@@ -42,10 +34,6 @@
     }
     .row-score {
         color: #004f6e;
-        font-family: "Noto Sans";
-        font-size: 26px;
-        letter-spacing: 0;
-        line-height: 26px;
         text-align: right;
     }
     .c3-line {

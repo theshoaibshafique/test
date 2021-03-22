@@ -210,6 +210,7 @@ class UniversalPicker extends React.Component {
             value={this.state.selectedOperatingRoom}
             onChange={(e, value) => this.handleORChange(e, value)}
             // groupBy={option => option.departmentTitle}
+            id="or-input"
             renderInput={params => (
               <TextField
                 {...params}
@@ -252,6 +253,7 @@ class UniversalPicker extends React.Component {
           <SpecialtyAutocomplete
             size="small"
             options={this.state.specialties}
+            id="specialty-input"
             clearOnEscape
             getOptionLabel={option => option.display ? option.display : ''}
             value={this.state.selectedSpecialty}
@@ -278,6 +280,7 @@ class UniversalPicker extends React.Component {
             options={this.state.operatingRooms}
             loading={this.state.isORLoading}
             clearOnEscape
+            id="or-input"
             getOptionLabel={option => option.display ? option.display : ''}
             value={this.state.selectedOperatingRoom}
             onChange={(e, value) => this.handleORChange(e, value)}
@@ -302,6 +305,7 @@ class UniversalPicker extends React.Component {
           <div>
             <FormControl variant="outlined" size="small" style={{ width: 90 }} >
               <Select
+                id="grace-mins"
                 MenuProps={{
                   PaperProps: {
                     style: {
@@ -329,6 +333,7 @@ class UniversalPicker extends React.Component {
           <div>
             <FormControl variant="outlined" size="small" style={{ width: 85, paddingRight: 2 }} >
               <Select
+                id="outlier-hrs"
                 MenuProps={{
                   PaperProps: {
                     style: {
@@ -348,6 +353,7 @@ class UniversalPicker extends React.Component {
             </FormControl>
             <FormControl variant="outlined" size="small" style={{ width: 85, paddingLeft: 2 }} >
               <Select
+                id="outlier-mins"
                 MenuProps={{
                   PaperProps: {
                     style: {
@@ -369,8 +375,8 @@ class UniversalPicker extends React.Component {
           <FormHelperText>{`${this.props.hospitalAbbr || ""} Standard`}: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "N/A"}</FormHelperText>
         </Grid>}
         <Grid item xs={2} className="buttons" >
-          <Button disabled={disabled} variant="outlined" className="primary normal-text" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>
-          <Button disableRipple className="clear subtle-subtext" onClick={() => this.resetFilters()}>Clear Filters</Button>
+          <Button id="apply" disabled={disabled} variant="outlined" className="primary normal-text" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>
+          <Button id="clear" disableRipple className="clear subtle-subtext" onClick={() => this.resetFilters()}>Clear Filters</Button>
         </Grid>
 
       </Grid>

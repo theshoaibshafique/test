@@ -472,6 +472,7 @@ export default class RequestEMM extends React.PureComponent {
                   <Autocomplete
                     disableClearable
                     size="small"
+                    id="eta-hrs"
                     options={this.state.hoursOptions}
                     getOptionLabel={option => option}
                     value={this.state.selectedHour}
@@ -491,6 +492,7 @@ export default class RequestEMM extends React.PureComponent {
                   <Autocomplete
                     disableClearable
                     size="small"
+                    id="eta-mins"
                     options={this.state.minuteOptions}
                     getOptionLabel={option => option}
                     value={this.state.selectedMinutes}
@@ -508,7 +510,7 @@ export default class RequestEMM extends React.PureComponent {
                 </Grid>
                 <Grid item xs={4}>
                   <FormControl variant="outlined" className={`input-field ap-field ${this.state.selectedAP || "NA"}`} size="small" error={Boolean(this.state.errors.ap)} >
-                    <Select value={this.state.selectedAP || "NA"} onChange={(e) => this.handleSelectedAPChange(e)} name="ap">
+                    <Select value={this.state.selectedAP || "NA"} onChange={(e) => this.handleSelectedAPChange(e)} name="ap" id="eta-ap">
                       <MenuItem value="NA" disabled>A/P</MenuItem>
                       <MenuItem value="AM">AM</MenuItem>
                       <MenuItem value="PM">PM</MenuItem>
@@ -535,6 +537,7 @@ export default class RequestEMM extends React.PureComponent {
                 value={this.state.selectedOperatingRoom}
                 onChange={(e) => this.handleChange(e)}
                 name="operatingRoom"
+                id="or-input"
                 error={Boolean(this.state.errors.operatingRoom)}
               />
               {(this.state.errors.operatingRoom) &&
@@ -571,6 +574,7 @@ export default class RequestEMM extends React.PureComponent {
             <Grid item xs={12} className="other-checkbox" style={this.state.specialtyCheck ? { marginBottom: -8 } : {}}>
               <Checkbox
                 disableRipple
+                id="other-procedure-checkbox"
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
                 checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                 checked={this.state.specialtyCheck} onChange={(e) => this.handleCheckSpecialty(e)} />Other
@@ -646,6 +650,7 @@ export default class RequestEMM extends React.PureComponent {
             <Grid item xs={12} className="other-checkbox" >
               <Checkbox
                 disableRipple
+                id="other-complication-checkbox"
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
                 checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                 checked={this.state.complicationsCheck} onChange={(e) => this.handleCheckComplications(e)} />Other
@@ -691,6 +696,7 @@ export default class RequestEMM extends React.PureComponent {
             <Grid item xs={8} style={{ marginBottom: 24 }}>
               <AsyncSelect
                 isMulti
+                id="email-input"
                 cacheOptions
                 defaultOptions
                 options={this.state.userList}
@@ -705,8 +711,8 @@ export default class RequestEMM extends React.PureComponent {
               <Grid container justify="flex-end" spacing={0}>
                 <Grid item xs={12}>
                   <Grid container justify="flex-end" spacing={0}>
-                    <Button style={{ color: "#3db3e3", height: 40, width: 115, marginRight: 40 }} onClick={() => this.reset()}>Reset Form</Button>
-                    <Button variant="outlined" style={{ height: 40, width: 96 }} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
+                    <Button id="reset" style={{ color: "#3db3e3", height: 40, width: 115, marginRight: 40 }} onClick={() => this.reset()}>Reset Form</Button>
+                    <Button id="submit" variant="outlined" style={{ height: 40, width: 96 }} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
                       {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button>
                   </Grid>
                 </Grid>

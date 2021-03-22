@@ -98,7 +98,7 @@ export default class ItemList extends React.PureComponent {
   render() {
     return (
       <div className="item-list">
-        <div className="title">{this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
+        <div className="title">{this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line,index) => { return <div key={index}>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
           <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
         </LightTooltip>}</div>
         <MaterialTable

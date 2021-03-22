@@ -48,9 +48,9 @@ export default class DetailedMultiLineChart extends React.PureComponent {
         }}
       >
         <Grid container spacing={0} justify='center' className="detailed-multi-line-chart" >
-          <Grid item xs={12} className="chart-title" style={{ textAlign: 'center' }}>
+          <Grid item xs={12} className="chart-title header-2" >
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow
-              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line) => { return <div>{line}</div> }) : this.props.toolTip}
+              title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line, index) => { return <div key={index}>{line}</div> }) : this.props.toolTip}
               placement="top" fontSize="small"
             >
               <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
@@ -65,7 +65,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                 <Grid container spacing={0} className="multi-line-chart-row" key={`row-${index}`}>
                   <Grid item xs={2} >
                     <Grid container spacing={1} direction="column" className="flex-center" style={{ height: "100%" }}>
-                      <Grid item xs className="row-title">
+                      <Grid item xs className="row-title header-2">
                         {globalFunctions.getName(this.props.labelList, reportData.title)}
                       </Grid>
                       {/* <Grid item xs className="row-subtitle subtle-subtext">
@@ -76,7 +76,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
                   <Grid item xs={8} >
                     <LineChart {...reportData} />
                   </Grid>
-                  <Grid item xs={2} className="row-score">
+                  <Grid item xs={2} className="row-score header-2">
                     <Grid container spacing={1} direction="column">
                       <Grid item xs>
                         {reportData.total}{reportData.unit}

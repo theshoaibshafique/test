@@ -98,6 +98,7 @@ function PhaseItem(props) {
         <div style={{ display: 'table-cell' }}>
           <Checkbox
             disableRipple
+            id={`phaseitem-${pIndex}-${qIndex}`}
             className="SST-Checkbox"
             icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
             checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
@@ -123,7 +124,7 @@ function Phase(props) {
         <div>
           <FormControlLabel
             control={
-              <SSTSwitch checked={isActive} onChange={toggle} disableRipple />
+              <SSTSwitch checked={isActive} onChange={toggle} id={`phaseswitch-${pIndex}`} disableRipple />
             }
             label={<span className="toggle-label">{isActive ? 'Enabled' : 'Disabled'}</span>}
             labelPlacement='start'
@@ -133,7 +134,7 @@ function Phase(props) {
       <Divider light className="divider" />
       <div className="phase-items">
         {questions.map((question, qIndex) => (
-          <div>
+          <div key={qIndex}>
             <PhaseItem {...question} cIndex={cIndex} pIndex={pIndex} qIndex={qIndex} togglePhase={togglePhase} />
           </div>
         ))}
@@ -143,7 +144,7 @@ function Phase(props) {
 }
 
 function Goal(props) {
-  let { goal, currentGoal, title, tooltip, onChange } = props;
+  let { goal, currentGoal, title, tooltip, onChange, id } = props;
   const clss = title && title.toLowerCase().replace(/\s/g, '');
 
   //Keep track of your own Value and only update Goal on Committed (Better performance)
@@ -172,7 +173,7 @@ function Goal(props) {
         <div>
           <FormControlLabel
             control={
-              <SSTSwitch checked={isActive} onChange={() => onChange(title, isActive ? null : (currentGoal || 50))} disableRipple />
+              <SSTSwitch id={`${id}-switch`} checked={isActive} onChange={() => onChange(title, isActive ? null : (currentGoal || 50))} disableRipple />
             }
             label={<span className="toggle-label subtle-subtext">{isActive ? 'Enabled' : 'Disabled'}</span>}
             labelPlacement='start'
@@ -188,6 +189,7 @@ function Goal(props) {
         <SSTSlider
           valueLabelDisplay="auto"
           defaultValue={50}
+          id={`${id}-slider`}
           value={(value >= 0 ? value : goal) || 0}
           onChange={handleSliderChange}
           onChangeCommitted={(event, goal) => onChange(title, goal)}
@@ -351,6 +353,7 @@ export default class SSCSettings extends React.PureComponent {
             <Grid item xs={4}>
               <Goal
                 title={"Compliance Score"}
+                id={"compliance"}
                 tooltip={"Compliance Score is based on the frequency that required checklists are completed, and if they are completed at the correct time."}
                 goal={this.state.complianceGoal}
                 currentGoal={complianceGoal}
@@ -358,6 +361,7 @@ export default class SSCSettings extends React.PureComponent {
               />
               <Goal
                 title={"Engagement Score"}
+                id={"engagement"}
                 tooltip={"Engagement Score is based on the frequency with which the full team is present and visibly attentive when a checklist is performed."}
                 goal={this.state.engagementGoal}
                 currentGoal={engagementGoal}
@@ -365,6 +369,7 @@ export default class SSCSettings extends React.PureComponent {
               />
               <Goal
                 title={"Quality Score"}
+                id={"quality"}
                 tooltip={"Quality Score is the percentage of priority items discussed for all performed checklist phases."}
                 goal={this.state.qualityGoal}
                 currentGoal={qualityGoal}
@@ -384,7 +389,7 @@ export default class SSCSettings extends React.PureComponent {
           This setting will allow you to configure the data displayed to only include the phases and items that are within your hospital’s standard of practice. All historical data will reflect this new standard as well.
         </div>
         {this.state.checklists.map((checklist, cIndex) => (
-          <Grid container spacing={3} key={cIndex}>
+          <Grid container spacing={3} key={`grid-${cIndex}`}>
             {checklist.phases.sort((a, b) => orderBy[a.phaseName] - orderBy[b.phaseName]).map((phase, pIndex) => (
               <Grid item xs={4} key={`${cIndex}-${pIndex}`}>
                 <Phase {...phase} cIndex={cIndex} pIndex={pIndex} togglePhase={(c, p, i) => this.togglePhase(c, p, i)} />
@@ -395,8 +400,8 @@ export default class SSCSettings extends React.PureComponent {
         {this.renderNotice(hasCheckedPhase)}
         {this.renderSaveWarning()}
         <div className="buttons">
-          <Button disableRipple className="reset" onClick={() => this.reset()}>Reset</Button>
-          <Button disableRipple variant="outlined" className="primary" disabled={(this.state.isLoading || !hasCheckedPhase)} onClick={() => this.submit()}>
+          <Button disableRipple id="reset" className="reset" onClick={() => this.reset()}>Reset</Button>
+          <Button disableRipple id="save" variant="outlined" className="primary" disabled={(this.state.isLoading || !hasCheckedPhase)} onClick={() => this.submit()}>
             {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}</Button>
         </div>
 

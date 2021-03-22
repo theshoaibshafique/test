@@ -410,7 +410,7 @@ export default class SSChecklist extends React.PureComponent {
       result = reportData && reportData.map((tileGroup, index) => {
         return (
           // xs should be max tilesize of group
-          <Grid item xs={xs[index]}>
+          <Grid item xs={xs[index]} key={index}>
             <Grid container spacing={3}>
               {tileGroup.group.map((tile, i) => {
                 tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
@@ -425,7 +425,7 @@ export default class SSChecklist extends React.PureComponent {
           </Grid>
         )
       }) || [];
-      result = [!this.state.isLoading && <Grid item xs={12} className="ssc-title">{this.state.reportType}</Grid>, ...result]
+      result = [!this.state.isLoading && <Grid item xs={12} key={'0-title'} className="ssc-title">{this.state.reportType}</Grid>, ...result]
     }
     return (
       <Grid container spacing={3} className={`ssc-main ${this.state.reportType}`}>
@@ -483,7 +483,7 @@ export default class SSChecklist extends React.PureComponent {
         case 'COMPAREINFOGRAPHIC':
           return 4;
         case 'METERINFOGRAPHIC':
-          return 0;
+          return 'auto';
         default:
           return 12;
       }
