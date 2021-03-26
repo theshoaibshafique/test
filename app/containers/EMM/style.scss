@@ -1,24 +1,29 @@
-@import '../../styles/global-styles.scss';
-.header {
-    font-size: 26px;
-    display: flex;
-}
 
-.table-row {
-    display: flex;
-}
-
-.first-column {
-    width: 37%;
-}
-
-.table-row-font {
-    margin-bottom: 35px;
-}
-
-.margin-top {
-    margin-top: 35px;
-}
-.pad {
-    padding: 0 16px 0 0;
+.emm{
+    .header {
+        font-size: 26px;
+        display: flex;
+    }
+    
+    .table-row {
+        display: flex;
+    }
+    
+    .first-column {
+        width: 37%;
+    }
+    
+    .table-row-font {
+        margin-bottom: 35px;
+    }
+    
+    .margin-top {
+        margin-top: 35px;
+    }
+    .pad {
+        padding: 0 16px 0 0;
+    }
+    .report-status{
+        margin: auto 0;
+    }
 }

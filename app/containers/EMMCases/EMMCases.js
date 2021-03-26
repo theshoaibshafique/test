@@ -101,6 +101,9 @@ export default class EMMCases extends React.PureComponent {
         .then(result => {
           let recentSearch = [];
           result.map((savedResult) => {
+            if (!savedResult){
+              return;
+            }
             let operatingRoom = operatingRoomMap.get(savedResult.roomName.toUpperCase());
 
             recentSearch.push({

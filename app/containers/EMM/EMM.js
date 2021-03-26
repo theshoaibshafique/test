@@ -125,7 +125,7 @@ export default class EMM extends React.PureComponent {
     const { enhancedMMReferenceName, enhancedMMPublished, emmAccess, isSafari } = this.state;
     const isReportReady = (enhancedMMReferenceName && enhancedMMPublished && emmAccess)
     return (
-      <section className="full-height">
+      <section className="full-height emm">
         <div className="header page-title">
           <div><span className="pad">Enhanced M&M</span></div>
           {(isReportReady) ?
