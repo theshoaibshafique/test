@@ -60,7 +60,7 @@ export default class EMM extends React.PureComponent {
   }
 
   getCase() {
-    globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/' + this.props.requestId, 'get', this.props.userToken, {})
+    globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/?request_id=' + this.props.requestId, 'get', this.props.userToken, {})
     .then(result => {
       if (result === 'error' || result === 'conflict') {
 
@@ -70,6 +70,7 @@ export default class EMM extends React.PureComponent {
         let procedureNames = [];
         let complicationList = [];
         let operatingRoom = '';
+        result.roomName = result.roomName || ""
 
         result.procedure.map((procedure) => {
           procedureNames.push(globalFuncs.getName(surgeryList,procedure))

@@ -153,7 +153,7 @@ export default class EMMReports extends React.PureComponent {
 
   getReport() {
     const { emmReportID, userToken } = this.props;
-    globalFuncs.genericFetch(process.env.EMMREPORT_API + '/' + emmReportID, 'get', userToken, {})
+    globalFuncs.genericFetch(process.env.EMMREPORT_API + '/?request_id=' + emmReportID, 'get', userToken, {})
       .then(caseData => {
         this.props.setEMMReport(caseData)
         this.setState({

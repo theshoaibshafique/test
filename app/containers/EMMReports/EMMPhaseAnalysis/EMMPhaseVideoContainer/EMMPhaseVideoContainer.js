@@ -6,7 +6,16 @@ import ChecklistAnalysis from './ChecklistAnalysis';
 import VideoTimeline from './VideoTimeline';
 import { FormControlLabel, Switch, withStyles } from '@material-ui/core';
 import VideoData from '../VideoData/VideoData';
-
+import videojs from 'video.js';
+import eme from 'videojs-contrib-eme'; //eslint-disable-line
+import {
+  licenseUri,
+  fairplayCertUri,
+  checkDrmType,
+  base64DecodeUint8Array,
+  base64EncodeUint8Array,
+  arrayToString
+} from './pallycon-helper';
 const videoOptions = {
   "nativeControlsForTouch": false,
   controls: true,
@@ -138,41 +147,85 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   createVideoPlayer(videoID) {
+    const videoJsOptions = {
+      autoplay: true,
+      controls: true,
+      preload: 'auto',
+      errorDisplay: true,
+      fluid: true,
+      aspectRatio: '16:9',
+      controlBar: true,
+      playbackRates: [0.5, 1, 1.5, 2],
+      userActions: {
+        hotkeys: true
+      }
+    };
     const { emmPresenterMode, userToken } = this.props;
     this.setState({ noVideo: false })
     const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}${videoID}`;
     globalFunctions.genericFetch(mediaURL, 'get', userToken, {})
       .then(result => {
         if (result) {
-          this.myPlayer = amp(this.state.videoID, videoOptions);
-          const presenterProtection = [
-            {
-              "type": "AES",
-              "authenticationToken": result.token
-            }
-          ]
-          const normalProtection = [
-            {
-              "type": "PlayReady",
-              "authenticationToken": result.token
-            },
-            {
-              "type": "Widevine",
-              "authenticationToken": result.token
-            },
-            {
-              "type": "FairPlay",
-              "authenticationToken": result.token
-            }
-          ]
-          this.myPlayer.src([{
-            src: result.url,
-            type: "application/vnd.ms-sstr+xml",
-            protectionInfo: (emmPresenterMode) ? presenterProtection : normalProtection
-          }]);
-          this.myPlayer.addEventListener('timeupdate', (e) => {
-            this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
+          this.myPlayer = videojs(
+            this.videoNode,
+            videoJsOptions,
+            function onPlayerReady() { }
+          );
+          // const { dash } = this.props;
+          const dash = 'http://dxj79d9ht70ez.cloudfront.net/dash-output-1/sample-mp4-file.mpd'
+          this.myPlayer.eme();
+          // const drmType = checkDrmType();
+          const drmType = 'Widevine';
+      
+          // const { token } = response.data;
+          // console.log(token);
+          const token = 'eyJrZXlfcm90YXRpb24iOmZhbHNlLCJyZXNwb25zZV9mb3JtYXQiOiJvcmlnaW5hbCIsInVzZXJfaWQiOiJ0ZXN0LXVzZXIiLCJkcm1fdHlwZSI6IldpZGV2aW5lIiwic2l0ZV9pZCI6IlpRMUkiLCJoYXNoIjoiejk5VXBnT1B2RUFENVo0dXVsOHYwT1NJN2VEbFZ1eHhoUzRnbzBTZXROND0iLCJjaWQiOiJtZWRpYWNvbnZlcnQtdGVzdC0xIiwicG9saWN5IjoiSHVLZHc2SnlqWXJMMkd1VmV3cTJmUT09IiwidGltZXN0YW1wIjoiMjAyMS0wMy0zMVQxNzo0MzoyM1oifQ==';
+          let playerConfig;
+      
+      
+          if (drmType === 'Widevine') {
+            playerConfig = {
+              src: dash,
+              type: 'application/dash+xml',
+              // withCredentials: true,
+              keySystems: {
+                'com.widevine.alpha': {
+                  url: licenseUri,
+                  licenseHeaders: {
+                    'pallycon-customdata-v2': token
+                  },
+                  videoRobustness: 'SW_SECURE_CRYPTO',
+                  audioRobustness: 'SW_SECURE_CRYPTO'
+                }
+              }
+            };
+          } else if (drmType === 'PlayReady') {
+            playerConfig = {
+              src: dash,
+              type: 'application/dash+xml',
+              withCredentials: true,
+              keySystems: {
+                'com.microsoft.playready': {
+                  url: licenseUri,
+                  licenseHeaders: {
+                    'pallycon-customdata-v2': token
+                  },
+                  videoRobustness: 'SW_SECURE_CRYPTO',
+                  audioRobustness: 'SW_SECURE_CRYPTO'
+                }
+              }
+            };
+          }
+          this.myPlayer.src(playerConfig);
+          this.myPlayer.ready(()=> {
+            this.on('timeupdate', (e) => {
+              this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
+            })
           });
+          // debugger;
+          // this.myPlayer.addEventListener('timeupdate', (e) => {
+          //   this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
+          // });
         }
       });
   }
@@ -229,7 +282,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     const { phaseData, emmVideoTime, emmPresenterMode, isPublished, hasPresenterRole, emmReportData: { hl7TimeSeries } } = this.props;
     const { noVideo, selectedVideoClipID, isProcedureStepWithTabs, selectedSurgicalTab } = this.state;
     const showVideoTimeline = (phaseData.enhancedMMData.length > 0 && selectedSurgicalTab == 0)
-    const {startTime,endTime} = this.getVideoStartEndTime();
+    const { startTime, endTime } = this.getVideoStartEndTime();
     const duration = endTime - startTime;
     return (
       <div className="Emm-Phase-Video-Container relative">
@@ -256,8 +309,33 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             (!noVideo) &&
             <div className="flex">
               <div className="phase-video">
-                <span>{(phaseData.name === 'SurgicalProcedure' && selectedSurgicalTab==0) && <VideoData videoData={hl7TimeSeries} videoOffSet={startTime} />}</span>
-                <video id="phaseAnalysisVideo" className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video>
+                <span>{(phaseData.name === 'SurgicalProcedure' && selectedSurgicalTab == 0) && <VideoData videoData={hl7TimeSeries} videoOffSet={startTime} />}</span>
+                {/* <video id="phaseAnalysisVideo" className="azuremediaplayer amp-default-skin amp-big-play-centered" tabIndex="0" data-setup='{"fluid": true}'></video> */}
+                <div>
+                  <link
+                    href="https://vjs.zencdn.net/7.10.2/video-js.css"
+                    rel="stylesheet"
+                  />
+                  <link
+                    href="https://unpkg.com/@videojs/themes@1/dist/forest/index.css"
+                    rel="stylesheet"
+                  />
+                  <link
+                    href="https://cdn.jsdelivr.net/npm/videojs-playlist-ui@3.8.0/dist/videojs-playlist-ui.css"
+                    rel="stylesheet"
+                  />
+                  <link
+                    href="https://cdn.jsdelivr.net/npm/videojs-playlist-ui@3.8.0/dist/videojs-playlist-ui.vertical.css"
+                    rel="stylesheet"
+                  />
+                  <div data-vjs-player>
+                    <video
+                      ref={node => (this.videoNode = node)}
+                      className="video-js vjs-theme-forest"
+                    />
+                    <div className="vjs-playlist" />
+                  </div>
+                </div>
                 {
                   (showVideoTimeline && Boolean(duration)) &&
                   <VideoTimeline

@@ -104,7 +104,7 @@ export default class EMMCases extends React.PureComponent {
             if (!savedResult){
               return;
             }
-            let operatingRoom = operatingRoomMap.get(savedResult.roomName.toUpperCase());
+            let operatingRoom = operatingRoomMap.get(savedResult.roomName && savedResult.roomName.toUpperCase());
 
             recentSearch.push({
               requestId: savedResult.name,
@@ -138,12 +138,12 @@ export default class EMMCases extends React.PureComponent {
     if (requestID) {
       this.reset();
 
-      globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/' + this.state.requestID, 'get', this.props.userToken, {})
+      globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/?request_id=' + this.state.requestID, 'get', this.props.userToken, {})
       .then(result => {
         if (result === 'error' || result === 'conflict') {
           this.setState({ noMatch: true })
         } else {
-          let operatingRoom = operatingRoomMap.get(result.roomName.toUpperCase());
+          let operatingRoom = operatingRoomMap.get(result.roomName && result.roomName.toUpperCase());
 
           let report = {
             requestId: result.name,

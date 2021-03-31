@@ -283,7 +283,7 @@ export default class RequestEMM extends React.PureComponent {
       "facilityName": this.props.userFacility
     }
 
-    globalFuncs.genericFetch(process.env.EMMREQUEST_API, 'post', this.props.userToken, jsonBody)
+    globalFuncs.genericFetch(process.env.REQUESTEMM_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {
           this.setState({

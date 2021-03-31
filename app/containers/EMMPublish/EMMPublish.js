@@ -60,7 +60,7 @@ export default class EMMPublish extends React.PureComponent {
   };
 
   getEMMCases() {
-    globalFuncs.genericFetch(process.env.EMMCASESREQUEST_API + "/", 'get', this.props.userToken, {})
+    globalFuncs.genericFetch(process.env.EMMREQUEST_API + "/all", 'get', this.props.userToken, {})
       .then(result => {
         if (result === 'error' || result === 'conflict') {
           this.setState({
