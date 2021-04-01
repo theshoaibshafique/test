@@ -162,7 +162,10 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     };
     const { emmPresenterMode, userToken } = this.props;
     this.setState({ noVideo: false })
-    const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}${videoID}`;
+    const drmType = checkDrmType();
+    videoID="mediaconvert-test-1";
+    const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}?asset=${videoID}&drm_type=${drmType}`;
+    
     globalFunctions.genericFetch(mediaURL, 'get', userToken, {})
       .then(result => {
         if (result) {
@@ -171,21 +174,15 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             videoJsOptions,
             function onPlayerReady() { }
           );
-          // const { dash } = this.props;
-          const dash = 'http://dxj79d9ht70ez.cloudfront.net/dash-output-1/sample-mp4-file.mpd'
+          const {src, token} = result;
           this.myPlayer.eme();
-          // const drmType = checkDrmType();
-          const drmType = 'Widevine';
       
-          // const { token } = response.data;
-          // console.log(token);
-          const token = 'eyJrZXlfcm90YXRpb24iOmZhbHNlLCJyZXNwb25zZV9mb3JtYXQiOiJvcmlnaW5hbCIsInVzZXJfaWQiOiJ0ZXN0LXVzZXIiLCJkcm1fdHlwZSI6IldpZGV2aW5lIiwic2l0ZV9pZCI6IlpRMUkiLCJoYXNoIjoiejk5VXBnT1B2RUFENVo0dXVsOHYwT1NJN2VEbFZ1eHhoUzRnbzBTZXROND0iLCJjaWQiOiJtZWRpYWNvbnZlcnQtdGVzdC0xIiwicG9saWN5IjoiSHVLZHc2SnlqWXJMMkd1VmV3cTJmUT09IiwidGltZXN0YW1wIjoiMjAyMS0wMy0zMVQxNzo0MzoyM1oifQ==';
           let playerConfig;
       
-      
           if (drmType === 'Widevine') {
+            
             playerConfig = {
-              src: dash,
+              src: src,
               type: 'application/dash+xml',
               // withCredentials: true,
               keySystems: {
@@ -201,9 +198,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             };
           } else if (drmType === 'PlayReady') {
             playerConfig = {
-              src: dash,
+              src: src,
               type: 'application/dash+xml',
-              withCredentials: true,
+              // withCredentials: true,
               keySystems: {
                 'com.microsoft.playready': {
                   url: licenseUri,
@@ -217,8 +214,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             };
           }
           this.myPlayer.src(playerConfig);
-          this.myPlayer.ready(()=> {
-            this.on('timeupdate', (e) => {
+          this.myPlayer.ready((y)=> {
+            this.myPlayer.on('timeupdate', (e) => {
+              console.log(e.target.player.currentTime())
               this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
             })
           });
@@ -232,6 +230,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
 
   destroyVideoPlayer() {
     if (this.myPlayer) {
+      this.myPlayer.off('timeupdate');
       this.myPlayer.dispose();
       this.props.setEMMVideoTime(0);
     }
