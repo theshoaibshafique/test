@@ -163,9 +163,8 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     const { emmPresenterMode, userToken } = this.props;
     this.setState({ noVideo: false })
     const drmType = checkDrmType();
-    videoID="mediaconvert-test-1";
     const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}?asset=${videoID}&drm_type=${drmType}`;
-    
+
     globalFunctions.genericFetch(mediaURL, 'get', userToken, {})
       .then(result => {
         if (result) {
@@ -174,12 +173,20 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             videoJsOptions,
             function onPlayerReady() { }
           );
+          
           const {src, token} = result;
-          this.myPlayer.eme();
+          if (typeof this.myPlayer.eme === 'function'){
+            this.myPlayer.eme();
+          }
       
           let playerConfig;
-      
-          if (drmType === 'Widevine') {
+          if (emmPresenterMode){
+            playerConfig = {
+              src: src,
+              type: 'application/dash+xml',
+              // withCredentials: true,
+            };
+          }else if (drmType === 'Widevine') {
             
             playerConfig = {
               src: src,
@@ -216,14 +223,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
           this.myPlayer.src(playerConfig);
           this.myPlayer.ready((y)=> {
             this.myPlayer.on('timeupdate', (e) => {
-              console.log(e.target.player.currentTime())
               this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
             })
           });
-          // debugger;
-          // this.myPlayer.addEventListener('timeupdate', (e) => {
-          //   this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
-          // });
         }
       });
   }
