@@ -140,7 +140,7 @@ export default class EMMCases extends React.PureComponent {
 
       globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/?request_id=' + this.state.requestID, 'get', this.props.userToken, {})
       .then(result => {
-        if (result === 'error' || result === 'conflict') {
+        if (result === 'error' || result === 'conflict' || !result) {
           this.setState({ noMatch: true })
         } else {
           let operatingRoom = operatingRoomMap.get(result.roomName && result.roomName.toUpperCase());

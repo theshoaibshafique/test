@@ -32,8 +32,8 @@ $sidebar-width: 250px;
   }
   .Phase-Events-Container {
     background: #FFFFFF;
-    width: $sidebar-width;
-    max-width: 250px;
+    // width: $sidebar-width;
+    max-width: 300px;
     height: $video-height;
     overflow-y: auto;
   }
@@ -117,4 +117,5 @@ $sidebar-width: 250px;
   }
 
   .vjs-current-time { width: 50px !important; }
+  .vjs-control-bar { .vjs-time-tooltip {font-size: 90% !important }}
 }

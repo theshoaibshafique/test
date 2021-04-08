@@ -223,6 +223,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
           this.myPlayer.src(playerConfig);
           this.myPlayer.ready((y)=> {
             this.myPlayer.on('timeupdate', (e) => {
+              if (!e || typeof e.target.player.currentTime !== 'function'){
+                return;
+              }
               this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
             })
           });
@@ -233,7 +236,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   destroyVideoPlayer() {
     if (this.myPlayer) {
       this.myPlayer.off('timeupdate');
-      this.myPlayer.dispose();
+      // this.myPlayer.dispose();
       this.props.setEMMVideoTime(0);
     }
   }
