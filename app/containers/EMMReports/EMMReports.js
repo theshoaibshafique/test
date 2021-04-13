@@ -105,7 +105,6 @@ export default class EMMReports extends React.PureComponent {
     super(props);
     this.ONBOARD_TYPE = "EMMReport";
     this.state = {
-      isScriptReady: false,
       isPublished: false,
       publishDialogOpen: false,
       onBoardDialogOpen: false,
@@ -114,7 +113,6 @@ export default class EMMReports extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.loadAMPScript();
     this.getReport();
     this.openOnboarding();
   };
@@ -162,22 +160,6 @@ export default class EMMReports extends React.PureComponent {
       });
   };
 
-  loadAMPScript() {
-    if (document.querySelector('#amp-azure')) {
-      this.setState({ isScriptReady: true });
-    };
-    var scriptTag = document.createElement('script');
-    var linkTag = document.createElement('link');
-    linkTag.rel = 'stylesheet';
-    scriptTag.id = 'amp-azure';
-    scriptTag.src = '//amp.azure.net/libs/amp/latest/azuremediaplayer.min.js';
-    linkTag.href = '//amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css';
-    document.body.appendChild(scriptTag);
-    document.head.insertBefore(linkTag, document.head.firstChild);
-    scriptTag.onload = () => {
-      this.setState({ isScriptReady: true });
-    };
-  }
 
   switchTab(currentTab) {
     const { emmReportTab } = this.props;
@@ -276,7 +258,6 @@ export default class EMMReports extends React.PureComponent {
               /> :
               <EMMPhaseAnalysis
                 tabShowing={emmReportTab === 'phase'}
-                scriptReady={this.state.isScriptReady}
                 phases={emmReportData.enhancedMMPages}
                 isPublished={isPublished}
               />
