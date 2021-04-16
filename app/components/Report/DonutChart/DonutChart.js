@@ -164,7 +164,8 @@ export default class DonutChart extends React.PureComponent {
           pageCount={this.state.legendPageCount}
           onPageIncrement={this.onPageIncrement}
           onPageDecrement={this.onPageDecrement}
-          onPageBoundary={this.onPageBoundary}
+          onPageStart={this.onPageStart}
+          onPageEnd={this.onPageEnd}
         />
       </div>
     );
@@ -200,12 +201,12 @@ export default class DonutChart extends React.PureComponent {
       legendCurrentPage: prevState.legendCurrentPage - 1
     }));
   }
-  onPageBoundaryStart() {
+  onPageStart() {
     this.setState((prevState) => ({
       legendCurrentPage: 1
     }));
   }
-  onPageBoundaryEnd() {
+  onPageEnd() {
     this.setState((prevState) => ({
       legendCurrentPage: prevState.legendPageCount
     }));

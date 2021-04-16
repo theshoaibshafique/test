@@ -18,13 +18,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LegendPagination = (props) => {
-    const { page, pageCount } = props;
+    const { page, pageCount, onPageIncrement, onPageDecrement, onPageStart, onPageEnd } = props;
     const classes = useStyles();
   
       return (
         <div className={classes.root}>
           <IconButton
-              onClick={() => {}}
+              onClick={onPageStart}
               aria-label="first page"
               disabled={page === 1}
               size="small"
@@ -32,7 +32,7 @@ const LegendPagination = (props) => {
               <FirstPage />
           </IconButton>
           <IconButton
-              onClick={() => {}}
+              onClick={onPageDecrement}
               aria-label="previous page"
               disabled={page === 1}
               size="small"
@@ -43,7 +43,7 @@ const LegendPagination = (props) => {
               {`${page}/${pageCount}`}
           </Typography>
           <IconButton
-              onClick={() => {}}
+              onClick={onPageIncrement}
               aria-label="next page"
               disabled={page === pageCount}
               size="small"
@@ -51,7 +51,7 @@ const LegendPagination = (props) => {
               <ChevronRight />
           </IconButton>
           <IconButton
-              onClick={() => {}}
+              onClick={onPageEnd}
               aria-label="last page"
               disabled={page === pageCount}
               size="small"
