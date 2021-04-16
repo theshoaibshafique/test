@@ -54,9 +54,13 @@ export default class DonutChart extends React.PureComponent {
           duration: 0
         },
         onrendered: () => this.chartRef.current && this.renderCustomTitle(),
+      },
+      legendPagination: {
+        pageCount: 1,
+        currentPage: 1,
+        itemsPerPage: 10
       }
     }
-
   };
 
   componentDidUpdate(prevProps) {
