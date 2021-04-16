@@ -98,13 +98,14 @@ export default class DonutChart extends React.PureComponent {
       tooltipData[point.title] = point.toolTip;
     });
     const orderBy = this.props.orderBy || {};
+    let legendPageCount = this.calcLegendPagination(this.props.dataPoints, this.state.legendItemsPerPage);
     let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] || b[1] - a[1] });
     let chartData = this.state.chartData;
     //Set as 0 by default and "load" columns later for animation
     chartData.data.columns = legendData;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-    this.setState({ chartData, xData, tooltipLegendData, tooltipData, legendData, isLoaded: true })
+    this.setState({ chartData, xData, tooltipLegendData, tooltipData, legendData, isLoaded: true, legendPageCount })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
