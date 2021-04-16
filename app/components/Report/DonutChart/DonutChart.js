@@ -8,6 +8,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import globalFunctions from '../../../utils/global-functions';
 import { NavLink } from 'react-router-dom';
 import { LightTooltip } from '../../SharedComponents/SharedComponents';
+import LegendPagination from '../../LegendPagination/LegendPagination';
 export default class DonutChart extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -154,6 +155,10 @@ export default class DonutChart extends React.PureComponent {
                 </div>)
             })}
         </div>
+        <LegendPagination 
+          page={this.state.legendCurrentPage}
+          pageCount={this.state.legendPageCount}
+        />
       </div>
     );
   }
