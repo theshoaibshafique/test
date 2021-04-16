@@ -58,7 +58,7 @@ export default class DonutChart extends React.PureComponent {
       },
       legendPageCount: 1,
       legendCurrentPage: 1,
-      legendItemsPerPage: 7
+      legendItemsPerPage: 10
     }
     this.onPageIncrement = this.onPageIncrement.bind(this, null);
     this.onPageDecrement = this.onPageDecrement.bind(this, null);
@@ -137,7 +137,9 @@ export default class DonutChart extends React.PureComponent {
       <div className="donut-chart-detailed-legend-container">
         <div className={`${this.state.chartID} donut-chart-detailed-legend`}>
           
-            {this.state.legendData && this.state.legendData.map(([id, value], index) => {
+            {this.state.legendData && this.state.legendData.
+            slice((this.state.legendCurrentPage - 1) * this.state.legendItemsPerPage, this.state.legendCurrentPage * this.state.legendItemsPerPage)
+            .map(([id, value], index) => {
               if (id == "NA") {
                 return;
               }
@@ -191,7 +193,6 @@ export default class DonutChart extends React.PureComponent {
   }
   // Legend pagination on click event handlers.
   onPageIncrement() {
-    console.log('inc')
     this.setState((prevState) => ({
       legendCurrentPage: prevState.legendCurrentPage + 1
     }));
