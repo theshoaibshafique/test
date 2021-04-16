@@ -160,14 +160,16 @@ export default class DonutChart extends React.PureComponent {
                   </div>
                 </div>)
             })}
-            <LegendPagination 
-              page={this.state.legendCurrentPage}
-              pageCount={this.state.legendPageCount}
-              onPageIncrement={this.onPageIncrement}
-              onPageDecrement={this.onPageDecrement}
-              onPageStart={this.onPageStart}
-              onPageEnd={this.onPageEnd}
-            />
+            {this.state.legendPageCount > 1 &&
+              <LegendPagination 
+                page={this.state.legendCurrentPage}
+                pageCount={this.state.legendPageCount}
+                onPageIncrement={this.onPageIncrement}
+                onPageDecrement={this.onPageDecrement}
+                onPageStart={this.onPageStart}
+                onPageEnd={this.onPageEnd}
+              />
+            }
         </div>
       </div>
     );
