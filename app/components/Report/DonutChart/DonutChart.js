@@ -181,6 +181,22 @@ export default class DonutChart extends React.PureComponent {
       return Math.ceil((legendData.length / itemsPerPage));
     }
   }
+  // Legend pagination on click event handlers.
+  onPageIncrement() {
+    this.setState((prevState) => ({
+      legendCurrentPage: prevState.legendCurrentPage + 1
+    }));
+  }
+  onPageDecrement() {
+    this.setState((prevState) => ({
+      legendCurrentPage: prevState.legendCurrentPage - 1
+    }));
+  }
+  onPageBoundary(direction) {
+    this.setState((prevState) => ({
+      legendCurrentPage: direction === 'start' ? 1 : prevState.legendPageCount
+    }));
+  }
   render() {
     return (
       <LoadingOverlay
