@@ -9,7 +9,9 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'nowrap',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginLeft: '16px'
+        marginLeft: '16px',
+        position: 'absolute',
+        bottom: '-20px',
     },
     text: {
         fontSize: 12,
