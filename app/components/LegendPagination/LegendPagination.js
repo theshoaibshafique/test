@@ -8,9 +8,12 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexWrap: 'nowrap',
         alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginLeft: '16px'
     },
     text: {
-        fontSize: 12
+        fontSize: 12,
+        color: '#0000008A'
     }
 }));
 
@@ -24,6 +27,7 @@ const LegendPagination = (props) => {
               onClick={() => {}}
               aria-label="first page"
               disabled={page === 1}
+              size="small"
           >
               <FirstPage />
           </IconButton>
@@ -31,6 +35,7 @@ const LegendPagination = (props) => {
               onClick={() => {}}
               aria-label="previous page"
               disabled={page === 1}
+              size="small"
           >
               <ChevronLeft />
           </IconButton>
@@ -41,6 +46,7 @@ const LegendPagination = (props) => {
               onClick={() => {}}
               aria-label="next page"
               disabled={page === pageCount}
+              size="small"
           >
               <ChevronRight />
           </IconButton>
@@ -48,6 +54,7 @@ const LegendPagination = (props) => {
               onClick={() => {}}
               aria-label="last page"
               disabled={page === pageCount}
+              size="small"
           >
               <LastPage />
           </IconButton>
