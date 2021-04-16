@@ -10,6 +10,11 @@
     line-height: 36px;
     text-align: center;
   }
+  .donut-chart-detailed-legend-container {
+    display: 'flex';
+    flex-direction: column;
+    align-items: 'flex-start';
+  }
   .donut-chart-detailed-legend {
     display: flex;
     margin-top: 32px;
