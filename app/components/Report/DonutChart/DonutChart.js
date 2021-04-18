@@ -179,11 +179,6 @@ export default class DonutChart extends React.PureComponent {
       .html(ReactDOMServer.renderToString(<tspan dy={44} x={0} className="second-title">{this.props.total}<tspan className="donut-unit normal-text">{this.props.unit}</tspan></tspan>))
 
   }
-  calcLegendPagination(legendData, itemsPerPage) {
-    if(legendData) {
-      return Math.ceil((legendData.length / itemsPerPage));
-    }
-  }
   // Legend pagination on click event handlers.
   onPageIncrement() {
     this.setState((prevState) => ({
