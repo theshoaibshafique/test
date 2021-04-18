@@ -103,14 +103,13 @@ export default class DonutChart extends React.PureComponent {
       tooltipData[point.title] = point.toolTip;
     });
     const orderBy = this.props.orderBy || {};
-    let legendPageCount = this.calcLegendPagination(this.props.dataPoints, this.state.legendItemsPerPage);
     let legendData = Object.entries(formattedData).sort((a, b) => { return orderBy[a[0]] - orderBy[b[0]] || b[1] - a[1] });
     let chartData = this.state.chartData;
     //Set as 0 by default and "load" columns later for animation
     chartData.data.columns = legendData;
     let chart = this.chartRef.current && this.chartRef.current.chart;
     chart && chart.load(chartData);
-    this.setState({ chartData, xData, tooltipLegendData, tooltipData, legendData, isLoaded: true, legendPageCount })
+    this.setState({ chartData, xData, tooltipLegendData, tooltipData, legendData, isLoaded: true })
   }
 
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
@@ -134,12 +133,13 @@ export default class DonutChart extends React.PureComponent {
     }
     let chart = this.chartRef.current.chart;
     return (
-      <div className="donut-chart-detailed-legend-container">
+      <div className="donut-chart-detailed-legend-container"> 
         <div className={`${this.state.chartID} donut-chart-detailed-legend`}>
-          
-            {this.state.legendData && this.state.legendData.
-            slice((this.state.legendCurrentPage - 1) * this.state.legendItemsPerPage, this.state.legendCurrentPage * this.state.legendItemsPerPage)
-            .map(([id, value], index) => {
+          <LegendPagination
+            legendData={this.state.legendData}
+            itemsPerPage={10}
+          >
+            {this.state.legendData && this.state.legendData.map(([id, value], index) => {
               if (id == "NA") {
                 return;
               }
@@ -160,16 +160,7 @@ export default class DonutChart extends React.PureComponent {
                   </div>
                 </div>)
             })}
-            {this.state.legendPageCount > 1 &&
-              <LegendPagination 
-                page={this.state.legendCurrentPage}
-                pageCount={this.state.legendPageCount}
-                onPageIncrement={this.onPageIncrement}
-                onPageDecrement={this.onPageDecrement}
-                onPageStart={this.onPageStart}
-                onPageEnd={this.onPageEnd}
-              />
-            }
+          </LegendPagination>
         </div>
       </div>
     );
