@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Typography }from '@material-ui/core';
 import { ChevronLeft, ChevronRight, FirstPage, LastPage } from '@material-ui/icons';
+import { LightTooltip } from '../SharedComponents/SharedComponents'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,13 +23,13 @@ const useStyles = makeStyles((theme) => ({
 const LegendPagination = (props) => {
     const [page, setPage] = useState(1);
     const [pageCount, setPageCount] = useState(1); 
-    const [itemsPerPage, setItemsPerPage] = useState(props.itemsPerPage)
+    const [itemsPerPage, setItemsPerPage] = useState(props.itemsPerPage);
     const { legendData, children } = props;
     
     useEffect(() => {
         // Calcuate number of legend pages and update pageCount piece of state.
-        setPageCount(Math.ceil(props.legendData.length / itemsPerPage));
-    }, [props.legendData.length]);
+        setPageCount(Math.ceil(legendData.length / itemsPerPage));
+    }, [legendData.length]);
 
     /*** LEGEND PAGE CHANGE EVENT HANDLER ***/
     const onPageChange = (buttonName) => {
@@ -48,46 +49,67 @@ const LegendPagination = (props) => {
     };
     
     const classes = useStyles();
+    const renderToolTip = () => {
+      if(nextButtonRef.current.disabled === false) {
+          
+      }
+    }
     return (
           <React.Fragment>
             {children.slice((page - 1) * itemsPerPage, page * itemsPerPage)}
             {pageCount > 1 && (
                 <div className={classes.root}>
-                    <IconButton
+                  <LightTooltip title="First Page">
+                    <div>
+                      <IconButton
                         onClick={() => onPageChange('first')}
                         aria-label="first page"
                         disabled={page === 1}
                         size="small"
-                        >
+                      >
                         <FirstPage />
-                    </IconButton>
-                    <IconButton
+                      </IconButton>
+                    </div>
+                  </LightTooltip>
+                  <LightTooltip title="Previous Page">
+                    <div>
+                      <IconButton
                         onClick={() => onPageChange('prev')}
                         aria-label="previous page"
                         disabled={page === 1}
                         size="small"
-                        >
+                      >
                         <ChevronLeft />
-                    </IconButton>
-                    <Typography variant="body1" className={classes.text}>
-                        {`${page}/${pageCount}`}
-                    </Typography>
-                    <IconButton
+                      </IconButton>
+                    </div>
+                  </LightTooltip>
+                  <Typography variant="body1" className={classes.text}>
+                      {`${page}/${pageCount}`}
+                  </Typography>
+                  <LightTooltip title="Next Page" >
+                    <div>
+                      <IconButton
                         onClick={() => onPageChange('next')}
                         aria-label="next page"
                         disabled={page === pageCount}
                         size="small"
-                        >
+                      >
                         <ChevronRight />
-                    </IconButton>
-                    <IconButton
-                        onClick={() => onPageChange('last')}
-                        aria-label="last page"
-                        disabled={page === pageCount}
-                        size="small"
-                        >
-                        <LastPage />
-                    </IconButton>
+                      </IconButton>
+                    </div>
+                  </LightTooltip>
+                  <LightTooltip title="Last Page">
+                    <div>
+                      <IconButton
+                          onClick={() => onPageChange('last')}
+                          aria-label="last page"
+                          disabled={page === pageCount}
+                          size="small"
+                          >
+                          <LastPage />
+                      </IconButton>
+                    </div>
+                  </LightTooltip>
                 </div>
             )}
         </React.Fragment>
