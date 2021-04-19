@@ -50,7 +50,10 @@ const LegendPagination = (props) => {
     };
     
     const classes = useStyles();
-   
+    // Handle null props.children value.
+    if(!children) {
+      return <div></div>
+    }
     return (
           <React.Fragment>
             {children.slice((page - 1) * itemsPerPage, page * itemsPerPage)}
