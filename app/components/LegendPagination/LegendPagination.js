@@ -12,7 +12,6 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'flex-start',
         marginLeft: '16px',
         position: 'absolute',
-        bottom: '-20px',
     },
     text: {
         fontSize: 12,
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const LegendPagination = (props) => {
     const [page, setPage] = useState(1);
     const [pageCount, setPageCount] = useState(1); 
-    const { legendData, itemsPerPage, children } = props;
+    const { legendData, itemsPerPage, children, chartTitle } = props;
     
     useEffect(() => {
       if(legendData) {
@@ -48,17 +47,31 @@ const LegendPagination = (props) => {
                 return;
         }
     };
+
+    // Calculate absolute position of legend pagination element based on chart title.
+    const calcPaginationPosition = () => {
+      let position;
+      // Check if chartTitle prop is null.
+      if(!chartTitle) {
+        position = '0px';
+      }
+      // conditionally set position prop for legend pagination based on chartTitle prop value.
+      position = chartTitle === 'Total Cases' ? '-24px' : '0px';
+      console.log(position)
+      return position;
+    };
     
     const classes = useStyles();
     // Handle null props.children value.
     if(!children) {
       return <div></div>
     }
+    console.log('TITLE IN LEGENDPAG', chartTitle)
     return (
           <React.Fragment>
             {children.slice((page - 1) * itemsPerPage, page * itemsPerPage)}
             {pageCount > 1 && (
-                <div className={classes.root}>
+                <div className={classes.root} style={{ bottom: calcPaginationPosition() }}>
                   <LightTooltip title="First Page">
                     <div>
                       <IconButton
