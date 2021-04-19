@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'flex-start',
         marginLeft: '16px',
         position: 'absolute',
+        bottom: '0px'
     },
     text: {
         fontSize: 12,
