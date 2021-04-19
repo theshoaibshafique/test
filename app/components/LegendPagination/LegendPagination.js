@@ -57,7 +57,6 @@ const LegendPagination = (props) => {
       }
       // conditionally set position prop for legend pagination based on chartTitle prop value.
       position = chartTitle === 'Total Cases' ? '-24px' : '0px';
-      console.log(position)
       return position;
     };
     
@@ -66,7 +65,6 @@ const LegendPagination = (props) => {
     if(!children) {
       return <div></div>
     }
-    console.log('TITLE IN LEGENDPAG', chartTitle)
     return (
           <React.Fragment>
             {children.slice((page - 1) * itemsPerPage, page * itemsPerPage)}
