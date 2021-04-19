@@ -130,6 +130,7 @@ export default class DonutChart extends React.PureComponent {
         <LegendPagination
           legendData={this.state.legendData}
           itemsPerPage={10}
+          chartTitle={this.state.chartData.donut.title || ''}
         >
           {this.state.legendData && this.state.legendData.map(([id, value], index) => {
             if (id == "NA") {
