@@ -47,18 +47,6 @@ const LegendPagination = (props) => {
                 return;
         }
     };
-
-    // Calculate absolute position of legend pagination element based on chart title.
-    const calcPaginationPosition = () => {
-      let position;
-      // Check if chartTitle prop is null.
-      if(!chartTitle) {
-        position = '0px';
-      }
-      // conditionally set position prop for legend pagination based on chartTitle prop value.
-      position = chartTitle === 'Total Cases' ? '-24px' : '0px';
-      return position;
-    };
     
     const classes = useStyles();
     // Handle null props.children value.
@@ -69,7 +57,7 @@ const LegendPagination = (props) => {
           <React.Fragment>
             {children.slice((page - 1) * itemsPerPage, page * itemsPerPage)}
             {pageCount > 1 && (
-                <div className={classes.root} style={{ bottom: calcPaginationPosition() }}>
+                <div className={classes.root}>
                   <LightTooltip title="First Page">
                     <div>
                       <IconButton
