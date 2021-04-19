@@ -26,8 +26,10 @@ const LegendPagination = (props) => {
     const { legendData, itemsPerPage, children } = props;
     
     useEffect(() => {
+      if(legendData) {
         // Calcuate number of legend pages and update pageCount piece of state.
         setPageCount(Math.ceil(legendData.length / itemsPerPage));
+      }
     }, [legendData.length]);
 
     /*** LEGEND PAGE CHANGE EVENT HANDLER ***/
