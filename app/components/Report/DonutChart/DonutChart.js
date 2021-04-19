@@ -126,35 +126,33 @@ export default class DonutChart extends React.PureComponent {
     }
     let chart = this.chartRef.current.chart;
     return (
-      <div className="donut-chart-detailed-legend-container"> 
-        <div className={`${this.state.chartID} donut-chart-detailed-legend`}>
-          <LegendPagination
-            legendData={this.state.legendData}
-            itemsPerPage={10}
-          >
-            {this.state.legendData && this.state.legendData.map(([id, value], index) => {
-              if (id == "NA") {
-                return;
-              }
-              return (
-                <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")}
-                  onMouseOver={() => {
-                    chart && chart.focus(id);
-                  }}
-                  onMouseOut={() => {
-                    chart && chart.revert();
-                  }}
-                  key={index}>
-                  <div className="legend-title">
-                    <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
-                    {this.state.tooltipLegendData[id] && <LightTooltip interactive arrow title={this.state.tooltipLegendData[id]} placement="top" fontSize="small">
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
-                    </LightTooltip>}
-                  </div>
-                </div>)
-            })}
-          </LegendPagination>
-        </div>
+      <div className={`${this.state.chartID} donut-chart-detailed-legend`}>
+        <LegendPagination
+          legendData={this.state.legendData}
+          itemsPerPage={10}
+        >
+          {this.state.legendData && this.state.legendData.map(([id, value], index) => {
+            if (id == "NA") {
+              return;
+            }
+            return (
+              <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")}
+                onMouseOver={() => {
+                  chart && chart.focus(id);
+                }}
+                onMouseOut={() => {
+                  chart && chart.revert();
+                }}
+                key={index}>
+                <div className="legend-title">
+                  <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
+                  {this.state.tooltipLegendData[id] && <LightTooltip interactive arrow title={this.state.tooltipLegendData[id]} placement="top" fontSize="small">
+                    <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                  </LightTooltip>}
+                </div>
+              </div>)
+          })}
+        </LegendPagination>
       </div>
     );
   }
