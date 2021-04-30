@@ -1,0 +1,34 @@
+@import "../../styles/global-styles.scss";
+.case {
+    div{
+        margin-bottom: 18px;
+    }
+    .title {
+        font-family: Helvetica;
+        font-size: 32px;
+        line-height: 37px;
+        color: #004f6e;
+        opacity: .8;
+    }
+    .subtitle {
+        font-family: Helvetica;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 21px;
+        color: #323232;
+        opacity: .8;
+    }
+    .description {
+        font-family: Helvetica;
+        font-size: 16px;
+        line-height: 18px;
+        color: #323232;
+        opacity: .8;
+    }
+    margin-bottom: 38px;
+}
+.case-discovery-grid{
+    .filters{
+        max-width: 360px;
+    }
+}

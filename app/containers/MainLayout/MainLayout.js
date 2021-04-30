@@ -22,6 +22,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
 import globalFunctions from '../../utils/global-functions';
+import CaseDiscovery from '../CaseDiscovery/CaseDiscovery';
 
 
 export default class MainLayout extends React.PureComponent {
@@ -50,6 +51,7 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: this.containsAny(roles,["ENHANCED M&M EDIT"]),
       sscAccess:this.containsAny(roles,["SURGICAL CHECKLIST"]),
       efficiencyAccess:this.containsAny(roles,["EFFICIENCY"]),
+      caseDiscoveryAccess:true
     });
     this.clearFilters();
     this.getPageAccess();
@@ -147,6 +149,9 @@ export default class MainLayout extends React.PureComponent {
         {(this.state.efficiencyAccess) &&
           <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"blockUtilization"} />} />
         }
+        {(this.state.caseDiscoveryAccess) &&
+          <Route path="/caseDiscovery" component={CaseDiscovery} />
+        }
 
         <Route path="/my-profile" component={MyProfile} />
         <Route path="" component={this.state.isLoading ? LoadingIndicator : NotFoundPage} />
@@ -186,6 +191,7 @@ export default class MainLayout extends React.PureComponent {
                   emmPublishAccess={this.state.emmPublishAccess}
                   sscAccess={this.state.sscAccess}
                   efficiencyAccess={this.state.efficiencyAccess}
+                  caseDiscoveryAccess={this.state.caseDiscoveryAccess}
                   pathname={this.props.location.pathname}
                   logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}

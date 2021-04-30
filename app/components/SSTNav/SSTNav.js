@@ -125,6 +125,9 @@ class SSTNav extends React.Component {
                 <ListItem disableGutters><NavLink to="/quality" className='text-link sub-item' >Quality</NavLink></ListItem>
               </Collapse>
             }
+            {(this.props.caseDiscoveryAccess) &&
+              <ListItem disableGutters><NavLink to="/caseDiscovery" className='text-link' >Case Discovery</NavLink></ListItem>
+            }
           </List>
         </Grid>
         <Grid item xs={12} style={{ display: 'flex', alignItems: 'flex-end' }}>
