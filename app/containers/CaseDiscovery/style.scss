@@ -1,6 +1,6 @@
 @import "../../styles/global-styles.scss";
 .case {
-    div{
+    div {
         margin-bottom: 18px;
     }
     .title {
@@ -8,7 +8,7 @@
         font-size: 32px;
         line-height: 37px;
         color: #004f6e;
-        opacity: .8;
+        opacity: 0.8;
     }
     .subtitle {
         font-family: Helvetica;
@@ -16,19 +16,51 @@
         font-size: 18px;
         line-height: 21px;
         color: #323232;
-        opacity: .8;
+        opacity: 0.8;
     }
     .description {
         font-family: Helvetica;
         font-size: 16px;
         line-height: 18px;
         color: #323232;
-        opacity: .8;
+        opacity: 0.8;
     }
     margin-bottom: 38px;
 }
-.case-discovery-grid{
-    .filters{
+.case-discovery-grid {
+    .filters {
         max-width: 360px;
+    }
+    .tags {
+        margin: 4px -4px;
+    }
+    .tag {
+        border-radius: 8px;
+        background-color: #d8f0f9;
+        color: #004f6e;
+        opacity: 0.8;
+        padding: 6px;
+        margin: 4px 4px;
+        display: inline-block;
+        font-family: Helvetica;
+        font-size: 16px;
+        line-height: 18px;
+        white-space: nowrap;
+        span{
+            display: inline-flex;
+        }
+        .display{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 110px;
+        }
+        .delete {
+            width: 16px;
+            height: 14px;
+            cursor: pointer;
+            padding-top: 2px;
+            margin-left: 4px;
+        }
     }
 }

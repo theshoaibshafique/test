@@ -4,13 +4,14 @@
  * This is the page we show when the user visits a url that doesn't have a route
  */
 
-import React, { useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import './style.scss';
 import { FormControl, Grid, InputAdornment, InputLabel, makeStyles, MenuItem, Select, TextField } from '@material-ui/core';
 import { CASES, SPECIALTIES, PROCEDURES, DATE_OPTIONS, ORS, TAGS } from './constants';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import MagnifyingGlass from './icons/MagnifyingGlass.svg';
 import moment from 'moment/moment';
+import CloseIcon from '@material-ui/icons/Close';
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
     marginBottom: 10,
@@ -57,6 +58,7 @@ const searchReducer = (state, event) => {
       procedures: {}
     }
   }
+
   if (event.name == 'date') {
     event.value = {
       selected: event.value.key,
@@ -71,17 +73,17 @@ const searchReducer = (state, event) => {
   }
 }
 
-function Case(props){
+function Case(props) {
   const { specialtyProcedures, caseId, startTime, endTime, roomName, tags } = props;
   const sTime = moment(startTime).format("hh:mm A");
   const eTime = moment(endTime).format("hh:mm A");
   const diff = moment(endTime).diff(moment(startTime));
   const date = moment(endTime).format("MMMM DD");
-  const {specialtyName, procedureName} = specialtyProcedures && specialtyProcedures.length && specialtyProcedures[0]
+  const { specialtyName, procedureName } = specialtyProcedures && specialtyProcedures.length && specialtyProcedures[0]
 
   const description = `Case ID ${caseId}  Started at ${sTime} / Ended at ${eTime} ${date} (${diff} Days ago)  ${roomName}`
   return (
-    <div className="case">
+    <div className="case" key={caseId}>
       <div className="title">
         {procedureName}
       </div>
@@ -90,6 +92,55 @@ function Case(props){
       </div>
       <div className="description">
         {description}
+      </div>
+    </div>
+  )
+}
+
+function TagsSelect(props) {
+  const { title, options, id, handleChange, searchData, classes } = props;
+  let [value, setValue] = React.useState(searchData[id]);
+  useEffect(() => {
+    setValue(searchData[id]);
+  }, [props.searchData]);
+  return (
+    <div>
+      <InputLabel className={classes.inputLabel}>{title}</InputLabel>
+      <Autocomplete
+        multiple
+        size="small"
+        id={id}
+        options={options}
+        disableClearable
+        getOptionLabel={option => option.display || option}
+        value={value || []}
+        renderTags={() => null}
+        onChange={(event, value) => handleChange(id, value)}
+        renderInput={params => (
+          <TextField
+            {...params}
+            variant="outlined"
+            name={id}
+            placeholder={`Filter by ${id}`}
+          />
+        )}
+      />
+      <div className="tags">
+        {value && value.map((tag, i) => {
+          return (
+            <span key={i} className={"tag"} >
+              <span><div className="display">{tag.display || tag}</div></span>
+              <span>
+                <CloseIcon fontSize='small' className='delete' onClick={(a) => {
+                  handleChange(id, value.filter(function (value, arrIndex) {
+                    return i !== arrIndex;
+                  }))
+                }} />
+              </span>
+
+            </span>
+          )
+        })}
       </div>
     </div>
   )
@@ -110,7 +161,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   });
 
   const handleChange = (event, value) => {
-    console.log(value)
     setSearchData({
       name: event,
       value: value
@@ -133,7 +183,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             variant="outlined"
           />
 
-          <InputLabel className={classes.inputLabel}>Filter by specialty</InputLabel>
+          <InputLabel className={classes.inputLabel}>Search by Date</InputLabel>
           <FormControl variant="outlined" size="small" fullWidth>
             <Select
               id="date"
@@ -150,81 +200,42 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             </Select>
           </FormControl>
 
-          <InputLabel className={classes.inputLabel}>Filter by specialty</InputLabel>
-          <Autocomplete
-            multiple
-            size="small"
-            id="specialties"
+          <TagsSelect
+            title="Filter by specialty"
+            classes={classes}
             options={SPECIALTIES}
-            getOptionLabel={option => option.display}
-            value={searchData.specialties}
-            onChange={(event, value) => handleChange('specialties', value)}
-            renderInput={params => (
-              <TextField
-                {...params}
-                variant="outlined"
-                name="specialties"
-                placeholder="Filter by specialties"
-              />
-            )}
+            id="specialties"
+            handleChange={handleChange}
+            searchData={searchData}
           />
 
-          <InputLabel className={classes.inputLabel}>Filter by procedure</InputLabel>
-          <Autocomplete
-            multiple
-            size="small"
-            id="procedures"
+          <TagsSelect
+            title="Filter by procedure"
+            classes={classes}
             options={PROCEDURES}
-            getOptionLabel={option => option.display}
-            value={searchData.procedures}
-            onChange={(event, value) => handleChange('procedures', value)}
-            renderInput={params => (
-              <TextField
-                {...params}
-                variant="outlined"
-                name="procedures"
-                placeholder="Filter by procedure"
-              />
-            )}
+            id="procedures"
+            handleChange={handleChange}
+            searchData={searchData}
           />
 
-          <InputLabel className={classes.inputLabel}>Operating room</InputLabel>
-          <Autocomplete
-            multiple
-            size="small"
-            id="roomNames"
+          <TagsSelect
+            title="Operating room"
+            classes={classes}
             options={ORS}
-            getOptionLabel={option => option.display}
-            value={searchData.roomNames}
-            onChange={(event, value) => handleChange('roomNames', value)}
-            renderInput={params => (
-              <TextField
-                {...params}
-                variant="outlined"
-                name="roomNames"
-                placeholder="Filter by OR"
-              />
-            )}
+            id="roomNames"
+            handleChange={handleChange}
+            searchData={searchData}
           />
 
-          <InputLabel className={classes.inputLabel}>Tags</InputLabel>
-          <Autocomplete
-            multiple
-            size="small"
-            id="tags"
+          <TagsSelect
+            title="Tags"
+            classes={classes}
             options={TAGS}
-            getOptionLabel={option => option}
-            value={searchData.tags}
-            onChange={(event, value) => handleChange('tags', value)}
-            renderInput={params => (
-              <TextField
-                {...params}
-                variant="outlined"
-                name="tags"
-                placeholder="Filter by tags"
-              />
-            )}
+            id="tags"
+            handleChange={handleChange}
+            searchData={searchData}
           />
+
         </Grid>
         <Grid item xs className="cases">
           {CASES.map((c) => (<Case {...c} />))}

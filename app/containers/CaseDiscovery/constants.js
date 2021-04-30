@@ -454,6 +454,19 @@ export const CASES = [
         "roomName": "OR1",
         "tags": ["Hypothension"]
     },
+    {
+        "specialtyProcedures": [
+            {
+                "specialtyName": "OTOLARYNGOLOGY",
+                "procedureName": "BIOPSY,LIVER,OR HEPATIC CYST EXCISION,LAPAROSCOPIC,ROBOTIC ASSISTED SI"
+            }
+        ],
+        "caseId": "2489209",
+        "startTime": "2021-04-23 11:42:52.357279",
+        "endTime": "2021-04-23 11:42:52.357279",
+        "roomName": "OR1",
+        "tags": ["Hypothension"]
+    },
 
 ]
 
