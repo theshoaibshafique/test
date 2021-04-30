@@ -106,6 +106,23 @@ function axiosFetch(url, fetchMethod, userToken, fetchBodyJSON, cancelToken) {
   });
 }
 
+function axiosFetchWithCredentials(url, fetchMethod, userToken, fetchBodyJSON) {
+  if (!url) {
+    return;
+  }
+  return axios({
+    method: fetchMethod,
+    url: url,
+    headers: {
+      'Authorization': 'Bearer ' + userToken,
+      'Content-Type': 'application/json'
+    },
+    withCredentials: true,
+    data: JSON.stringify(fetchBodyJSON),
+    mode: 'cors'
+  });
+}
+
 function formatDateTime(date) {
   let newDate = moment(date);
   return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
@@ -166,6 +183,7 @@ export default {
   genericFetchWithNoReturnMessage,
   axiosFetch,
   formatSecsToTime,
+  axiosFetchWithCredentials,
   formatDateTime,
   getName,
   generatePaddedDigits
