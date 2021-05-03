@@ -8,7 +8,8 @@ import React, { useEffect, useReducer, useState } from 'react';
 import './style.scss';
 import { Button, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
 import { SPECIALTIES, PROCEDURES, DATE_OPTIONS, ORS, TAGS } from './constants';
-
+import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import MagnifyingGlass from './icons/MagnifyingGlass.svg';
 import ArrowsDownUp from './icons/ArrowsDownUp.svg';
@@ -38,7 +39,7 @@ const MenuProps = {
 const getPresetDates = (option) => {
   switch (option) {
     case 'Any Time':
-      return { from: moment("2020-08-15"), to: moment('2021-04-04') }
+      return { from: moment("2019-08-15"), to: moment('2022-04-04') }
     case 'Last 24 hours':
       return { from: moment().subtract(1, 'days'), to: moment() }
     case 'Last week':
@@ -70,7 +71,21 @@ const searchReducer = (state, event) => {
       selected: event.value.key,
       ...getPresetDates(event.value.key)
     }
+  } else if (event.name == 'custom-to') {
+    event.name = 'date'
+    event.value = {
+      ...state.date,
+      to: event.value,
+    }
+
+  } else if (event.name == 'custom-from') {
+    event.name = 'date'
+    event.value = {
+      ...state.date,
+      from: event.value
+    }
   }
+
 
   console.log(event.value)
   return {
@@ -258,13 +273,16 @@ function TagsSelect(props) {
 
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
   // const { children, index, ...other } = props;
+  //TODO: replace min/maxDate
+  const minDate = moment("2019-08-15");
+  const maxDate = moment('2022-04-04');
 
   const classes = useStyles();
   const [searchData, setSearchData] = useReducer(searchReducer, {
     date: {
       selected: DATE_OPTIONS[0],
-      from: moment("2020-08-15"),
-      to: moment('2021-04-04')
+      from: minDate,
+      to: maxDate
     },
     caseId: "",
     specialties: [],
@@ -284,7 +302,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const specialties = searchData.specialties.map((s) => s.display)
   const procedures = searchData.procedures.map((s) => s.display)
   const roomNames = searchData.roomNames.map((s) => s.display)
-
+  const { to, from } = searchData.date;
   // for any
   const [includeAllTags, setIncludeAllTags] = React.useState(1);
 
@@ -293,6 +311,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   let filterCases = CASES.filter((c) => {
     return (
       (`${c.caseId}`.includes(searchData.caseId)) &&
+      (!from || moment(c.startTime).isAfter(from)) && 
+      (!to || moment(c.endTime).isBefore(to)) && 
       (!specialties.length || specialties.includes(c.specialtyProcedures[0].specialtyName)) &&
       (!procedures.length || procedures.includes(c.specialtyProcedures[0].procedureName)) &&
       (!roomNames.length || roomNames.includes(c.roomName)) &&
@@ -317,6 +337,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   if (isOldest) {
     filterCases = filterCases.reverse()
   }
+  console.log(searchData.date.selected)
+
+  const isCustomDate = searchData.date.selected == "Custom date range";
 
   return (
     <section className="case-discovery">
@@ -335,6 +358,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             variant="outlined"
           />
 
+
+
           <InputLabel className={classes.inputLabel}>Search by Date</InputLabel>
           <FormControl variant="outlined" size="small" fullWidth>
             <Select
@@ -351,6 +376,55 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
               ))}
             </Select>
           </FormControl>
+
+          {isCustomDate && (
+            <div className="custom-dates">
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <div className="start-date">
+                  <InputLabel className={classes.inputLabel}>From</InputLabel>
+                  <DatePicker
+                    disableToolbar
+                    size="small"
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    name="startDate"
+                    minDate={minDate}
+                    maxDate={searchData.date.to || maxDate}
+                    placeholder="Pick Date"
+                    inputVariant="outlined"
+                    className="custom-date"
+                    autoOk
+                    value={searchData.date.from || null}
+                    inputProps={{ autoComplete: 'off' }}
+                    onChange={(e, v) => handleChange('custom-from', e)}
+                    id="startDate"
+                  />
+                </div>
+                <div className="end-date">
+                  <InputLabel className={classes.inputLabel}>To</InputLabel>
+                  <DatePicker
+                    disableToolbar
+                    size="small"
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    name="endDate"
+                    minDate={searchData.date.from || minDate}
+                    maxDate={maxDate}
+                    placeholder="Pick Date"
+                    inputVariant="outlined"
+                    className="custom-date"
+                    autoOk
+                    value={searchData.date.to || null}
+                    inputProps={{ autoComplete: 'off' }}
+                    onChange={(e, v) => handleChange('custom-to', e)}
+                    id="endDate"
+                  />
+                </div>
+
+              </MuiPickersUtilsProvider>
+            </div>
+
+          )}
 
           <TagsSelect
             title="Filter by specialty"
@@ -461,4 +535,4 @@ function generateFakeCases(numCases) {
   return Array.from({ length: numCases }, () => fakeCase());
 }
 
-const CASES = generateFakeCases(500);
+const CASES = generateFakeCases(25);
