@@ -6,8 +6,9 @@
 
 import React, { useEffect, useReducer, useState } from 'react';
 import './style.scss';
-import { Button, FormControl, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Select, TextField } from '@material-ui/core';
+import { Button, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
 import { SPECIALTIES, PROCEDURES, DATE_OPTIONS, ORS, TAGS } from './constants';
+
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import MagnifyingGlass from './icons/MagnifyingGlass.svg';
 import ArrowsDownUp from './icons/ArrowsDownUp.svg';
@@ -109,19 +110,98 @@ function Case(props) {
       <div className="description">
         {description}
       </div>
-      {tagDisplays.length >0 && <div className="tags">
+      {tagDisplays.length > 0 && <div className="tags">
         {tagDisplays}
       </div>}
     </div>
   )
 }
 
+const useStylesRadio = makeStyles({
+  root: {
+    '&:hover': {
+      // backgroundColor: 'transparent',
+    },
+  },
+  icon: {
+    borderRadius: '50%',
+    width: 16,
+    height: 16,
+    boxShadow: 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
+    backgroundColor: '#FFFFFF',
+    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
+    '$root.Mui-focusVisible &': {
+      outline: '2px auto rgba(19,124,189,.6)',
+      outlineOffset: 2,
+    },
+    'input:hover ~ &': {
+      backgroundColor: '#FFFFFF',
+    },
+    'input:disabled ~ &': {
+      boxShadow: 'none',
+      background: 'rgba(206,217,224,.5)',
+    },
+  },
+  checkedIcon: {
+    borderRadius: '50%',
+    width: 16,
+    height: 16,
+    backgroundColor: '#FFFFFF',
+    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))',
+    '&:before': {
+      display: 'block',
+      width: 16,
+      height: 16,
+      backgroundImage: 'radial-gradient(#014F6E,#014F6E 28%,transparent 32%)',
+      content: '""',
+    },
+    'input:hover ~ &': {
+      backgroundColor: '#FFFFFF',
+    },
+    boxShadow: 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
+    // backgroundColor: '#f5f8fa',
+    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
+    '$root.Mui-focusVisible &': {
+      outline: '2px auto rgba(19,124,189,.6)',
+      outlineOffset: 2,
+    },
+    'input:hover ~ &': {
+      backgroundColor: '#ebf1f5',
+    },
+    'input:disabled ~ &': {
+      boxShadow: 'none',
+      background: 'rgba(206,217,224,.5)',
+    },
+  },
+});
+
+function CustomRadio(props) {
+  const classes = useStylesRadio();
+
+  return (
+    <Radio
+      className={classes.root}
+      disableRipple
+      color="default"
+      checkedIcon={<span className={classes.checkedIcon} />}
+      icon={<span className={classes.icon} />}
+      {...props}
+    />
+  );
+}
+
 function TagsSelect(props) {
-  const { title, options, id, handleChange, searchData, classes } = props;
+  const { title, options, id, handleChange, searchData, classes, includeToggle, includeAllTags, setIncludeAllTags } = props;
   let [value, setValue] = React.useState(searchData[id]);
+  let [includeAll, setIncludeAll] = React.useState(includeAllTags);
+
   useEffect(() => {
     setValue(searchData[id]);
   }, [props.searchData]);
+
+  useEffect(() => {
+    setIncludeAll(includeAllTags);
+  }, [props.includeAllTags]);
   return (
     <div>
       <InputLabel className={classes.inputLabel}>{title}</InputLabel>
@@ -144,6 +224,16 @@ function TagsSelect(props) {
           />
         )}
       />
+
+      {includeToggle && (
+        <div className="include-toggle">
+          <RadioGroup aria-label="position" name="position" value={includeAll}>
+            <FormControlLabel value={1} control={<CustomRadio checked={includeAll == 1} small color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Match all tags (and)</span>} />
+            <FormControlLabel value={0} control={<CustomRadio checked={includeAll == 0} small color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags (or)</span>} />
+          </RadioGroup>
+        </div>
+      )}
+
       <div className="tags">
         {value && value.map((tag, i) => {
           return (
@@ -195,19 +285,22 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const procedures = searchData.procedures.map((s) => s.display)
   const roomNames = searchData.roomNames.map((s) => s.display)
 
-  const anyTag = false;
-  //Filter cases
+  // for any
+  const [includeAllTags, setIncludeAllTags] = React.useState(1);
 
+  //Filter cases
+  console.log(includeAllTags)
   let filterCases = CASES.filter((c) => {
     return (
       (`${c.caseId}`.includes(searchData.caseId)) &&
       (!specialties.length || specialties.includes(c.specialtyProcedures[0].specialtyName)) &&
       (!procedures.length || procedures.includes(c.specialtyProcedures[0].procedureName)) &&
       (!roomNames.length || roomNames.includes(c.roomName)) &&
-      (!searchData.tags.length || (anyTag && searchData.tags.every((t) => c.tags.includes(t))) || (!anyTag && c.tags.some((t) => searchData.tags.includes(t))))
+      (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => c.tags.includes(t))) || (includeAllTags == 0 && c.tags.some((t) => searchData.tags.includes(t))))
     );
   })
   filterCases.sort((a, b) => moment(b.endTime).valueOf() - moment(a.endTime).valueOf())
+
 
   // for Sorting the cases
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -293,6 +386,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             id="tags"
             handleChange={handleChange}
             searchData={searchData}
+            includeToggle={true}
+            includeAllTags={includeAllTags}
+            setIncludeAllTags={setIncludeAllTags}
           />
 
         </Grid>
@@ -365,4 +461,4 @@ function generateFakeCases(numCases) {
   return Array.from({ length: numCases }, () => fakeCase());
 }
 
-const CASES = generateFakeCases(25);
+const CASES = generateFakeCases(500);

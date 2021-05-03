@@ -18,6 +18,17 @@
         display: flex;
         justify-content: space-between;
     }
+    .include-toggle{
+        margin-top: 12px;
+        color: #323232 !important;
+        .include-label{
+            font-family: Helvetica;
+            font-size: 16px;
+            line-height: 18px;
+            opacity: .8;
+            color: #323232;
+        }
+    }
     .filters {
         max-width: 360px;
     }
