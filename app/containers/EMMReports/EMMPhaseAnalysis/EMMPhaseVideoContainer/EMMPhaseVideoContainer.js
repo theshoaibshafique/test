@@ -17,23 +17,18 @@ import {
   arrayToString
 } from './pallycon-helper';
 const videoOptions = {
-  "nativeControlsForTouch": false,
+  autoplay: true,
   controls: true,
+  preload: 'auto',
+  errorDisplay: true,
   fluid: true,
-  playbackSpeed: {
-    enabled: true,
-    initialSpeed: 1.0,
-    speedLevels: [
-      { name: "x4.0", value: 4.0 },
-      { name: "x3.0", value: 3.0 },
-      { name: "x2.0", value: 2.0 },
-      { name: "x1.0", value: 1.0 },
-      { name: "x0.5", value: 0.5 },
-    ]
-  },
-  "logo": { "enabled": false },
-}
-
+  aspectRatio: '16:9',
+  controlBar: true,
+  playbackRates: [0.5, 1, 2, 3, 4],
+  userActions: {
+    hotkeys: true
+  }
+};
 const SSTSwitch = withStyles((theme) => ({
   switchBase: {
     color: '#ABABAB',
@@ -147,47 +142,36 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   createVideoPlayer(videoID) {
-    const videoJsOptions = {
-      autoplay: true,
-      controls: true,
-      preload: 'auto',
-      errorDisplay: true,
-      fluid: true,
-      aspectRatio: '16:9',
-      controlBar: true,
-      playbackRates: [0.5, 1, 1.5, 2],
-      userActions: {
-        hotkeys: true
-      }
-    };
+
     const { emmPresenterMode, userToken } = this.props;
     this.setState({ noVideo: false })
     const drmType = checkDrmType();
     const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}?asset=${videoID}&drm_type=${drmType}`;
 
-    globalFunctions.genericFetch(mediaURL, 'get', userToken, {})
+    globalFunctions.axiosFetchWithCredentials(mediaURL, 'get', userToken, {})
       .then(result => {
+        result = result.data
         if (result) {
           this.myPlayer = videojs(
             this.videoNode,
-            videoJsOptions,
+            videoOptions,
             function onPlayerReady() { }
           );
-          
-          const {src, token} = result;
-          if (typeof this.myPlayer.eme === 'function'){
+
+          const { src, token } = result;
+          if (typeof this.myPlayer.eme === 'function') {
             this.myPlayer.eme();
           }
-      
+
           let playerConfig;
-          if (emmPresenterMode){
+          if (emmPresenterMode) {
             playerConfig = {
               src: src,
               type: 'application/dash+xml',
               // withCredentials: true,
             };
-          }else if (drmType === 'Widevine') {
-            
+          } else if (drmType === 'Widevine') {
+
             playerConfig = {
               src: src,
               type: 'application/dash+xml',
@@ -221,9 +205,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             };
           }
           this.myPlayer.src(playerConfig);
-          this.myPlayer.ready((y)=> {
+          this.myPlayer.ready((y) => {
             this.myPlayer.on('timeupdate', (e) => {
-              if (!e || typeof e.target.player.currentTime !== 'function'){
+              if (!e || typeof e.target.player.currentTime !== 'function') {
                 return;
               }
               this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
