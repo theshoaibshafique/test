@@ -1,6 +1,5 @@
 @import "../../styles/global-styles.scss";
 
-
 .case-discovery-grid {
     // max-width: 1198px;
     // margin: auto !important;
@@ -19,28 +18,28 @@
         justify-content: space-between;
         margin-top: 9px;
     }
-    
+
     .filters {
         max-width: 360px;
-        .select-header{
+        .select-header {
             display: flex;
             justify-content: space-between;
         }
-        .custom-dates{
+        .custom-dates {
             display: flex;
             justify-content: space-between;
-            .start-date{
+            .start-date {
                 margin-right: 8px;
             }
         }
-        .include-toggle{
+        .include-toggle {
             margin-top: 12px;
             color: #323232 !important;
-            .include-label{
+            .include-label {
                 font-family: Helvetica;
                 font-size: 16px;
                 line-height: 18px;
-                opacity: .8;
+                opacity: 0.8;
                 color: #323232;
             }
         }
@@ -121,13 +120,37 @@
             font-size: 16px;
             line-height: 18px;
             white-space: nowrap;
-            .display{
+            .display {
                 margin: auto 4px;
             }
-            &.Flagged{
-                background-color: #FFCFCF;
-                color: #7B2D2D;
+            &.Flagged {
+                background-color: #ffcfcf;
+                color: #7b2d2d;
             }
+        }
+    }
+    .no-cases {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        text-align: center;
+        .title {
+            font-family: Helvetica;
+            font-size: 32px;
+            line-height: 37px;
+
+            color: #004f6e;
+
+            opacity: 0.8;
+            margin-bottom: 19px;
+        }
+        .subtitle {
+            font-family: Helvetica;
+            font-size: 16px;
+            line-height: 18px;
+            color: #323232;
+            opacity: 0.8;
         }
     }
 }

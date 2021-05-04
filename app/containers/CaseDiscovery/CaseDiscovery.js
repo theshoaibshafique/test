@@ -30,6 +30,7 @@ import globalFunctions from '../../utils/global-functions';
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
     fontFamily: 'Helvetica',
+    fontSize:16,
     marginBottom: 10,
     marginTop: 30,
     color: '#323232',
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   clear: {
     fontFamily: 'Helvetica',
+    fontSize:16,
     marginBottom: 10,
     marginTop: 30,
     color: '#919191',
@@ -86,8 +88,9 @@ const searchReducer = (state, event) => {
       procedures: {}
     }
   }
-
-  if (event.name == 'date') {
+  if (event.name == 'date-clear'){
+    event.name = 'date'
+  }else if (event.name == 'date') {
     event.value = {
       selected: event.value.key,
       ...getPresetDates(event.value.key)
@@ -147,10 +150,10 @@ function Case(props) {
     }
   }
 
-  const tagDisplays = tags.map((tag) => {
+  const tagDisplays = tags.map((tag, i) => {
     tag = tag.display || tag;
     return (
-      <span className={`case-tag ${tag}`}>
+      <span className={`case-tag ${tag}`} key={tag}>
         <span>
           {getTag(tag)}
         </span>
@@ -225,8 +228,8 @@ function TagsSelect(props) {
       {includeToggle && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
-            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} small color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Match all tags (and)</span>} />
-            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} small color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags (or)</span>} />
+            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Match all tags (and)</span>} />
+            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags (or)</span>} />
           </RadioGroup>
         </div>
       )}
@@ -304,7 +307,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   })
   filterCases.sort((a, b) => moment(b.endTime).valueOf() - moment(a.endTime).valueOf())
 
-
   // for Sorting the cases
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isOldest, setIsOldest] = React.useState(0);
@@ -323,6 +325,25 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   console.log(searchData.date.selected)
 
   const isCustomDate = searchData.date.selected == "Custom date range";
+
+  const getCasesView = () => {
+    if (filterCases && filterCases.length){
+      return filterCases.map((c,i) => (<Case key={i} {...c} />))
+    }
+    return (
+      <div className="no-cases">
+        <div className="title">
+          Nothing matches your search
+        </div>
+        <div className="subtitle">
+          Remove any filters, or search for
+        </div>
+        <div className="subtitle">
+          something less specific.
+        </div>
+      </div>
+    )
+  }
 
   return (
     <section className="case-discovery">
@@ -343,7 +364,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
           <div className="select-header">
           <InputLabel className={classes.inputLabel}>Date</InputLabel>
-            <div className={classes.clear} onClick={(e, v) => handleChange('date', defaultDate)}>Clear</div>
+            <div className={classes.clear} onClick={(e, v) => handleChange('date-clear', defaultDate)}>Clear</div>
           </div>
           <FormControl variant="outlined" size="small" fullWidth>
             <Select
@@ -471,8 +492,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
               </Menu>
             </div>
           </div>
-
-          {filterCases.map((c) => (<Case {...c} />))}
+          
+          {getCasesView()}
         </Grid>
       </Grid>
     </section>
