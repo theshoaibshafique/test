@@ -1,4 +1,4 @@
-export const DATE_OPTIONS = ['Any Time', 'Last 24 hours', 'Last week', 'Last month', 'Last year', 'Custom date range'];
+export const DATE_OPTIONS = ['Any Time','Last week', 'Last month', 'Last year', 'Custom date range'];
 
 
 export const SPECIALTIES = [
@@ -471,12 +471,13 @@ export const CASES = [
 ]
 
 export const TAGS = [
-    "Incident",
-    "Hypothermic",
-    "Hypoxic",
-    "Hypotensive",
-    "Procedure time",
-    "Bad schedule time estimate",
-    "Turnover time",
-    "Fluff time"
+    "Flagged",
+    "Hypothermia",
+    "Hypoxia",
+    "Hypotension",
+    "Case Duration",
+    "Late Start",
+    "Turnover Duration",
+    "First Case",
+    "eMM"
 ]

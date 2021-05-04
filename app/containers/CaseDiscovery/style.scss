@@ -17,10 +17,15 @@
         margin-bottom: 24px;
         display: flex;
         justify-content: space-between;
+        margin-top: 9px;
     }
     
     .filters {
         max-width: 360px;
+        .select-header{
+            display: flex;
+            justify-content: space-between;
+        }
         .custom-dates{
             display: flex;
             justify-content: space-between;
@@ -111,11 +116,18 @@
             opacity: 0.8;
             padding: 6px;
             margin: 0 4px;
-            display: inline-block;
+            display: inline-flex;
             font-family: Helvetica;
             font-size: 16px;
             line-height: 18px;
             white-space: nowrap;
+            .display{
+                margin: auto 4px;
+            }
+            &.Flagged{
+                background-color: #FFCFCF;
+                color: #7B2D2D;
+            }
         }
     }
 }

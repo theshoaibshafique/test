@@ -13,12 +13,35 @@ import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import MagnifyingGlass from './icons/MagnifyingGlass.svg';
 import ArrowsDownUp from './icons/ArrowsDownUp.svg';
+import CaseDuration from './icons/CaseDuration.svg';
+import eMM from './icons/eMM.svg';
+import FirstCase from './icons/FirstCase.svg';
+import Flagged from './icons/Flag.svg';
+import Hypotension from './icons/Hypotension.svg';
+import Hypothermia from './icons/Hypothermia.svg';
+import Hypoxia from './icons/Hypoxia.svg';
+import LateStart from './icons/LateStart.svg';
+import TurnoverDuration from './icons/TurnoverDuration.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
+import { StyledRadio } from '../../components/SharedComponents/SharedComponents';
+import globalFunctions from '../../utils/global-functions';
+
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
+    fontFamily: 'Helvetica',
     marginBottom: 10,
-    marginTop: 30
+    marginTop: 30,
+    color: '#323232',
+    opacity: .8
+  },
+  clear: {
+    fontFamily: 'Helvetica',
+    marginBottom: 10,
+    marginTop: 30,
+    color: '#919191',
+    opacity: .8,
+    cursor: 'pointer'
   },
   search: {
     marginBottom: 10
@@ -40,8 +63,6 @@ const getPresetDates = (option) => {
   switch (option) {
     case 'Any Time':
       return { from: moment("2019-08-15"), to: moment('2022-04-04') }
-    case 'Last 24 hours':
-      return { from: moment().subtract(1, 'days'), to: moment() }
     case 'Last week':
       return { from: moment().subtract(7, 'days'), to: moment() }
     case 'Last month':
@@ -86,8 +107,6 @@ const searchReducer = (state, event) => {
     }
   }
 
-
-  console.log(event.value)
   return {
     ...state,
     [event.name]: event.value
@@ -102,13 +121,41 @@ function Case(props) {
   const date = moment(endTime).format("MMMM DD");
   const { specialtyName, procedureName } = specialtyProcedures && specialtyProcedures.length && specialtyProcedures[0];
 
-  const tagDisplays = tags.map((tag) => {
-    return (
-      <span className="case-tag">
-        <span><div className="display">{tag.display || tag}</div></span>
-        <span>
 
+  const getTag = (tag) => {
+    switch (`${tag}`.toLowerCase()) {
+      case "flagged":
+        return <img src={Flagged} />
+      case "hypothermia":
+        return <img src={Hypothermia} />
+      case "hypoxia":
+        return <img src={Hypoxia} />
+      case "hypotension":
+        return <img src={Hypotension} />
+      case "case duration":
+        return <img src={CaseDuration} />
+      case "late start":
+        return <img src={LateStart} />
+      case "turnover duration":
+        return <img src={TurnoverDuration} />
+      case "first case":
+        return <img src={FirstCase} />
+      case "emm":
+        return <img src={eMM} />
+      default:
+        break;
+    }
+  }
+
+  const tagDisplays = tags.map((tag) => {
+    tag = tag.display || tag;
+    return (
+      <span className={`case-tag ${tag}`}>
+        <span>
+          {getTag(tag)}
         </span>
+        <div className="display">{tag}</div>
+
       </span>
     )
   })
@@ -117,7 +164,7 @@ function Case(props) {
   return (
     <div className="case" key={caseId}>
       <div className="title">
-        {procedureName}
+        {globalFunctions.toTitleCase(procedureName)}
       </div>
       <div className="subtitle">
         {specialtyName}
@@ -132,83 +179,12 @@ function Case(props) {
   )
 }
 
-const useStylesRadio = makeStyles({
-  root: {
-    '&:hover': {
-      // backgroundColor: 'transparent',
-    },
-  },
-  icon: {
-    borderRadius: '50%',
-    width: 16,
-    height: 16,
-    boxShadow: 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
-    backgroundColor: '#FFFFFF',
-    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
-    '$root.Mui-focusVisible &': {
-      outline: '2px auto rgba(19,124,189,.6)',
-      outlineOffset: 2,
-    },
-    'input:hover ~ &': {
-      backgroundColor: '#FFFFFF',
-    },
-    'input:disabled ~ &': {
-      boxShadow: 'none',
-      background: 'rgba(206,217,224,.5)',
-    },
-  },
-  checkedIcon: {
-    borderRadius: '50%',
-    width: 16,
-    height: 16,
-    backgroundColor: '#FFFFFF',
-    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))',
-    '&:before': {
-      display: 'block',
-      width: 16,
-      height: 16,
-      backgroundImage: 'radial-gradient(#014F6E,#014F6E 28%,transparent 32%)',
-      content: '""',
-    },
-    'input:hover ~ &': {
-      backgroundColor: '#FFFFFF',
-    },
-    boxShadow: 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
-    // backgroundColor: '#f5f8fa',
-    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
-    '$root.Mui-focusVisible &': {
-      outline: '2px auto rgba(19,124,189,.6)',
-      outlineOffset: 2,
-    },
-    'input:hover ~ &': {
-      backgroundColor: '#ebf1f5',
-    },
-    'input:disabled ~ &': {
-      boxShadow: 'none',
-      background: 'rgba(206,217,224,.5)',
-    },
-  },
-});
-
-function CustomRadio(props) {
-  const classes = useStylesRadio();
-
-  return (
-    <Radio
-      className={classes.root}
-      disableRipple
-      color="default"
-      checkedIcon={<span className={classes.checkedIcon} />}
-      icon={<span className={classes.icon} />}
-      {...props}
-    />
-  );
-}
 
 function TagsSelect(props) {
-  const { title, options, id, handleChange, searchData, classes, includeToggle, includeAllTags, setIncludeAllTags } = props;
+  const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, setIncludeAllTags, freeSolo } = props;
   let [value, setValue] = React.useState(searchData[id]);
   let [includeAll, setIncludeAll] = React.useState(includeAllTags);
+  const classes = useStyles();
 
   useEffect(() => {
     setValue(searchData[id]);
@@ -219,13 +195,19 @@ function TagsSelect(props) {
   }, [props.includeAllTags]);
   return (
     <div>
-      <InputLabel className={classes.inputLabel}>{title}</InputLabel>
+      <div className="select-header">
+        <InputLabel className={classes.inputLabel}>{title}</InputLabel>
+        <div className={classes.clear} onClick={() => handleChange(id, [])}>Clear</div>
+      </div>
       <Autocomplete
         multiple
         size="small"
+        freeSolo={freeSolo}
         id={id}
         options={options}
         disableClearable
+        // disableCloseOnSelect
+        clearOnEscape
         getOptionLabel={option => option.display || option}
         value={value || []}
         renderTags={() => null}
@@ -235,7 +217,7 @@ function TagsSelect(props) {
             {...params}
             variant="outlined"
             name={id}
-            placeholder={`Filter by ${id}`}
+            placeholder={placeholder}
           />
         )}
       />
@@ -243,8 +225,8 @@ function TagsSelect(props) {
       {includeToggle && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
-            <FormControlLabel value={1} control={<CustomRadio checked={includeAll == 1} small color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Match all tags (and)</span>} />
-            <FormControlLabel value={0} control={<CustomRadio checked={includeAll == 0} small color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags (or)</span>} />
+            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} small color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Match all tags (and)</span>} />
+            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} small color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags (or)</span>} />
           </RadioGroup>
         </div>
       )}
@@ -278,12 +260,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const maxDate = moment('2022-04-04');
 
   const classes = useStyles();
+  const defaultDate = {
+    selected: DATE_OPTIONS[0],
+    from: minDate,
+    to: maxDate
+  };
   const [searchData, setSearchData] = useReducer(searchReducer, {
-    date: {
-      selected: DATE_OPTIONS[0],
-      from: minDate,
-      to: maxDate
-    },
+    date: defaultDate,
     caseId: "",
     specialties: [],
     procedures: [],
@@ -292,6 +275,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   });
   // Change/update the filter
   const handleChange = (event, value) => {
+    console.log(event, value)
     setSearchData({
       name: event,
       value: value
@@ -300,21 +284,20 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
 
   const specialties = searchData.specialties.map((s) => s.display)
-  const procedures = searchData.procedures.map((s) => s.display)
+  const procedures = searchData.procedures.map((s) => s.display || s)
   const roomNames = searchData.roomNames.map((s) => s.display)
   const { to, from } = searchData.date;
   // for any
   const [includeAllTags, setIncludeAllTags] = React.useState(1);
 
   //Filter cases
-  console.log(includeAllTags)
   let filterCases = CASES.filter((c) => {
     return (
       (`${c.caseId}`.includes(searchData.caseId)) &&
-      (!from || moment(c.startTime).isAfter(from)) && 
-      (!to || moment(c.endTime).isBefore(to)) && 
+      (!from || moment(c.startTime).isAfter(from)) &&
+      (!to || moment(c.endTime).isBefore(to)) &&
       (!specialties.length || specialties.includes(c.specialtyProcedures[0].specialtyName)) &&
-      (!procedures.length || procedures.includes(c.specialtyProcedures[0].procedureName)) &&
+      (!procedures.length || procedures.every((p) => c.specialtyProcedures[0].procedureName.toLowerCase().includes(p.toLowerCase()))) &&
       (!roomNames.length || roomNames.includes(c.roomName)) &&
       (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => c.tags.includes(t))) || (includeAllTags == 0 && c.tags.some((t) => searchData.tags.includes(t))))
     );
@@ -358,9 +341,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             variant="outlined"
           />
 
-
-
-          <InputLabel className={classes.inputLabel}>Search by Date</InputLabel>
+          <div className="select-header">
+          <InputLabel className={classes.inputLabel}>Date</InputLabel>
+            <div className={classes.clear} onClick={(e, v) => handleChange('date', defaultDate)}>Clear</div>
+          </div>
           <FormControl variant="outlined" size="small" fullWidth>
             <Select
               id="date"
@@ -427,8 +411,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           )}
 
           <TagsSelect
-            title="Filter by specialty"
-            classes={classes}
+            title="Specialty"
+            placeholder="Filter by specialty"
             options={SPECIALTIES}
             id="specialties"
             handleChange={handleChange}
@@ -436,17 +420,18 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           />
 
           <TagsSelect
-            title="Filter by procedure"
-            classes={classes}
+            title="Procedure"
+            placeholder="Filter by procedure"
             options={PROCEDURES}
             id="procedures"
+            freeSolo={true}
             handleChange={handleChange}
             searchData={searchData}
           />
 
           <TagsSelect
             title="Operating room"
-            classes={classes}
+            placeholder="Filter by OR"
             options={ORS}
             id="roomNames"
             handleChange={handleChange}
@@ -455,7 +440,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
           <TagsSelect
             title="Tags"
-            classes={classes}
+            placeholder="Filter by tags"
             options={TAGS}
             id="tags"
             handleChange={handleChange}
@@ -535,4 +520,4 @@ function generateFakeCases(numCases) {
   return Array.from({ length: numCases }, () => fakeCase());
 }
 
-const CASES = generateFakeCases(25);
+const CASES = generateFakeCases(50);

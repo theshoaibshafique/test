@@ -178,6 +178,15 @@ function generatePaddedDigits(n, m, size, d) {
   return result;
 }
 
+function toTitleCase(str) {
+  return str.replace(
+    /\w\S*/g,
+    function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    }
+  );
+}
+
 export default {
   genericFetch,
   genericFetchWithNoReturnMessage,
@@ -186,5 +195,6 @@ export default {
   axiosFetchWithCredentials,
   formatDateTime,
   getName,
-  generatePaddedDigits
+  generatePaddedDigits,
+  toTitleCase
 };
