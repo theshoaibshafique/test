@@ -112,8 +112,8 @@ function Case(props) {
 
 
   return (
-    <div className="case" key={caseId} onClick={onClick} >
-      <div className="title">
+    <div className="case" key={caseId}  >
+      <div className="title" onClick={onClick}>
         {procedureName}
       </div>
       <div className="subtitle">
@@ -178,8 +178,8 @@ function TagsSelect(props) {
       {includeToggle && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
-            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Match all tags (and)</span>} />
-            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags (or)</span>} />
+            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all tags</span>} />
+            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
           </RadioGroup>
         </div>
       )}
@@ -254,7 +254,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // const { children, index, ...other } = props;
   //TODO: replace min/maxDate
   const minDate = moment("2019-08-15");
-  const maxDate = moment('2022-04-04');
+  const maxDate = moment();
 
   const classes = useStyles();
   const defaultDate = {
@@ -468,7 +468,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         />
 
       </Grid>
-      <Grid item xs className="cases">
+      <Grid item xs>
         <div className="header">
           <div className="header-label">
             {`Showing ${filterCases && filterCases.length || 0} cases`}
@@ -488,7 +488,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             </Menu>
           </div>
         </div>
-        {getCasesView()}
+        <div className="cases">
+          {getCasesView()}
+        </div>
+
       </Grid>
     </Grid>
   )
@@ -499,7 +502,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
       <div hidden={!caseId} className="case-discovery-detailed">
-        <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom:2 }}/> Back</div>
+        <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
       </div>
     </section>
   );
