@@ -1,4 +1,4 @@
-export const DATE_OPTIONS = ['Any Time','Last week', 'Last month', 'Last year', 'Custom date range'];
+export const DATE_OPTIONS = ['Any Time', 'Last week', 'Last month', 'Last year', 'Custom date range'];
 
 
 export const SPECIALTIES = [
@@ -481,3 +481,77 @@ export const TAGS = [
     "First Case",
     "eMM"
 ]
+
+export const DETAILED_CASE = {
+    "specialtyProcedures": [
+        {
+            "specialtyName": "UROLOGY",
+            "procedureName": "Abdominal Lymphadenectomy, Regional, Including Celiac, Gastric, Portal, Peripancreatic, With or Without Para-Aortic and Vena Caval Nodes (List in Addition to Primary Procedure) "
+        }
+    ],
+    "caseId": "2489209",
+    "startTime": "2021-04-23 11:42:52.357279",
+    "endTime": "2021-04-23 11:42:52.357279",
+    "scheduledStartTime": "2021-04-23 11:42:52.357279",
+    "scheduledEndTime": "2021-04-23 11:42:52.357279",
+    "procedureTime": "2021-04-23 11:42:52.357279",
+    "roomName": "OR1",
+    "tags": ["Hypoxia", "Flagged"],
+
+    "isLeftSided": true,
+    "isRightSided":false,
+
+    "timeline": [
+        { "value": 3600, "text": "Patient Enter", "class": "styleA" },
+    	{ "value": 48000, "text": "Patient Exit", "class": "styleB" }
+    ],
+    "hl7Data": [
+        {
+            "title": "Blood Pressure",
+            "unit": "?",
+            "is_spaced_unit":false,
+            "xValues": [0, 1600, 3200, 4800],
+            "yValues": [66, 92, 102, 0]
+        },
+        {
+            "title": "Temperature",
+            "unit": "?",
+            "is_spaced_unit":false,
+            "xValues": [0, 1600, 3200, 4800],
+            "yValues": [35, 36, 36, 34]
+        },
+
+    ],
+
+    "procedureData": {
+        "unit": "?",
+        "xValues": [0, 1600, 3200, 4800],
+        "yValues": [35, 36, 36, 34]
+    },
+
+    "schedule": [
+        {
+            "specialtyProcedures": [
+                {
+                    "specialtyName": "GYNECOLOGY & OBSTETRICS",
+                    "procedureName": "COLECTOMY, PARTIAL, ROBOT-ASSISTED, LAPAROSCOPIC, WITH ANASTOMOSIS"
+                }
+            ],
+            "caseId": "2489209",
+            "startTime": "2021-04-23 11:42:52.357279",
+            "endTime": "2021-04-23 11:42:52.357279",
+        },
+        {
+            "specialtyProcedures": [
+                {
+                    "specialtyName": "GYNECOLOGY & OBSTETRICS",
+                    "procedureName": "Abdominal Lymphadenectomy, Regional, Including Celiac, Gastric, Portal, Peripancreatic, With or Without Para-Aortic and Vena Caval Nodes (List in Addition to Primary Procedure)"
+                }
+            ],
+            "caseId": "2489209",
+            "startTime": "2021-04-23 11:42:52.357279",
+            "endTime": "2021-04-23 11:42:52.357279",
+        }
+    ]
+
+}

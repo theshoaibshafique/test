@@ -25,12 +25,12 @@ import TurnoverDuration from './icons/TurnoverDuration.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
 import { StyledRadio } from '../../components/SharedComponents/SharedComponents';
-import globalFunctions from '../../utils/global-functions';
+import ArrowBack from '@material-ui/icons/ArrowBackIos';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
     fontFamily: 'Helvetica',
-    fontSize:16,
+    fontSize: 16,
     marginBottom: 10,
     marginTop: 30,
     color: '#323232',
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   clear: {
     fontFamily: 'Helvetica',
-    fontSize:16,
+    fontSize: 16,
     marginBottom: 10,
     marginTop: 30,
     color: '#919191',
@@ -61,63 +61,10 @@ const MenuProps = {
   },
 }
 
-const getPresetDates = (option) => {
-  switch (option) {
-    case 'Any Time':
-      return { from: moment("2019-08-15"), to: moment('2022-04-04') }
-    case 'Last week':
-      return { from: moment().subtract(7, 'days'), to: moment() }
-    case 'Last month':
-      return { from: moment().subtract(1, 'months'), to: moment() }
-    case 'Last year':
-      return { from: moment().subtract(1, 'years'), to: moment() }
-    default:
-      return {}
-  }
-}
 
-const searchReducer = (state, event) => {
-  if (event.reset) {
-    return {
-      date: {
-        selected: null,
-        from: moment("2020-08-15"),
-        to: moment('2021-04-04')
-      },
-      specialties: {},
-      procedures: {}
-    }
-  }
-  if (event.name == 'date-clear'){
-    event.name = 'date'
-  }else if (event.name == 'date') {
-    event.value = {
-      selected: event.value.key,
-      ...getPresetDates(event.value.key)
-    }
-  } else if (event.name == 'custom-to') {
-    event.name = 'date'
-    event.value = {
-      ...state.date,
-      to: event.value,
-    }
-
-  } else if (event.name == 'custom-from') {
-    event.name = 'date'
-    event.value = {
-      ...state.date,
-      from: event.value
-    }
-  }
-
-  return {
-    ...state,
-    [event.name]: event.value
-  }
-}
 
 function Case(props) {
-  const { specialtyProcedures, caseId, startTime, endTime, roomName, tags } = props;
+  const { specialtyProcedures, caseId, startTime, endTime, roomName, tags, onClick } = props;
   const sTime = moment(startTime).format("hh:mm A");
   const eTime = moment(endTime).format("hh:mm A");
   const diff = moment().diff(moment(startTime), 'days');
@@ -163,17 +110,20 @@ function Case(props) {
     )
   })
 
-  const description = `Case ID ${caseId}  Started at ${sTime} / Ended at ${eTime} ${date} (${diff} Days ago)  ${roomName}`
+
   return (
-    <div className="case" key={caseId}>
+    <div className="case" key={caseId} onClick={onClick} >
       <div className="title">
-        {globalFunctions.toTitleCase(procedureName)}
+        {procedureName}
       </div>
       <div className="subtitle">
         {specialtyName}
       </div>
       <div className="description">
-        {description}
+        <span>Case ID {caseId}</span>
+        <span>Started at {sTime} / Ended at {eTime}</span>
+        <span>{date} ({diff} Days ago)</span>
+        <span>{roomName}</span>
       </div>
       {tagDisplays.length > 0 && <div className="tags">
         {tagDisplays}
@@ -255,6 +205,50 @@ function TagsSelect(props) {
   )
 }
 
+const getPresetDates = (option) => {
+  switch (option) {
+    case 'Any Time':
+      return { from: moment("2019-08-15"), to: moment('2022-04-04') }
+    case 'Last week':
+      return { from: moment().subtract(7, 'days'), to: moment() }
+    case 'Last month':
+      return { from: moment().subtract(1, 'months'), to: moment() }
+    case 'Last year':
+      return { from: moment().subtract(1, 'years'), to: moment() }
+    default:
+      return {}
+  }
+}
+
+const searchReducer = (state, event) => {
+  if (event.name == 'date-clear') {
+    event.name = 'date'
+  } else if (event.name == 'date') {
+    event.value = {
+      selected: event.value.key,
+      ...getPresetDates(event.value.key)
+    }
+  } else if (event.name == 'custom-to') {
+    event.name = 'date'
+    event.value = {
+      ...state.date,
+      to: event.value,
+    }
+
+  } else if (event.name == 'custom-from') {
+    event.name = 'date'
+    event.value = {
+      ...state.date,
+      from: event.value
+    }
+  }
+
+  return {
+    ...state,
+    [event.name]: event.value
+  }
+}
+
 
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
   // const { children, index, ...other } = props;
@@ -309,6 +303,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // for Sorting the cases
   const [anchorEl, setAnchorEl] = React.useState(null);
+  // Check if sorting by oldest
   const [isOldest, setIsOldest] = React.useState(0);
 
   const handleClick = (event) => {
@@ -322,13 +317,15 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   if (isOldest) {
     filterCases = filterCases.reverse()
   }
-  console.log(searchData.date.selected)
 
   const isCustomDate = searchData.date.selected == "Custom date range";
 
+  // Set CaseID for detailed case view
+  const [caseId, setCaseId] = React.useState(null);
+
   const getCasesView = () => {
-    if (filterCases && filterCases.length){
-      return filterCases.map((c,i) => (<Case key={i} {...c} />))
+    if (filterCases && filterCases.length) {
+      return filterCases.map((c, i) => (<Case key={i} onClick={() => setCaseId(c.caseId)} {...c} />))
     }
     return (
       <div className="no-cases">
@@ -345,157 +342,165 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     )
   }
 
+  const searchView = (
+    <Grid container spacing={5} className="case-discovery-search">
+      <Grid item xs className="filters">
+        <TextField
+          size="small"
+          fullWidth
+          id="filled-start-adornment"
+          className={classes.search}
+          placeholder="Search case ID#"
+          onChange={(e, v) => handleChange('caseId', e.target.value)}
+          InputProps={{
+            startAdornment: <InputAdornment position="start"><img src={MagnifyingGlass} /></InputAdornment>,
+          }}
+          variant="outlined"
+        />
+
+        <div className="select-header">
+          <InputLabel className={classes.inputLabel}>Date</InputLabel>
+          <div className={classes.clear} onClick={(e, v) => handleChange('date-clear', defaultDate)}>Clear</div>
+        </div>
+        <FormControl variant="outlined" size="small" fullWidth>
+          <Select
+            id="date"
+            variant="outlined"
+            MenuProps={MenuProps}
+            value={searchData.date.selected}
+            onChange={(e, v) => handleChange('date', v)}
+          >
+            {DATE_OPTIONS.map((index) => (
+              <MenuItem key={index} value={index}>
+                {index}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {isCustomDate && (
+          <div className="custom-dates">
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <div className="start-date">
+                <InputLabel className={classes.inputLabel}>From</InputLabel>
+                <DatePicker
+                  disableToolbar
+                  size="small"
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  name="startDate"
+                  minDate={minDate}
+                  maxDate={searchData.date.to || maxDate}
+                  placeholder="Pick Date"
+                  inputVariant="outlined"
+                  className="custom-date"
+                  autoOk
+                  value={searchData.date.from || null}
+                  inputProps={{ autoComplete: 'off' }}
+                  onChange={(e, v) => handleChange('custom-from', e)}
+                  id="startDate"
+                />
+              </div>
+              <div className="end-date">
+                <InputLabel className={classes.inputLabel}>To</InputLabel>
+                <DatePicker
+                  disableToolbar
+                  size="small"
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  name="endDate"
+                  minDate={searchData.date.from || minDate}
+                  maxDate={maxDate}
+                  placeholder="Pick Date"
+                  inputVariant="outlined"
+                  className="custom-date"
+                  autoOk
+                  value={searchData.date.to || null}
+                  inputProps={{ autoComplete: 'off' }}
+                  onChange={(e, v) => handleChange('custom-to', e)}
+                  id="endDate"
+                />
+              </div>
+
+            </MuiPickersUtilsProvider>
+          </div>
+
+        )}
+
+        <TagsSelect
+          title="Specialty"
+          placeholder="Filter by specialty"
+          options={SPECIALTIES}
+          id="specialties"
+          handleChange={handleChange}
+          searchData={searchData}
+        />
+
+        <TagsSelect
+          title="Procedure"
+          placeholder="Filter by procedure"
+          options={PROCEDURES}
+          id="procedures"
+          freeSolo={true}
+          handleChange={handleChange}
+          searchData={searchData}
+        />
+
+        <TagsSelect
+          title="Operating room"
+          placeholder="Filter by OR"
+          options={ORS}
+          id="roomNames"
+          handleChange={handleChange}
+          searchData={searchData}
+        />
+
+        <TagsSelect
+          title="Tags"
+          placeholder="Filter by tags"
+          options={TAGS}
+          id="tags"
+          handleChange={handleChange}
+          searchData={searchData}
+          includeToggle={true}
+          includeAllTags={includeAllTags}
+          setIncludeAllTags={setIncludeAllTags}
+        />
+
+      </Grid>
+      <Grid item xs className="cases">
+        <div className="header">
+          <div className="header-label">
+            {`Showing ${filterCases && filterCases.length || 0} cases`}
+          </div>
+          <div>
+            <Button className={classes.sortButton} onClick={handleClick} disableRipple>
+              <div className="header-label"><img src={ArrowsDownUp} />{isOldest ? "Shown by oldest case" : "Shown by most recent"}</div>
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem value={0} onClick={handleClose}>Recent to oldest</MenuItem>
+              <MenuItem value={1} onClick={handleClose}>Oldest to most recent</MenuItem>
+            </Menu>
+          </div>
+        </div>
+        {getCasesView()}
+      </Grid>
+    </Grid>
+  )
+
+  console.log(caseId)
+
   return (
     <section className="case-discovery">
-      <Grid container spacing={5} className="case-discovery-grid">
-        <Grid item xs className="filters">
-          <TextField
-            size="small"
-            fullWidth
-            id="filled-start-adornment"
-            className={classes.search}
-            placeholder="Search case ID#"
-            onChange={(e, v) => handleChange('caseId', e.target.value)}
-            InputProps={{
-              startAdornment: <InputAdornment position="start"><img src={MagnifyingGlass} /></InputAdornment>,
-            }}
-            variant="outlined"
-          />
-
-          <div className="select-header">
-          <InputLabel className={classes.inputLabel}>Date</InputLabel>
-            <div className={classes.clear} onClick={(e, v) => handleChange('date-clear', defaultDate)}>Clear</div>
-          </div>
-          <FormControl variant="outlined" size="small" fullWidth>
-            <Select
-              id="date"
-              variant="outlined"
-              MenuProps={MenuProps}
-              value={searchData.date.selected}
-              onChange={(e, v) => handleChange('date', v)}
-            >
-              {DATE_OPTIONS.map((index) => (
-                <MenuItem key={index} value={index}>
-                  {index}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          {isCustomDate && (
-            <div className="custom-dates">
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <div className="start-date">
-                  <InputLabel className={classes.inputLabel}>From</InputLabel>
-                  <DatePicker
-                    disableToolbar
-                    size="small"
-                    variant="inline"
-                    format="MM/dd/yyyy"
-                    name="startDate"
-                    minDate={minDate}
-                    maxDate={searchData.date.to || maxDate}
-                    placeholder="Pick Date"
-                    inputVariant="outlined"
-                    className="custom-date"
-                    autoOk
-                    value={searchData.date.from || null}
-                    inputProps={{ autoComplete: 'off' }}
-                    onChange={(e, v) => handleChange('custom-from', e)}
-                    id="startDate"
-                  />
-                </div>
-                <div className="end-date">
-                  <InputLabel className={classes.inputLabel}>To</InputLabel>
-                  <DatePicker
-                    disableToolbar
-                    size="small"
-                    variant="inline"
-                    format="MM/dd/yyyy"
-                    name="endDate"
-                    minDate={searchData.date.from || minDate}
-                    maxDate={maxDate}
-                    placeholder="Pick Date"
-                    inputVariant="outlined"
-                    className="custom-date"
-                    autoOk
-                    value={searchData.date.to || null}
-                    inputProps={{ autoComplete: 'off' }}
-                    onChange={(e, v) => handleChange('custom-to', e)}
-                    id="endDate"
-                  />
-                </div>
-
-              </MuiPickersUtilsProvider>
-            </div>
-
-          )}
-
-          <TagsSelect
-            title="Specialty"
-            placeholder="Filter by specialty"
-            options={SPECIALTIES}
-            id="specialties"
-            handleChange={handleChange}
-            searchData={searchData}
-          />
-
-          <TagsSelect
-            title="Procedure"
-            placeholder="Filter by procedure"
-            options={PROCEDURES}
-            id="procedures"
-            freeSolo={true}
-            handleChange={handleChange}
-            searchData={searchData}
-          />
-
-          <TagsSelect
-            title="Operating room"
-            placeholder="Filter by OR"
-            options={ORS}
-            id="roomNames"
-            handleChange={handleChange}
-            searchData={searchData}
-          />
-
-          <TagsSelect
-            title="Tags"
-            placeholder="Filter by tags"
-            options={TAGS}
-            id="tags"
-            handleChange={handleChange}
-            searchData={searchData}
-            includeToggle={true}
-            includeAllTags={includeAllTags}
-            setIncludeAllTags={setIncludeAllTags}
-          />
-
-        </Grid>
-        <Grid item xs className="cases">
-          <div className="header">
-            <div className="header-label">
-              {`Showing ${filterCases && filterCases.length || 0} cases`}
-            </div>
-            <div>
-              <Button className={classes.sortButton} onClick={handleClick} disableRipple>
-                <div className="header-label"><img src={ArrowsDownUp} />{isOldest ? "Shown by oldest case" : "Shown by most recent"}</div>
-              </Button>
-              <Menu
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem value={0} onClick={handleClose}>Recent to oldest</MenuItem>
-                <MenuItem value={1} onClick={handleClose}>Oldest to most recent</MenuItem>
-              </Menu>
-            </div>
-          </div>
-          
-          {getCasesView()}
-        </Grid>
-      </Grid>
+      <div hidden={caseId}>{searchView}</div>
+      <div hidden={!caseId} className="case-discovery-detailed">
+        <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom:2 }}/> Back</div>
+      </div>
     </section>
   );
 }
