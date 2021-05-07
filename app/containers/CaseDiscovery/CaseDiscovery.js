@@ -475,7 +475,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
 
         <TagsSelect
-          title="Operating room"
+          title="Operating Room"
           placeholder="Filter by OR"
           options={ORS}
           id="roomNames"
