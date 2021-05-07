@@ -1,8 +1,8 @@
 @import "../../styles/global-styles.scss";
-.app-wrapper section.case-discovery{
+.app-wrapper section.case-discovery {
     overflow: hidden;
     padding-top: 20px;
-    padding-right:0px;
+    padding-right: 0px;
 }
 
 .case-discovery-search {
@@ -18,21 +18,39 @@
         margin: auto 0;
     }
     .header {
-        // padding-bottom: 12px;
-        // margin-bottom: 12px;
+        position: absolute;
+        background: linear-gradient(180deg, #ffffff 80.33%, rgba(255, 255, 255, 0) 107.41%);
+        z-index: 300;
         display: flex;
         justify-content: space-between;
-        margin-top: 29px;
-        padding-right: 40px;
-        border-bottom: 1px solid #F3F3F3;
+        left: 0;
+        right: 20px;
+        top: 0;
+        padding: 20px;
+        padding-top: 49px;
+        margin-right: 20px;
+        opacity: 1;
     }
-    .cases{
+    .cases {
         overflow-y: auto;
-        max-height: calc(100vh - 87px);
-        padding-top: 24px;
-        padding-right: 40px;
+        max-height: calc(100vh - 17px);
+        width: 100%;
+        padding-top: 96px;
         padding-bottom: 90px;
         height: 100%;
+        .load-more {
+            padding: 7px 23px;
+            background: #f4f5f7;
+            border: 1px solid #f3f3f3;
+            border-radius: 4px;
+
+            font-family: "Noto Sans";
+
+            font-size: 18px;
+            line-height: 25px;
+
+            color: #323232;
+        }
     }
 
     .filters {
@@ -106,7 +124,7 @@
             opacity: 0.8;
             cursor: pointer;
             width: fit-content;
-            &:hover{
+            &:hover {
                 text-decoration: underline;
             }
         }

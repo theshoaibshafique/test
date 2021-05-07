@@ -493,7 +493,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         />
 
       </Grid>
-      <Grid item xs>
+      <Grid item xs style={{position:'relative'}}>
         <div className="header">
           <div className="header-label">
             {`Showing ${Math.min(numShownCases, filterCases.length) || 0} cases`}
@@ -514,8 +514,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           </div>
         </div>
         <div className="cases">
+
           {getCasesView()}
-          {(numShownCases < filterCases.length) && <Button variant="contained" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
+          {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
             Load More
           </Button>}
         </div>
