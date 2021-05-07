@@ -1,4 +1,4 @@
-export const DATE_OPTIONS = ['Any Time', 'Last week', 'Last month', 'Last year', 'Custom date range'];
+export const DATE_OPTIONS = ['Past week', 'Past month', 'Past year', 'Custom'];
 
 
 export const SPECIALTIES = [

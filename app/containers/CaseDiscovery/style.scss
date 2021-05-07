@@ -54,6 +54,8 @@
     }
 
     .filters {
+        overflow-y: auto;
+        max-height: calc(100vh - 17px);
         margin-top: 20px;
         max-width: 360px;
         .select-header {
@@ -66,6 +68,9 @@
             .start-date {
                 margin-right: 8px;
             }
+        }
+        .empty-date{
+            opacity: .45;
         }
         .include-toggle {
             margin-top: 12px;

@@ -192,7 +192,7 @@ function TagsSelect(props) {
         )}
       />
 
-      {includeToggle && (value && value.length > 0) && (
+      {includeToggle && (value && value.length > 1) && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
             <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all tags</span>} />
@@ -226,11 +226,11 @@ const getPresetDates = (option) => {
   switch (option) {
     case 'Any Time':
       return { from: moment("2019-08-15"), to: moment('2022-04-04') }
-    case 'Last week':
+    case 'Past week':
       return { from: moment().subtract(7, 'days'), to: moment() }
-    case 'Last month':
+    case 'Past month':
       return { from: moment().subtract(1, 'months'), to: moment() }
-    case 'Last year':
+    case 'Past year':
       return { from: moment().subtract(1, 'years'), to: moment() }
     default:
       return {}
@@ -275,7 +275,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const classes = useStyles();
   const defaultDate = {
-    selected: DATE_OPTIONS[0],
+    selected: "Any Time",
     from: minDate,
     to: maxDate
   };
@@ -335,7 +335,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     filterCases = filterCases.reverse()
   }
 
-  const isCustomDate = searchData.date.selected == "Custom date range";
+  const isCustomDate = searchData.date.selected == "Custom";
 
   // Set CaseID for detailed case view
   const [caseId, setCaseId] = React.useState(null);
@@ -381,7 +381,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
         <div className="select-header">
           <InputLabel className={classes.inputLabel}>Date</InputLabel>
-          <div className={classes.clear} onClick={(e, v) => handleChange('date-clear', defaultDate)}>
+          <div hidden={searchData.date.selected == "Any Time"} className={classes.clear} onClick={(e, v) => handleChange('date-clear', defaultDate)}>
             Clear
           </div>
         </div>
@@ -393,6 +393,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             value={searchData.date.selected}
             onChange={(e, v) => handleChange('date', v)}
           >
+            <MenuItem key={"Any Time"} value={"Any Time"} >
+              <div className="empty-date">Any Time</div>
+            </MenuItem>
             {DATE_OPTIONS.map((index) => (
               <MenuItem key={index} value={index}>
                 {index}
@@ -493,10 +496,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         />
 
       </Grid>
-      <Grid item xs style={{position:'relative'}}>
+      <Grid item xs style={{ position: 'relative' }}>
         <div className="header">
           <div className="header-label">
-            {`Showing ${Math.min(numShownCases, filterCases.length) || 0} cases`}
+            {`${filterCases && filterCases.length || 0} Cases`}
           </div>
           <div>
             <Button className={classes.sortButton} onClick={handleClick} disableRipple>
