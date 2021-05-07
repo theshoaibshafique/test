@@ -7,7 +7,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import './style.scss';
 import { Button, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
-import { SPECIALTIES, PROCEDURES, DATE_OPTIONS, ORS, TAGS } from './constants';
+import { SPECIALTIES, PROCEDURES, DATE_OPTIONS, ORS, TAGS, DETAILED_CASE } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -26,6 +26,7 @@ import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
 import { StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
+import { groupBy } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -134,7 +135,7 @@ function Case(props) {
 
 
 function TagsSelect(props) {
-  const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, setIncludeAllTags, freeSolo } = props;
+  const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, setIncludeAllTags, freeSolo, groupBy } = props;
   let [value, setValue] = React.useState(searchData[id]);
   let [includeAll, setIncludeAll] = React.useState(includeAllTags);
   const classes = useStyles();
@@ -146,11 +147,26 @@ function TagsSelect(props) {
   useEffect(() => {
     setIncludeAll(includeAllTags);
   }, [props.includeAllTags]);
+
+  const filterOptions = (o, state) => {
+    // Dont show any options until the user has typed
+    const { inputValue } = state;
+    if (groupBy && !inputValue) {
+      return []
+    }
+    return o.filter((op) => {
+      op = op.display || op
+      return `${op}`.toLowerCase().includes(inputValue.toLowerCase())
+    })
+  };
+
   return (
     <div>
       <div className="select-header">
         <InputLabel className={classes.inputLabel}>{title}</InputLabel>
-        <div className={classes.clear} onClick={() => handleChange(id, [])}>Clear</div>
+        <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
+          Clear
+        </div>
       </div>
       <Autocomplete
         multiple
@@ -159,8 +175,9 @@ function TagsSelect(props) {
         id={id}
         options={options}
         disableClearable
-        // disableCloseOnSelect
         clearOnEscape
+        groupBy={(option) => groupBy}
+        filterOptions={filterOptions}
         getOptionLabel={option => option.display || option}
         value={value || []}
         renderTags={() => null}
@@ -175,7 +192,7 @@ function TagsSelect(props) {
         )}
       />
 
-      {includeToggle && (
+      {includeToggle && (value && value.length > 0) && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
             <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all tags</span>} />
@@ -323,9 +340,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Set CaseID for detailed case view
   const [caseId, setCaseId] = React.useState(null);
 
+  const [numShownCases, setNumShownCases] = React.useState(5);
+
+
   const getCasesView = () => {
     if (filterCases && filterCases.length) {
       return filterCases.map((c, i) => (<Case key={i} onClick={() => setCaseId(c.caseId)} {...c} />))
+        .slice(0, numShownCases)
     }
     return (
       <div className="no-cases">
@@ -360,7 +381,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
         <div className="select-header">
           <InputLabel className={classes.inputLabel}>Date</InputLabel>
-          <div className={classes.clear} onClick={(e, v) => handleChange('date-clear', defaultDate)}>Clear</div>
+          <div className={classes.clear} onClick={(e, v) => handleChange('date-clear', defaultDate)}>
+            Clear
+          </div>
         </div>
         <FormControl variant="outlined" size="small" fullWidth>
           <Select
@@ -428,6 +451,17 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         )}
 
         <TagsSelect
+          title="Procedure"
+          placeholder="Search by procedure"
+          options={PROCEDURES}
+          id="procedures"
+          freeSolo={true}
+          groupBy="Suggested"
+          handleChange={handleChange}
+          searchData={searchData}
+        />
+
+        <TagsSelect
           title="Specialty"
           placeholder="Filter by specialty"
           options={SPECIALTIES}
@@ -436,15 +470,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           searchData={searchData}
         />
 
-        <TagsSelect
-          title="Procedure"
-          placeholder="Filter by procedure"
-          options={PROCEDURES}
-          id="procedures"
-          freeSolo={true}
-          handleChange={handleChange}
-          searchData={searchData}
-        />
 
         <TagsSelect
           title="Operating room"
@@ -471,7 +496,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       <Grid item xs>
         <div className="header">
           <div className="header-label">
-            {`Showing ${filterCases && filterCases.length || 0} cases`}
+            {`Showing ${Math.min(numShownCases, filterCases.length) || 0} cases`}
           </div>
           <div>
             <Button className={classes.sortButton} onClick={handleClick} disableRipple>
@@ -490,6 +515,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         </div>
         <div className="cases">
           {getCasesView()}
+          {(numShownCases < filterCases.length) && <Button variant="contained" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
+            Load More
+          </Button>}
         </div>
 
       </Grid>
@@ -502,10 +530,23 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
       <div hidden={!caseId} className="case-discovery-detailed">
-        <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
+        <DetailedCase {...DETAILED_CASE} setCaseId={setCaseId} />
+
+
       </div>
     </section>
   );
+}
+
+function DetailedCase(props) {
+  const { title, setCaseId, caseId } = props;
+  let [value, setValue] = React.useState(null);
+  return (
+    <div>
+      <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
+
+    </div>
+  )
 }
 
 
@@ -549,4 +590,4 @@ function generateFakeCases(numCases) {
   return Array.from({ length: numCases }, () => fakeCase());
 }
 
-const CASES = generateFakeCases(50);
+const CASES = generateFakeCases(100);

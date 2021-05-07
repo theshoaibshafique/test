@@ -1,5 +1,5 @@
 @import "../../styles/global-styles.scss";
-section.case-discovery{
+.app-wrapper section.case-discovery{
     overflow: hidden;
     padding-top: 20px;
     padding-right:0px;
@@ -31,7 +31,7 @@ section.case-discovery{
         max-height: calc(100vh - 87px);
         padding-top: 24px;
         padding-right: 40px;
-        padding-bottom: 0;
+        padding-bottom: 90px;
         height: 100%;
     }
 
