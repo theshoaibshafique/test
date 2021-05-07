@@ -66,8 +66,8 @@ const MenuProps = {
 
 function Case(props) {
   const { specialtyProcedures, caseId, startTime, endTime, roomName, tags, onClick } = props;
-  const sTime = moment(startTime).format("hh:mm A");
-  const eTime = moment(endTime).format("hh:mm A");
+  const sTime = moment(startTime).format("h:mm A");
+  const eTime = moment(endTime).format("h:mm A");
   const diff = moment().diff(moment(startTime), 'days');
   const date = moment(endTime).format("MMMM DD");
   const { specialtyName, procedureName } = specialtyProcedures && specialtyProcedures.length && specialtyProcedures[0];
@@ -122,8 +122,8 @@ function Case(props) {
       </div>
       <div className="description">
         <span>Case ID {caseId}</span>
-        <span>Started at {sTime} / Ended at {eTime}</span>
         <span>{date} ({diff} Days ago)</span>
+        <span>{sTime} - {eTime}</span>
         <span>{roomName}</span>
       </div>
       {tagDisplays.length > 0 && <div className="tags">
