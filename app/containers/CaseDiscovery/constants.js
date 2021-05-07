@@ -495,28 +495,39 @@ export const DETAILED_CASE = {
     "scheduledStartTime": "2021-04-23 11:42:52.357279",
     "scheduledEndTime": "2021-04-23 11:42:52.357279",
     "procedureTime": "2021-04-23 11:42:52.357279",
+    "blockStartTime": "2021-04-23 09:00:00.357279",
+    "blockEndTime":"2021-04-23 17:00:00.357279",
     "roomName": "OR1",
-    "tags": ["Hypoxia", "Flagged"],
+    "tags": [
+        {
+            "title": "Hypoxia",
+            "description": "Whatever hypoxia description is"
+        },
+        {
+            "title": "Flagged",
+            "description": "whatever flagged description is"
+        }
+    ],
 
     "isLeftSided": true,
-    "isRightSided":false,
+    "isRightSided": false,
 
     "timeline": [
         { "value": 3600, "text": "Patient Enter", "class": "styleA" },
-    	{ "value": 48000, "text": "Patient Exit", "class": "styleB" }
+        { "value": 48000, "text": "Patient Exit", "class": "styleB" }
     ],
     "hl7Data": [
         {
             "title": "Blood Pressure",
             "unit": "?",
-            "is_spaced_unit":false,
+            "isSpacedUnit": false,
             "xValues": [0, 1600, 3200, 4800],
             "yValues": [66, 92, 102, 0]
         },
         {
             "title": "Temperature",
             "unit": "?",
-            "is_spaced_unit":false,
+            "isSpacedUnit": false,
             "xValues": [0, 1600, 3200, 4800],
             "yValues": [35, 36, 36, 34]
         },
@@ -524,9 +535,7 @@ export const DETAILED_CASE = {
     ],
 
     "procedureData": {
-        "unit": "?",
-        "xValues": [0, 1600, 3200, 4800],
-        "yValues": [35, 36, 36, 34]
+        
     },
 
     "schedule": [
@@ -538,8 +547,8 @@ export const DETAILED_CASE = {
                 }
             ],
             "caseId": "2489209",
-            "startTime": "2021-04-23 11:42:52.357279",
-            "endTime": "2021-04-23 11:42:52.357279",
+            "startTime": "2021-04-23 09:42:52.357279",
+            "endTime": "2021-04-23 11:32:52.357279",
         },
         {
             "specialtyProcedures": [
@@ -549,8 +558,8 @@ export const DETAILED_CASE = {
                 }
             ],
             "caseId": "2489209",
-            "startTime": "2021-04-23 11:42:52.357279",
-            "endTime": "2021-04-23 11:42:52.357279",
+            "startTime": "2021-04-23 13:42:52.357279",
+            "endTime": "2021-04-23 15:42:52.357279",
         }
     ]
 

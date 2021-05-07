@@ -192,7 +192,7 @@ function TagsSelect(props) {
         )}
       />
 
-      {includeToggle && (value && value.length > 1) && (
+      {includeToggle && (value && value.length > 0) && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
             <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all tags</span>} />
@@ -532,25 +532,57 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   return (
     <section className="case-discovery">
-      <div hidden={caseId}>{searchView}</div>
-      <div hidden={!caseId} className="case-discovery-detailed">
-        <DetailedCase {...DETAILED_CASE} setCaseId={setCaseId} />
-
-
-      </div>
+      {/* <div hidden={caseId}>{searchView}</div> */}
+      <DetailedCase {...DETAILED_CASE} setCaseId={setCaseId} />
     </section>
   );
 }
 
 function DetailedCase(props) {
-  const { title, setCaseId, caseId } = props;
-  let [value, setValue] = React.useState(null);
-  return (
-    <div>
-      <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
+  const { blockStartTime, blockEndTime, roomName, title, setCaseId, caseId } = props;
 
-    </div>
+  let [value, setValue] = React.useState(null);
+
+  const startTime = convertToHoursFromMidnight(blockStartTime);
+  const endTime = convertToHoursFromMidnight(blockEndTime);
+  const duration = (endTime + 1) - (startTime - 1);
+  console.log("startTime " + startTime)
+  console.log("endTime " + endTime)
+  console.log("duration " + duration)
+  // Hour block size in pixels
+  const HOUR_SIZE = 180;
+  return (
+    <Grid container spacing={0} className="case-discovery-detailed" >
+      <Grid item xs={9} className="detailed-case">
+        <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
+      </Grid>
+      <Grid item xs className="schedule">
+        <div className="header">
+          {roomName} {moment(blockStartTime).format('DD MMM')}.
+        </div>
+        <div className="timeline relative"
+          style={{
+            height: `${duration * HOUR_SIZE}px`
+          }}
+        >
+
+          <div className="scheduled-block absolute"
+            style={{
+              top: `${(duration - startTime) * HOUR_SIZE}px`,
+              height: `${(endTime-startTime) * HOUR_SIZE}px`
+            }}
+          >
+
+          </div>
+
+        </div>
+      </Grid>
+    </Grid>
   )
+}
+
+function convertToHoursFromMidnight(timeString) {
+  return moment(timeString).diff(moment(timeString).startOf('day'), 'hours')
 }
 
 

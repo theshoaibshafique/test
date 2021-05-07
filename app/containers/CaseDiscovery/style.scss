@@ -1,13 +1,13 @@
 @import "../../styles/global-styles.scss";
 .app-wrapper section.case-discovery {
     overflow: hidden;
-    padding-top: 20px;
-    padding-right: 0px;
+    padding: 0px;
 }
 
 .case-discovery-search {
     // max-width: 1198px;
     // margin: auto !important;
+    padding: 2.5em 0 0 2em;
     .header,
     .header-label {
         font-family: Helvetica;
@@ -69,8 +69,8 @@
                 margin-right: 8px;
             }
         }
-        .empty-date{
-            opacity: .45;
+        .empty-date {
+            opacity: 0.45;
         }
         .include-toggle {
             margin-top: 12px;
@@ -207,14 +207,42 @@
 }
 
 .case-discovery-detailed {
-    .back {
-        font-family: Helvetica;
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 21px;
-        color: #323232;
+    height: 100%;
+    .detailed-case{
+        padding: 40px;
+        .back {
+            font-family: Helvetica;
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 21px;
+            color: #323232;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+    }
+    
+    .schedule {
+        background: #f5f8fa;
+        box-shadow: -1px 0px 0px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        .header {
+            font-family: Helvetica;
+            font-style: normal;
+            font-weight: 300;
+            font-size: 18px;
+            line-height: 21px;
 
-        opacity: 0.8;
-        cursor: pointer;
+            color: #828282;
+            padding: 32px 28px;
+        }
+        .timeline{
+            .scheduled-block{
+                width:100%;
+                background: #F3F3F3;
+            }
+        }
+        
     }
 }
