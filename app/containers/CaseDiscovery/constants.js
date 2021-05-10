@@ -1,4 +1,4 @@
-export const DATE_OPTIONS = ['Past week', 'Past month', 'Past year', 'Custom'];
+export const DATE_OPTIONS = ['Any Time', 'Past week', 'Past month', 'Past year', 'Custom'];
 
 
 export const SPECIALTIES = [
@@ -489,14 +489,14 @@ export const DETAILED_CASE = {
             "procedureName": "Abdominal Lymphadenectomy, Regional, Including Celiac, Gastric, Portal, Peripancreatic, With or Without Para-Aortic and Vena Caval Nodes (List in Addition to Primary Procedure) "
         }
     ],
-    "caseId": "2489209",
+    "caseId": "2128324",
     "startTime": "2021-04-23 11:42:52.357279",
     "endTime": "2021-04-23 11:42:52.357279",
     "scheduledStartTime": "2021-04-23 11:42:52.357279",
     "scheduledEndTime": "2021-04-23 11:42:52.357279",
     "procedureTime": "2021-04-23 11:42:52.357279",
     "blockStartTime": "2021-04-23 09:00:00.357279",
-    "blockEndTime":"2021-04-23 17:00:00.357279",
+    "blockEndTime": "2021-04-23 17:00:00.357279",
     "roomName": "OR1",
     "tags": [
         {
@@ -535,7 +535,7 @@ export const DETAILED_CASE = {
     ],
 
     "procedureData": {
-        
+
     },
 
     "schedule": [
@@ -546,7 +546,7 @@ export const DETAILED_CASE = {
                     "procedureName": "COLECTOMY, PARTIAL, ROBOT-ASSISTED, LAPAROSCOPIC, WITH ANASTOMOSIS"
                 }
             ],
-            "caseId": "2489209",
+            "caseId": "2128324",
             "startTime": "2021-04-23 09:42:52.357279",
             "endTime": "2021-04-23 11:32:52.357279",
         },

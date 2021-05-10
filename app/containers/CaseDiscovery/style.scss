@@ -69,9 +69,6 @@
                 margin-right: 8px;
             }
         }
-        .empty-date {
-            opacity: 0.45;
-        }
         .include-toggle {
             margin-top: 12px;
             color: #323232 !important;
@@ -208,7 +205,7 @@
 
 .case-discovery-detailed {
     height: 100%;
-    .detailed-case{
+    .detailed-case {
         padding: 40px;
         .back {
             font-family: Helvetica;
@@ -220,13 +217,15 @@
             cursor: pointer;
         }
     }
-    
+
     .schedule {
         background: #f5f8fa;
         box-shadow: -1px 0px 0px rgba(0, 0, 0, 0.1);
         width: 100%;
         height: 100%;
         overflow-y: auto;
+        min-width: 330px;
+        max-width: 346px;
         .header {
             font-family: Helvetica;
             font-style: normal;
@@ -237,12 +236,71 @@
             color: #828282;
             padding: 32px 28px;
         }
-        .timeline{
-            .scheduled-block{
-                width:100%;
-                background: #F3F3F3;
+        .timeline {
+            .scheduled-block {
+                width: 100%;
+                background: #f3f3f3;
+            }
+            .hour-marker {
+                font-family: Helvetica;
+                font-size: 14px;
+                line-height: 16px;
+                color: #828282;
+                opacity: 0.8;
+            }
+            .case-block {
+                right: 12px;
+                width: 70%;
+                background: #fff;
+                border-radius: 4px;
+                padding: 10px 14px;
+                cursor: pointer;
+                .case-title,
+                .case-time {
+                    font-family: Helvetica;
+                    font-weight: bold;
+                    font-size: 14px;
+                    line-height: 16px;
+
+                    color: #323232;
+                    opacity: 0.8;
+                }
+                .case-time {
+                    bottom: 12px;
+                    position: absolute;
+                }
+                &.is-current-case {
+                    background: #d8f0f9;
+                    .case-title,
+                    .case-time {
+                        color: #2b6f8a;
+                    }
+                }
+                
+                &:hover{
+                    text-decoration: underline;
+                }
             }
         }
-        
+    }
+    ::-webkit-scrollbar {
+        width: 6px;
+        border-radius: 6px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #c2c2c2;
+        border-radius: 6px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(85, 85, 85, 0.8);
     }
 }

@@ -275,7 +275,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const classes = useStyles();
   const defaultDate = {
-    selected: "Any Time",
+    selected: DATE_OPTIONS[0],
     from: minDate,
     to: maxDate
   };
@@ -338,7 +338,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const isCustomDate = searchData.date.selected == "Custom";
 
   // Set CaseID for detailed case view
-  const [caseId, setCaseId] = React.useState(null);
+  const [caseId, setCaseId] = React.useState(2128324);
 
   const [numShownCases, setNumShownCases] = React.useState(5);
 
@@ -393,9 +393,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             value={searchData.date.selected}
             onChange={(e, v) => handleChange('date', v)}
           >
-            <MenuItem key={"Any Time"} value={"Any Time"} >
-              <div className="empty-date">Any Time</div>
-            </MenuItem>
             {DATE_OPTIONS.map((index) => (
               <MenuItem key={index} value={index}>
                 {index}
@@ -532,48 +529,82 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   return (
     <section className="case-discovery">
-      {/* <div hidden={caseId}>{searchView}</div> */}
-      <DetailedCase {...DETAILED_CASE} setCaseId={setCaseId} />
+      <div hidden={caseId}>{searchView}</div>
+      <DetailedCase hidden={!caseId} {...DETAILED_CASE} setCaseId={setCaseId} />
     </section>
   );
 }
 
 function DetailedCase(props) {
-  const { blockStartTime, blockEndTime, roomName, title, setCaseId, caseId } = props;
+  const { blockStartTime, blockEndTime, roomName, schedule, setCaseId, caseId, hidden } = props;
 
   let [value, setValue] = React.useState(null);
 
-  const startTime = convertToHoursFromMidnight(blockStartTime);
-  const endTime = convertToHoursFromMidnight(blockEndTime);
+  const startTime = getDiffFromMidnight(blockStartTime);
+  const endTime = getDiffFromMidnight(blockEndTime);
   const duration = (endTime + 1) - (startTime - 1);
   console.log("startTime " + startTime)
   console.log("endTime " + endTime)
   console.log("duration " + duration)
   // Hour block size in pixels
-  const HOUR_SIZE = 180;
+  const HOUR_SIZE = 160;
   return (
-    <Grid container spacing={0} className="case-discovery-detailed" >
-      <Grid item xs={9} className="detailed-case">
+    <Grid hidden={hidden}container spacing={0} className="case-discovery-detailed" >
+      <Grid item xs className="detailed-case">
         <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
       </Grid>
       <Grid item xs className="schedule">
         <div className="header">
-          {roomName} {moment(blockStartTime).format('DD MMM')}.
+          {roomName} — {moment(blockStartTime).format('DD MMM')}.
         </div>
         <div className="timeline relative"
           style={{
             height: `${duration * HOUR_SIZE}px`
           }}
         >
-
+          {/* Highlight Scheduled block */}
           <div className="scheduled-block absolute"
             style={{
               top: `${(duration - startTime) * HOUR_SIZE}px`,
-              height: `${(endTime-startTime) * HOUR_SIZE}px`
+              height: `${(endTime - startTime) * HOUR_SIZE}px`
             }}
           >
-
           </div>
+          {/* Add time markers */}
+          {Array.from({ length: duration }, (x, i) => {
+            const now = moment().toDate()
+            let cTime = startTime - 1 + i;
+            now.setHours(cTime);
+            now.setMinutes(0);
+            return (
+              <div className="hour-marker"
+                style={{
+                  top: `${i * HOUR_SIZE}px`,
+                  height: `${HOUR_SIZE}px`,
+                  padding: 12
+                }}>
+                {moment(now).format("h:mm a")}
+              </div>
+            )
+          })}
+          {/* Display all cases given  */}
+          {schedule.map((c) => {
+            const { specialtyProcedures, startTime, endTime } = c;
+            const procedure = specialtyProcedures[0].procedureName;
+            const startMins = getDiffFromMidnight(startTime,'minutes') - getDiffFromMidnight(blockStartTime,'minutes')+60;
+            const endMins = getDiffFromMidnight(endTime,'minutes') - getDiffFromMidnight(blockStartTime,'minutes') + 60;
+            return (
+              <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'}`}
+                onClick={() => setCaseId(c.caseId)}
+                style={{
+                  top: `${(startMins/60) * HOUR_SIZE}px`,
+                  height: `${(endMins - startMins)/60 * HOUR_SIZE}px`,
+                }}>
+                <div className="case-title">{procedure}</div>
+                <div className="case-time">{moment(startTime).format("h:mm")} - {moment(endTime).format("h:mm")}</div>
+              </div>
+            )
+          })}
 
         </div>
       </Grid>
@@ -581,8 +612,8 @@ function DetailedCase(props) {
   )
 }
 
-function convertToHoursFromMidnight(timeString) {
-  return moment(timeString).diff(moment(timeString).startOf('day'), 'hours')
+function getDiffFromMidnight(timeString, unit='hours') {
+  return moment(timeString).diff(moment(timeString).startOf('day'), unit)
 }
 
 
