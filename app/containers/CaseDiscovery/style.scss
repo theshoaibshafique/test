@@ -2,6 +2,31 @@
 .app-wrapper section.case-discovery {
     overflow: hidden;
     padding: 0px;
+    .tags {
+        margin: 4px -4px;
+        display: flex;
+        width: 100%;
+    }
+    .case-tag {
+        border-radius: 8px;
+        background-color: #d8f0f9;
+        color: #004f6e;
+        opacity: 0.8;
+        padding: 6px;
+        margin: 0 4px;
+        display: inline-flex;
+        font-family: Helvetica;
+        font-size: 16px;
+        line-height: 18px;
+        white-space: nowrap;
+        .display {
+            margin: auto 4px;
+        }
+        &.Flagged {
+            background-color: #ffcfcf;
+            color: #7b2d2d;
+        }
+    }
 }
 
 .case-discovery-search {
@@ -81,11 +106,6 @@
             }
         }
     }
-    .tags {
-        margin: 4px -4px;
-        display:flex;
-        width: 100%;
-    }
     .tag {
         border-radius: 8px;
         background-color: #d8f0f9;
@@ -154,26 +174,7 @@
             }
         }
         margin-bottom: 38px;
-        .case-tag {
-            border-radius: 8px;
-            background-color: #d8f0f9;
-            color: #004f6e;
-            opacity: 0.8;
-            padding: 6px;
-            margin: 0 4px;
-            display: inline-flex;
-            font-family: Helvetica;
-            font-size: 16px;
-            line-height: 18px;
-            white-space: nowrap;
-            .display {
-                margin: auto 4px;
-            }
-            &.Flagged {
-                background-color: #ffcfcf;
-                color: #7b2d2d;
-            }
-        }
+        
     }
     .no-cases {
         display: flex;
@@ -214,11 +215,11 @@
             opacity: 0.8;
             cursor: pointer;
         }
-        .case-header{
+        .case-header {
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
-            .button{
+            .button {
                 margin: auto 0;
             }
         }
@@ -229,7 +230,32 @@
             line-height: 37px;
             color: #004f6e;
             max-width: 80%;
-            
+            margin-bottom: 12px;
+        }
+        .case-description {
+            font-family: Helvetica;
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 21px;
+            color: #828282;
+            opacity: .8;
+            mix-blend-mode: normal;
+            margin-bottom: 30px;
+            .case-specialty {
+                font-family: Helvetica;
+                font-weight: bold;
+                font-size: 18px;
+                line-height: 21px;
+                color: #585858;
+                mix-blend-mode: normal;
+                margin: 12px 0;
+            }
+            span {
+                margin: 0 6px;
+                &:first-child {
+                    margin: 0 6px 0 0;
+                }
+            }
         }
     }
 

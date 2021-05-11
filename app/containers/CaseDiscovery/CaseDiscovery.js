@@ -88,15 +88,8 @@ function getTag(tag) {
   }
 }
 
-function Case(props) {
-  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick } = props;
-  const sTime = moment(wheelsIn).format("h:mm A");
-  const eTime = moment(wheelsOut).format("h:mm A");
-  const diff = moment().diff(moment(wheelsIn), 'days');
-  const date = moment(wheelsOut).format("MMMM DD");
-  const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
-
-  const tagDisplays = tags.map((tag, i) => {
+function displayTags(tags) {
+  return tags.map((tag, i) => {
     let desc = tag.description || "";
     tag = tag.tagName || tag;
     return (
@@ -112,6 +105,17 @@ function Case(props) {
 
     )
   })
+}
+
+function Case(props) {
+  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick } = props;
+  const sTime = moment(wheelsIn).format("h:mm A");
+  const eTime = moment(wheelsOut).format("h:mm A");
+  const diff = moment().diff(moment(wheelsIn), 'days');
+  const date = moment(wheelsOut).format("MMMM DD");
+  const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
+
+  const tagDisplays = displayTags(tags);
 
 
   return (
@@ -586,9 +590,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 }
 
 function DetailedCase(props) {
-  const { blockStartTime, blockEndTime, roomName, schedule, procedures, reportId, setCaseId, caseId, hidden, showEMMReport } = props;
+  const { blockStartTime, blockEndTime, wheelsIn, wheelsOut, roomName, schedule, procedures, tags, reportId, setCaseId, caseId, emrCaseId, hidden, showEMMReport } = props;
   const procedureTitle = procedures[0].procedureName;
+  const specialtyTitle = procedures[0].specialtyName;
   let [value, setValue] = React.useState(null);
+
+  const diff = moment().diff(moment(wheelsIn), 'days');
+  const date = moment(wheelsOut).format("MMMM DD");
 
   const startTime = getDiffFromMidnight(blockStartTime);
   const endTime = getDiffFromMidnight(blockEndTime);
@@ -607,9 +615,17 @@ function DetailedCase(props) {
           <div className="button"><Button variant="outlined" className="primary" onClick={() => showEMMReport(reportId)}>Open Report</Button></div>
         </div>
         <div className="case-description">
-          <div className=""></div>
-          <div></div>
+          <div className="case-specialty">{specialtyTitle}</div>
+          <div>
+            <span>Case ID {emrCaseId}</span>
+            <span>{date} ({diff} Days ago)</span>
+            <span>{roomName}</span>
+          </div>
         </div>
+        <div className="tags">
+          {displayTags(tags)}
+        </div>
+
       </Grid>
       <Grid item xs className="schedule">
         <div className="header">
