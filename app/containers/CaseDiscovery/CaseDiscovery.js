@@ -7,7 +7,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import './style.scss';
 import { Button, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
-import { SPECIALTIES, PROCEDURES, DATE_OPTIONS, ORS, TAGS, DETAILED_CASE } from './constants';
+import { DATE_OPTIONS, TAGS, DETAILED_CASE } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -24,9 +24,10 @@ import LateStart from './icons/LateStart.svg';
 import TurnoverDuration from './icons/TurnoverDuration.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
-import { StyledRadio } from '../../components/SharedComponents/SharedComponents';
+import { LightTooltip, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
-import { groupBy } from 'lodash';
+import globalFunctions from '../../utils/global-functions';
+import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -62,58 +63,59 @@ const MenuProps = {
   },
 }
 
-
+function getTag(tag) {
+  switch (`${tag}`.toLowerCase()) {
+    case "flagged":
+      return <img src={Flagged} />
+    case "hypothermia":
+      return <img src={Hypothermia} />
+    case "hypoxia":
+      return <img src={Hypoxia} />
+    case "hypotension":
+      return <img src={Hypotension} />
+    case "procedure duration":
+      return <img src={CaseDuration} />
+    case "late start":
+      return <img src={LateStart} />
+    case "turnover duration":
+      return <img src={TurnoverDuration} />
+    case "first case":
+      return <img src={FirstCase} />
+    case "eM&M":
+      return <img src={eMM} />
+    default:
+      break;
+  }
+}
 
 function Case(props) {
-  const { specialtyProcedures, caseId, startTime, endTime, roomName, tags, onClick } = props;
-  const sTime = moment(startTime).format("h:mm A");
-  const eTime = moment(endTime).format("h:mm A");
-  const diff = moment().diff(moment(startTime), 'days');
-  const date = moment(endTime).format("MMMM DD");
-  const { specialtyName, procedureName } = specialtyProcedures && specialtyProcedures.length && specialtyProcedures[0];
-
-
-  const getTag = (tag) => {
-    switch (`${tag}`.toLowerCase()) {
-      case "flagged":
-        return <img src={Flagged} />
-      case "hypothermia":
-        return <img src={Hypothermia} />
-      case "hypoxia":
-        return <img src={Hypoxia} />
-      case "hypotension":
-        return <img src={Hypotension} />
-      case "case duration":
-        return <img src={CaseDuration} />
-      case "late start":
-        return <img src={LateStart} />
-      case "turnover duration":
-        return <img src={TurnoverDuration} />
-      case "first case":
-        return <img src={FirstCase} />
-      case "emm":
-        return <img src={eMM} />
-      default:
-        break;
-    }
-  }
+  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick } = props;
+  const sTime = moment(wheelsIn).format("h:mm A");
+  const eTime = moment(wheelsOut).format("h:mm A");
+  const diff = moment().diff(moment(wheelsIn), 'days');
+  const date = moment(wheelsOut).format("MMMM DD");
+  const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
 
   const tagDisplays = tags.map((tag, i) => {
-    tag = tag.display || tag;
+    let desc = tag.description || "";
+    tag = tag.tagName || tag;
     return (
-      <span className={`case-tag ${tag}`} key={tag}>
-        <span>
-          {getTag(tag)}
-        </span>
-        <div className="display">{tag}</div>
+      <LightTooltip title={desc} arrow={true}>
+        <span className={`case-tag ${tag}`} key={tag}>
+          <span>
+            {getTag(tag)}
+          </span>
+          <div className="display">{tag}</div>
 
-      </span>
+        </span>
+      </LightTooltip>
+
     )
   })
 
 
   return (
-    <div className="case" key={caseId}  >
+    <div className="case" key={emrCaseId}  >
       <div className="title" onClick={onClick}>
         {procedureName}
       </div>
@@ -121,7 +123,7 @@ function Case(props) {
         {specialtyName}
       </div>
       <div className="description">
-        <span>Case ID {caseId}</span>
+        <span>Case ID {emrCaseId}</span>
         <span>{date} ({diff} Days ago)</span>
         <span>{sTime} - {eTime}</span>
         <span>{roomName}</span>
@@ -268,9 +270,53 @@ const searchReducer = (state, event) => {
 
 
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
-  // const { children, index, ...other } = props;
+  const { showEMMReport, userFacility, userToken } = props;
+  const [CASES, setCases] = useState([]);
+  const [SPECIALTIES, setSpecialties] = useState([]);
+  const [PROCEDURES, setProcedures] = useState([]);
+  const [ORS, setORs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      const result = await globalFunctions.axiosFetch('https://utils.surgicalsafety.com/api/case_discovery/v1/' + 'cases?facility_id=' + userFacility, 'get', userToken, {})
+        .then(result => {
+          result = result.data
+          setCases(result);
+          console.time('timeTest');
+          let spec = new Set();
+          let proc = new Set();
+          let ors = new Set();
+          result.forEach((c) => {
+            const { procedures, roomName } = c;
+
+            procedures.forEach((p) => {
+              const { specialtyName, procedureName } = p;
+              spec.add(specialtyName);
+              proc.add(procedureName);
+            })
+
+            ors.add(roomName);
+          });
+
+          setSpecialties(Array.from(spec));
+          setProcedures(Array.from(proc));
+          setORs(Array.from(ors));
+          console.timeEnd('timeTest');
+        }).catch((error) => {
+          console.log("uh oh")
+          setCases(generateFakeCases(100));
+        }).finally(() => {
+          setIsLoading(false);
+        });
+    }
+    fetchCases()
+
+
+  }, []);
+
   //TODO: replace min/maxDate
-  const minDate = moment("2019-08-15");
+  const minDate = moment().subtract(100, 'years');
   const maxDate = moment();
 
   const classes = useStyles();
@@ -297,26 +343,27 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   }
 
 
-  const specialties = searchData.specialties.map((s) => s.display)
+  const specialties = searchData.specialties.map((s) => s.display || s)
   const procedures = searchData.procedures.map((s) => s.display || s)
-  const roomNames = searchData.roomNames.map((s) => s.display)
+  const roomNames = searchData.roomNames.map((s) => s.display || s)
   const { to, from } = searchData.date;
   // for any
   const [includeAllTags, setIncludeAllTags] = React.useState(1);
 
   //Filter cases
   let filterCases = CASES.filter((c) => {
+    let cTags = c.tags.map((t) => t.tagName);
     return (
-      (`${c.caseId}`.includes(searchData.caseId)) &&
-      (!from || moment(c.startTime).isAfter(from)) &&
-      (!to || moment(c.endTime).isBefore(to)) &&
-      (!specialties.length || specialties.includes(c.specialtyProcedures[0].specialtyName)) &&
-      (!procedures.length || procedures.every((p) => c.specialtyProcedures[0].procedureName.toLowerCase().includes(p.toLowerCase()))) &&
+      (`${c.emrCaseId}`.includes(searchData.caseId)) &&
+      (!from || moment(c.wheelsIn).isAfter(from)) &&
+      (!to || moment(c.wheelsOut).isBefore(to)) &&
+      (!specialties.length || specialties.includes(c.procedures && c.procedures[0].specialtyName)) &&
+      (!procedures.length || procedures.every((p) => c.procedures && c.procedures[0].procedureName.toLowerCase().includes(p.toLowerCase()))) &&
       (!roomNames.length || roomNames.includes(c.roomName)) &&
-      (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => c.tags.includes(t))) || (includeAllTags == 0 && c.tags.some((t) => searchData.tags.includes(t))))
+      (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => cTags.includes(t))) || (includeAllTags == 0 && cTags.some((t) => searchData.tags.includes(t))))
     );
   })
-  filterCases.sort((a, b) => moment(b.endTime).valueOf() - moment(a.endTime).valueOf())
+  filterCases.sort((a, b) => moment(b.wheelsOut).valueOf() - moment(a.wheelsOut).valueOf())
 
   // for Sorting the cases
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -338,7 +385,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const isCustomDate = searchData.date.selected == "Custom";
 
   // Set CaseID for detailed case view
-  const [caseId, setCaseId] = React.useState(2128324);
+  const [caseId, setCaseId] = React.useState(null);
 
   const [numShownCases, setNumShownCases] = React.useState(5);
 
@@ -513,31 +560,34 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             </Menu>
           </div>
         </div>
-        <div className="cases">
+        {isLoading ? <LoadingIndicator /> : (
+          <div className="cases">
 
-          {getCasesView()}
-          {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
-            Load More
+            {getCasesView()}
+            {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
+              Load More
           </Button>}
-        </div>
+          </div>
+        )
+        }
+
 
       </Grid>
     </Grid>
   )
 
-  console.log(caseId)
-
+  console.log(caseId);
   return (
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
-      <DetailedCase hidden={!caseId} {...DETAILED_CASE} setCaseId={setCaseId} />
+      <DetailedCase {...DETAILED_CASE} setCaseId={setCaseId} hidden={!caseId} showEMMReport={showEMMReport} />
     </section>
   );
 }
 
 function DetailedCase(props) {
-  const { blockStartTime, blockEndTime, roomName, schedule, setCaseId, caseId, hidden } = props;
-
+  const { blockStartTime, blockEndTime, roomName, schedule, procedures, reportId, setCaseId, caseId, hidden, showEMMReport } = props;
+  const procedureTitle = procedures[0].procedureName;
   let [value, setValue] = React.useState(null);
 
   const startTime = getDiffFromMidnight(blockStartTime);
@@ -549,9 +599,17 @@ function DetailedCase(props) {
   // Hour block size in pixels
   const HOUR_SIZE = 160;
   return (
-    <Grid hidden={hidden}container spacing={0} className="case-discovery-detailed" >
+    <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       <Grid item xs className="detailed-case">
         <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
+        <div className="case-header">
+          <div className="case-title">{procedureTitle}</div>
+          <div className="button"><Button variant="outlined" className="primary" onClick={() => showEMMReport(reportId)}>Open Report</Button></div>
+        </div>
+        <div className="case-description">
+          <div className=""></div>
+          <div></div>
+        </div>
       </Grid>
       <Grid item xs className="schedule">
         <div className="header">
@@ -589,16 +647,16 @@ function DetailedCase(props) {
           })}
           {/* Display all cases given  */}
           {schedule.map((c) => {
-            const { specialtyProcedures, startTime, endTime } = c;
-            const procedure = specialtyProcedures[0].procedureName;
-            const startMins = getDiffFromMidnight(startTime,'minutes') - getDiffFromMidnight(blockStartTime,'minutes')+60;
-            const endMins = getDiffFromMidnight(endTime,'minutes') - getDiffFromMidnight(blockStartTime,'minutes') + 60;
+            const { procedures, startTime, endTime } = c;
+            const procedure = procedures[0].procedureName;
+            const startMins = getDiffFromMidnight(startTime, 'minutes') - getDiffFromMidnight(blockStartTime, 'minutes') + 60;
+            const endMins = getDiffFromMidnight(endTime, 'minutes') - getDiffFromMidnight(blockStartTime, 'minutes') + 60;
             return (
               <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'}`}
                 onClick={() => setCaseId(c.caseId)}
                 style={{
-                  top: `${(startMins/60) * HOUR_SIZE}px`,
-                  height: `${(endMins - startMins)/60 * HOUR_SIZE}px`,
+                  top: `${(startMins / 60) * HOUR_SIZE}px`,
+                  height: `${(endMins - startMins) / 60 * HOUR_SIZE}px`,
                 }}>
                 <div className="case-title">{procedure}</div>
                 <div className="case-time">{moment(startTime).format("h:mm")} - {moment(endTime).format("h:mm")}</div>
@@ -612,7 +670,7 @@ function DetailedCase(props) {
   )
 }
 
-function getDiffFromMidnight(timeString, unit='hours') {
+function getDiffFromMidnight(timeString, unit = 'hours') {
   return moment(timeString).diff(moment(timeString).startOf('day'), unit)
 }
 
@@ -639,7 +697,7 @@ function fakeCase() {
   var randomSpecialty = SPECIALTIES[Math.floor(Math.random() * SPECIALTIES.length)];
   var randomProcedure = PROCEDURES[Math.floor(Math.random() * PROCEDURES.length)];
   return {
-    "specialtyProcedures": [
+    "procedures": [
       {
         "specialtyName": randomSpecialty.display,
         "procedureName": randomProcedure.display
@@ -649,7 +707,9 @@ function fakeCase() {
     "startTime": randomStart.format(),
     "endTime": randomStart.add(Math.ceil(Math.random() * 12), 'hours').format(),
     "roomName": ORS[Math.floor(Math.random() * ORS.length)].display,
-    "tags": TAGS.sort(() => 0.5 - Math.random()).slice(0, Math.random() * 3)
+    "tags": TAGS.sort(() => 0.5 - Math.random()).slice(0, Math.random() * 3).map((tag) => {
+      return { "title": tag, "description": "Hey this is a placeholder description. idk what to write here" }
+    })
   }
 }
 
@@ -657,4 +717,4 @@ function generateFakeCases(numCases) {
   return Array.from({ length: numCases }, () => fakeCase());
 }
 
-const CASES = generateFakeCases(100);
+

@@ -414,76 +414,23 @@ export const ORS = [
     }
 ];
 
-export const CASES = [
-    {
-        "specialtyProcedures": [
-            {
-                "specialtyName": "UROLOGY",
-                "procedureName": "Abdominal Lymphadenectomy, Regional, Including Celiac, Gastric, Portal, Peripancreatic, With or Without Para-Aortic and Vena Caval Nodes (List in Addition to Primary Procedure) "
-            }
-        ],
-        "caseId": "2489209",
-        "startTime": "2021-04-23 11:42:52.357279",
-        "endTime": "2021-04-23 11:42:52.357279",
-        "roomName": "OR1",
-        "tags": ["Hypoxia", "Flagged"]
-    },
-    {
-        "specialtyProcedures": [
-            {
-                "specialtyName": "GYNECOLOGY & OBSTETRICS",
-                "procedureName": "COLECTOMY, PARTIAL, ROBOT-ASSISTED, LAPAROSCOPIC, WITH ANASTOMOSIS"
-            }
-        ],
-        "caseId": "2489209",
-        "startTime": "2021-04-23 11:42:52.357279",
-        "endTime": "2021-04-23 11:42:52.357279",
-        "roomName": "OR1",
-        "tags": []
-    },
-    {
-        "specialtyProcedures": [
-            {
-                "specialtyName": "GYNECOLOGY & OBSTETRICS",
-                "procedureName": "COLECTOMY, PARTIAL, ROBOT-ASSISTED, LAPAROSCOPIC, WITH ANASTOMOSIS"
-            }
-        ],
-        "caseId": "2489209",
-        "startTime": "2021-04-23 11:42:52.357279",
-        "endTime": "2021-04-23 11:42:52.357279",
-        "roomName": "OR1",
-        "tags": ["Hypothension"]
-    },
-    {
-        "specialtyProcedures": [
-            {
-                "specialtyName": "OTOLARYNGOLOGY",
-                "procedureName": "BIOPSY,LIVER,OR HEPATIC CYST EXCISION,LAPAROSCOPIC,ROBOTIC ASSISTED SI"
-            }
-        ],
-        "caseId": "2489209",
-        "startTime": "2021-04-23 11:42:52.357279",
-        "endTime": "2021-04-23 11:42:52.357279",
-        "roomName": "OR1",
-        "tags": ["Hypothension"]
-    },
-
-]
 
 export const TAGS = [
+    "eM&M",
+    "First Case",
     "Flagged",
+    "Hypotension",
     "Hypothermia",
     "Hypoxia",
-    "Hypotension",
-    "Case Duration",
     "Late Start",
-    "Turnover Duration",
-    "First Case",
-    "eMM"
+    "Post-Op Duration",
+    "Pre-Op Duration",
+    "Procedure Duration",
+    "Turnover Duration"
 ]
 
 export const DETAILED_CASE = {
-    "specialtyProcedures": [
+    "procedures": [
         {
             "specialtyName": "UROLOGY",
             "procedureName": "Abdominal Lymphadenectomy, Regional, Including Celiac, Gastric, Portal, Peripancreatic, With or Without Para-Aortic and Vena Caval Nodes (List in Addition to Primary Procedure) "
@@ -498,6 +445,11 @@ export const DETAILED_CASE = {
     "blockStartTime": "2021-04-23 09:00:00.357279",
     "blockEndTime": "2021-04-23 17:00:00.357279",
     "roomName": "OR1",
+
+    "reportId":"33645f22-8938-408e-b0f6-d2094f55a3f6",
+    "isPublished":"true",
+
+
     "tags": [
         {
             "title": "Hypoxia",
@@ -540,7 +492,7 @@ export const DETAILED_CASE = {
 
     "schedule": [
         {
-            "specialtyProcedures": [
+            "procedures": [
                 {
                     "specialtyName": "GYNECOLOGY & OBSTETRICS",
                     "procedureName": "COLECTOMY, PARTIAL, ROBOT-ASSISTED, LAPAROSCOPIC, WITH ANASTOMOSIS"
@@ -551,7 +503,7 @@ export const DETAILED_CASE = {
             "endTime": "2021-04-23 11:32:52.357279",
         },
         {
-            "specialtyProcedures": [
+            "procedures": [
                 {
                     "specialtyName": "GYNECOLOGY & OBSTETRICS",
                     "procedureName": "Abdominal Lymphadenectomy, Regional, Including Celiac, Gastric, Portal, Peripancreatic, With or Without Para-Aortic and Vena Caval Nodes (List in Addition to Primary Procedure)"

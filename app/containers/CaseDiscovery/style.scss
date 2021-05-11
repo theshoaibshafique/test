@@ -33,7 +33,7 @@
     }
     .cases {
         overflow-y: auto;
-        max-height: calc(100vh - 17px);
+        max-height: calc(100vh - 40px);
         width: 100%;
         padding-top: 96px;
         padding-bottom: 90px;
@@ -83,6 +83,8 @@
     }
     .tags {
         margin: 4px -4px;
+        display:flex;
+        width: 100%;
     }
     .tag {
         border-radius: 8px;
@@ -152,10 +154,6 @@
             }
         }
         margin-bottom: 38px;
-        .tags {
-            display: inline-block;
-            margin: 0 -4px;
-        }
         .case-tag {
             border-radius: 8px;
             background-color: #d8f0f9;
@@ -216,6 +214,27 @@
             opacity: 0.8;
             cursor: pointer;
         }
+        .case-header{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            .button{
+                margin: auto 0;
+            }
+        }
+        .case-title {
+            font-family: Helvetica;
+            font-weight: bold;
+            font-size: 32px;
+            line-height: 37px;
+            color: #004f6e;
+            max-width: 80%;
+            
+        }
+    }
+
+    &[hidden] {
+        display: none;
     }
 
     .schedule {
@@ -276,8 +295,8 @@
                         color: #2b6f8a;
                     }
                 }
-                
-                &:hover{
+
+                &:hover {
                     text-decoration: underline;
                 }
             }
