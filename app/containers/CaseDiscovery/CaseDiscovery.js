@@ -608,17 +608,19 @@ function getWindowDimensions() {
 }
 
 function DetailedCase(props) {
-  const { isLeftSided, isRightSided, blockStartTime, blockEndTime, wheelsIn, wheelsOut, scheduledStart, roomName, schedule, procedures, tags, reportId, setCaseId, caseId, emrCaseId, hidden, showEMMReport, hl7Data, timeline } = props;
+  const { isLeftSided, isRightSided, startTime, endTime, blockStartTime, blockEndTime, wheelsIn, wheelsOut, scheduledStart, roomName, schedule, procedures, tags, reportId, setCaseId, caseId, emrCaseId, hidden, showEMMReport, hl7Data, timeline, procedureDistribution } = props;
   const procedureTitle = procedures[0].procedureName;
   const specialtyTitle = procedures[0].specialtyName;
-  let [value, setValue] = React.useState(null);
 
   const dayDiff = moment().diff(moment(wheelsIn), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
 
-  const startTime = getDiffFromMidnight(blockStartTime);
-  const endTime = getDiffFromMidnight(blockEndTime);
-  const duration = (endTime + 1) - (startTime - 1);
+  const bStartTime = getDiffFromMidnight(blockStartTime);
+  const bEndTime = getDiffFromMidnight(blockEndTime);
+  const duration = (bEndTime + 1) - (bStartTime - 1);
+
+  const procedureDuration = (getDiffFromMidnight(endTime, 'minutes') - getDiffFromMidnight(startTime, 'minutes')) / 60;
+  console.log("pDuration: " + procedureDuration);
 
   const startDiff = moment(wheelsIn).diff(moment(scheduledStart), 'seconds');
 
@@ -630,8 +632,8 @@ function DetailedCase(props) {
 
 
 
-  console.log("startTime " + startTime)
-  console.log("endTime " + endTime)
+  console.log("startTime " + bStartTime)
+  console.log("endTime " + bEndTime)
   console.log("duration " + duration)
 
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
@@ -694,7 +696,7 @@ function DetailedCase(props) {
 
             </Grid>
             <Grid item xs className="procedure-time">
-
+              <ProcedureDistribution {...procedureDistribution} duration={procedureDuration} />
             </Grid>
           </Grid>
           <HL7Chart hl7Data={hl7Data} timeline={timeline} />
@@ -716,15 +718,15 @@ function DetailedCase(props) {
           {/* Highlight Scheduled block */}
           <div className="scheduled-block absolute"
             style={{
-              top: `${(duration - startTime) * HOUR_SIZE}px`,
-              height: `${(endTime - startTime) * HOUR_SIZE}px`
+              top: `${(duration - bStartTime) * HOUR_SIZE}px`,
+              height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`
             }}
           >
           </div>
           {/* Add time markers */}
           {Array.from({ length: duration }, (x, i) => {
             const now = moment().toDate()
-            let cTime = startTime - 1 + i;
+            let cTime = bStartTime - 1 + i;
             now.setHours(cTime);
             now.setMinutes(0);
             return (
@@ -763,6 +765,90 @@ function DetailedCase(props) {
   )
 }
 
+function erf(x) {
+  // constants
+  var a1 = 0.254829592;
+  var a2 = -0.284496736;
+  var a3 = 1.421413741;
+  var a4 = -1.453152027;
+  var a5 = 1.061405429;
+  var p = 0.3275911;
+
+  // Save the sign of x
+  var sign = 1;
+  if (x < 0) {
+    sign = -1;
+  }
+  x = Math.abs(x);
+
+  // A&S formula 7.1.26
+  var t = 1.0 / (1.0 + p * x);
+  var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+
+  return sign * y;
+}
+
+function log_norm_cdf(duration, scale, shape) {
+  let a = (Math.log(duration) - Math.log(scale)) / (Math.sqrt(2) * shape)
+  return .5 + .5 * erf(a)
+}
+
+function log_norm_pdf(duration, scale, shape) {
+  let a = Math.exp(-((Math.log(duration) - Math.log(scale)) ** 2) / (2 * (shape ** 2)))
+  return (1 / (duration * shape * Math.sqrt(2 * Math.PI))) * a
+}
+
+function ProcedureDistribution(props) {
+  const { shape, scale, duration } = props;
+  const mu = scale;
+  const sigma = shape * scale;
+  const range = globalFunctions.range(Math.max(0, mu - 5 * sigma), mu + 5 * sigma, sigma / 2);
+  const chartRef = useRef(null);
+  const data = {
+    size: {
+      height: 150,
+      width: 400
+    },
+    data: {
+      x: 'x',
+      columns: [
+        ['x', ...range],
+        ['y', ...range.map((x) => log_norm_pdf(x, scale, shape))]
+      ],
+      type: 'area-spline'
+    },
+    tooltip: {
+      show: false
+    },
+    axis: {
+      x: {
+        show: false
+      },
+      y: {
+        show: false
+      }
+    },
+    grid: {
+      x: {
+        lines: [{ "value": duration*60, "text": "current", "class":"marker"},]
+      }
+    },
+    legend: {
+      show: false
+    },
+    point: {
+      show: false
+    }
+  }
+  return (
+    <div className="procedure-distribution" >
+      <div className="title">Procedure Time: {duration.toFixed(1)} hr</div>
+      <C3Chart ref={chartRef} {...data} />
+    </div>
+  )
+}
+
+
 function HL7Chart(props) {
   const { hl7Data, timeline } = props;
   const chartRef = useRef(null);
@@ -779,7 +865,8 @@ function HL7Chart(props) {
     d = d[0]
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
-        {`${d.id}: ${d.value}${unitMap[d.id]}`}
+        <div>{globalFunctions.formatSecsToTime(d.x)}</div>
+        <div>{`${d.id}: ${d.value}${unitMap[d.id]}`}</div>
       </div>);
   }
 
@@ -856,7 +943,7 @@ function HL7Chart(props) {
       setTimeout(() => {
         chart.resize();
       }, 200)
-      
+
     }
   });
   useEffect(() => {

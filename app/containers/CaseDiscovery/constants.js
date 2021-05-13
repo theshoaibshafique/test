@@ -442,7 +442,7 @@ export const DETAILED_CASE = {
     "wheelsOut": "2021-04-23 14:42:23.357279",
     "scheduledStart": "2021-04-23 11:00:12.357279",
     "startTime": "2021-04-23 11:00:12.357279",
-    "etartTime": "2021-04-23 11:00:12.357279",
+    "endTime": "2021-04-23 11:45:12.357279",
     "blockStartTime": "2021-04-23 09:00:00.357279",
     "blockEndTime": "2021-04-23 17:00:00.357279",
     "roomName": "OR1",
@@ -494,8 +494,8 @@ export const DETAILED_CASE = {
     ],
 
     "procedureDistribution": {
-        "shape": 5,
-        "scale": 2,
+        "shape": 9.3/38,
+        "scale": 38,
         "duration": 6.5
     },
 

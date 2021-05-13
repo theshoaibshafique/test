@@ -271,6 +271,34 @@
         }
 
         .timing-graphs {
+            .procedure-distribution {
+                text-align: center;
+                .title {
+                    font-style: normal;
+                    font-weight: 300;
+                    font-size: 18px;
+                    line-height: 21px;
+                    /* identical to box height */
+
+                    color: #323232;
+
+                    mix-blend-mode: normal;
+                    opacity: 0.8;
+                    margin: auto;
+                    width: 100%;
+                }
+                .marker {
+                    // font-family: "Noto Sans";
+                    // font-weight: bold;
+                    // font-size: 14px;
+                    // line-height: 19px;
+                    // line,
+                    // text {
+                    //     // stroke-dasharray: 5, 5;
+                    //     fill: #009483;
+                    // }
+                }
+            }
             .tooltip {
                 color: #fff;
                 padding: 16px;
@@ -281,6 +309,9 @@
                 font-weight: 500 !important;
                 border-radius: 4px;
                 background-color: rgba(97, 97, 97, 0.9);
+            }
+            .MuiDivider-root {
+                margin-bottom: 18px;
             }
             .header {
                 font-family: "Noto Sans";
@@ -347,7 +378,6 @@
                     font-family: "Noto Sans";
                     font-size: 12px;
                     line-height: 19px;
-                    opacity: 0.8;
                     line,
                     text {
                         stroke-dasharray: 5, 5;
@@ -355,7 +385,7 @@
                     }
                 }
                 .toggles {
-                    margin-bottom: 15px;
+                    margin-bottom: 18px;
                     .toggle {
                         padding: 8px;
                         font-style: normal;
