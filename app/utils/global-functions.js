@@ -147,18 +147,18 @@ function formatSecsToTime(seconds, toWords = false, short = false) {
   if (!toWords)
     return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
   else if (short)
-    return `${formatWords(hh, 'hr',true)} ${formatWords(mm, 'min',true)} ${formatWords(ss, 'sec',true)}`
+    return `${formatWords(hh, 'hr', true)} ${formatWords(mm, 'min', true)} ${formatWords(ss, 'sec', true)}`
   else
     return `${formatWords(hh, 'hour')} ${formatWords(mm, 'minute')} ${formatWords(ss, 'second')}`;
 }
 
 function formatWords(value, word, short = false) {
-  if (value == 0 || parseInt(value) != value){
+  if (value == 0 || parseInt(value) != value) {
     return ""
-  } else if (short){
-    return `${value}${word}`
+  } else if (short) {
+    return `${value} ${word}`
   }
-  return `${(value > 0) ? `${value}${word}${(value > 1) ? `s` : ''}` : ''}`
+  return `${(value > 0) ? `${value} ${word}${(value > 1) ? `s` : ''}` : ''}`
 }
 
 function pad(string) {
@@ -181,10 +181,15 @@ function generatePaddedDigits(n, m, size, d) {
 function toTitleCase(str) {
   return str.replace(
     /\w\S*/g,
-    function(txt) {
+    function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     }
   );
+}
+
+function range(start, end, step = 1) {
+  const len = Math.floor((end - start) / step) + 1
+  return Array(len).fill().map((_, idx) => start + (idx * step))
 }
 
 export default {
@@ -196,5 +201,6 @@ export default {
   formatDateTime,
   getName,
   generatePaddedDigits,
-  toTitleCase
+  toTitleCase,
+  range
 };

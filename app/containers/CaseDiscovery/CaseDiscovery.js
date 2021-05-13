@@ -4,9 +4,11 @@
  * This is the page we show when the user visits a url that doesn't have a route
  */
 
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
+import 'c3/c3.css';
+import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
+import { Button, Divider, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
 import { DATE_OPTIONS, TAGS, DETAILED_CASE } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -21,17 +23,19 @@ import Hypotension from './icons/Hypotension.svg';
 import Hypothermia from './icons/Hypothermia.svg';
 import Hypoxia from './icons/Hypoxia.svg';
 import LateStart from './icons/LateStart.svg';
-import TurnoverDuration from './icons/TurnoverDuration.svg';
+import FullPerson from './icons/FullPerson.svg';
+import HalfPerson from './icons/HalfPerson.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
 import { LightTooltip, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
 import globalFunctions from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
+import ReactDOMServer from 'react-dom/server';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
-    fontFamily: 'Helvetica',
+    fontFamily: 'Noto Sans',
     fontSize: 16,
     marginBottom: 10,
     marginTop: 30,
@@ -39,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: .8
   },
   clear: {
-    fontFamily: 'Helvetica',
+    fontFamily: 'Noto Sans',
     fontSize: 16,
     marginBottom: 10,
     marginTop: 30,
@@ -90,10 +94,12 @@ function getTag(tag) {
 
 function displayTags(tags) {
   return tags.map((tag, i) => {
-    let desc = tag.description || "";
+    let desc = tag.toolTip || [];
     tag = tag.tagName || tag;
     return (
-      <LightTooltip title={desc} arrow={true}>
+      <LightTooltip title={desc.map((line) => {
+        return <div>{line}</div>
+      })} arrow={true}>
         <span className={`case-tag ${tag}`} key={tag}>
           <span>
             {getTag(tag)}
@@ -128,7 +134,7 @@ function Case(props) {
       </div>
       <div className="description">
         <span>Case ID {emrCaseId}</span>
-        <span>{date} ({diff} Days ago)</span>
+        <span>{date} {`(${diff} ${diff == 1 ? 'Day' : 'Days'} ago)`}</span>
         <span>{sTime} - {eTime}</span>
         <span>{roomName}</span>
       </div>
@@ -296,6 +302,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
             procedures.forEach((p) => {
               const { specialtyName, procedureName } = p;
+              if (specialtyName == "string") {
+                console.log(specialtyName)
+              }
+
               spec.add(specialtyName);
               proc.add(procedureName);
             })
@@ -391,7 +401,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Set CaseID for detailed case view
   const [caseId, setCaseId] = React.useState(null);
 
-  const [numShownCases, setNumShownCases] = React.useState(5);
+  const [numShownCases, setNumShownCases] = React.useState(10);
 
 
   const getCasesView = () => {
@@ -547,7 +557,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       <Grid item xs style={{ position: 'relative' }}>
         <div className="header">
           <div className="header-label">
-            {`${filterCases && filterCases.length || 0} Cases`}
+            {!isLoading && `${filterCases && filterCases.length || 0} Cases`}
           </div>
           <div>
             <Button className={classes.sortButton} onClick={handleClick} disableRipple>
@@ -589,23 +599,53 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   );
 }
 
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+
 function DetailedCase(props) {
-  const { blockStartTime, blockEndTime, wheelsIn, wheelsOut, roomName, schedule, procedures, tags, reportId, setCaseId, caseId, emrCaseId, hidden, showEMMReport } = props;
+  const { isLeftSided, isRightSided, blockStartTime, blockEndTime, wheelsIn, wheelsOut, scheduledStart, roomName, schedule, procedures, tags, reportId, setCaseId, caseId, emrCaseId, hidden, showEMMReport, hl7Data, timeline } = props;
   const procedureTitle = procedures[0].procedureName;
   const specialtyTitle = procedures[0].specialtyName;
   let [value, setValue] = React.useState(null);
 
-  const diff = moment().diff(moment(wheelsIn), 'days');
+  const dayDiff = moment().diff(moment(wheelsIn), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
 
   const startTime = getDiffFromMidnight(blockStartTime);
   const endTime = getDiffFromMidnight(blockEndTime);
   const duration = (endTime + 1) - (startTime - 1);
+
+  const startDiff = moment(wheelsIn).diff(moment(scheduledStart), 'seconds');
+
+  const laterality = (isLeftSided && isRightSided) ? "Bilateral" : (isLeftSided ? "Left Side" : "Right Side");
+  const lateralityIcon = (isLeftSided && isRightSided) ? (
+    <img src={FullPerson} />) : (
+      isLeftSided ? <img src={HalfPerson} /> : <img src={HalfPerson} style={{ transform: 'scaleX(-1)' }} />
+    );
+
+
+
   console.log("startTime " + startTime)
   console.log("endTime " + endTime)
   console.log("duration " + duration)
+
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   // Hour block size in pixels
-  const HOUR_SIZE = 160;
+  const HEADER_SIZE = 82;
+  const HOUR_SIZE = (windowDimensions.height - HEADER_SIZE) / (duration);
+  console.log(HOUR_SIZE)
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       <Grid item xs className="detailed-case">
@@ -618,7 +658,7 @@ function DetailedCase(props) {
           <div className="case-specialty">{specialtyTitle}</div>
           <div>
             <span>Case ID {emrCaseId}</span>
-            <span>{date} ({diff} Days ago)</span>
+            <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
             <span>{roomName}</span>
           </div>
         </div>
@@ -626,10 +666,47 @@ function DetailedCase(props) {
           {displayTags(tags)}
         </div>
 
+        <div className="timing-graphs" id="timing-graphs">
+          <div className="header">Timing & Graphs</div>
+          <Divider style={{ backgroundColor: '#C8C8C8' }} />
+          <Grid container spacing={0}>
+            <Grid item xs className="timing">
+              <Grid container spacing={0} className="start-timing">
+                <Grid item xs={4} className="scheduled-start">
+                  <div className="timing-header">Scheduled Start</div>
+                  <div className="timing-value">Started at</div>
+                  <div className="timing-header">Laterality</div>
+                  <div className="timing-value">{laterality}</div>
+                </Grid>
+                <Grid item xs={4} className="actual-start">
+
+                  <div className="timing-header">{moment(scheduledStart).format("hh:mm:ss")}</div>
+                  <div className="timing-value">{moment(wheelsIn).format("hh:mm:ss")}</div>
+                  <div className="laterality">
+                    {lateralityIcon}
+                  </div>
+                </Grid>
+                <Grid item xs={4} className="difference">
+                  <div className="timing-header" style={{ visibility: 'hidden' }}>placeholder</div>
+                  <div className={`${startDiff > 0 ? 'late' : 'early'}`}>{globalFunctions.formatSecsToTime(Math.abs(startDiff - (startDiff % 60)), true, true)} {`${startDiff > 0 ? 'late' : 'early'}`}</div>
+                </Grid>
+              </Grid>
+
+            </Grid>
+            <Grid item xs className="procedure-time">
+
+            </Grid>
+          </Grid>
+          <HL7Chart hl7Data={hl7Data} timeline={timeline} />
+
+
+        </div>
+
       </Grid>
       <Grid item xs className="schedule">
         <div className="header">
-          {roomName} — {moment(blockStartTime).format('DD MMM')}.
+          <div>{roomName} Block</div>
+          <div>{moment(blockStartTime).format('MMMM DD, YYYY')}</div>
         </div>
         <div className="timeline relative"
           style={{
@@ -683,6 +760,129 @@ function DetailedCase(props) {
         </div>
       </Grid>
     </Grid>
+  )
+}
+
+function HL7Chart(props) {
+  const { hl7Data, timeline } = props;
+  const chartRef = useRef(null);
+  if (!hl7Data || !hl7Data.length) {
+    return <span></span>
+  }
+
+  const unitMap = {};
+  hl7Data.forEach((d) => {
+    unitMap[d.title] = `${d.isSpacedUnit ? ' ' : ''}${d.unit}`;
+  });
+
+  const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
+    d = d[0]
+    return ReactDOMServer.renderToString(
+      <div className="tooltip subtle-subtext">
+        {`${d.id}: ${d.value}${unitMap[d.id]}`}
+      </div>);
+  }
+
+  const data = {
+    padding: {
+      top: 20
+    },
+    data: {
+      x: 'x',
+      columns: []
+    },
+    legend: {
+      show: false
+    },
+    axis: {
+      x: {
+        tick: {
+          outer: false,
+          // values: []
+          format: (x) => {
+            return globalFunctions.formatSecsToTime(x);
+          }
+
+        },
+        padding: {
+          // left: 1000,
+          // right: 1000
+        }
+      },
+      y: {
+        tick: {
+          outer: false,
+          count: 10,
+          min: 0,
+          format: (x) => {
+            return parseInt(x);
+          }
+        },
+        padding: {
+          top: 20,
+          // bottom: 0
+        }
+      }
+    },
+    grid: {
+      x: {
+        lines: timeline.map((t) => {
+          return { ...t, "class": 'marker' }
+        })
+      }
+    },
+    tooltip: {
+      // grouped: false,
+      contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
+    },
+  }
+
+
+
+
+
+  let [index, setIndex] = React.useState(0);
+  const { times, values, unit, title } = hl7Data[index];
+  data.data.columns = [
+    ['x', ...times],
+    [title, ...values]
+  ]
+
+  useEffect(() => {
+    const chart = chartRef && chartRef.current && chartRef.current.chart;
+    if (chart) {
+      const size = document.getElementById('timing-graphs').clientWidth
+      console.log(size)
+      setTimeout(() => {
+        chart.resize();
+      }, 200)
+      
+    }
+  });
+  useEffect(() => {
+    const { times, values, unit, title } = hl7Data[index];
+
+    const chart = chartRef && chartRef.current && chartRef.current.chart;
+    chart && chart.load({
+      columns: [
+        ['x', ...times],
+        [title, ...values]
+      ],
+      unload: hl7Data.map((d) => d.title == title ? '' : d.title),
+    });
+  }, [index]);
+
+  return (
+    <div className="hl7-chart" >
+      <div className="toggles">
+        {hl7Data.map((d, i) => {
+          return (
+            <span className={`${i == index && 'selected'} toggle`} onClick={() => setIndex(i)}>{d.title}</span>
+          )
+        })}
+      </div>
+      <C3Chart ref={chartRef} {...data} />
+    </div>
   )
 }
 

@@ -433,62 +433,70 @@ export const DETAILED_CASE = {
     "procedures": [
         {
             "specialtyName": "UROLOGY",
-            "procedureName": "Abdominal Lymphadenectomy, Regional, Including Celiac, Gastric, Portal, Peripancreatic, With or Without Para-Aortic and Vena Caval Nodes (List in Addition to Primary Procedure) "
+            "procedureName": "COLECTOMY, TOTAL, ABDOMINAL, LAPAROSCOPIC, WITH ILEOSTOMY OR ILEOPROCTOSTOMY CREATION, WITHOUT PROCTECTOMY"
         }
     ],
     "caseId": "2489209",
-    "emrCaseId":"1232",
-    "startTime": "2021-04-23 11:42:52.357279",
-    "endTime": "2021-04-23 11:42:52.357279",
-    "scheduledStart": "2021-04-23 11:42:52.357279",
-
-    "procedureTime": "2021-04-23 11:42:52.357279",
+    "emrCaseId": "1232",
+    "wheelsIn": "2021-04-23 11:42:52.357279",
+    "wheelsOut": "2021-04-23 14:42:23.357279",
+    "scheduledStart": "2021-04-23 11:00:12.357279",
+    "startTime": "2021-04-23 11:00:12.357279",
+    "etartTime": "2021-04-23 11:00:12.357279",
     "blockStartTime": "2021-04-23 09:00:00.357279",
     "blockEndTime": "2021-04-23 17:00:00.357279",
     "roomName": "OR1",
 
-    "reportId":"33645f22-8938-408e-b0f6-d2094f55a3f6",
-    "isPublished":"true",
+    "reportId": "ED7B0049-FBBA-4643-9BD1-4DF7E940E5FE",
+    "isPublished": "true",
 
 
     "tags": [
         {
             "tagName": "Hypoxia",
-            "description": "Whatever hypoxia description is"
+            "toolTip": ["Whatever hypoxia description is"]
         },
         {
             "tagName": "Flagged",
-            "description": "whatever flagged description is"
+            "toolTip": ["whatever flagged description is", "2nd line","","4th line"]
         }
     ],
 
-    "isLeftSided": true,
-    "isRightSided": false,
+    "isLeftSided": false,
+    "isRightSided": true,
 
     "timeline": [
-        { "value": 3600, "text": "Patient Enter", "class": "styleA" },
-        { "value": 48000, "text": "Patient Exit", "class": "styleB" }
+        { "value": 3200, "text": "Some other flag" },
+        { "value": 34200, "text": "Patient Exit" }
     ],
     "hl7Data": [
         {
             "title": "Blood Pressure",
-            "unit": "?",
-            "isSpacedUnit": false,
-            "xValues": [0, 1600, 3200, 4800],
-            "yValues": [66, 92, 102, 0]
+            "unit": "mmHg",
+            "isSpacedUnit": true,
+            "times": [0, 1800, 3600, 5400, 7200, 9000, 10800, 12600, 14400,
+                16200, 18000, 19800, 21600, 23400, 25200, 27000, 28800, 30600,
+                32400, 34200],
+            "values": [81, 82, 40, 68, 28, 29, 48, 86, 23, 90, 94, 74, 60, 61, 70, 87, 96, 14, 79, 33]
         },
         {
             "title": "Temperature",
-            "unit": "?",
+            "unit": "°C",
             "isSpacedUnit": false,
-            "xValues": [0, 1600, 3200, 4800],
-            "yValues": [35, 36, 36, 34]
+            "times": [    0,   900,  1800,  2700,  3600,  4500,  5400,  6300,  7200,
+                8100,  9000,  9900, 10800, 11700, 12600, 13500, 14400, 15300,
+               16200, 17100, 18000, 18900, 19800, 20700, 21600, 22500, 23400,
+               24300, 25200, 26100, 27000, 27900, 28800, 29700, 30600, 31500,
+               32400, 33300, 34200],
+            "values": [263, 248, 351, 223, 284, 258, 240, 261, 270, 232, 395, 229, 306, 224, 210, 379, 302, 297, 377, 228, 320, 272, 227, 323, 237, 243, 316, 274, 267, 259, 247, 235, 342, 214, 341, 354, 349, 364, 304, 369]
         },
 
     ],
 
-    "procedureData": {
-
+    "procedureDistribution": {
+        "shape": 5,
+        "scale": 2,
+        "duration": 6.5
     },
 
     "schedule": [
@@ -507,7 +515,7 @@ export const DETAILED_CASE = {
             "procedures": [
                 {
                     "specialtyName": "GYNECOLOGY & OBSTETRICS",
-                    "procedureName": "Abdominal Lymphadenectomy, Regional, Including Celiac, Gastric, Portal, Peripancreatic, With or Without Para-Aortic and Vena Caval Nodes (List in Addition to Primary Procedure)"
+                    "procedureName": "COLECTOMY, TOTAL, ABDOMINAL, LAPAROSCOPIC, WITH ILEOSTOMY OR ILEOPROCTOSTOMY CREATION, WITHOUT PROCTECTOMY"
                 }
             ],
             "caseId": "2489209",

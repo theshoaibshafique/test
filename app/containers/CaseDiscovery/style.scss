@@ -15,7 +15,7 @@
         padding: 6px;
         margin: 0 4px;
         display: inline-flex;
-        font-family: Helvetica;
+        font-family: "Noto Sans";
         font-size: 16px;
         line-height: 18px;
         white-space: nowrap;
@@ -35,7 +35,7 @@
     padding: 2.5em 0 0 2em;
     .header,
     .header-label {
-        font-family: Helvetica;
+        font-family: "Noto Sans";
         font-size: 16px;
         opacity: 0.8;
         line-height: 18px;
@@ -98,12 +98,15 @@
             margin-top: 12px;
             color: #323232 !important;
             .include-label {
-                font-family: Helvetica;
+                font-family: "Noto Sans";
                 font-size: 16px;
                 line-height: 18px;
                 opacity: 0.8;
                 color: #323232;
             }
+        }
+        .tags {
+            display: inherit !important;
         }
     }
     .tag {
@@ -114,7 +117,7 @@
         padding: 6px;
         margin: 4px 4px;
         display: inline-block;
-        font-family: Helvetica;
+        font-family: "Noto Sans";
         font-size: 16px;
         line-height: 18px;
         white-space: nowrap;
@@ -141,19 +144,21 @@
             margin-bottom: 18px;
         }
         .title {
-            font-family: Helvetica;
-            font-size: 32px;
-            line-height: 37px;
+            font-family: "Noto Sans";
+            font-size: 26px;
+            line-height: 36px;
             color: #004f6e;
             opacity: 0.8;
             cursor: pointer;
             width: fit-content;
+            max-width: 75%;
+            font-weight: bold;
             &:hover {
                 text-decoration: underline;
             }
         }
         .subtitle {
-            font-family: Helvetica;
+            font-family: "Noto Sans";
             font-weight: bold;
             font-size: 18px;
             line-height: 21px;
@@ -161,7 +166,7 @@
             opacity: 0.8;
         }
         .description {
-            font-family: Helvetica;
+            font-family: "Noto Sans";
             font-size: 16px;
             line-height: 18px;
             color: #323232;
@@ -174,7 +179,6 @@
             }
         }
         margin-bottom: 38px;
-        
     }
     .no-cases {
         display: flex;
@@ -183,7 +187,7 @@
         justify-content: center;
         text-align: center;
         .title {
-            font-family: Helvetica;
+            font-family: "Noto Sans";
             font-size: 32px;
             line-height: 37px;
 
@@ -193,7 +197,7 @@
             margin-bottom: 19px;
         }
         .subtitle {
-            font-family: Helvetica;
+            font-family: "Noto Sans";
             font-size: 16px;
             line-height: 18px;
             color: #323232;
@@ -206,8 +210,12 @@
     height: 100%;
     .detailed-case {
         padding: 40px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-width: calc(100vw - 340px);
+        max-height: calc(100vh);
         .back {
-            font-family: Helvetica;
+            font-family: "Noto Sans";
             font-weight: bold;
             font-size: 18px;
             line-height: 21px;
@@ -224,25 +232,29 @@
             }
         }
         .case-title {
-            font-family: Helvetica;
+            font-family: "Noto Sans";
             font-weight: bold;
             font-size: 32px;
             line-height: 37px;
             color: #004f6e;
             max-width: 80%;
             margin-bottom: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* number of lines to show */
+            -webkit-box-orient: vertical;
         }
         .case-description {
-            font-family: Helvetica;
+            font-family: "Noto Sans";
             font-weight: bold;
             font-size: 18px;
             line-height: 21px;
             color: #828282;
-            opacity: .8;
             mix-blend-mode: normal;
             margin-bottom: 30px;
             .case-specialty {
-                font-family: Helvetica;
+                font-family: "Noto Sans";
                 font-weight: bold;
                 font-size: 18px;
                 line-height: 21px;
@@ -257,6 +269,118 @@
                 }
             }
         }
+
+        .timing-graphs {
+            .tooltip {
+                color: #fff;
+                padding: 16px;
+                text-align: left;
+                max-width: 300px;
+                word-wrap: break-word;
+                font-family: "Noto Sans";
+                font-weight: 500 !important;
+                border-radius: 4px;
+                background-color: rgba(97, 97, 97, 0.9);
+            }
+            .header {
+                font-family: "Noto Sans";
+                font-weight: bold;
+                font-size: 18px;
+                line-height: 21px;
+                color: #4f4f4f;
+                margin: 30px 0 12px;
+            }
+            .timing {
+                min-width: 320px;
+                max-width: 600px;
+                .scheduled-start {
+                    margin-bottom: 16px;
+                }
+                .timing-value,
+                .timing-header {
+                    font-weight: 300;
+                    font-size: 18px;
+                    line-height: 21px;
+                    color: #323232;
+                    mix-blend-mode: normal;
+                    opacity: 0.8;
+                    margin: 8px 0;
+                }
+                .timing-value {
+                    font-weight: bold;
+                    margin-bottom: 18px;
+                }
+                .laterality img {
+                    margin: 8px 0;
+                }
+                .difference {
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 18px;
+                    line-height: 21px;
+                    /* identical to box height */
+                    color: #ff0000;
+
+                    mix-blend-mode: normal;
+                    opacity: 0.8;
+                    .early {
+                        color: #009483;
+                    }
+                    div {
+                        white-space: nowrap;
+                    }
+                }
+            }
+            .hl7-chart {
+                .c3-axis-x,
+                .c3-axis-y {
+                    color: #2b6f8a;
+                    font-size: 14px;
+                    .tick line {
+                        opacity: 0;
+                    }
+                    path {
+                        stroke: #cce5ee;
+                    }
+                }
+                .marker {
+                    font-family: "Noto Sans";
+                    font-size: 12px;
+                    line-height: 19px;
+                    opacity: 0.8;
+                    line,
+                    text {
+                        stroke-dasharray: 5, 5;
+                        fill: #009483;
+                    }
+                }
+                .toggles {
+                    margin-bottom: 15px;
+                    .toggle {
+                        padding: 8px;
+                        font-style: normal;
+                        font-weight: normal;
+                        font-size: 16px;
+                        line-height: 18px;
+                        border: 2px solid #d8f0f9;
+                        box-sizing: border-box;
+                        border-radius: 4px;
+                        color: #2f83a4;
+
+                        mix-blend-mode: normal;
+                        margin: 0px 4px;
+                        cursor: pointer;
+                        &:first-child {
+                            margin-left: 0;
+                        }
+                        &.selected {
+                            background: #d8f0f9;
+                            color: #004f6e;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     &[hidden] {
@@ -264,7 +388,8 @@
     }
 
     .schedule {
-        background: #f5f8fa;
+        background: #f3f3f3;
+
         box-shadow: -1px 0px 0px rgba(0, 0, 0, 0.1);
         width: 100%;
         height: 100%;
@@ -272,22 +397,26 @@
         min-width: 330px;
         max-width: 346px;
         .header {
-            font-family: Helvetica;
+            font-family: "Noto Sans";
             font-style: normal;
             font-weight: 300;
             font-size: 18px;
             line-height: 21px;
 
             color: #828282;
-            padding: 32px 28px;
+            padding: 14px 28px;
+
+            div {
+                margin: 4px 0;
+            }
         }
         .timeline {
             .scheduled-block {
                 width: 100%;
-                background: #f3f3f3;
+                background: #f5f8fa;
             }
             .hour-marker {
-                font-family: Helvetica;
+                font-family: "Noto Sans";
                 font-size: 14px;
                 line-height: 16px;
                 color: #828282;
@@ -302,13 +431,18 @@
                 cursor: pointer;
                 .case-title,
                 .case-time {
-                    font-family: Helvetica;
+                    font-family: "Noto Sans";
                     font-weight: bold;
                     font-size: 14px;
                     line-height: 16px;
 
                     color: #323232;
                     opacity: 0.8;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3; /* number of lines to show */
+                    -webkit-box-orient: vertical;
                 }
                 .case-time {
                     bottom: 12px;
