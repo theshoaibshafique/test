@@ -440,7 +440,7 @@
 
             color: #828282;
             padding: 14px 28px;
-
+            margin-bottom: 8px;
             div {
                 margin: 4px 0;
             }
@@ -456,6 +456,13 @@
                 line-height: 16px;
                 color: #828282;
                 opacity: 0.8;
+                position: relative;
+                div {
+                    // margin-top: -8px;
+                    top: -8px;
+                    left: 8px;
+                    position: absolute;
+                }
             }
             .case-block {
                 right: 12px;

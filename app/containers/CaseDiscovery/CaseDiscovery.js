@@ -634,7 +634,7 @@ function getWindowDimensions() {
 }
 
 function DetailedCase(props) {
-  if (props.metaData == null ){
+  if (props.metaData == null) {
     return <LoadingIndicator />
   }
   const { hidden, showEMMReport, setCaseId } = props;
@@ -642,7 +642,7 @@ function DetailedCase(props) {
     duration, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
     procedures, timeline } } = props;
   const { roomSchedule: { blockStart, blockEnd, roomCases }, procedureDistribution, emmStatus: { reportId, isPublished }, hl7Parameters, tags } = props;
-  
+
   const procedureTitle = procedures[0].procedureName;
   const specialtyTitle = procedures[0].specialtyName;
 
@@ -660,7 +660,7 @@ function DetailedCase(props) {
 
   const earliestStartTime = roomCases.reduce((min, c) => getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
   const latestEndTime = roomCases.reduce((max, c) => getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
-  const scheduleDuration = (latestEndTime) - (earliestStartTime );
+  const scheduleDuration = (latestEndTime) - (earliestStartTime);
   // console.log("earliestStartTime: " + earliestStartTime);
   // console.log("latestEndTime: " + latestEndTime);
   // console.log("scheduleDuration: " + scheduleDuration);
@@ -694,7 +694,7 @@ function DetailedCase(props) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   // Hour block size in pixels
-  const HEADER_SIZE = 82;
+  const HEADER_SIZE = 90;
   const HOUR_SIZE = (windowDimensions.height - HEADER_SIZE) / (scheduleDuration);
   const [openRequestEMM, setOpenRequestEMM] = React.useState(false);
 
@@ -710,7 +710,7 @@ function DetailedCase(props) {
 
   const [isLoading, setIsLoading] = React.useState(false);
   const updateCaseId = (cId) => {
-    if (cId == caseId){
+    if (cId == caseId) {
       return;
     }
     setIsLoading(true)
@@ -786,7 +786,7 @@ function DetailedCase(props) {
           {/* Highlight Scheduled block */}
           <div className="scheduled-block absolute"
             style={{
-              top: `${(bStartTime - earliestStartTime ) * HOUR_SIZE}px`,
+              top: `${(bStartTime - earliestStartTime) * HOUR_SIZE}px`,
               height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`
             }}
           >
@@ -800,11 +800,10 @@ function DetailedCase(props) {
             return (
               <div className="hour-marker"
                 style={{
-                  top: `${i * HOUR_SIZE}px`,
+                  // top: `${i * HOUR_SIZE}px`,
                   height: `${HOUR_SIZE}px`,
-                  padding: 12
                 }}>
-                {moment(now).format("h:mm a")}
+                <div>{moment(now).format("h:mm a")}</div>
               </div>
             )
           })}
@@ -1001,7 +1000,7 @@ function ProcedureDistribution(props) {
     },
     grid: {
       x: {
-        lines: [{ "value": duration , "text": "current", "class": "marker" },]
+        lines: [{ "value": duration, "text": "current", "class": "marker" },]
       }
     },
     legend: {
@@ -1013,7 +1012,7 @@ function ProcedureDistribution(props) {
   }
   return (
     <div className="procedure-distribution" >
-      <div className="title">Procedure Time: {(duration/60/60).toFixed(1)} hr</div>
+      <div className="title">Procedure Time: {(duration / 60 / 60).toFixed(1)} hr</div>
       <C3Chart ref={chartRef} {...data} />
     </div>
   )
@@ -1085,7 +1084,7 @@ function HL7Chart(props) {
     grid: {
       x: {
         lines: timeline.map((t) => {
-          return { ...t, "class": 'marker' }
+          return { ...t, value: t.time, "class": 'marker' }
         })
       }
     },
