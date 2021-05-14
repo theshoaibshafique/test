@@ -423,7 +423,7 @@
     }
 
     .schedule {
-        background: #f3f3f3;
+        background: rgba(216, 223, 249,.4);
 
         box-shadow: -1px 0px 0px rgba(0, 0, 0, 0.1);
         width: 100%;
@@ -438,9 +438,10 @@
             font-size: 18px;
             line-height: 21px;
 
-            color: #828282;
+            color: black;
             padding: 14px 28px;
             margin-bottom: 8px;
+            text-align: center;
             div {
                 margin: 4px 0;
             }
@@ -448,7 +449,7 @@
         .timeline {
             .scheduled-block {
                 width: 100%;
-                background: #f5f8fa;
+                background: rgba(245, 248, 250,1);
             }
             .hour-marker {
                 font-family: "Noto Sans";
@@ -462,6 +463,9 @@
                     top: -8px;
                     left: 8px;
                     position: absolute;
+                    background: #fff;
+                    padding:4px;
+                    border-radius: 4px;
                 }
             }
             .case-block {

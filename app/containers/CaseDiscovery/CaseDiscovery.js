@@ -634,10 +634,11 @@ function getWindowDimensions() {
 }
 
 function DetailedCase(props) {
-  if (props.metaData == null) {
-    return <LoadingIndicator />
-  }
   const { hidden, showEMMReport, setCaseId } = props;
+  if (props.metaData == null) {
+    return <div hidden={hidden}><LoadingIndicator /></div>
+  }
+  
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsOut, scheduledStart, startTime, endTime,
     duration, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
     procedures, timeline } } = props;
@@ -775,8 +776,9 @@ function DetailedCase(props) {
       </Grid>
       <Grid item xs className="schedule">
         <div className="header">
-          <div>{roomName} Block ({`${moment(blockStartTime).format('h:mm a')} to ${moment(blockEndTime).format('h:mm a')}`})</div>
+          <div>{roomName} Block</div>
           <div>{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
+
         </div>
         <div className="timeline relative"
           style={{
@@ -791,6 +793,7 @@ function DetailedCase(props) {
             }}
           >
           </div>
+
           {/* Add time markers */}
           {Array.from({ length: Math.round(scheduleDuration) }, (x, i) => {
             const now = moment().toDate()
@@ -803,10 +806,23 @@ function DetailedCase(props) {
                   // top: `${i * HOUR_SIZE}px`,
                   height: `${HOUR_SIZE}px`,
                 }}>
-                <div>{moment(now).format("h:mm a")}</div>
+                <div >{moment(now).format("h:mm a")}</div>
               </div>
             )
           })}
+          <LightTooltip
+            title={`Block hours: ${moment(blockStartTime).format('h:mm a')} - ${moment(blockEndTime).format('h:mm a')}`}
+            placement='left'
+          >
+            <div className="absolute"
+              style={{
+                top: `${(bStartTime - earliestStartTime) * HOUR_SIZE}px`,
+                height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`,
+                width: `100%`
+              }}
+            >
+            </div>
+          </LightTooltip>
           {/* Display all cases given  */}
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
@@ -826,6 +842,7 @@ function DetailedCase(props) {
               </div>
             )
           })}
+
 
         </div>
       </Grid>
@@ -971,7 +988,7 @@ function ProcedureDistribution(props) {
   const { shape, scale, duration } = props;
   const mu = scale;
   const sigma = shape * scale;
-  const range = globalFunctions.range(Math.max(0, mu - 5 * sigma), mu + 5 * sigma, sigma / 2);
+  const range = globalFunctions.range(Math.max(0, mu - 5 * sigma), mu + 5 * sigma, sigma / 50);
   // console.log(range)
   const chartRef = useRef(null);
   const data = {
@@ -985,7 +1002,7 @@ function ProcedureDistribution(props) {
         ['x', ...range],
         ['y', ...range.map((x) => log_norm_pdf(x, scale, shape))]
       ],
-      type: 'area-spline'
+      type: 'area'
     },
     tooltip: {
       show: false
@@ -1000,7 +1017,7 @@ function ProcedureDistribution(props) {
     },
     grid: {
       x: {
-        lines: [{ "value": duration, "text": "current", "class": "marker" },]
+        lines: [{ "value": duration, },]
       }
     },
     legend: {
@@ -1022,7 +1039,7 @@ function ProcedureDistribution(props) {
 function HL7Chart(props) {
   const { hl7Data, timeline } = props;
   const chartRef = useRef(null);
-  if (!hl7Data || !hl7Data.length) {
+  if (!hl7Data) {
     return <span></span>
   }
 
@@ -1030,6 +1047,9 @@ function HL7Chart(props) {
   hl7Data.forEach((d) => {
     unitMap[d.title] = `${d.isSpacedUnit ? ' ' : ''}${d.unit}`;
   });
+
+  const hasHL7Data = hl7Data.length > 0;
+  const max = Math.max(...(hasHL7Data ? hl7Data[0].times : []), ...timeline.map((t) => t.time));
 
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
     d = d[0]
@@ -1044,12 +1064,18 @@ function HL7Chart(props) {
     padding: {
       top: 20
     },
+    size: hasHL7Data ? {} : {
+      height:175
+    },
     data: {
       x: 'x',
       columns: []
     },
     legend: {
       show: false
+    },
+    point: {
+      show: hasHL7Data
     },
     axis: {
       x: {
@@ -1059,22 +1085,26 @@ function HL7Chart(props) {
           format: (x) => {
             return globalFunctions.formatSecsToTime(x);
           }
-
         },
+        min: 0,
+        max: max,
         padding: {
-          // left: 1000,
-          // right: 1000
+          left: 500,
+          right: 500,
+          // bottom: 0
         }
       },
       y: {
         tick: {
           outer: false,
-          count: 10,
+          count: hl7Data.length ? 10 : 1,
           min: 0,
           format: (x) => {
             return parseInt(x);
-          }
+          },
+          
         },
+        show: hasHL7Data,
         padding: {
           top: 20,
           // bottom: 0
@@ -1090,6 +1120,7 @@ function HL7Chart(props) {
     },
     tooltip: {
       // grouped: false,
+      show: hasHL7Data,
       contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
     },
   }
@@ -1099,11 +1130,19 @@ function HL7Chart(props) {
 
 
   let [index, setIndex] = React.useState(0);
-  const { times, values, unit, title } = hl7Data[index];
-  data.data.columns = [
-    ['x', ...times],
-    [title, ...values]
-  ]
+  if (hasHL7Data) {
+    const { times, values, unit, title } = hl7Data[index];
+    data.data.columns = [
+      ['x', ...times],
+      [title, ...values]
+    ]
+  } else {
+    data.data.columns = [
+      ['x', ...globalFunctions.range(0, max, max / 10)],
+      ['y', ...Array(max/10).fill().map(() => 0)],
+    ]
+  }
+
 
   useEffect(() => {
     const chart = chartRef && chartRef.current && chartRef.current.chart;
@@ -1117,6 +1156,9 @@ function HL7Chart(props) {
     }
   });
   useEffect(() => {
+    if (!hasHL7Data) {
+      return;
+    }
     const { times, values, unit, title } = hl7Data[index];
 
     const chart = chartRef && chartRef.current && chartRef.current.chart;
