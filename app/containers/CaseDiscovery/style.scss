@@ -209,11 +209,16 @@
 .case-discovery-detailed {
     height: 100%;
     .detailed-case {
+        position: relative;
         padding: 40px;
         overflow-x: hidden;
         overflow-y: auto;
         max-width: calc(100vw - 340px);
         max-height: calc(100vh);
+        .detailed-loading{
+            width: 100%;
+            position: absolute;
+        }
         .back {
             font-family: "Noto Sans";
             font-weight: bold;
@@ -288,15 +293,15 @@
                     width: 100%;
                 }
                 .marker {
-                    // font-family: "Noto Sans";
-                    // font-weight: bold;
-                    // font-size: 14px;
-                    // line-height: 19px;
-                    // line,
-                    // text {
-                    //     // stroke-dasharray: 5, 5;
-                    //     fill: #009483;
-                    // }
+                    font-family: "Noto Sans";
+                    font-weight: bold;
+                    font-size: 14px;
+                    line-height: 19px;
+                    line,
+                    text {
+                        // stroke-dasharray: 5, 5;
+                        fill: #009483;
+                    }
                 }
             }
             .tooltip {
@@ -459,6 +464,9 @@
                 border-radius: 4px;
                 padding: 10px 14px;
                 cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
                 .case-title,
                 .case-time {
                     font-family: "Noto Sans";
@@ -475,8 +483,8 @@
                     -webkit-box-orient: vertical;
                 }
                 .case-time {
-                    bottom: 12px;
-                    position: absolute;
+                    // bottom: 12px;
+                    // position: absolute;
                 }
                 &.is-current-case {
                     background: #d8f0f9;
@@ -511,5 +519,119 @@
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
         background: rgba(85, 85, 85, 0.8);
+    }
+}
+
+.request-emm-modal {
+    .request-emm {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    right: 0;
+    max-width: 570px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 40px;
+    outline: none;
+    position: absolute;
+    box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 5px 8px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 14px 0px rgba(0, 0, 0, 0.12);
+    background-color: #fff;
+    border-radius: 4px;
+    .close-button {
+        width: 100%;
+        cursor: pointer;
+        img {
+            float: right;
+        }
+    }
+    .header {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 32px;
+        line-height: 37px;
+        color: #004f6e;
+        mix-blend-mode: normal;
+        margin-bottom: 26px;
+        max-width: 290px;
+    }
+    .subtitle {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 21px;
+        color: #4f4f4f;
+        mix-blend-mode: normal;
+        margin-bottom: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+
+    .description {
+        font-family: "Noto Sans";
+        font-size: 16px;
+        line-height: 18px;
+        color: #323232;
+        opacity: 0.8;
+        div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        // span {
+        //     margin: 0 6px;
+        //     &:first-child {
+        //         margin: 0 6px 0 0;
+        //     }
+        // }
+    }
+    .select-header {
+        display: flex;
+        justify-content: space-between;
+    }
+    .tags {
+        margin: 4px -4px;
+        width: 100%;
+    }
+    .tag {
+        border-radius: 8px;
+        background-color: #d8f0f9;
+        color: #004f6e;
+        opacity: 0.8;
+        padding: 6px;
+        margin: 4px 4px;
+        display: inline-block;
+        font-family: "Noto Sans";
+        font-size: 16px;
+        line-height: 18px;
+        white-space: nowrap;
+        span {
+            display: inline-flex;
+        }
+
+        .display {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 110px;
+        }
+        .delete {
+            width: 16px;
+            height: 14px;
+            cursor: pointer;
+            padding-top: 2px;
+            margin-left: 4px;
+        }
+    }
+    .notes-field{
+        margin-bottom: 24px;
+    }
+    .send-request {
+        margin-top: auto;
+        align-self: baseline;
     }
 }

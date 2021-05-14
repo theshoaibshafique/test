@@ -429,6 +429,581 @@ export const TAGS = [
     "Turnover Duration"
 ]
 
+export const COMPLICATIONS = [
+    {
+        "display": "Abscess",
+        "id": "9bbb21e3-4e9d-4a2b-aebf-a4126913896b"
+    },
+    {
+        "display": "Anastomotic Leak",
+        "id": "840a54ca-5d77-4615-acfe-c1987622017d"
+    },
+    {
+        "display": "Bile Leak",
+        "id": "1051672b-bac9-4c1d-9ea5-5fa4191c739e"
+    },
+    {
+        "display": "Bleeding",
+        "id": "1529799c-c4d9-4034-abdd-2faa21047904"
+    },
+    {
+        "display": "Bowel obstruction",
+        "id": "56c4e921-ccb6-41e5-b607-0b1187b47621"
+    },
+    {
+        "display": "Cardiac failure",
+        "id": "6e3391d7-ad83-4060-8d65-77c8f8ac294d"
+    },
+    {
+        "display": "DVT",
+        "id": "53e0a898-4005-4d0a-8a22-f3be4388878e"
+    },
+    {
+        "display": "Hernia",
+        "id": "51712bd0-2bb1-45ac-b17e-80b89e831066"
+    },
+    {
+        "display": "Ileus",
+        "id": "850b6ca9-8491-4a2d-8113-7785ba158abf"
+    },
+    {
+        "display": "Pancreatic leak",
+        "id": "fbb927fe-7549-43d6-9b2d-6edd4e5970ab"
+    },
+    {
+        "display": "PE",
+        "id": "0ef069b8-1240-45c7-b7d3-a6afbad855af"
+    },
+    {
+        "display": "Pneumonia",
+        "id": "886b628a-78bc-4267-9a43-c85f81fb003e"
+    },
+    {
+        "display": "Readmission",
+        "id": "3c399110-7cd2-4f8a-ab46-1c10f0f0854c"
+    },
+    {
+        "display": "Respiratory failure",
+        "id": "3ff34df9-0699-4d53-909e-9fc7388e1a0f"
+    },
+    {
+        "display": "Return to Operating Room",
+        "id": "46d9ef33-46bf-49d9-a83e-fb6e9d7faf56"
+    },
+    {
+        "display": "Sepsis",
+        "id": "6a3473d6-b0ac-4ec6-98b0-20b01b75a2a3"
+    },
+    {
+        "display": "Unplanned ICU admission",
+        "id": "28f7556c-dd63-440c-8dd5-7c857516d4cd"
+    },
+    {
+        "display": "Urinary Tract Infection",
+        "id": "e2e6a43e-3f42-4ab6-ab84-f6a1feff18e0"
+    },
+    {
+        "display": "Wound dehiscence",
+        "id": "97cc9b23-b442-4d2f-a7c3-4b869f79effe"
+    },
+    {
+        "display": "Wound Infection",
+        "id": "069f3784-aea2-4d76-ba82-37bd72d31465"
+    }
+]
+export const USERS = [
+    {
+        "updatedByName": null,
+        "userName": "08f4ad2d-0a47-400b-a8fe-48aed3a1a8ff",
+        "display": "Franko",
+        "lastName": "Luk",
+        "title": null,
+        "email": "f.luk@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "99f6bafd-f197-41a3-983b-87bb5cb3fa98",
+        "display": "Benet",
+        "lastName": "Wu",
+        "title": null,
+        "email": "b.wu@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "4b6a876a-332d-413c-a3a6-7e69d701d4fc",
+        "display": "Vanessa",
+        "lastName": "Palter",
+        "title": null,
+        "email": "v.palter@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "b88a9429-e193-4b09-b4c8-048757168a7b",
+        "display": "Adam",
+        "lastName": "Lee",
+        "title": null,
+        "email": "a.lee@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "dde27e6d-a800-402c-bf3a-9c927d48fb58",
+        "display": "Amar",
+        "lastName": "Chaudhry",
+        "title": null,
+        "email": "a.chaudhry@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "ea217d43-e98f-498d-92e4-89d7d47e52cf",
+        "display": "Felipe",
+        "lastName": "Sarmiento",
+        "title": null,
+        "email": "f.sarmiento@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "8b95f4e9-52a7-4812-a28f-e9238a03945e",
+        "display": "Jason",
+        "lastName": "Llorin",
+        "title": null,
+        "email": "j.llorin@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "1e11169d-471d-4614-b536-68e9ad46338e",
+        "display": "John",
+        "lastName": "Xu",
+        "title": null,
+        "email": "j.xu@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "06f417ff-e934-4d37-a3a9-f1930a2025f9",
+        "display": "Teodor",
+        "lastName": "Grantcharov",
+        "title": null,
+        "email": "t.grantcharov@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "927ecfe8-e833-4052-9f0e-dcab14c6028b",
+        "display": "Derek",
+        "lastName": "Lo",
+        "title": null,
+        "email": "d.lo@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "c7c5c086-42e3-42c2-8626-c8551aa71634",
+        "display": "Kee",
+        "lastName": "Tang",
+        "title": null,
+        "email": "k.tang@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "0efef932-0c43-4d44-85db-0b6f57111742",
+        "display": "Tan 123",
+        "lastName": "Kwan 12",
+        "title": null,
+        "email": "t.kwan@surgicalsafety.com",
+        "active": false,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "15a4af6b-6593-4e0e-b08d-3ef60df81325",
+        "display": "Felipe",
+        "lastName": "Sarmiento",
+        "title": null,
+        "email": "f.sarmiento+1@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "00e5258b-07e4-4e0b-beb4-75c5bde5bc41",
+        "display": "Tan plus 2 test",
+        "lastName": "Kwan plus 2 test2",
+        "title": null,
+        "email": "t.kwan+plus@surgicalsafety.com",
+        "active": false,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "08804b55-f477-46fd-bdb5-f224d12b78a7",
+        "display": "Peter",
+        "lastName": "Grantcharov",
+        "title": null,
+        "email": "p.grantcharov@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "73a0c7fa-9547-44be-8238-207d7e07215e",
+        "display": "tan test",
+        "lastName": "test",
+        "title": null,
+        "email": "tan.kwan@gmail.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "565591d3-ac37-4d60-8749-377e73ac34f7",
+        "display": "Adam test",
+        "lastName": "Lee testss",
+        "title": null,
+        "email": "a.lee+test@surgicalsafety.com",
+        "active": false,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "04ee7649-e9a9-433e-ac54-77ad587f80c0",
+        "display": "Franko",
+        "lastName": "Tester",
+        "title": null,
+        "email": "f.luk+presenter@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "8d8ffef0-589b-460b-8700-46d11718112a",
+        "display": "Sherman",
+        "lastName": "Wong",
+        "title": null,
+        "email": "s.wong@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "967d9b8b-f6b2-4690-9f9e-6ee1473c2998",
+        "display": "Bharat",
+        "lastName": "Choudhary",
+        "title": null,
+        "email": "b.choudhary@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "2badba35-c33f-45b8-b960-db6e74087ea6",
+        "display": "Manksh",
+        "lastName": "Gupta",
+        "title": null,
+        "email": "m.gupta@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "c4e1801e-1064-4822-8e88-963bad2a0d56",
+        "display": "Filip",
+        "lastName": "Grantcharov",
+        "title": null,
+        "email": "f.grantcharov@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "1c879ea9-51f7-4cac-b87d-901f62fbc955",
+        "display": "Trista",
+        "lastName": "Tian",
+        "title": null,
+        "email": "t.tian@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "e7c25656-1f5b-4c15-add4-3eb10dc64ea9",
+        "display": "Ryan",
+        "lastName": "Floyd",
+        "title": null,
+        "email": "r.floyd@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "ac4d18ed-a6f0-465c-87b4-a75e8b566ff4",
+        "display": "Eric",
+        "lastName": "Dong",
+        "title": null,
+        "email": "e.dong@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "4a8459ef-7d81-4d0a-9f62-715d36f38206",
+        "display": "Jason",
+        "lastName": "Llorin",
+        "title": null,
+        "email": "j.llorin+1@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "0cb89bb4-394e-47f2-baa6-683de02c33a9",
+        "display": "Eric",
+        "lastName": "Bastarache",
+        "title": null,
+        "email": "e.bastarache@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "ea660786-0d69-429a-8bb9-09d6ecd5b2d4",
+        "display": "test",
+        "lastName": "test",
+        "title": null,
+        "email": "f.luk+test@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "7d0ee6c0-986d-4e8d-b13a-c218a67a28d5",
+        "display": "Ryan",
+        "lastName": "Floyd",
+        "title": null,
+        "email": "r.floyd+plus@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "ad49e4e1-c64e-4d8b-8cab-f665be50e993",
+        "display": "Pavel",
+        "lastName": "Gusilic",
+        "title": null,
+        "email": "p.gusilic@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "a5542709-1192-424b-8f76-fb91ef8051ff",
+        "display": "Diego",
+        "lastName": "Bernabe De Luna",
+        "title": null,
+        "email": "d.deluna@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "cfdc1bc8-9eaa-40f0-a1c3-7ddac9e5ba85",
+        "display": "Marius",
+        "lastName": "De Allie",
+        "title": null,
+        "email": "m.deallie@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "8c31e479-3062-43c0-8784-9b8c3287351b",
+        "display": "Fahim",
+        "lastName": "Shahreer",
+        "title": null,
+        "email": "f.shahreer@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "f21b8150-5b8e-49b9-b73b-f4411eddffb1",
+        "display": "Cindy",
+        "lastName": "Lu",
+        "title": null,
+        "email": "c.lu@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    },
+    {
+        "updatedByName": null,
+        "userName": "bb35e0d2-6ab0-4e6a-8472-0e447bab94cf",
+        "display": "Arif",
+        "lastName": "Alam",
+        "title": null,
+        "email": "a.alam@surgicalsafety.com",
+        "active": true,
+        "hospitalName": null,
+        "facilityName": null,
+        "departmentName": null,
+        "surveyStatus": null,
+        "surveyLinkId": null
+    }
+]
+
 export const DETAILED_CASE = {
     "procedures": [
         {
@@ -450,6 +1025,9 @@ export const DETAILED_CASE = {
     "reportId": "ED7B0049-FBBA-4643-9BD1-4DF7E940E5FE",
     "isPublished": "true",
 
+    // "reportId": "ED7B0049-FBBA-4643-9BD1-4DF7E940E5FE",
+    "isPublished": null,
+
 
     "tags": [
         {
@@ -458,7 +1036,7 @@ export const DETAILED_CASE = {
         },
         {
             "tagName": "Flagged",
-            "toolTip": ["whatever flagged description is", "2nd line","","4th line"]
+            "toolTip": ["whatever flagged description is", "2nd line", "", "4th line"]
         }
     ],
 
@@ -483,18 +1061,18 @@ export const DETAILED_CASE = {
             "title": "Temperature",
             "unit": "°C",
             "isSpacedUnit": false,
-            "times": [    0,   900,  1800,  2700,  3600,  4500,  5400,  6300,  7200,
-                8100,  9000,  9900, 10800, 11700, 12600, 13500, 14400, 15300,
-               16200, 17100, 18000, 18900, 19800, 20700, 21600, 22500, 23400,
-               24300, 25200, 26100, 27000, 27900, 28800, 29700, 30600, 31500,
-               32400, 33300, 34200],
+            "times": [0, 900, 1800, 2700, 3600, 4500, 5400, 6300, 7200,
+                8100, 9000, 9900, 10800, 11700, 12600, 13500, 14400, 15300,
+                16200, 17100, 18000, 18900, 19800, 20700, 21600, 22500, 23400,
+                24300, 25200, 26100, 27000, 27900, 28800, 29700, 30600, 31500,
+                32400, 33300, 34200],
             "values": [263, 248, 351, 223, 284, 258, 240, 261, 270, 232, 395, 229, 306, 224, 210, 379, 302, 297, 377, 228, 320, 272, 227, 323, 237, 243, 316, 274, 267, 259, 247, 235, 342, 214, 341, 354, 349, 364, 304, 369]
         },
 
     ],
 
     "procedureDistribution": {
-        "shape": 9.3/38,
+        "shape": 9.3 / 38,
         "scale": 38,
         "duration": 6.5
     },

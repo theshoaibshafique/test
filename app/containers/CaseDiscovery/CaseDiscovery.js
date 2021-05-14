@@ -8,8 +8,8 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Divider, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
-import { DATE_OPTIONS, TAGS, DETAILED_CASE } from './constants';
+import { Button, Divider, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
+import { DATE_OPTIONS, TAGS, COMPLICATIONS, USERS } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -25,6 +25,8 @@ import Hypoxia from './icons/Hypoxia.svg';
 import LateStart from './icons/LateStart.svg';
 import FullPerson from './icons/FullPerson.svg';
 import HalfPerson from './icons/HalfPerson.svg';
+import TurnoverDuration from './icons/TurnoverDuration.svg';
+import Close from './icons/Close.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
 import { LightTooltip, StyledRadio } from '../../components/SharedComponents/SharedComponents';
@@ -349,7 +351,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   });
   // Change/update the filter
   const handleChange = (event, value) => {
-    console.log(event, value)
     setSearchData({
       name: event,
       value: value
@@ -590,6 +591,31 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     </Grid>
   )
 
+  // const [isLoading, setIsLoading] = useState(true);
+  const [DETAILED_CASE, setDetailedCase] = useState(null);
+
+  useEffect(() => {
+    if (caseId == null) {
+      setDetailedCase(null)
+      return;
+    }
+    // setDetailedCase(null)
+    const fetchCases = async () => {
+      const result = await globalFunctions.axiosFetch('https://utils.surgicalsafety.com/api/case_discovery/v1/' + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
+        .then(result => {
+          result = result.data
+          setDetailedCase(result)
+        }).catch((error) => {
+          console.log("oh no")
+        }).finally(() => {
+          // setIsLoading(false);
+        });
+    }
+    fetchCases()
+
+
+  }, [caseId]);
+
   console.log(caseId);
   return (
     <section className="case-discovery">
@@ -608,19 +634,47 @@ function getWindowDimensions() {
 }
 
 function DetailedCase(props) {
-  const { isLeftSided, isRightSided, startTime, endTime, blockStartTime, blockEndTime, wheelsIn, wheelsOut, scheduledStart, roomName, schedule, procedures, tags, reportId, setCaseId, caseId, emrCaseId, hidden, showEMMReport, hl7Data, timeline, procedureDistribution } = props;
+  if (props.metaData == null ){
+    return <LoadingIndicator />
+  }
+  const { hidden, showEMMReport, setCaseId } = props;
+  const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsOut, scheduledStart, startTime, endTime,
+    duration, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
+    procedures, timeline } } = props;
+  const { roomSchedule: { blockStart, blockEnd, roomCases }, procedureDistribution, emmStatus: { reportId, isPublished }, hl7Parameters, tags } = props;
+  
   const procedureTitle = procedures[0].procedureName;
   const specialtyTitle = procedures[0].specialtyName;
 
   const dayDiff = moment().diff(moment(wheelsIn), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
+  const blockStartTime = moment(blockStart, 'HH:mm:ss');
+  const blockEndTime = moment(blockEnd, 'HH:mm:ss');
+  const bStartTime = getDiffFromMidnight(blockStartTime, 'minutes') / 60;
+  const bEndTime = getDiffFromMidnight(blockEndTime, 'minutes') / 60;
 
-  const bStartTime = getDiffFromMidnight(blockStartTime);
-  const bEndTime = getDiffFromMidnight(blockEndTime);
-  const duration = (bEndTime + 1) - (bStartTime - 1);
+
+  // console.log("bStartTime: " + bStartTime);
+  // console.log("bEndTime: " + bEndTime);
+
+
+  const earliestStartTime = roomCases.reduce((min, c) => getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
+  const latestEndTime = roomCases.reduce((max, c) => getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
+  const scheduleDuration = (latestEndTime) - (earliestStartTime );
+  // console.log("earliestStartTime: " + earliestStartTime);
+  // console.log("latestEndTime: " + latestEndTime);
+  // console.log("scheduleDuration: " + scheduleDuration);
+
+  const description = (
+    <div>
+      <span>Case ID {emrCaseId}</span>
+      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
+      <span>{roomName}</span>
+    </div>
+  );
 
   const procedureDuration = (getDiffFromMidnight(endTime, 'minutes') - getDiffFromMidnight(startTime, 'minutes')) / 60;
-  console.log("pDuration: " + procedureDuration);
+  // console.log("pDuration: " + procedureDuration);
 
   const startDiff = moment(wheelsIn).diff(moment(scheduledStart), 'seconds');
 
@@ -630,11 +684,6 @@ function DetailedCase(props) {
       isLeftSided ? <img src={HalfPerson} /> : <img src={HalfPerson} style={{ transform: 'scaleX(-1)' }} />
     );
 
-
-
-  console.log("startTime " + bStartTime)
-  console.log("endTime " + bEndTime)
-  console.log("duration " + duration)
 
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
   useEffect(() => {
@@ -646,23 +695,42 @@ function DetailedCase(props) {
   }, []);
   // Hour block size in pixels
   const HEADER_SIZE = 82;
-  const HOUR_SIZE = (windowDimensions.height - HEADER_SIZE) / (duration);
-  console.log(HOUR_SIZE)
+  const HOUR_SIZE = (windowDimensions.height - HEADER_SIZE) / (scheduleDuration);
+  const [openRequestEMM, setOpenRequestEMM] = React.useState(false);
+
+  const reportButton = () => {
+    if (isPublished == null) {
+      return <Button variant="outlined" className="primary" onClick={() => setOpenRequestEMM(true)}>Request eM&M</Button>
+    } else if (!isPublished) {
+      return <div>Report Pending</div>
+    } else {
+      return <Button variant="outlined" className="primary" onClick={() => showEMMReport(reportId)}>Open eM&M Report</Button>
+    }
+  }
+
+  const [isLoading, setIsLoading] = React.useState(false);
+  const updateCaseId = (cId) => {
+    if (cId == caseId){
+      return;
+    }
+    setIsLoading(true)
+    setCaseId(cId);
+  }
+  useEffect(() => {
+    setIsLoading(false);
+  }, [caseId]);
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       <Grid item xs className="detailed-case">
+        {isLoading && <div className="detailed-loading"><LoadingIndicator /></div>}
         <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
         <div className="case-header">
           <div className="case-title">{procedureTitle}</div>
-          <div className="button"><Button variant="outlined" className="primary" onClick={() => showEMMReport(reportId)}>Open Report</Button></div>
+          <div className="button">{reportButton()}</div>
         </div>
         <div className="case-description">
           <div className="case-specialty">{specialtyTitle}</div>
-          <div>
-            <span>Case ID {emrCaseId}</span>
-            <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
-            <span>{roomName}</span>
-          </div>
+          {description}
         </div>
         <div className="tags">
           {displayTags(tags)}
@@ -696,10 +764,10 @@ function DetailedCase(props) {
 
             </Grid>
             <Grid item xs className="procedure-time">
-              <ProcedureDistribution {...procedureDistribution} duration={procedureDuration} />
+              <ProcedureDistribution {...procedureDistribution} duration={duration} />
             </Grid>
           </Grid>
-          <HL7Chart hl7Data={hl7Data} timeline={timeline} />
+          <HL7Chart hl7Data={hl7Parameters} timeline={timeline} />
 
 
         </div>
@@ -707,26 +775,26 @@ function DetailedCase(props) {
       </Grid>
       <Grid item xs className="schedule">
         <div className="header">
-          <div>{roomName} Block</div>
-          <div>{moment(blockStartTime).format('MMMM DD, YYYY')}</div>
+          <div>{roomName} Block ({`${moment(blockStartTime).format('h:mm a')} to ${moment(blockEndTime).format('h:mm a')}`})</div>
+          <div>{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
         </div>
         <div className="timeline relative"
           style={{
-            height: `${duration * HOUR_SIZE}px`
+            height: `${scheduleDuration * HOUR_SIZE}px`
           }}
         >
           {/* Highlight Scheduled block */}
           <div className="scheduled-block absolute"
             style={{
-              top: `${(duration - bStartTime) * HOUR_SIZE}px`,
+              top: `${(bStartTime - earliestStartTime ) * HOUR_SIZE}px`,
               height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`
             }}
           >
           </div>
           {/* Add time markers */}
-          {Array.from({ length: duration }, (x, i) => {
+          {Array.from({ length: Math.round(scheduleDuration) }, (x, i) => {
             const now = moment().toDate()
-            let cTime = bStartTime - 1 + i;
+            let cTime = Math.round(earliestStartTime) + i;
             now.setHours(cTime);
             now.setMinutes(0);
             return (
@@ -741,27 +809,129 @@ function DetailedCase(props) {
             )
           })}
           {/* Display all cases given  */}
-          {schedule.map((c) => {
-            const { procedures, startTime, endTime } = c;
-            const procedure = procedures[0].procedureName;
-            const startMins = getDiffFromMidnight(startTime, 'minutes') - getDiffFromMidnight(blockStartTime, 'minutes') + 60;
-            const endMins = getDiffFromMidnight(endTime, 'minutes') - getDiffFromMidnight(blockStartTime, 'minutes') + 60;
+          {roomCases.map((c) => {
+            const { procedureName, wheelsIn, wheelsOut } = c;
+
+            const startMins = getDiffFromMidnight(wheelsIn, 'minutes') - (earliestStartTime * 60);
+            const endMins = getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
+            const caseHeight = (endMins - startMins) / 60;
             return (
               <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'}`}
-                onClick={() => setCaseId(c.caseId)}
+                onClick={() => updateCaseId(c.caseId)}
                 style={{
                   top: `${(startMins / 60) * HOUR_SIZE}px`,
-                  height: `${(endMins - startMins) / 60 * HOUR_SIZE}px`,
+                  height: `${caseHeight * HOUR_SIZE}px`,
                 }}>
-                <div className="case-title">{procedure}</div>
-                <div className="case-time">{moment(startTime).format("h:mm")} - {moment(endTime).format("h:mm")}</div>
+                <div className="case-title">{procedureName}</div>
+                {caseHeight > 1 && <div className="case-time">{moment(wheelsIn).format("h:mm")} - {moment(wheelsOut).format("h:mm")}</div>}
               </div>
             )
           })}
 
         </div>
       </Grid>
+      <Modal
+        open={openRequestEMM}
+        onClose={() => setOpenRequestEMM(false)}
+      >
+        <div className="request-emm-modal">
+          <div className="close-button">
+            <img src={Close} onClick={() => setOpenRequestEMM(false)} />
+          </div>
+          <RequestEMM procedureTitle={procedureTitle} description={description} />
+        </div>
+
+      </Modal>
     </Grid>
+  )
+}
+
+
+const requestReducer = (state, event) => {
+  if (event.name == 'date-clear') {
+    event.name = 'date'
+  } else if (event.name == 'date') {
+    event.value = {
+      selected: event.value.key,
+      ...getPresetDates(event.value.key)
+    }
+  } else if (event.name == 'custom-to') {
+    event.name = 'date'
+    event.value = {
+      ...state.date,
+      to: event.value,
+    }
+
+  } else if (event.name == 'custom-from') {
+    event.name = 'date'
+    event.value = {
+      ...state.date,
+      from: event.value
+    }
+  }
+
+  return {
+    ...state,
+    [event.name]: event.value
+  }
+}
+
+function RequestEMM(props) {
+  const { procedureTitle, description } = props;
+  const [requestData, setRequestData] = useReducer(requestReducer, {
+    complications: [],
+    users: [],
+    notes: "",
+  });
+  const classes = useStyles();
+  // Change/update the filter
+  const handleChange = (event, value) => {
+    setRequestData({
+      name: event,
+      value: value
+    })
+  }
+  // console.log(requestData)
+  return (
+    <div className="request-emm">
+      <div className="header">
+        Request for Enhanced M&M
+      </div>
+      <div className="subtitle">
+        {procedureTitle}
+      </div>
+      <div className="description">
+        {description}
+      </div>
+
+      <TagsSelect
+        title="Complications"
+        placeholder="Select 1 or more"
+        options={COMPLICATIONS}
+        id="complications"
+        handleChange={handleChange}
+        searchData={requestData}
+      />
+      <TagsSelect
+        title="Also send confirmation email to these users (optional)"
+        placeholder="Select users"
+        options={USERS}
+        id="users"
+        handleChange={handleChange}
+        searchData={requestData}
+      />
+      <InputLabel className={classes.inputLabel}>Notes (Optional)</InputLabel>
+      <TextField
+        multiline
+        className="notes-field"
+        rows="8"
+        variant="outlined"
+        onChange={(e) => handleChange('notes', e.target.value)}
+      />
+
+      <Button variant="outlined" className="primary send-request" onClick={() => null}>Request eM&M</Button>
+    </div>
+
   )
 }
 
@@ -803,6 +973,7 @@ function ProcedureDistribution(props) {
   const mu = scale;
   const sigma = shape * scale;
   const range = globalFunctions.range(Math.max(0, mu - 5 * sigma), mu + 5 * sigma, sigma / 2);
+  // console.log(range)
   const chartRef = useRef(null);
   const data = {
     size: {
@@ -830,7 +1001,7 @@ function ProcedureDistribution(props) {
     },
     grid: {
       x: {
-        lines: [{ "value": duration*60, "text": "current", "class":"marker"},]
+        lines: [{ "value": duration , "text": "current", "class": "marker" },]
       }
     },
     legend: {
@@ -842,7 +1013,7 @@ function ProcedureDistribution(props) {
   }
   return (
     <div className="procedure-distribution" >
-      <div className="title">Procedure Time: {duration.toFixed(1)} hr</div>
+      <div className="title">Procedure Time: {(duration/60/60).toFixed(1)} hr</div>
       <C3Chart ref={chartRef} {...data} />
     </div>
   )
