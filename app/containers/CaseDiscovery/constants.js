@@ -416,13 +416,16 @@ export const ORS = [
 
 
 export const TAGS = [
-    "eM&M",
-    "First Case",
+    // "eM&M",
+    "Delayed",
+    "Late First Case",
+    // "First Case",
     "Flagged",
     "Hypotension",
     "Hypothermia",
     "Hypoxia",
-    "Late Start",
+    // "Late Start",
+    "Case Delay",
     "Post-Op Duration",
     "Pre-Op Duration",
     "Procedure Duration",

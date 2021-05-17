@@ -8,8 +8,8 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Divider, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
-import { DATE_OPTIONS, TAGS, COMPLICATIONS, USERS } from './constants';
+import { Button, Divider, FormControl, FormControlLabel, FormHelperText, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
+import { DATE_OPTIONS, TAGS, } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -34,6 +34,7 @@ import ArrowBack from '@material-ui/icons/ArrowBackIos';
 import globalFunctions from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 import ReactDOMServer from 'react-dom/server';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -81,10 +82,12 @@ function getTag(tag) {
       return <img src={Hypotension} />
     case "procedure duration":
       return <img src={CaseDuration} />
+    case "case delay":
     case "late start":
       return <img src={LateStart} />
     case "turnover duration":
       return <img src={TurnoverDuration} />
+    case "late first case":
     case "first case":
       return <img src={FirstCase} />
     case "eM&M":
@@ -209,8 +212,8 @@ function TagsSelect(props) {
       {includeToggle && (value && value.length > 0) && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
-            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all tags</span>} />
             <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
+            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all of these tags</span>} />
           </RadioGroup>
         </div>
       )}
@@ -289,9 +292,43 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [ORS, setORs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [COMPLICATIONS, setComplications] = useState([]);
+  const [USERS, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/emm_users', 'get', userToken, {})
+        .then(result => {
+          result = result.data
+          setUsers(result);
+
+        }).catch((error) => {
+          console.log("uh no.")
+        }).finally(() => {
+
+        });
+    }
+    const fetchComplications = async () => {
+      const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/complications', 'get', userToken, {})
+        .then(result => {
+          result = result.data
+          setComplications(result);
+
+        }).catch((error) => {
+          console.log("uh no.")
+        }).finally(() => {
+
+        });
+    }
+    fetchUsers();
+    fetchComplications();
+
+
+  }, []);
+
   useEffect(() => {
     const fetchCases = async () => {
-      const result = await globalFunctions.axiosFetch('https://utils.surgicalsafety.com/api/case_discovery/v1/' + 'cases?facility_id=' + userFacility, 'get', userToken, {})
+      const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
         .then(result => {
           result = result.data
           setCases(result);
@@ -363,7 +400,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const roomNames = searchData.roomNames.map((s) => s.display || s)
   const { to, from } = searchData.date;
   // for any
-  const [includeAllTags, setIncludeAllTags] = React.useState(1);
+  const [includeAllTags, setIncludeAllTags] = React.useState(0);
 
   //Filter cases
   let filterCases = CASES.filter((c) => {
@@ -601,7 +638,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
     // setDetailedCase(null)
     const fetchCases = async () => {
-      const result = await globalFunctions.axiosFetch('https://utils.surgicalsafety.com/api/case_discovery/v1/' + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
+      const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
         .then(result => {
           result = result.data
           setDetailedCase(result)
@@ -620,7 +657,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   return (
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
-      <DetailedCase {...DETAILED_CASE} setCaseId={setCaseId} hidden={!caseId} showEMMReport={showEMMReport} />
+      <DetailedCase {...DETAILED_CASE} COMPLICATIONS={COMPLICATIONS} USERS={USERS} userToken={userToken} setCaseId={setCaseId} hidden={!caseId} showEMMReport={showEMMReport} userFacility={userFacility} />
     </section>
   );
 }
@@ -634,13 +671,13 @@ function getWindowDimensions() {
 }
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, setCaseId } = props;
+  const { hidden, showEMMReport, setCaseId, COMPLICATIONS, USERS, userToken, userFacility } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
-  
+
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsOut, scheduledStart, startTime, endTime,
-    duration, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
+    duration, departmentId, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
     procedures, timeline } } = props;
   const { roomSchedule: { blockStart, blockEnd, roomCases }, procedureDistribution, emmStatus: { reportId, isPublished }, hl7Parameters, tags } = props;
 
@@ -674,9 +711,6 @@ function DetailedCase(props) {
     </div>
   );
 
-  const procedureDuration = (getDiffFromMidnight(endTime, 'minutes') - getDiffFromMidnight(startTime, 'minutes')) / 60;
-  // console.log("pDuration: " + procedureDuration);
-
   const startDiff = moment(wheelsIn).diff(moment(scheduledStart), 'seconds');
 
   const laterality = (isLeftSided && isRightSided) ? "Bilateral" : (isLeftSided ? "Left Side" : "Right Side");
@@ -696,17 +730,28 @@ function DetailedCase(props) {
   }, []);
   // Hour block size in pixels
   const HEADER_SIZE = 90;
-  const HOUR_SIZE = (windowDimensions.height - HEADER_SIZE) / (scheduleDuration);
+  const HOUR_SIZE = Math.max((windowDimensions.height - HEADER_SIZE) / (scheduleDuration), 34);
   const [openRequestEMM, setOpenRequestEMM] = React.useState(false);
+  const [isRequestSubmitted, setIsRequestSubmitted] = React.useState(false);
 
   const reportButton = () => {
-    if (isPublished == null) {
+    if (isRequestSubmitted) {
+
+      return <LightTooltip title={"eM&M request submitted successfully"} arrow>
+        <div><Button variant="outlined" className="primary disabled" onClick={() => null} disabled>Request eM&M</Button></div>
+      </LightTooltip>
+    } else if (dayDiff <= 21) {
       return <Button variant="outlined" className="primary" onClick={() => setOpenRequestEMM(true)}>Request eM&M</Button>
-    } else if (!isPublished) {
-      return <div>Report Pending</div>
     } else {
-      return <Button variant="outlined" className="primary" onClick={() => showEMMReport(reportId)}>Open eM&M Report</Button>
+      return <div></div>
     }
+    // if (isPublished == null) {
+    //   return <Button variant="outlined" className="primary" onClick={() => setOpenRequestEMM(true)}>Request eM&M</Button>
+    // } else if (!isPublished) {
+    //   return <div>Report Pending</div>
+    // } else {
+    //   return <Button variant="outlined" className="primary" onClick={() => showEMMReport(reportId)}>Open eM&M Report</Button>
+    // }
   }
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -720,60 +765,121 @@ function DetailedCase(props) {
   useEffect(() => {
     setIsLoading(false);
   }, [caseId]);
+
+  const [requestData, setRequestData] = useReducer(requestReducer, {
+    complications: [],
+    complicationDate: null,
+    users: [],
+    notes: "",
+  });
+  const classes = useStyles();
+
+  const [isComplicationFilled, setIsComplicationFilled] = React.useState(true);
+  const [isComplicationDateFilled, setIsComplicationDateFilled] = React.useState(true);
+  // Change/update the filter for request ID
+  const handleChange = (event, value) => {
+    if (event == "complications") {
+      setIsComplicationFilled(true);
+    }
+    if (event == "complicationDate") {
+      setIsComplicationDateFilled(true);
+    }
+
+    setRequestData({
+      name: event,
+      value: value
+    })
+  }
+
+  const submit = () => {
+    if (requestData.complications.length < 1) {
+      setIsComplicationFilled(false);
+      return;
+    }
+    if (!requestData.complicationDate) {
+      setIsComplicationDateFilled(false);
+      return;
+    }
+    let jsonBody = {
+      "roomName": roomName,
+      "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
+      "procedure": [procedureTitle],
+      "complications": requestData.complications.map((c) => c.id),
+      "postOpDate": requestData.complicationDate,
+      "operationDate": globalFunctions.formatDateTime(scheduledStart),
+      "notes": requestData.notes,
+      "usersToNotify": requestData.users.map((c) => c.id),
+      "departmentName": departmentId,
+      "facilityName": userFacility
+    }
+    globalFunctions.genericFetch(process.env.REQUESTEMM_API, 'post', userToken, jsonBody)
+      .then(result => {
+        if (result === 'error' || result === 'conflict') {
+
+        } else {
+          setIsRequestSubmitted(result)
+        }
+      }).finally(() => {
+        setIsComplicationFilled(true);
+        setIsComplicationDateFilled(false);
+      });
+  }
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
-      <Grid item xs className="detailed-case">
-        {isLoading && <div className="detailed-loading"><LoadingIndicator /></div>}
-        <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
-        <div className="case-header">
-          <div className="case-title">{procedureTitle}</div>
-          <div className="button">{reportButton()}</div>
-        </div>
-        <div className="case-description">
-          <div className="case-specialty">{specialtyTitle}</div>
-          {description}
-        </div>
-        <div className="tags">
-          {displayTags(tags)}
-        </div>
+      {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
+        <Grid item xs className="detailed-case">
 
-        <div className="timing-graphs" id="timing-graphs">
-          <div className="header">Timing & Graphs</div>
-          <Divider style={{ backgroundColor: '#C8C8C8' }} />
-          <Grid container spacing={0}>
-            <Grid item xs className="timing">
-              <Grid container spacing={0} className="start-timing">
-                <Grid item xs={4} className="scheduled-start">
-                  <div className="timing-header">Scheduled Start</div>
-                  <div className="timing-value">Started at</div>
-                  <div className="timing-header">Laterality</div>
-                  <div className="timing-value">{laterality}</div>
-                </Grid>
-                <Grid item xs={4} className="actual-start">
+          <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
+          <div className="case-header">
+            <div className="case-title">{procedureTitle}</div>
+            <div className="button">{reportButton()}</div>
+          </div>
+          <div className="case-description">
+            <div className="case-specialty">{specialtyTitle}</div>
+            {description}
+          </div>
+          <div className="tags">
+            {displayTags(tags)}
+          </div>
 
-                  <div className="timing-header">{moment(scheduledStart).format("hh:mm:ss")}</div>
-                  <div className="timing-value">{moment(wheelsIn).format("hh:mm:ss")}</div>
-                  <div className="laterality">
-                    {lateralityIcon}
-                  </div>
+          <div className="timing-graphs" id="timing-graphs">
+            <div className="header">Timing & Graphs</div>
+            <Divider style={{ backgroundColor: '#C8C8C8' }} />
+            <Grid container spacing={0}>
+              <Grid item xs={8} className="timing">
+                <Grid container spacing={0} className="start-timing">
+                  <Grid item xs={4} className="scheduled-start">
+                    <div className="timing-header">Scheduled Start</div>
+                    <div className="timing-value">Started at</div>
+                    <div className="timing-header">Laterality</div>
+                    <div className="timing-value">{laterality}</div>
+                  </Grid>
+                  <Grid item xs={3} className="actual-start">
+
+                    <div className="timing-header">{moment(scheduledStart).format("hh:mm:ss")}</div>
+                    <div className="timing-value">{moment(wheelsIn).format("hh:mm:ss")}</div>
+                    <div className="laterality">
+                      {lateralityIcon}
+                    </div>
+                  </Grid>
+                  <Grid item xs={5} className="difference">
+                    <div className="timing-header" style={{ visibility: 'hidden' }}>placeholder</div>
+                    <div className={`${startDiff && (startDiff > 0 ? 'late' : 'early')}`}>{globalFunctions.formatSecsToTime(Math.abs(startDiff - (startDiff % 60)), true, true)} {`${startDiff > 0 ? 'late' : 'early'}`}</div>
+                  </Grid>
                 </Grid>
-                <Grid item xs={4} className="difference">
-                  <div className="timing-header" style={{ visibility: 'hidden' }}>placeholder</div>
-                  <div className={`${startDiff > 0 ? 'late' : 'early'}`}>{globalFunctions.formatSecsToTime(Math.abs(startDiff - (startDiff % 60)), true, true)} {`${startDiff > 0 ? 'late' : 'early'}`}</div>
-                </Grid>
+
               </Grid>
-
+              <Grid item xs className="procedure-time">
+                <ProcedureDistribution {...procedureDistribution} duration={duration} />
+              </Grid>
             </Grid>
-            <Grid item xs className="procedure-time">
-              <ProcedureDistribution {...procedureDistribution} duration={duration} />
-            </Grid>
-          </Grid>
-          <HL7Chart hl7Data={hl7Parameters} timeline={timeline} />
+            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} />
 
 
-        </div>
+          </div>
 
-      </Grid>
+        </Grid>
+      }
       <Grid item xs className="schedule">
         <div className="header">
           <div>{roomName} Block</div>
@@ -831,11 +937,12 @@ function DetailedCase(props) {
             const endMins = getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
             const caseHeight = (endMins - startMins) / 60;
             return (
-              <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'}`}
+              <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 34 && 'short'}`}
                 onClick={() => updateCaseId(c.caseId)}
                 style={{
                   top: `${(startMins / 60) * HOUR_SIZE}px`,
                   height: `${caseHeight * HOUR_SIZE}px`,
+                  minHeight: HOUR_SIZE
                 }}>
                 <div className="case-title">{procedureName}</div>
                 {caseHeight > 1 && <div className="case-time">{moment(wheelsIn).format("h:mm")} - {moment(wheelsOut).format("h:mm")}</div>}
@@ -854,7 +961,83 @@ function DetailedCase(props) {
           <div className="close-button">
             <img src={Close} onClick={() => setOpenRequestEMM(false)} />
           </div>
-          <RequestEMM procedureTitle={procedureTitle} description={description} />
+          {isRequestSubmitted ?
+            (<Grid container spacing={2} direction="column">
+              <Grid item xs={12} className="header" style={{ maxWidth: 'none', marginBottom: 0 }}>
+                <p>Thank you for submitting your request!</p>
+              </Grid>
+              <Grid item xs>
+                Please note the Enhanced M&M ID for the report to be generated:
+                <span style={{ fontWeight: 'bold' }}>{` ${isRequestSubmitted}`}</span>
+              </Grid>
+              <Grid item xs>
+                We will notify you when the report is ready on Insights for viewing.
+              </Grid>
+              <Grid item xs>
+                <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => setOpenRequestEMM(false)}>Close</Button>
+              </Grid>
+            </Grid>
+            ) :
+            <div className="request-emm">
+              <div className="header">
+                Request for Enhanced M&M
+              </div>
+              <div className="subtitle">
+                {procedureTitle}
+              </div>
+              <div className="description">
+                {description}
+              </div>
+
+              <TagsSelect
+                title="Complications"
+                placeholder="Select 1 or more"
+                options={COMPLICATIONS}
+                id="complications"
+                handleChange={handleChange}
+                searchData={requestData}
+              />
+              {!isComplicationFilled && <FormHelperText className="Mui-error" >Please select a complication</FormHelperText>}
+              <InputLabel className={classes.inputLabel}>Date of Complication</InputLabel>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <DatePicker
+                  disableToolbar
+                  size="small"
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  name="complicationDate"
+                  minDate={scheduledStart}
+                  maxDate={moment()}
+                  placeholder="Pick Date"
+                  inputVariant="outlined"
+                  className="complicationDate"
+                  autoOk
+                  value={requestData.complicationDate || null}
+                  inputProps={{ autoComplete: 'off' }}
+                  onChange={(e, v) => handleChange('complicationDate', e)}
+                  id="complicationDate"
+                />
+              </MuiPickersUtilsProvider>
+              {!isComplicationDateFilled && <FormHelperText className="Mui-error" >Please select a complication date</FormHelperText>}
+              <TagsSelect
+                title="Also send confirmation email to these users (optional)"
+                placeholder="Select users"
+                options={USERS.map((u) => { return { "display": `${u.firstName} ${u.lastName}`, "id": u.userName } })}
+                id="users"
+                handleChange={handleChange}
+                searchData={requestData}
+              />
+              <InputLabel className={classes.inputLabel}>Notes (Optional)</InputLabel>
+              <TextField
+                multiline
+                className="notes-field"
+                rows="8"
+                variant="outlined"
+                onChange={(e) => handleChange('notes', e.target.value)}
+              />
+
+              <Button variant="outlined" className="primary send-request" onClick={() => submit()}>Request eM&M</Button>
+            </div>}
         </div>
 
       </Modal>
@@ -892,64 +1075,6 @@ const requestReducer = (state, event) => {
   }
 }
 
-function RequestEMM(props) {
-  const { procedureTitle, description } = props;
-  const [requestData, setRequestData] = useReducer(requestReducer, {
-    complications: [],
-    users: [],
-    notes: "",
-  });
-  const classes = useStyles();
-  // Change/update the filter
-  const handleChange = (event, value) => {
-    setRequestData({
-      name: event,
-      value: value
-    })
-  }
-  // console.log(requestData)
-  return (
-    <div className="request-emm">
-      <div className="header">
-        Request for Enhanced M&M
-      </div>
-      <div className="subtitle">
-        {procedureTitle}
-      </div>
-      <div className="description">
-        {description}
-      </div>
-
-      <TagsSelect
-        title="Complications"
-        placeholder="Select 1 or more"
-        options={COMPLICATIONS}
-        id="complications"
-        handleChange={handleChange}
-        searchData={requestData}
-      />
-      <TagsSelect
-        title="Also send confirmation email to these users (optional)"
-        placeholder="Select users"
-        options={USERS}
-        id="users"
-        handleChange={handleChange}
-        searchData={requestData}
-      />
-      <InputLabel className={classes.inputLabel}>Notes (Optional)</InputLabel>
-      <TextField
-        multiline
-        className="notes-field"
-        rows="8"
-        variant="outlined"
-        onChange={(e) => handleChange('notes', e.target.value)}
-      />
-
-      <Button variant="outlined" className="primary send-request" onClick={() => null}>Request eM&M</Button>
-    </div>
-
-  )
-}
 
 function erf(x) {
   // constants
@@ -985,16 +1110,27 @@ function log_norm_pdf(duration, scale, shape) {
 }
 
 function ProcedureDistribution(props) {
-  const { shape, scale, duration } = props;
+  const { shape, scale, duration, sampleSize } = props;
   const mu = scale;
   const sigma = shape * scale;
-  const range = globalFunctions.range(Math.max(0, mu - 5 * sigma), mu + 5 * sigma, sigma / 50);
+  const range = [duration, ...globalFunctions.range(Math.max(0, mu - 5 * sigma), mu + 5 * sigma, sigma / 10)].sort();
   // console.log(range)
   const chartRef = useRef(null);
+
+  const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
+    d = d[0]
+    let seconds = d.x;
+    return ReactDOMServer.renderToString(
+      <div className="tooltip subtle-subtext">
+        <div>{globalFunctions.formatSecsToTime(seconds, true, true)}</div>
+        <div>{`${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(d.x, scale, shape) * 100))} percentile`}</div>
+      </div>);
+  }
+
   const data = {
     size: {
-      height: 150,
-      width: 400
+      height: 130,
+      width: 500
     },
     data: {
       x: 'x',
@@ -1002,10 +1138,12 @@ function ProcedureDistribution(props) {
         ['x', ...range],
         ['y', ...range.map((x) => log_norm_pdf(x, scale, shape))]
       ],
-      type: 'area'
+      type: 'area-spline'
     },
     tooltip: {
-      show: false
+      grouped: true,
+      // show: false,
+      contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
     },
     axis: {
       x: {
@@ -1017,8 +1155,8 @@ function ProcedureDistribution(props) {
     },
     grid: {
       x: {
-        lines: [{ "value": duration, },]
-      }
+        lines: [{ "value": duration, "text": globalFunctions.formatSecsToTime(duration, true, true), "class": "marker" }]
+      },
     },
     legend: {
       show: false
@@ -1027,9 +1165,16 @@ function ProcedureDistribution(props) {
       show: false
     }
   }
+  // useEffect(() => {
+  //   const chart = chartRef && chartRef.current && chartRef.current.chart;
+  //   chart && chart.xgrids([{ "value": duration, "text": globalFunctions.formatSecsToTime(duration, true, true), "class": "marker" }]);
+  // }, [duration]);
+
   return (
     <div className="procedure-distribution" >
-      <div className="title">Procedure Time: {(duration / 60 / 60).toFixed(1)} hr</div>
+      <div className="title">Procedure Time <LightTooltip interactive arrow title={`Procedure time distribution is a best approximation based on ${sampleSize} cases of the same procedure type`} placement="top" fontSize="small">
+        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 0px' }} />
+      </LightTooltip></div>
       <C3Chart ref={chartRef} {...data} />
     </div>
   )
@@ -1053,6 +1198,17 @@ function HL7Chart(props) {
 
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
     d = d[0]
+    if (!hasHL7Data) {
+      let value = timeline.find((e) => e.time == d.x)
+      if (!value || !value.text) {
+        return;
+      }
+      return ReactDOMServer.renderToString(
+        <div className="tooltip subtle-subtext">
+          <div>{globalFunctions.formatSecsToTime(d.x)}</div>
+          <div>{`${value.text}`}</div>
+        </div>);
+    }
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{globalFunctions.formatSecsToTime(d.x)}</div>
@@ -1060,12 +1216,27 @@ function HL7Chart(props) {
       </div>);
   }
 
+  const xRange = globalFunctions.range(0, max, 900);
+  let xValues = [];
+  let maxVal = 5;
+
+  let delta = Math.floor(xRange.length / maxVal);
+
+  if (delta) {
+    for (let i = 0; i < xRange.length; i = i + delta) {
+      xValues.push(xRange[i]);
+    }
+  } else {
+    xValues = xRange
+  }
+
+
   const data = {
     padding: {
       top: 20
     },
     size: hasHL7Data ? {} : {
-      height:175
+      height: 175
     },
     data: {
       x: 'x',
@@ -1081,17 +1252,14 @@ function HL7Chart(props) {
       x: {
         tick: {
           outer: false,
-          // values: []
+          values: xValues,
           format: (x) => {
             return globalFunctions.formatSecsToTime(x);
           }
         },
-        min: 0,
-        max: max,
-        padding: {
-          left: 500,
-          right: 500,
-          // bottom: 0
+        padding: hasHL7Data ? {} : {
+          left: max * .05,
+          right: max * .05,
         }
       },
       y: {
@@ -1102,7 +1270,7 @@ function HL7Chart(props) {
           format: (x) => {
             return parseInt(x);
           },
-          
+
         },
         show: hasHL7Data,
         padding: {
@@ -1116,17 +1284,17 @@ function HL7Chart(props) {
         lines: timeline.map((t) => {
           return { ...t, value: t.time, "class": 'marker' }
         })
+      },
+      focus: {
+        show: hasHL7Data
       }
     },
     tooltip: {
       // grouped: false,
-      show: hasHL7Data,
+      // show: hasHL7Data,
       contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
     },
   }
-
-
-
 
 
   let [index, setIndex] = React.useState(0);
@@ -1138,8 +1306,8 @@ function HL7Chart(props) {
     ]
   } else {
     data.data.columns = [
-      ['x', ...globalFunctions.range(0, max, max / 10)],
-      ['y', ...Array(max/10).fill().map(() => 0)],
+      ['x', ...globalFunctions.range(0, max, max / 5), ...timeline.map((t) => t.time)],
+      ['y', ...Array(max / 10 + timeline.length).fill().map(() => 0)],
     ]
   }
 
@@ -1147,14 +1315,13 @@ function HL7Chart(props) {
   useEffect(() => {
     const chart = chartRef && chartRef.current && chartRef.current.chart;
     if (chart) {
-      const size = document.getElementById('timing-graphs').clientWidth
-      console.log(size)
       setTimeout(() => {
         chart.resize();
       }, 200)
 
     }
   });
+
   useEffect(() => {
     if (!hasHL7Data) {
       return;
