@@ -470,7 +470,7 @@
                     top: -8px;
                     left: 8px;
                     position: absolute;
-                    background: #fff;
+                    background: rgba(245, 248, 250,1);
                     padding:4px;
                     border-radius: 4px;
                 }
@@ -499,6 +499,9 @@
                     display: -webkit-box;
                     -webkit-line-clamp: 3; /* number of lines to show */
                     -webkit-box-orient: vertical;
+                }
+                &.medium .case-title {
+                    -webkit-line-clamp: 2;
                 }
                 &.short .case-title {
                     -webkit-line-clamp: 1;

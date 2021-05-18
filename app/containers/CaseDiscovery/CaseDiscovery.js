@@ -8,7 +8,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Divider, FormControl, FormControlLabel, FormHelperText, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Divider, FormControl, FormControlLabel, FormHelperText, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
 import { DATE_OPTIONS, TAGS, } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -35,6 +35,9 @@ import globalFunctions from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 import ReactDOMServer from 'react-dom/server';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import Icon from '@mdi/react';
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { isUndefined } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -120,8 +123,8 @@ function displayTags(tags) {
 
 function Case(props) {
   const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick } = props;
-  const sTime = moment(wheelsIn).format("h:mm A");
-  const eTime = moment(wheelsOut).format("h:mm A");
+  const sTime = moment(wheelsIn).format("HH:mm");
+  const eTime = moment(wheelsOut).format("HH:mm");
   const diff = moment().diff(moment(wheelsIn), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
   const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
@@ -333,28 +336,29 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           result = result.data
           setCases(result);
           console.time('timeTest');
-          let spec = new Set();
-          let proc = new Set();
-          let ors = new Set();
+          let spec = [];
+          let proc = [];
+          let ors = [];
           result.forEach((c) => {
             const { procedures, roomName } = c;
 
             procedures.forEach((p) => {
               const { specialtyName, procedureName } = p;
-              if (specialtyName == "string") {
-                console.log(specialtyName)
+              if (spec.indexOf(specialtyName) < 0){
+                spec.push(specialtyName);
               }
-
-              spec.add(specialtyName);
-              proc.add(procedureName);
-            })
-
-            ors.add(roomName);
+              if (proc.indexOf(procedureName) < 0){
+                proc.push(procedureName);
+              }
+            });
+            if (ors.indexOf(roomName) < 0){
+              ors.push(roomName);
+            }            
           });
 
-          setSpecialties(Array.from(spec));
-          setProcedures(Array.from(proc));
-          setORs(Array.from(ors));
+          setSpecialties(spec);
+          setProcedures(proc);
+          setORs(ors);
           console.timeEnd('timeTest');
         }).catch((error) => {
           console.log("uh oh")
@@ -367,6 +371,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
 
   }, []);
+
+  // Scrol to top on filter change 
+  const topElementRef = useRef(null)
+  const scrollToTop = () => {
+    topElementRef.current.scrollIntoView(true);
+    document.getElementById("cases-id").scrollTop -= 100;
+  }
 
   //TODO: replace min/maxDate
   const minDate = moment().subtract(100, 'years');
@@ -388,6 +399,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   });
   // Change/update the filter
   const handleChange = (event, value) => {
+    scrollToTop();
     setSearchData({
       name: event,
       value: value
@@ -415,7 +427,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => cTags.includes(t))) || (includeAllTags == 0 && cTags.some((t) => searchData.tags.includes(t))))
     );
   })
-  filterCases.sort((a, b) => moment(b.wheelsOut).valueOf() - moment(a.wheelsOut).valueOf())
+  filterCases.sort((a, b) => moment(b.wheelsIn).valueOf() - moment(a.wheelsIn).valueOf())
 
   // for Sorting the cases
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -428,7 +440,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const handleClose = (event) => {
     setAnchorEl(null);
-    setIsOldest(event.target.value)
+    if (!isUndefined(event.target.value)){
+      setIsOldest(event.target.value)
+    }
+    
   };
   if (isOldest) {
     filterCases = filterCases.reverse()
@@ -461,7 +476,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       </div>
     )
   }
-
+  
   const searchView = (
     <Grid container spacing={5} className="case-discovery-search">
       <Grid item xs className="filters">
@@ -613,8 +628,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           </div>
         </div>
         {isLoading ? <LoadingIndicator /> : (
-          <div className="cases">
-
+          <div id="cases-id" className="cases">
+            <div ref={topElementRef}></div>
             {getCasesView()}
             {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
               Load More
@@ -690,7 +705,6 @@ function DetailedCase(props) {
   const blockEndTime = moment(blockEnd, 'HH:mm:ss');
   const bStartTime = getDiffFromMidnight(blockStartTime, 'minutes') / 60;
   const bEndTime = getDiffFromMidnight(blockEndTime, 'minutes') / 60;
-
 
   // console.log("bStartTime: " + bStartTime);
   // console.log("bEndTime: " + bEndTime);
@@ -769,6 +783,7 @@ function DetailedCase(props) {
   const [requestData, setRequestData] = useReducer(requestReducer, {
     complications: [],
     complicationDate: null,
+    complicationOther: null,
     users: [],
     notes: "",
   });
@@ -776,12 +791,13 @@ function DetailedCase(props) {
 
   const [isComplicationFilled, setIsComplicationFilled] = React.useState(true);
   const [isComplicationDateFilled, setIsComplicationDateFilled] = React.useState(true);
+  const [isComplicationOtherChecked, setIsComplicationOtherChecked] = React.useState(false);
   // Change/update the filter for request ID
   const handleChange = (event, value) => {
-    if (event == "complications") {
+    if (!isComplicationFilled && event == "complications") {
       setIsComplicationFilled(true);
     }
-    if (event == "complicationDate") {
+    if (!isComplicationDateFilled && event == "complicationDate") {
       setIsComplicationDateFilled(true);
     }
 
@@ -792,19 +808,25 @@ function DetailedCase(props) {
   }
 
   const submit = () => {
-    if (requestData.complications.length < 1) {
+    if (isComplicationOtherChecked){
+      if (!requestData.complicationOther){
+        setIsComplicationFilled(false);
+        return;  
+      }
+    } else if ( requestData.complications.length < 1) {
       setIsComplicationFilled(false);
       return;
-    }
+    } 
     if (!requestData.complicationDate) {
       setIsComplicationDateFilled(false);
       return;
     }
+    let complicationList = requestData.complications.map((c) => c.id);
     let jsonBody = {
       "roomName": roomName,
       "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
       "procedure": [procedureTitle],
-      "complications": requestData.complications.map((c) => c.id),
+      "complications": requestData.complicationOther ? [...complicationList, requestData.complicationOther] : complicationList,
       "postOpDate": requestData.complicationDate,
       "operationDate": globalFunctions.formatDateTime(scheduledStart),
       "notes": requestData.notes,
@@ -819,10 +841,7 @@ function DetailedCase(props) {
         } else {
           setIsRequestSubmitted(result)
         }
-      }).finally(() => {
-        setIsComplicationFilled(true);
-        setIsComplicationDateFilled(false);
-      });
+      })
   }
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
@@ -912,12 +931,12 @@ function DetailedCase(props) {
                   // top: `${i * HOUR_SIZE}px`,
                   height: `${HOUR_SIZE}px`,
                 }}>
-                <div >{moment(now).format("h:mm a")}</div>
+                <div >{moment(now).format("HH:mm")}</div>
               </div>
             )
           })}
           <LightTooltip
-            title={`Block hours: ${moment(blockStartTime).format('h:mm a')} - ${moment(blockEndTime).format('h:mm a')}`}
+            title={`Block hours: ${moment(blockStartTime).format('HH:mm')} - ${moment(blockEndTime).format('HH:mm')}`}
             placement='left'
           >
             <div className="absolute"
@@ -937,7 +956,7 @@ function DetailedCase(props) {
             const endMins = getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
             const caseHeight = (endMins - startMins) / 60;
             return (
-              <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 34 && 'short'}`}
+              <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 34 && 'short'} ${caseHeight * HOUR_SIZE <= 83 && 'medium'}`}
                 onClick={() => updateCaseId(c.caseId)}
                 style={{
                   top: `${(startMins / 60) * HOUR_SIZE}px`,
@@ -997,7 +1016,26 @@ function DetailedCase(props) {
                 handleChange={handleChange}
                 searchData={requestData}
               />
-              {!isComplicationFilled && <FormHelperText className="Mui-error" >Please select a complication</FormHelperText>}
+              {!isComplicationFilled && !isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please select a complication</FormHelperText>}
+              <div>
+                <Checkbox
+                  disableRipple
+                  id="other-complication-checkbox"
+                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                  checked={isComplicationOtherChecked} onChange={(e) => setIsComplicationOtherChecked(e.target.checked)} />Other
+              </div>
+              {isComplicationOtherChecked && <TextField
+                id="complication-other"
+                variant="outlined"
+                size="small"
+                name="complicationValue"
+                // error={Boolean(this.state.errors.procedureValue)}
+                // helperText={this.state.errors.procedureValue}
+                // className="input-field"
+                onChange={(e) => handleChange('complicationOther', e.target.value)}
+              />}
+              {!isComplicationFilled && isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please enter a complication</FormHelperText>}
               <InputLabel className={classes.inputLabel}>Date of Complication</InputLabel>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <DatePicker
@@ -1206,7 +1244,7 @@ function HL7Chart(props) {
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{globalFunctions.formatSecsToTime(d.x)}</div>
-          <div>{`${value.text}`}</div>
+          <div>{value.text}</div>
         </div>);
     }
     return ReactDOMServer.renderToString(
