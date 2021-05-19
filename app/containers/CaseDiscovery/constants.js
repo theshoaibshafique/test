@@ -1106,3 +1106,14 @@ export const DETAILED_CASE = {
     ]
 
 }
+
+export const TAG_INFO = {
+    "Hypoxia": "Identifies cases where the percentage of procedure time patient was hypoxic (blood oxygen saturation below 94%) was 95th percentile or above",
+    "Hypotension": "Identifies cases where the percentage of procedure time patient was hypotensive (mean arterial blood pressure below 65mmHg) was 95th percentile or above",
+    "Hypothermia": "Identifies cases where the percentage of procedure time patient was hypothermic (temperature below 35°C) was 95th percentile or above",
+    "Flagged": "Identifies cases that have been flagged on operating room touch screen",
+    "Procedure Duration": "Identifies cases where procedure duration was 95th percentile or above for given procedure type",
+    "Pre-Op Duration": "Identifies cases where the period of time between patient entering operating room, and procedure start, was 95th percentile or above",
+    "Post-Op Duration": "Identifies cases where the period of time between procedure end, and patient exiting operating room, was 95th percentile or above",
+    "Case Delay": "Identifies cases where the delay from scheduled start, to actual start, was 95th percentile or above"
+}

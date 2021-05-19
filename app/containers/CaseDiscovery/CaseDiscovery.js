@@ -9,7 +9,7 @@ import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
 import { Button, Checkbox, Divider, FormControl, FormControlLabel, FormHelperText, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
-import { DATE_OPTIONS, TAGS, } from './constants';
+import { DATE_OPTIONS, TAGS, TAG_INFO } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -131,14 +131,33 @@ function Case(props) {
 
   const tagDisplays = displayTags(tags);
 
+  const procedureList = [...new Set(procedures.slice(1).map((p) => p.procedureName))];
+  const specialtyList = [...new Set(procedures.map((p) => p.specialtyName))];
+
 
   return (
     <div className="case" key={emrCaseId}  >
-      <div className="title" onClick={onClick}>
-        {procedureName}
-      </div>
+      {procedureList.length > 0 ? (
+        <LightTooltip arrow title={
+          <div>
+            <span>{`Secondary Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
+            <ul style={{ margin: '4px 0px' }}>
+              {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
+            </ul>
+          </div>
+        }>
+          <div className="title" onClick={onClick}>
+            {procedureName}
+          </div>
+        </LightTooltip>
+      ) :
+        <div className="title" onClick={onClick}>
+          {procedureName}
+        </div>
+      }
+
       <div className="subtitle">
-        {specialtyName}
+        {specialtyList.join(" & ")}
       </div>
       <div className="description">
         <span>Case ID {emrCaseId}</span>
@@ -298,6 +317,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [COMPLICATIONS, setComplications] = useState([]);
   const [USERS, setUsers] = useState([]);
 
+  const [facilityName, setFacilityName] = useState("");
+  const [gracePeriod, setGracePeriod] = useState(0);
+  const [outlierThreshold, setOutlierThreshold] = useState(0);
+
   useEffect(() => {
     const fetchUsers = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/emm_users', 'get', userToken, {})
@@ -323,8 +346,24 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
         });
     }
+    
+    const fetchFacilityConfig = async () => {
+      const result = await globalFunctions.axiosFetch(process.env.EFFICIENCY_API + "/config?facility_id=" + userFacility, 'get', userToken, {})
+        .then(result => {
+          result = result.data;
+          const {facilityName, fcotsThreshold, turnoverThreshold} = result;
+          setFacilityName(facilityName);
+          setGracePeriod(fcotsThreshold);
+          setOutlierThreshold(turnoverThreshold);
+        }).catch((error) => {
+          console.log("uh no.")
+        }).finally(() => {
+
+        });
+    }
     fetchUsers();
     fetchComplications();
+    fetchFacilityConfig();
 
 
   }, []);
@@ -344,16 +383,16 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
             procedures.forEach((p) => {
               const { specialtyName, procedureName } = p;
-              if (spec.indexOf(specialtyName) < 0){
+              if (spec.indexOf(specialtyName) < 0) {
                 spec.push(specialtyName);
               }
-              if (proc.indexOf(procedureName) < 0){
+              if (proc.indexOf(procedureName) < 0) {
                 proc.push(procedureName);
               }
             });
-            if (ors.indexOf(roomName) < 0){
+            if (ors.indexOf(roomName) < 0) {
               ors.push(roomName);
-            }            
+            }
           });
 
           setSpecialties(spec);
@@ -440,10 +479,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const handleClose = (event) => {
     setAnchorEl(null);
-    if (!isUndefined(event.target.value)){
+    if (!isUndefined(event.target.value)) {
       setIsOldest(event.target.value)
     }
-    
+
   };
   if (isOldest) {
     filterCases = filterCases.reverse()
@@ -455,6 +494,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [caseId, setCaseId] = React.useState(null);
 
   const [numShownCases, setNumShownCases] = React.useState(10);
+  const [showTagsModal, setShowTagsModal] = React.useState(false);
 
 
   const getCasesView = () => {
@@ -476,7 +516,38 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       </div>
     )
   }
-  
+
+
+  const renderTagInfo = () => {
+    const result = []
+    const tag_info = TAG_INFO;
+    tag_info['Late First Case'] = `Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true)}`;
+    tag_info['Turnover Duration'] = `Identifies cases where turnover time preceding case was above ${facilityName} defined outlier threshold of ${globalFunctions.formatSecsToTime(outlierThreshold, true, true)}`;
+    for (const [tag, value] of Object.entries(tag_info)) {
+      result.push(
+        <Grid item xs={3} className="tag-column">
+          <div className="info-tag">
+            <span className={`case-tag ${tag}`} key={tag}>
+              <span>
+                {getTag(tag)}
+              </span>
+              <div className="display">{tag}</div>
+            </span>
+          </div>
+        </Grid>
+      );
+      result.push(<Grid item xs={9} className="info-column">{value}</Grid>);
+    }
+
+    return (
+
+      <Grid container spacing={0} className="subtle-subtext">
+        {result}
+      </Grid>
+
+    )
+  }
+
   const searchView = (
     <Grid container spacing={5} className="case-discovery-search">
       <Grid item xs className="filters">
@@ -595,7 +666,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         />
 
         <TagsSelect
-          title="Tags"
+          title={<div>Tags (<span className="link" onClick={() => setShowTagsModal(true)}>Learn More</span>)</div>}
           placeholder="Filter by tags"
           options={TAGS}
           id="tags"
@@ -605,6 +676,31 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           includeAllTags={includeAllTags}
           setIncludeAllTags={setIncludeAllTags}
         />
+
+        <Modal
+          open={showTagsModal}
+          onClose={() => setShowTagsModal(false)}
+        >
+
+          <div className="Modal tag-info-modal">
+            <div className="close-button">
+              <img src={Close} onClick={() => setShowTagsModal(false)} />
+            </div>
+            <div className="header">
+              Case Tags
+            </div>
+            {renderTagInfo()}
+            <div className="close">
+              <Button disableElevation disableRipple
+                variant="contained" className="primary"
+                onClick={() => setShowTagsModal(false)}>
+                Close
+            </Button>
+            </div>
+          </div>
+
+
+        </Modal>
 
       </Grid>
       <Grid item xs style={{ position: 'relative' }}>
@@ -668,7 +764,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   }, [caseId]);
 
-  console.log(caseId);
   return (
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
@@ -706,16 +801,9 @@ function DetailedCase(props) {
   const bStartTime = getDiffFromMidnight(blockStartTime, 'minutes') / 60;
   const bEndTime = getDiffFromMidnight(blockEndTime, 'minutes') / 60;
 
-  // console.log("bStartTime: " + bStartTime);
-  // console.log("bEndTime: " + bEndTime);
-
-
   const earliestStartTime = roomCases.reduce((min, c) => getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
   const latestEndTime = roomCases.reduce((max, c) => getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
   const scheduleDuration = (latestEndTime) - (earliestStartTime);
-  // console.log("earliestStartTime: " + earliestStartTime);
-  // console.log("latestEndTime: " + latestEndTime);
-  // console.log("scheduleDuration: " + scheduleDuration);
 
   const description = (
     <div>
@@ -792,6 +880,8 @@ function DetailedCase(props) {
   const [isComplicationFilled, setIsComplicationFilled] = React.useState(true);
   const [isComplicationDateFilled, setIsComplicationDateFilled] = React.useState(true);
   const [isComplicationOtherChecked, setIsComplicationOtherChecked] = React.useState(false);
+  const [isSending, setIsSending] = React.useState(false);
+
   // Change/update the filter for request ID
   const handleChange = (event, value) => {
     if (!isComplicationFilled && event == "complications") {
@@ -808,15 +898,15 @@ function DetailedCase(props) {
   }
 
   const submit = () => {
-    if (isComplicationOtherChecked){
-      if (!requestData.complicationOther){
+    if (isComplicationOtherChecked) {
+      if (!requestData.complicationOther) {
         setIsComplicationFilled(false);
-        return;  
+        return;
       }
-    } else if ( requestData.complications.length < 1) {
+    } else if (requestData.complications.length < 1) {
       setIsComplicationFilled(false);
       return;
-    } 
+    }
     if (!requestData.complicationDate) {
       setIsComplicationDateFilled(false);
       return;
@@ -834,6 +924,7 @@ function DetailedCase(props) {
       "departmentName": departmentId,
       "facilityName": userFacility
     }
+    setIsSending(true);
     globalFunctions.genericFetch(process.env.REQUESTEMM_API, 'post', userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {
@@ -843,6 +934,10 @@ function DetailedCase(props) {
         }
       })
   }
+
+  const procedureList = [...new Set(procedures.slice(1).map((p) => p.procedureName))];
+  const specialtyList = [...new Set(procedures.map((p) => p.specialtyName))];
+
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -850,11 +945,25 @@ function DetailedCase(props) {
 
           <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
           <div className="case-header">
-            <div className="case-title">{procedureTitle}</div>
+            {procedureList.length > 0 ? (
+              <LightTooltip arrow title={
+                <div>
+                  <span>{`Secondary Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
+                  <ul style={{ margin: '4px 0px' }}>
+                    {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
+                  </ul>
+                </div>
+              }
+              >
+                <div className="case-title">{procedureTitle}</div>
+              </LightTooltip>
+            ) :
+              <div className="case-title">{procedureTitle}</div>
+            }
             <div className="button">{reportButton()}</div>
           </div>
           <div className="case-description">
-            <div className="case-specialty">{specialtyTitle}</div>
+            <div className="case-specialty">{specialtyList.join(" & ")}</div>
             {description}
           </div>
           <div className="tags">
@@ -883,7 +992,14 @@ function DetailedCase(props) {
                   </Grid>
                   <Grid item xs={5} className="difference">
                     <div className="timing-header" style={{ visibility: 'hidden' }}>placeholder</div>
-                    <div className={`${startDiff && (startDiff > 0 ? 'late' : 'early')}`}>{globalFunctions.formatSecsToTime(Math.abs(startDiff - (startDiff % 60)), true, true)} {`${startDiff > 0 ? 'late' : 'early'}`}</div>
+                    {Math.abs(startDiff) < 1 ?
+                      <div className={`early`}>
+                        On Time
+                    </div>
+                      :
+                      <div className={`${startDiff > 0 ? 'late' : 'early'}`}>
+                        {globalFunctions.formatSecsToTime(Math.abs(startDiff - (startDiff % 60)), true, true)} {`${startDiff > 0 ? 'late' : 'early'}`}
+                      </div>}
                   </Grid>
                 </Grid>
 
@@ -1017,7 +1133,7 @@ function DetailedCase(props) {
                 searchData={requestData}
               />
               {!isComplicationFilled && !isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please select a complication</FormHelperText>}
-              <div>
+              <div className="input-label">
                 <Checkbox
                   disableRipple
                   id="other-complication-checkbox"
@@ -1030,9 +1146,6 @@ function DetailedCase(props) {
                 variant="outlined"
                 size="small"
                 name="complicationValue"
-                // error={Boolean(this.state.errors.procedureValue)}
-                // helperText={this.state.errors.procedureValue}
-                // className="input-field"
                 onChange={(e) => handleChange('complicationOther', e.target.value)}
               />}
               {!isComplicationFilled && isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please enter a complication</FormHelperText>}
@@ -1074,7 +1187,13 @@ function DetailedCase(props) {
                 onChange={(e) => handleChange('notes', e.target.value)}
               />
 
-              <Button variant="outlined" className="primary send-request" onClick={() => submit()}>Request eM&M</Button>
+              <Button variant="outlined" className="primary send-request"
+                onClick={() => submit()}
+                disabled={isSending}
+
+              >
+                {isSending ? <div className="loader"></div> : 'Request eM&M'}
+              </Button>
             </div>}
         </div>
 
@@ -1151,7 +1270,7 @@ function ProcedureDistribution(props) {
   const { shape, scale, duration, sampleSize } = props;
   const mu = scale;
   const sigma = shape * scale;
-  const range = [duration, ...globalFunctions.range(Math.max(0, mu - 5 * sigma), mu + 5 * sigma, sigma / 10)].sort();
+  const range = [duration, ...globalFunctions.range(Math.max(0, mu - 4.5 * sigma), mu + 4.5 * sigma, sigma / 20)].sort();
   // console.log(range)
   const chartRef = useRef(null);
 
@@ -1181,7 +1300,11 @@ function ProcedureDistribution(props) {
     tooltip: {
       grouped: true,
       // show: false,
-      contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
+      contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color),
+      position: function (data, width, height, element) {
+        // var top = d3.mouse(element)[1] + 15;
+        return { top: 130, left: parseInt(element.getAttribute('x')) + parseInt(element.getAttribute('width')) }
+      }
     },
     axis: {
       x: {
@@ -1203,13 +1326,16 @@ function ProcedureDistribution(props) {
       show: false
     }
   }
-  // useEffect(() => {
-  //   const chart = chartRef && chartRef.current && chartRef.current.chart;
-  //   chart && chart.xgrids([{ "value": duration, "text": globalFunctions.formatSecsToTime(duration, true, true), "class": "marker" }]);
-  // }, [duration]);
+
+  // Move marker behind the ggraph for tooltip to still display
+  useEffect(() => {
+    var content = document.getElementById('procedure-dist').getElementsByClassName('c3-grid c3-grid-lines')[0];
+    var parent = content.parentNode;
+    parent.insertBefore(content, parent.firstChild)
+  }, []);
 
   return (
-    <div className="procedure-distribution" >
+    <div className="procedure-distribution" id="procedure-dist" >
       <div className="title">Procedure Time <LightTooltip interactive arrow title={`Procedure time distribution is a best approximation based on ${sampleSize} cases of the same procedure type`} placement="top" fontSize="small">
         <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 0px' }} />
       </LightTooltip></div>
@@ -1356,9 +1482,15 @@ function HL7Chart(props) {
       setTimeout(() => {
         chart.resize();
       }, 200)
-
     }
   });
+
+  // Move marker behind the ggraph for tooltip to still display
+  useEffect(() => {
+    var content = document.getElementById('hl7-chart').getElementsByClassName('c3-grid c3-grid-lines')[0];
+    var parent = content.parentNode;
+    parent.insertBefore(content, parent.firstChild)
+  }, []);
 
   useEffect(() => {
     if (!hasHL7Data) {
@@ -1377,7 +1509,7 @@ function HL7Chart(props) {
   }, [index]);
 
   return (
-    <div className="hl7-chart" >
+    <div className="hl7-chart" id="hl7-chart" >
       <div className="toggles">
         {hl7Data.map((d, i) => {
           return (
