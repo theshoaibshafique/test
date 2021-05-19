@@ -983,8 +983,8 @@ function DetailedCase(props) {
                   </Grid>
                   <Grid item xs={3} className="actual-start">
 
-                    <div className="timing-header">{moment(scheduledStart).format("hh:mm:ss")}</div>
-                    <div className="timing-value">{moment(wheelsIn).format("hh:mm:ss")}</div>
+                    <div className="timing-header">{moment(scheduledStart).format("HH:mm:ss")}</div>
+                    <div className="timing-value">{moment(wheelsIn).format("HH:mm:ss")}</div>
                     <div className="laterality">
                       {lateralityIcon}
                     </div>
@@ -1079,7 +1079,7 @@ function DetailedCase(props) {
                   minHeight: HOUR_SIZE
                 }}>
                 <div className="case-title">{procedureName}</div>
-                {caseHeight > 1 && <div className="case-time">{moment(wheelsIn).format("h:mm")} - {moment(wheelsOut).format("h:mm")}</div>}
+                {caseHeight > 1 && <div className="case-time">{moment(wheelsIn).format("HH:mm")} - {moment(wheelsOut).format("HH:mm")}</div>}
               </div>
             )
           })}
@@ -1402,7 +1402,7 @@ function HL7Chart(props) {
 
   const data = {
     padding: {
-      top: 20
+      // top: 20
     },
     size: hasHL7Data ? {} : {
       height: 175
@@ -1429,10 +1429,10 @@ function HL7Chart(props) {
         padding: hasHL7Data ? {
           left: max * .025,
           right: max * .025,
-        } :  {
-          left: max * .05,
-          right: max * .05,
-        }
+        } : {
+            left: max * .05,
+            right: max * .05,
+          }
       },
       y: {
         tick: {
@@ -1469,6 +1469,9 @@ function HL7Chart(props) {
     },
     line: {
       connectNull: true
+    },
+    point: {
+      show: false
     }
   }
 
@@ -1479,7 +1482,7 @@ function HL7Chart(props) {
 
       const { times, values, unit, title } = hl7Data[i];
       const min = Math.min(...values.filter((x) => x))
-      
+
       for (let t = 0; t < timeline.length; t++) {
         const { time } = timeline[t];
         const x = times.findIndex((x) => time < x);
@@ -1513,7 +1516,7 @@ function HL7Chart(props) {
     const chart = chartRef && chartRef.current && chartRef.current.chart;
     if (chart) {
       setTimeout(() => {
-        chart.resize();
+        // chart.resize();
       }, 200)
     }
   });
@@ -1544,14 +1547,34 @@ function HL7Chart(props) {
 
   return (
     <div className="hl7-chart" id="hl7-chart" >
-      <div className="toggles">
+      {/* <div className="toggles">
         {hl7Data.map((d, i) => {
           return (
             <span className={`${i == index && 'selected'} toggle`} onClick={() => setIndex(i)}>{d.title}</span>
           )
         })}
+      </div> 
+      <C3Chart ref={chartRef} {...data} /> */}
+      <div className="header">Case Timeline</div>
+      <Divider style={{ backgroundColor: '#C8C8C8' }} />
+      <div className="chart-container">
+        {hasHL7Data && <div className="patient-vitals" >
+          <div className="sub header">Patient Vitals</div>
+          <div className="selector">
+            {hl7Data.map((d, i) => {
+              return (
+                <div className={`${i == index && 'selected'} hl7-value`} onClick={() => setIndex(i)}>{d.title}</div>
+              )
+            })}
+          </div>
+        </div>}
+        <div style={{width:'100%'}}>
+          <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
+          <C3Chart ref={chartRef} {...data} />
+        </div>
       </div>
-      <C3Chart ref={chartRef} {...data} />
+
+
     </div>
   )
 }

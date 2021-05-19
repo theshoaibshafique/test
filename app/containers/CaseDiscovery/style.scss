@@ -383,7 +383,7 @@
                         stroke: #cce5ee;
                     }
                 }
-                .c3-target-y{
+                .c3-target-y {
                     display: none;
                 }
                 .marker {
@@ -418,6 +418,60 @@
                         &.selected {
                             background: #d8f0f9;
                             color: #004f6e;
+                        }
+                    }
+                }
+                .MuiDivider-root {
+                    // margin-bottom: 8px;
+                }
+                .header {
+                    font-family: "Noto Sans";
+                    font-weight: bold;
+                    font-size: 18px;
+                    line-height: 21px;
+                    color: #4f4f4f;
+                    margin: 16px 0 12px;
+                    &.sub{
+                        font-size: 16px;
+                        line-height: 18px;
+                    }
+                    &.center {
+                        text-align: center;
+                    }
+                }
+                .chart-container{
+                    display: flex;
+                }
+                .patient-vitals{
+                    min-width: 220px;
+                    max-width: 300px;
+                    div{
+                        margin-right: 8px;
+                    }
+                }
+                .selector {
+                    height: 270px;
+                    margin-left: -8px;
+                    overflow-y: auto;
+                    .hl7-value {
+                        font-family: "Noto Sans";
+                        // font-weight: bold;
+                        font-size: 14px;
+                        line-height: 16px;
+                        color: #323232;
+                        opacity: 0.8;
+                        padding: 8px 8px;
+                        margin: 4px 0px;
+                        overflow-y: auto;
+                        cursor: pointer;
+                        &.selected {
+                            color: #2b6f8a;
+                            background: #d8f0f9;
+                            font-weight: bold;
+                            opacity: 1;
+                        }
+                        &:hover {
+                            background: #d8f0f9;
                         }
                     }
                 }
@@ -720,7 +774,7 @@
         // padding: 40px 40px 0;
         margin-bottom: 16px;
     }
-    .close{
+    .close {
         margin-top: 16px;
         text-align: end;
     }
