@@ -292,16 +292,12 @@
             .procedure-distribution {
                 text-align: center;
                 .title {
-                    font-style: normal;
-                    font-weight: 300;
-                    font-size: 18px;
-                    line-height: 21px;
-                    /* identical to box height */
-
-                    color: #323232;
-
-                    mix-blend-mode: normal;
-                    opacity: 0.8;
+                    font-family: "Noto Sans";
+                    font-weight: bold;
+                    font-size: 16px;
+                    line-height: 18px;
+                    color: #4f4f4f;
+                    margin: 16px 0 12px;
                     margin: auto;
                     width: 100%;
                 }
@@ -431,7 +427,7 @@
                     line-height: 21px;
                     color: #4f4f4f;
                     margin: 16px 0 12px;
-                    &.sub{
+                    &.sub {
                         font-size: 16px;
                         line-height: 18px;
                     }
@@ -439,13 +435,13 @@
                         text-align: center;
                     }
                 }
-                .chart-container{
+                .chart-container {
                     display: flex;
                 }
-                .patient-vitals{
-                    min-width: 220px;
+                .patient-vitals {
+                    min-width: 230px;
                     max-width: 300px;
-                    div{
+                    div {
                         margin-right: 8px;
                     }
                 }

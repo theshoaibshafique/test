@@ -797,8 +797,8 @@ function DetailedCase(props) {
   const date = moment(wheelsOut).format("MMMM DD");
   const blockStartTime = moment(blockStart, 'HH:mm:ss');
   const blockEndTime = moment(blockEnd, 'HH:mm:ss');
-  const bStartTime = getDiffFromMidnight(blockStartTime, 'minutes') / 60;
-  const bEndTime = getDiffFromMidnight(blockEndTime, 'minutes') / 60;
+  const bStartTime = getDiffFromMidnight(blockStartTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes')/60;
+  const bEndTime = getDiffFromMidnight(blockEndTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes')/60;
 
   const earliestStartTime = roomCases.reduce((min, c) => getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
   const latestEndTime = roomCases.reduce((max, c) => getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
@@ -848,13 +848,6 @@ function DetailedCase(props) {
     } else {
       return <div></div>
     }
-    // if (isPublished == null) {
-    //   return <Button variant="outlined" className="primary" onClick={() => setOpenRequestEMM(true)}>Request eM&M</Button>
-    // } else if (!isPublished) {
-    //   return <div>Report Pending</div>
-    // } else {
-    //   return <Button variant="outlined" className="primary" onClick={() => showEMMReport(reportId)}>Open eM&M Report</Button>
-    // }
   }
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -1016,7 +1009,7 @@ function DetailedCase(props) {
       }
       <Grid item xs className="schedule">
         <div className="header">
-          <div>{roomName} Block</div>
+          <div>{`${roomName}${!blockStart ? ' Off' : ''} Block`}</div>
           <div>{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
 
         </div>
@@ -1031,6 +1024,7 @@ function DetailedCase(props) {
               top: `${(bStartTime - earliestStartTime) * HOUR_SIZE}px`,
               height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`
             }}
+            hidden={!blockStart}
           >
           </div>
 
@@ -1050,7 +1044,7 @@ function DetailedCase(props) {
               </div>
             )
           })}
-          <LightTooltip
+          {blockStart && <LightTooltip
             title={`Block hours: ${moment(blockStartTime).format('HH:mm')} - ${moment(blockEndTime).format('HH:mm')}`}
             placement='left'
           >
@@ -1062,7 +1056,7 @@ function DetailedCase(props) {
               }}
             >
             </div>
-          </LightTooltip>
+          </LightTooltip>}
           {/* Display all cases given  */}
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
