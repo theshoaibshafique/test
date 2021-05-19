@@ -160,7 +160,7 @@ function Case(props) {
         {specialtyList.join(" & ")}
       </div>
       <div className="description">
-        <span>Case ID {emrCaseId}</span>
+        <span>Case ID: {emrCaseId}</span>
         <span>{date} {`(${diff} ${diff == 1 ? 'Day' : 'Days'} ago)`}</span>
         <span>{sTime} - {eTime}</span>
         <span>{roomName}</span>
@@ -346,12 +346,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
         });
     }
-    
+
     const fetchFacilityConfig = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EFFICIENCY_API + "/config?facility_id=" + userFacility, 'get', userToken, {})
         .then(result => {
           result = result.data;
-          const {facilityName, fcotsThreshold, turnoverThreshold} = result;
+          const { facilityName, fcotsThreshold, turnoverThreshold } = result;
           setFacilityName(facilityName);
           setGracePeriod(fcotsThreshold);
           setOutlierThreshold(turnoverThreshold);
@@ -754,7 +754,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           result = result.data
           setDetailedCase(result)
         }).catch((error) => {
-          console.log("oh no")
+          console.log("oh no " + error)
         }).finally(() => {
           // setIsLoading(false);
         });
@@ -792,7 +792,6 @@ function DetailedCase(props) {
   const { roomSchedule: { blockStart, blockEnd, roomCases }, procedureDistribution, emmStatus: { reportId, isPublished }, hl7Parameters, tags } = props;
 
   const procedureTitle = procedures[0].procedureName;
-  const specialtyTitle = procedures[0].specialtyName;
 
   const dayDiff = moment().diff(moment(wheelsIn), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
@@ -807,9 +806,11 @@ function DetailedCase(props) {
 
   const description = (
     <div>
-      <span>Case ID {emrCaseId}</span>
+      <span>Case ID: {emrCaseId}</span>
+      <span>Surgeon ID: {`${surgeonId}`}</span>
       <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
       <span>{roomName}</span>
+      {intubationType && <span>Intubation Type: {intubationType}</span>}
     </div>
   );
 
@@ -971,8 +972,6 @@ function DetailedCase(props) {
           </div>
 
           <div className="timing-graphs" id="timing-graphs">
-            <div className="header">Timing & Graphs</div>
-            <Divider style={{ backgroundColor: '#C8C8C8' }} />
             <Grid container spacing={0}>
               <Grid item xs={8} className="timing">
                 <Grid container spacing={0} className="start-timing">
@@ -1361,8 +1360,9 @@ function HL7Chart(props) {
   const max = Math.max(...(hasHL7Data ? hl7Data[0].times : []), ...timeline.map((t) => t.time));
 
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
-    d = d[0]
+
     if (!hasHL7Data) {
+      d = d[0]
       let value = timeline.find((e) => e.time == d.x)
       if (!value || !value.text) {
         return;
@@ -1373,10 +1373,15 @@ function HL7Chart(props) {
           <div>{value.text}</div>
         </div>);
     }
+    let hl7 = d.find((e) => e && e.id != "y");
+    let y = d.find((e) => e && e.id == "y");
+    let value = y && timeline.find((e) => e.time == y.x);
+    let x = hl7 && hl7.x || y && y.x;
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
-        <div>{globalFunctions.formatSecsToTime(d.x)}</div>
-        <div>{`${d.id}: ${d.value}${unitMap[d.id]}`}</div>
+        <div>{globalFunctions.formatSecsToTime(x)}</div>
+        {value && <div>{value.text}</div>}
+        {hl7 && hl7.value && <div>{`${hl7.id}: ${hl7.value}${unitMap[hl7.id]}`}</div>}
       </div>);
   }
 
@@ -1421,7 +1426,10 @@ function HL7Chart(props) {
             return globalFunctions.formatSecsToTime(x);
           }
         },
-        padding: hasHL7Data ? {} : {
+        padding: hasHL7Data ? {
+          left: max * .025,
+          right: max * .025,
+        } :  {
           left: max * .05,
           right: max * .05,
         }
@@ -1429,14 +1437,15 @@ function HL7Chart(props) {
       y: {
         tick: {
           outer: false,
-          count: hl7Data.length ? 10 : 1,
+          // count: hasHL7Data ? 10 : 1,
           min: 0,
-          format: (x) => {
-            return parseInt(x);
-          },
+          // format: (x) => {
+          //   return parseInt(x);
+          // },
 
         },
         show: hasHL7Data,
+        // show: false,
         padding: {
           top: 20,
           // bottom: 0
@@ -1458,15 +1467,39 @@ function HL7Chart(props) {
       // show: hasHL7Data,
       contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color)
     },
+    line: {
+      connectNull: true
+    }
+  }
+
+
+  // Pad HL7 with timeline data
+  if (hasHL7Data) {
+    for (let i = 0; i < hl7Data.length; i++) {
+
+      const { times, values, unit, title } = hl7Data[i];
+      const min = Math.min(...values.filter((x) => x))
+      
+      for (let t = 0; t < timeline.length; t++) {
+        const { time } = timeline[t];
+        const x = times.findIndex((x) => time < x);
+        times.splice(x, 0, time)
+        values.splice(x, 0, null)
+      }
+
+      hl7Data[i].y = ['y', ...Array(times.length).fill().map(() => min)]
+    }
   }
 
 
   let [index, setIndex] = React.useState(0);
   if (hasHL7Data) {
-    const { times, values, unit, title } = hl7Data[index];
+    const { times, values, unit, title, y } = hl7Data[index];
+
     data.data.columns = [
       ['x', ...times],
-      [title, ...values]
+      [title, ...values],
+      y,
     ]
   } else {
     data.data.columns = [
@@ -1496,15 +1529,16 @@ function HL7Chart(props) {
     if (!hasHL7Data) {
       return;
     }
-    const { times, values, unit, title } = hl7Data[index];
+    const { times, values, unit, title, y } = hl7Data[index];
 
     const chart = chartRef && chartRef.current && chartRef.current.chart;
     chart && chart.load({
       columns: [
         ['x', ...times],
-        [title, ...values]
+        [title, ...values],
+        y
       ],
-      unload: hl7Data.map((d) => d.title == title ? '' : d.title),
+      unload: [...hl7Data.map((d) => d.title == title ? '' : d.title), 'y'],
     });
   }, [index]);
 
