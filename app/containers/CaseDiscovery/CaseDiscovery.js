@@ -38,6 +38,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
+import { Logger } from './Logger/Logger';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -100,7 +101,7 @@ function getTag(tag) {
   }
 }
 
-function displayTags(tags) {
+function displayTags(tags,emrCaseId) {
   return tags.map((tag, i) => {
     let desc = tag.toolTip || [];
     tag = tag.tagName || tag;
@@ -108,7 +109,7 @@ function displayTags(tags) {
       <LightTooltip title={desc.map((line) => {
         return <div>{line}</div>
       })} arrow={true}>
-        <span className={`case-tag ${tag}`} key={tag}>
+        <span className={`case-tag ${tag} log-mouseover`} id={`${emrCaseId}-${tag}-tag`} emrCaseId={emrCaseId} key={tag}>
           <span>
             {getTag(tag)}
           </span>
@@ -129,14 +130,14 @@ function Case(props) {
   const date = moment(wheelsOut).format("MMMM DD");
   const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
 
-  const tagDisplays = displayTags(tags);
+  const tagDisplays = displayTags(tags, emrCaseId);
 
   const procedureList = [...new Set(procedures.slice(1).map((p) => p.procedureName))];
   const specialtyList = [...new Set(procedures.map((p) => p.specialtyName))];
 
 
   return (
-    <div className="case" key={emrCaseId} onClick={onClick} >
+    <div className="case log-click" id={`case-${emrCaseId}`} emrCaseId={emrCaseId} key={emrCaseId} onClick={onClick} >
       {procedureList.length > 0 ? (
         <LightTooltip arrow title={
           <div>
@@ -305,7 +306,7 @@ const searchReducer = (state, event) => {
   }
 }
 
-
+const logger = new Logger();
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
   const { showEMMReport, userFacility, userToken } = props;
   const [CASES, setCases] = useState([]);
@@ -320,7 +321,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [facilityName, setFacilityName] = useState("");
   const [gracePeriod, setGracePeriod] = useState(0);
   const [outlierThreshold, setOutlierThreshold] = useState(0);
-
+  // Load all the APIs 
   useEffect(() => {
     const fetchUsers = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/emm_users', 'get', userToken, {})
@@ -361,14 +362,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
         });
     }
-    fetchUsers();
-    fetchComplications();
-    fetchFacilityConfig();
 
-
-  }, []);
-
-  useEffect(() => {
     const fetchCases = async () => {
       const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
         .then(result => {
@@ -406,10 +400,25 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           setIsLoading(false);
         });
     }
-    fetchCases()
+
+    fetchCases();
+    fetchUsers();
+    fetchComplications();
+    fetchFacilityConfig();
 
 
   }, []);
+
+  // const [logger, setLogger] = useState(null);
+  // useEffect(() => {
+  //   setLogger(new Logger());
+  // },[]);
+  useEffect(() => {
+    setTimeout(() => {
+      logger && logger.connectListeners();
+    }, 300)
+  });
+
 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
@@ -439,6 +448,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Change/update the filter
   const handleChange = (event, value) => {
     scrollToTop();
+    logger.manualAddLog('onchange', event, value)
     setSearchData({
       name: event,
       value: value
@@ -556,7 +566,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           fullWidth
           id="filled-start-adornment"
           className={classes.search}
-          placeholder="Search case ID#"
+          placeholder="Search case ID"
           onChange={(e, v) => handleChange('caseId', e.target.value)}
           InputProps={{
             startAdornment: <InputAdornment position="start"><img src={MagnifyingGlass} /></InputAdornment>,
@@ -681,7 +691,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           open={showTagsModal}
           onClose={() => setShowTagsModal(false)}
         >
-
           <div className="Modal tag-info-modal">
             <div className="close-button">
               <img src={Close} onClick={() => setShowTagsModal(false)} />
@@ -797,8 +806,8 @@ function DetailedCase(props) {
   const date = moment(wheelsOut).format("MMMM DD");
   const blockStartTime = moment(blockStart, 'HH:mm:ss');
   const blockEndTime = moment(blockEnd, 'HH:mm:ss');
-  const bStartTime = getDiffFromMidnight(blockStartTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes')/60;
-  const bEndTime = getDiffFromMidnight(blockEndTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes')/60;
+  const bStartTime = getDiffFromMidnight(blockStartTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
+  const bEndTime = getDiffFromMidnight(blockEndTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
 
   const earliestStartTime = roomCases.reduce((min, c) => getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
   const latestEndTime = roomCases.reduce((max, c) => getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
@@ -811,6 +820,14 @@ function DetailedCase(props) {
       <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
       <span>{roomName}</span>
       {intubationType && <span>Intubation Type: {intubationType}</span>}
+    </div>
+  );
+
+  const requestEMMDescription = (
+    <div>
+      <span>Case ID: {emrCaseId}</span>
+      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
+      <span>{roomName}</span>
     </div>
   );
 
@@ -932,6 +949,13 @@ function DetailedCase(props) {
   const procedureList = [...new Set(procedures.slice(1).map((p) => p.procedureName))];
   const specialtyList = [...new Set(procedures.map((p) => p.specialtyName))];
 
+  // Connect logger
+  useEffect(() => {
+    setTimeout(() => {
+      logger && logger.connectListeners();
+    }, 300)
+  });
+
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -961,7 +985,7 @@ function DetailedCase(props) {
             {description}
           </div>
           <div className="tags">
-            {displayTags(tags)}
+            {displayTags(tags, emrCaseId)}
           </div>
 
           <div className="timing-graphs" id="timing-graphs">
@@ -1114,7 +1138,7 @@ function DetailedCase(props) {
                 {procedureTitle}
               </div>
               <div className="description">
-                {description}
+                {requestEMMDescription}
               </div>
 
               <TagsSelect
@@ -1164,7 +1188,7 @@ function DetailedCase(props) {
               </MuiPickersUtilsProvider>
               {!isComplicationDateFilled && <FormHelperText className="Mui-error" >Please select a complication date</FormHelperText>}
               <TagsSelect
-                title="Also send confirmation email to these users (optional)"
+                title="Additional users to receive updates on request status (Optional)"
                 placeholder="Select users"
                 options={USERS.map((u) => { return { "display": `${u.firstName} ${u.lastName}`, "id": u.userName } })}
                 id="users"
@@ -1267,13 +1291,18 @@ function ProcedureDistribution(props) {
   // console.log(range)
   const chartRef = useRef(null);
 
+
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
     d = d[0]
     let seconds = d.x;
+    
+    const time = globalFunctions.formatSecsToTime(seconds, true, true);
+    const percentile = `${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(d.x, scale, shape) * 100))} percentile`;
+    logger && logger.manualAddLog('mouseover',`procedure-time-tooltip-${time}`, `${time} - ${percentile}`)
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
-        <div>{globalFunctions.formatSecsToTime(seconds, true, true)}</div>
-        <div>{`${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(d.x, scale, shape) * 100))} percentile`}</div>
+        <div>{time}</div>
+        <div>{percentile}</div>
       </div>);
   }
 
@@ -1296,8 +1325,8 @@ function ProcedureDistribution(props) {
       contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color),
       position: function (data, width, height, element) {
         // var top = d3.mouse(element)[1] ;
-        let left =  parseInt(element.getAttribute('x')) + parseInt(element.getAttribute('width'));
-        return { top: 130, left: left}
+        let left = parseInt(element.getAttribute('x')) + parseInt(element.getAttribute('width'));
+        return { top: 130, left: left }
       }
     },
     axis: {
@@ -1362,19 +1391,25 @@ function HL7Chart(props) {
       if (!value || !value.text) {
         return;
       }
+      const time = globalFunctions.formatSecsToTime(d.x);
+      const text = value.text;
+      logger && logger.manualAddLog('mouseover',`hl7-tooltip-${time}`, text)
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
-          <div>{globalFunctions.formatSecsToTime(d.x)}</div>
-          <div>{value.text}</div>
+          <div>{time}</div>
+          <div>{text}</div>
         </div>);
     }
+    
     let hl7 = d.find((e) => e && e.id != "y");
     let y = d.find((e) => e && e.id == "y");
     let value = y && timeline.find((e) => e.time == y.x);
     let x = hl7 && hl7.x || y && y.x;
+    const time = globalFunctions.formatSecsToTime(x);
+    logger && logger.manualAddLog('mouseover',`hl7-tooltip-${time}`, [hl7, value])
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
-        <div>{globalFunctions.formatSecsToTime(x)}</div>
+        <div>{time}</div>
         {value && <div>{value.text}</div>}
         {hl7 && hl7.value && <div>{`${hl7.id}: ${hl7.value}${unitMap[hl7.id]}`}</div>}
       </div>);
@@ -1428,6 +1463,9 @@ function HL7Chart(props) {
             left: max * .05,
             right: max * .05,
           }
+      },
+      color: {
+        pattern: ['#028CC8']
       },
       y: {
         tick: {
@@ -1563,7 +1601,7 @@ function HL7Chart(props) {
             })}
           </div>
         </div>}
-        <div style={{width:'100%'}}>
+        <div style={{ width: '100%' }}>
           <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
           <C3Chart ref={chartRef} {...data} />
         </div>

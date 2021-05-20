@@ -51,7 +51,7 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: this.containsAny(roles,["ENHANCED M&M EDIT"]),
       sscAccess:this.containsAny(roles,["SURGICAL CHECKLIST"]),
       efficiencyAccess:this.containsAny(roles,["EFFICIENCY"]),
-      caseDiscoveryAccess:true
+      caseDiscoveryAccess: this.containsAny(roles,["ADMIN"])
     });
     this.clearFilters();
     this.getPageAccess();
