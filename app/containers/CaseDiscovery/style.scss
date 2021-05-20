@@ -54,8 +54,8 @@
         left: 0;
         right: 20px;
         top: 0;
-        padding: 20px;
-        padding-top: 49px;
+        padding: 30px 32px;
+        // padding-top: 49px;
         margin-right: 20px;
         opacity: 1;
     }
@@ -85,6 +85,7 @@
         overflow-y: auto;
         max-height: calc(100vh - 17px);
         margin-top: 20px;
+        padding-right: 30px;
         max-width: 360px;
         .link {
             font-size: 16px;
@@ -101,6 +102,7 @@
             }
         }
         .include-toggle {
+            margin:4px;
             margin-top: 12px;
             color: #323232 !important;
             .include-label {
@@ -146,6 +148,15 @@
     }
 
     .case {
+        &:hover {
+            box-shadow: 1px 1px 6px grey;
+            -webkit-transition: box-shadow 0.1s ease-in;
+        }
+        cursor: pointer;
+        margin: 8px 8px;
+        margin-right: 26px;
+        padding: 24px;
+        border-radius: 8px;
         div:not(:last-child) {
             margin-bottom: 18px;
         }
@@ -159,9 +170,9 @@
             width: fit-content;
             max-width: 75%;
             font-weight: bold;
-            &:hover {
-                text-decoration: underline;
-            }
+            // &:hover {
+            //     text-decoration: underline;
+            // }
         }
         .subtitle {
             font-family: "Noto Sans";
@@ -184,7 +195,6 @@
                 }
             }
         }
-        margin-bottom: 38px;
     }
     .no-cases {
         display: flex;
@@ -535,6 +545,7 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
+                
                 .case-title,
                 .case-time {
                     font-family: "Noto Sans";
@@ -563,9 +574,9 @@
                         color: #2b6f8a;
                     }
                 }
-
                 &:hover {
-                    text-decoration: underline;
+                    box-shadow: 1px 2px 12px grey;
+                    -webkit-transition: box-shadow 0.1s ease-in;
                 }
             }
         }

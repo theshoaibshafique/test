@@ -136,7 +136,7 @@ function Case(props) {
 
 
   return (
-    <div className="case" key={emrCaseId}  >
+    <div className="case" key={emrCaseId} onClick={onClick} >
       {procedureList.length > 0 ? (
         <LightTooltip arrow title={
           <div>
@@ -146,12 +146,12 @@ function Case(props) {
             </ul>
           </div>
         }>
-          <div className="title" onClick={onClick}>
+          <div className="title" >
             {procedureName}
           </div>
         </LightTooltip>
       ) :
-        <div className="title" onClick={onClick}>
+        <div className="title" >
           {procedureName}
         </div>
       }
@@ -549,7 +549,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   }
 
   const searchView = (
-    <Grid container spacing={5} className="case-discovery-search">
+    <Grid container spacing={0} className="case-discovery-search">
       <Grid item xs className="filters">
         <TextField
           size="small"
@@ -1295,8 +1295,9 @@ function ProcedureDistribution(props) {
       // show: false,
       contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color),
       position: function (data, width, height, element) {
-        // var top = d3.mouse(element)[1] + 15;
-        return { top: 130, left: parseInt(element.getAttribute('x')) + parseInt(element.getAttribute('width')) }
+        // var top = d3.mouse(element)[1] ;
+        let left =  parseInt(element.getAttribute('x')) + parseInt(element.getAttribute('width'));
+        return { top: 130, left: left}
       }
     },
     axis: {
