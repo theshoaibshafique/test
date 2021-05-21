@@ -46,19 +46,19 @@ export default class MainLayout extends React.PureComponent {
   resourcesGathered(roles) {
     this.setState({
       userLoggedIn: true,
-      adminPanelAccess: this.containsAny(roles,["ADMIN"]),
-      emmAccess: this.containsAny(roles,["ENHANCED M&M VIEW"]),
-      emmRequestAccess: this.containsAny(roles,["ENHANCED M&M EDIT"]),
-      sscAccess:this.containsAny(roles,["SURGICAL CHECKLIST"]),
-      efficiencyAccess:this.containsAny(roles,["EFFICIENCY"]),
-      caseDiscoveryAccess: this.containsAny(roles,["ADMIN"])
+      adminPanelAccess: this.containsAny(roles, ["ADMIN"]),
+      emmAccess: this.containsAny(roles, ["ENHANCED M&M VIEW"]),
+      emmRequestAccess: this.containsAny(roles, ["ENHANCED M&M EDIT"]),
+      sscAccess: this.containsAny(roles, ["SURGICAL CHECKLIST"]),
+      efficiencyAccess: this.containsAny(roles, ["EFFICIENCY"]),
+      caseDiscoveryAccess: this.containsAny(roles, ["ADMIN"]) && this.props.userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92"
     });
     this.clearFilters();
     this.getPageAccess();
   };
 
-  containsAny(arr1,arr2){
-    return arr1.some(r=>arr2.includes(r.toUpperCase()));
+  containsAny(arr1, arr2) {
+    return arr1.some(r => arr2.includes(r.toUpperCase()));
   }
 
   clearFilters() {
@@ -69,25 +69,25 @@ export default class MainLayout extends React.PureComponent {
   redirect() {
     this.setState({
       authenticated: false,
-      isLoading:false
+      isLoading: false
     });
   };
 
   getPageAccess() {
     Promise.all([this.getEMMPublishAccess()].map(function (e) {
-        return e && e.then(function (result) {
-          return result && result.data;
-        }).catch(function () {
-          return false;
-        })
-      })).then(([emmPublishAccess]) => {
-        this.setState({
-          emmPublishAccess, isLoading: false
-        })
-        this.props.setEMMPublishAccess(emmPublishAccess);
-      }).catch(function (results) {
-        this.notLoading();
-      });
+      return e && e.then(function (result) {
+        return result && result.data;
+      }).catch(function () {
+        return false;
+      })
+    })).then(([emmPublishAccess]) => {
+      this.setState({
+        emmPublishAccess, isLoading: false
+      })
+      this.props.setEMMPublishAccess(emmPublishAccess);
+    }).catch(function (results) {
+      this.notLoading();
+    });
   }
   notLoading() {
     this.setState({ isLoading: false });
@@ -120,7 +120,7 @@ export default class MainLayout extends React.PureComponent {
         {(this.state.emmRequestAccess) &&
           <Route path="/requestemm" component={RequestEMM} />
         }
-        
+
         {(this.state.adminPanelAccess) &&
           <Route path="/adminPanel/:index?" component={AdminPanel} />
         }
@@ -149,7 +149,7 @@ export default class MainLayout extends React.PureComponent {
         {(this.state.efficiencyAccess) &&
           <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"blockUtilization"} />} />
         }
-        {(this.state.caseDiscoveryAccess) &&
+        {(this.state.emmPublishAccess  && this.props.userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92") &&
           <Route path="/caseDiscovery" render={(props) => <CaseDiscovery {...props} showEMMReport={this.props.showEMMReport} userFacility={this.props.userFacility} userToken={this.props.userToken} />} />
         }
 
@@ -157,7 +157,7 @@ export default class MainLayout extends React.PureComponent {
         <Route path="" component={this.state.isLoading ? LoadingIndicator : NotFoundPage} />
       </Switch>
     } else {
-      return this.state.isLoading ? <LoadingIndicator/> : ''
+      return this.state.isLoading ? <LoadingIndicator /> : ''
     }
   };
 
@@ -191,7 +191,7 @@ export default class MainLayout extends React.PureComponent {
                   emmPublishAccess={this.state.emmPublishAccess}
                   sscAccess={this.state.sscAccess}
                   efficiencyAccess={this.state.efficiencyAccess}
-                  caseDiscoveryAccess={this.state.caseDiscoveryAccess && this.props.userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92"}
+                  caseDiscoveryAccess={this.state.emmPublishAccess && this.props.userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92"}
                   pathname={this.props.location.pathname}
                   logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}
