@@ -25,6 +25,7 @@ import Hypoxia from './icons/Hypoxia.svg';
 import LateStart from './icons/LateStart.svg';
 import FullPerson from './icons/FullPerson.svg';
 import HalfPerson from './icons/HalfPerson.svg';
+import EmptyPerson from './icons/EmptyPerson.svg';
 import PostOpDelay from './icons/PostOpDelay.svg';
 import PreOpDelay from './icons/PreOpDelay.svg';
 import TurnoverDuration from './icons/TurnoverDuration.svg';
@@ -859,12 +860,16 @@ function DetailedCase(props) {
   );
 
   const startDiff = moment(wheelsIn).diff(moment(scheduledStart), 'seconds');
-
-  const laterality = (isLeftSided && isRightSided) ? "Bilateral" : (isLeftSided ? "Left Side" : "Right Side");
-  const lateralityIcon = (isLeftSided && isRightSided) ? (
-    <img src={FullPerson} />) : (
-      isLeftSided ? <img src={HalfPerson} /> : <img src={HalfPerson} style={{ transform: 'scaleX(-1)' }} />
-    );
+  
+  let laterality = "N/A";
+  let lateralityIcon = <img src={EmptyPerson} />
+  if (isLeftSided || isRightSided){
+    laterality = (isLeftSided && isRightSided) ? "Bilateral" : (isLeftSided ? "Left Side" : "Right Side");
+    lateralityIcon = (isLeftSided && isRightSided) ? (
+      <img src={FullPerson} />) : (
+        isLeftSided ? <img src={HalfPerson} /> : <img src={HalfPerson} style={{ transform: 'scaleX(-1)' }} />
+      );
+  }
 
 
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
