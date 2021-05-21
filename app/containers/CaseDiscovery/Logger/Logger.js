@@ -18,7 +18,7 @@ export class Logger {
 
     sendLogs() {
         console.log("sent", this.recentEvents)
-        this.recentEvents = [];
+        // this.recentEvents = [];
         setTimeout(() => {
             this.sendLogs();
         }, this.logInterval);
@@ -28,16 +28,19 @@ export class Logger {
         const log = {
             time: moment(),
             event: event,
-            id: id,
-            value: Array.isArray(value) ? value : [value]
+            id: id
+        }
+        if (value) {
+            if (Array.isArray(value)){
+                log.values = value;
+            } else {
+                log.description = value;
+            }
+            
         }
         const length = this.recentEvents.length;
         //If they updated the last value - and it wasnt a clear -> we just update the log
-        if (length && this.recentEvents[length - 1].id == id && value) {
-            // Mouse over doesnt change the log values (other than timestamp)
-            if (event == 'mouseover'){
-                return;
-            }
+        if (event == 'onchange' && length && this.recentEvents[length - 1].id == id && value) {
             console.log("updated log", log)
             this.recentEvents.splice(length - 1, 1, log)
             return;

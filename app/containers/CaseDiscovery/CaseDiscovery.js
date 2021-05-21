@@ -101,7 +101,7 @@ function getTag(tag) {
   }
 }
 
-function displayTags(tags,emrCaseId) {
+function displayTags(tags, emrCaseId) {
   return tags.map((tag, i) => {
     let desc = tag.toolTip || [];
     tag = tag.tagName || tag;
@@ -490,6 +490,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleClose = (event) => {
     setAnchorEl(null);
     if (!isUndefined(event.target.value)) {
+      logger && logger.manualAddLog('click', 'sort-cases', event.target.value ? 'recent to oldest' : 'oldest to recent');
       setIsOldest(event.target.value)
     }
 
@@ -502,14 +503,20 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Set CaseID for detailed case view
   const [caseId, setCaseId] = React.useState(null);
+  const handleChangeCaseId = (cId) => {
+    setCaseId(cId);
+    if (!cId) {
+      logger && logger.manualAddLog('click', cId ? `case-${cId}` : 'close-case', 'case-closed');
+    }
 
+  }
   const [numShownCases, setNumShownCases] = React.useState(10);
   const [showTagsModal, setShowTagsModal] = React.useState(false);
 
 
   const getCasesView = () => {
     if (filterCases && filterCases.length) {
-      return filterCases.map((c, i) => (<Case key={i} onClick={() => setCaseId(c.caseId)} {...c} />))
+      return filterCases.map((c, i) => (<Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} />))
         .slice(0, numShownCases)
     }
     return (
@@ -776,7 +783,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   return (
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
-      <DetailedCase {...DETAILED_CASE} COMPLICATIONS={COMPLICATIONS} USERS={USERS} userToken={userToken} setCaseId={setCaseId} hidden={!caseId} showEMMReport={showEMMReport} userFacility={userFacility} />
+      <DetailedCase {...DETAILED_CASE} COMPLICATIONS={COMPLICATIONS} USERS={USERS} userToken={userToken} handleChangeCaseId={handleChangeCaseId} hidden={!caseId} showEMMReport={showEMMReport} userFacility={userFacility} />
     </section>
   );
 }
@@ -790,7 +797,7 @@ function getWindowDimensions() {
 }
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, setCaseId, COMPLICATIONS, USERS, userToken, userFacility } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, COMPLICATIONS, USERS, userToken, userFacility } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -853,6 +860,10 @@ function DetailedCase(props) {
   const HOUR_SIZE = Math.max((windowDimensions.height - HEADER_SIZE) / (scheduleDuration), 34);
   const [openRequestEMM, setOpenRequestEMM] = React.useState(false);
   const [isRequestSubmitted, setIsRequestSubmitted] = React.useState(false);
+  const handleOpenRequestEMM = (open) => {
+    setOpenRequestEMM(open);
+    logger && logger.manualAddLog('click', open ? 'openEMMRequest' : 'closeEMMRequest', !open && !isRequestSubmitted ? 'Closed without submission' : '');
+  }
 
   const reportButton = () => {
     if (isRequestSubmitted) {
@@ -861,7 +872,7 @@ function DetailedCase(props) {
         <div><Button variant="outlined" className="primary disabled" onClick={() => null} disabled>Request eM&M</Button></div>
       </LightTooltip>
     } else if (dayDiff <= 21) {
-      return <Button variant="outlined" className="primary" onClick={() => setOpenRequestEMM(true)}>Request eM&M</Button>
+      return <Button variant="outlined" className="primary" onClick={() => handleOpenRequestEMM(true)}>Request eM&M</Button>
     } else {
       return <div></div>
     }
@@ -872,8 +883,9 @@ function DetailedCase(props) {
     if (cId == caseId) {
       return;
     }
+    logger && logger.manualAddLog('click', `case-${emrCaseId}`, 'swap case through schedule tab');
     setIsLoading(true)
-    setCaseId(cId);
+    handleChangeCaseId(cId);
   }
   useEffect(() => {
     setIsLoading(false);
@@ -902,6 +914,8 @@ function DetailedCase(props) {
       setIsComplicationDateFilled(true);
     }
 
+    logger.manualAddLog('onchange', event, value);
+
     setRequestData({
       name: event,
       value: value
@@ -912,13 +926,16 @@ function DetailedCase(props) {
     if (isComplicationOtherChecked) {
       if (!requestData.complicationOther) {
         setIsComplicationFilled(false);
+        logger && logger.manualAddLog('click', 'submit-validation-error', 'complication-empty');
         return;
       }
     } else if (requestData.complications.length < 1) {
+      logger && logger.manualAddLog('click', 'submit-validation-error', 'complication-empty');
       setIsComplicationFilled(false);
       return;
     }
     if (!requestData.complicationDate) {
+      logger && logger.manualAddLog('click', 'submit-validation-error', 'complication-date-empty');
       setIsComplicationDateFilled(false);
       return;
     }
@@ -935,6 +952,7 @@ function DetailedCase(props) {
       "departmentName": departmentId,
       "facilityName": userFacility
     }
+    logger && logger.manualAddLog('click', 'submit-emm-request', jsonBody);
     setIsSending(true);
     globalFunctions.genericFetch(process.env.REQUESTEMM_API, 'post', userToken, jsonBody)
       .then(result => {
@@ -961,7 +979,7 @@ function DetailedCase(props) {
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
         <Grid item xs className="detailed-case">
 
-          <div className="back" onClick={() => setCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
+          <div className="back" onClick={() => handleChangeCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
           <div className="case-header">
             {procedureList.length > 0 ? (
               <LightTooltip arrow title={
@@ -1107,11 +1125,11 @@ function DetailedCase(props) {
       </Grid>
       <Modal
         open={openRequestEMM}
-        onClose={() => setOpenRequestEMM(false)}
+        onClose={() => handleOpenRequestEMM(false)}
       >
         <div className="request-emm-modal">
           <div className="close-button">
-            <img src={Close} onClick={() => setOpenRequestEMM(false)} />
+            <img src={Close} onClick={() => handleOpenRequestEMM(false)} />
           </div>
           {isRequestSubmitted ?
             (<Grid container spacing={2} direction="column">
@@ -1126,7 +1144,7 @@ function DetailedCase(props) {
                 We will notify you when the report is ready on Insights for viewing.
               </Grid>
               <Grid item xs>
-                <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => setOpenRequestEMM(false)}>Close</Button>
+                <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => handleOpenRequestEMM(false)}>Close</Button>
               </Grid>
             </Grid>
             ) :
@@ -1295,10 +1313,10 @@ function ProcedureDistribution(props) {
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
     d = d[0]
     let seconds = d.x;
-    
+
     const time = globalFunctions.formatSecsToTime(seconds, true, true);
     const percentile = `${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(d.x, scale, shape) * 100))} percentile`;
-    logger && logger.manualAddLog('mouseover',`procedure-time-tooltip-${time}`, `${time} - ${percentile}`)
+    logger && logger.manualAddLog('mouseover', `procedure-time-tooltip-${time}`, `${time} - ${percentile}`)
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1393,20 +1411,20 @@ function HL7Chart(props) {
       }
       const time = globalFunctions.formatSecsToTime(d.x);
       const text = value.text;
-      logger && logger.manualAddLog('mouseover',`hl7-tooltip-${time}`, text)
+      logger && logger.manualAddLog('mouseover', `hl7-tooltip-${time}`, text)
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{time}</div>
           <div>{text}</div>
         </div>);
     }
-    
+
     let hl7 = d.find((e) => e && e.id != "y");
     let y = d.find((e) => e && e.id == "y");
     let value = y && timeline.find((e) => e.time == y.x);
     let x = hl7 && hl7.x || y && y.x;
     const time = globalFunctions.formatSecsToTime(x);
-    logger && logger.manualAddLog('mouseover',`hl7-tooltip-${time}`, [hl7, value])
+    logger && logger.manualAddLog('mouseover', `hl7-tooltip-${time}`, [hl7, value])
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1576,18 +1594,11 @@ function HL7Chart(props) {
       ],
       unload: [...hl7Data.map((d) => d.title == title ? '' : d.title), 'y'],
     });
+    logger && logger.manualAddLog('click', 'change-hl7-selection', title);
   }, [index]);
 
   return (
     <div className="hl7-chart" id="hl7-chart" >
-      {/* <div className="toggles">
-        {hl7Data.map((d, i) => {
-          return (
-            <span className={`${i == index && 'selected'} toggle`} onClick={() => setIndex(i)}>{d.title}</span>
-          )
-        })}
-      </div> 
-      <C3Chart ref={chartRef} {...data} /> */}
       <div className="header">Case Timeline</div>
       <Divider style={{ backgroundColor: '#C8C8C8' }} />
       <div className="chart-container">
