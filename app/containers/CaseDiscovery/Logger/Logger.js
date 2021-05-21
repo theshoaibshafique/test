@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
 import moment from 'moment/moment';
+import axios from 'axios';
 const events = ['mouseover', 'click']
 const classPrefix = 'log-';
 
 export class Logger {
     constructor() {
         this.recentEvents = [];
-        // this.logInterval = 30000; // In ms
-        this.logInterval = 5000; // In ms
+        this.userToken = '';
+        this.userID = '';
+        this.logInterval = 30000; // In ms
+        // this.logInterval = 5000; // In ms
         this.sendLogs();
         this._addLog = this.addLog.bind(this);
         this._addLog = this.addLog.bind(this);
@@ -18,7 +21,19 @@ export class Logger {
 
     sendLogs() {
         console.log("sent", this.recentEvents)
-        // this.recentEvents = [];
+        const jsonBody = {
+            time: moment(),
+            metadata: {},
+            logs: {
+                user: this.userID,
+                payload: this.recentEvents
+            }
+        }
+        if (this.recentEvents.length) {
+            this.postLogs(process.env.LOGGER_API, 'post', this.userToken, process.env.LOGGER_APP_ID, jsonBody);
+            this.recentEvents = [];
+        }
+
         setTimeout(() => {
             this.sendLogs();
         }, this.logInterval);
@@ -31,12 +46,12 @@ export class Logger {
             id: id
         }
         if (value) {
-            if (Array.isArray(value)){
+            if (Array.isArray(value)) {
                 log.values = value;
             } else {
                 log.description = value;
             }
-            
+
         }
         const length = this.recentEvents.length;
         //If they updated the last value - and it wasnt a clear -> we just update the log
@@ -83,7 +98,7 @@ export class Logger {
         });
     }
 
-    log_action(url, fetchMethod = 'post', userToken, appId, fetchBodyJSON) {
+    postLogs(url, fetchMethod, userToken, appId, fetchBodyJSON) {
         if (!url) {
             return;
         }
@@ -100,21 +115,4 @@ export class Logger {
         });
     }
 
-}
-
-export function log_action(url, fetchMethod = 'post', userToken, appId, fetchBodyJSON) {
-    if (!url) {
-        return;
-    }
-    return axios({
-        method: fetchMethod,
-        url: url,
-        headers: {
-            'Authorization': 'Bearer ' + userToken,
-            'x-app-id': appId,
-            'Content-Type': 'application/json'
-        },
-        data: JSON.stringify(fetchBodyJSON),
-        mode: 'cors'
-    });
 }

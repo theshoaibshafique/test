@@ -308,7 +308,7 @@ const searchReducer = (state, event) => {
 
 const logger = new Logger();
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
-  const { showEMMReport, userFacility, userToken } = props;
+  const { showEMMReport, userFacility, userToken,userID } = props;
   const [CASES, setCases] = useState([]);
   const [SPECIALTIES, setSpecialties] = useState([]);
   const [PROCEDURES, setProcedures] = useState([]);
@@ -323,6 +323,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [outlierThreshold, setOutlierThreshold] = useState(0);
   // Load all the APIs 
   useEffect(() => {
+    logger.userToken = userToken;
+    logger.userID = userID;
     const fetchUsers = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/emm_users', 'get', userToken, {})
         .then(result => {
