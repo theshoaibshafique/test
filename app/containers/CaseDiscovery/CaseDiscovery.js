@@ -25,6 +25,8 @@ import Hypoxia from './icons/Hypoxia.svg';
 import LateStart from './icons/LateStart.svg';
 import FullPerson from './icons/FullPerson.svg';
 import HalfPerson from './icons/HalfPerson.svg';
+import PostOpDelay from './icons/PostOpDelay.svg';
+import PreOpDelay from './icons/PreOpDelay.svg';
 import TurnoverDuration from './icons/TurnoverDuration.svg';
 import Close from './icons/Close.svg';
 import moment from 'moment/moment';
@@ -77,25 +79,29 @@ const MenuProps = {
 function getTag(tag) {
   switch (`${tag}`.toLowerCase()) {
     case "flagged":
-      return <img src={Flagged} />
+      return <img src={Flagged} style={{ height: 20, width: 24 }} />
     case "hypothermia":
       return <img src={Hypothermia} />
     case "hypoxia":
       return <img src={Hypoxia} />
     case "hypotension":
       return <img src={Hypotension} />
-    case "procedure duration":
+    case "long procedure":
       return <img src={CaseDuration} />
     case "case delay":
     case "late start":
       return <img src={LateStart} />
-    case "turnover duration":
+    case "slow turnover":
       return <img src={TurnoverDuration} />
     case "late first case":
     case "first case":
       return <img src={FirstCase} />
     case "eM&M":
       return <img src={eMM} />
+    case "slow post-op":
+      return <img src={PostOpDelay} />
+    case "slow pre-op":
+      return <img src={PreOpDelay} />
     default:
       break;
   }
@@ -308,7 +314,7 @@ const searchReducer = (state, event) => {
 
 const logger = new Logger();
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
-  const { showEMMReport, userFacility, userToken,userID } = props;
+  const { showEMMReport, userFacility, userToken, userID } = props;
   const [CASES, setCases] = useState([]);
   const [SPECIALTIES, setSpecialties] = useState([]);
   const [PROCEDURES, setProcedures] = useState([]);
@@ -541,7 +547,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const result = []
     const tag_info = TAG_INFO;
     tag_info['Late First Case'] = `Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true)}`;
-    tag_info['Turnover Duration'] = `Identifies cases where turnover time preceding case was above ${facilityName} defined outlier threshold of ${globalFunctions.formatSecsToTime(outlierThreshold, true, true)}`;
+    tag_info['Slow Turnover'] = `Identifies cases where turnover time preceding case was above ${facilityName} defined outlier threshold of ${globalFunctions.formatSecsToTime(outlierThreshold, true, true)}`;
     for (const [tag, value] of Object.entries(tag_info)) {
       result.push(
         <Grid item xs={3} className="tag-column">

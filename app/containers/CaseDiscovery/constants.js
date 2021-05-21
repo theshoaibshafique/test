@@ -416,21 +416,17 @@ export const ORS = [
 
 
 export const TAGS = [
-    // "eM&M",
-    "Delayed",
-    "Late First Case",
-    // "First Case",
-    "Flagged",
-    "Hypotension",
-    "Hypothermia",
-    "Hypoxia",
-    // "Late Start",
-    "Case Delay",
-    "Post-Op Duration",
-    "Pre-Op Duration",
-    "Procedure Duration",
-    "Turnover Duration"
-]
+    "Case Delay", 
+    "Flagged", 
+    "Hypotension", 
+    "Hypothermia", 
+    "Hypoxia", 
+    "Late First Case", 
+    "Long Procedure", 
+    "Slow Post-Op", 
+    "Slow Pre-Op", 
+    "Slow Turnover"]
+
 
 export const COMPLICATIONS = [
     {
@@ -1112,8 +1108,8 @@ export const TAG_INFO = {
     "Hypoxia": "Identifies cases where the percentage of procedure time patient was hypoxic (blood oxygen saturation below 94%) was 95th percentile or above",
     "Hypotension": "Identifies cases where the percentage of procedure time patient was hypotensive (mean arterial blood pressure below 65mmHg) was 95th percentile or above",
     "Hypothermia": "Identifies cases where the percentage of procedure time patient was hypothermic (temperature below 35°C) was 95th percentile or above",
-    "Procedure Duration": "Identifies cases where procedure duration was 95th percentile or above for given procedure type",
-    "Pre-Op Duration": "Identifies cases where the period of time between patient entering operating room, and procedure start, was 95th percentile or above",
-    "Post-Op Duration": "Identifies cases where the period of time between procedure end, and patient exiting operating room, was 95th percentile or above",
+    "Long Procedure": "Identifies cases where procedure duration was 95th percentile or above for given procedure type",
+    "Slow Pre-Op": "Identifies cases where the period of time between patient entering operating room, and procedure start, was 95th percentile or above",
+    "Slow Post-Op": "Identifies cases where the period of time between procedure end, and patient exiting operating room, was 95th percentile or above",
     "Case Delay": "Identifies cases where the delay from scheduled start, to actual start, was 95th percentile or above"
 }

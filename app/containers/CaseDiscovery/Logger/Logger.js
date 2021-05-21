@@ -13,7 +13,6 @@ export class Logger {
         // this.logInterval = 5000; // In ms
         this.sendLogs();
         this._addLog = this.addLog.bind(this);
-        this._addLog = this.addLog.bind(this);
     }
     get recent() {
         return this.recentEvents;
