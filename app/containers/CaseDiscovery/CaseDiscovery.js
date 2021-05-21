@@ -40,6 +40,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Logger } from './Logger/Logger';
 
 const useStyles = makeStyles((theme) => ({
@@ -523,8 +524,20 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const getCasesView = () => {
     if (filterCases && filterCases.length) {
-      return filterCases.map((c, i) => (<Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} />))
-        .slice(0, numShownCases)
+
+      return (
+        <TransitionGroup>{
+          filterCases.map((c, i) => (
+            <CSSTransition
+              key={c.caseId}
+              timeout={500}
+              classNames="item"
+            >
+              <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} />
+            </CSSTransition>
+          )).slice(0, numShownCases)
+        }</TransitionGroup>
+      )
     }
     return (
       <div className="no-cases">
@@ -1384,7 +1397,7 @@ function ProcedureDistribution(props) {
 
   return (
     <div className="procedure-distribution" id="procedure-dist" >
-      <div className="title">Procedure Time <LightTooltip interactive arrow title={`Procedure time distribution is a best approximation based on ${sampleSize} cases of the same procedure type`} placement="top" fontSize="small">
+      <div className="title">Procedure Time <LightTooltip interactive arrow title={`Procedure time distribution is a best approximation based on ${sampleSize} case${sampleSize ==1 ? '' : 's'} of the same procedure type`} placement="top" fontSize="small">
         <InfoOutlinedIcon className="log-mouseover" id="procedure-time-info-tooltip" style={{ fontSize: 16, margin: '0 0 4px 0px' }} />
       </LightTooltip></div>
       <C3Chart ref={chartRef} {...data} />
