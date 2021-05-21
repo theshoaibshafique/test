@@ -191,7 +191,7 @@ export default class MainLayout extends React.PureComponent {
                   emmPublishAccess={this.state.emmPublishAccess}
                   sscAccess={this.state.sscAccess}
                   efficiencyAccess={this.state.efficiencyAccess}
-                  caseDiscoveryAccess={this.state.caseDiscoveryAccess}
+                  caseDiscoveryAccess={this.state.caseDiscoveryAccess && this.props.userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92"}
                   pathname={this.props.location.pathname}
                   logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}
