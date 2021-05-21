@@ -377,7 +377,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         .then(result => {
           result = result.data
           setCases(result);
-          console.time('timeTest');
+          // console.time('timeTest');
           let spec = [];
           let proc = [];
           let ors = [];
@@ -401,7 +401,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           setSpecialties(spec);
           setProcedures(proc);
           setORs(ors);
-          console.timeEnd('timeTest');
+          // console.timeEnd('timeTest');
         }).catch((error) => {
           console.log("uh oh")
           setCases(generateFakeCases(100));

@@ -79,7 +79,7 @@ export class Logger {
                 id: id,
                 emrCaseId: emrCaseId
             };
-            console.log('logged', log)
+            // console.log('logged', log)
             this.recentEvents.push(log)
         }
 

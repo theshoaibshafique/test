@@ -149,7 +149,7 @@ export default class MainLayout extends React.PureComponent {
         {(this.state.efficiencyAccess) &&
           <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"blockUtilization"} />} />
         }
-        {(this.state.emmPublishAccess  && this.props.userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92") &&
+        {(this.state.caseDiscoveryAccess) &&
           <Route path="/caseDiscovery" render={(props) => <CaseDiscovery {...props} showEMMReport={this.props.showEMMReport} userFacility={this.props.userFacility} userToken={this.props.userToken} />} />
         }
 
@@ -191,7 +191,7 @@ export default class MainLayout extends React.PureComponent {
                   emmPublishAccess={this.state.emmPublishAccess}
                   sscAccess={this.state.sscAccess}
                   efficiencyAccess={this.state.efficiencyAccess}
-                  caseDiscoveryAccess={this.state.emmPublishAccess && this.props.userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92"}
+                  caseDiscoveryAccess={this.state.caseDiscoveryAccess}
                   pathname={this.props.location.pathname}
                   logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}
