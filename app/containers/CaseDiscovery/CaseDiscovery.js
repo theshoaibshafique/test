@@ -415,7 +415,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     fetchComplications();
     fetchFacilityConfig();
 
-
+    logger && logger.manualAddLog('session','window-dimensions',getWindowDimensions());
   }, []);
 
   // const [logger, setLogger] = useState(null);
@@ -764,7 +764,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           <div id="cases-id" className="cases">
             <div ref={topElementRef}></div>
             {getCasesView()}
-            {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
+            {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more log-click" id="load-more" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
               Load More
           </Button>}
           </div>
@@ -876,6 +876,7 @@ function DetailedCase(props) {
   useEffect(() => {
     function handleResize() {
       setWindowDimensions(getWindowDimensions());
+      logger && logger.manualAddLog('onchange','window-resize',getWindowDimensions());
     }
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
