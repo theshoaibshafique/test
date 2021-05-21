@@ -8,7 +8,6 @@ export class Logger {
     constructor() {
         this.recentEvents = [];
         this.userToken = '';
-        this.userID = '';
         this.logInterval = 30000; // In ms
         // this.logInterval = 5000; // In ms
         this.sendLogs();
@@ -19,12 +18,11 @@ export class Logger {
     }
 
     sendLogs() {
-        console.log("sent", this.recentEvents)
+        // console.log("sent", this.recentEvents)
         const jsonBody = {
             time: moment(),
             metadata: {},
             logs: {
-                user: this.userID,
                 payload: this.recentEvents
             }
         }
@@ -55,7 +53,7 @@ export class Logger {
         const length = this.recentEvents.length;
         //If they updated the last value - and it wasnt a clear -> we just update the log
         if (event == 'onchange' && length && this.recentEvents[length - 1].id == id && value) {
-            console.log("updated log", log)
+            // console.log("updated log", log)
             this.recentEvents.splice(length - 1, 1, log)
             return;
         }
@@ -88,7 +86,7 @@ export class Logger {
     }
 
     connectListeners() {
-        console.log('connected');
+        // console.log('connected');
         events.forEach(event => {
             document.querySelectorAll(`.${classPrefix}${event}`).forEach(item => {
                 item.removeEventListener(event, this._addLog);

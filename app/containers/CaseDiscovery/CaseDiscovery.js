@@ -314,7 +314,7 @@ const searchReducer = (state, event) => {
 
 const logger = new Logger();
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
-  const { showEMMReport, userFacility, userToken, userID } = props;
+  const { showEMMReport, userFacility, userToken } = props;
   const [CASES, setCases] = useState([]);
   const [SPECIALTIES, setSpecialties] = useState([]);
   const [PROCEDURES, setProcedures] = useState([]);
@@ -330,7 +330,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Load all the APIs 
   useEffect(() => {
     logger.userToken = userToken;
-    logger.userID = userID;
     const fetchUsers = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/emm_users', 'get', userToken, {})
         .then(result => {
@@ -691,7 +690,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         />
 
         <TagsSelect
-          title={<div>Tags (<span className="link" onClick={() => setShowTagsModal(true)}>Learn More</span>)</div>}
+          title={<div>Tags (<span className="link log-click" id="learn-more-tags" onClick={() => setShowTagsModal(true)}>Learn More</span>)</div>}
           placeholder="Filter by tags"
           options={TAGS}
           id="tags"
@@ -1386,7 +1385,7 @@ function ProcedureDistribution(props) {
   return (
     <div className="procedure-distribution" id="procedure-dist" >
       <div className="title">Procedure Time <LightTooltip interactive arrow title={`Procedure time distribution is a best approximation based on ${sampleSize} cases of the same procedure type`} placement="top" fontSize="small">
-        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 0px' }} />
+        <InfoOutlinedIcon className="log-mouseover" id="procedure-time-info-tooltip" style={{ fontSize: 16, margin: '0 0 4px 0px' }} />
       </LightTooltip></div>
       <C3Chart ref={chartRef} {...data} />
     </div>
@@ -1615,7 +1614,7 @@ function HL7Chart(props) {
           <div className="selector">
             {hl7Data.map((d, i) => {
               return (
-                <div className={`${i == index && 'selected'} hl7-value`} onClick={() => setIndex(i)}>{d.title}</div>
+                <div className={`${i == index && 'selected'} hl7-value`} onClick={() => setIndex(i)}>{d.abbreviation}</div>
               )
             })}
           </div>
