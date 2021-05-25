@@ -6,6 +6,7 @@ import { List, ListItem, Collapse, Grid, MenuItem, Menu } from '@material-ui/cor
 import IconExpandLess from '@material-ui/icons/ExpandLess'
 import IconExpandMore from '@material-ui/icons/ExpandMore'
 import LoadingOverlay from 'react-loading-overlay';
+import alphaTag from 'images/alpha-tag.svg';
 class SSTNav extends React.Component {
   constructor(props) {
     super(props);
@@ -126,7 +127,7 @@ class SSTNav extends React.Component {
               </Collapse>
             }
             {(this.props.caseDiscoveryAccess) &&
-              <ListItem disableGutters><NavLink to="/caseDiscovery" className='text-link' >Case Discovery</NavLink></ListItem>
+              <ListItem disableGutters><NavLink to="/caseDiscovery" className='text-link' >Case Discovery<img style={{margin:'0px 0px 2px 4px', width:60}} src={alphaTag}/></NavLink></ListItem>
             }
           </List>
         </Grid>
