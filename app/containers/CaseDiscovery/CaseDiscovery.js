@@ -43,6 +43,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Logger } from './Logger/Logger';
+import { log_norm_cdf, log_norm_pdf, getWindowDimensions } from './Utils';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -809,13 +810,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   );
 }
 
-function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-  return {
-    width,
-    height
-  };
-}
+
 
 function DetailedCase(props) {
   const { hidden, showEMMReport, handleChangeCaseId, COMPLICATIONS, USERS, userToken, userFacility } = props;
@@ -834,11 +829,11 @@ function DetailedCase(props) {
   const date = moment(wheelsOut).format("MMMM DD");
   const blockStartTime = moment(blockStart, 'HH:mm:ss');
   const blockEndTime = moment(blockEnd, 'HH:mm:ss');
-  const bStartTime = getDiffFromMidnight(blockStartTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
-  const bEndTime = getDiffFromMidnight(blockEndTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
+  const bStartTime = globalFunctions.getDiffFromMidnight(blockStartTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
+  const bEndTime = globalFunctions.getDiffFromMidnight(blockEndTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
 
-  const earliestStartTime = roomCases.reduce((min, c) => getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
-  const latestEndTime = roomCases.reduce((max, c) => getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
+  const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
+  const latestEndTime = roomCases.reduce((max, c) => globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
   const scheduleDuration = (latestEndTime) - (earliestStartTime);
 
   const description = (
@@ -1129,8 +1124,8 @@ function DetailedCase(props) {
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
 
-            const startMins = getDiffFromMidnight(wheelsIn, 'minutes') - (earliestStartTime * 60);
-            const endMins = getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
+            const startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - (earliestStartTime * 60);
+            const endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
             const caseHeight = (endMins - startMins) / 60;
             return (
               <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 34 && 'short'} ${caseHeight * HOUR_SIZE <= 83 && 'medium'}`}
@@ -1293,39 +1288,6 @@ const requestReducer = (state, event) => {
   }
 }
 
-
-function erf(x) {
-  // constants
-  var a1 = 0.254829592;
-  var a2 = -0.284496736;
-  var a3 = 1.421413741;
-  var a4 = -1.453152027;
-  var a5 = 1.061405429;
-  var p = 0.3275911;
-
-  // Save the sign of x
-  var sign = 1;
-  if (x < 0) {
-    sign = -1;
-  }
-  x = Math.abs(x);
-
-  // A&S formula 7.1.26
-  var t = 1.0 / (1.0 + p * x);
-  var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
-
-  return sign * y;
-}
-
-function log_norm_cdf(duration, scale, shape) {
-  let a = (Math.log(duration) - Math.log(scale)) / (Math.sqrt(2) * shape)
-  return .5 + .5 * erf(a)
-}
-
-function log_norm_pdf(duration, scale, shape) {
-  let a = Math.exp(-((Math.log(duration) - Math.log(scale)) ** 2) / (2 * (shape ** 2)))
-  return (1 / (duration * shape * Math.sqrt(2 * Math.PI))) * a
-}
 
 function ProcedureDistribution(props) {
   const { shape, scale, duration, sampleSize } = props;
@@ -1649,51 +1611,8 @@ function HL7Chart(props) {
   )
 }
 
-function getDiffFromMidnight(timeString, unit = 'hours') {
-  return moment(timeString).diff(moment(timeString).startOf('day'), unit)
-}
 
 
 
-
-function momentRandom(end = moment(), start) {
-  const endTime = +moment(end);
-  const randomNumber = (to, from = 0) =>
-    Math.floor(Math.random() * (to - from) + from);
-
-  if (start) {
-    const startTime = +moment(start);
-    if (startTime > endTime) {
-      throw new Error('End date is before start date!');
-    }
-    return moment(randomNumber(endTime, startTime));
-  }
-  return moment(randomNumber(endTime));
-}
-
-function fakeCase() {
-  var randomStart = momentRandom(moment(), moment().subtract(1, 'years'));
-  var randomSpecialty = SPECIALTIES[Math.floor(Math.random() * SPECIALTIES.length)];
-  var randomProcedure = PROCEDURES[Math.floor(Math.random() * PROCEDURES.length)];
-  return {
-    "procedures": [
-      {
-        "specialtyName": randomSpecialty.display,
-        "procedureName": randomProcedure.display
-      }
-    ],
-    "caseId": Math.floor(100000 + Math.random() * 900000),
-    "startTime": randomStart.format(),
-    "endTime": randomStart.add(Math.ceil(Math.random() * 12), 'hours').format(),
-    "roomName": ORS[Math.floor(Math.random() * ORS.length)].display,
-    "tags": TAGS.sort(() => 0.5 - Math.random()).slice(0, Math.random() * 3).map((tag) => {
-      return { "title": tag, "description": "Hey this is a placeholder description. idk what to write here" }
-    })
-  }
-}
-
-function generateFakeCases(numCases) {
-  return Array.from({ length: numCases }, () => fakeCase());
-}
 
 
