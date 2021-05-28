@@ -79,8 +79,8 @@ export default class EMM extends React.PureComponent {
         result.complications.map((complication) => {
           let match = false;
           this.props.complications && this.props.complications.map((comp) => {
-            if (complication.toUpperCase() === comp.value.toUpperCase()) {
-              complicationList.push(comp.name);
+            if (complication.toUpperCase() === comp.id.toUpperCase()) {
+              complicationList.push(comp.display);
               match = true;
             }
           });

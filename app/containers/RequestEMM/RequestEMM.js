@@ -83,7 +83,7 @@ export default class RequestEMM extends React.PureComponent {
   };
 
   handleChangeComplication(e, values) {
-    let value = values.map(comp => comp.value);
+    let value = values.map(comp => comp.value || comp.id);
     let errors = this.state.errors;
     errors.complication = '';
     this.setState({ selectedComplication: value, complicationList: values, errors });
@@ -632,7 +632,7 @@ export default class RequestEMM extends React.PureComponent {
                 size="small"
                 id="complication"
                 options={this.props.complications}
-                getOptionLabel={option => option.name}
+                getOptionLabel={option => option.display}
                 value={this.state.complicationList}
                 onChange={(e, value) => this.handleChangeComplication(e, value)}
                 renderInput={params => (

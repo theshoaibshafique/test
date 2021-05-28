@@ -4,7 +4,7 @@
  * This is the page we show when the user visits a url that doesn't have a route
  */
 
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
@@ -44,6 +44,8 @@ import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Logger } from './Logger/Logger';
 import { log_norm_cdf, log_norm_pdf, getWindowDimensions } from './Utils';
+import { useSelector } from 'react-redux';
+import { makeSelectComplications, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -317,19 +319,22 @@ const searchReducer = (state, event) => {
 
 const logger = new Logger();
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
-  const { showEMMReport, userFacility, userToken } = props;
+  const { showEMMReport } = props;
   const [CASES, setCases] = useState([]);
   const [SPECIALTIES, setSpecialties] = useState([]);
   const [PROCEDURES, setProcedures] = useState([]);
   const [ORS, setORs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [COMPLICATIONS, setComplications] = useState([]);
+  // const [COMPLICATIONS, setComplications] = useState([]);
   const [USERS, setUsers] = useState([]);
 
   const [facilityName, setFacilityName] = useState("");
   const [gracePeriod, setGracePeriod] = useState(0);
   const [outlierThreshold, setOutlierThreshold] = useState(0);
+  const userFacility = useSelector(makeSelectUserFacility());
+  const userToken = useSelector(makeSelectToken());
+
   // Load all the APIs 
   useEffect(() => {
     logger.userToken = userToken;
@@ -338,18 +343,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         .then(result => {
           result = result.data
           setUsers(result);
-
-        }).catch((error) => {
-          console.log("uh no.")
-        }).finally(() => {
-
-        });
-    }
-    const fetchComplications = async () => {
-      const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/complications', 'get', userToken, {})
-        .then(result => {
-          result = result.data
-          setComplications(result);
 
         }).catch((error) => {
           console.log("uh no.")
@@ -413,10 +406,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     fetchCases();
     fetchUsers();
-    fetchComplications();
+    // fetchComplications();
     fetchFacilityConfig();
 
-    logger && logger.manualAddLog('session','window-dimensions',getWindowDimensions());
+    logger && logger.manualAddLog('session', 'window-dimensions', getWindowDimensions());
   }, []);
 
   // const [logger, setLogger] = useState(null);
@@ -805,7 +798,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   return (
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
-      <DetailedCase {...DETAILED_CASE} COMPLICATIONS={COMPLICATIONS} USERS={USERS} userToken={userToken} handleChangeCaseId={handleChangeCaseId} hidden={!caseId} showEMMReport={showEMMReport} userFacility={userFacility} />
+      <DetailedCase {...DETAILED_CASE} USERS={USERS} handleChangeCaseId={handleChangeCaseId} hidden={!caseId} showEMMReport={showEMMReport}/>
     </section>
   );
 }
@@ -813,10 +806,14 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, COMPLICATIONS, USERS, userToken, userFacility } = props;
+  const { hidden, showEMMReport, handleChangeCaseId,  USERS,  } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
+
+  const COMPLICATIONS = useSelector(makeSelectComplications());
+  const userFacility = useSelector(makeSelectUserFacility());
+  const userToken = useSelector(makeSelectToken());
 
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsOut, scheduledStart, startTime, endTime,
     duration, departmentId, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
@@ -855,10 +852,10 @@ function DetailedCase(props) {
   );
 
   const startDiff = moment(wheelsIn).diff(moment(scheduledStart), 'seconds');
-  
+
   let laterality = "N/A";
   let lateralityIcon = <img src={EmptyPerson} />
-  if (isLeftSided || isRightSided){
+  if (isLeftSided || isRightSided) {
     laterality = (isLeftSided && isRightSided) ? "Bilateral" : (isLeftSided ? "Left Side" : "Right Side");
     lateralityIcon = (isLeftSided && isRightSided) ? (
       <img src={FullPerson} />) : (
@@ -871,7 +868,7 @@ function DetailedCase(props) {
   useEffect(() => {
     function handleResize() {
       setWindowDimensions(getWindowDimensions());
-      logger && logger.manualAddLog('onchange','window-resize',getWindowDimensions());
+      logger && logger.manualAddLog('onchange', 'window-resize', getWindowDimensions());
     }
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -1365,7 +1362,7 @@ function ProcedureDistribution(props) {
 
   return (
     <div className="procedure-distribution" id="procedure-dist" >
-      <div className="title">Procedure Time <LightTooltip interactive arrow title={`Procedure time distribution is a best approximation based on ${sampleSize} case${sampleSize ==1 ? '' : 's'} of the same procedure type`} placement="top" fontSize="small">
+      <div className="title">Procedure Time <LightTooltip interactive arrow title={`Procedure time distribution is a best approximation based on ${sampleSize} case${sampleSize == 1 ? '' : 's'} of the same procedure type`} placement="top" fontSize="small">
         <InfoOutlinedIcon className="log-mouseover" id="procedure-time-info-tooltip" style={{ fontSize: 16, margin: '0 0 4px 0px' }} />
       </LightTooltip></div>
       <C3Chart ref={chartRef} {...data} />

@@ -52,7 +52,7 @@ const MOUNT_NODE = document.getElementById('app');
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
-        <ConnectedRouter history={history}>
+        <ConnectedRouter store={store} history={history}>
           <App />
         </ConnectedRouter>
     </Provider>,

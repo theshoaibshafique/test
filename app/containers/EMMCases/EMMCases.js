@@ -57,7 +57,7 @@ export default class EMMCases extends React.PureComponent {
 
     let complicationsMap = new Map;
     complications.forEach((complication) => {
-      complicationsMap.set(complication.value.toUpperCase(), complication.name)
+      complicationsMap.set(complication.id.toUpperCase(), complication.display)
     })
 
     let operatingRoomMap = new Map();

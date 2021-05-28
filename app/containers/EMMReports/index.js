@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { goBack } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import EMMReports from './EMMReports';
-import { makeSelectToken, makeSelectSpecialties, makeSelectComplications, makeSelectEmail } from '../App/selectors';
+import { makeSelectToken, makeSelectSpecialties, makeSelectEmail } from '../App/selectors';
 import { selectEMMTab, selectEMMReportData, selectEMMReportID, selectEMMPublishAccess, selectEMMPresenterDialog, selectEMMPresenterMode } from '../App/emm-selectors';
 import { hideEMMReport, setEMMPresenterDialog, setEMMPresenterMode, setEMMReport, setEMMTab } from '../App/emm-actions';
 
@@ -10,7 +10,6 @@ const mapStateToProps = (state, ownProps) => createStructuredSelector({
   userToken: makeSelectToken(),
   userEmail: makeSelectEmail(),
   specialties: makeSelectSpecialties(),
-  complications: makeSelectComplications(),
   emmReportData: selectEMMReportData(),
   emmReportID: selectEMMReportID(),
   emmReportTab: selectEMMTab(),

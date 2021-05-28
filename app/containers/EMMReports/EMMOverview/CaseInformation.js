@@ -7,7 +7,7 @@ const CaseInformation = (props) => {
 
   const caseComplications = complications.map((complication) => {
     return allComplications.filter((allComplication) => {
-      return allComplication.value.toUpperCase() == complication.toUpperCase()
+      return allComplication.id.toUpperCase() == complication.toUpperCase()
     })[0]
   })
 
@@ -20,7 +20,7 @@ const CaseInformation = (props) => {
           })
         }
         <div className="case-complication">{
-          caseComplications.map((caseComplication, index) => caseComplication == undefined ? complications[index] : caseComplication.name).join(' · ')
+          caseComplications.map((caseComplication, index) => caseComplication == undefined ? complications[index] : (caseComplication.name || caseComplication.display)).join(' · ')
         }</div>
       </div>
     </div>
