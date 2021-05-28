@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
-import { setUserInfo, setUserFacility, setFacilityRooms, setSpecialties, setComplications, setOperatingRoom, setUserRoles } from '../../containers/App/actions';
+import { setUserInfo, setUserFacility, setFacilityRooms, setSpecialties, setComplications, setOperatingRoom, setUserRoles, setLogger } from '../../containers/App/actions';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import { makeSelectID, makeSelectToken, makeSelectSpecialties, makeSelectComplications, makeSelectUserFacility } from '../../containers/App/selectors';
+import { makeSelectID, makeSelectToken, makeSelectSpecialties, makeSelectComplications, makeSelectUserFacility, makeSelectLogger } from '../../containers/App/selectors';
 
 import AzureLogin from './AzureLogin';
 
@@ -11,7 +11,8 @@ const mapStateToProps = createStructuredSelector({
   userID: makeSelectID(),
   specialties: makeSelectSpecialties(),
   complications: makeSelectComplications(),
-  userFacility: makeSelectUserFacility()
+  userFacility: makeSelectUserFacility(),
+  logger: makeSelectLogger()
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -36,6 +37,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setUserRoles: (userRoles) => {
       dispatch(setUserRoles(userRoles))
+    },
+    setLogger: (logger) => {
+      dispatch(setLogger(logger))
     },
     pushUrl: (url) => {
       dispatch(push(url));

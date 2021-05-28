@@ -5,9 +5,9 @@ const events = ['mouseover', 'click']
 const classPrefix = 'log-';
 
 export class Logger {
-    constructor() {
+    constructor(userToken) {
         this.recentEvents = [];
-        this.userToken = '';
+        this.userToken = userToken;
         this.logInterval = 30000; // In ms
         // this.logInterval = 5000; // In ms
         this.sendLogs();
@@ -53,7 +53,7 @@ export class Logger {
         const length = this.recentEvents.length;
         //If they updated the last value - and it wasnt a clear -> we just update the log
         if (event == 'onchange' && length && this.recentEvents[length - 1].id == id && value) {
-            // console.log("updated log", log)
+            console.log("updated log", log)
             this.recentEvents.splice(length - 1, 1, log)
             return;
         }
@@ -65,8 +65,7 @@ export class Logger {
         const { type, currentTarget } = e;
         if (currentTarget) {
             const { id } = currentTarget;
-            // TODO: make less specific
-            const emrCaseId = currentTarget.getAttribute("emrCaseId")
+            const description = currentTarget.getAttribute("description")
             const existingLog = this.recentEvents.findIndex((r) => r.id == id);
 
             //Dont log mouseOvers too much
@@ -76,10 +75,12 @@ export class Logger {
             const log = {
                 time: moment(),
                 event: type,
-                id: id,
-                emrCaseId: emrCaseId
+                id: id
             };
-            // console.log('logged', log)
+            if (description){
+                log.description = description;
+            }
+            console.log('logged', log)
             this.recentEvents.push(log)
         }
 

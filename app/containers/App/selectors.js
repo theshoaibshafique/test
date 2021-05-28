@@ -88,6 +88,12 @@ const makeSelectIsAdmin = () => createSelector(
   (globalState) => globalState.get('userRoles').filter(role => role === 'Admin').length === 1
 );
 
+const makeSelectLogger = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('logger')
+);
+
+
 export {
   selectGlobal,
   makeSelectToken,
@@ -105,5 +111,6 @@ export {
   makeSelectEmail,
   makeSelectJobTitle,
   makeSelectIsPresenter,
-  makeSelectIsAdmin
+  makeSelectIsAdmin,
+  makeSelectLogger
 };

@@ -4,6 +4,7 @@ import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 import IdleTimer from 'react-idle-timer';
 import * as CONSTANTS from '../../constants';
 import globalFunctions from '../../utils/global-functions';
+import { Logger } from '../Logger/Logger';
 
 class AzureLogin extends React.Component {
   constructor(props) {
@@ -40,6 +41,15 @@ class AzureLogin extends React.Component {
     this.props.userInfo(receivedToken);
     this.getUserFacility(receivedToken);
     this.getComplications();
+    this.setLogger();
+  }
+
+  setLogger(){
+    if (this.props.logger){
+      return;
+    }
+    
+    this.props.setLogger(new Logger(this.props.userToken))
   }
 
   getUserFacility() {

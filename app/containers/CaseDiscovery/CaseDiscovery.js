@@ -42,10 +42,9 @@ import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { Logger } from './Logger/Logger';
 import { log_norm_cdf, log_norm_pdf, getWindowDimensions } from './Utils';
 import { useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectComplications, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -148,7 +147,7 @@ function Case(props) {
 
 
   return (
-    <div className="case log-click" id={`case-${emrCaseId}`} emrCaseId={emrCaseId} key={emrCaseId} onClick={onClick} >
+    <div className="case log-click" id={`open-case`} description={emrCaseId} key={emrCaseId} onClick={onClick} >
       {procedureList.length > 0 ? (
         <LightTooltip arrow title={
           <div>
@@ -317,7 +316,6 @@ const searchReducer = (state, event) => {
   }
 }
 
-const logger = new Logger();
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
   const { showEMMReport } = props;
   const [CASES, setCases] = useState([]);
@@ -334,10 +332,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [outlierThreshold, setOutlierThreshold] = useState(0);
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
+  const logger = useSelector(makeSelectLogger());
 
   // Load all the APIs 
   useEffect(() => {
-    logger.userToken = userToken;
     const fetchUsers = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/emm_users', 'get', userToken, {})
         .then(result => {
@@ -451,7 +449,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Change/update the filter
   const handleChange = (event, value) => {
     scrollToTop();
-    logger.manualAddLog('onchange', event, value)
+    logger && logger.manualAddLog('onchange', event, value)
     setSearchData({
       name: event,
       value: value
@@ -507,10 +505,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Set CaseID for detailed case view
   const [caseId, setCaseId] = React.useState(null);
   const handleChangeCaseId = (cId) => {
-    setCaseId(cId);
+    //Handle close case
     if (!cId) {
-      logger && logger.manualAddLog('click', cId ? `case-${cId}` : 'close-case', 'case-closed');
+      logger && logger.manualAddLog('click', 'close-case', caseId);
     }
+    setCaseId(cId);
+    
 
   }
   const [numShownCases, setNumShownCases] = React.useState(10);
@@ -778,16 +778,17 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       setDetailedCase(null)
       return;
     }
-    // setDetailedCase(null)
+
     const fetchCases = async () => {
       const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
         .then(result => {
           result = result.data
           setDetailedCase(result)
         }).catch((error) => {
+          debugger;
           console.log("oh no " + error)
         }).finally(() => {
-          // setIsLoading(false);
+
         });
     }
     fetchCases()
@@ -814,6 +815,7 @@ function DetailedCase(props) {
   const COMPLICATIONS = useSelector(makeSelectComplications());
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
+  const logger = useSelector(makeSelectLogger());
 
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsOut, scheduledStart, startTime, endTime,
     duration, departmentId, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
@@ -901,7 +903,7 @@ function DetailedCase(props) {
     if (cId == caseId) {
       return;
     }
-    logger && logger.manualAddLog('click', `case-${emrCaseId}`, 'swap case through schedule tab');
+    logger && logger.manualAddLog('click', `swap-case`, cId);
     setIsLoading(true)
     handleChangeCaseId(cId);
   }
@@ -932,7 +934,7 @@ function DetailedCase(props) {
       setIsComplicationDateFilled(true);
     }
 
-    logger.manualAddLog('onchange', event, value);
+    logger && logger.manualAddLog('onchange', event, value);
 
     setRequestData({
       name: event,
@@ -1288,6 +1290,7 @@ const requestReducer = (state, event) => {
 
 function ProcedureDistribution(props) {
   const { shape, scale, duration, sampleSize } = props;
+  const logger = useSelector(makeSelectLogger());
   const mu = scale;
   const sigma = shape * scale;
   const range = [duration, ...globalFunctions.range(Math.max(0, mu - 4.5 * sigma), mu + 4.5 * sigma, sigma / 20)].sort();
@@ -1373,6 +1376,7 @@ function ProcedureDistribution(props) {
 
 function HL7Chart(props) {
   const { hl7Data, timeline } = props;
+  const logger = useSelector(makeSelectLogger());
   const chartRef = useRef(null);
   if (!hl7Data) {
     return <span></span>
