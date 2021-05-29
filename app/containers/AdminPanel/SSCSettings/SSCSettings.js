@@ -231,15 +231,26 @@ export default class SSCSettings extends React.PureComponent {
   togglePhase(cIndex = -1, pIndex = -1, iIndex = -1) {
     let checklists = [].concat(this.state.checklists);
     let { isPhaseChanged } = this.state;
-    isPhaseChanged = {
-      ...isPhaseChanged,
-      [checklists[cIndex].phases[pIndex].phaseId]: true
-    };
     //Change item vs change phase
     if (iIndex >= 0) {
       checklists[cIndex].phases[pIndex].questions[iIndex].isActive = !checklists[cIndex].phases[pIndex].questions[iIndex].isActive;
+      // Add phase id that the currently item belongs to as a property on isPhasechanged object, with a property value of true.
+      isPhaseChanged = {
+        ...isPhaseChanged,
+        [checklists[cIndex].phases[pIndex].phaseId]: true
+      };
     } else if (pIndex >= 0) {
       checklists[cIndex].phases[pIndex].isActive = !checklists[cIndex].phases[pIndex].isActive;
+      // Check whether specific phase element is being enabled/re-enabled for the first time since last save.
+      if(checklists[cIndex].phases[pIndex].isActive && !this.state.isPhaseChanged[checklists[cIndex].phases[pIndex].phaseId]) {
+        // Then update all current phase's question elements isActive property to true(i.e. set all items for that phase to checked).
+        checklists[cIndex].phases[pIndex].questions = checklists[cIndex].phases[pIndex].questions.map(question => ({...question, isActive: true}));
+      }
+      // Add currently toggled phase's id as a property on isPhasechanged object, with a property value of true.
+      isPhaseChanged = {
+        ...isPhaseChanged,
+        [checklists[cIndex].phases[pIndex].phaseId]: true
+      };
     } //Eventually different checklists will be toggleable
 
     this.setState({
