@@ -209,6 +209,7 @@ export default class SSCSettings extends React.PureComponent {
     this.state = {
       checklists: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists || [])),
       isChanged: false,
+      isPhaseChanged: {},
       complianceGoal: complianceGoal,
       engagementGoal: engagementGoal,
       qualityGoal: qualityGoal
