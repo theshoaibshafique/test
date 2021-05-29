@@ -320,7 +320,8 @@ export default class SSCSettings extends React.PureComponent {
       this.props.submit(jsonBody).then(() => {
         this.setState({
           isChanged: false,
-          isLoading: false
+          isLoading: false,
+          isPhaseChanged: {}
         })
       })
     })
