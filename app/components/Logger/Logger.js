@@ -27,6 +27,7 @@ export class Logger {
             }
         }
         if (this.recentEvents.length) {
+            console.log(this.recent)
             this.postLogs(process.env.LOGGER_API, 'post', this.userToken, process.env.LOGGER_APP_ID, jsonBody);
             this.recentEvents = [];
         }
@@ -43,16 +44,17 @@ export class Logger {
             id: id
         }
         if (value) {
-            if (Array.isArray(value)) {
+            if (event == 'onchange') {
                 log.values = value;
-            } else {
+            }
+            else {
                 log.description = value;
             }
 
         }
         const length = this.recentEvents.length;
         //If they updated the last value - and it wasnt a clear -> we just update the log
-        if (event == 'onchange' && length && this.recentEvents[length - 1].id == id && value) {
+        if ((event == 'onchange' || event == 'mouseover') && length && this.recentEvents[length - 1].id == id && value) {
             console.log("updated log", log)
             this.recentEvents.splice(length - 1, 1, log)
             return;
@@ -66,7 +68,7 @@ export class Logger {
         if (currentTarget) {
             const { id } = currentTarget;
             const description = currentTarget.getAttribute("description")
-            const existingLog = this.recentEvents.findIndex((r) => r.id == id);
+            const existingLog = this.recentEvents.findIndex((r) => r.id == id && r.description == description);
 
             //Dont log mouseOvers too much
             if (type == 'mouseover' && existingLog >= 0) {
@@ -77,7 +79,7 @@ export class Logger {
                 event: type,
                 id: id
             };
-            if (description){
+            if (description) {
                 log.description = description;
             }
             console.log('logged', log)

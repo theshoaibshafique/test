@@ -119,7 +119,7 @@ function displayTags(tags, emrCaseId) {
       <LightTooltip title={desc.map((line) => {
         return <div>{line}</div>
       })} arrow={true}>
-        <span className={`case-tag ${tag} log-mouseover`} id={`${emrCaseId}-${tag}-tag`} emrCaseId={emrCaseId} key={tag}>
+        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag`} description={emrCaseId} key={tag}>
           <span>
             {getTag(tag)}
           </span>
@@ -185,7 +185,7 @@ function Case(props) {
 
 
 function TagsSelect(props) {
-  const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, setIncludeAllTags, freeSolo, groupBy } = props;
+  const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, handleChangeIncludeAllTags, freeSolo, groupBy } = props;
   let [value, setValue] = React.useState(searchData[id]);
   let [includeAll, setIncludeAll] = React.useState(includeAllTags);
   const classes = useStyles();
@@ -245,8 +245,8 @@ function TagsSelect(props) {
       {includeToggle && (value && value.length > 0) && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
-            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
-            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all of these tags</span>} />
+            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
+            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all of these tags</span>} />
           </RadioGroup>
         </div>
       )}
@@ -309,7 +309,8 @@ const searchReducer = (state, event) => {
       from: event.value
     }
   }
-
+  const logger = event.logger;
+  logger && logger.manualAddLog('onchange', event.name, event.value)
   return {
     ...state,
     [event.name]: event.value
@@ -410,10 +411,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     logger && logger.manualAddLog('session', 'window-dimensions', getWindowDimensions());
   }, []);
 
-  // const [logger, setLogger] = useState(null);
-  // useEffect(() => {
-  //   setLogger(new Logger());
-  // },[]);
   useEffect(() => {
     setTimeout(() => {
       logger && logger.connectListeners();
@@ -449,10 +446,11 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Change/update the filter
   const handleChange = (event, value) => {
     scrollToTop();
-    logger && logger.manualAddLog('onchange', event, value)
+
     setSearchData({
       name: event,
-      value: value
+      value: value,
+      logger: logger
     })
   }
 
@@ -463,6 +461,11 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const { to, from } = searchData.date;
   // for any
   const [includeAllTags, setIncludeAllTags] = React.useState(0);
+
+  const handleChangeIncludeAllTags = (includeAllTags) => {
+    logger && logger.manualAddLog('click', 'match-tags', includeAllTags == 1 ? 'Matches all tags' : 'Matches any tags');
+    setIncludeAllTags(includeAllTags)
+  }
 
   //Filter cases
   let filterCases = CASES.filter((c) => {
@@ -491,7 +494,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleClose = (event) => {
     setAnchorEl(null);
     if (!isUndefined(event.target.value)) {
-      logger && logger.manualAddLog('click', 'sort-cases', event.target.value ? 'recent to oldest' : 'oldest to recent');
+      logger && logger.manualAddLog('click', 'sort-cases', event.target.value ? 'oldest to recent' : 'recent to oldest');
       setIsOldest(event.target.value)
     }
 
@@ -506,15 +509,20 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [caseId, setCaseId] = React.useState(null);
   const handleChangeCaseId = (cId) => {
     //Handle close case
-    if (!cId) {
-      logger && logger.manualAddLog('click', 'close-case', caseId);
+    if (!cId && DETAILED_CASE) {
+      logger && logger.manualAddLog('click', 'close-case', DETAILED_CASE.metaData && DETAILED_CASE.metaData.emrCaseId);
     }
     setCaseId(cId);
-    
-
   }
   const [numShownCases, setNumShownCases] = React.useState(10);
   const [showTagsModal, setShowTagsModal] = React.useState(false);
+
+  const handleShowTagsModal = (show) => {
+    if (!show) {
+      logger && logger.manualAddLog('click', 'close-learn-more-tags', null);
+    }
+    setShowTagsModal(show);
+  }
 
 
   const getCasesView = () => {
@@ -698,7 +706,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         />
 
         <TagsSelect
-          title={<div>Tags (<span className="link log-click" id="learn-more-tags" onClick={() => setShowTagsModal(true)}>Learn More</span>)</div>}
+          title={<div>Tags (<span className="link log-click" id="learn-more-tags" onClick={() => handleShowTagsModal(true)}>Learn More</span>)</div>}
           placeholder="Filter by tags"
           options={TAGS}
           id="tags"
@@ -706,16 +714,16 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           searchData={searchData}
           includeToggle={true}
           includeAllTags={includeAllTags}
-          setIncludeAllTags={setIncludeAllTags}
+          handleChangeIncludeAllTags={handleChangeIncludeAllTags}
         />
 
         <Modal
           open={showTagsModal}
-          onClose={() => setShowTagsModal(false)}
+          onClose={() => handleShowTagsModal(false)}
         >
           <div className="Modal tag-info-modal">
             <div className="close-button">
-              <img src={Close} onClick={() => setShowTagsModal(false)} />
+              <img src={Close} onClick={() => handleShowTagsModal(false)} />
             </div>
             <div className="header">
               Case Tags
@@ -724,7 +732,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             <div className="close">
               <Button disableElevation disableRipple
                 variant="contained" className="primary"
-                onClick={() => setShowTagsModal(false)}>
+                onClick={() => handleShowTagsModal(false)}>
                 Close
             </Button>
             </div>
@@ -778,14 +786,17 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       setDetailedCase(null)
       return;
     }
-
+    
     const fetchCases = async () => {
       const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
         .then(result => {
           result = result.data
+          if (result.metaData && result.metaData.emrCaseId && DETAILED_CASE ){
+            logger && logger.manualAddLog('click', `swap-case`, result.metaData.emrCaseId);
+          }
+          
           setDetailedCase(result)
         }).catch((error) => {
-          debugger;
           console.log("oh no " + error)
         }).finally(() => {
 
@@ -799,7 +810,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   return (
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
-      <DetailedCase {...DETAILED_CASE} USERS={USERS} handleChangeCaseId={handleChangeCaseId} hidden={!caseId} showEMMReport={showEMMReport}/>
+      <DetailedCase {...DETAILED_CASE} USERS={USERS} handleChangeCaseId={handleChangeCaseId} hidden={!caseId} showEMMReport={showEMMReport} />
     </section>
   );
 }
@@ -807,7 +818,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId,  USERS,  } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -903,7 +914,6 @@ function DetailedCase(props) {
     if (cId == caseId) {
       return;
     }
-    logger && logger.manualAddLog('click', `swap-case`, cId);
     setIsLoading(true)
     handleChangeCaseId(cId);
   }
@@ -934,11 +944,12 @@ function DetailedCase(props) {
       setIsComplicationDateFilled(true);
     }
 
-    logger && logger.manualAddLog('onchange', event, value);
+
 
     setRequestData({
       name: event,
-      value: value
+      value: value,
+      logger: logger
     })
   }
 
@@ -1122,7 +1133,7 @@ function DetailedCase(props) {
           {/* Display all cases given  */}
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
-
+            
             const startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - (earliestStartTime * 60);
             const endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
             const caseHeight = (endMins - startMins) / 60;
@@ -1280,6 +1291,8 @@ const requestReducer = (state, event) => {
       from: event.value
     }
   }
+  const logger = event.logger
+  logger && logger.manualAddLog('onchange', event.name, event.value);
 
   return {
     ...state,
@@ -1304,7 +1317,7 @@ function ProcedureDistribution(props) {
 
     const time = globalFunctions.formatSecsToTime(seconds, true, true);
     const percentile = `${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(d.x, scale, shape) * 100))} percentile`;
-    logger && logger.manualAddLog('mouseover', `procedure-time-tooltip-${time}`, `${time} - ${percentile}`)
+    logger && logger.manualAddLog('mouseover', `procedure-time-tooltip`, { xValue: time, yValue: percentile})
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1400,7 +1413,7 @@ function HL7Chart(props) {
       }
       const time = globalFunctions.formatSecsToTime(d.x);
       const text = value.text;
-      logger && logger.manualAddLog('mouseover', `hl7-tooltip-${time}`, text)
+      logger && logger.manualAddLog('mouseover', `hl7-tooltip`, {xValue: time,zValue: text})
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{time}</div>
@@ -1413,7 +1426,7 @@ function HL7Chart(props) {
     let value = y && timeline.find((e) => e.time == y.x);
     let x = hl7 && hl7.x || y && y.x;
     const time = globalFunctions.formatSecsToTime(x);
-    logger && logger.manualAddLog('mouseover', `hl7-tooltip-${time}`, [hl7, value])
+    logger && logger.manualAddLog('mouseover', `hl7-tooltip`, {xValue:time, yValue: hl7 && hl7.value, zValue: value && value.text})
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
