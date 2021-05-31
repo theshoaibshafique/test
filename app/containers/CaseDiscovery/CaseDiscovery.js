@@ -786,15 +786,15 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       setDetailedCase(null)
       return;
     }
-    
+
     const fetchCases = async () => {
       const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
         .then(result => {
           result = result.data
-          if (result.metaData && result.metaData.emrCaseId && DETAILED_CASE ){
+          if (result.metaData && result.metaData.emrCaseId && DETAILED_CASE) {
             logger && logger.manualAddLog('click', `swap-case`, result.metaData.emrCaseId);
           }
-          
+
           setDetailedCase(result)
         }).catch((error) => {
           console.log("oh no " + error)
@@ -1133,7 +1133,7 @@ function DetailedCase(props) {
           {/* Display all cases given  */}
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
-            
+
             const startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - (earliestStartTime * 60);
             const endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
             const caseHeight = (endMins - startMins) / 60;
@@ -1317,7 +1317,7 @@ function ProcedureDistribution(props) {
 
     const time = globalFunctions.formatSecsToTime(seconds, true, true);
     const percentile = `${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(d.x, scale, shape) * 100))} percentile`;
-    logger && logger.manualAddLog('mouseover', `procedure-time-tooltip`, { xValue: time, yValue: percentile})
+    logger && logger.manualAddLog('mouseover', `procedure-time-tooltip`, { xValue: time, yValue: percentile })
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1413,7 +1413,7 @@ function HL7Chart(props) {
       }
       const time = globalFunctions.formatSecsToTime(d.x);
       const text = value.text;
-      logger && logger.manualAddLog('mouseover', `hl7-tooltip`, {xValue: time,zValue: text})
+      logger && logger.manualAddLog('mouseover', `hl7-tooltip`, { xValue: time, zValue: text, name: d.name })
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{time}</div>
@@ -1426,7 +1426,7 @@ function HL7Chart(props) {
     let value = y && timeline.find((e) => e.time == y.x);
     let x = hl7 && hl7.x || y && y.x;
     const time = globalFunctions.formatSecsToTime(x);
-    logger && logger.manualAddLog('mouseover', `hl7-tooltip`, {xValue:time, yValue: hl7 && hl7.value, zValue: value && value.text})
+    logger && logger.manualAddLog('mouseover', `hl7-tooltip`, { xValue: time, yValue: hl7 && hl7.value, zValue: value && value.text, name: hl7 && hl7.name  })
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1492,9 +1492,9 @@ function HL7Chart(props) {
           outer: false,
           // count: hasHL7Data ? 10 : 1,
           min: 0,
-          // format: (x) => {
-          //   return parseInt(x);
-          // },
+          format: (x) => {
+            return parseInt(x) == parseFloat(x) ? x : parseFloat(x).toFixed(2)
+          }
 
         },
         show: hasHL7Data,
