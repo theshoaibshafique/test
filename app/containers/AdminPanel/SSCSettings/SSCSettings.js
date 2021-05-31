@@ -209,6 +209,7 @@ export default class SSCSettings extends React.PureComponent {
     this.state = {
       checklists: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists || [])),
       isChanged: false,
+      isPhaseChanged: {},
       complianceGoal: complianceGoal,
       engagementGoal: engagementGoal,
       qualityGoal: qualityGoal
@@ -229,16 +230,33 @@ export default class SSCSettings extends React.PureComponent {
   // Checklist index, Phase Index, Item Index
   togglePhase(cIndex = -1, pIndex = -1, iIndex = -1) {
     let checklists = [].concat(this.state.checklists);
+    let { isPhaseChanged } = this.state;
     //Change item vs change phase
     if (iIndex >= 0) {
       checklists[cIndex].phases[pIndex].questions[iIndex].isActive = !checklists[cIndex].phases[pIndex].questions[iIndex].isActive;
+      // Add phase id that the currently item belongs to as a property on isPhasechanged object, with a property value of true.
+      isPhaseChanged = {
+        ...isPhaseChanged,
+        [checklists[cIndex].phases[pIndex].phaseId]: true
+      };
     } else if (pIndex >= 0) {
       checklists[cIndex].phases[pIndex].isActive = !checklists[cIndex].phases[pIndex].isActive;
+      // Check whether specific phase element is being enabled/re-enabled for the first time since last save.
+      if(checklists[cIndex].phases[pIndex].isActive && !this.state.isPhaseChanged[checklists[cIndex].phases[pIndex].phaseId]) {
+        // Then update all current phase's question elements isActive property to true(i.e. set all items for that phase to checked).
+        checklists[cIndex].phases[pIndex].questions = checklists[cIndex].phases[pIndex].questions.map(question => ({...question, isActive: true}));
+      }
+      // Add currently toggled phase's id as a property on isPhasechanged object, with a property value of true.
+      isPhaseChanged = {
+        ...isPhaseChanged,
+        [checklists[cIndex].phases[pIndex].phaseId]: true
+      };
     } //Eventually different checklists will be toggleable
 
     this.setState({
       checklists,
-      isChanged: true
+      isChanged: true,
+      isPhaseChanged
     })
   }
 
@@ -302,7 +320,8 @@ export default class SSCSettings extends React.PureComponent {
       this.props.submit(jsonBody).then(() => {
         this.setState({
           isChanged: false,
-          isLoading: false
+          isLoading: false,
+          isPhaseChanged: {}
         })
       })
     })
@@ -314,6 +333,7 @@ export default class SSCSettings extends React.PureComponent {
     this.setState({
       checklists: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists)),
       isChanged: false,
+      isPhaseChanged: {},
       complianceGoal,
       engagementGoal,
       qualityGoal
