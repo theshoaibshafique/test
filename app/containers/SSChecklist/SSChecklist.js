@@ -10,7 +10,6 @@ import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import ReportScore from '../../components/Report/ReportScore/ReportScore';
 import globalFunctions from '../../utils/global-functions';
-import LoadingOverlay from 'react-loading-overlay';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDetail';
 import CompareInfographic from '../../components/Report/CompareInfographic/CompareInfographic';
@@ -28,6 +27,7 @@ import { mdiCogOutline } from '@mdi/js';
 import Icon from '@mdi/react'
 import { SSCOnboardModal } from './SSCOnboardModal/SSCOnboardModel';
 import { GenericInformationPage } from './GenericInformationPage/GenericInformationPage';
+import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 
 
 
@@ -472,32 +472,7 @@ export default class SSChecklist extends React.PureComponent {
             </NavLink>
           </div>}
         </Grid>
-        <LoadingOverlay
-          active={isLoading}
-          spinner
-          fadeSpeed={0}
-          text='Loading your content...'
-          className="overlay"
-          styles={{
-            overlay: (base) => ({
-              ...base,
-              background: 'none',
-              color: '#000',
-              opacity: 0.8,
-              color: "#000000",
-              fontFamily: "Noto Sans",
-              fontSize: 18,
-              lineHeight: "24px"
-            }),
-            spinner: (base) => ({
-              ...base,
-              '& svg circle': {
-                stroke: 'rgba(0, 0, 0, 0.5)'
-              }
-            })
-          }}
-        >
-
+        {isLoading ? <div style={{marginTop:-100}}><LoadingIndicator /></div> : <div className="overlay">
           {this.renderTiles()}
 
           <Modal
@@ -513,7 +488,7 @@ export default class SSChecklist extends React.PureComponent {
             onClose={() => this.closeOnboardModal()}
             reportType={this.state.reportType}
           />
-        </LoadingOverlay>
+        </div>}
       </div>
     );
   }
