@@ -40,15 +40,12 @@ class AzureLogin extends React.Component {
   userJustLoggedIn = receivedToken => {
     this.props.userInfo(receivedToken);
     this.getUserFacility(receivedToken);
-    this.getComplications();
-    this.setLogger();
   }
 
-  setLogger(){
-    if (this.props.logger){
+  setLogger() {
+    if (this.props.logger) {
       return;
     }
-    
     this.props.setLogger(new Logger(this.props.userToken))
   }
 
@@ -66,9 +63,11 @@ class AzureLogin extends React.Component {
             if (result) {
               this.props.setUserRoles(result.roles);
               this.props.setUserFacility(result);
-              this.props.resourcesGathered(result.roles);
+              this.props.resourcesGathered(result.roles, result.facilityName);
               this.getSpecialty(result.facilityName);
               this.getOperatingRooms();
+              this.getComplications();
+              this.setLogger();
             }
           });
         } else {

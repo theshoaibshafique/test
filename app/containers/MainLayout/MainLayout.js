@@ -43,7 +43,7 @@ export default class MainLayout extends React.PureComponent {
     this.logoutRef = React.createRef();
   }
 
-  resourcesGathered(roles) {
+  resourcesGathered(roles, userFacility) {
     this.setState({
       userLoggedIn: true,
       adminPanelAccess: this.containsAny(roles, ["ADMIN"]),
@@ -51,7 +51,7 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: this.containsAny(roles, ["ENHANCED M&M EDIT"]),
       sscAccess: this.containsAny(roles, ["SURGICAL CHECKLIST"]),
       efficiencyAccess: this.containsAny(roles, ["EFFICIENCY"]),
-      caseDiscoveryAccess: this.containsAny(roles, ["ADMIN"]) && this.props.userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92"
+      caseDiscoveryAccess: this.containsAny(roles, ["ADMIN"]) && userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92"
     });
     this.clearFilters();
     this.getPageAccess();
@@ -196,7 +196,7 @@ export default class MainLayout extends React.PureComponent {
                   logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}
                   userLogin={<AzureLogin
-                    resourcesGathered={(roles) => this.resourcesGathered(roles)}
+                    resourcesGathered={(roles, userFacility) => this.resourcesGathered(roles, userFacility)}
                     redirect={() => this.redirect()}
                     logoutRef={this.logoutRef}
                   />}

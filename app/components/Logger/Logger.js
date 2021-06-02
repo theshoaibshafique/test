@@ -82,7 +82,7 @@ export class Logger {
             if (description) {
                 log.description = description;
             }
-            console.log('logged', log)
+            console.log('added log', log)
             this.recentEvents.push(log)
         }
 
