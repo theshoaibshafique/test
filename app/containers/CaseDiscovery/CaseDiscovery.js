@@ -116,7 +116,7 @@ function displayTags(tags, emrCaseId) {
     let desc = tag.toolTip || [];
     tag = tag.tagName || tag;
     return (
-      <LightTooltip title={desc.map((line) => {
+      <LightTooltip key={`${tag}-${i}`} title={desc.map((line) => {
         return <div>{line}</div>
       })} arrow={true}>
         <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag`} description={emrCaseId} key={tag}>
@@ -317,14 +317,24 @@ const searchReducer = (state, event) => {
   }
 }
 
+const dataReducer = (state, event) =>{
+  return {
+    ...state,
+    ...event
+  }
+}
+
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
   const { showEMMReport } = props;
-  const [CASES, setCases] = useState([]);
-  const [SPECIALTIES, setSpecialties] = useState([]);
-  const [PROCEDURES, setProcedures] = useState([]);
-  const [ORS, setORs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
+  
+  const [DATA, setData] = useReducer(dataReducer, {
+    CASES: [],
+    SPECIALTIES: [],
+    PROCEDURES: [],
+    ORS: [],
+    isLoading: true
+  });
+  const {CASES, SPECIALTIES, PROCEDURES, ORS, isLoading} = DATA;
   // const [COMPLICATIONS, setComplications] = useState([]);
   const [USERS, setUsers] = useState([]);
 
@@ -366,11 +376,11 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
 
     const fetchCases = async () => {
-      const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
+      
+      return await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
         .then(result => {
+          console.time('Process Filters')
           result = result.data
-          setCases(result);
-          // console.time('timeTest');
           let spec = [];
           let proc = [];
           let ors = [];
@@ -391,21 +401,25 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             }
           });
 
-          setSpecialties(spec);
-          setProcedures(proc);
-          setORs(ors);
-          // console.timeEnd('timeTest');
+          setData({
+            CASES: result,
+            SPECIALTIES: spec,
+            PROCEDURES: proc,
+            ORS:ors,
+            isLoading:false
+          })
+          console.timeEnd('Process Filters')
+
         }).catch((error) => {
           console.log("uh oh")
-          setCases(generateFakeCases(100));
-        }).finally(() => {
-          setIsLoading(false);
-        });
-    }
+        })
 
+    }
+    
     fetchCases();
+    
     fetchUsers();
-    // fetchComplications();
+
     fetchFacilityConfig();
 
     logger && logger.manualAddLog('session', 'window-dimensions', getWindowDimensions());
@@ -565,7 +579,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     tag_info['Slow Turnover'] = `Identifies cases where turnover time preceding case was above ${facilityName} defined outlier threshold of ${globalFunctions.formatSecsToTime(outlierThreshold, true, true)}`;
     for (const [tag, value] of Object.entries(tag_info)) {
       result.push(
-        <Grid item xs={3} className="tag-column">
+        <Grid item xs={3} className="tag-column" key={`${tag}-${value}`}>
           <div className="info-tag">
             <span className={`case-tag ${tag}`} key={tag}>
               <span>
@@ -576,7 +590,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           </div>
         </Grid>
       );
-      result.push(<Grid item xs={9} className="info-column">{value}</Grid>);
+      result.push(<Grid item xs={9} className="info-column" key='info-col'>{value}</Grid>);
     }
 
     return (
