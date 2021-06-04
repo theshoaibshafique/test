@@ -814,7 +814,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         .then(result => {
           result = result.data
           if (result.metaData && result.metaData.emrCaseId && DETAILED_CASE) {
-            logger && logger.manualAddLog('click', `swap-case`, result.metaData.emrCaseId);
+            logger && logger.manualAddLog('click', `swap-case`, {emrCaseId:result.metaData.emrCaseId});
           }
 
           setDetailedCase(result)
