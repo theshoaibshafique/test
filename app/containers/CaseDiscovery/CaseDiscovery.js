@@ -487,12 +487,15 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   //Filter cases
   let filterCases = CASES.filter((c) => {
     let cTags = c.tags.map((t) => t.tagName);
+    //Filter for which cases should be INCLUDED
     return (
       (`${c.emrCaseId}`.includes(searchData.caseId)) &&
       (!from || moment(c.wheelsIn).isAfter(from)) &&
       (!to || moment(c.wheelsOut).isBefore(to)) &&
-      (!specialties.length || specialties.includes(c.procedures && c.procedures[0].specialtyName)) &&
-      (!procedures.length || procedures.every((p) => c.procedures && c.procedures[0].procedureName.toLowerCase().includes(p.toLowerCase()))) &&
+      //given the filtered `specialties` list - check that the case has at least ONE matching specialty (including secondary specialties)
+      (!specialties.length || c.procedures && c.procedures.some((p) => specialties.includes(p.specialtyName))) &&
+      //Given the filtered `procedures` list match every item with at least one procedure (including secondary procedures)
+      (!procedures.length || procedures.every((p) => c.procedures && c.procedures.some(pr => pr.procedureName.toLowerCase().includes(p.toLowerCase())))) &&
       (!roomNames.length || roomNames.includes(c.roomName)) &&
       (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => cTags.includes(t))) || (includeAllTags == 0 && cTags.some((t) => searchData.tags.includes(t))))
     );
