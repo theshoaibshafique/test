@@ -119,7 +119,7 @@ function displayTags(tags, emrCaseId) {
       <LightTooltip key={`${tag}-${i}`} title={desc.map((line) => {
         return <div>{line}</div>
       })} arrow={true}>
-        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag`} description={JSON.stringify({emrCaseId:emrCaseId})} key={tag}>
+        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag`} description={JSON.stringify({ emrCaseId: emrCaseId })} key={tag}>
           <span>
             {getTag(tag)}
           </span>
@@ -147,24 +147,26 @@ function Case(props) {
 
 
   return (
-    <div className="case log-click" id={`open-case`} description={JSON.stringify({emrCaseId:emrCaseId})} key={emrCaseId} onClick={onClick} >
-      {procedureList.length > 0 ? (
-        <LightTooltip arrow title={
-          <div>
-            <span>{`Secondary Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
-            <ul style={{ margin: '4px 0px' }}>
-              {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
-            </ul>
-          </div>
-        }>
-          <div className="title" >
-            {procedureName}
-          </div>
-        </LightTooltip>
-      ) :
-        <div className="title" >
-          {procedureName}
+    <div className="case log-click" id={`open-case`} description={JSON.stringify({ emrCaseId: emrCaseId })} key={emrCaseId} onClick={onClick} >
+
+      <div className="title" >
+        {procedureName}
+      </div>
+      {procedureList.length > 0 && (
+        <div className="description">
+          {`Secondary Procedure${procedureList.length == 1 ? '' : 's'}`}
+          <LightTooltip arrow title={
+            <div>
+              <span>{`Secondary Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
+              <ul style={{ margin: '4px 0px' }}>
+                {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
+              </ul>
+            </div>
+          }>
+            <InfoOutlinedIcon className="log-mouseover" id="secondary-procedure-tooltip" description={JSON.stringify({ emrCaseId: emrCaseId })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+          </LightTooltip>
         </div>
+      )
       }
 
       <div className="subtitle">
@@ -317,7 +319,7 @@ const searchReducer = (state, event) => {
   }
 }
 
-const dataReducer = (state, event) =>{
+const dataReducer = (state, event) => {
   return {
     ...state,
     ...event
@@ -326,7 +328,7 @@ const dataReducer = (state, event) =>{
 
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
   const { showEMMReport } = props;
-  
+
   const [DATA, setData] = useReducer(dataReducer, {
     CASES: [],
     SPECIALTIES: [],
@@ -334,13 +336,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     ORS: [],
     isLoading: true,
     facilityName: "",
-    gracePeriod:0,
+    gracePeriod: 0,
     outlierThreshold: 0
   });
-  const {CASES, SPECIALTIES, PROCEDURES, ORS, isLoading} = DATA;
-  const {facilityName, gracePeriod, outlierThreshold} = DATA;
+  const { CASES, SPECIALTIES, PROCEDURES, ORS, isLoading } = DATA;
+  const { facilityName, gracePeriod, outlierThreshold } = DATA;
   const [USERS, setUsers] = useState([]);
-  
+
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
@@ -367,9 +369,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           const { facilityName, fcotsThreshold, turnoverThreshold } = result;
 
           setData({
-            facilityName:facilityName,
-            gracePeriod:fcotsThreshold,
-            outlierThreshold:turnoverThreshold
+            facilityName: facilityName,
+            gracePeriod: fcotsThreshold,
+            outlierThreshold: turnoverThreshold
           })
         }).catch((error) => {
           console.log("uh no.")
@@ -379,7 +381,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
 
     const fetchCases = async () => {
-      
+
       return await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
         .then(result => {
           console.time('Process Filters')
@@ -408,8 +410,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             CASES: result,
             SPECIALTIES: spec,
             PROCEDURES: proc,
-            ORS:ors,
-            isLoading:false
+            ORS: ors,
+            isLoading: false
           })
           console.timeEnd('Process Filters')
 
@@ -418,9 +420,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         })
 
     }
-    
+
     fetchCases();
-    
+
     fetchUsers();
 
     fetchFacilityConfig();
@@ -892,8 +894,8 @@ function DetailedCase(props) {
     laterality = (isLeftSided && isRightSided) ? "Bilateral" : (isLeftSided ? "Left Side" : "Right Side");
     lateralityIcon = (isLeftSided && isRightSided) ? (
       <img src={FullPerson} />) : (
-        isLeftSided ? <img src={HalfPerson} /> : <img src={HalfPerson} style={{ transform: 'scaleX(-1)' }} />
-      );
+      isLeftSided ? <img src={HalfPerson} /> : <img src={HalfPerson} style={{ transform: 'scaleX(-1)' }} />
+    );
   }
 
 
@@ -1032,7 +1034,14 @@ function DetailedCase(props) {
 
           <div className="back" onClick={() => handleChangeCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
           <div className="case-header">
-            {procedureList.length > 0 ? (
+
+            <div className="case-title">{procedureTitle}</div>
+
+            <div className="button">{reportButton()}</div>
+          </div>
+          {procedureList.length > 0 && (
+            <div className="case-description" style={{marginBottom:0}}>
+              {`Secondary Procedure${procedureList.length == 1 ? '' : 's'}`}
               <LightTooltip arrow title={
                 <div>
                   <span>{`Secondary Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
@@ -1042,13 +1051,11 @@ function DetailedCase(props) {
                 </div>
               }
               >
-                <div className="case-title">{procedureTitle}</div>
+                <InfoOutlinedIcon className="log-mouseover" id="secondary-procedure-tooltip" description={JSON.stringify({ emrCaseId: emrCaseId })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
               </LightTooltip>
-            ) :
-              <div className="case-title">{procedureTitle}</div>
-            }
-            <div className="button">{reportButton()}</div>
-          </div>
+            </div>
+          )
+          }
           <div className="case-description">
             <div className="case-specialty">{specialtyList.join(" & ")}</div>
             {description}
@@ -1446,7 +1453,7 @@ function HL7Chart(props) {
     let value = y && timeline.find((e) => e.time == y.x);
     let x = hl7 && hl7.x || y && y.x;
     const time = globalFunctions.formatSecsToTime(x);
-    logger && logger.manualAddLog('mouseover', `hl7-tooltip`, { xValue: time, yValue: hl7 && hl7.value, zValue: value && value.text, name: hl7 && hl7.name  })
+    logger && logger.manualAddLog('mouseover', `hl7-tooltip`, { xValue: time, yValue: hl7 && hl7.value, zValue: value && value.text, name: hl7 && hl7.name })
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1500,9 +1507,9 @@ function HL7Chart(props) {
           left: max * .025,
           right: max * .025,
         } : {
-            left: max * .05,
-            right: max * .05,
-          }
+          left: max * .05,
+          right: max * .05,
+        }
       },
       color: {
         pattern: ['#028CC8']
