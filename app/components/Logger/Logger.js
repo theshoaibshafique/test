@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import moment from 'moment/moment';
+import * as moment from 'moment-timezone';
 import axios from 'axios';
 const events = ['mouseover', 'click']
 const classPrefix = 'log-';
@@ -40,6 +40,7 @@ export class Logger {
     manualAddLog(event, id, value) {
         const log = {
             time: moment(),
+            localTime: moment().format(),
             event: event,
             id: id
         }
@@ -76,11 +77,12 @@ export class Logger {
             }
             const log = {
                 time: moment(),
+                localTime: moment().format(),
                 event: type,
                 id: id
             };
             if (description) {
-                log.description = description;
+                log.description = JSON.parse(description);
             }
             console.log('added log', log)
             this.recentEvents.push(log)
