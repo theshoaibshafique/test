@@ -332,15 +332,15 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     SPECIALTIES: [],
     PROCEDURES: [],
     ORS: [],
-    isLoading: true
+    isLoading: true,
+    facilityName: "",
+    gracePeriod:0,
+    outlierThreshold: 0
   });
   const {CASES, SPECIALTIES, PROCEDURES, ORS, isLoading} = DATA;
-  // const [COMPLICATIONS, setComplications] = useState([]);
+  const {facilityName, gracePeriod, outlierThreshold} = DATA;
   const [USERS, setUsers] = useState([]);
-
-  const [facilityName, setFacilityName] = useState("");
-  const [gracePeriod, setGracePeriod] = useState(0);
-  const [outlierThreshold, setOutlierThreshold] = useState(0);
+  
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
@@ -365,9 +365,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         .then(result => {
           result = result.data;
           const { facilityName, fcotsThreshold, turnoverThreshold } = result;
-          setFacilityName(facilityName);
-          setGracePeriod(fcotsThreshold);
-          setOutlierThreshold(turnoverThreshold);
+
+          setData({
+            facilityName:facilityName,
+            gracePeriod:fcotsThreshold,
+            outlierThreshold:turnoverThreshold
+          })
         }).catch((error) => {
           console.log("uh no.")
         }).finally(() => {
