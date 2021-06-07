@@ -1,13 +1,5 @@
 import moment from 'moment/moment';
 
-export function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window;
-    return {
-      width,
-      height
-    };
-  }
-
 export function erf(x) {
     // constants
     var a1 = 0.254829592;

@@ -42,7 +42,7 @@ import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { log_norm_cdf, log_norm_pdf, getWindowDimensions } from './Utils';
+import { log_norm_cdf, log_norm_pdf } from './Utils';
 import { useSelector } from 'react-redux';
 import { makeSelectComplications, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 
@@ -347,6 +347,21 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
 
+  useEffect(() => {
+    if (!logger){
+      return;
+    }
+    logger.manualAddLog('session', 'open-case-discovery');
+    logger.exitLogs.push(['session', 'close-case-discovery', "Exited/Refreshed page"]);
+    return () => {
+      if (!logger){
+        return
+      }
+      logger.exitLogs = [];
+      logger.manualAddLog('session', 'close-case-discovery', "Redirected page");
+    }
+  }, [logger])
+
   // Load all the APIs 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -427,7 +442,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     fetchFacilityConfig();
 
-    logger && logger.manualAddLog('session', 'window-dimensions', getWindowDimensions());
   }, []);
 
   useEffect(() => {
@@ -814,7 +828,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         .then(result => {
           result = result.data
           if (result.metaData && result.metaData.emrCaseId && DETAILED_CASE) {
-            logger && logger.manualAddLog('click', `swap-case`, {emrCaseId:result.metaData.emrCaseId});
+            logger && logger.manualAddLog('click', `swap-case`, { emrCaseId: result.metaData.emrCaseId });
           }
 
           setDetailedCase(result)
@@ -899,11 +913,10 @@ function DetailedCase(props) {
   }
 
 
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+  const [windowDimensions, setWindowDimensions] = useState(globalFunctions.getWindowDimensions());
   useEffect(() => {
     function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-      logger && logger.manualAddLog('onchange', 'window-resize', getWindowDimensions());
+      setWindowDimensions(globalFunctions.getWindowDimensions());
     }
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -1040,7 +1053,7 @@ function DetailedCase(props) {
             <div className="button">{reportButton()}</div>
           </div>
           {procedureList.length > 0 && (
-            <div className="case-description" style={{marginBottom:0}}>
+            <div className="case-description" style={{ marginBottom: 0 }}>
               {`Secondary Procedure${procedureList.length == 1 ? '' : 's'}`}
               <LightTooltip arrow title={
                 <div>

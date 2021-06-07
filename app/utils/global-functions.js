@@ -222,6 +222,14 @@ function ordinal_suffix_of(i) {
 function getDiffFromMidnight(timeString, unit = 'hours') {
   return moment(timeString).diff(moment(timeString).startOf('day'), unit)
 }
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
 export default {
   genericFetch,
   genericFetchWithNoReturnMessage,
@@ -234,5 +242,6 @@ export default {
   toTitleCase,
   range,
   ordinal_suffix_of,
-  getDiffFromMidnight
+  getDiffFromMidnight,
+  getWindowDimensions
 };

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import * as moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import axios from 'axios';
+import globalFunctions from '../../utils/global-functions';
 const events = ['mouseover', 'click']
 const classPrefix = 'log-';
 
@@ -9,12 +10,43 @@ export class Logger {
         this.recentEvents = [];
         this.userToken = userToken;
         this.logInterval = 30000; // In ms
-        // this.logInterval = 5000; // In ms
-        this.sendLogs();
+
         this._addLog = this.addLog.bind(this);
+        this._exitLog = this.sendExitLogs.bind(this);
+        this.exitLogs = [];
+        //Add close window/refresh listener
+        this.connectExitListener();
+        this.sendLogs();
+        this.initialLogs();
     }
     get recent() {
         return this.recentEvents;
+    }
+
+    initialLogs() {
+        this.manualAddLog('session', 'window-dimensions', globalFunctions.getWindowDimensions());
+        const handleResize = () => {
+            this.manualAddLog('onchange', 'window-resize', globalFunctions.getWindowDimensions());
+        }
+        window.addEventListener('resize', handleResize)
+    }
+
+    /*
+        Each page might maintain a list of logs to send upon close
+    */
+    connectExitListener() {
+        window.removeEventListener("beforeunload", this._exitLog);
+        window.addEventListener("beforeunload", this._exitLog);
+    }
+
+
+    sendExitLogs() {
+        this.exitLogs.forEach((log) => {
+            this.manualAddLog(...log);
+        })
+        console.log("with exit logs " + this.recentEvents);
+        this.sendLogs();
+        this.exitLogs = [];
     }
 
     sendLogs() {
