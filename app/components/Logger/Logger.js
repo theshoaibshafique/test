@@ -101,7 +101,7 @@ export class Logger {
         if (currentTarget) {
             const { id } = currentTarget;
             const description = currentTarget.getAttribute("description")
-            const existingLog = this.recentEvents.findIndex((r) => r.id == id && r.description == description);
+            const existingLog = this.recentEvents.findIndex((r) => r.id == id && JSON.stringify(r.description) == description);
 
             //Dont log mouseOvers too much
             if (type == 'mouseover' && existingLog >= 0) {

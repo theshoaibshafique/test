@@ -119,7 +119,7 @@ function displayTags(tags, emrCaseId) {
       <LightTooltip key={`${tag}-${i}`} title={desc.map((line) => {
         return <div>{line}</div>
       })} arrow={true}>
-        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag`} description={JSON.stringify({ emrCaseId: emrCaseId })} key={tag}>
+        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId })} key={tag}>
           <span>
             {getTag(tag)}
           </span>
@@ -147,7 +147,7 @@ function Case(props) {
 
 
   return (
-    <div className="case log-click" id={`open-case`} description={JSON.stringify({ emrCaseId: emrCaseId })} key={emrCaseId} onClick={onClick} >
+    <div className="case log-click" id={`open-case-${emrCaseId}`} description={JSON.stringify(formatCaseForLogs(props))} key={emrCaseId} onClick={onClick} >
 
       <div className="title" >
         {procedureName}
@@ -163,7 +163,7 @@ function Case(props) {
               </ul>
             </div>
           }>
-            <InfoOutlinedIcon className="log-mouseover" id="secondary-procedure-tooltip" description={JSON.stringify({ emrCaseId: emrCaseId })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+            <InfoOutlinedIcon className="log-mouseover" id={`secondary-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
           </LightTooltip>
         </div>
       )
@@ -185,6 +185,21 @@ function Case(props) {
   )
 }
 
+function formatCaseForLogs(c){
+  if (!c){
+    return {}
+  }
+  c = {...c}
+  const { procedures } = c;
+  if (!procedures || !procedures.length){
+    return {}
+  }
+  c['primaryProcedure'] = procedures && procedures[0].procedureName
+  c['primarySpecialty'] = procedures && procedures[0].specialtyName
+  delete c['procedures']
+  c['tags'] = c['tags'].map((t) => t.tagName);
+  return c
+}
 
 function TagsSelect(props) {
   const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, handleChangeIncludeAllTags, freeSolo, groupBy } = props;
@@ -342,25 +357,36 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const { CASES, SPECIALTIES, PROCEDURES, ORS, isLoading } = DATA;
   const { facilityName, gracePeriod, outlierThreshold } = DATA;
   const [USERS, setUsers] = useState([]);
+  const [numShownCases, setNumShownCases] = React.useState(10);
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
-
+  console.time('total')
   useEffect(() => {
-    if (!logger){
+    if (!logger) {
       return;
     }
     logger.manualAddLog('session', 'open-case-discovery');
     logger.exitLogs.push(['session', 'close-case-discovery', "Exited/Refreshed page"]);
     return () => {
-      if (!logger){
+      if (!logger) {
         return
       }
       logger.exitLogs = [];
       logger.manualAddLog('session', 'close-case-discovery', "Redirected page");
     }
   }, [logger])
+
+  useEffect(() => {
+    if (!CASES || CASES.length <= 0 || !logger) {
+      return;
+    }
+    logger.manualAddLog('session', 'initial-cases', CASES.slice(0, numShownCases).map(formatCaseForLogs))
+
+    // logger.manualAddLog('session', 'case-discovery-load-time', )
+
+  }, [CASES])
 
   // Load all the APIs 
   useEffect(() => {
@@ -420,7 +446,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
               ors.push(roomName);
             }
           });
-
+          result.sort((a, b) => moment(b.wheelsIn).valueOf() - moment(a.wheelsIn).valueOf())
           setData({
             CASES: result,
             SPECIALTIES: spec,
@@ -516,7 +542,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => cTags.includes(t))) || (includeAllTags == 0 && cTags.some((t) => searchData.tags.includes(t))))
     );
   })
-  filterCases.sort((a, b) => moment(b.wheelsIn).valueOf() - moment(a.wheelsIn).valueOf())
 
   // for Sorting the cases
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -546,11 +571,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleChangeCaseId = (cId) => {
     //Handle close case
     if (!cId && DETAILED_CASE) {
-      logger && logger.manualAddLog('click', 'close-case', DETAILED_CASE.metaData && DETAILED_CASE.metaData.emrCaseId);
+      const emrCId=DETAILED_CASE.metaData && DETAILED_CASE.metaData.emrCaseId;
+      const oldCase = CASES.find((c) => c.emrCaseId == emrCId);
+      logger && logger.manualAddLog('click', `close-case-${emrCId}`, formatCaseForLogs(oldCase));
     }
     setCaseId(cId);
   }
-  const [numShownCases, setNumShownCases] = React.useState(10);
+
   const [showTagsModal, setShowTagsModal] = React.useState(false);
 
   const handleShowTagsModal = (show) => {
@@ -802,7 +829,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           <div id="cases-id" className="cases">
             <div ref={topElementRef}></div>
             {getCasesView()}
-            {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more log-click" id="load-more" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
+            {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" id="load-more" disableElevation onClick={() => {
+              setNumShownCases(numShownCases + 10);
+              logger && logger.manualAddLog('click', 'load-more', filterCases.slice(numShownCases, numShownCases+10).map(formatCaseForLogs));
+              }}>
               Load More
           </Button>}
           </div>
@@ -828,7 +858,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         .then(result => {
           result = result.data
           if (result.metaData && result.metaData.emrCaseId && DETAILED_CASE) {
-            logger && logger.manualAddLog('click', `swap-case`, { emrCaseId: result.metaData.emrCaseId });
+            const newCase = CASES.find((c) => c.emrCaseId == result.metaData.emrCaseId);
+            logger && logger.manualAddLog('click', `swap-case-${result.metaData.emrCaseId}`, formatCaseForLogs(newCase));
           }
 
           setDetailedCase(result)
@@ -928,7 +959,7 @@ function DetailedCase(props) {
   const [isRequestSubmitted, setIsRequestSubmitted] = React.useState(false);
   const handleOpenRequestEMM = (open) => {
     setOpenRequestEMM(open);
-    logger && logger.manualAddLog('click', open ? 'openEMMRequest' : 'closeEMMRequest', !open && !isRequestSubmitted ? 'Closed without submission' : '');
+    logger && logger.manualAddLog('click', open ? 'open-emm-request' : 'close-emm-request', !open && !isRequestSubmitted ? 'Closed without submission' : '');
   }
 
   const reportButton = () => {
@@ -1064,7 +1095,7 @@ function DetailedCase(props) {
                 </div>
               }
               >
-                <InfoOutlinedIcon className="log-mouseover" id="secondary-procedure-tooltip" description={JSON.stringify({ emrCaseId: emrCaseId })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                <InfoOutlinedIcon className="log-mouseover" id={`secondary-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
               </LightTooltip>
             </div>
           )
@@ -1453,7 +1484,7 @@ function HL7Chart(props) {
       }
       const time = globalFunctions.formatSecsToTime(d.x);
       const text = value.text;
-      logger && logger.manualAddLog('mouseover', `hl7-tooltip`, { xValue: time, zValue: text, name: d.name })
+      logger && logger.manualAddLog('mouseover', `hl7-tooltip-${d.name}`, { xValue: time, zValue: text, name: d.name })
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{time}</div>
@@ -1466,7 +1497,7 @@ function HL7Chart(props) {
     let value = y && timeline.find((e) => e.time == y.x);
     let x = hl7 && hl7.x || y && y.x;
     const time = globalFunctions.formatSecsToTime(x);
-    logger && logger.manualAddLog('mouseover', `hl7-tooltip`, { xValue: time, yValue: hl7 && hl7.value, zValue: value && value.text, name: hl7 && hl7.name })
+    logger && logger.manualAddLog('mouseover', `hl7-tooltip-${hl7 && hl7.name}`, { xValue: time, yValue: hl7 && hl7.value, zValue: value && value.text, name: hl7 && hl7.name })
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1589,6 +1620,11 @@ function HL7Chart(props) {
 
 
   let [index, setIndex] = React.useState(0);
+  const handleChangeIndex = (index) => {
+    setIndex(index);
+    const { times, values, unit, title, y } = hl7Data[index];
+    logger && logger.manualAddLog('click', `change-hl7-selection-${title}`, title);
+  }
   if (hasHL7Data) {
     const { times, values, unit, title, y } = hl7Data[index];
 
@@ -1619,6 +1655,12 @@ function HL7Chart(props) {
     var content = document.getElementById('hl7-chart').getElementsByClassName('c3-grid c3-grid-lines')[0];
     var parent = content.parentNode;
     parent.insertBefore(content, parent.firstChild)
+
+    //Log initial setup 
+    logger && logger.manualAddLog('click', `initial-hl7`, hl7Data.map((h) => {
+      return {abbreviation:h.abbreviation, title: h.title}
+    }));
+    
   }, []);
 
   useEffect(() => {
@@ -1636,7 +1678,7 @@ function HL7Chart(props) {
       ],
       unload: [...hl7Data.map((d) => d.title == title ? '' : d.title), 'y'],
     });
-    logger && logger.manualAddLog('click', 'change-hl7-selection', title);
+
   }, [index]);
 
   return (
@@ -1649,7 +1691,7 @@ function HL7Chart(props) {
           <div className="selector">
             {hl7Data.map((d, i) => {
               return (
-                <div className={`${i == index && 'selected'} hl7-value`} onClick={() => setIndex(i)}>{d.abbreviation}</div>
+                <div className={`${i == index && 'selected'} hl7-value`} onClick={() => handleChangeIndex(i)}>{d.abbreviation}</div>
               )
             })}
           </div>
