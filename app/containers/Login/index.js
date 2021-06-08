@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(setUserInfo(token));
     },
     setUserFacility: (facility) => {
-      dispatch(setUserFacility(facility.facilityName))
+      dispatch(setUserFacility(facility))
     },
     setFacilityRooms: (rooms) => {
       dispatch(setFacilityRooms(rooms))

@@ -51,10 +51,13 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: this.containsAny(roles, ["ENHANCED M&M EDIT"]),
       sscAccess: this.containsAny(roles, ["SURGICAL CHECKLIST"]),
       efficiencyAccess: this.containsAny(roles, ["EFFICIENCY"]),
-      caseDiscoveryAccess: this.containsAny(roles, ["ADMIN"]) && userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92"
+      caseDiscoveryAccess: this.containsAny(roles, ["ADMIN"]) && userFacility.toUpperCase() == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92",
+      emmPublishAccess: this.containsAny(roles, ["SSTADMIN"]),
+      isLoading:false
     });
+    this.props.setEMMPublishAccess(this.containsAny(roles, ["SSTADMIN"]));
     this.clearFilters();
-    this.getPageAccess();
+    // this.getPageAccess();
   };
 
   containsAny(arr1, arr2) {
@@ -73,22 +76,6 @@ export default class MainLayout extends React.PureComponent {
     });
   };
 
-  getPageAccess() {
-    Promise.all([this.getEMMPublishAccess()].map(function (e) {
-      return e && e.then(function (result) {
-        return result && result.data;
-      }).catch(function () {
-        return false;
-      })
-    })).then(([emmPublishAccess]) => {
-      this.setState({
-        emmPublishAccess, isLoading: false
-      })
-      this.props.setEMMPublishAccess(emmPublishAccess);
-    }).catch(function (results) {
-      this.notLoading();
-    });
-  }
   notLoading() {
     this.setState({ isLoading: false });
   }

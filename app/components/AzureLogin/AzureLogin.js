@@ -50,29 +50,15 @@ class AzureLogin extends React.Component {
   }
 
   getUserFacility() {
-    fetch(process.env.USER_API, {
-      method: 'get',
-      headers: {
-        'Authorization': 'Bearer ' + this.props.userToken,
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (response.status !== 204) {
-          response.json().then((result) => {
-            if (result) {
-              this.props.setUserRoles(result.roles);
-              this.props.setUserFacility(result);
-              this.props.resourcesGathered(result.roles, result.facilityName);
-              this.getSpecialty(result.facilityName);
-              this.getOperatingRooms();
-              this.getComplications();
-              this.setLogger();
-            }
-          });
-        } else {
-          this.props.redirect();
-        }
+    globalFunctions.genericFetch(process.env.USER_API, 'get', this.props.userToken, {})
+      .then(result => {
+        this.props.setUserRoles(result.roles);
+        this.props.setUserFacility(result.facilityId);
+        this.props.resourcesGathered(result.roles, result.facilityId);
+        this.getSpecialty(result.facilityId);
+        this.getOperatingRooms();
+        this.getComplications();
+        this.setLogger();
       }).catch((results) => {
         this.props.redirect();
       });
