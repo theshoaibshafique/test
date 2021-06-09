@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import moment from 'moment-timezone';
 import axios from 'axios';
 import globalFunctions from '../../utils/global-functions';
-const events = ['mouseover', 'click']
+const events = ['mouseover', 'click', 'scroll']
+const reducedEvents = ['mouseover', 'onchange']
 const classPrefix = 'log-';
 
 export class Logger {
@@ -87,7 +88,7 @@ export class Logger {
         }
         const length = this.recentEvents.length;
         //If they updated the last value - and it wasnt a clear -> we just update the log
-        if ((event == 'onchange' || event == 'mouseover') && length && this.recentEvents[length - 1].id == id && value) {
+        if (reducedEvents.includes(event) && length && this.recentEvents[length - 1].id == id && value) {
             console.log("updated log", log)
             this.recentEvents.splice(length - 1, 1, log)
             return;

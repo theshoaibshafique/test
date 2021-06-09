@@ -32,8 +32,50 @@ export function log_norm_pdf(duration, scale, shape) {
     let a = Math.exp(-((Math.log(duration) - Math.log(scale)) ** 2) / (2 * (shape ** 2)))
     return (1 / (duration * shape * Math.sqrt(2 * Math.PI))) * a
 }
+/*
+    The logs expect a different format for the case object
+*/
+export function formatCaseForLogs(c) {
+    if (!c) {
+        return {}
+    }
+    c = { ...c }
+    const { procedures } = c;
+    if (!procedures || !procedures.length) {
+        return {}
+    }
+    c['primaryProcedure'] = procedures && procedures[0].procedureName
+    c['primarySpecialty'] = procedures && procedures[0].specialtyName
+    delete c['procedures']
+    c['tags'] = c['tags'].map((t) => t.tagName);
+    return c
+}
 
+export function getCasesInView(){
+    
+    const caseList = document.getElementsByClassName('case');
+    if (!caseList || !caseList.length){
+        return 0
+    }
+    const inView = [];
+    [...caseList].forEach(element => {
+        if (isInViewport(element)){
+            inView.push(element.id)
+        }
+    });
+    return inView;
 
+}
+
+export function isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
 
 /*
   Generate random date between start/end time

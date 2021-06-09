@@ -42,7 +42,7 @@ import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { log_norm_cdf, log_norm_pdf } from './Utils';
+import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView } from './Utils';
 import { useSelector } from 'react-redux';
 import { makeSelectComplications, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 
@@ -183,22 +183,6 @@ function Case(props) {
       </div>}
     </div>
   )
-}
-
-function formatCaseForLogs(c){
-  if (!c){
-    return {}
-  }
-  c = {...c}
-  const { procedures } = c;
-  if (!procedures || !procedures.length){
-    return {}
-  }
-  c['primaryProcedure'] = procedures && procedures[0].procedureName
-  c['primarySpecialty'] = procedures && procedures[0].specialtyName
-  delete c['procedures']
-  c['tags'] = c['tags'].map((t) => t.tagName);
-  return c
 }
 
 function TagsSelect(props) {
@@ -384,7 +368,27 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
     logger.manualAddLog('session', 'initial-cases', CASES.slice(0, numShownCases).map(formatCaseForLogs))
 
-    // logger.manualAddLog('session', 'case-discovery-load-time', )
+    //Log the initial cases in view
+    const inViewIds = getCasesInView();
+    logger && logger.manualAddLog('session', 'cases-in-view', inViewIds.map(id => formatCaseForLogs(CASES.find((c) => `open-case-${c.emrCaseId}` == id))));
+
+    // Setup scrolling variable
+    let isScrolling;
+    const casesWindow = document.getElementById('cases-id');
+
+    // Listen for scroll events
+    casesWindow.addEventListener('scroll', (event) => {
+
+      // Clear our timeout throughout the scroll
+      window.clearTimeout(isScrolling);
+
+      // Set a timeout to run after scrolling ends
+      isScrolling = setTimeout(() => {
+        const inViewIds = getCasesInView();
+        logger && logger.manualAddLog('scroll', 'cases-in-view', inViewIds.map(id => formatCaseForLogs(CASES.find((c) => `open-case-${c.emrCaseId}` == id))));
+      }, 66);
+
+    }, false);
 
   }, [CASES])
 
@@ -482,6 +486,11 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const scrollToTop = () => {
     topElementRef.current.scrollIntoView(true);
     document.getElementById("cases-id").scrollTop -= 100;
+    //Log the top elements manually after animation
+    setTimeout(() => {
+      const inViewIds = getCasesInView();
+      logger && logger.manualAddLog('scroll', 'cases-in-view', inViewIds.map(id => formatCaseForLogs(CASES.find((c) => `open-case-${c.emrCaseId}` == id))));
+    }, 1000)
   }
 
   //TODO: replace min/maxDate
@@ -571,9 +580,15 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleChangeCaseId = (cId) => {
     //Handle close case
     if (!cId && DETAILED_CASE) {
-      const emrCId=DETAILED_CASE.metaData && DETAILED_CASE.metaData.emrCaseId;
+      const emrCId = DETAILED_CASE.metaData && DETAILED_CASE.metaData.emrCaseId;
       const oldCase = CASES.find((c) => c.emrCaseId == emrCId);
+
       logger && logger.manualAddLog('click', `close-case-${emrCId}`, formatCaseForLogs(oldCase));
+
+      setTimeout(() => {
+        const inViewIds = getCasesInView();
+        logger && logger.manualAddLog('session', 'cases-in-view', inViewIds.map(id => formatCaseForLogs(CASES.find((c) => `open-case-${c.emrCaseId}` == id))));
+      }, 300)
     }
     setCaseId(cId);
   }
@@ -831,8 +846,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             {getCasesView()}
             {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" id="load-more" disableElevation onClick={() => {
               setNumShownCases(numShownCases + 10);
-              logger && logger.manualAddLog('click', 'load-more', filterCases.slice(numShownCases, numShownCases+10).map(formatCaseForLogs));
-              }}>
+              logger && logger.manualAddLog('click', 'load-more', filterCases.slice(numShownCases, numShownCases + 10).map(formatCaseForLogs));
+            }}>
               Load More
           </Button>}
           </div>
@@ -1658,9 +1673,9 @@ function HL7Chart(props) {
 
     //Log initial setup 
     logger && logger.manualAddLog('click', `initial-hl7`, hl7Data.map((h) => {
-      return {abbreviation:h.abbreviation, title: h.title}
+      return { abbreviation: h.abbreviation, title: h.title }
     }));
-    
+
   }, []);
 
   useEffect(() => {
