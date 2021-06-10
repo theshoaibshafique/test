@@ -60,7 +60,7 @@ export function getCasesInView(){
     const inView = [];
     [...caseList].forEach(element => {
         if (isInViewport(element)){
-            inView.push(element.id)
+            inView.push(JSON.parse(element.getAttribute("description")))
         }
     });
     return inView;

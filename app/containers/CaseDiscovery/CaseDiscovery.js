@@ -44,7 +44,8 @@ import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView } from './Utils';
 import { useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectComplications, makeSelectIsAdmin, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { NavLink } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -116,8 +117,8 @@ function displayTags(tags, emrCaseId) {
     let desc = tag.toolTip || [];
     tag = tag.tagName || tag;
     return (
-      <LightTooltip key={`${tag}-${i}`} title={desc.map((line) => {
-        return <div>{line}</div>
+      <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
+        return <div key={i}>{line}</div>
       })} arrow={true}>
         <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId })} key={tag}>
           <span>
@@ -369,8 +370,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     logger.manualAddLog('session', 'initial-cases', CASES.slice(0, numShownCases).map(formatCaseForLogs))
 
     //Log the initial cases in view
-    const inViewIds = getCasesInView();
-    logger && logger.manualAddLog('session', 'cases-in-view', inViewIds.map(id => formatCaseForLogs(CASES.find((c) => `open-case-${c.emrCaseId}` == id))));
+    logger && logger.manualAddLog('session', 'cases-in-view', getCasesInView());
 
     // Setup scrolling variable
     let isScrolling;
@@ -384,8 +384,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
       // Set a timeout to run after scrolling ends
       isScrolling = setTimeout(() => {
-        const inViewIds = getCasesInView();
-        logger && logger.manualAddLog('scroll', 'cases-in-view', inViewIds.map(id => formatCaseForLogs(CASES.find((c) => `open-case-${c.emrCaseId}` == id))));
+        logger && logger.manualAddLog('scroll', 'cases-in-view', getCasesInView());
       }, 66);
 
     }, false);
@@ -488,8 +487,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     document.getElementById("cases-id").scrollTop -= 100;
     //Log the top elements manually after animation
     setTimeout(() => {
-      const inViewIds = getCasesInView();
-      logger && logger.manualAddLog('scroll', 'cases-in-view', inViewIds.map(id => formatCaseForLogs(CASES.find((c) => `open-case-${c.emrCaseId}` == id))));
+      logger && logger.manualAddLog('scroll', 'cases-in-view', getCasesInView());
     }, 1000)
   }
 
@@ -586,8 +584,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       logger && logger.manualAddLog('click', `close-case-${emrCId}`, formatCaseForLogs(oldCase));
 
       setTimeout(() => {
-        const inViewIds = getCasesInView();
-        logger && logger.manualAddLog('session', 'cases-in-view', inViewIds.map(id => formatCaseForLogs(CASES.find((c) => `open-case-${c.emrCaseId}` == id))));
+        logger && logger.manualAddLog('session', 'cases-in-view', getCasesInView());
       }, 300)
     }
     setCaseId(cId);
@@ -639,8 +636,24 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const renderTagInfo = () => {
     const result = []
     const tag_info = TAG_INFO;
-    tag_info['Late First Case'] = `Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true)}`;
-    tag_info['Slow Turnover'] = `Identifies cases where turnover time preceding case was above ${facilityName} defined outlier threshold of ${globalFunctions.formatSecsToTime(outlierThreshold, true, true)}`;
+    const isAdmin = makeSelectIsAdmin();
+    const updateInAdmin = isAdmin && (
+      <span>
+        <NavLink to={"/adminPanel/1"} className='link'>
+          (update in Admin Panel)
+        </NavLink>
+      </span>)
+    tag_info['Late First Case'] = (
+      <span>
+        {`Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true)}`}
+        {updateInAdmin}
+      </span>)
+    tag_info['Slow Turnover'] = (
+      <span>
+        {`Identifies cases where turnover time preceding case was above ${facilityName} defined outlier threshold of ${globalFunctions.formatSecsToTime(outlierThreshold, true, true)}`}
+        {updateInAdmin}
+      </span>
+    );
     for (const [tag, value] of Object.entries(tag_info)) {
       result.push(
         <Grid item xs={3} className="tag-column" key={`${tag}-${value}`}>

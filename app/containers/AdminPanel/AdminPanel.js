@@ -88,7 +88,7 @@ export default class AdminPanel extends React.PureComponent {
         >
           <StyledTab label="User Management" />
           <StyledTab label="Efficiency" />
-          {(this.state.sscConfig && this.state.sscConfig.checklists.length > 0) && <StyledTab label="Surgical Safety Checklist" />}
+          {(this.state.sscConfig && this.state.sscConfig.checklists && this.state.sscConfig.checklists.length > 0) && <StyledTab label="Surgical Safety Checklist" />}
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
           <UserManagement />
