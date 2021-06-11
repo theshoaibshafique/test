@@ -2,7 +2,7 @@
 // export const licenseUri =
 //   'https://license-global.pallycon.com/ri/licenseManager.do';
 export const licenseUri =
-  'https://license.pallycon.com/ri/licenseManager.do';
+  'https://license-global.pallycon.com/ri/licenseManager.do';
 
 export const fairplayCertUri =
   'https://license-global.pallycon.com/ri/fpsKeyManager.do?siteId=7MA7';

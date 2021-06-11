@@ -147,7 +147,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     this.setState({ noVideo: false })
     const drmType = checkDrmType();
     const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}?asset=${videoID}&drm_type=${drmType}`;
-
+    
     globalFunctions.axiosFetchWithCredentials(mediaURL, 'get', userToken, {})
       .then(result => {
         result = result.data
@@ -211,6 +211,26 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
                 return;
               }
               this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
+            })
+
+            /*
+              There was a bug where after seeking - the video would stop loading and not play the video
+            */
+            let timer;
+            //Listen for bufferProgress
+            this.myPlayer.on('progress', (e) => {
+              if (!e || typeof e.target.player.bufferedEnd !== 'function') {
+                return;
+              }
+              window.clearTimeout(timer);
+              //Every X interval try and force play the video if its seeking 
+              timer = setTimeout(() => {
+                if (!e.target.player.paused() && e.target.player.seeking()){
+                  e.target.player.currentTime(e.target.player.currentTime());
+                  e.target.player.play();
+                }
+              }, 1000)
+              
             })
           });
         }
