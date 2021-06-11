@@ -1111,5 +1111,5 @@ export const TAG_INFO = {
     "Long Procedure": "Identifies cases where procedure duration was 95th percentile or above for given procedure type",
     "Slow Pre-Op": "Identifies cases where the period of time between patient entering operating room, and procedure start, was 95th percentile or above",
     "Slow Post-Op": "Identifies cases where the period of time between procedure end, and patient exiting operating room, was 95th percentile or above",
-    "Case Delay": "Identifies cases where the delay from scheduled start, to actual start, was 95th percentile or above"
+    "Case Delay": "Identifies cases where the delay from the scheduled start was 60 minutes or longer"
 }
