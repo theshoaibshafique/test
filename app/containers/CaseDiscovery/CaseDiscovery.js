@@ -120,7 +120,7 @@ function displayTags(tags, emrCaseId) {
       <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
         return <div key={i}>{line}</div>
       })} arrow={true}>
-        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId })} key={tag}>
+        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:desc })} key={tag}>
           <span>
             {getTag(tag)}
           </span>
@@ -164,7 +164,7 @@ function Case(props) {
               </ul>
             </div>
           }>
-            <InfoOutlinedIcon className="log-mouseover" id={`secondary-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+            <InfoOutlinedIcon className="log-mouseover" id={`secondary-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
           </LightTooltip>
         </div>
       )
