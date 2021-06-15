@@ -370,7 +370,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     logger.manualAddLog('session', 'initial-cases', CASES.slice(0, numShownCases).map(formatCaseForLogs))
 
     //Log the initial cases in view
-    logger && logger.manualAddLog('session', 'cases-in-view', getCasesInView());
+    logger.manualAddLog('session', 'cases-in-view', getCasesInView());
 
     // Setup scrolling variable
     let isScrolling;
@@ -384,7 +384,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
       // Set a timeout to run after scrolling ends
       isScrolling = setTimeout(() => {
-        logger && logger.manualAddLog('scroll', 'cases-in-view', getCasesInView());
+        logger.manualAddLog('scroll', 'cases-in-view', getCasesInView());
       }, 66);
 
     }, false);
@@ -1123,7 +1123,7 @@ function DetailedCase(props) {
                 </div>
               }
               >
-                <InfoOutlinedIcon className="log-mouseover" id={`secondary-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                <InfoOutlinedIcon className="log-mouseover" id={`secondary-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
               </LightTooltip>
             </div>
           )
@@ -1181,8 +1181,8 @@ function DetailedCase(props) {
       }
       <Grid item xs className="schedule">
         <div className="header">
-          <div>{`${roomName}${!blockStart ? ' Off' : ''} Block`}</div>
-          <div>{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
+          <div className="log-click" id="or-schedule-header">{`${roomName}${!blockStart ? ' Off' : ''} Block`}</div>
+          <div  className="log-click" id="or-schedule-date">{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
 
         </div>
         <div className="timeline relative"
@@ -1206,13 +1206,15 @@ function DetailedCase(props) {
             let cTime = Math.round(earliestStartTime) + i;
             now.setHours(cTime);
             now.setMinutes(0);
+            const formattedTime = moment(now).format("HH:mm");
             return (
-              <div className="hour-marker"
+              <div className="hour-marker log-click"
+                id={`hour-block-${formattedTime}`}
                 style={{
                   // top: `${i * HOUR_SIZE}px`,
                   height: `${HOUR_SIZE}px`,
                 }}>
-                <div >{moment(now).format("HH:mm")}</div>
+                <div className="log-click" id={`hour-marker-${formattedTime}`}>{formattedTime}</div>
               </div>
             )
           })}
@@ -1220,7 +1222,8 @@ function DetailedCase(props) {
             title={`Block hours: ${moment(blockStartTime).format('HH:mm')} - ${moment(blockEndTime).format('HH:mm')}`}
             placement='left'
           >
-            <div className="absolute"
+            <div className="absolute log-mouseover"
+              id="block-hours-tooltip"
               style={{
                 top: `${(bStartTime - earliestStartTime) * HOUR_SIZE}px`,
                 height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`,
@@ -1685,7 +1688,7 @@ function HL7Chart(props) {
     parent.insertBefore(content, parent.firstChild)
 
     //Log initial setup 
-    logger && logger.manualAddLog('click', `initial-hl7`, hl7Data.map((h) => {
+    logger && logger.manualAddLog('session', `initial-hl7`, hl7Data.map((h) => {
       return { abbreviation: h.abbreviation, title: h.title }
     }));
 
