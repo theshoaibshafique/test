@@ -11,7 +11,10 @@ export class Logger {
         this.recentEvents = [];
         this.userToken = userToken;
         this.logInterval = 30000; // In ms
-
+        if (!userToken){
+            console.log('no user token')
+            return;
+        }
         this._addLog = this.addLog.bind(this);
         this._exitLog = this.sendExitLogs.bind(this);
         this.exitLogs = [];
@@ -134,7 +137,8 @@ export class Logger {
     }
 
     postLogs(url, fetchMethod, userToken, appId, fetchBodyJSON) {
-        if (!url) {
+        if (!url || !userToken) {
+            console.log('No User Token provided')
             return;
         }
         return axios({

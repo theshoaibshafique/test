@@ -125,6 +125,11 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     } else if (visibleTicks.length < MAX_TICK_WIDTH) {
       visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     }
+
+    const {title, logger} = this.props;
+    if (d){
+      logger && logger.manualAddLog('onchange', `area-time-series-domain-${title}`, {domain:d});
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -196,16 +201,18 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     let tooltipData = d.map((point) => {
       return this.state.tooltipData[point.id + moment(point.x).format("YYYY-MM-DD")];
     })
+    const {title, logger} = this.props;
     const xValue = moment(d[0].x).format('MMM DD');
     let na = d.filter((point) => point.value == null && point.id != "NA").map((point) => point.id) || [];
     if (na.length == d.length - 1) {
+      logger && logger.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d[0].value});
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{xValue}</div>
           <div>Unavailable - at least five turnovers required in last 30 days</div>
         </div>);
     }
-
+    logger && logger.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{xValue}</div>
@@ -244,7 +251,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
             <div className="legend-title">
               <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
               {this.state.tooltipLegendData[id] && <LightTooltip interactive arrow title={this.state.tooltipLegendData[id]} placement="top" fontSize="small">
-                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${id}`}/>
               </LightTooltip>}
             </div>
           </div>)

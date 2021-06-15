@@ -190,6 +190,8 @@ export default class BarChart extends React.PureComponent {
           {desc != null && <div>{`${desc}`}</div>}
         </div>);
     } else {
+      const {title, logger} = this.props;
+      logger && logger.manualAddLog('mouseover', `bar-tooltip-${title}`, {toolTip: tooltipData, xValue:x, yValue:d[0].value});
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           {tooltipData.map((line) => {
@@ -234,7 +236,7 @@ export default class BarChart extends React.PureComponent {
         <Grid container spacing={0} direction="column" className={`bar-chart ${this.id}`} >
           <Grid item xs className="chart-title header-2">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line,index) => { return <div key={index}>{line}</div> }): this.props.toolTip} placement="top" fontSize="small">
-              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${this.props.title}`} />
             </LightTooltip>}
           </Grid>
           <Grid item xs={12} className="chart-subtitle subtle-subtext">
@@ -244,7 +246,7 @@ export default class BarChart extends React.PureComponent {
             {this.renderBody()}
           </Grid>
           <Grid item xs>
-            {this.props.url && <NavLink to={this.props.url} className='link normal-text'>
+            {this.props.url && <NavLink to={this.props.url} className='link normal-text log-click' id={`learn-more-${this.props.title}`}>
               {this.props.urlText}
             </NavLink>}
           </Grid>

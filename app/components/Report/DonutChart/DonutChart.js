@@ -113,6 +113,8 @@ export default class DonutChart extends React.PureComponent {
     if (tooltipData.length == 0) {
       return;
     }
+    const {logger, title} = this.props;
+    logger && logger.manualAddLog('mouseover', `donut-tooltip-${title}`, {toolTip:tooltipData, xValue:d[0].id, yValue: d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {
@@ -147,7 +149,7 @@ export default class DonutChart extends React.PureComponent {
                 <div className="legend-title">
                   <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
                   {this.state.tooltipLegendData[id] && <LightTooltip interactive arrow title={this.state.tooltipLegendData[id]} placement="top" fontSize="small">
-                    <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                    <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${id}`} />
                   </LightTooltip>}
                 </div>
               </div>)
@@ -195,7 +197,7 @@ export default class DonutChart extends React.PureComponent {
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow placement="top" fontSize="small"
               title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line,index) => { return <div key={index}>{line}</div> }) : this.props.toolTip}
             >
-              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${this.props.title}`}/>
             </LightTooltip>}
           </Grid>
           <Grid item xs={8} >
@@ -205,7 +207,7 @@ export default class DonutChart extends React.PureComponent {
             {this.renderLegend()}
           </Grid>
           {this.props.url && <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <NavLink to={this.props.url} className='link'>
+            <NavLink to={this.props.url} className='link log-click' id={`${this.props.title}-learn-more`}>
               {this.props.urlText}
             </NavLink>
           </Grid>}

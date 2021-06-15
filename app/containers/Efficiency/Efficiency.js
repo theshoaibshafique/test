@@ -13,18 +13,18 @@ import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import LoadingOverlay from 'react-loading-overlay';
 import globalFunctions from '../../utils/global-functions';
 import DisplayNumber from '../../components/Report/InfographicText/DisplayNumber';
-import BarChart from '../../components/Report/BarChart/BarChart';
-import Histogram from '../../components/Report/Histogram/Histogram';
+import BarChart from '../../components/Report/BarChart';
+import Histogram from '../../components/Report/Histogram';
 import StackedBarChart from '../../components/Report/StackedBarChart';
-import DetailedMultiLineChart from '../../components/Report/DetailedMultiLineChart/DetailedMultiLineChart';
+import DetailedMultiLineChart from '../../components/Report/DetailedMultiLineChart';
 import Table from '../../components/Report/Table';
-import DonutChart from '../../components/Report/DonutChart/DonutChart';
+import DonutChart from '../../components/Report/DonutChart';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import CloseIcon from '@material-ui/icons/Close';
 import { NavLink } from 'react-router-dom';
 import NoData from '../../components/Report/NoData/NoData';
-import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
-import TimeSeriesAreaChart from '../../components/Report/TimeSeriesAreaChart/TimeSeriesAreaChart';
+import TimeSeriesChart from '../../components/Report/TimeSeriesChart';
+import TimeSeriesAreaChart from '../../components/Report/TimeSeriesAreaChart';
 import { StyledTab, StyledTabs, TabPanel } from '../../components/SharedComponents/SharedComponents';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 
@@ -78,6 +78,10 @@ export default class Efficiency extends React.PureComponent {
         this.getReportLayout();
       })
     }
+    const {logger} = this.props;
+    setTimeout(() => {
+      logger && logger.connectListeners();
+    }, 300)
   }
 
   componentDidMount() {
@@ -310,6 +314,8 @@ export default class Efficiency extends React.PureComponent {
   }
 
   handleTabChange(obj, tabIndex) {
+    const {logger} = this.props;
+    logger && logger.manualAddLog('click', 'swap-tab', tabIndex ? 'Global Comparison' : 'My Hospital');
     this.setState({ tabIndex });
   }
 
