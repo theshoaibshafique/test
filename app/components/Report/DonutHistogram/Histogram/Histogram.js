@@ -154,6 +154,8 @@ export default class Histogram extends React.PureComponent {
     if (tooltipData.length == 0) {
       return;
     }
+    const {title, logger} = this.props;
+    logger && logger.manualAddLog('mouseover', `histogram-tooltip-${title}`, {toolTip: tooltipData, xValue:d[0].x, yValue:d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {

@@ -205,14 +205,14 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     const xValue = moment(d[0].x).format('MMM DD');
     let na = d.filter((point) => point.value == null && point.id != "NA").map((point) => point.id) || [];
     if (na.length == d.length - 1) {
-      logger && logger.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d[0].value});
+      logger && logger.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d.map((p) => p.value)});
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{xValue}</div>
           <div>Unavailable - at least five turnovers required in last 30 days</div>
         </div>);
     }
-    logger && logger.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d[0].value});
+    logger && logger.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d.map((p) => p.value)});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{xValue}</div>

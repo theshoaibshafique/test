@@ -272,6 +272,8 @@ export default class Efficiency extends React.PureComponent {
   }
 
   updateState(key, value) {
+    const {logger} = this.props;
+    logger && logger.manualAddLog('onchange', `update-${key}`, value);
     this.setState({
       [key]: value,
       isFilterApplied: false

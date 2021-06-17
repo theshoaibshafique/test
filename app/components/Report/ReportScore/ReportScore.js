@@ -130,14 +130,14 @@ export default class ReportScore extends React.PureComponent {
                 title={toolTip.map((line,index) => { return <div key={index} style={!line ? { margin: 8 } : {}}>{line}</div> })}
                 placement="top" fontSize="small"
               >
-                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 2px 4px' }} />
+                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 2px 4px' }} className="log-mouseover" id={`info-tooltip-${title}`}/>
               </LightTooltip>}
             </div>
             <div className={`score-display ${compareValue && 'large'}`}>
               {total}
             </div>
             <div >
-              {this.props.url && <NavLink to={this.props.url} className='link subtle-text'>
+              {this.props.url && <NavLink to={this.props.url} className='link subtle-text log-click' id={`${title}-learn-more`}>
                 {this.props.urlText}
               </NavLink>}
             </div>

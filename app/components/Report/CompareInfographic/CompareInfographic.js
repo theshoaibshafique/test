@@ -32,7 +32,7 @@ export default class CompareInfographic extends React.PureComponent {
       <Grid container spacing={0} className="compare-infographic">
         <Grid item xs={12} className="title normal-text">
           {title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line,index) => { return <div key={index}>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
-            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${title}`}/>
           </LightTooltip>}
         </Grid>
         {this.renderData()}

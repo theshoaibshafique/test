@@ -14,11 +14,11 @@ import InfographicParagraph from '../../components/Report/InfographicParagraph/I
 import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDetail';
 import CompareInfographic from '../../components/Report/CompareInfographic/CompareInfographic';
 
-import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
+import TimeSeriesChart from '../../components/Report/TimeSeriesChart';
 import MultiDonutChart from '../../components/Report/MultiDonutChart/MultiDonutChart';
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
-import ScatterPlot from '../../components/Report/ScatterPlot/ScatterPlot';
-import ItemList from '../../components/Report/ItemList/ItemList';
+import ScatterPlot from '../../components/Report/ScatterPlot';
+import ItemList from '../../components/Report/ItemList';
 import NoData from '../../components/Report/NoData/NoData';
 import MultiTimeSeriesChart from '../../components/Report/MultiTimeSeriesChart';
 import DonutHistogram from '../../components/Report/DonutHistogram/DonutHistogram';
@@ -66,6 +66,10 @@ export default class SSChecklist extends React.PureComponent {
         this.getReportLayout();
       })
     }
+    const {logger} = this.props;
+    setTimeout(() => {
+      logger && logger.connectListeners();
+    }, 300)
   }
 
   componentDidMount() {
@@ -270,7 +274,8 @@ export default class SSChecklist extends React.PureComponent {
   }
 
   updateState(key, value, shouldApply = false) {
-
+    const {logger} = this.props;
+    logger && logger.manualAddLog('onchange', `update-${key}`, value);
     this.setState({
       [key]: value,
       isFilterApplied: false

@@ -259,7 +259,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         title={tooltip}
         placement="top" fontSize="small"
       >
-        <div className={`change-value ${className}`}>
+        <div className={`change-value ${className} log-mouseover`} id={`trending-tooltip-${this.props.title}`} description={JSON.stringify({toolTip:tooltip, trend:diff})}>
           <span>{`${diff}%`}</span>
           <span>{tag}</span>
         </div>
