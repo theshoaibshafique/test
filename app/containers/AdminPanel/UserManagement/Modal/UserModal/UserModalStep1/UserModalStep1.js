@@ -43,9 +43,11 @@ class UserModalStep1 extends React.Component {
   };
 
   addUser() {
+    const {logger} = this.props;
     let fieldErrors = this.props.isFormValid();
     this.setState({ fieldErrors });
     if (Object.keys(fieldErrors).length !== 0) {
+      logger && logger.manualAddLog('click', `add-user-errors`, fieldErrors);
       return;
     }
 
@@ -81,6 +83,7 @@ class UserModalStep1 extends React.Component {
             }
           });
         } else {
+          logger && logger.manualAddLog('click', `add-user`);
           // add roles
           let jsonBody;
           let jsonList = [];

@@ -91,8 +91,9 @@ export default class MainLayout extends React.PureComponent {
         <NoAccess />
       </Switch>
     }
-
+    const {logger} = this.props;
     if (this.state.userLoggedIn) {
+      logger && logger.manualAddLog('session', `open-${window.location.pathname.substring(1)}`);
       return <Switch>
         <Route path="/dashboard" component={Welcome} />
         {(this.state.emmAccess) &&

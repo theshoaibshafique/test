@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import moment from 'moment-timezone';
 import axios from 'axios';
 import globalFunctions from '../../utils/global-functions';
-const events = ['mouseover', 'click', 'scroll']
-const reducedEvents = ['mouseover', 'onchange']
+const events = ['mouseover', 'click', 'scroll', 'input']
+const reducedEvents = ['mouseover', 'onchange', 'input']
 const classPrefix = 'log-';
 
 export class Logger {
@@ -103,14 +103,10 @@ export class Logger {
     addLog(e) {
         const { type, currentTarget } = e;
         if (currentTarget) {
-            const { id } = currentTarget;
+            const { id, value } = currentTarget;
             const description = currentTarget.getAttribute("description")
             const existingLog = this.recentEvents.findIndex((r) => r.id == id && JSON.stringify(r.description) == description);
 
-            //Dont log mouseOvers too much
-            if (type == 'mouseover' && existingLog >= 0) {
-                return;
-            }
             const log = {
                 time: moment(),
                 localTime: moment().format(),
@@ -120,6 +116,20 @@ export class Logger {
             if (description) {
                 log.description = JSON.parse(description);
             }
+            if (value) {
+                log.values = value;
+            }
+            //Dont log mouseOvers too much
+            
+            if (reducedEvents.includes(type) && existingLog >= 0) {
+                //If its the most recent event - we update it
+                const length = this.recentEvents.length;
+                if (length && this.recentEvents[length -1].id == id && value){
+                    console.log('updated log', log)
+                    this.recentEvents.splice(length - 1, 1, log)
+                }
+                return;
+            }
             console.log('added log', log)
             this.recentEvents.push(log)
         }
@@ -127,7 +137,7 @@ export class Logger {
     }
 
     connectListeners() {
-        // console.log('connected');
+        console.log('connected');
         events.forEach(event => {
             document.querySelectorAll(`.${classPrefix}${event}`).forEach(item => {
                 item.removeEventListener(event, this._addLog);

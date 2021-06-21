@@ -137,7 +137,8 @@ export default class EMMCases extends React.PureComponent {
 
     if (requestID) {
       this.reset();
-
+      const {logger} = this.props;
+      logger && logger.manualAddLog('click', `emm-case-search-button`);
       globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/?request_id=' + this.state.requestID, 'get', this.props.userToken, {})
       .then(result => {
         if (result === 'error' || result === 'conflict' || !result) {
@@ -178,6 +179,8 @@ export default class EMMCases extends React.PureComponent {
   };
 
   handleFormChange(e) {
+    const {logger} = this.props;
+    logger && logger.manualAddLog('onchange', `emm-case-search`, e.target.value.trim());
     this.setState({ requestID: e.target.value.trim() });
   };
 
