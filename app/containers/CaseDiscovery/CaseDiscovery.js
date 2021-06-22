@@ -155,16 +155,16 @@ function Case(props) {
       </div>
       {procedureList.length > 0 && (
         <div className="description">
-          {`Secondary Procedure${procedureList.length == 1 ? '' : 's'}`}
+          {`Additional Procedure${procedureList.length == 1 ? '' : 's'}`}
           <LightTooltip arrow title={
             <div>
-              <span>{`Secondary Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
+              <span>{`Additional Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
               <ul style={{ margin: '4px 0px' }}>
                 {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
               </ul>
             </div>
           }>
-            <InfoOutlinedIcon className="log-mouseover" id={`secondary-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+            <InfoOutlinedIcon className="log-mouseover" id={`additional-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
           </LightTooltip>
         </div>
       )
@@ -1113,17 +1113,17 @@ function DetailedCase(props) {
           </div>
           {procedureList.length > 0 && (
             <div className="case-description" style={{ marginBottom: 0 }}>
-              {`Secondary Procedure${procedureList.length == 1 ? '' : 's'}`}
+              {`Additional Procedure${procedureList.length == 1 ? '' : 's'}`}
               <LightTooltip arrow title={
                 <div>
-                  <span>{`Secondary Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
+                  <span>{`Additional Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
                   <ul style={{ margin: '4px 0px' }}>
                     {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
                   </ul>
                 </div>
               }
               >
-                <InfoOutlinedIcon className="log-mouseover" id={`secondary-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                <InfoOutlinedIcon className="log-mouseover" id={`additional-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
               </LightTooltip>
             </div>
           )
