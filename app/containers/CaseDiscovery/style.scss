@@ -740,6 +740,12 @@
 }
 
 .tag-info-modal {
+    .admin-link{
+        text-decoration: none;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
     .info-tag,
     .case-tag {
         margin: auto 0;

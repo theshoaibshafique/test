@@ -639,9 +639,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const isAdmin = makeSelectIsAdmin();
     const updateInAdmin = isAdmin && (
       <span>
-        <NavLink to={"/adminPanel/1"} className='link'>
-          (update in Admin Panel)
-        </NavLink>
+        (<NavLink to={"/adminPanel/1"} className='link admin-link'>
+        update in Admin Panel
+        </NavLink>)
       </span>)
     tag_info['Late First Case'] = (
       <span>
