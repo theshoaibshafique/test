@@ -1138,15 +1138,15 @@ function DetailedCase(props) {
 
           <div className="timing-graphs" id="timing-graphs">
             <Grid container spacing={0}>
-              <Grid item xs={8} className="timing">
-                <Grid container spacing={0} className="start-timing">
-                  <Grid item xs={4} className="scheduled-start">
+              <Grid item xs={6} className="timing">
+                <Grid container spacing={0} className="start-timing"> 
+                  <Grid item xs className="scheduled-start">
                     <div className="timing-header">Scheduled Start</div>
                     <div className="timing-value">Started at</div>
                     <div className="timing-header">Laterality</div>
                     <div className="timing-value">{laterality}</div>
                   </Grid>
-                  <Grid item xs={3} className="actual-start">
+                  <Grid item xs className="actual-start">
 
                     <div className="timing-header">{moment(scheduledStart).format("HH:mm:ss")}</div>
                     <div className="timing-value">{moment(wheelsIn).format("HH:mm:ss")}</div>
@@ -1154,7 +1154,7 @@ function DetailedCase(props) {
                       {lateralityIcon}
                     </div>
                   </Grid>
-                  <Grid item xs={5} className="difference">
+                  <Grid item xs className="difference">
                     <div className="timing-header" style={{ visibility: 'hidden' }}>placeholder</div>
                     {Math.abs(startDiff) < 1 ?
                       <div className={`early`}>
@@ -1168,7 +1168,7 @@ function DetailedCase(props) {
                 </Grid>
 
               </Grid>
-              <Grid item xs className="procedure-time">
+              <Grid item xs={6} className="procedure-time">
                 <ProcedureDistribution {...procedureDistribution} duration={duration} />
               </Grid>
             </Grid>
@@ -1554,7 +1554,7 @@ function HL7Chart(props) {
 
   const data = {
     padding: {
-      // top: 20
+      left: 45,
     },
     size: hasHL7Data ? {} : {
       height: 175
