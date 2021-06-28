@@ -93,7 +93,12 @@ export default class MainLayout extends React.PureComponent {
     }
     const {logger} = this.props;
     if (this.state.userLoggedIn) {
-      logger && logger.manualAddLog('session', `open-${window.location.pathname.substring(1)}`);
+      if (this.props.emmReportID){
+        logger && logger.manualAddLog('session', `open-emm-report`, this.props.emmReportID);
+      } else {
+        logger && logger.manualAddLog('session', `open-${window.location.pathname.substring(1)}`);
+      }
+      
       return <Switch>
         <Route path="/dashboard" component={Welcome} />
         {(this.state.emmAccess) &&

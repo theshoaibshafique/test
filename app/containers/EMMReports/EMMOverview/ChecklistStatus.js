@@ -25,7 +25,8 @@ class ChecklistStatus extends React.Component {
             checkListHappened.map((happened, index) => {
               return <div
                         key={`checkListHappened${index}`}
-                        className="checklist-happened"
+                        className="checklist-happened  log-click"
+                        id={`checklist-${happened.title}`}
                         onClick={()=>this.switchToPhase(happened.valueX)}>
                       <div className="title">{happened.title}</div>
                       <div className="subtitle">{happened.subTitle}</div>

@@ -207,30 +207,10 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
           this.myPlayer.src(playerConfig);
           this.myPlayer.ready((y) => {
             this.myPlayer.on('timeupdate', (e) => {
-              if (!e || typeof e.target.player.currentTime !== 'function') {
+              if (!e || !e.target.player || typeof e.target.player.currentTime !== 'function') {
                 return;
               }
               this.props.setEMMVideoTime(parseInt(e.target.player.currentTime()))
-            })
-
-            /*
-              There was a bug where after seeking - the video would stop loading and not play the video
-            */
-            let timer;
-            //Listen for bufferProgress
-            this.myPlayer.on('progress', (e) => {
-              if (!e || typeof e.target.player.bufferedEnd !== 'function') {
-                return;
-              }
-              window.clearTimeout(timer);
-              //Every X interval try and force play the video if its seeking 
-              timer = setTimeout(() => {
-                if (!e.target.player.paused() && e.target.player.seeking()){
-                  e.target.player.currentTime(e.target.player.currentTime());
-                  e.target.player.play();
-                }
-              }, 1000)
-              
             })
           });
         }
@@ -240,13 +220,13 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   destroyVideoPlayer() {
     if (this.myPlayer) {
       this.myPlayer.off('timeupdate');
-      // this.myPlayer.dispose();
+      this.myPlayer.dispose();
       this.props.setEMMVideoTime(0);
     }
   }
 
   seekVideo(time) {
-    this.myPlayer.currentTime(time)
+    this.myPlayer.currentTime(time);
   }
 
   updateSelectedSurgicalTab(index) {
@@ -276,13 +256,14 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   }
 
   switchPresenterMode = () => {
-    const { emmPresenterMode, setEMMPresenterDialog, setEMMPresenterMode } = this.props;
+    const { emmPresenterMode, setEMMPresenterDialog, setEMMPresenterMode, logger } = this.props;
     if (!emmPresenterMode) {
       //need to show warning if previous state is non presentation mode
       setEMMPresenterDialog(true)
     } else {
       //otherwise, can just turn off presentation mode
       setEMMPresenterMode(false)
+      logger && logger.manualAddLog('click', `toggle-presenter-mode`, {checked:false});
     }
   }
 
