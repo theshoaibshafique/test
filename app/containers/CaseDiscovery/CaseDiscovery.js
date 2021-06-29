@@ -8,7 +8,7 @@ import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Divider, FormControl, FormControlLabel, FormHelperText, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
 import { DATE_OPTIONS, TAGS, TAG_INFO } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -46,6 +46,8 @@ import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView } from '.
 import { useSelector } from 'react-redux';
 import { makeSelectComplications, makeSelectIsAdmin, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
+import StarTwoToneIcon from '@material-ui/icons/StarTwoTone';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -120,7 +122,7 @@ function displayTags(tags, emrCaseId) {
       <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
         return <div key={i}>{line}</div>
       })} arrow={true}>
-        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:desc })} key={tag}>
+        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} key={tag}>
           <span>
             {getTag(tag)}
           </span>
@@ -134,7 +136,7 @@ function displayTags(tags, emrCaseId) {
 }
 
 function Case(props) {
-  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick } = props;
+  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick, isSaved, handleSaveCase } = props;
   const sTime = moment(wheelsIn).format("HH:mm");
   const eTime = moment(wheelsOut).format("HH:mm");
   const diff = moment().diff(moment(wheelsIn), 'days');
@@ -145,14 +147,26 @@ function Case(props) {
 
   const procedureList = [...new Set(procedures.slice(1).map((p) => p.procedureName))];
   const specialtyList = [...new Set(procedures.map((p) => p.specialtyName))];
-
+  const logger = useSelector(makeSelectLogger());
+  const handleClick = () => {
+    onClick();
+    logger.manualAddLog('click', `open-case-${emrCaseId}`, formatCaseForLogs(props))
+  }
 
   return (
-    <div className="case log-click" id={`open-case-${emrCaseId}`} description={JSON.stringify(formatCaseForLogs(props))} key={emrCaseId} onClick={onClick} >
+    <div className="case" key={emrCaseId} onClick={handleClick} >
+      <div className="case-header">
+        <div className="title" >
+          {procedureName}
+        </div>
+        <div className="save-toggle" onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
+          <IconButton style={{ marginTop:-6, marginBottom:-11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
+            {isSaved ? <StarTwoToneIcon style={{ color: '#EEDF58', fontSize:29  }}   /> : <StarBorderIcon style={{ color: '#828282', fontSize:29  }}  />}
+          </IconButton>
 
-      <div className="title" >
-        {procedureName}
+        </div>
       </div>
+
       {procedureList.length > 0 && (
         <div className="description">
           {`Additional Procedure${procedureList.length == 1 ? '' : 's'}`}
@@ -164,7 +178,7 @@ function Case(props) {
               </ul>
             </div>
           }>
-            <InfoOutlinedIcon className="log-mouseover" id={`additional-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+            <InfoOutlinedIcon className="log-mouseover" id={`additional-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
           </LightTooltip>
         </div>
       )
@@ -335,11 +349,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     PROCEDURES: [],
     ORS: [],
     isLoading: true,
+    savedCases: [],
     facilityName: "",
     gracePeriod: 0,
     outlierThreshold: 0
   });
-  const { CASES, SPECIALTIES, PROCEDURES, ORS, isLoading } = DATA;
+  const { CASES, SPECIALTIES, PROCEDURES, ORS, isLoading, savedCases } = DATA;
   const { facilityName, gracePeriod, outlierThreshold } = DATA;
   const [USERS, setUsers] = useState([]);
   const [numShownCases, setNumShownCases] = React.useState(10);
@@ -347,7 +362,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
-  console.time('total')
+
   useEffect(() => {
     if (!logger) {
       return;
@@ -428,7 +443,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
       return await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
         .then(result => {
-          console.time('Process Filters')
           result = result.data
           let spec = [];
           let proc = [];
@@ -457,7 +471,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             ORS: ors,
             isLoading: false
           })
-          console.timeEnd('Process Filters')
 
         }).catch((error) => {
           console.log("uh oh")
@@ -465,11 +478,26 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     }
 
+    const fetchSavedCases = async () => {
+      await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + "bookmarks", 'get', userToken, {})
+      .then(result => {
+        result = result.data;
+        setData({
+          'savedCases': result
+        })
+      }).catch((error) => {
+        console.log("uh no.")
+      }).finally(() => {
+
+      });
+    }
+
     fetchCases();
 
     fetchUsers();
 
     fetchFacilityConfig();
+    fetchSavedCases();
 
   }, []);
 
@@ -478,7 +506,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       logger && logger.connectListeners();
     }, 300)
   });
-
 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
@@ -507,8 +534,24 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     specialties: [],
     procedures: [],
     tags: [],
-    roomNames: []
+    roomNames: [],
+    onlySavedCases: false
   });
+
+  const handleSaveCase = async (caseId) => {
+    
+    await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!savedCases.includes(caseId)}` , 'PUT', userToken, {})
+      .then(result => {
+        result = result.data;
+        setData({
+          'savedCases': result
+        })
+      }).catch((error) => {
+        console.log("uh no.")
+      });
+
+  }
+
   // Change/update the filter
   const handleChange = (event, value) => {
     scrollToTop();
@@ -546,7 +589,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       //Given the filtered `procedures` list match every item with at least one procedure (including secondary procedures)
       (!procedures.length || procedures.every((p) => c.procedures && c.procedures.some(pr => pr.procedureName.toLowerCase().includes(p.toLowerCase())))) &&
       (!roomNames.length || roomNames.includes(c.roomName)) &&
-      (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => cTags.includes(t))) || (includeAllTags == 0 && cTags.some((t) => searchData.tags.includes(t))))
+      (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => cTags.includes(t))) || (includeAllTags == 0 && cTags.some((t) => searchData.tags.includes(t)))) &&
+      (!searchData.onlySavedCases || (savedCases.includes(c.caseId)))
     );
   })
 
@@ -611,7 +655,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
               timeout={500}
               classNames="item"
             >
-              <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} />
+              <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} isSaved={savedCases.includes(c.caseId)} handleSaveCase={() => handleSaveCase(c.caseId)} />
             </CSSTransition>
           )).slice(0, numShownCases)
         }</TransitionGroup>
@@ -640,7 +684,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const updateInAdmin = isAdmin && (
       <span>
         (<NavLink to={"/adminPanel/1"} className='link admin-link'>
-        update in Admin Panel
+          update in Admin Panel
         </NavLink>)
       </span>)
     tag_info['Late First Case'] = (
@@ -694,6 +738,20 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           }}
           variant="outlined"
         />
+
+        <div className="show-only-saved">
+          <FormControlLabel
+            control={
+              <Checkbox
+                disableRipple
+                icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checked={searchData.onlySavedCases} onChange={(e) => handleChange('onlySavedCases', e.target.checked)} />
+            }
+            label={<span className="label">Show only saved cases</span>}
+          />
+
+        </div>
 
         <div className="select-header">
           <InputLabel className={classes.inputLabel}>Date</InputLabel>
@@ -905,7 +963,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   return (
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
-      <DetailedCase {...DETAILED_CASE} USERS={USERS} handleChangeCaseId={handleChangeCaseId} hidden={!caseId} showEMMReport={showEMMReport} />
+      <DetailedCase {...DETAILED_CASE}
+        isSaved={savedCases.includes(caseId)}
+        handleSaveCase={() => handleSaveCase(caseId)} USERS={USERS}
+        handleChangeCaseId={handleChangeCaseId}
+        hidden={!caseId}
+        showEMMReport={showEMMReport} />
     </section>
   );
 }
@@ -913,7 +976,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1103,13 +1166,20 @@ function DetailedCase(props) {
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
         <Grid item xs className="detailed-case">
-
-          <div className="back" onClick={() => handleChangeCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
-          <div className="case-header">
-
-            <div className="case-title">{procedureTitle}</div>
-
+          <div className="back-header">
+            <div className="back" onClick={() => handleChangeCaseId(null)} >
+              <ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back
+            </div>
             <div className="button">{reportButton()}</div>
+          </div>
+          <div className="case-header">
+            <div className="case-title">{procedureTitle}</div>
+            <div className="save-toggle" onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
+              <IconButton style={{marginRight:55, marginTop:-6, marginBottom:-11}} title={isSaved ? "Remove from saved cases" : "Save case"}>
+                {isSaved ? <StarTwoToneIcon style={{ color: '#EEDF58', fontSize:29  }}  /> : <StarBorderIcon style={{ color: '#828282', fontSize:29  }}  />}
+              </IconButton>
+
+            </div>
           </div>
           {procedureList.length > 0 && (
             <div className="case-description" style={{ marginBottom: 0 }}>
@@ -1123,7 +1193,7 @@ function DetailedCase(props) {
                 </div>
               }
               >
-                <InfoOutlinedIcon className="log-mouseover" id={`additional-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip:procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                <InfoOutlinedIcon className="log-mouseover" id={`additional-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
               </LightTooltip>
             </div>
           )
@@ -1139,7 +1209,7 @@ function DetailedCase(props) {
           <div className="timing-graphs" id="timing-graphs">
             <Grid container spacing={0}>
               <Grid item xs={6} className="timing">
-                <Grid container spacing={0} className="start-timing"> 
+                <Grid container spacing={0} className="start-timing">
                   <Grid item xs className="scheduled-start">
                     <div className="timing-header">Scheduled Start</div>
                     <div className="timing-value">Started at</div>
@@ -1182,7 +1252,7 @@ function DetailedCase(props) {
       <Grid item xs className="schedule">
         <div className="header">
           <div className="log-click" id="or-schedule-header">{`${roomName}${!blockStart ? ' Off' : ''} Block`}</div>
-          <div  className="log-click" id="or-schedule-date">{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
+          <div className="log-click" id="or-schedule-date">{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
 
         </div>
         <div className="timeline relative"
