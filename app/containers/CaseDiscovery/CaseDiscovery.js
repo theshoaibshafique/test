@@ -159,7 +159,7 @@ function Case(props) {
         <div className="title" >
           {procedureName}
         </div>
-        <div className="save-toggle" onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
+        <div className={`save-toggle ${!isSaved && 'not-saved'}`}  onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
           <IconButton style={{ marginTop:-6, marginBottom:-11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
             {isSaved ? <StarIcon  style={{ color: '#EEDF58', fontSize:29  }}   /> : <StarBorderIcon style={{ color: '#828282', fontSize:29  }}  />}
           </IconButton>
@@ -539,9 +539,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   });
 
   const handleSaveCase = async (caseId) => {
-    
-    await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!savedCases.includes(caseId)}` , 'PUT', userToken, {})
+    const isSav = savedCases.includes(caseId);
+    await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}` , 'PUT', userToken, {})
       .then(result => {
+        logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, {caseId:caseId});
         result = result.data;
         setData({
           'savedCases': result
@@ -1174,7 +1175,7 @@ function DetailedCase(props) {
           </div>
           <div className="case-header">
             <div className="case-title">{procedureTitle}</div>
-            <div className="save-toggle" onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
+            <div className={"save-toggle"} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
               <IconButton style={{marginRight:55, marginTop:-12, marginBottom:-11}} title={isSaved ? "Remove from saved cases" : "Save case"}>
                 {isSaved ? <StarIcon  style={{ color: '#EEDF58', fontSize:36  }}  /> : <StarBorderIcon style={{ color: '#828282', fontSize:36  }}  />}
               </IconButton>
