@@ -46,7 +46,7 @@ import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView } from '.
 import { useSelector } from 'react-redux';
 import { makeSelectComplications, makeSelectIsAdmin, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
-import StarTwoToneIcon from '@material-ui/icons/StarTwoTone';
+import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 const useStyles = makeStyles((theme) => ({
@@ -161,7 +161,7 @@ function Case(props) {
         </div>
         <div className="save-toggle" onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
           <IconButton style={{ marginTop:-6, marginBottom:-11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
-            {isSaved ? <StarTwoToneIcon style={{ color: '#EEDF58', fontSize:29  }}   /> : <StarBorderIcon style={{ color: '#828282', fontSize:29  }}  />}
+            {isSaved ? <StarIcon  style={{ color: '#EEDF58', fontSize:29  }}   /> : <StarBorderIcon style={{ color: '#828282', fontSize:29  }}  />}
           </IconButton>
 
         </div>
@@ -1175,8 +1175,8 @@ function DetailedCase(props) {
           <div className="case-header">
             <div className="case-title">{procedureTitle}</div>
             <div className="save-toggle" onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
-              <IconButton style={{marginRight:55, marginTop:-6, marginBottom:-11}} title={isSaved ? "Remove from saved cases" : "Save case"}>
-                {isSaved ? <StarTwoToneIcon style={{ color: '#EEDF58', fontSize:29  }}  /> : <StarBorderIcon style={{ color: '#828282', fontSize:29  }}  />}
+              <IconButton style={{marginRight:55, marginTop:-12, marginBottom:-11}} title={isSaved ? "Remove from saved cases" : "Save case"}>
+                {isSaved ? <StarIcon  style={{ color: '#EEDF58', fontSize:36  }}  /> : <StarBorderIcon style={{ color: '#828282', fontSize:36  }}  />}
               </IconButton>
 
             </div>
