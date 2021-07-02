@@ -191,7 +191,7 @@ function Case(props) {
       </div>
       <div className="description">
         <span>Case ID: {emrCaseId}</span>
-        <span>{date} {`(${diff} ${diff == 1 ? 'Day' : 'Days'} ago)`}</span>
+        <span>{date} {`(${diff} ${diff == 1 ? 'day' : 'days'} ago)`}</span>
         <span>{sTime} - {eTime}</span>
         <span>{roomName}</span>
       </div>
@@ -1011,7 +1011,7 @@ function DetailedCase(props) {
     <div>
       <span>Case ID: {emrCaseId}</span>
       <span>Surgeon ID: {`${surgeonId}`}</span>
-      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
+      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'days'} ago)`}</span>
       <span>{roomName}</span>
       {intubationType && <span>Intubation Type: {intubationType}</span>}
     </div>
@@ -1020,7 +1020,7 @@ function DetailedCase(props) {
   const requestEMMDescription = (
     <div>
       <span>Case ID: {emrCaseId}</span>
-      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
+      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'days'} ago)`}</span>
       <span>{roomName}</span>
     </div>
   );
