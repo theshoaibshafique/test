@@ -136,7 +136,7 @@ function displayTags(tags, emrCaseId) {
 }
 
 function Case(props) {
-  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick, isSaved, handleSaveCase } = props;
+  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick, isSaved, handleSaveCase, isShort } = props;
   const sTime = moment(wheelsIn).format("HH:mm");
   const eTime = moment(wheelsOut).format("HH:mm");
   const diff = moment().diff(moment(wheelsIn), 'days');
@@ -154,21 +154,21 @@ function Case(props) {
   }
 
   return (
-    <div className="case" key={emrCaseId} onClick={handleClick} >
+    <div className={`case ${isShort && 'short'}`} key={emrCaseId} onClick={handleClick} >
       <div className="case-header">
         <div className="title" >
           {procedureName}
         </div>
-        <div className={`save-toggle ${!isSaved && 'not-saved'}`}  onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
-          <IconButton style={{ marginTop:-6, marginBottom:-11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
-            {isSaved ? <StarIcon  style={{ color: '#EEDF58', fontSize:29  }}   /> : <StarBorderIcon style={{ color: '#828282', fontSize:29  }}  />}
+        <div className={`save-toggle ${!isSaved && 'not-saved'} ${isShort && 'short-icon'}`} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
+          <IconButton style={{ marginTop: -6, marginBottom: -11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
+            {isSaved ? <StarIcon style={{ color: '#EEDF58', fontSize: 29 }} /> : <StarBorderIcon style={{ color: '#828282', fontSize: 29 }} />}
           </IconButton>
 
         </div>
       </div>
 
       {procedureList.length > 0 && (
-        <div className="description">
+        <div className="description additional-procedure">
           {`Additional Procedure${procedureList.length == 1 ? '' : 's'}`}
           <LightTooltip arrow title={
             <div>
@@ -190,8 +190,8 @@ function Case(props) {
       <div className="description">
         <span>Case ID: {emrCaseId}</span>
         <span>{date} {`(${diff} ${diff == 1 ? 'Day' : 'Days'} ago)`}</span>
-        <span>{sTime} - {eTime}</span>
-        <span>{roomName}</span>
+        {!isShort && <span>{sTime} - {eTime}</span>}
+        {!isShort && <span>{roomName}</span>}
       </div>
       {tagDisplays.length > 0 && <div className="tags">
         {tagDisplays}
@@ -450,14 +450,18 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           result.forEach((c) => {
             const { procedures, roomName } = c;
 
-            procedures.forEach((p) => {
-              const { specialtyName, procedureName } = p;
+            c.procedures = procedures.map((p) => {
+              let { specialtyName, procedureName } = p;
+              procedureName = procedureName.replace(/,(?=[^\s])/g, ', ');
+
               if (spec.indexOf(specialtyName) < 0) {
                 spec.push(specialtyName);
               }
               if (proc.indexOf(procedureName) < 0) {
                 proc.push(procedureName);
               }
+              p.procedureName = procedureName
+              return p;
             });
             if (ors.indexOf(roomName) < 0) {
               ors.push(roomName);
@@ -480,16 +484,16 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     const fetchSavedCases = async () => {
       await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + "bookmarks", 'get', userToken, {})
-      .then(result => {
-        result = result.data;
-        setData({
-          'savedCases': result
-        })
-      }).catch((error) => {
-        console.log("uh no.")
-      }).finally(() => {
+        .then(result => {
+          result = result.data;
+          setData({
+            'savedCases': result
+          })
+        }).catch((error) => {
+          console.log("uh no.")
+        }).finally(() => {
 
-      });
+        });
     }
 
     fetchCases();
@@ -540,9 +544,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const handleSaveCase = async (caseId) => {
     const isSav = savedCases.includes(caseId);
-    await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}` , 'PUT', userToken, {})
+    await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
-        logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, {caseId:caseId});
+        logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
         result = result.data;
         setData({
           'savedCases': result
@@ -892,40 +896,46 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         </Modal>
 
       </Grid>
-      <Grid item xs style={{ position: 'relative' }}>
-        <div className="header">
-          <div className="header-label">
-            {!isLoading && `${filterCases && filterCases.length || 0} Cases`}
+      <Grid item xs >
+        <RecommendedCases
+          savedCases={savedCases}
+          handleSaveCase={handleSaveCase}
+          handleChangeCaseId={handleChangeCaseId}
+        />
+        <div style={{ position: 'relative' }}>
+          <div className="header">
+            <div className="header-label">
+              {!isLoading && `${filterCases && filterCases.length || 0} Cases`}
+            </div>
+            <div>
+              <Button className={classes.sortButton} onClick={handleClick} disableRipple>
+                <div className="header-label"><img src={ArrowsDownUp} />{isOldest ? "Shown by oldest case" : "Shown by most recent"}</div>
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem value={0} onClick={handleClose}>Recent to oldest</MenuItem>
+                <MenuItem value={1} onClick={handleClose}>Oldest to most recent</MenuItem>
+              </Menu>
+            </div>
           </div>
-          <div>
-            <Button className={classes.sortButton} onClick={handleClick} disableRipple>
-              <div className="header-label"><img src={ArrowsDownUp} />{isOldest ? "Shown by oldest case" : "Shown by most recent"}</div>
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem value={0} onClick={handleClose}>Recent to oldest</MenuItem>
-              <MenuItem value={1} onClick={handleClose}>Oldest to most recent</MenuItem>
-            </Menu>
-          </div>
-        </div>
-        {isLoading ? <LoadingIndicator /> : (
-          <div id="cases-id" className="cases">
-            <div ref={topElementRef}></div>
-            {getCasesView()}
-            {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" id="load-more" disableElevation onClick={() => {
-              setNumShownCases(numShownCases + 10);
-              logger && logger.manualAddLog('click', 'load-more', filterCases.slice(numShownCases, numShownCases + 10).map(formatCaseForLogs));
-            }}>
-              Load More
+          {isLoading ? <LoadingIndicator /> : (
+            <div id="cases-id" className="cases">
+              <div ref={topElementRef}></div>
+              {getCasesView()}
+              {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" id="load-more" disableElevation onClick={() => {
+                setNumShownCases(numShownCases + 10);
+                logger && logger.manualAddLog('click', 'load-more', filterCases.slice(numShownCases, numShownCases + 10).map(formatCaseForLogs));
+              }}>
+                Load More
           </Button>}
-          </div>
-        )
-        }
-
+            </div>
+          )
+          }
+        </div>
 
       </Grid>
     </Grid>
@@ -972,6 +982,72 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         showEMMReport={showEMMReport} />
     </section>
   );
+}
+
+function RecommendedCases(props) {
+  const { handleChangeCaseId, savedCases, handleSaveCase } = props;
+  const userFacility = useSelector(makeSelectUserFacility());
+  const userToken = useSelector(makeSelectToken());
+  const [CASES, setCases] = useState([]);
+
+  const [viewIndex, setViewIndex] = useState(0);
+  const handleSetViewIndex = (i) => {
+    setViewIndex(i);
+  }
+
+  useEffect(() => {
+    const fetchRecCases = async () => {
+      await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}recommendations?facility_id=${userFacility}`, 'get', userToken, {})
+        .then(result => {
+          result = result.data;
+          result.forEach((c) => {
+            const { procedures, roomName } = c;
+            c.procedures = procedures.map((p) => {
+              const { procedureName } = p;
+              p.procedureName = procedureName.replace(/,(?=[^\s])/g, ', ');
+              return p;
+            });
+          });
+          setCases(result);
+        }).catch((error) => {
+          console.log("uh no.")
+        }).finally(() => {
+
+        });
+    }
+    fetchRecCases();
+  }, [])
+  const viewable = []
+  const MAX_VIEW = 3;
+  for (var index = viewIndex; index < viewIndex+MAX_VIEW; index++) {
+    const i = Math.abs(index) % CASES.length;
+    if (i < CASES.length && CASES[i]){
+      viewable.push(CASES[i])
+    }
+    
+  }
+
+  return (<div className="recommended-cases">
+    <div className="rec-header">
+      <div className="left-arrow" onClick={() => handleSetViewIndex(viewIndex-MAX_VIEW)}></div>
+      <div>Recommended Cases</div>
+      <div className="right-arrow" onClick={() => handleSetViewIndex(viewIndex+MAX_VIEW)}></div>
+    </div>
+    <div>
+      {
+        viewable.map((c, i) => (
+          <Case
+            isShort
+            key={i}
+            onClick={() => handleChangeCaseId(c.caseId)}
+            {...c}
+            isSaved={savedCases.includes(c.caseId)}
+            handleSaveCase={() => handleSaveCase(c.caseId)} />
+        ))
+      }
+    </div>
+
+  </div>)
 }
 
 
@@ -1176,8 +1252,8 @@ function DetailedCase(props) {
           <div className="case-header">
             <div className="case-title">{procedureTitle}</div>
             <div className={"save-toggle"} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
-              <IconButton style={{marginRight:55, marginTop:-12, marginBottom:-11}} title={isSaved ? "Remove from saved cases" : "Save case"}>
-                {isSaved ? <StarIcon  style={{ color: '#EEDF58', fontSize:36  }}  /> : <StarBorderIcon style={{ color: '#828282', fontSize:36  }}  />}
+              <IconButton style={{ marginRight: 55, marginTop: -12, marginBottom: -11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
+                {isSaved ? <StarIcon style={{ color: '#EEDF58', fontSize: 36 }} /> : <StarBorderIcon style={{ color: '#828282', fontSize: 36 }} />}
               </IconButton>
 
             </div>
