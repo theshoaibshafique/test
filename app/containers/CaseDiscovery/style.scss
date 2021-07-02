@@ -166,8 +166,11 @@
             box-shadow: 1px 1px 6px grey;
             -webkit-transition: box-shadow 0.1s ease-in;
             .case-header .save-toggle.not-saved {
-                opacity: 1 ;
+                opacity: .6 ;
                 height: auto;
+                &:hover{
+                    opacity: 1;
+                }
             }
         }
         cursor: pointer;
