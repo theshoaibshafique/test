@@ -1175,11 +1175,10 @@ function DetailedCase(props) {
           </div>
           <div className="case-header">
             <div className="case-title">{procedureTitle}</div>
-            <div className={"save-toggle"} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
+            <div className={`save-toggle ${!isSaved && 'not-saved'}`} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
               <IconButton style={{marginRight:55, marginTop:-12, marginBottom:-11}} title={isSaved ? "Remove from saved cases" : "Save case"}>
                 {isSaved ? <StarIcon  style={{ color: '#EEDF58', fontSize:36  }}  /> : <StarBorderIcon style={{ color: '#828282', fontSize:36  }}  />}
               </IconButton>
-
             </div>
           </div>
           {procedureList.length > 0 && (

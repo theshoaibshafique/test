@@ -265,6 +265,12 @@
         overflow-y: auto;
         max-width: calc(100vw - 340px);
         max-height: calc(100vh);
+        .case-header .save-toggle.not-saved {
+            opacity: .6 ;
+            &:hover{
+                opacity: 1;
+            }
+        }
         .detailed-loading {
             width: 100%;
             position: absolute;
