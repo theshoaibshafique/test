@@ -889,7 +889,7 @@
 .recommended-cases {
     max-width: 80%;
     > div {
-        display: flex;
+        // display: flex;
     }
     
     .rec-header {
@@ -922,4 +922,16 @@
         margin-top: 3px !important;
         cursor: pointer;
     }
+}
+.carousel {
+    overflow: hidden;
+    .case{
+        width: 30%;
+        // display: none;
+    }
+    *:focus-visible,
+    &:focus-visible{
+        outline: none !important;
+    }
+    
 }

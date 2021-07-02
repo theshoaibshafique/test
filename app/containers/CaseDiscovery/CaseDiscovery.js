@@ -48,6 +48,7 @@ import { makeSelectComplications, makeSelectIsAdmin, makeSelectLogger, makeSelec
 import { NavLink } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
+import Flickity from 'react-flickity-component'
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -989,10 +990,20 @@ function RecommendedCases(props) {
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const [CASES, setCases] = useState([]);
-
-  const [viewIndex, setViewIndex] = useState(0);
-  const handleSetViewIndex = (i) => {
-    setViewIndex(i);
+  const flkRef = useRef(null)
+  const handleNext = () => {
+    const {flkty} = flkRef.current;
+    if (!flkty){
+      return
+    }
+    flkty.next()
+  }
+  const handlePrev = () => {
+    const {flkty} = flkRef.current;
+    if (!flkty){
+      return
+    }
+    flkty.previous()
   }
 
   useEffect(() => {
@@ -1017,25 +1028,34 @@ function RecommendedCases(props) {
     }
     fetchRecCases();
   }, [])
-  const viewable = []
-  const MAX_VIEW = 3;
-  for (var index = viewIndex; index < viewIndex+MAX_VIEW; index++) {
-    const i = Math.abs(index) % CASES.length;
-    if (i < CASES.length && CASES[i]){
-      viewable.push(CASES[i])
-    }
-    
+  if (!CASES.length){
+    return '';
   }
 
   return (<div className="recommended-cases">
     <div className="rec-header">
-      <div className="left-arrow" onClick={() => handleSetViewIndex(viewIndex-MAX_VIEW)}></div>
-      <div>Recommended Cases</div>
-      <div className="right-arrow" onClick={() => handleSetViewIndex(viewIndex+MAX_VIEW)}></div>
+      <div className="left-arrow" onClick={handlePrev}></div>
+      <div>Cases of Interest</div>
+      <div className="right-arrow" onClick={handleNext}></div>
     </div>
-    <div>
+    <Flickity
+      className={'carousel'} // default ''
+      // elementType={'div'} // default 'div'
+      // flickityRef={flkty}
+      ref={flkRef}
+      options={{ 
+        autoPlay: 5000,
+        wrapAround: true, 
+        draggable:false,
+        initialIndex:1,
+        freeScroll: false,
+        prevNextButtons: false,
+        pageDots: false }} // takes flickity options {}
+      // disableImagesLoaded={false} // default false
+      reloadOnUpdate // default false
+    >
       {
-        viewable.map((c, i) => (
+        CASES.map((c, i) => (
           <Case
             isShort
             key={i}
@@ -1045,7 +1065,7 @@ function RecommendedCases(props) {
             handleSaveCase={() => handleSaveCase(c.caseId)} />
         ))
       }
-    </div>
+    </Flickity>
 
   </div>)
 }
