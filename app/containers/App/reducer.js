@@ -19,7 +19,8 @@ import {
   SPECIALTIES,
   COMPLICATIONS,
   OPERATING_ROOM,
-  USER_ROLES
+  USER_ROLES,
+  LOGGER
 } from './constants';
 
 // The initial state of the App
@@ -69,6 +70,9 @@ function emmReducer(state = initialState, action) {
     case USER_ROLES:
       return state
         .set('userRoles', action.userRoles)
+    case LOGGER:
+      return state
+        .set('logger', action.logger)
     default:
       return state;
   }

@@ -86,7 +86,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         },
         subchart: {
           show: true,
-          onbrush: (d) => this.handleBrush() && this.props.showChange && this._doActionNoSpam(d),
+          onbrush: (d) => this.handleBrush(d) && this.props.showChange && this._doActionNoSpam(d),
           size: {
             // height: 20
           },
@@ -137,6 +137,12 @@ export default class TimeSeriesChart extends React.PureComponent {
     } else if (visibleTicks.length < MAX_TICK_WIDTH) {
       visibleTicks.forEach(tick => { if (whitelist.includes(tick)) tick.querySelector("text").style.display = "block" });
     }
+
+    const {title, logger} = this.props;
+    if (d){
+      logger && logger.manualAddLog('onchange', `time-series-domain-${title}`, {domain:d});
+    }
+    
     return true
   }
 
@@ -201,14 +207,17 @@ export default class TimeSeriesChart extends React.PureComponent {
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
     const xValue = moment(d[0].x);
     let tooltipData = this.state.tooltipData && this.state.tooltipData[xValue.format("YYYY-MM-DD")] || []
+    const {title, logger} = this.props;
+
     if (tooltipData.length == 0) {
+      logger && logger.manualAddLog('mouseover', `time-series-tooltip-${title}`, {toolTip: this.props.nullMessage, xValue:xValue, yValue:d[0].value});
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext" >
           <div>{xValue.format('MMM DD')}</div>
           <div>{this.props.nullMessage}</div>
         </div>);
     }
-
+    logger && logger.manualAddLog('mouseover', `time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {
@@ -250,7 +259,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         title={tooltip}
         placement="top" fontSize="small"
       >
-        <div className={`change-value ${className}`}>
+        <div className={`change-value ${className} log-mouseover`} id={`trending-tooltip-${this.props.title}`} description={JSON.stringify({toolTip:tooltip, trend:diff})}>
           <span>{`${diff}%`}</span>
           <span>{tag}</span>
         </div>
@@ -283,7 +292,7 @@ export default class TimeSeriesChart extends React.PureComponent {
         <Grid container spacing={0} justify='center' className="time-series" style={{ textAlign: 'center' }}>
           <Grid item xs className="chart-title">
             {this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line,index) => { return <div key={index}>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
-              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${this.props.title}`}/>
             </LightTooltip>}
             {this.props.showChange && this.renderChangeValue()}
           </Grid>

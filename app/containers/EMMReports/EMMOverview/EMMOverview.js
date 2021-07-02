@@ -101,7 +101,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <div className="Section-Title">
                     {distractionScore.title}
                     <CustomLightTooltip interactive arrow title={EMM_DISTRACTION_TOOLTIP} placement="top" fontSize="small">
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} className="log-mouseover" id={`info-tooltip-${distractionScore.title}`}/>
                     </CustomLightTooltip>
                   </div>
                   <div>
@@ -115,7 +115,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <div className="Section-Title">
                     {technicalPerformanceScore.title}
                     <CustomLightTooltip interactive arrow title={EMM_TECHNICAL_TOOLTIP} placement="top" fontSize="small">
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} className="log-mouseover" id={`info-tooltip-${technicalPerformanceScore.title}`}/>
                     </CustomLightTooltip>
                   </div>
                   <div>
@@ -134,7 +134,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <div className="Section-Title">
                     {adverseEventRate.title}
                     <CustomLightTooltip interactive arrow title={EMM_ADVERSEEVENT_TOOLTIP} placement="top" fontSize="small">
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} className="log-mouseover" id={`info-tooltip-${adverseEventRate.title}`}/>
                     </CustomLightTooltip>
                   </div>
                   <div>
@@ -149,12 +149,12 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                   <Grid container spacing={9}>
                     <Grid item xs={4} className="EMM-HL7 relative">
                       {hasHypotension ? <CustomLightTooltip interactive arrow title={hypotension.body} placement="top" fontSize="small">
-                        <span className="Score-Speedometer">{this.getSpeedometer(hypotension.description)}</span>
+                        <span className="Score-Speedometer log-mouseover" id={`speedometer-tooltip-Hypotension`}>{this.getSpeedometer(hypotension.description)}</span>
                       </CustomLightTooltip> : ''}
                       <div className="Section-Title">
                         Hypotension
                         {hasHypotension ? <CustomLightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypotension.dataPoints} title={hypotension.subTitle} />} placement="top" fontSize="small">
-                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} className="log-mouseover" id={`info-tooltip-Hypotension`}/>
                         </CustomLightTooltip> : ''}
                       </div>
                       <div>
@@ -172,13 +172,13 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                     </Grid>
                     <Grid item xs={4} className="EMM-HL7 relative">
                       {hasHypothermia ? <CustomLightTooltip interactive arrow title={hypothermia.body} placement="top" fontSize="small">
-                        <span className="Score-Speedometer">{this.getSpeedometer(hypothermia.description)}</span>
+                        <span className="Score-Speedometer log-mouseover" id={`speedometer-tooltip-Hypothermia`}>{this.getSpeedometer(hypothermia.description)}</span>
                       </CustomLightTooltip> : ''}
                       <div className="Section-Divider" />
                       <div className="Section-Title">
                         Hypothermia
                         {hasHypothermia ? <CustomLightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypothermia.dataPoints} title={hypothermia.subTitle} />} placement="top" fontSize="small">
-                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} className="log-mouseover" id={`info-tooltip-Hypothermia`}/>
                         </CustomLightTooltip> : ''}
                       </div>
                       <div>
@@ -192,13 +192,13 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                     </Grid>
                     <Grid item xs={4} className="EMM-HL7 relative">
                       {hasHypoxia ? <CustomLightTooltip interactive arrow title={hypoxia.body} placement="top" fontSize="small">
-                        <span className="Score-Speedometer" style={{ marginRight: 10 }}>{this.getSpeedometer(hypoxia.description)}</span>
+                        <span className="Score-Speedometer log-mouseover" id={`speedometer-tooltip-Hypoxia`} style={{ marginRight: 10 }}>{this.getSpeedometer(hypoxia.description)}</span>
                       </CustomLightTooltip> : ''}
                       <div className="Section-Divider" />
                       <div className="Section-Title">
                         Hypoxia
                         {hasHypoxia ? <CustomLightTooltip interactive arrow title={<HorizontalBarChart dataPoints={hypoxia.dataPoints} title={hypoxia.subTitle} />} placement="top" fontSize="small">
-                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+                          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 4px 4px' }} className="log-mouseover" id={`info-tooltip-Hypoxia`}/>
                         </CustomLightTooltip> : ''}
                       </div>
                       <div>

@@ -39,7 +39,7 @@ export default class DisplayNumber extends React.PureComponent {
                 title={Array.isArray(this.props.tooltipText) ? this.props.tooltipText.map((line, index) => { return <div key={index}>{line}</div> }) : this.props.tooltipText}
                 placement="top" fontSize="small"
               >
-                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${this.props.title}`}/>
               </LightTooltip>}
             </span>
           </Grid>

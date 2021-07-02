@@ -2,15 +2,15 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import SSChecklist from './SSChecklist';
-import { makeSelectToken, makeSelectUserFacility, makeSelectEmail, makeSelectSpecialties, makeSelectComplications, makeSelectIsAdmin } from '../App/selectors';
+import { makeSelectToken, makeSelectUserFacility, makeSelectEmail, makeSelectSpecialties,  makeSelectIsAdmin, makeSelectLogger } from '../App/selectors';
 
 const mapStateToProps = createStructuredSelector({
   userToken: makeSelectToken(),
   userFacility: makeSelectUserFacility(),
   userEmail: makeSelectEmail(),
   specialties: makeSelectSpecialties(),
-  complications: makeSelectComplications(),
-  isAdmin: makeSelectIsAdmin()
+  isAdmin: makeSelectIsAdmin(),
+  logger: makeSelectLogger()
 });
 
 const mapDispatchToProps = (dispatch) => {

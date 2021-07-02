@@ -43,7 +43,7 @@ export default class MainLayout extends React.PureComponent {
     this.logoutRef = React.createRef();
   }
 
-  resourcesGathered(roles) {
+  resourcesGathered(roles, userFacility) {
     this.setState({
       userLoggedIn: true,
       adminPanelAccess: this.containsAny(roles, ["ADMIN"]),
@@ -51,10 +51,13 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: this.containsAny(roles, ["ENHANCED M&M EDIT"]),
       sscAccess: this.containsAny(roles, ["SURGICAL CHECKLIST"]),
       efficiencyAccess: this.containsAny(roles, ["EFFICIENCY"]),
-      caseDiscoveryAccess: this.containsAny(roles, ["ADMIN"]) && this.props.userFacility == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92"
+      caseDiscoveryAccess: this.containsAny(roles, ["ADMIN"]) && (userFacility.toUpperCase() == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92" || userFacility.toUpperCase() == "0282953F-D4C9-47C0-904D-92849A394EEA"),
+      emmPublishAccess: this.containsAny(roles, ["SSTADMIN"]),
+      isLoading:false
     });
+    this.props.setEMMPublishAccess(this.containsAny(roles, ["SSTADMIN"]));
     this.clearFilters();
-    this.getPageAccess();
+    // this.getPageAccess();
   };
 
   containsAny(arr1, arr2) {
@@ -73,22 +76,6 @@ export default class MainLayout extends React.PureComponent {
     });
   };
 
-  getPageAccess() {
-    Promise.all([this.getEMMPublishAccess()].map(function (e) {
-      return e && e.then(function (result) {
-        return result && result.data;
-      }).catch(function () {
-        return false;
-      })
-    })).then(([emmPublishAccess]) => {
-      this.setState({
-        emmPublishAccess, isLoading: false
-      })
-      this.props.setEMMPublishAccess(emmPublishAccess);
-    }).catch(function (results) {
-      this.notLoading();
-    });
-  }
   notLoading() {
     this.setState({ isLoading: false });
   }
@@ -104,8 +91,14 @@ export default class MainLayout extends React.PureComponent {
         <NoAccess />
       </Switch>
     }
-
+    const {logger} = this.props;
     if (this.state.userLoggedIn) {
+      if (this.props.emmReportID){
+        logger && logger.manualAddLog('session', `open-emm-report`, this.props.emmReportID);
+      } else {
+        logger && logger.manualAddLog('session', `open-${window.location.pathname.substring(1)}`);
+      }
+      
       return <Switch>
         <Route path="/dashboard" component={Welcome} />
         {(this.state.emmAccess) &&
@@ -150,7 +143,7 @@ export default class MainLayout extends React.PureComponent {
           <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"blockUtilization"} />} />
         }
         {(this.state.caseDiscoveryAccess) &&
-          <Route path="/caseDiscovery" render={(props) => <CaseDiscovery {...props} showEMMReport={this.props.showEMMReport} userFacility={this.props.userFacility} userToken={this.props.userToken} />} />
+          <Route path="/caseDiscovery" render={(props) => <CaseDiscovery {...props} showEMMReport={this.props.showEMMReport} />} />
         }
 
         <Route path="/my-profile" component={MyProfile} />
@@ -196,7 +189,7 @@ export default class MainLayout extends React.PureComponent {
                   logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}
                   userLogin={<AzureLogin
-                    resourcesGathered={(roles) => this.resourcesGathered(roles)}
+                    resourcesGathered={(roles, userFacility) => this.resourcesGathered(roles, userFacility)}
                     redirect={() => this.redirect()}
                     logoutRef={this.logoutRef}
                   />}

@@ -32,7 +32,7 @@ export default class ItemList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      dataPoints: []
+      dataPoints: [],
     };
   };
 
@@ -42,24 +42,8 @@ export default class ItemList extends React.PureComponent {
 
   }
 
-
-  customSort(name, title) {
-    return (a, b) => { return a[name] - b[name] || this.procedureNameCompare(title, a, b) }
-  }
-
-  procedureNameCompare(title, a, b) {
-    var element = document.querySelectorAll('.MuiTableSortLabel-active .MuiTableSortLabel-iconDirectionAsc');
-    var titleElement = document.querySelectorAll('.MuiTableSortLabel-active');
-    let isSameTitle = titleElement.length && title == titleElement[0].textContent;
-    //If element exists we're descending
-    if (element.length && isSameTitle) {
-      return ('' + b.procedureName).localeCompare(a.procedureName);
-    }
-    return ('' + a.procedureName).localeCompare(b.procedureName);
-  }
-
   renderChangeValue(rowData) {
-    let { valueY } = rowData;
+    let { valueY , valueX } = rowData;
     valueY = parseInt(valueY)
     let className = '';
     let tag = '';
@@ -86,7 +70,7 @@ export default class ItemList extends React.PureComponent {
         title={tooltip}
         placement="right" fontSize="small"
       >
-        <div className={`change-value normal-text ${className}`}>
+        <div className={`change-value normal-text ${className} log-mouseover`}  id={`trending-tooltip-${valueX}`} description={JSON.stringify({toolTip:tooltip, trend:valueY})}>
           <span>{`${valueY}%`}</span>
           <span>{tag}</span>
         </div>
@@ -95,22 +79,32 @@ export default class ItemList extends React.PureComponent {
     )
 
   }
+  sortClick(key){
+    //if element exists we're descending
+    var element = document.querySelectorAll('.MuiTableSortLabel-active .MuiTableSortLabel-iconDirectionAsc');
+    var titleElement = document.querySelectorAll('.MuiTableSortLabel-active');
+    //Check if its the same title
+    let isSameTitle = titleElement.length && key == titleElement[0].textContent;
+    const {logger} = this.props;
+    logger && logger.manualAddLog('click', `sort-item-list-${key}`, element.length && isSameTitle ? 'desc' : 'asc');
+  }
+  
   render() {
     return (
       <div className="item-list">
         <div className="title">{this.props.title}{this.props.toolTip && <LightTooltip interactive arrow title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line,index) => { return <div key={index}>{line}</div> }) : this.props.toolTip} placement="top" fontSize="small">
-          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }}  className="log-mouseover" id={`info-tooltip-${this.props.title}`}/>
         </LightTooltip>}</div>
         <MaterialTable
           columns={[
             {
               field: "valueX",
-              title: "Specialty",
+              title: <div onClick={() => this.sortClick('Specialty')}>Specialty</div>,
               render: rowData => <div className="specialty-col normal-text" onClick={() => {this.props.selectOption({display:rowData.valueX, id:rowData.valueX})}}>{rowData.valueX}</div>
             },
             {
               field: "valueY",
-              title: "% Change",
+              title: <div onClick={() => this.sortClick('% Change')}>% Change</div>,
               defaultSort: 'desc',
               headerStyle: { textAlign: 'right' },
               customSort: (a, b) => (a.valueY == null ? -.1 : a.valueY) - (b.valueY == null ? -.1 : b.valueY),

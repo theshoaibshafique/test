@@ -3,7 +3,7 @@ import { Grid, Tooltip, withStyles, Divider } from '@material-ui/core';
 import './style.scss';
 import DonutChart from './DonutChart/DonutChart';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Histogram from './Histogram/Histogram';
+import Histogram from './Histogram';
 import { LightTooltip } from '../../SharedComponents/SharedComponents';
 const colors = {
   'other': '#F3F3F3',

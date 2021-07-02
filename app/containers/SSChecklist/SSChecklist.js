@@ -10,16 +10,15 @@ import moment from 'moment/moment';
 import UniversalPicker from '../../components/UniversalPicker/UniversalPicker';
 import ReportScore from '../../components/Report/ReportScore/ReportScore';
 import globalFunctions from '../../utils/global-functions';
-import LoadingOverlay from 'react-loading-overlay';
 import InfographicParagraph from '../../components/Report/InfographicParagraph/InfographicParagraph';
 import ChecklistDetail from '../../components/Report/ChecklistDetail/ChecklistDetail';
 import CompareInfographic from '../../components/Report/CompareInfographic/CompareInfographic';
 
-import TimeSeriesChart from '../../components/Report/TimeSeriesChart/TimeSeriesChart';
+import TimeSeriesChart from '../../components/Report/TimeSeriesChart';
 import MultiDonutChart from '../../components/Report/MultiDonutChart/MultiDonutChart';
 import MonthRangePicker from '../../components/MonthRangePicker/MonthRangePicker';
-import ScatterPlot from '../../components/Report/ScatterPlot/ScatterPlot';
-import ItemList from '../../components/Report/ItemList/ItemList';
+import ScatterPlot from '../../components/Report/ScatterPlot';
+import ItemList from '../../components/Report/ItemList';
 import NoData from '../../components/Report/NoData/NoData';
 import MultiTimeSeriesChart from '../../components/Report/MultiTimeSeriesChart';
 import DonutHistogram from '../../components/Report/DonutHistogram/DonutHistogram';
@@ -28,6 +27,7 @@ import { mdiCogOutline } from '@mdi/js';
 import Icon from '@mdi/react'
 import { SSCOnboardModal } from './SSCOnboardModal/SSCOnboardModel';
 import { GenericInformationPage } from './GenericInformationPage/GenericInformationPage';
+import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 
 
 
@@ -66,6 +66,10 @@ export default class SSChecklist extends React.PureComponent {
         this.getReportLayout();
       })
     }
+    const {logger} = this.props;
+    setTimeout(() => {
+      logger && logger.connectListeners();
+    }, 300)
   }
 
   componentDidMount() {
@@ -270,7 +274,8 @@ export default class SSChecklist extends React.PureComponent {
   }
 
   updateState(key, value, shouldApply = false) {
-
+    const {logger} = this.props;
+    logger && logger.manualAddLog('onchange', `update-${key}`, value);
     this.setState({
       [key]: value,
       isFilterApplied: false
@@ -472,32 +477,7 @@ export default class SSChecklist extends React.PureComponent {
             </NavLink>
           </div>}
         </Grid>
-        <LoadingOverlay
-          active={isLoading}
-          spinner
-          fadeSpeed={0}
-          text='Loading your content...'
-          className="overlay"
-          styles={{
-            overlay: (base) => ({
-              ...base,
-              background: 'none',
-              color: '#000',
-              opacity: 0.8,
-              color: "#000000",
-              fontFamily: "Noto Sans",
-              fontSize: 18,
-              lineHeight: "24px"
-            }),
-            spinner: (base) => ({
-              ...base,
-              '& svg circle': {
-                stroke: 'rgba(0, 0, 0, 0.5)'
-              }
-            })
-          }}
-        >
-
+        {isLoading ? <div style={{marginTop:-100}}><LoadingIndicator /></div> : <div className="overlay">
           {this.renderTiles()}
 
           <Modal
@@ -513,7 +493,7 @@ export default class SSChecklist extends React.PureComponent {
             onClose={() => this.closeOnboardModal()}
             reportType={this.state.reportType}
           />
-        </LoadingOverlay>
+        </div>}
       </div>
     );
   }

@@ -15,18 +15,8 @@ import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
 import UserModal from './Modal/UserModal/UserModal';
-import DeleteModal from './Modal/DeleteModal/DeleteModal';
+import DeleteModal from './Modal/DeleteModal';
 
-const tableIcons = {
-    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
-};
 
 export default class UserManagement extends React.PureComponent {
   constructor(props) {
@@ -75,12 +65,24 @@ export default class UserManagement extends React.PureComponent {
     this.getRoles();
   };
 
+  componentDidUpdate(){
+    // FOR THE LOGS
+    const search = document.getElementsByClassName('MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd');
+    if (search.length){
+      search[0].classList.add("log-input");
+    }
+    const {logger} = this.props;
+    setTimeout(() => {
+      logger && logger.connectListeners();
+    }, 300)
+  }
+
   openModal(e, view, rowData) {
     this.setState({
       errorMsgVisible: false,
       errorMsgEmailVisible: false
     })
-
+    const {logger} = this.props;
     if (rowData) {
       this.setState({
         lastRequestedUserName: rowData.userName
@@ -102,9 +104,8 @@ export default class UserManagement extends React.PureComponent {
           });
           //Only set the state of the most recently retrieved user (fixes bug when of rapidly swapping between popups)
           if (this.state.lastRequestedUserName == rowData.userName){
-            this.setState({
-              userValue: {
-                currentUser: rowData.userName,
+            const userData = {
+              currentUser: rowData.userName,
                 firstName: rowData.firstName,
                 lastName: rowData.lastName,
                 email: rowData.email,
@@ -115,12 +116,19 @@ export default class UserManagement extends React.PureComponent {
                 active: rowData.active,
                 permissions: permission,
                 id: rowData.tableData.id,
+            };
+            logger && logger.manualAddLog('click', `open-${view}-modal`, userData);
+            this.setState({
+              userValue: {
+                ...userData,
                 isLoaded:true
               }
             });
           }
         }
       });
+    } else {
+      logger && logger.manualAddLog('click', `open-${view}-modal`);
     }
 
     this.setState({
@@ -134,6 +142,8 @@ export default class UserManagement extends React.PureComponent {
   };
 
   resetModal() {
+    const {logger} = this.props;
+    logger && logger.manualAddLog('click', `close-${this.state.currentView}-modal`);
     this.setState({
       open: false,
       currentView: 'add',
@@ -231,15 +241,19 @@ export default class UserManagement extends React.PureComponent {
 
   handleFormChange(e) {
     let currentUserValue = {...this.state.userValue};
+    const {logger} = this.props;
     if (e.target.type == 'checkbox') {
       let targetIndex = currentUserValue["permissions"].indexOf(e.target.value);
       if (targetIndex < 0) {
         currentUserValue["permissions"].push(e.target.value);
+        logger && logger.manualAddLog('onchange', `user-update-permissions-add`, e.target.value);
       } else {
         currentUserValue["permissions"].splice(targetIndex, 1);
+        logger && logger.manualAddLog('onchange', `user-update-permissions-remove`, e.target.value);
       }
     } else {
       currentUserValue[e.target.name] = e.target.value;
+      logger && logger.manualAddLog('onchange', `user-update-${e.target.name}`, e.target.value);
     }
     this.setState({userValue: currentUserValue});
   };
@@ -290,11 +304,11 @@ export default class UserManagement extends React.PureComponent {
           <MaterialTable
             title=""
             columns={[
-              { title: 'User Name', field: 'userName', hidden: true },
-              { title: 'First Name', field: 'firstName' },
-              { title: 'Last Name', field: 'lastName' },
-              { title: 'Email', field: 'email' },
-              { title: 'Title', field: 'title'}
+              { title: this.generateTitle('User Name'), field: 'userName', hidden: true },
+              { title: this.generateTitle('First Name'), field: 'firstName', defaultSort: 'asc' },
+              { title: this.generateTitle('Last Name'), field: 'lastName' },
+              { title: this.generateTitle('Email'), field: 'email' },
+              { title: this.generateTitle('Title'), field: 'title'}
             ]}
             options={{ 
               pageSize: 10,
@@ -303,10 +317,11 @@ export default class UserManagement extends React.PureComponent {
               paging: true,
               searchFieldAlignment: 'left',
               searchFieldStyle:{marginLeft:-24},
+              thirdSortClick: false,
               draggable:false
             }}
             data={this.state.userList}
-            icons={tableIcons}
+            icons={this.getTableIcons()}
             onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
           />
         </div>
@@ -340,5 +355,40 @@ export default class UserManagement extends React.PureComponent {
       </div>
       </LoadingOverlay>
     );
+  }
+
+  // LOG HELPERS
+  getTableIcons(){
+    const tableIcons = {
+      Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+      FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} onClick={() => this.logClick('first-page')} />),
+      LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} onClick={() => this.logClick('last-page')}/>),
+      NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} onClick={() => this.logClick('next-page')}/>),
+      PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} onClick={() => this.logClick('previous-page')}/>),
+      ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => this.logClick('clear-search')}/>),
+      Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+      SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
+    };
+    return tableIcons
+  }
+  logClick(key){
+    const {logger} = this.props;
+    logger && logger.manualAddLog('click', `${key}`);
+  }
+
+  sortClick(key){
+    //if element exists we're descending
+    var element = document.querySelectorAll('.MuiTableSortLabel-active .MuiTableSortLabel-iconDirectionAsc');
+    var titleElement = document.querySelectorAll('.MuiTableSortLabel-active');
+    //Check if its the same title
+    let isSameTitle = titleElement.length && key == titleElement[0].textContent;
+    const {logger} = this.props;
+    logger && logger.manualAddLog('click', `sort-user-list-${key}`, element.length && isSameTitle ? 'desc' : 'asc');
+  }
+  generateTitle(title){
+    // Generate a title element for the logs
+    return (
+      <div onClick={() => this.sortClick(title)}>{title}</div>
+    )
   }
 }

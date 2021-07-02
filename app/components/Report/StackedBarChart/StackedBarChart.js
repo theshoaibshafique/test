@@ -190,6 +190,8 @@ export default class StackedBarChart extends React.PureComponent {
         </div>
       );
     } else {
+      const {logger, title} = this.props;
+    logger && logger.manualAddLog('mouseover', `stacked-bar-tooltip-${title}`, {toolTip:tooltipData, xValue:valueX, yValue: d[0].value});
       return ReactDOMServer.renderToString(
         <div className="chartTooltip subtle-subtext" >
           {tooltipData.map((line) => {
@@ -215,7 +217,7 @@ export default class StackedBarChart extends React.PureComponent {
             <div className="legend-title">
               <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
               {this.state.tooltipLegendData[id] && <LightTooltip interactive arrow title={this.state.tooltipLegendData[id]} placement="top" fontSize="small">
-                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${id}`}/>
               </LightTooltip>}
             </div>
           </div>)

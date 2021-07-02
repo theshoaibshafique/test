@@ -22,7 +22,8 @@ import {
   SPECIALTIES,
   COMPLICATIONS,
   OPERATING_ROOM,
-  USER_ROLES
+  USER_ROLES,
+  LOGGER
 } from './constants';
 
 /**
@@ -120,5 +121,19 @@ export function setUserRoles(userRoles) {
   return {
     type: USER_ROLES,
     userRoles
+  };
+}
+
+/**
+ * Save the logger
+ *
+ * @param  {Logger} logger that saves/sends all user actions
+ *
+ * @return {object}    An action object with a type of LOGGER
+ */
+export function setLogger(logger) {
+  return {
+    type: LOGGER,
+    logger
   };
 }

@@ -1,7 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { makeSelectLogger } from '../../../App/selectors';
 
 const VideoTimeline = (props) => {
   const { duration, procedureSteps, seekVideo, currentVideoTime } = props;
+  const logger = useSelector(makeSelectLogger());
   let adverseEvents = [];
   procedureSteps.forEach((procedureStep) => {
     if (procedureStep.dataPoints.length > 0)
@@ -11,6 +14,7 @@ const VideoTimeline = (props) => {
   const shouldHighlight = (startTime, endTime) => {
     return (currentVideoTime >= startTime && currentVideoTime < endTime) ? 'highlighted' : '';
   }
+
 
   return (
     <div className="Video-Timeline relative">
@@ -34,16 +38,19 @@ const VideoTimeline = (props) => {
 
       {
         adverseEvents.map((event, index) => {
+          const clickEvent = () => {
+            seekVideo(parseInt(event.valueX));
+            logger && logger.manualAddLog('click', `ae-select`, { time: parseInt(event.valueX) });
+          }
           return <div
                     key={`adverseEvent${index}`}
                     className="time-line-marker event-circle absolute"
                     style={{left: `calc(${(event.valueX / duration * 100)}%)`}}
-                    onClick={()=>seekVideo(parseInt(event.valueX))}/>
+                    onClick={clickEvent}/>
 
         })
       }
     </div>
   )
 }
-
 export default VideoTimeline;

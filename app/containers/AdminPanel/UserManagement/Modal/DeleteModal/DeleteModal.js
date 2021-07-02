@@ -20,7 +20,10 @@ class DeleteModal extends React.Component {
       "userName": this.props.userValue.currentUser
     };
     this.props.userValue.id;
+    const {logger} = this.props;
     if (this.props.userValue.active) {
+      
+      logger && logger.manualAddLog('click', 'disable-user', this.props.userValue.currentUser);
       globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGEMENT_API, 'delete', this.props.userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {
@@ -34,6 +37,7 @@ class DeleteModal extends React.Component {
         this.setState({isLoading:false})
       });
     } else {
+      logger && logger.manualAddLog('click', 'enable-user', this.props.userValue.currentUser);
       globalFuncs.genericFetchWithNoReturnMessage(process.env.USERMANAGMENTACTIVATE_API + '/' + this.props.userValue.currentUser, 'PATCH', this.props.userToken, {})
       .then(result => {
         if (result === 'error' || result === 'conflict') {

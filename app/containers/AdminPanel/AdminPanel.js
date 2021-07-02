@@ -6,6 +6,7 @@ import UserManagement from './UserManagement/Loadable';
 import SSCSettings from './SSCSettings/Loadable';
 import { StyledTab, StyledTabs, TabPanel } from '../../components/SharedComponents/SharedComponents';
 
+const TABS = ['user management', 'eff', 'ssc']
 export default class AdminPanel extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -13,7 +14,12 @@ export default class AdminPanel extends React.PureComponent {
       tabIndex: 0
     }
   }
+  
+  
   handleChange(obj, tabIndex) {
+    const {logger} = this.props;
+    
+    logger && logger.manualAddLog('click', 'swap-tab', TABS[tabIndex]);
     this.setState({ tabIndex });
   }
   componentDidMount() {
@@ -24,6 +30,12 @@ export default class AdminPanel extends React.PureComponent {
     }
     this.getEfficiencyConfig();
     this.getSSCConfig();
+  }
+  componentDidUpdate(){
+    const {logger} = this.props;
+    setTimeout(() => {
+      logger && logger.connectListeners();
+    }, 300)
   }
 
   async getEfficiencyConfig() {
@@ -88,7 +100,7 @@ export default class AdminPanel extends React.PureComponent {
         >
           <StyledTab label="User Management" />
           <StyledTab label="Efficiency" />
-          <StyledTab label="Surgical Safety Checklist" />
+          {(this.state.sscConfig && this.state.sscConfig.checklists && this.state.sscConfig.checklists.length > 0) && <StyledTab label="Surgical Safety Checklist" />}
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
           <UserManagement />

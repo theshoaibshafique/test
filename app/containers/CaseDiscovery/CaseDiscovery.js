@@ -4,11 +4,11 @@
  * This is the page we show when the user visits a url that doesn't have a route
  */
 
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Divider, FormControl, FormControlLabel, FormHelperText, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
 import { DATE_OPTIONS, TAGS, TAG_INFO } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -42,7 +42,12 @@ import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { Logger } from './Logger/Logger';
+import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView } from './Utils';
+import { useSelector } from 'react-redux';
+import { makeSelectComplications, makeSelectIsAdmin, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { NavLink } from 'react-router-dom';
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -114,10 +119,10 @@ function displayTags(tags, emrCaseId) {
     let desc = tag.toolTip || [];
     tag = tag.tagName || tag;
     return (
-      <LightTooltip title={desc.map((line) => {
-        return <div>{line}</div>
+      <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
+        return <div key={i}>{line}</div>
       })} arrow={true}>
-        <span className={`case-tag ${tag} log-mouseover`} id={`${emrCaseId}-${tag}-tag`} emrCaseId={emrCaseId} key={tag}>
+        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} key={tag}>
           <span>
             {getTag(tag)}
           </span>
@@ -131,7 +136,7 @@ function displayTags(tags, emrCaseId) {
 }
 
 function Case(props) {
-  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick } = props;
+  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick, isSaved, handleSaveCase } = props;
   const sTime = moment(wheelsIn).format("HH:mm");
   const eTime = moment(wheelsOut).format("HH:mm");
   const diff = moment().diff(moment(wheelsIn), 'days');
@@ -142,27 +147,41 @@ function Case(props) {
 
   const procedureList = [...new Set(procedures.slice(1).map((p) => p.procedureName))];
   const specialtyList = [...new Set(procedures.map((p) => p.specialtyName))];
-
+  const logger = useSelector(makeSelectLogger());
+  const handleClick = () => {
+    onClick();
+    logger.manualAddLog('click', `open-case-${emrCaseId}`, formatCaseForLogs(props))
+  }
 
   return (
-    <div className="case log-click" id={`case-${emrCaseId}`} emrCaseId={emrCaseId} key={emrCaseId} onClick={onClick} >
-      {procedureList.length > 0 ? (
-        <LightTooltip arrow title={
-          <div>
-            <span>{`Secondary Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
-            <ul style={{ margin: '4px 0px' }}>
-              {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
-            </ul>
-          </div>
-        }>
-          <div className="title" >
-            {procedureName}
-          </div>
-        </LightTooltip>
-      ) :
+    <div className="case" key={emrCaseId} onClick={handleClick} >
+      <div className="case-header">
         <div className="title" >
           {procedureName}
         </div>
+        <div className={`save-toggle ${!isSaved && 'not-saved'}`}  onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
+          <IconButton style={{ marginTop:-6, marginBottom:-11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
+            {isSaved ? <StarIcon  style={{ color: '#EEDF58', fontSize:29  }}   /> : <StarBorderIcon style={{ color: '#828282', fontSize:29  }}  />}
+          </IconButton>
+
+        </div>
+      </div>
+
+      {procedureList.length > 0 && (
+        <div className="description">
+          {`Additional Procedure${procedureList.length == 1 ? '' : 's'}`}
+          <LightTooltip arrow title={
+            <div>
+              <span>{`Additional Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
+              <ul style={{ margin: '4px 0px' }}>
+                {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
+              </ul>
+            </div>
+          }>
+            <InfoOutlinedIcon className="log-mouseover" id={`additional-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
+          </LightTooltip>
+        </div>
+      )
       }
 
       <div className="subtitle">
@@ -181,9 +200,8 @@ function Case(props) {
   )
 }
 
-
 function TagsSelect(props) {
-  const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, setIncludeAllTags, freeSolo, groupBy } = props;
+  const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, handleChangeIncludeAllTags, freeSolo, groupBy } = props;
   let [value, setValue] = React.useState(searchData[id]);
   let [includeAll, setIncludeAll] = React.useState(includeAllTags);
   const classes = useStyles();
@@ -243,8 +261,8 @@ function TagsSelect(props) {
       {includeToggle && (value && value.length > 0) && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
-            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
-            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => setIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all of these tags</span>} />
+            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
+            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all of these tags</span>} />
           </RadioGroup>
         </div>
       )}
@@ -307,48 +325,94 @@ const searchReducer = (state, event) => {
       from: event.value
     }
   }
-
+  const logger = event.logger;
+  logger && logger.manualAddLog('onchange', event.name, event.value)
   return {
     ...state,
     [event.name]: event.value
   }
 }
 
-const logger = new Logger();
+const dataReducer = (state, event) => {
+  return {
+    ...state,
+    ...event
+  }
+}
+
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
-  const { showEMMReport, userFacility, userToken } = props;
-  const [CASES, setCases] = useState([]);
-  const [SPECIALTIES, setSpecialties] = useState([]);
-  const [PROCEDURES, setProcedures] = useState([]);
-  const [ORS, setORs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { showEMMReport } = props;
 
-  const [COMPLICATIONS, setComplications] = useState([]);
+  const [DATA, setData] = useReducer(dataReducer, {
+    CASES: [],
+    SPECIALTIES: [],
+    PROCEDURES: [],
+    ORS: [],
+    isLoading: true,
+    savedCases: [],
+    facilityName: "",
+    gracePeriod: 0,
+    outlierThreshold: 0
+  });
+  const { CASES, SPECIALTIES, PROCEDURES, ORS, isLoading, savedCases } = DATA;
+  const { facilityName, gracePeriod, outlierThreshold } = DATA;
   const [USERS, setUsers] = useState([]);
+  const [numShownCases, setNumShownCases] = React.useState(10);
 
-  const [facilityName, setFacilityName] = useState("");
-  const [gracePeriod, setGracePeriod] = useState(0);
-  const [outlierThreshold, setOutlierThreshold] = useState(0);
+  const userFacility = useSelector(makeSelectUserFacility());
+  const userToken = useSelector(makeSelectToken());
+  const logger = useSelector(makeSelectLogger());
+
+  useEffect(() => {
+    if (!logger) {
+      return;
+    }
+    logger.manualAddLog('session', 'open-case-discovery');
+    logger.exitLogs.push(['session', 'close-case-discovery', "Exited/Refreshed page"]);
+    return () => {
+      if (!logger) {
+        return
+      }
+      logger.exitLogs = [];
+      logger.manualAddLog('session', 'close-case-discovery', "Redirected page");
+    }
+  }, [logger])
+
+  useEffect(() => {
+    if (!CASES || CASES.length <= 0 || !logger) {
+      return;
+    }
+    logger.manualAddLog('session', 'initial-cases', CASES.slice(0, numShownCases).map(formatCaseForLogs))
+
+    //Log the initial cases in view
+    logger.manualAddLog('session', 'cases-in-view', getCasesInView());
+
+    // Setup scrolling variable
+    let isScrolling;
+    const casesWindow = document.getElementById('cases-id');
+
+    // Listen for scroll events
+    casesWindow.addEventListener('scroll', (event) => {
+
+      // Clear our timeout throughout the scroll
+      window.clearTimeout(isScrolling);
+
+      // Set a timeout to run after scrolling ends
+      isScrolling = setTimeout(() => {
+        logger.manualAddLog('scroll', 'cases-in-view', getCasesInView());
+      }, 66);
+
+    }, false);
+
+  }, [CASES])
+
   // Load all the APIs 
   useEffect(() => {
-    logger.userToken = userToken;
     const fetchUsers = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/emm_users', 'get', userToken, {})
         .then(result => {
           result = result.data
           setUsers(result);
-
-        }).catch((error) => {
-          console.log("uh no.")
-        }).finally(() => {
-
-        });
-    }
-    const fetchComplications = async () => {
-      const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/complications', 'get', userToken, {})
-        .then(result => {
-          result = result.data
-          setComplications(result);
 
         }).catch((error) => {
           console.log("uh no.")
@@ -362,9 +426,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         .then(result => {
           result = result.data;
           const { facilityName, fcotsThreshold, turnoverThreshold } = result;
-          setFacilityName(facilityName);
-          setGracePeriod(fcotsThreshold);
-          setOutlierThreshold(turnoverThreshold);
+
+          setData({
+            facilityName: facilityName,
+            gracePeriod: fcotsThreshold,
+            outlierThreshold: turnoverThreshold
+          })
         }).catch((error) => {
           console.log("uh no.")
         }).finally(() => {
@@ -373,11 +440,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
 
     const fetchCases = async () => {
-      const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
+
+      return await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
         .then(result => {
           result = result.data
-          setCases(result);
-          // console.time('timeTest');
           let spec = [];
           let proc = [];
           let ors = [];
@@ -397,43 +463,59 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
               ors.push(roomName);
             }
           });
+          result.sort((a, b) => moment(b.wheelsIn).valueOf() - moment(a.wheelsIn).valueOf())
+          setData({
+            CASES: result,
+            SPECIALTIES: spec,
+            PROCEDURES: proc,
+            ORS: ors,
+            isLoading: false
+          })
 
-          setSpecialties(spec);
-          setProcedures(proc);
-          setORs(ors);
-          // console.timeEnd('timeTest');
         }).catch((error) => {
           console.log("uh oh")
-          setCases(generateFakeCases(100));
-        }).finally(() => {
-          setIsLoading(false);
-        });
+        })
+
+    }
+
+    const fetchSavedCases = async () => {
+      await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + "bookmarks", 'get', userToken, {})
+      .then(result => {
+        result = result.data;
+        setData({
+          'savedCases': result
+        })
+      }).catch((error) => {
+        console.log("uh no.")
+      }).finally(() => {
+
+      });
     }
 
     fetchCases();
-    fetchUsers();
-    fetchComplications();
-    fetchFacilityConfig();
 
-    logger && logger.manualAddLog('session','window-dimensions',getWindowDimensions());
+    fetchUsers();
+
+    fetchFacilityConfig();
+    fetchSavedCases();
+
   }, []);
 
-  // const [logger, setLogger] = useState(null);
-  // useEffect(() => {
-  //   setLogger(new Logger());
-  // },[]);
   useEffect(() => {
     setTimeout(() => {
       logger && logger.connectListeners();
     }, 300)
   });
 
-
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
   const scrollToTop = () => {
     topElementRef.current.scrollIntoView(true);
     document.getElementById("cases-id").scrollTop -= 100;
+    //Log the top elements manually after animation
+    setTimeout(() => {
+      logger && logger.manualAddLog('scroll', 'cases-in-view', getCasesInView());
+    }, 1000)
   }
 
   //TODO: replace min/maxDate
@@ -452,15 +534,33 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     specialties: [],
     procedures: [],
     tags: [],
-    roomNames: []
+    roomNames: [],
+    onlySavedCases: false
   });
+
+  const handleSaveCase = async (caseId) => {
+    const isSav = savedCases.includes(caseId);
+    await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}` , 'PUT', userToken, {})
+      .then(result => {
+        logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, {caseId:caseId});
+        result = result.data;
+        setData({
+          'savedCases': result
+        })
+      }).catch((error) => {
+        console.log("uh no.")
+      });
+
+  }
+
   // Change/update the filter
   const handleChange = (event, value) => {
     scrollToTop();
-    logger.manualAddLog('onchange', event, value)
+
     setSearchData({
       name: event,
-      value: value
+      value: value,
+      logger: logger
     })
   }
 
@@ -472,20 +572,28 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // for any
   const [includeAllTags, setIncludeAllTags] = React.useState(0);
 
+  const handleChangeIncludeAllTags = (includeAllTags) => {
+    logger && logger.manualAddLog('click', 'match-tags', includeAllTags == 1 ? 'Matches all tags' : 'Matches any tags');
+    setIncludeAllTags(includeAllTags)
+  }
+
   //Filter cases
   let filterCases = CASES.filter((c) => {
     let cTags = c.tags.map((t) => t.tagName);
+    //Filter for which cases should be INCLUDED
     return (
       (`${c.emrCaseId}`.includes(searchData.caseId)) &&
       (!from || moment(c.wheelsIn).isAfter(from)) &&
       (!to || moment(c.wheelsOut).isBefore(to)) &&
-      (!specialties.length || specialties.includes(c.procedures && c.procedures[0].specialtyName)) &&
-      (!procedures.length || procedures.every((p) => c.procedures && c.procedures[0].procedureName.toLowerCase().includes(p.toLowerCase()))) &&
+      //given the filtered `specialties` list - check that the case has at least ONE matching specialty (including secondary specialties)
+      (!specialties.length || c.procedures && c.procedures.some((p) => specialties.includes(p.specialtyName))) &&
+      //Given the filtered `procedures` list match every item with at least one procedure (including secondary procedures)
+      (!procedures.length || procedures.every((p) => c.procedures && c.procedures.some(pr => pr.procedureName.toLowerCase().includes(p.toLowerCase())))) &&
       (!roomNames.length || roomNames.includes(c.roomName)) &&
-      (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => cTags.includes(t))) || (includeAllTags == 0 && cTags.some((t) => searchData.tags.includes(t))))
+      (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => cTags.includes(t))) || (includeAllTags == 0 && cTags.some((t) => searchData.tags.includes(t)))) &&
+      (!searchData.onlySavedCases || (savedCases.includes(c.caseId)))
     );
   })
-  filterCases.sort((a, b) => moment(b.wheelsIn).valueOf() - moment(a.wheelsIn).valueOf())
 
   // for Sorting the cases
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -499,7 +607,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleClose = (event) => {
     setAnchorEl(null);
     if (!isUndefined(event.target.value)) {
-      logger && logger.manualAddLog('click', 'sort-cases', event.target.value ? 'recent to oldest' : 'oldest to recent');
+      logger && logger.manualAddLog('click', 'sort-cases', event.target.value ? 'oldest to recent' : 'recent to oldest');
       setIsOldest(event.target.value)
     }
 
@@ -513,14 +621,28 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Set CaseID for detailed case view
   const [caseId, setCaseId] = React.useState(null);
   const handleChangeCaseId = (cId) => {
-    setCaseId(cId);
-    if (!cId) {
-      logger && logger.manualAddLog('click', cId ? `case-${cId}` : 'close-case', 'case-closed');
-    }
+    //Handle close case
+    if (!cId && DETAILED_CASE) {
+      const emrCId = DETAILED_CASE.metaData && DETAILED_CASE.metaData.emrCaseId;
+      const oldCase = CASES.find((c) => c.emrCaseId == emrCId);
 
+      logger && logger.manualAddLog('click', `close-case-${emrCId}`, formatCaseForLogs(oldCase));
+
+      setTimeout(() => {
+        logger && logger.manualAddLog('session', 'cases-in-view', getCasesInView());
+      }, 300)
+    }
+    setCaseId(cId);
   }
-  const [numShownCases, setNumShownCases] = React.useState(10);
+
   const [showTagsModal, setShowTagsModal] = React.useState(false);
+
+  const handleShowTagsModal = (show) => {
+    if (!show) {
+      logger && logger.manualAddLog('click', 'close-learn-more-tags', null);
+    }
+    setShowTagsModal(show);
+  }
 
 
   const getCasesView = () => {
@@ -534,7 +656,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
               timeout={500}
               classNames="item"
             >
-              <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} />
+              <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} isSaved={savedCases.includes(c.caseId)} handleSaveCase={() => handleSaveCase(c.caseId)} />
             </CSSTransition>
           )).slice(0, numShownCases)
         }</TransitionGroup>
@@ -559,11 +681,27 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const renderTagInfo = () => {
     const result = []
     const tag_info = TAG_INFO;
-    tag_info['Late First Case'] = `Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true)}`;
-    tag_info['Slow Turnover'] = `Identifies cases where turnover time preceding case was above ${facilityName} defined outlier threshold of ${globalFunctions.formatSecsToTime(outlierThreshold, true, true)}`;
+    const isAdmin = makeSelectIsAdmin();
+    const updateInAdmin = isAdmin && (
+      <span>
+        (<NavLink to={"/adminPanel/1"} className='link admin-link'>
+          update in Admin Panel
+        </NavLink>)
+      </span>)
+    tag_info['Late First Case'] = (
+      <span>
+        {`Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true)}`}
+        {updateInAdmin}
+      </span>)
+    tag_info['Slow Turnover'] = (
+      <span>
+        {`Identifies cases where turnover time preceding case was above ${facilityName} defined outlier threshold of ${globalFunctions.formatSecsToTime(outlierThreshold, true, true)}`}
+        {updateInAdmin}
+      </span>
+    );
     for (const [tag, value] of Object.entries(tag_info)) {
       result.push(
-        <Grid item xs={3} className="tag-column">
+        <Grid item xs={3} className="tag-column" key={`${tag}-${value}`}>
           <div className="info-tag">
             <span className={`case-tag ${tag}`} key={tag}>
               <span>
@@ -574,7 +712,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           </div>
         </Grid>
       );
-      result.push(<Grid item xs={9} className="info-column">{value}</Grid>);
+      result.push(<Grid item xs={9} className="info-column" key='info-col'>{value}</Grid>);
     }
 
     return (
@@ -601,6 +739,20 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           }}
           variant="outlined"
         />
+
+        <div className="show-only-saved">
+          <FormControlLabel
+            control={
+              <Checkbox
+                disableRipple
+                icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checked={searchData.onlySavedCases} onChange={(e) => handleChange('onlySavedCases', e.target.checked)} />
+            }
+            label={<span className="label">Show only saved cases</span>}
+          />
+
+        </div>
 
         <div className="select-header">
           <InputLabel className={classes.inputLabel}>Date</InputLabel>
@@ -704,7 +856,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         />
 
         <TagsSelect
-          title={<div>Tags (<span className="link log-click" id="learn-more-tags" onClick={() => setShowTagsModal(true)}>Learn More</span>)</div>}
+          title={<div>Tags (<span className="link log-click" id="learn-more-tags" onClick={() => handleShowTagsModal(true)}>Learn More</span>)</div>}
           placeholder="Filter by tags"
           options={TAGS}
           id="tags"
@@ -712,16 +864,16 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           searchData={searchData}
           includeToggle={true}
           includeAllTags={includeAllTags}
-          setIncludeAllTags={setIncludeAllTags}
+          handleChangeIncludeAllTags={handleChangeIncludeAllTags}
         />
 
         <Modal
           open={showTagsModal}
-          onClose={() => setShowTagsModal(false)}
+          onClose={() => handleShowTagsModal(false)}
         >
           <div className="Modal tag-info-modal">
             <div className="close-button">
-              <img src={Close} onClick={() => setShowTagsModal(false)} />
+              <img src={Close} onClick={() => handleShowTagsModal(false)} />
             </div>
             <div className="header">
               Case Tags
@@ -730,7 +882,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             <div className="close">
               <Button disableElevation disableRipple
                 variant="contained" className="primary"
-                onClick={() => setShowTagsModal(false)}>
+                onClick={() => handleShowTagsModal(false)}>
                 Close
             </Button>
             </div>
@@ -764,7 +916,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           <div id="cases-id" className="cases">
             <div ref={topElementRef}></div>
             {getCasesView()}
-            {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more log-click" id="load-more" disableElevation onClick={() => setNumShownCases(numShownCases + 10)}>
+            {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" id="load-more" disableElevation onClick={() => {
+              setNumShownCases(numShownCases + 10);
+              logger && logger.manualAddLog('click', 'load-more', filterCases.slice(numShownCases, numShownCases + 10).map(formatCaseForLogs));
+            }}>
               Load More
           </Button>}
           </div>
@@ -784,16 +939,21 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       setDetailedCase(null)
       return;
     }
-    // setDetailedCase(null)
+
     const fetchCases = async () => {
       const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
         .then(result => {
           result = result.data
+          if (result.metaData && result.metaData.emrCaseId && DETAILED_CASE) {
+            const newCase = CASES.find((c) => c.emrCaseId == result.metaData.emrCaseId);
+            logger && logger.manualAddLog('click', `swap-case-${result.metaData.emrCaseId}`, formatCaseForLogs(newCase));
+          }
+
           setDetailedCase(result)
         }).catch((error) => {
           console.log("oh no " + error)
         }).finally(() => {
-          // setIsLoading(false);
+
         });
     }
     fetchCases()
@@ -804,24 +964,28 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   return (
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
-      <DetailedCase {...DETAILED_CASE} COMPLICATIONS={COMPLICATIONS} USERS={USERS} userToken={userToken} handleChangeCaseId={handleChangeCaseId} hidden={!caseId} showEMMReport={showEMMReport} userFacility={userFacility} />
+      <DetailedCase {...DETAILED_CASE}
+        isSaved={savedCases.includes(caseId)}
+        handleSaveCase={() => handleSaveCase(caseId)} USERS={USERS}
+        handleChangeCaseId={handleChangeCaseId}
+        hidden={!caseId}
+        showEMMReport={showEMMReport} />
     </section>
   );
 }
 
-function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-  return {
-    width,
-    height
-  };
-}
+
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, COMPLICATIONS, USERS, userToken, userFacility } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
+
+  const COMPLICATIONS = useSelector(makeSelectComplications());
+  const userFacility = useSelector(makeSelectUserFacility());
+  const userToken = useSelector(makeSelectToken());
+  const logger = useSelector(makeSelectLogger());
 
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsOut, scheduledStart, startTime, endTime,
     duration, departmentId, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
@@ -834,11 +998,11 @@ function DetailedCase(props) {
   const date = moment(wheelsOut).format("MMMM DD");
   const blockStartTime = moment(blockStart, 'HH:mm:ss');
   const blockEndTime = moment(blockEnd, 'HH:mm:ss');
-  const bStartTime = getDiffFromMidnight(blockStartTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
-  const bEndTime = getDiffFromMidnight(blockEndTime, 'minutes') / 60 || getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
+  const bStartTime = globalFunctions.getDiffFromMidnight(blockStartTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
+  const bEndTime = globalFunctions.getDiffFromMidnight(blockEndTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
 
-  const earliestStartTime = roomCases.reduce((min, c) => getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
-  const latestEndTime = roomCases.reduce((max, c) => getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
+  const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
+  const latestEndTime = roomCases.reduce((max, c) => globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
   const scheduleDuration = (latestEndTime) - (earliestStartTime);
 
   const description = (
@@ -860,23 +1024,22 @@ function DetailedCase(props) {
   );
 
   const startDiff = moment(wheelsIn).diff(moment(scheduledStart), 'seconds');
-  
+
   let laterality = "N/A";
   let lateralityIcon = <img src={EmptyPerson} />
-  if (isLeftSided || isRightSided){
+  if (isLeftSided || isRightSided) {
     laterality = (isLeftSided && isRightSided) ? "Bilateral" : (isLeftSided ? "Left Side" : "Right Side");
     lateralityIcon = (isLeftSided && isRightSided) ? (
       <img src={FullPerson} />) : (
-        isLeftSided ? <img src={HalfPerson} /> : <img src={HalfPerson} style={{ transform: 'scaleX(-1)' }} />
-      );
+      isLeftSided ? <img src={HalfPerson} /> : <img src={HalfPerson} style={{ transform: 'scaleX(-1)' }} />
+    );
   }
 
 
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+  const [windowDimensions, setWindowDimensions] = useState(globalFunctions.getWindowDimensions());
   useEffect(() => {
     function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-      logger && logger.manualAddLog('onchange','window-resize',getWindowDimensions());
+      setWindowDimensions(globalFunctions.getWindowDimensions());
     }
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -888,7 +1051,7 @@ function DetailedCase(props) {
   const [isRequestSubmitted, setIsRequestSubmitted] = React.useState(false);
   const handleOpenRequestEMM = (open) => {
     setOpenRequestEMM(open);
-    logger && logger.manualAddLog('click', open ? 'openEMMRequest' : 'closeEMMRequest', !open && !isRequestSubmitted ? 'Closed without submission' : '');
+    logger && logger.manualAddLog('click', open ? 'open-emm-request' : 'close-emm-request', !open && !isRequestSubmitted ? 'Closed without submission' : '');
   }
 
   const reportButton = () => {
@@ -909,7 +1072,6 @@ function DetailedCase(props) {
     if (cId == caseId) {
       return;
     }
-    logger && logger.manualAddLog('click', `case-${emrCaseId}`, 'swap case through schedule tab');
     setIsLoading(true)
     handleChangeCaseId(cId);
   }
@@ -940,11 +1102,12 @@ function DetailedCase(props) {
       setIsComplicationDateFilled(true);
     }
 
-    logger.manualAddLog('onchange', event, value);
+
 
     setRequestData({
       name: event,
-      value: value
+      value: value,
+      logger: logger
     })
   }
 
@@ -1004,26 +1167,37 @@ function DetailedCase(props) {
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
         <Grid item xs className="detailed-case">
-
-          <div className="back" onClick={() => handleChangeCaseId(null)} ><ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back</div>
+          <div className="back-header">
+            <div className="back" onClick={() => handleChangeCaseId(null)} >
+              <ArrowBack style={{ fontSize: 12, marginBottom: 2 }} /> Back
+            </div>
+            <div className="button">{reportButton()}</div>
+          </div>
           <div className="case-header">
-            {procedureList.length > 0 ? (
+            <div className="case-title">{procedureTitle}</div>
+            <div className={`save-toggle ${!isSaved && 'not-saved'}`} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
+              <IconButton style={{marginRight:55, marginTop:-12, marginBottom:-11}} title={isSaved ? "Remove from saved cases" : "Save case"}>
+                {isSaved ? <StarIcon  style={{ color: '#EEDF58', fontSize:36  }}  /> : <StarBorderIcon style={{ color: '#828282', fontSize:36  }}  />}
+              </IconButton>
+            </div>
+          </div>
+          {procedureList.length > 0 && (
+            <div className="case-description" style={{ marginBottom: 0 }}>
+              {`Additional Procedure${procedureList.length == 1 ? '' : 's'}`}
               <LightTooltip arrow title={
                 <div>
-                  <span>{`Secondary Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
+                  <span>{`Additional Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
                   <ul style={{ margin: '4px 0px' }}>
                     {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
                   </ul>
                 </div>
               }
               >
-                <div className="case-title">{procedureTitle}</div>
+                <InfoOutlinedIcon className="log-mouseover" id={`additional-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
               </LightTooltip>
-            ) :
-              <div className="case-title">{procedureTitle}</div>
-            }
-            <div className="button">{reportButton()}</div>
-          </div>
+            </div>
+          )
+          }
           <div className="case-description">
             <div className="case-specialty">{specialtyList.join(" & ")}</div>
             {description}
@@ -1034,15 +1208,15 @@ function DetailedCase(props) {
 
           <div className="timing-graphs" id="timing-graphs">
             <Grid container spacing={0}>
-              <Grid item xs={8} className="timing">
+              <Grid item xs={6} className="timing">
                 <Grid container spacing={0} className="start-timing">
-                  <Grid item xs={4} className="scheduled-start">
+                  <Grid item xs className="scheduled-start">
                     <div className="timing-header">Scheduled Start</div>
                     <div className="timing-value">Started at</div>
                     <div className="timing-header">Laterality</div>
                     <div className="timing-value">{laterality}</div>
                   </Grid>
-                  <Grid item xs={3} className="actual-start">
+                  <Grid item xs className="actual-start">
 
                     <div className="timing-header">{moment(scheduledStart).format("HH:mm:ss")}</div>
                     <div className="timing-value">{moment(wheelsIn).format("HH:mm:ss")}</div>
@@ -1050,7 +1224,7 @@ function DetailedCase(props) {
                       {lateralityIcon}
                     </div>
                   </Grid>
-                  <Grid item xs={5} className="difference">
+                  <Grid item xs className="difference">
                     <div className="timing-header" style={{ visibility: 'hidden' }}>placeholder</div>
                     {Math.abs(startDiff) < 1 ?
                       <div className={`early`}>
@@ -1064,7 +1238,7 @@ function DetailedCase(props) {
                 </Grid>
 
               </Grid>
-              <Grid item xs className="procedure-time">
+              <Grid item xs={6} className="procedure-time">
                 <ProcedureDistribution {...procedureDistribution} duration={duration} />
               </Grid>
             </Grid>
@@ -1077,8 +1251,8 @@ function DetailedCase(props) {
       }
       <Grid item xs className="schedule">
         <div className="header">
-          <div>{`${roomName}${!blockStart ? ' Off' : ''} Block`}</div>
-          <div>{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
+          <div className="log-click" id="or-schedule-header">{`${roomName}${!blockStart ? ' Off' : ''} Block`}</div>
+          <div className="log-click" id="or-schedule-date">{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
 
         </div>
         <div className="timeline relative"
@@ -1102,13 +1276,15 @@ function DetailedCase(props) {
             let cTime = Math.round(earliestStartTime) + i;
             now.setHours(cTime);
             now.setMinutes(0);
+            const formattedTime = moment(now).format("HH:mm");
             return (
-              <div className="hour-marker"
+              <div className="hour-marker log-click"
+                id={`hour-block-${formattedTime}`}
                 style={{
                   // top: `${i * HOUR_SIZE}px`,
                   height: `${HOUR_SIZE}px`,
                 }}>
-                <div >{moment(now).format("HH:mm")}</div>
+                <div className="log-click" id={`hour-marker-${formattedTime}`}>{formattedTime}</div>
               </div>
             )
           })}
@@ -1116,7 +1292,8 @@ function DetailedCase(props) {
             title={`Block hours: ${moment(blockStartTime).format('HH:mm')} - ${moment(blockEndTime).format('HH:mm')}`}
             placement='left'
           >
-            <div className="absolute"
+            <div className="absolute log-mouseover"
+              id="block-hours-tooltip"
               style={{
                 top: `${(bStartTime - earliestStartTime) * HOUR_SIZE}px`,
                 height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`,
@@ -1129,8 +1306,8 @@ function DetailedCase(props) {
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
 
-            const startMins = getDiffFromMidnight(wheelsIn, 'minutes') - (earliestStartTime * 60);
-            const endMins = getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
+            const startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - (earliestStartTime * 60);
+            const endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
             const caseHeight = (endMins - startMins) / 60;
             return (
               <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 34 && 'short'} ${caseHeight * HOUR_SIZE <= 83 && 'medium'}`}
@@ -1286,6 +1463,8 @@ const requestReducer = (state, event) => {
       from: event.value
     }
   }
+  const logger = event.logger
+  logger && logger.manualAddLog('onchange', event.name, event.value);
 
   return {
     ...state,
@@ -1294,41 +1473,9 @@ const requestReducer = (state, event) => {
 }
 
 
-function erf(x) {
-  // constants
-  var a1 = 0.254829592;
-  var a2 = -0.284496736;
-  var a3 = 1.421413741;
-  var a4 = -1.453152027;
-  var a5 = 1.061405429;
-  var p = 0.3275911;
-
-  // Save the sign of x
-  var sign = 1;
-  if (x < 0) {
-    sign = -1;
-  }
-  x = Math.abs(x);
-
-  // A&S formula 7.1.26
-  var t = 1.0 / (1.0 + p * x);
-  var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
-
-  return sign * y;
-}
-
-function log_norm_cdf(duration, scale, shape) {
-  let a = (Math.log(duration) - Math.log(scale)) / (Math.sqrt(2) * shape)
-  return .5 + .5 * erf(a)
-}
-
-function log_norm_pdf(duration, scale, shape) {
-  let a = Math.exp(-((Math.log(duration) - Math.log(scale)) ** 2) / (2 * (shape ** 2)))
-  return (1 / (duration * shape * Math.sqrt(2 * Math.PI))) * a
-}
-
 function ProcedureDistribution(props) {
   const { shape, scale, duration, sampleSize } = props;
+  const logger = useSelector(makeSelectLogger());
   const mu = scale;
   const sigma = shape * scale;
   const range = [duration, ...globalFunctions.range(Math.max(0, mu - 4.5 * sigma), mu + 4.5 * sigma, sigma / 20)].sort();
@@ -1342,7 +1489,7 @@ function ProcedureDistribution(props) {
 
     const time = globalFunctions.formatSecsToTime(seconds, true, true);
     const percentile = `${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(d.x, scale, shape) * 100))} percentile`;
-    logger && logger.manualAddLog('mouseover', `procedure-time-tooltip-${time}`, `${time} - ${percentile}`)
+    logger && logger.manualAddLog('mouseover', `procedure-time-tooltip`, { xValue: time, yValue: percentile })
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1403,7 +1550,7 @@ function ProcedureDistribution(props) {
 
   return (
     <div className="procedure-distribution" id="procedure-dist" >
-      <div className="title">Procedure Time <LightTooltip interactive arrow title={`Procedure time distribution is a best approximation based on ${sampleSize} case${sampleSize ==1 ? '' : 's'} of the same procedure type`} placement="top" fontSize="small">
+      <div className="title">Procedure Time <LightTooltip interactive arrow title={`Procedure time distribution is a best approximation based on ${sampleSize} case${sampleSize == 1 ? '' : 's'} of the same procedure type`} placement="top" fontSize="small">
         <InfoOutlinedIcon className="log-mouseover" id="procedure-time-info-tooltip" style={{ fontSize: 16, margin: '0 0 4px 0px' }} />
       </LightTooltip></div>
       <C3Chart ref={chartRef} {...data} />
@@ -1414,6 +1561,7 @@ function ProcedureDistribution(props) {
 
 function HL7Chart(props) {
   const { hl7Data, timeline } = props;
+  const logger = useSelector(makeSelectLogger());
   const chartRef = useRef(null);
   if (!hl7Data) {
     return <span></span>
@@ -1437,7 +1585,7 @@ function HL7Chart(props) {
       }
       const time = globalFunctions.formatSecsToTime(d.x);
       const text = value.text;
-      logger && logger.manualAddLog('mouseover', `hl7-tooltip-${time}`, text)
+      logger && logger.manualAddLog('mouseover', `hl7-tooltip-${d.name}`, { xValue: time, zValue: text, name: d.name })
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{time}</div>
@@ -1450,7 +1598,7 @@ function HL7Chart(props) {
     let value = y && timeline.find((e) => e.time == y.x);
     let x = hl7 && hl7.x || y && y.x;
     const time = globalFunctions.formatSecsToTime(x);
-    logger && logger.manualAddLog('mouseover', `hl7-tooltip-${time}`, [hl7, value])
+    logger && logger.manualAddLog('mouseover', `hl7-tooltip-${hl7 && hl7.name}`, { xValue: time, yValue: hl7 && hl7.value, zValue: value && value.text, name: hl7 && hl7.name })
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1476,7 +1624,7 @@ function HL7Chart(props) {
 
   const data = {
     padding: {
-      // top: 20
+      left: 45,
     },
     size: hasHL7Data ? {} : {
       height: 175
@@ -1504,9 +1652,9 @@ function HL7Chart(props) {
           left: max * .025,
           right: max * .025,
         } : {
-            left: max * .05,
-            right: max * .05,
-          }
+          left: max * .05,
+          right: max * .05,
+        }
       },
       color: {
         pattern: ['#028CC8']
@@ -1516,9 +1664,9 @@ function HL7Chart(props) {
           outer: false,
           // count: hasHL7Data ? 10 : 1,
           min: 0,
-          // format: (x) => {
-          //   return parseInt(x);
-          // },
+          format: (x) => {
+            return parseInt(x) == parseFloat(x) ? x : parseFloat(x).toFixed(2)
+          }
 
         },
         show: hasHL7Data,
@@ -1573,6 +1721,11 @@ function HL7Chart(props) {
 
 
   let [index, setIndex] = React.useState(0);
+  const handleChangeIndex = (index) => {
+    setIndex(index);
+    const { times, values, unit, title, y } = hl7Data[index];
+    logger && logger.manualAddLog('click', `change-hl7-selection-${title}`, title);
+  }
   if (hasHL7Data) {
     const { times, values, unit, title, y } = hl7Data[index];
 
@@ -1603,6 +1756,12 @@ function HL7Chart(props) {
     var content = document.getElementById('hl7-chart').getElementsByClassName('c3-grid c3-grid-lines')[0];
     var parent = content.parentNode;
     parent.insertBefore(content, parent.firstChild)
+
+    //Log initial setup 
+    logger && logger.manualAddLog('session', `initial-hl7`, hl7Data.map((h) => {
+      return { abbreviation: h.abbreviation, title: h.title }
+    }));
+
   }, []);
 
   useEffect(() => {
@@ -1620,7 +1779,7 @@ function HL7Chart(props) {
       ],
       unload: [...hl7Data.map((d) => d.title == title ? '' : d.title), 'y'],
     });
-    logger && logger.manualAddLog('click', 'change-hl7-selection', title);
+
   }, [index]);
 
   return (
@@ -1633,7 +1792,7 @@ function HL7Chart(props) {
           <div className="selector">
             {hl7Data.map((d, i) => {
               return (
-                <div className={`${i == index && 'selected'} hl7-value`} onClick={() => setIndex(i)}>{d.abbreviation}</div>
+                <div className={`${i == index && 'selected'} hl7-value`} onClick={() => handleChangeIndex(i)}>{d.abbreviation}</div>
               )
             })}
           </div>
@@ -1649,51 +1808,8 @@ function HL7Chart(props) {
   )
 }
 
-function getDiffFromMidnight(timeString, unit = 'hours') {
-  return moment(timeString).diff(moment(timeString).startOf('day'), unit)
-}
 
 
 
-
-function momentRandom(end = moment(), start) {
-  const endTime = +moment(end);
-  const randomNumber = (to, from = 0) =>
-    Math.floor(Math.random() * (to - from) + from);
-
-  if (start) {
-    const startTime = +moment(start);
-    if (startTime > endTime) {
-      throw new Error('End date is before start date!');
-    }
-    return moment(randomNumber(endTime, startTime));
-  }
-  return moment(randomNumber(endTime));
-}
-
-function fakeCase() {
-  var randomStart = momentRandom(moment(), moment().subtract(1, 'years'));
-  var randomSpecialty = SPECIALTIES[Math.floor(Math.random() * SPECIALTIES.length)];
-  var randomProcedure = PROCEDURES[Math.floor(Math.random() * PROCEDURES.length)];
-  return {
-    "procedures": [
-      {
-        "specialtyName": randomSpecialty.display,
-        "procedureName": randomProcedure.display
-      }
-    ],
-    "caseId": Math.floor(100000 + Math.random() * 900000),
-    "startTime": randomStart.format(),
-    "endTime": randomStart.add(Math.ceil(Math.random() * 12), 'hours').format(),
-    "roomName": ORS[Math.floor(Math.random() * ORS.length)].display,
-    "tags": TAGS.sort(() => 0.5 - Math.random()).slice(0, Math.random() * 3).map((tag) => {
-      return { "title": tag, "description": "Hey this is a placeholder description. idk what to write here" }
-    })
-  }
-}
-
-function generateFakeCases(numCases) {
-  return Array.from({ length: numCases }, () => fakeCase());
-}
 
 

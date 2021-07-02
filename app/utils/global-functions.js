@@ -132,9 +132,12 @@ function getName(searchList, key) {
   if (!key || !searchList) {
     return key;
   }
-  let index = searchList.findIndex(item => item.value && `${item.value}`.toLowerCase() == `${key}`.toLowerCase());
+  let index = searchList.findIndex(item => {
+    item.value = item.value || item.id;
+    return item.value && `${item.value}`.toLowerCase() == `${key}`.toLowerCase();
+  });
   if (index >= 0) {
-    return searchList[index].name;
+    return searchList[index].name || searchList[index].display;
   }
   return key;
 }
@@ -186,27 +189,46 @@ function toTitleCase(str) {
     }
   );
 }
-
+/*
+  Generates list of integers from start to end using step size 'step'
+*/
 function range(start, end, step = 1) {
-  if (start == end){
+  if (start == end) {
     return [];
   }
   const len = Math.floor((end - start) / step) + 1
   return Array(len).fill().map((_, idx) => start + (idx * step))
 }
+/*
+  Adds the suffix to an integer (1 to 1st, 2 to 2nd, 3 to 3rd)
+*/
 function ordinal_suffix_of(i) {
   var j = i % 10,
-      k = i % 100;
+    k = i % 100;
   if (j == 1 && k != 11) {
-      return i + "st";
+    return i + "st";
   }
   if (j == 2 && k != 12) {
-      return i + "nd";
+    return i + "nd";
   }
   if (j == 3 && k != 13) {
-      return i + "rd";
+    return i + "rd";
   }
   return i + "th";
+}
+/*
+  Returns difference of time since midnight (of that day)
+*/
+function getDiffFromMidnight(timeString, unit = 'hours') {
+  return moment(timeString).diff(moment(timeString).startOf('day'), unit)
+}
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
 }
 export default {
   genericFetch,
@@ -219,5 +241,7 @@ export default {
   generatePaddedDigits,
   toTitleCase,
   range,
-  ordinal_suffix_of
+  ordinal_suffix_of,
+  getDiffFromMidnight,
+  getWindowDimensions
 };

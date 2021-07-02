@@ -188,24 +188,30 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
   createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color) {
     const xValue = moment(d[0].x).format('MMM DD');
     let na = d.filter((point) => point.value == null && point.id != "NA").map((point) => point.id) || [];
+    const {logger, title} = this.props;
+    const unavail = "Unavailable - no data in last 30 days";
     if (na.length == d.length - 1) {
+      logger && logger.manualAddLog('mouseover', `multi-time-series-tooltip-${title}`, {toolTip:[xValue, unavail], xValue:xValue, yValue: d.map((p) => p.value)});
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext" >
           <div>{xValue}</div>
-          <div>Unavailable - no data in last 30 days</div>
+          <div>{unavail}</div>
         </div>);
     }
+    d= d.filter((point) => point.value != null && point.id != "NA");
+    const tooltip = d.map((point) => `${point.id}: ${point.value}`);
+    logger && logger.manualAddLog('mouseover', `multi-time-series-tooltip-${title}`, {toolTip:[...tooltip, ...na], xValue:xValue, yValue: d.map((p) => p.value)});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext" >
         <div>{xValue}</div>
-        {d.filter((point) => point.value != null && point.id != "NA").map(point => (
-          <div>{`${point.id}: ${point.value}`}</div>
+        {tooltip.map(point => (
+          <div>{point}</div>
         ))}
 
         {na.length != 0 && (
           <div style={{ marginTop: 12 }}>
             {`${na.join(", ")}:`}
-            <div>Unavailable - no data in last 30 days</div>
+            <div>{unavail}</div>
           </div>
         )}
 
@@ -240,7 +246,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
         title={tooltip}
         placement="top" fontSize="small"
       >
-        <div className={`change-value ${className}`}>
+        <div className={`change-value ${className} log-mouseover`} id={`trending-tooltip-${id}`} description={JSON.stringify({toolTip:tooltip, trend:diff})}>
           <span>{`${diff}%`}</span>
           <span>{tag}</span>
         </div>

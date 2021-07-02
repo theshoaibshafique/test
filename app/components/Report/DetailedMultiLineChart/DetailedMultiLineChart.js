@@ -53,7 +53,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
               title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line, index) => { return <div key={index}>{line}</div> }) : this.props.toolTip}
               placement="top" fontSize="small"
             >
-              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${this.props.title}`}/>
             </LightTooltip>}
           </Grid>
           <Grid item xs={12} className="chart-subtitle subtle-subtext">
@@ -95,7 +95,7 @@ export default class DetailedMultiLineChart extends React.PureComponent {
             </Grid>}
           </Grid>
           <Grid item xs={12} style={{ textAlign: 'center', marginTop: 15 }}>
-            {this.props.url && <NavLink to={this.props.url} className='link normal-text'>
+            {this.props.url && <NavLink to={this.props.url} className='link normal-text log-click' id={`learn-more-${this.props.title}`}>
               {this.props.urlText}
             </NavLink>}
           </Grid>

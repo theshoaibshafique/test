@@ -144,6 +144,8 @@ export default class Histogram extends React.PureComponent {
     if (tooltipData.length == 0) {
       return;
     }
+    const {title, logger} = this.props;
+    logger && logger.manualAddLog('mouseover', `histogram-tooltip-${title}`, {toolTip: tooltipData, xValue:d[0].x, yValue:d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {
@@ -185,6 +187,11 @@ export default class Histogram extends React.PureComponent {
       allTicks.forEach(tick => tick.querySelector("text").style.display = "none");
       visibleTicks.forEach(tick => { if (whitelist.includes(tick)) this.displayTick(tick, tickOffset) });
     }
+
+    const {title, logger} = this.props;
+    if (d){
+      logger && logger.manualAddLog('onchange', `time-series-domain-${title}`, {domain:d});
+    }
   }
 
   render() {
@@ -213,7 +220,7 @@ export default class Histogram extends React.PureComponent {
               title={Array.isArray(this.props.toolTip) ? this.props.toolTip.map((line, index) => { return <div key={index} style={!line ? { margin: 8 } : {}}>{line}</div> }) : this.props.toolTip}
               placement="top" fontSize="small"
             >
-              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} />
+              <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }}  className="log-mouseover" id={`info-tooltip-${this.props.title}`}/>
             </LightTooltip>}
           </Grid>
           <Grid item xs={12} className="chart-subtitle subtle-subtext">

@@ -116,6 +116,12 @@ export default class EMMReports extends React.PureComponent {
     this.getReport();
     this.openOnboarding();
   };
+  componentDidUpdate(){
+    const {logger} = this.props;
+    setTimeout(() => {
+      logger && logger.connectListeners();
+    }, 300)
+  }
 
   openOnboarding() {
     //If they already did the onboard - Dont bother checking API
@@ -162,18 +168,20 @@ export default class EMMReports extends React.PureComponent {
 
 
   switchTab(currentTab) {
-    const { emmReportTab } = this.props;
+    const { emmReportTab, logger } = this.props;
     if (currentTab != emmReportTab) {
+      logger && logger.manualAddLog('click', 'swap-tab', (emmReportTab == 'overview') ? 'phase' : 'overview');
       this.props.setEmmTab((emmReportTab == 'overview') ? 'phase' : 'overview')
     }
   }
 
   publishReport() {
-    let { emmReportData, userToken } = this.props;
+    let { emmReportData, userToken, logger } = this.props;
     const jsonBody = {
       "name": emmReportData.name,
       "published": true
     }
+    logger && logger.manualAddLog('click', 'publish-report');
     globalFuncs.genericFetch(process.env.EMMPUBLISH_API, 'PATCH', userToken, jsonBody)
       .then(result => {
         if (result !== 'error' && result !== 'conflict') {
@@ -192,9 +200,10 @@ export default class EMMReports extends React.PureComponent {
   }
 
   closePresenterDialog(choice) {
-    const { setEMMPresenterMode, setEMMPresenterDialog } = this.props;
+    const { setEMMPresenterMode, setEMMPresenterDialog, logger } = this.props;
     (choice) && setEMMPresenterMode(choice);
     setEMMPresenterDialog(false);
+    logger && logger.manualAddLog('click', `toggle-presenter-mode`, {checked:choice});
   }
 
   closeEMMReport() {
