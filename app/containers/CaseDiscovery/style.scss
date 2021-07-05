@@ -201,9 +201,9 @@
             box-shadow: 1px 1px 6px grey;
             -webkit-transition: box-shadow 0.1s ease-in;
             .case-header .save-toggle.not-saved {
-                opacity: 0.8;
+                opacity: .6 ;
                 height: auto;
-                &:hover {
+                &:hover{
                     opacity: 1;
                 }
             }
@@ -223,8 +223,7 @@
             justify-content: space-between;
             .save-toggle.not-saved {
                 opacity: 0;
-                height: 0;
-                transition: opacity 0.1s ease-out;
+                transition: opacity .1s ease-out;
             }
         }
         .title {
@@ -300,6 +299,12 @@
         overflow-y: auto;
         max-width: calc(100vw - 340px);
         max-height: calc(100vh);
+        .case-header .save-toggle.not-saved {
+            opacity: .6 ;
+            &:hover{
+                opacity: 1;
+            }
+        }
         .detailed-loading {
             width: 100%;
             position: absolute;
@@ -888,9 +893,7 @@
 
 .recommended-cases {
     max-width: 80%;
-    > div {
-        // display: flex;
-    }
+    max-width: 1180px;
     
     .rec-header {
         display: flex;

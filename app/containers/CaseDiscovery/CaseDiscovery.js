@@ -160,8 +160,10 @@ function Case(props) {
         <div className="title" >
           {procedureName}
         </div>
-        <div className={`save-toggle ${!isSaved && 'not-saved'} ${isShort && 'short-icon'}`} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
-          <IconButton style={{ marginTop: -6, marginBottom: -11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
+        <div >
+          <IconButton 
+            className={`save-toggle ${!isSaved && 'not-saved'}  ${isShort && 'short-icon'}`} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}
+            style={{ marginTop: -6, marginBottom: -11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
             {isSaved ? <StarIcon style={{ color: '#EEDF58', fontSize: 29 }} /> : <StarBorderIcon style={{ color: '#828282', fontSize: 29 }} />}
           </IconButton>
 
@@ -190,7 +192,7 @@ function Case(props) {
       </div>
       <div className="description">
         <span>Case ID: {emrCaseId}</span>
-        <span>{date} {`(${diff} ${diff == 1 ? 'Day' : 'Days'} ago)`}</span>
+        <span>{date} {`(${diff} ${diff == 1 ? 'day' : 'days'} ago)`}</span>
         {!isShort && <span>{sTime} - {eTime}</span>}
         {!isShort && <span>{roomName}</span>}
       </div>
@@ -1105,7 +1107,7 @@ function DetailedCase(props) {
     <div>
       <span>Case ID: {emrCaseId}</span>
       <span>Surgeon ID: {`${surgeonId}`}</span>
-      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
+      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'days'} ago)`}</span>
       <span>{roomName}</span>
       {intubationType && <span>Intubation Type: {intubationType}</span>}
     </div>
@@ -1114,7 +1116,7 @@ function DetailedCase(props) {
   const requestEMMDescription = (
     <div>
       <span>Case ID: {emrCaseId}</span>
-      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'Days'} ago)`}</span>
+      <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'days'} ago)`}</span>
       <span>{roomName}</span>
     </div>
   );
@@ -1271,11 +1273,12 @@ function DetailedCase(props) {
           </div>
           <div className="case-header">
             <div className="case-title">{procedureTitle}</div>
-            <div className={"save-toggle"} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}>
-              <IconButton style={{ marginRight: 55, marginTop: -12, marginBottom: -11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
+            <div >
+              <IconButton
+                className={`save-toggle ${!isSaved && 'not-saved'}`} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}
+                style={{ marginRight: 55, marginTop: -12, marginBottom: -11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
                 {isSaved ? <StarIcon style={{ color: '#EEDF58', fontSize: 36 }} /> : <StarBorderIcon style={{ color: '#828282', fontSize: 36 }} />}
               </IconButton>
-
             </div>
           </div>
           {procedureList.length > 0 && (

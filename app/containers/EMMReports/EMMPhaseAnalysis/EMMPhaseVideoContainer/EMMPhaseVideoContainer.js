@@ -221,6 +221,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     if (this.myPlayer) {
       this.myPlayer.off('timeupdate');
       this.myPlayer.dispose();
+      this.myPlayer = null;
       this.props.setEMMVideoTime(0);
     }
   }
