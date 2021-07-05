@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
   clear: {
     fontFamily: 'Noto Sans',
     fontSize: 16,
-    marginBottom: 10,
     marginTop: 30,
     color: '#919191',
     opacity: .8,
@@ -87,7 +86,7 @@ const MenuProps = {
 function getTag(tag) {
   switch (`${tag}`.toLowerCase()) {
     case "flagged":
-      return <img src={Flagged} style={{ height: 20, width: 24 }} />
+      return <img src={Flagged} style={{ height: 24, width: 24 }} />
     case "hypothermia":
       return <img src={Hypothermia} />
     case "hypoxia":
@@ -153,7 +152,7 @@ function Case(props) {
     onClick();
     logger.manualAddLog('click', `open-case-${emrCaseId}`, formatCaseForLogs(props))
   }
-
+  const MAX_SHORT_TAGS = 4;
   return (
     <div className={`case ${isShort && 'short'}`} key={emrCaseId} onClick={handleClick} >
       <div className="case-header">
@@ -191,13 +190,18 @@ function Case(props) {
         {specialtyList.join(" & ")}
       </div>
       <div className="description">
-        <span>Case ID: {emrCaseId}</span>
+        {!isShort && <span>Case ID: {emrCaseId}</span>}
         <span>{date} {`(${diff} ${diff == 1 ? 'day' : 'days'} ago)`}</span>
         {!isShort && <span>{sTime} - {eTime}</span>}
         {!isShort && <span>{roomName}</span>}
       </div>
       {tagDisplays.length > 0 && <div className="tags">
-        {tagDisplays}
+        {isShort && tagDisplays.length > MAX_SHORT_TAGS ? (
+          <span className="plus-text subtext">
+            {tagDisplays.slice(0, MAX_SHORT_TAGS)} 
+            <span style={{opacity:.8}} >+{tagDisplays.length-MAX_SHORT_TAGS}</span>
+            </span>
+          ) : tagDisplays}
       </div>}
     </div>
   )
@@ -270,8 +274,8 @@ function TagsSelect(props) {
         </div>
       )}
 
-      <div className="tags">
-        {value && value.map((tag, i) => {
+      {value && value.length > 0 && <div className="tags">
+        {value.map((tag, i) => {
           return (
             <span key={i} className={"tag"} >
               <span><div className="display">{tag.display || tag}</div></span>
@@ -286,7 +290,7 @@ function TagsSelect(props) {
             </span>
           )
         })}
-      </div>
+      </div>}
     </div>
   )
 }
@@ -992,7 +996,7 @@ function RecommendedCases(props) {
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const [CASES, setCases] = useState([]);
-  const flkRef = useRef(null)
+  const flkRef = useRef(null);
   const handleNext = () => {
     const {flkty} = flkRef.current;
     if (!flkty){
@@ -1030,9 +1034,6 @@ function RecommendedCases(props) {
     }
     fetchRecCases();
   }, [])
-  if (!CASES.length){
-    return '';
-  }
 
   return (<div className="recommended-cases">
     <div className="rec-header">
@@ -1049,12 +1050,15 @@ function RecommendedCases(props) {
         autoPlay: 5000,
         wrapAround: true, 
         draggable:false,
-        initialIndex:1,
+        // initialIndex:1,
         freeScroll: false,
         prevNextButtons: false,
+        pauseAutoPlayOnHover: true,
+        imagesLoaded: true,
         pageDots: false }} // takes flickity options {}
       // disableImagesLoaded={false} // default false
       reloadOnUpdate // default false
+      static
     >
       {
         CASES.map((c, i) => (
