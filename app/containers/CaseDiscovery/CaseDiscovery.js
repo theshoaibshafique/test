@@ -143,7 +143,7 @@ function Case(props) {
   const diff = moment().diff(moment(wheelsIn), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
   const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
-
+  const daysAgo = `${date} (${diff} ${diff == 1 ? 'day' : 'days'} ago)`;
   const tagDisplays = displayTags(tags, emrCaseId);
 
   const procedureList = [...new Set(procedures.slice(1).map((p) => p.procedureName))];
@@ -157,7 +157,7 @@ function Case(props) {
   return (
     <div className={`case ${isShort && 'short'}`} description={JSON.stringify(formatCaseForLogs(props))} key={emrCaseId} onClick={handleClick} >
       <div className="case-header">
-        <div className="title" >
+        <div className="title" title={procedureName}>
           {procedureName}
         </div>
         <div >
@@ -187,12 +187,12 @@ function Case(props) {
       )
       }
 
-      <div className="subtitle">
+      <div className="subtitle" title={specialtyList.join(" & ")}>
         {specialtyList.join(" & ")}
       </div>
       <div className="description">
         {!isShort && <span>Case ID: {emrCaseId}</span>}
-        <span>{date} {`(${diff} ${diff == 1 ? 'day' : 'days'} ago)`}</span>
+        <span title={daysAgo}>{daysAgo}</span>
         {!isShort && <span>{sTime} - {eTime}</span>}
         {!isShort && <span>{roomName}</span>}
       </div>
@@ -1055,7 +1055,7 @@ function RecommendedCases(props) {
       showDots={false}
       responsive={responsive}
       autoPlay={true}
-      autoPlaySpeed={5000}
+      autoPlaySpeed={6500}
       arrows={false} 
       renderButtonGroupOutside={true}
       customButtonGroup={<Controls/>}
