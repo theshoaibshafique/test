@@ -97,6 +97,9 @@
         .link {
             font-size: 16px;
         }
+        .checkbox:hover{
+            background-color: unset;
+        }
         .select-header {
             display: flex;
             justify-content: space-between;
@@ -953,17 +956,27 @@
         max-width: 1180px;
     }
 }
-@media (max-width: 1496px) {
+@media (max-width: 1600px) {
     .case-discovery-search {
         .no-cases,
         .case,
         .header {
             width: 95%;
         }
+        .filters{
+            min-width: 26%;
+            width: 26%;
+            padding-right: 24px;
+        }
+        .case-container{
+            max-width: 74%;
+            flex-basis: 74%;
+        }
     }
     .recommended-cases {
         width: 95%;
     }
+
 }
 
 @media (max-width: 1280px) {

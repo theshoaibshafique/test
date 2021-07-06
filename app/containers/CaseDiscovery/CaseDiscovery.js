@@ -757,6 +757,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             control={
               <Checkbox
                 disableRipple
+                className="checkbox"
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
                 checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
                 checked={searchData.onlySavedCases} onChange={(e) => handleChange('onlySavedCases', e.target.checked)} />

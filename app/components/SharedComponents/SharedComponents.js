@@ -64,7 +64,7 @@ export function TabPanel(props) {
 const useStylesRadio = makeStyles({
   root: {
     '&:hover': {
-      // backgroundColor: 'transparent',
+      backgroundColor: 'transparent !important',
     },
   },
   icon: {
