@@ -48,7 +48,8 @@ import { makeSelectComplications, makeSelectIsAdmin, makeSelectLogger, makeSelec
 import { NavLink } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import Flickity from 'react-flickity-component'
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -154,13 +155,13 @@ function Case(props) {
   }
   const MAX_SHORT_TAGS = 4;
   return (
-    <div className={`case ${isShort && 'short'}`} key={emrCaseId} onClick={handleClick} >
+    <div className={`case ${isShort && 'short'}`} description={JSON.stringify(formatCaseForLogs(props))} key={emrCaseId} onClick={handleClick} >
       <div className="case-header">
         <div className="title" >
           {procedureName}
         </div>
         <div >
-          <IconButton 
+          <IconButton
             className={`save-toggle ${!isSaved && 'not-saved'}  ${isShort && 'short-icon'}`} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}
             style={{ marginTop: -6, marginBottom: -11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
             {isSaved ? <StarIcon style={{ color: '#EEDF58', fontSize: 29 }} /> : <StarBorderIcon style={{ color: '#828282', fontSize: 29 }} />}
@@ -198,10 +199,10 @@ function Case(props) {
       {tagDisplays.length > 0 && <div className="tags">
         {isShort && tagDisplays.length > MAX_SHORT_TAGS ? (
           <span className="plus-text subtext">
-            {tagDisplays.slice(0, MAX_SHORT_TAGS)} 
-            <span style={{opacity:.8}} >+{tagDisplays.length-MAX_SHORT_TAGS}</span>
-            </span>
-          ) : tagDisplays}
+            {tagDisplays.slice(0, MAX_SHORT_TAGS)}
+            <span style={{ opacity: .8 }} >+{tagDisplays.length - MAX_SHORT_TAGS}</span>
+          </span>
+        ) : tagDisplays}
       </div>}
     </div>
   )
@@ -737,7 +738,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const searchView = (
     <Grid container spacing={0} className="case-discovery-search">
-      <Grid item xs className="filters">
+      <Grid item xs={3} className="filters">
         <TextField
           size="small"
           fullWidth
@@ -903,7 +904,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         </Modal>
 
       </Grid>
-      <Grid item xs >
+      <Grid item xs={9} className="case-container">
         <RecommendedCases
           savedCases={savedCases}
           handleSaveCase={handleSaveCase}
@@ -996,21 +997,6 @@ function RecommendedCases(props) {
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const [CASES, setCases] = useState([]);
-  const flkRef = useRef(null);
-  const handleNext = () => {
-    const {flkty} = flkRef.current;
-    if (!flkty){
-      return
-    }
-    flkty.next()
-  }
-  const handlePrev = () => {
-    const {flkty} = flkRef.current;
-    if (!flkty){
-      return
-    }
-    flkty.previous()
-  }
 
   useEffect(() => {
     const fetchRecCases = async () => {
@@ -1034,31 +1020,45 @@ function RecommendedCases(props) {
     }
     fetchRecCases();
   }, [])
-
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1280 },
+      items: 3,
+      slidesToSlide: 1 // optional, default to 1.
+    },
+    tablet: {
+      breakpoint: { max: 1280, min: 464 },
+      items: 2,
+      slidesToSlide: 1 // optional, default to 1.
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+      slidesToSlide: 1 // optional, default to 1.
+    }
+  };
+  const Controls = ({ next, previous, goToSlide, ...rest }) => {
+    return (
+      <div className="rec-header">
+        <div className="left-arrow" onClick={() => previous()}></div>
+        <div>Cases of Interest</div>
+        <div className="right-arrow" onClick={() => next()}></div>
+      </div>
+    )
+  }
   return (<div className="recommended-cases">
-    <div className="rec-header">
-      <div className="left-arrow" onClick={handlePrev}></div>
-      <div>Cases of Interest</div>
-      <div className="right-arrow" onClick={handleNext}></div>
-    </div>
-    <Flickity
-      className={'carousel'} // default ''
-      // elementType={'div'} // default 'div'
-      // flickityRef={flkty}
-      ref={flkRef}
-      options={{ 
-        autoPlay: 5000,
-        wrapAround: true, 
-        draggable:false,
-        // initialIndex:1,
-        freeScroll: false,
-        prevNextButtons: false,
-        pauseAutoPlayOnHover: true,
-        imagesLoaded: true,
-        pageDots: false }} // takes flickity options {}
-      // disableImagesLoaded={false} // default false
-      reloadOnUpdate // default false
-      static
+
+    <Carousel
+      className={'carousel'}
+      id="carousel" // default ''
+      infinite={true}
+      showDots={false}
+      responsive={responsive}
+      autoPlay={true}
+      autoPlaySpeed={5000}
+      arrows={false} 
+      renderButtonGroupOutside={true}
+      customButtonGroup={<Controls/>}
     >
       {
         CASES.map((c, i) => (
@@ -1071,7 +1071,7 @@ function RecommendedCases(props) {
             handleSaveCase={() => handleSaveCase(c.caseId)} />
         ))
       }
-    </Flickity>
+    </Carousel>
 
   </div>)
 }
