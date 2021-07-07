@@ -109,25 +109,6 @@ class UniversalPicker extends React.Component {
     };
   }
 
-  async populateOperatingRooms(e, callback) {
-    return await globalFunctions.genericFetch(process.env.FACILITYDEPARTMENT_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
-      .then(result => {
-        let operatingRooms = [{ label: "All ORs", value: "" }];
-        if (result === 'error' || result === 'conflict') {
-
-        } else if (result && result.length > 0) {
-          result.map((department) => {
-            department.rooms.map((room) => { operatingRooms.push({ departmentTitle: department.departmentTitle, value: room.roomName, label: room.roomTitle, departmentName: department.departmentName }) });
-          });
-        }
-        this.setState({ operatingRooms, isORLoading: false });
-        return operatingRooms
-      }).catch(error => {
-        console.error(error)
-      });
-
-  }
-
   handleORChange(e, value) {
     this.setState({
       selectedOperatingRoom: value,

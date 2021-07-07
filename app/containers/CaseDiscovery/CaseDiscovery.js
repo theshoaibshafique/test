@@ -1231,10 +1231,10 @@ function DetailedCase(props) {
       setIsComplicationDateFilled(false);
       return;
     }
-    let complicationList = requestData.complications.map((c) => c.id);
+    let complicationList = requestData.complications.map((c) => c.display);
     let jsonBody = {
       "roomName": roomName,
-      "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
+      "specialty": ["Unknown Specialty"],
       "procedure": [procedureTitle],
       "complications": requestData.complicationOther ? [...complicationList, requestData.complicationOther] : complicationList,
       "postOpDate": requestData.complicationDate,
@@ -1246,7 +1246,7 @@ function DetailedCase(props) {
     }
     logger && logger.manualAddLog('click', 'submit-emm-request', jsonBody);
     setIsSending(true);
-    globalFunctions.genericFetch(process.env.REQUESTEMM_API, 'post', userToken, jsonBody)
+    globalFunctions.genericFetch(process.env.EMMREQUEST_API, 'post', userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {
 

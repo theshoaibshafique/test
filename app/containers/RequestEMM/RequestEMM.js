@@ -79,11 +79,11 @@ export default class RequestEMM extends React.PureComponent {
     let errors = this.state.errors;
     errors.operatingRoom = '';
 
-    this.setState({ selectedOperatingRoom: e, departmentName: e.departmentName, errors });
+    this.setState({ selectedOperatingRoom: e, errors });
   };
 
   handleChangeComplication(e, values) {
-    let value = values.map(comp => comp.value || comp.id);
+    let value = values.map(comp => comp.display || comp.id);
     let errors = this.state.errors;
     errors.complication = '';
     this.setState({ selectedComplication: value, complicationList: values, errors });
@@ -96,7 +96,7 @@ export default class RequestEMM extends React.PureComponent {
   };
 
   handleChangeProcedure(e, values) {
-    let value = values.map(comp => comp.value);
+    let value = values.map(comp => comp.name);
     let errors = this.state.errors;
     errors.procedure = '';
     this.setState({ selectedProcedures: value, selectedProcedureList: values, errors });
@@ -271,8 +271,9 @@ export default class RequestEMM extends React.PureComponent {
     }
     
     let jsonBody = {
-      "roomName": this.state.selectedOperatingRoom.value,
-      "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
+      "roomName": this.state.selectedOperatingRoom.label,
+      // "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
+      "specialty": ["Unknown Specialty"],
       "procedure": this.state.specialtyCheck && this.state.procedureValue ? [...this.state.selectedProcedures, this.state.procedureValue] : this.state.selectedProcedures,
       "complications": this.state.complicationsCheck && this.state.complicationValue ? [...this.state.selectedComplication, this.state.complicationValue] : this.state.selectedComplication,
       "postOpDate": globalFuncs.formatDateTime(this.state.compDate),
@@ -283,7 +284,7 @@ export default class RequestEMM extends React.PureComponent {
       "facilityName": this.props.userFacility
     }
 
-    globalFuncs.genericFetch(process.env.REQUESTEMM_API, 'post', this.props.userToken, jsonBody)
+    globalFuncs.genericFetch(process.env.EMMREQUEST_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {
           this.setState({
@@ -329,7 +330,7 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   async populateUserEmail(e, callback) {
-    return await globalFuncs.genericFetch(process.env.USERSEARCH_API, 'get', this.props.userToken, {})
+    return await globalFuncs.genericFetch(process.env.EMMREPORT_API + '/emm_users', 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           let users = [];
@@ -354,18 +355,10 @@ export default class RequestEMM extends React.PureComponent {
 
   async populateOperatingRooms(e, callback) {
 
-    return await globalFuncs.genericFetch(process.env.FACILITYDEPARTMENT_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+    return await globalFuncs.genericFetch(process.env.CASE_DISCOVERY_API + "rooms" , 'get', this.props.userToken, {})
       .then(result => {
-        let operatingRooms = [];
-        if (result === 'error' || result === 'conflict') {
-
-        } else if (result && result.length > 0) {
-          result.map((department) => {
-            let rooms = department.rooms.map((room) => { return { value: room.roomName, label: room.roomTitle, departmentName: department.departmentName } });
-            operatingRooms.push({ label: department.departmentTitle, options: rooms });
-          });
-
-        }
+        let operatingRooms = result.map(r => ({value:r, label:r}));
+        
         callback(operatingRooms)
         this.setState({ operatingRooms });
         return operatingRooms
@@ -377,19 +370,11 @@ export default class RequestEMM extends React.PureComponent {
     this.populateSpecialtyList();
   }
   populateSpecialtyList() {
-    globalFunctions.genericFetch(process.env.PROCEDURE_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
+    globalFunctions.genericFetch(process.env.CASE_DISCOVERY_API + "procedures", 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
-          if (result == 'error' || !result) {
-            return;
-          }
-          let procedureList = this.state.procedureList || []
-          result && result.forEach((procedure) => {
-            procedureList.push({
-              name: procedure.procedureName,
-              value: procedure.name
-            })
-          });
+          let procedureList = result.map(r => ({name:r, value:r}))
+
           procedureList.sort((a, b) => { return ('' + a.name).localeCompare(b.name) });
           this.setState({ procedureList });
         } else {
