@@ -5,6 +5,7 @@ import globalFunctions from '../../utils/global-functions';
 const events = ['mouseover', 'click', 'scroll', 'input']
 const reducedEvents = ['mouseover', 'onchange', 'input']
 const classPrefix = 'log-';
+const displayLogs = true;
 
 export class Logger {
     constructor(userToken) {
@@ -48,13 +49,13 @@ export class Logger {
         this.exitLogs.forEach((log) => {
             this.manualAddLog(...log);
         })
-        // console.log("with exit logs " + this.recentEvents);
+        displayLogs && console.log("with exit logs " + this.recentEvents);
         this.sendLogs();
         this.exitLogs = [];
     }
 
     sendLogs() {
-        // console.log("sent", this.recentEvents)
+        displayLogs && console.log("sent", this.recentEvents)
         const jsonBody = {
             time: moment(),
             metadata: {},
@@ -92,11 +93,11 @@ export class Logger {
         const length = this.recentEvents.length;
         //If they updated the last value - and it wasnt a clear -> we just update the log
         if (reducedEvents.includes(event) && length && this.recentEvents[length - 1].id == id && value) {
-            // console.log("updated log", log)
+            displayLogs && console.log("updated log", log)
             this.recentEvents.splice(length - 1, 1, log)
             return;
         }
-        // console.log("added log", log)
+        displayLogs && console.log("added log", log)
         this.recentEvents.push(log)
     }
 
@@ -125,12 +126,12 @@ export class Logger {
                 //If its the most recent event - we update it
                 const length = this.recentEvents.length;
                 if (length && this.recentEvents[length -1].id == id && value){
-                    // console.log('updated log', log)
+                    displayLogs && console.log('updated log', log)
                     this.recentEvents.splice(length - 1, 1, log)
                 }
                 return;
             }
-            // console.log('added log', log)
+            displayLogs && console.log('added log', log)
             this.recentEvents.push(log)
         }
 
