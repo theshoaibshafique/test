@@ -94,19 +94,19 @@ export default class Efficiency extends React.PureComponent {
     if (localStorage.getItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`)) {
       return;
     }
-    globalFunctions.axiosFetch(process.env.ONBOARD_API, 'get', this.props.userToken, {})
-      .then(result => {
-        var data = result.data;
+    // globalFunctions.axiosFetch(process.env.ONBOARD_API, 'get', this.props.userToken, {})
+    //   .then(result => {
+    //     var data = result.data;
 
-        if (data && data.onboardCompleted && data.onboardCompleted.includes && data.onboardCompleted.includes(this.ONBOARD_TYPE)) {
-          localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
-          return;
-        }
-        this.openOnboardModal();
-        this.updateOnboardStatus();
-      }).catch((error) => {
+    //     if (data && data.onboardCompleted && data.onboardCompleted.includes && data.onboardCompleted.includes(this.ONBOARD_TYPE)) {
+    //       localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
+    //       return;
+    //     }
+    //     this.openOnboardModal();
+    //     this.updateOnboardStatus();
+    //   }).catch((error) => {
 
-      });
+    //   });
   }
   updateOnboardStatus() {
     let jsonBody = { onboardCompleted: [this.ONBOARD_TYPE] };

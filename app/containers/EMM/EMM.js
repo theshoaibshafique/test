@@ -26,70 +26,65 @@ export default class EMM extends React.PureComponent {
     this.getOperatingRooms();
   };
 
-  getOperatingRooms(){
-    globalFuncs.genericFetch(process.env.LOCATIONROOM_API + "/" + this.props.userFacility, 'get', this.props.userToken, {})
-      .then(result => {
-        let operatingRoomList = [];
-        if (result) {
-          result.map((room) => {
-            operatingRoomList.push({ value: room.roomName, label: room.roomTitle })
-          });
-        }
-        this.setState({ operatingRoomList },this.getCase());
-      });
+  getOperatingRooms() {
+    const { operatingRooms } = this.props;
+    if (operatingRooms) {
+      this.setState({ operatingRoomList: operatingRooms.map(r => ({ value: r.id, label: r.display })) }, this.getCase());
+    }
+
   }
 
   getCase() {
     globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/?request_id=' + this.props.requestId, 'get', this.props.userToken, {})
-    .then(result => {
-      if (result === 'error' || result === 'conflict') {
+      .then(result => {
+        if (result === 'error' || result === 'conflict') {
 
-      } else {
-        let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
+        } else {
+          let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
 
-        let procedureNames = [];
-        let complicationList = [];
-        let operatingRoom = '';
-        result.roomName = result.roomName || ""
+          let procedureNames = [];
+          let complicationList = [];
+          let operatingRoom = '';
+          result.roomName = result.roomName || ""
 
-        result.procedure.map((procedure) => {
-          procedureNames.push(globalFuncs.getName(surgeryList,procedure))
-        });
+          result.procedure.map((procedure) => {
+            procedureNames.push(globalFuncs.getName(surgeryList, procedure))
+          });
 
-        result.complications.map((complication) => {
-          let match = false;
-          this.props.complications && this.props.complications.map((comp) => {
-            if (complication.toUpperCase() === comp.id.toUpperCase()) {
-              complicationList.push(comp.display);
-              match = true;
+          result.complications.map((complication) => {
+            let match = false;
+            this.props.complications && this.props.complications.map((comp) => {
+              if (complication.toUpperCase() === comp.id.toUpperCase()) {
+                complicationList.push(comp.display);
+                match = true;
+              }
+            });
+            if (!match) { complicationList.push(complication); }
+          });
+          this.state.operatingRoomList.map((room) => {
+            if (room.value.toUpperCase() === result.roomName.toUpperCase()) {
+              operatingRoom = room.label;
             }
           });
-          if (!match) { complicationList.push(complication); }
-        });
-        this.state.operatingRoomList.map((room) => {
-          if (room.value.toUpperCase() === result.roomName.toUpperCase()) {
-            operatingRoom = room.label;
-          }
-        });
 
-        this.setState({
-          procedureNames: procedureNames,
-          complicationNames: complicationList.join(', '),
-          operatingRoom: operatingRoom,
-          compDate: new Date(result.postOpDate).toLocaleDateString(),
-          enhancedMMReferenceName: result.enhancedMMReferenceName,
-          enhancedMMPublished: result.enhancedMMPublished
-        });
-      }
-    });
+          this.setState({
+            procedureNames: procedureNames,
+            complicationNames: complicationList.join(', '),
+            operatingRoom: operatingRoom,
+            compDate: new Date(result.postOpDate).toLocaleDateString(),
+            enhancedMMReferenceName: result.enhancedMMReferenceName,
+            enhancedMMPublished: result.enhancedMMPublished
+          });
+        }
+      });
   };
 
   renderSpecialtiesProcedures() {
     if (this.state.procedureNames.length) {
       return this.state.procedureNames.map((procedure, index) => {
-        return  <div className="table-row row-font normal-text" key={index}>
-                  <div>{procedure}</div>
-                </div>
+        return <div className="table-row row-font normal-text" key={index}>
+          <div>{procedure}</div>
+        </div>
       });
     }
   }

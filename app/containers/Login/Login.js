@@ -84,7 +84,6 @@ export default class Login extends React.PureComponent {
     globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', accessToken, {})
       .then(result => {
         this.props.setProfile(result);
-        // this.getSpecialty(result.facilityId);
         this.getOperatingRooms(result.facilityId);
         this.getComplications();
         this.setLogger();
@@ -101,21 +100,6 @@ export default class Login extends React.PureComponent {
     this.props.setLogger(new Logger(this.props.userToken))
   }
 
-  // getSpecialty(userFacility) {
-  //   if (this.props.specialties && this.props.specialties.length > 0) {
-  //     return;
-  //   }
-  //   globalFunctions.genericFetch(process.env.SPECIALTY_API + "/" + userFacility, 'get', this.props.userToken, {})
-  //     .then(result => {
-  //       if (result) {
-  //         if (result == 'error' || !result) {
-  //           return;
-  //         }
-  //         this.props.setSpecialtyList(result.filter && result.filter(s => s && s.value));
-  //       } else {
-  //       }
-  //     });
-  // };
 
   getComplications() {
     if (this.props.complications && this.props.complications.length > 0) {

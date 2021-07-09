@@ -127,19 +127,19 @@ export default class SSChecklist extends React.PureComponent {
     if (localStorage.getItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`)) {
       return;
     }
-    globalFunctions.axiosFetch(process.env.ONBOARD_API, 'get', this.props.userToken, {})
-      .then(result => {
-        var data = result.data;
+    // globalFunctions.axiosFetch(process.env.ONBOARD_API, 'get', this.props.userToken, {})
+    //   .then(result => {
+    //     var data = result.data;
 
-        if (data && data.onboardCompleted && data.onboardCompleted.includes && data.onboardCompleted.includes(this.ONBOARD_TYPE)) {
-          localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
-          return;
-        }
-        this.openOnboardModal();
-        this.updateOnboardStatus();
-      }).catch((error) => {
+    //     if (data && data.onboardCompleted && data.onboardCompleted.includes && data.onboardCompleted.includes(this.ONBOARD_TYPE)) {
+    //       localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
+    //       return;
+    //     }
+    //     this.openOnboardModal();
+    //     this.updateOnboardStatus();
+    //   }).catch((error) => {
 
-      });
+    //   });
   }
   updateOnboardStatus() {
     let jsonBody = { onboardCompleted: [this.ONBOARD_TYPE] };
@@ -215,52 +215,6 @@ export default class SSChecklist extends React.PureComponent {
 
   closeModal() {
     this.setState({ isOpen: false });
-  }
-
-  openModal(tileRequest) {
-    let jsonBody = {
-      "facilityName": tileRequest.facilityName,
-      "reportName": tileRequest.reportName,
-      "hospitalName": tileRequest.hospitalName,
-      "departmentName": tileRequest.departmentName,
-
-      "startDate": globalFuncs.formatDateTime(this.state.month.startOf('month')),
-      "endDate": globalFuncs.formatDateTime(this.state.month.endOf('month')),
-      "tileType": tileRequest.tileType,
-      "dashboardName": tileRequest.dashboardName,
-
-      "roomName": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.value,
-      "days": this.state.selectedWeekday && [moment().isoWeekday(this.state.selectedWeekday).day()] || [],
-      "specialtyName": this.state.selectedSpecialty && this.state.selectedSpecialty.value,
-      "procedureName": ""
-    }
-    jsonBody.Monthly = !Boolean(jsonBody.roomName || jsonBody.days.length || jsonBody.specialtyName);
-    let modal = this.state.modalTile || { days: [] };
-    //If nothing changed - open the tile
-    if (modal.days.length === jsonBody.days.length && modal.days.every(function (value, index) { return value === jsonBody.days[index] })
-      && modal.roomName == jsonBody.roomName
-      && modal.specialtyName == jsonBody.specialtyName
-      && moment.utc(modal.startDate).isSame(this.state.month.startOf('month'), 'month')) {
-      this.setState({ isOpen: true })
-      return
-    }
-
-    this.setState({ isOpen: true, modalTile: this.state.modalTile || jsonBody });
-    globalFuncs.axiosFetch(process.env.SSCTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
-      .then(result => {
-        result = result.data;
-        if (result === 'error' || result === 'conflict') {
-          this.setState({ isOpen: false, modalTile: null, isLoading: false });
-        } else {
-          result = { ...jsonBody, ...result, roomName: jsonBody.roomName };
-          if (moment.utc(tileRequest.dataDate).isSame(this.state.month.startOf('month'), 'month')) {
-            this.setState({ modalTile: result });
-          }
-
-        }
-      }).catch((error) => {
-        this.setState({ isOpen: false, modalTile: null, isLoading: false });
-      });
   }
 
   updateMonth(month) {

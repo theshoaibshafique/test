@@ -92,10 +92,6 @@ export default class MainLayout extends React.PureComponent {
     this.setState({ isLoading: false });
   }
 
-  getEMMPublishAccess() {
-    return globalFunctions.axiosFetch(process.env.EMMPUBLISHACCESS_API, 'get', this.props.userToken);
-  };
-
   getContainer() {
     if (!this.state.authenticated) {
       return <Switch>
