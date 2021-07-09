@@ -8,6 +8,7 @@ import globalFunctions from '../../utils/global-functions';
 import { redirectLogin } from '../../utils/Auth';
 import moment from 'moment';
 import { Logger } from '../../components/Logger/Logger';
+import { refreshInterval } from '../../constants';
 
 export default class Login extends React.PureComponent {
   constructor(props) {
@@ -27,7 +28,16 @@ export default class Login extends React.PureComponent {
     if (!refreshToken) {
       window.location.replace(redirectLogin())
     }
+    this.refreshLoop();
+    console.log('LOOP')
+  }
+
+  refreshLoop() {
+    
     this.refreshLogin();
+    setTimeout(() => {
+      this.refreshLoop();
+    }, refreshInterval);
   }
 
   unauthenticatedFunction = loginFunction => {
@@ -61,6 +71,7 @@ export default class Login extends React.PureComponent {
   }
 
   refreshLogin() {
+    console.log('refreshToken');
     const { refreshToken, expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
     const body = {
       client_id: process.env.AUTH_CLIENT_ID,
@@ -81,6 +92,9 @@ export default class Login extends React.PureComponent {
     const { accessToken, expiresAt, refreshToken } = data;
     localStorage.setItem('refreshToken', JSON.stringify({ refreshToken: refreshToken, expiresAt: expiresAt * 1000 }));
     this.props.setUserToken(accessToken);
+    if (this.props.logger){
+      return;
+    }
     globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', accessToken, {})
       .then(result => {
         this.props.setProfile(result);
@@ -118,7 +132,7 @@ export default class Login extends React.PureComponent {
   getOperatingRooms() {
     globalFunctions.genericFetch(process.env.CASE_DISCOVERY_API + "rooms", 'get', this.props.userToken, {})
       .then(result => {
-        if (result != 'error'){
+        if (result != 'error') {
           this.props.setOperatingRoom(result)
         }
       }).catch((error) =>

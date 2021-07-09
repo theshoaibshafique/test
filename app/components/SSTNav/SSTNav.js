@@ -9,6 +9,9 @@ import LoadingOverlay from 'react-loading-overlay';
 import alphaTag from 'images/alpha-tag.svg';
 import globalFunctions from '../../utils/global-functions';
 import { redirectLogin } from '../../utils/Auth';
+import IdleTimer from 'react-idle-timer';
+import * as CONSTANTS from '../../constants';
+
 class SSTNav extends React.Component {
   constructor(props) {
     super(props);
@@ -20,7 +23,7 @@ class SSTNav extends React.Component {
       isEfficiencyOpen: this.isInNav(this.efficiencyLinks, this.props.pathname),
       menu: null
     }
-
+    this.onIdle = this._onIdle.bind(this)
   }
 
   componentDidUpdate() {
@@ -64,6 +67,10 @@ class SSTNav extends React.Component {
         console.error(error)
         window.location.replace(redirectLogin())
       });
+  }
+
+  _onIdle(e) {
+    this.logout();
   }
 
   render() {
@@ -174,7 +181,10 @@ class SSTNav extends React.Component {
 
           </List>
         </Grid>
-
+        <IdleTimer
+          element={document}
+          onIdle={this.onIdle}
+          timeout={CONSTANTS.idleTimeout} />
       </Grid>
     );
   }
