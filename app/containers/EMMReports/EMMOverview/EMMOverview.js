@@ -51,8 +51,8 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
               }
             } else {
               return {
-                'specialty': 'Unknown Specialty',
-                'procedure': 'Unknown Procedure'
+                'specialty': procedure.specialtyName,
+                'procedure': procedure.procedureName
               }
             }
           });
