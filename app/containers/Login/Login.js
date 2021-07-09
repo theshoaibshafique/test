@@ -4,15 +4,35 @@ import './style.scss';
 import { Helmet } from 'react-helmet';
 import SSTLogo from './img/SST_logo.svg';
 import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
+import globalFunctions from '../../utils/global-functions';
+import { redirectLogin } from '../../utils/Auth';
+import moment from 'moment';
+import { Logger } from '../../components/Logger/Logger';
 
 export default class Login extends React.PureComponent {
   constructor(props) {
     super(props);
   }
 
+  componentDidMount() {
+
+    const { refreshToken, expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
+    const urlParams = new URLSearchParams(window.location.search)
+    const auth_code = urlParams.get('code')
+    //If they're redirecting back to Insights
+    if (auth_code) {
+      this.login(auth_code);
+      return;
+    }
+    if (!refreshToken) {
+      window.location.replace(redirectLogin())
+    }
+    this.refreshLogin();
+  }
+
   unauthenticatedFunction = loginFunction => {
     return (
-        <button className="Button sst-login-button" onClick={loginFunction}>Login</button>
+      <button className="Button sst-login-button" onClick={loginFunction}>Login</button>
     );
   }
 
@@ -21,34 +41,136 @@ export default class Login extends React.PureComponent {
     this.props.pushUrl('/dashboard');
   }
 
+  login(auth_code) {
+    localStorage.setItem('refreshToken', null);
+    const body = {
+      client_id: process.env.AUTH_CLIENT_ID,
+      grant_type: 'authorization_code',
+      redirect_uri: process.env.AUTH_CALLBACK,
+      code_verifier: localStorage.getItem('verifier'),
+      code: auth_code
+    }
+
+    globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
+      .then(result => {
+        this.processAuthentication(result.data);
+        this.props.pushUrl('/dashboard');
+      }).catch(error => {
+        console.error(error);
+      });
+  }
+
+  refreshLogin() {
+    const { refreshToken, expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
+    const body = {
+      client_id: process.env.AUTH_CLIENT_ID,
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken || ""
+    }
+    globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
+      .then(result => {
+        this.processAuthentication(result.data);
+      }).catch(error => {
+        console.error(error)
+        localStorage.setItem('refreshToken', null);
+        window.location.replace(redirectLogin())
+      });
+  };
+
+  processAuthentication(data) {
+    const { accessToken, expiresAt, refreshToken } = data;
+    localStorage.setItem('refreshToken', JSON.stringify({ refreshToken: refreshToken, expiresAt: expiresAt * 1000 }));
+    this.props.setUserToken(accessToken);
+    globalFunctions.genericFetch(process.env.USER_API, 'get', accessToken, {})
+      .then(result => {
+        this.props.setProfile(result);
+        // this.getSpecialty(result.facilityId);
+        this.getOperatingRooms(result.facilityId);
+        this.getComplications();
+        this.setLogger();
+      }).catch((results) => {
+        console.error("oh no", results)
+      });
+  }
+
+  setLogger() {
+    if (this.props.logger) {
+      return;
+    }
+
+    this.props.setLogger(new Logger(this.props.userToken))
+  }
+
+  // getSpecialty(userFacility) {
+  //   if (this.props.specialties && this.props.specialties.length > 0) {
+  //     return;
+  //   }
+  //   globalFunctions.genericFetch(process.env.SPECIALTY_API + "/" + userFacility, 'get', this.props.userToken, {})
+  //     .then(result => {
+  //       if (result) {
+  //         if (result == 'error' || !result) {
+  //           return;
+  //         }
+  //         this.props.setSpecialtyList(result.filter && result.filter(s => s && s.value));
+  //       } else {
+  //       }
+  //     });
+  // };
+
+  getComplications() {
+    if (this.props.complications && this.props.complications.length > 0) {
+      return;
+    }
+
+    globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/complications', 'get', this.props.userToken, {})
+      .then(result => {
+        result = result.data
+        this.props.setComplicationList(result);
+      }).catch((error) => {
+        console.error('Could not fetch Complications list')
+      })
+  };
+
+  getOperatingRooms() {
+    globalFunctions.genericFetch(process.env.CASE_DISCOVERY_API + "rooms", 'get', this.props.userToken, {})
+      .then(result => {
+        if (result != 'error'){
+          this.props.setOperatingRoom(result)
+        }
+      }).catch((error) =>
+        console.error(error)
+      );
+  }
+
   render() {
     return (
-      <section className="SST-LOGIN full-height">
-        <Helmet>
-          <title>SST Insights Login</title>
-          <meta name="description" content="SST Insights Dashboard" />
-        </Helmet>
-        <div className="flex vertical-center flex-column full-height">
-          <img src={SSTLogo} style={{width: '650px'}}/>
-          <AzureAD
-            // reduxStore={store}
-            provider={new MsalAuthProviderFactory({
-              authority: process.env.REACT_APP_AUTHORITY,
-              clientID: process.env.REACT_APP_AAD_APP_CLIENT_ID,
-              scopes: process.env.REACT_APP_AAD_SCOPES.split(' '),
-              redirectUri: process.env.REACT_APP_AAD_CALLback,
-              type: LoginType.Redirect,
-              validateAuthority: false,
-              persistLoginPastSession: true,
-            })}
-            unauthenticatedFunction={this.unauthenticatedFunction}
-            userInfoCallback={this.userJustLoggedIn}
-            authenticatedFunction={this.authenticatedFunction}
-            storeAuthStateInCookie={true}
-            forceLogin={true}
-          />
-        </div>
-      </section>
+      // <section className="SST-LOGIN full-height">
+      //   <Helmet>
+      //     <title>SST Insights Login</title>
+      //     <meta name="description" content="SST Insights Dashboard" />
+      //   </Helmet>
+      //   <div className="flex vertical-center flex-column full-height">
+      //     <img src={SSTLogo} style={{width: '650px'}}/>
+      //     {/* <AzureAD
+      //       // reduxStore={store}
+      //       provider={new MsalAuthProviderFactory({
+      //         authority: process.env.REACT_APP_AUTHORITY,
+      //         clientID: process.env.REACT_APP_AAD_APP_CLIENT_ID,
+      //         scopes: process.env.REACT_APP_AAD_SCOPES.split(' '),
+      //         redirectUri: process.env.REACT_APP_AAD_CALLback,
+      //         type: LoginType.Redirect,
+      //         validateAuthority: false,
+      //         persistLoginPastSession: true,
+      //       })}
+      //       unauthenticatedFunction={this.unauthenticatedFunction}
+      //       userInfoCallback={this.userJustLoggedIn}
+      //       authenticatedFunction={this.authenticatedFunction}
+      //       storeAuthStateInCookie={true}
+      //       forceLogin={true}
+      //     /> */}
+      //   </div>
+      // </section>
+      <span></span>
     );
   }
 }

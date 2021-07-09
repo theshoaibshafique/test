@@ -20,7 +20,9 @@ import {
   COMPLICATIONS,
   OPERATING_ROOM,
   USER_ROLES,
-  LOGGER
+  LOGGER,
+  AUTH_LOGIN,
+  PROFILE
 } from './constants';
 
 // The initial state of the App
@@ -52,6 +54,19 @@ function emmReducer(state = initialState, action) {
         .set('lastName', action.token.user.idToken.family_name)
         .set('email', action.token.user.idToken.email)
         .set('jobTitle', action.token.user.idToken.job_title);
+    case AUTH_LOGIN:
+      return state
+        .set('userToken', action.accessToken)
+        .set('userLoggedIn', true);
+    case PROFILE:
+      return state
+        .set('userID', action.profile.userId)
+        .set('email', action.profile.email)
+        .set('userFacility', action.profile.facilityId)
+        .set('firstName', action.profile.firstName)
+        .set('lastName', action.profile.lastName)
+        .set('jobTitle', action.profile.title)
+        .set('userRoles', action.profile.roles);
     case USER_FACILITY:
       return state
         .set('userFacility', action.facility)

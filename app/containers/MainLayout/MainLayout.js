@@ -23,7 +23,8 @@ import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
 import globalFunctions from '../../utils/global-functions';
 import CaseDiscovery from '../CaseDiscovery/CaseDiscovery';
-
+import moment from 'moment';
+import Login from '../Login';
 
 export default class MainLayout extends React.PureComponent {
   constructor(props) {
@@ -39,8 +40,19 @@ export default class MainLayout extends React.PureComponent {
       efficiencyAccess: false,
       isLoading: true
     }
+  }
 
-    this.logoutRef = React.createRef();
+  componentDidMount(){
+    // const {refreshToken,expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
+    // if (!refreshToken){
+    //   this.props.pushUrl('/');
+    //   return;
+    // }
+  }
+  componentDidUpdate(prevProps){
+    if (prevProps.userRoles != this.props.userRoles || prevProps.userFacility != this.props.userFacility){
+      this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
+    }
   }
 
   resourcesGathered(roles, userFacility) {
@@ -157,6 +169,7 @@ export default class MainLayout extends React.PureComponent {
   render() {
     return (
       <div className="app-wrapper">
+        <Login/>
         <CssBaseline />
         <Helmet
           titleTemplate="%s - SST Insights"
@@ -186,13 +199,7 @@ export default class MainLayout extends React.PureComponent {
                   efficiencyAccess={this.state.efficiencyAccess}
                   caseDiscoveryAccess={this.state.caseDiscoveryAccess}
                   pathname={this.props.location.pathname}
-                  logoutRef={this.logoutRef}
                   isLoading={this.state.isLoading}
-                  userLogin={<AzureLogin
-                    resourcesGathered={(roles, userFacility) => this.resourcesGathered(roles, userFacility)}
-                    redirect={() => this.redirect()}
-                    logoutRef={this.logoutRef}
-                  />}
                 />
               </Drawer>
             </Hidden>

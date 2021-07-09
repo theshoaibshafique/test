@@ -29,7 +29,7 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
       }
     }).catch(error => {
       console.error(error)
-      return error;
+      return 'error';
     })
   } else {
     return fetch(api, {
@@ -103,6 +103,22 @@ function axiosFetch(url, fetchMethod, userToken, fetchBodyJSON, cancelToken) {
     mode: 'cors',
     cancelToken: cancelToken || new axios.CancelToken(function (cancel) {
     })
+  });
+}
+
+function authFetch(url, fetchMethod, body) {
+  if (!url) {
+    return;
+  }
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(body)) {
+    params.append(key, value)
+  }
+  return axios({
+    method: fetchMethod,
+    url: url,
+    mode: 'cors',
+    data: params
   });
 }
 
@@ -243,5 +259,6 @@ export default {
   range,
   ordinal_suffix_of,
   getDiffFromMidnight,
-  getWindowDimensions
+  getWindowDimensions,
+  authFetch
 };

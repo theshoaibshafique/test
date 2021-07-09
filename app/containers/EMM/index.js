@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import EMM from './EMM';
-import { makeSelectToken, makeSelectUserFacility, makeSelectSpecialties, makeSelectComplications } from '../App/selectors';
+import { makeSelectToken, makeSelectUserFacility, makeSelectSpecialties, makeSelectComplications, makeSelectEMMAccess } from '../App/selectors';
 import { showEMMReport } from '../App/emm-actions';
 
 const mapStateToProps = (state, ownProps) => createStructuredSelector({
@@ -10,7 +10,8 @@ const mapStateToProps = (state, ownProps) => createStructuredSelector({
   requestId: () => ownProps.match.params.requestid,
   userFacility: makeSelectUserFacility(),
   specialties: makeSelectSpecialties(),
-  complications: makeSelectComplications()
+  complications: makeSelectComplications(),
+  emmAccess: makeSelectEMMAccess(),
 });
 
 const mapDispatchToProps = (dispatch) => {

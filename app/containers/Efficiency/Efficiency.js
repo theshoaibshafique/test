@@ -393,10 +393,7 @@ export default class Efficiency extends React.PureComponent {
     switch (`${tile.tileType}`.toUpperCase()) {
       case 'DETAILEDMULTILINECHART':
         return <DetailedMultiLineChart
-          {...tile}
-          labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
-            return { value: or.roomName, name: or.roomTitle };
-          }) || []} />
+          {...tile}/>
       case 'INFOGRAPHICPARAGRAPH':
         return <InfographicParagraph {...tile} />
       case 'INFOGRAPHICTEXT':
@@ -417,18 +414,12 @@ export default class Efficiency extends React.PureComponent {
           id={tile.tileTypeCount}
           reportType={this.props.reportType}
           noWrapXTick={this.state.isLandingPage && this.state.tabIndex == 0}
-          {...tile}
-          labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
-            return { value: or.roomName, name: or.roomTitle };
-          }) || []} />
+          {...tile}/>
       case 'HISTOGRAM':
         return <Histogram
           id={tile.tileTypeCount}
           reportType={this.props.reportType}
-          {...tile}
-          labelList={this.props.operatingRooms && this.props.operatingRooms.map && this.props.operatingRooms.map((or) => {
-            return { value: or.roomName, name: or.roomTitle };
-          }) || []} />
+          {...tile} />
       case 'DONUTCHART':
         return <DonutChart {...tile} specialties={this.state.specialties} orderBy={{ "Setup": 1, "Clean-up": 2, "Idle": 3 }} />
       case 'STACKEDBARCHART':

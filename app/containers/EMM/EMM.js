@@ -14,7 +14,7 @@ export default class EMM extends React.PureComponent {
       compDate: null,
       specialtyNames: [],
       operatingRoomList: [],
-      emmAccess: false,
+      emmAccess: this.props.emmAccess,
       enhancedMMReferenceName: '',
       enhancedMMPublished: false,
       showReport: false,
@@ -24,26 +24,6 @@ export default class EMM extends React.PureComponent {
 
   componentDidMount() {
     this.getOperatingRooms();
-    this.getEMMAccess();
-  };
-
-  getEMMAccess() {
-    fetch(process.env.EMMACCESS_API, {
-      method: 'get',
-      headers: {
-        'Authorization': 'Bearer ' + this.props.userToken,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      if (response.status === 200) {
-        response.json().then((result) => {
-          if (result) {
-            this.setState ({ emmAccess: true })
-          }
-        });
-      }
-    })
   };
 
   getOperatingRooms(){

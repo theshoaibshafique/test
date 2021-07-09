@@ -116,7 +116,7 @@ class AzureLogin extends React.Component {
           element={document}
           onIdle={this.onIdle}
           timeout={CONSTANTS.idleTimeout} />
-        <AzureAD
+        {/* <AzureAD
           // reduxStore={store}
           provider={new MsalAuthProviderFactory({
             authority: process.env.REACT_APP_AUTHORITY,
@@ -132,7 +132,7 @@ class AzureLogin extends React.Component {
           authenticatedFunction={this.userAuthenticatedFunction}
           storeAuthStateInCookie={true}
           forceLogin={true}
-        />
+        /> */}
       </span>
     );
   }

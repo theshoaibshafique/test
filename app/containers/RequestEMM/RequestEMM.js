@@ -357,7 +357,7 @@ export default class RequestEMM extends React.PureComponent {
 
     return await globalFuncs.genericFetch(process.env.CASE_DISCOVERY_API + "rooms" , 'get', this.props.userToken, {})
       .then(result => {
-        let operatingRooms = result.map(r => ({value:r, label:r}));
+        let operatingRooms = result.map(r => ({value:r.id, label:r.display}));
         
         callback(operatingRooms)
         this.setState({ operatingRooms });

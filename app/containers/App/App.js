@@ -20,7 +20,7 @@ library.add(faCog, faEdit, faTrash, faPlus, faUser, faMale, faFemale, faChevronR
 
 const App = () => (
         <Switch>
-          <Route exact path="/" component={Login} />
+          {/* <Route exact path="/" component={Login} /> */}
           <Route path="" component={MainLayout} />
         </Switch>
 

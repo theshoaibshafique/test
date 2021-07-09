@@ -62,7 +62,7 @@ export default class EMMCases extends React.PureComponent {
 
     let operatingRoomMap = new Map();
     operatingRooms.map((room) => {
-      operatingRoomMap.set(room.roomName.toUpperCase(), room.roomTitle);
+      operatingRoomMap.set(room.id.toUpperCase(), room.display);
     });
 
     this.state = {

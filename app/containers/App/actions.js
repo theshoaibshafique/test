@@ -23,7 +23,9 @@ import {
   COMPLICATIONS,
   OPERATING_ROOM,
   USER_ROLES,
-  LOGGER
+  LOGGER,
+  AUTH_LOGIN,
+  PROFILE
 } from './constants';
 
 /**
@@ -135,5 +137,33 @@ export function setLogger(logger) {
   return {
     type: LOGGER,
     logger
+  };
+}
+
+/**
+ * Save User Token
+ *
+ * @param  {string} user token
+ *
+ * @return {object}    An action object with a type of AUTH_LOGIN
+ */
+ export function setUserToken(accessToken) {
+  return {
+    type: AUTH_LOGIN,
+    accessToken
+  };
+}
+
+/**
+ * Save User Profile
+ *
+ * @param  {object} User Profile
+ *
+ * @return {object}    An action object with a type of PROFILE
+ */
+ export function setProfile(profile) {
+  return {
+    type: PROFILE,
+    profile
   };
 }

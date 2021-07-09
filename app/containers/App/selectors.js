@@ -88,6 +88,16 @@ const makeSelectIsAdmin = () => createSelector(
   (globalState) => globalState.get('userRoles').filter(role => role === 'Admin').length === 1
 );
 
+const makeSelectEMMAccess = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('userRoles').filter(role => role.toUpperCase() === 'ENHANCED M&M VIEW').length === 1
+);
+
+const makeSelectRoles = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('userRoles')
+);
+
 const makeSelectLogger = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('logger')
@@ -112,5 +122,7 @@ export {
   makeSelectJobTitle,
   makeSelectIsPresenter,
   makeSelectIsAdmin,
+  makeSelectEMMAccess,
+  makeSelectRoles,
   makeSelectLogger
 };

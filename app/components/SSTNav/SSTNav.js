@@ -7,6 +7,8 @@ import IconExpandLess from '@material-ui/icons/ExpandLess'
 import IconExpandMore from '@material-ui/icons/ExpandMore'
 import LoadingOverlay from 'react-loading-overlay';
 import alphaTag from 'images/alpha-tag.svg';
+import globalFunctions from '../../utils/global-functions';
+import { redirectLogin } from '../../utils/Auth';
 class SSTNav extends React.Component {
   constructor(props) {
     super(props);
@@ -47,6 +49,21 @@ class SSTNav extends React.Component {
   }
   closeMenu() {
     this.setState({ menu: null })
+  }
+
+  logout(){
+    const { refreshToken, expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
+    const body = {
+      refresh_token: refreshToken || ""
+    }
+    localStorage.setItem('refreshToken', null);
+    globalFunctions.authFetch(`${process.env.AUTH_API}revoke`, 'POST', body)
+      .then(result => {
+        window.location.replace(redirectLogin())
+      }).catch(error => {
+        console.error(error)
+        window.location.replace(redirectLogin())
+      });
   }
 
   render() {
@@ -150,10 +167,10 @@ class SSTNav extends React.Component {
                 <NavLink to="/my-profile" onClick={() => this.closeMenu()} style={{ color: 'unset', textDecoration: 'none' }} >My Profile</NavLink>
               </MenuItem>
               <MenuItem className="sst-menu-item">
-                <div onClick={() => { this.props.logoutRef.current && this.props.logoutRef.current.click() }}>Logout</div>
+                <div onClick={() =>  this.logout()}>Logout</div>
               </MenuItem>
             </Menu>
-            <div hidden ><NavLink to="/" className='text-link' isActive={() => false} >{this.props.userLogin}</NavLink></div>
+            {/* <div hidden ><NavLink to="/" className='text-link' isActive={() => false} >{this.props.userLogin}</NavLink></div> */}
 
           </List>
         </Grid>
