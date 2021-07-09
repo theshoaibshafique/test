@@ -81,7 +81,7 @@ export default class Login extends React.PureComponent {
     const { accessToken, expiresAt, refreshToken } = data;
     localStorage.setItem('refreshToken', JSON.stringify({ refreshToken: refreshToken, expiresAt: expiresAt * 1000 }));
     this.props.setUserToken(accessToken);
-    globalFunctions.genericFetch(process.env.USER_API, 'get', accessToken, {})
+    globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', accessToken, {})
       .then(result => {
         this.props.setProfile(result);
         // this.getSpecialty(result.facilityId);

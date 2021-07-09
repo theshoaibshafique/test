@@ -22,7 +22,8 @@ class UserFields extends React.Component {
   }
 
   checkPermissions(value) {
-    return this.props.userValue.permissions.indexOf(value) >= 0;
+    const containsAdmin = this.props.userValue.permissions.indexOf("Admin") >= 0;
+    return this.props.userValue.permissions.indexOf(value) >= 0 || containsAdmin;
   }
 
   validateField = (e, type) => {
@@ -98,7 +99,7 @@ class UserFields extends React.Component {
   }
 
   render() {
-    const isAdmin = this.checkPermissions("6AD12264-46FA-8440-52AD1846BDF1_Admin");
+    const isAdmin = this.checkPermissions("Admin");
     return (
       <Grid container spacing={2}>
         <Grid item xs={6} className="input-title">
@@ -204,7 +205,7 @@ class UserFields extends React.Component {
                   name="userManagement"
                   onChange={this.props.handleFormChange}
                   checked={isAdmin}
-                  value="6AD12264-46FA-8440-52AD1846BDF1_Admin"
+                  value="Admin"
                 />
               }
               label={<Typography className="subtext">Admin</Typography>}
@@ -220,8 +221,8 @@ class UserFields extends React.Component {
                   name="mmView"
                   disabled={isAdmin}
                   onChange={this.props.handleFormChange}
-                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View")}
-                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M View"
+                  checked={this.checkPermissions("Enhanced M&M View")}
+                  value="Enhanced M&M View"
                 />
               }
               label={<Typography className="subtext">Enhanced M&M View Report</Typography>}
@@ -237,8 +238,8 @@ class UserFields extends React.Component {
                   name="mmEdit"
                   disabled={isAdmin}
                   onChange={this.props.handleFormChange}
-                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit")}
-                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Edit"
+                  checked={this.checkPermissions("Enhanced M&M Edit")}
+                  value="Enhanced M&M Edit"
                 />
               }
               label={<Typography className="subtext">Enhanced M&M Request</Typography>}
@@ -254,8 +255,8 @@ class UserFields extends React.Component {
                   name="presenterAccess"
                   disabled={isAdmin}
                   onChange={this.props.handleFormChange}
-                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter")}
-                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Enhanced M&M Presenter"
+                  checked={this.checkPermissions("Enhanced M&M Presenter")}
+                  value="Enhanced M&M Presenter"
                 />
               }
               label={<div className="subtext">Enhanced M&M Presenter<LightTooltip interactive arrow title={"This permission enables the user to access Presentation Mode for Enhanced M&M Reports. Presentation Mode will cause the videos to no longer be secured but will enable sharing over video conferencing tools. This feature can be found above the video player for each report."} placement="top" fontSize="small">
@@ -273,8 +274,8 @@ class UserFields extends React.Component {
                   name="sscAccess"
                   disabled={isAdmin}
                   onChange={this.props.handleFormChange}
-                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist")}
-                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Surgical Checklist"
+                  checked={this.checkPermissions("Surgical Checklist")}
+                  value="Surgical Checklist"
                 />
               }
               label={<Typography className="subtext">Surgical Safety Checklist</Typography>}
@@ -290,8 +291,8 @@ class UserFields extends React.Component {
                   name="efficiencyAccess"
                   disabled={isAdmin}
                   onChange={this.props.handleFormChange}
-                  checked={this.checkPermissions("35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Efficiency")}
-                  value="35840EC2-8FA4-4515-AF4F-D90BD2A303BA_Efficiency"
+                  checked={this.checkPermissions("Efficiency")}
+                  value="Efficiency"
                 />
               }
               label={<Typography className="subtext">Efficiency</Typography>}

@@ -50,7 +50,7 @@ class AzureLogin extends React.Component {
   }
 
   getUserFacility() {
-    globalFunctions.genericFetch(process.env.USER_API, 'get', this.props.userToken, {})
+    globalFunctions.genericFetch(process.env.USER_API + "profile", 'get', this.props.userToken, {})
       .then(result => {
         this.props.setUserRoles(result.roles);
         this.props.setUserFacility(result.facilityId);

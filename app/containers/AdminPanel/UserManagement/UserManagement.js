@@ -49,7 +49,7 @@ export default class UserManagement extends React.PureComponent {
   }
 
   async componentDidMount() {
-    await globalFuncs.genericFetch(process.env.USERMANAGEMENT_API, 'get', this.props.userToken, {})
+    await globalFuncs.genericFetch(`${process.env.USER_API}profiles`, 'get', this.props.userToken, {})
     .then(result => {
       if (result) {       
         this.setState({
@@ -87,46 +87,28 @@ export default class UserManagement extends React.PureComponent {
       this.setState({
         lastRequestedUserName: rowData.userName
       })
-      // get the user roles for edit
-      globalFuncs.genericFetch(process.env.USERMANAGEMENTUSERROLES_API + rowData.userName, 'get', this.props.userToken, {})
-      .then(result => {
-        if (result === 'error' || result === 'conflict') {
-          // send error to modal
-          this.setState({ errorMsgVisible: true });
-        } else {
-          const permission = []
-          result.map(userRole => {
-            if (userRole.roleNames && userRole.roleNames.length) {
-              userRole.roleNames.map((role) => {
-                permission.push(userRole.appName + '_' + role);
-              })
-            }
-          });
-          //Only set the state of the most recently retrieved user (fixes bug when of rapidly swapping between popups)
-          if (this.state.lastRequestedUserName == rowData.userName){
-            const userData = {
-              currentUser: rowData.userName,
-                firstName: rowData.firstName,
-                lastName: rowData.lastName,
-                email: rowData.email,
-                title: rowData.title,
-                facilityName: rowData.facilityName,
-                country: rowData.country,
-                preferredLanguage: rowData.preferredLanguage,
-                active: rowData.active,
-                permissions: permission,
-                id: rowData.tableData.id,
-            };
-            logger && logger.manualAddLog('click', `open-${view}-modal`, userData);
-            this.setState({
-              userValue: {
-                ...userData,
-                isLoaded:true
-              }
-            });
-          }
+
+      const userData = {
+        currentUser: rowData.userName,
+          firstName: rowData.firstName,
+          lastName: rowData.lastName,
+          email: rowData.email,
+          title: rowData.title,
+          facilityName: rowData.facilityName,
+          country: rowData.country,
+          preferredLanguage: rowData.preferredLanguage,
+          isActive: rowData.isActive,
+          permissions: rowData.roles || rowData.permissions,
+          id: rowData.tableData.id,
+      };
+      logger && logger.manualAddLog('click', `open-${view}-modal`, userData);
+      this.setState({
+        userValue: {
+          ...userData,
+          isLoaded:true
         }
       });
+
     } else {
       logger && logger.manualAddLog('click', `open-${view}-modal`);
     }
@@ -155,7 +137,7 @@ export default class UserManagement extends React.PureComponent {
         title: '',
         country: '',
         preferredLanguage: 'en-US',
-        active: true,
+        isActive: true,
         permissions: [],
         id: ''
       },
@@ -205,6 +187,7 @@ export default class UserManagement extends React.PureComponent {
   refreshGrid(userName) {
     let newUser = this.state.userValue;
     newUser.userName = userName;
+    debugger;
     this.setState({
       userList: [...this.state.userList, newUser],
       currentView: 'add',
@@ -215,7 +198,7 @@ export default class UserManagement extends React.PureComponent {
 
   updateGrid(id) {
     let newState = Object.assign({}, this.state);
-    newState.userList[id].active = !this.state.userValue.active;
+    newState.userList[id].isActive = !this.state.userValue.isActive;
 
     this.setState({
       newState,
@@ -274,12 +257,12 @@ export default class UserManagement extends React.PureComponent {
   };
 
   getRoles(){
-    globalFuncs.genericFetch(process.env.USERMANAGEMENTROLES_API + "/35840EC2-8FA4-4515-AF4F-D90BD2A303BA", 'get', this.props.userToken, {})
+    globalFuncs.genericFetch(process.env.USER_API + "subscriptions", 'get', this.props.userToken, {})
       .then(result => {
         if (result === 'error' || result === 'conflict') {
 
         } else if (result) {
-          this.setState({roleNames:result.roleNames || []})
+          this.setState({roleNames:result || []})
         }
       });
   }
@@ -350,6 +333,7 @@ export default class UserManagement extends React.PureComponent {
           userValue={this.state.userValue}
           errorMsg={this.state.errorMsg}
           updateGrid={(id) => this.updateGrid(id)}
+          roleNames={this.state.roleNames}
         />
 
       </div>
