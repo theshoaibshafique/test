@@ -53,7 +53,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
         }
       }
     });
-    this.setState({ specialties: result, caseProcedures });
+    this.setState({ caseProcedures });
   }
 
   getSpeedometer(speed) {
