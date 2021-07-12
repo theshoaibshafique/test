@@ -5,7 +5,7 @@ import './style.scss';
 
 export default class MyProfile extends React.PureComponent {
   redirect(type, url) {
-    window.location.replace(`${process.env.AUTH_LOGIN}/update`)
+    window.location.replace(`${process.env.AUTH_LOGIN}update`)
   }
 
   render() {
