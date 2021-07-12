@@ -17,6 +17,7 @@ export default class Login extends React.PureComponent {
 
   componentDidMount() {
 
+
     const { refreshToken, expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
     const urlParams = new URLSearchParams(window.location.search)
     const auth_code = urlParams.get('code')
@@ -28,8 +29,10 @@ export default class Login extends React.PureComponent {
     if (!refreshToken) {
       window.location.replace(redirectLogin())
     }
+    if (window.location.pathname == "/"){
+      this.props.pushUrl('/dashboard');
+    } 
     this.refreshLoop();
-    console.log('LOOP')
   }
 
   refreshLoop() {

@@ -48,6 +48,7 @@ export default class MainLayout extends React.PureComponent {
     //   this.props.pushUrl('/');
     //   return;
     // }
+    this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
   }
   componentDidUpdate(prevProps){
     if (prevProps.userRoles != this.props.userRoles || prevProps.userFacility != this.props.userFacility){
@@ -73,7 +74,7 @@ export default class MainLayout extends React.PureComponent {
   };
 
   containsAny(arr1, arr2) {
-    return arr1.some(r => arr2.includes(r.toUpperCase()));
+    return arr1 && arr1.some(r => arr2.includes(r.toUpperCase()));
   }
 
   clearFilters() {
