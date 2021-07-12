@@ -26,12 +26,14 @@ export default class Login extends React.PureComponent {
       this.login(auth_code);
       return;
     }
+    if (window.location.pathname == "/"){
+      this.props.pushUrl('/dashboard');
+      return;
+    } 
     if (!refreshToken) {
       window.location.replace(redirectLogin())
     }
-    if (window.location.pathname == "/"){
-      this.props.pushUrl('/dashboard');
-    } 
+    
     this.refreshLoop();
   }
 
