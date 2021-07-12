@@ -148,7 +148,7 @@ class UserFields extends React.Component {
                     ? <div className="loader" ></div>
                     : (this.props.isEmailSent
                       ? <div className="input-title">Email Sent!</div>
-                      : <a className="link" onClick={this.props.passwordResetLink}>Send password reset link</a>)}
+                      : <a className="link" onClick={this.props.passwordResetLink}>Send account reset link</a>)}
 
                 </Grid>
 
