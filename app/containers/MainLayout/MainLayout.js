@@ -57,6 +57,9 @@ export default class MainLayout extends React.PureComponent {
   }
 
   resourcesGathered(roles, userFacility) {
+    if (!userFacility){
+      return;
+    }
     this.setState({
       userLoggedIn: true,
       adminPanelAccess: this.containsAny(roles, ["ADMIN"]),
