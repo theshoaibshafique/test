@@ -108,7 +108,7 @@ class UserModalStep1 extends React.Component {
       "roles": containsAdmin ? this.props.roleNames : this.props.userValue.permissions
     }
 
-    globalFuncs.genericFetchWithNoReturnMessage(`${process.env.USER_API}profile`, 'PATCH', this.props.userToken, jsonBody)
+    globalFuncs.genericFetch(`${process.env.USER_API}profile`, 'PATCH', this.props.userToken, jsonBody)
       .then(result => {
         if (result === 'error') {
           this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false, isLoading: false });

@@ -187,7 +187,6 @@ export default class UserManagement extends React.PureComponent {
   refreshGrid(userName) {
     let newUser = this.state.userValue;
     newUser.userName = userName;
-    debugger;
     this.setState({
       userList: [...this.state.userList, newUser],
       currentView: 'add',

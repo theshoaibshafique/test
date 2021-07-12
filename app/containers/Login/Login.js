@@ -83,6 +83,9 @@ export default class Login extends React.PureComponent {
       grant_type: 'refresh_token',
       refresh_token: refreshToken || ""
     }
+    if (!refreshToken) {
+      window.location.replace(redirectLogin())
+    }
     globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
       .then(result => {
         this.processAuthentication(result.data);
