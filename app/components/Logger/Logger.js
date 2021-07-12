@@ -5,7 +5,7 @@ import globalFunctions from '../../utils/global-functions';
 const events = ['mouseover', 'click', 'scroll', 'input']
 const reducedEvents = ['mouseover', 'onchange', 'input']
 const classPrefix = 'log-';
-const displayLogs = true;
+const displayLogs = false;
 
 export class Logger {
     constructor(userToken) {

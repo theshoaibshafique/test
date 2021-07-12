@@ -76,7 +76,7 @@ export default class Login extends React.PureComponent {
   }
 
   refreshLogin() {
-    console.log('refreshToken');
+    // console.log('refreshToken');
     const { refreshToken, expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
     const body = {
       client_id: process.env.AUTH_CLIENT_ID,
