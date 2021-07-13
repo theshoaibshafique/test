@@ -29,3 +29,9 @@
   margin-bottom: 16px;
   text-align: left;
 }
+.BlockUtilizationTrend,
+.TurnoverTimeTrend{
+  &.no-data-tile .body{
+    padding: 145px 0px;
+  }
+}

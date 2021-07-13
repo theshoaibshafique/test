@@ -159,7 +159,7 @@ export default class TimeSeriesChart extends React.PureComponent {
 
   generateChartData() {
     const { dataPoints, minDate } = this.props;
-    if (!dataPoints) {
+    if (!dataPoints || dataPoints.length <= 0) {
       return;
     }
     let formattedData = { x: ['x'], y: ['y'] };
