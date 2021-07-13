@@ -31,7 +31,7 @@
 }
 .BlockUtilizationTrend,
 .TurnoverTimeTrend{
-  .no-data-tile .body{
+  &.no-data-tile .body{
     padding: 145px 0px;
   }
 }
