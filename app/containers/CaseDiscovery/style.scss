@@ -869,6 +869,43 @@
         text-align: end;
     }
 }
+.timeline-container{
+    width: 100%;
+    transform: translate(0px, -110px);
+    padding-left: 45px;
+    height: 30px;
+    .clip-timeline{
+        position: relative;
+        // background-color: #cce5ee;
+        border-top: 1px solid #cce5ee;
+        border-left: 1px solid #cce5ee;
+        height: 100%;
+        width: 100%;
+        .clip-marker{
+            border-radius: 4px;
+            cursor: pointer;
+            position: absolute;
+            min-width: 30px;
+            padding-top: 2px;
+            display: flex;
+            background-color: #ffcfcf;
+            height: 100%;
+            img{
+                margin:auto;
+            }
+        }
+    }
+}
+.clip-modal{
+
+    .close-button {
+        width: 100%;
+        cursor: pointer;
+        img {
+            float: right;
+        }
+    }
+}
 
 @media (max-height: 960px) {
     .tag-info-modal {
@@ -876,6 +913,7 @@
         overflow-y: auto;
     }
 }
+// Case display animation
 .item-enter {
     opacity: 0.01;
     transform: translate(0, -40px);

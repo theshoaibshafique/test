@@ -1057,9 +1057,9 @@ function RecommendedCases(props) {
       responsive={responsive}
       autoPlay={true}
       autoPlaySpeed={6500}
-      arrows={false} 
+      arrows={false}
       renderButtonGroupOutside={true}
-      customButtonGroup={<Controls/>}
+      customButtonGroup={<Controls />}
     >
       {
         CASES.map((c, i) => (
@@ -1730,9 +1730,10 @@ function HL7Chart(props) {
   const data = {
     padding: {
       left: 45,
+      bottom: 80
     },
     size: hasHL7Data ? {} : {
-      height: 175
+      height: 250
     },
     data: {
       x: 'x',
@@ -1754,11 +1755,14 @@ function HL7Chart(props) {
           }
         },
         padding: hasHL7Data ? {
-          left: max * .025,
+          // left: max * .025,
+          // right: max * .025,
+          left: 3,
           right: max * .025,
         } : {
-          left: max * .05,
-          right: max * .05,
+          // left: max * .05,
+          left: 0,
+          right: max * .025,
         }
       },
       color: {
@@ -1805,7 +1809,6 @@ function HL7Chart(props) {
     }
   }
 
-
   // Pad HL7 with timeline data
   if (hasHL7Data) {
     for (let i = 0; i < hl7Data.length; i++) {
@@ -1851,7 +1854,13 @@ function HL7Chart(props) {
     const chart = chartRef && chartRef.current && chartRef.current.chart;
     if (chart) {
       setTimeout(() => {
-        // chart.resize();
+        d3.selectAll(`#hl7-chart .marker text`).style('transform', 'translate(18px, 0px) rotate(-90deg)')
+        // d3.selectAll(`#hl7-chart .c3-axis-x`).attr('dy', '-20')
+        const t = d3.transform(d3.select('#hl7-chart .c3-axis-x').attr("transform")),
+          x = t.translate[0],
+          y = t.translate[1]
+        // d3.select(`#hl7-chart .c3-axis-x`).style('transform', `translate(${x}, ${y+20})`)
+        d3.select(`#hl7-chart .c3-axis-x`).style('transform', `translate(${x}px, ${y + 30}px)`)
       }, 200)
     }
   });
@@ -1905,6 +1914,7 @@ function HL7Chart(props) {
         <div style={{ width: '100%' }}>
           <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
           <C3Chart ref={chartRef} {...data} />
+          <ClipTimeline timeline={timeline} max={max} />
         </div>
       </div>
 
@@ -1913,7 +1923,40 @@ function HL7Chart(props) {
   )
 }
 
+function ClipTimeline(props) {
+  const { timeline, max } = props;
+  const duration = max + max * .025
 
+  const [selectedMarker, setSelect] = React.useState(false);
+  const handleSelect = (t) => {
+    setSelected(t);
+  }
+  return (
+    <div className="timeline-container">
+      <div className='clip-timeline'>
+        {timeline.map((t,i) => {
+          return (
+            <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width:t.duration}}
+              onClick={() => handleSelect(t)}
+            >
+              <img src={Flagged} style={{ height: 16, width: 16 }} />
+            </div>
+          )
+        })}
+      </div>
+      <Modal
+        open={selectedMarker}
+        onClose={() => handleSelect(false)}
+        >
+          <div className="Modal clip-modal">
+            <div className="close-button">
+              <img src={Close} onClick={() => handleSelect(false)} />
+            </div>
+          </div>
+        </Modal>
+    </div>
+  )
+}
 
 
 
