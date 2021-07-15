@@ -15,7 +15,7 @@ import {
   base64DecodeUint8Array,
   base64EncodeUint8Array,
   arrayToString
-} from './pallycon-helper';
+} from '../../../../components/VideoPlayer/pallycon-helper';
 const videoOptions = {
   autoplay: true,
   controls: true,

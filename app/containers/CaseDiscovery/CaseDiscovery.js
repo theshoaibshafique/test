@@ -50,6 +50,7 @@ import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -1929,7 +1930,7 @@ function ClipTimeline(props) {
 
   const [selectedMarker, setSelect] = React.useState(false);
   const handleSelect = (t) => {
-    setSelected(t);
+    setSelect(t);
   }
   return (
     <div className="timeline-container">
@@ -1952,6 +1953,7 @@ function ClipTimeline(props) {
             <div className="close-button">
               <img src={Close} onClick={() => handleSelect(false)} />
             </div>
+            <VideoPlayer videoId="test-30" />
           </div>
         </Modal>
     </div>
