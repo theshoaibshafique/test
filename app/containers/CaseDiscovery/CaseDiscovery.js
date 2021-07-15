@@ -8,7 +8,7 @@ import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, Tooltip, withStyles } from '@material-ui/core';
 import { DATE_OPTIONS, TAGS, TAG_INFO } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -1923,39 +1923,66 @@ function HL7Chart(props) {
     </div>
   )
 }
-
+export const Thumbnail = withStyles((theme) => ({
+  tooltip: {
+    boxShadow: theme.shadows[1],
+    padding: '0',
+  }
+}))(Tooltip);
 function ClipTimeline(props) {
   const { timeline, max } = props;
   const duration = max + max * .025
 
   const [selectedMarker, setSelect] = React.useState(false);
   const handleSelect = (t) => {
+    if (t){
+      t.thumbnail = "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"
+      t.clipId="test-30"
+      t.description = [{'title': 'Severity Index', 'body': ' 3 - Mild Harm'}, {'title': 'Subcategory', 'body': ' Adverse Intraoperative Event'}, {'title': 'Description', 'body': ' CPR'}, {'title': 'Description', 'body': ' one more test'}];
+    }
     setSelect(t);
   }
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>
-        {timeline.map((t,i) => {
+        {timeline.map((t, i) => {
           return (
-            <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width:t.duration}}
-              onClick={() => handleSelect(t)}
-            >
-              <img src={Flagged} style={{ height: 16, width: 16 }} />
-            </div>
+            <Thumbnail 
+            title={<img src={t.thumbnail || "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"} 
+            style={{width:160, padding:0}} />}
+            arrow>
+              <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width: t.duration }}
+                onClick={() => handleSelect(t)}
+              >
+                <img src={Flagged} style={{ height: 16, width: 16 }} />
+              </div>
+            </Thumbnail>
+
           )
         })}
       </div>
       <Modal
         open={selectedMarker}
         onClose={() => handleSelect(false)}
-        >
-          <div className="Modal clip-modal">
-            <div className="close-button">
-              <img src={Close} onClick={() => handleSelect(false)} />
-            </div>
-            <VideoPlayer videoId="test-30" />
+      >
+        <div className="Modal clip-modal">
+          <div className="close-button">
+            <img src={Close} onClick={() => handleSelect(false)} />
           </div>
-        </Modal>
+          <VideoPlayer videoId={selectedMarker.clipId} />
+          <Grid container spacing={0} className="clip-details">
+            <Grid item xs={12} className="details-header normal-text">Flag Details</Grid>
+            {selectedMarker.description && selectedMarker.description.map((d) => {
+              return (
+                <Grid item xs={6} className="detail-entry subtext">
+                  <div className="title">{d.title}:</div>
+                  <div className="body">{d.body}</div>
+                </Grid>
+              )
+            })}
+          </Grid>
+        </div>
+      </Modal>
     </div>
   )
 }

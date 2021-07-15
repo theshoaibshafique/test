@@ -897,12 +897,32 @@
     }
 }
 .clip-modal{
-
     .close-button {
+        margin-top: -34px;
         width: 100%;
+        position: absolute;
+        padding: 0 44px;
         cursor: pointer;
         img {
             float: right;
+        }
+    }
+    .video-player{
+        margin-bottom: 16px;
+    }
+    .clip-details{
+        
+        .details-header{
+            font-weight: bold;
+        }
+        .detail-entry{
+            margin: 4px 0;
+            > div{
+                margin: 4px 0;
+            }
+            .title{
+                font-weight: bold;
+            }
         }
     }
 }

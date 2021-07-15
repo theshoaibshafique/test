@@ -94,7 +94,7 @@ export function VideoPlayer(props) {
       });
   }, [Node,videoId])
   return (
-    <div>
+    <div className="video-player">
       <link
         href="https://vjs.zencdn.net/7.10.2/video-js.css"
         rel="stylesheet"
