@@ -32,6 +32,7 @@ export default class Login extends React.PureComponent {
     } 
     if (!refreshToken) {
       window.location.replace(redirectLogin())
+      return;
     }
     
     this.refreshLoop();
@@ -85,6 +86,7 @@ export default class Login extends React.PureComponent {
     }
     if (!refreshToken) {
       window.location.replace(redirectLogin())
+      return;
     }
     globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
       .then(result => {
