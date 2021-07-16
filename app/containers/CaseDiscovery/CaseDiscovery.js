@@ -1954,7 +1954,7 @@ function ClipTimeline(props) {
         {timeline.map((t, i) => {
           return (
 
-            <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width: `${t.duration || (Math.random() * 30*60 /duration)}%` }}>
+            <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width: `${t.duration || (Math.random() * 5*60*100 /duration)}%` }}>
               <Thumbnail
                 title={<img src={t.thumbnail || "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"}
                   style={{ width: 160, padding: 0 }} />}
