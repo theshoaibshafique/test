@@ -1,5 +1,5 @@
 
-export function redirectLogin() {
+export function redirectLogin(logger) {
     const url = `${process.env.AUTH_LOGIN}login?`;
     const redirectUri = `&redirect_uri=${encodeURIComponent(process.env.AUTH_CALLBACK)}`;
     const clientId = `&client_id=${process.env.AUTH_CLIENT_ID}`;
@@ -9,9 +9,14 @@ export function redirectLogin() {
     const code_challenge_method = '&code_challenge_method=S256';
 
     const code_verifier = generate_code_verifier();
-    localStorage.setItem('verifier', code_verifier);
-    const code_challenge = `&code_challenge=${generate_code_challenge(code_verifier)}`;
+    const verifier_list = JSON.parse(localStorage.getItem('verifier_list')) || [];
 
+    localStorage.setItem('verifier_list', JSON.stringify([...verifier_list, code_verifier]));
+    const challenge = generate_code_challenge(code_verifier);
+    const code_challenge = `&code_challenge=${challenge}`;
+    
+    logger && logger.manualAddLog('session', `verifier_and_challenge`, {'verifier': code_verifier, 'challenge':challenge});
+    logger && logger.sendLogs();
     const state = `&state=${generate_code_verifier()}`;
     localStorage.setItem('state', state);
 

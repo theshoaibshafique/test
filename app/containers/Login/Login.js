@@ -16,7 +16,7 @@ export default class Login extends React.PureComponent {
   }
 
   componentDidMount() {
-
+    const { logger } = this.props;
 
     const { refreshToken, expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
     const urlParams = new URLSearchParams(window.location.search)
@@ -26,20 +26,19 @@ export default class Login extends React.PureComponent {
       this.login(auth_code);
       return;
     }
-    if (window.location.pathname == "/"){
+    if (window.location.pathname == "/") {
       this.props.pushUrl('/dashboard');
       return;
-    } 
+    }
     if (!refreshToken) {
-      window.location.replace(redirectLogin())
+      window.location.replace(redirectLogin(logger))
       return;
     }
-    
+
     this.refreshLoop();
   }
 
   refreshLoop() {
-    
     this.refreshLogin();
     setTimeout(() => {
       this.refreshLoop();
@@ -57,27 +56,45 @@ export default class Login extends React.PureComponent {
     this.props.pushUrl('/dashboard');
   }
 
-  login(auth_code) {
+  async login(auth_code) {
+    const { logger } = this.props;
     localStorage.setItem('refreshToken', null);
-    const body = {
-      client_id: process.env.AUTH_CLIENT_ID,
-      grant_type: 'authorization_code',
-      redirect_uri: process.env.AUTH_CALLBACK,
-      code_verifier: localStorage.getItem('verifier'),
-      code: auth_code
+    const verifier_list = JSON.parse(localStorage.getItem('verifier_list')) || [];
+    let success = false;
+    for (const verifier of verifier_list) {
+      if (success){
+        break;
+      }
+      const body = {
+        client_id: process.env.AUTH_CLIENT_ID,
+        grant_type: 'authorization_code',
+        redirect_uri: process.env.AUTH_CALLBACK,
+        code_verifier: verifier,
+        code: auth_code
+      }
+      
+      await globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
+        .then(result => {
+          localStorage.setItem('verifier_list', null);
+          this.processAuthentication(result.data);
+          success = true;
+          this.props.pushUrl('/dashboard');
+        }).catch(error => {
+          console.error(error);
+          logger && logger.manualAddLog('session', `error_login_auth`, {'verifier': verifier, 'error': error});
+        });
+    }
+    if (!success){
+      logger && logger.sendLogs();
+      localStorage.setItem('verifier_list', null);
+      window.location.replace(redirectLogin(logger));
     }
 
-    globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
-      .then(result => {
-        this.processAuthentication(result.data);
-        this.props.pushUrl('/dashboard');
-      }).catch(error => {
-        console.error(error);
-      });
   }
 
   refreshLogin() {
-    // console.log('refreshToken');
+    const { logger } = this.props;
+
     const { refreshToken, expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
     const body = {
       client_id: process.env.AUTH_CLIENT_ID,
@@ -85,16 +102,19 @@ export default class Login extends React.PureComponent {
       refresh_token: refreshToken || ""
     }
     if (!refreshToken) {
-      window.location.replace(redirectLogin())
+      window.location.replace(redirectLogin(logger))
       return;
     }
+    logger && logger.manualAddLog('session', `refresh_token`, {'refresh_token': refreshToken});
     globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
       .then(result => {
         this.processAuthentication(result.data);
       }).catch(error => {
         console.error(error)
+        logger && logger.manualAddLog('session', `error_refresh_token`, {'refresh_token': refreshToken, 'error':error});
+        logger && logger.sendLogs();
         localStorage.setItem('refreshToken', null);
-        window.location.replace(redirectLogin())
+        window.location.replace(redirectLogin(logger))
       });
   };
 
@@ -102,7 +122,7 @@ export default class Login extends React.PureComponent {
     const { accessToken, expiresAt, refreshToken } = data;
     localStorage.setItem('refreshToken', JSON.stringify({ refreshToken: refreshToken, expiresAt: expiresAt * 1000 }));
     this.props.setUserToken(accessToken);
-    if (this.props.logger){
+    if (this.props.logger) {
       return;
     }
     globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', accessToken, {})
