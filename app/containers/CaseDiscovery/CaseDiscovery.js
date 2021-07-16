@@ -1679,6 +1679,7 @@ function HL7Chart(props) {
   });
 
   const hasHL7Data = hl7Data.length > 0;
+  const hasClips = true;
   const max = Math.max(...(hasHL7Data ? hl7Data[0].times : []), ...timeline.map((t) => t.time));
 
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
@@ -1752,7 +1753,7 @@ function HL7Chart(props) {
           outer: false,
           values: xValues,
           format: (x) => {
-            return globalFunctions.formatSecsToTime(x);
+            return globalFunctions.formatSecsToTime(x).substring(0,5);
           }
         },
         padding: hasHL7Data ? {
@@ -1775,6 +1776,9 @@ function HL7Chart(props) {
           // count: hasHL7Data ? 10 : 1,
           min: 0,
           format: (x) => {
+            if (x < 0) {
+              return
+            }
             return parseInt(x) == parseFloat(x) ? x : parseFloat(x).toFixed(2)
           }
 
@@ -1783,7 +1787,7 @@ function HL7Chart(props) {
         // show: false,
         padding: {
           top: 20,
-          // bottom: 0
+          bottom: hasClips ? 50 : 0
         }
       }
     },
@@ -1857,11 +1861,10 @@ function HL7Chart(props) {
       setTimeout(() => {
         d3.selectAll(`#hl7-chart .marker text`).style('transform', 'translate(18px, 0px) rotate(-90deg)')
         // d3.selectAll(`#hl7-chart .c3-axis-x`).attr('dy', '-20')
-        const t = d3.transform(d3.select('#hl7-chart .c3-axis-x').attr("transform")),
-          x = t.translate[0],
-          y = t.translate[1]
-        // d3.select(`#hl7-chart .c3-axis-x`).style('transform', `translate(${x}, ${y+20})`)
-        d3.select(`#hl7-chart .c3-axis-x`).style('transform', `translate(${x}px, ${y + 30}px)`)
+        // const t = d3.transform(d3.select('#hl7-chart .c3-axis-x').attr("transform")),
+        //   x = t.translate[0],
+        //   y = t.translate[1]
+        // d3.select(`#hl7-chart .c3-axis-x`).style('transform', `translate(${x}px, ${y + 30}px)`)
       }, 200)
     }
   });
@@ -1915,7 +1918,7 @@ function HL7Chart(props) {
         <div style={{ width: '100%' }}>
           <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
           <C3Chart ref={chartRef} {...data} />
-          <ClipTimeline timeline={timeline} max={max} />
+          {hasClips && <ClipTimeline timeline={timeline} max={max} />}
         </div>
       </div>
 
@@ -1925,8 +1928,11 @@ function HL7Chart(props) {
 }
 export const Thumbnail = withStyles((theme) => ({
   tooltip: {
-    boxShadow: theme.shadows[1],
+    boxShadow: 'theme.shadows[1]',
     padding: '0',
+  },
+  arrow:{
+    color:'#d42828'
   }
 }))(Tooltip);
 function ClipTimeline(props) {
@@ -1935,10 +1941,10 @@ function ClipTimeline(props) {
 
   const [selectedMarker, setSelect] = React.useState(false);
   const handleSelect = (t) => {
-    if (t){
+    if (t) {
       t.thumbnail = "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"
-      t.clipId="test-30"
-      t.description = [{'title': 'Severity Index', 'body': ' 3 - Mild Harm'}, {'title': 'Subcategory', 'body': ' Adverse Intraoperative Event'}, {'title': 'Description', 'body': ' CPR'}, {'title': 'Description', 'body': ' one more test'}];
+      t.clipId = "test-30"
+      t.description = [{ 'title': 'Severity Index', 'body': ' 3 - Mild Harm' }, { 'title': 'Subcategory', 'body': ' Adverse Intraoperative Event' }, { 'title': 'Description', 'body': ' CPR' }, { 'title': 'Description', 'body': ' one more test' }];
     }
     setSelect(t);
   }
@@ -1947,17 +1953,18 @@ function ClipTimeline(props) {
       <div className='clip-timeline'>
         {timeline.map((t, i) => {
           return (
-            <Thumbnail 
-            title={<img src={t.thumbnail || "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"} 
-            style={{width:160, padding:0}} />}
-            arrow>
-              <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width: t.duration }}
-                onClick={() => handleSelect(t)}
-              >
-                <img src={Flagged} style={{ height: 16, width: 16 }} />
-              </div>
-            </Thumbnail>
 
+            <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width: `${t.duration || (Math.random() * 30*60 /duration)}%` }}>
+              <Thumbnail
+                title={<img src={t.thumbnail || "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"}
+                  style={{ width: 160, padding: 0 }} />}
+                arrow>
+                {/* <img onClick={() => handleSelect(t)} src={Flagged} style={{ height: 20, width: 20 }} /> */}
+                <svg onClick={() => handleSelect(t)} width="20" height="20" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 0C1.26522 0 1.51957 0.105357 1.70711 0.292893C1.89464 0.48043 2 0.734784 2 1V1.88C3.06 1.44 4.5 1 6 1C9 1 9 3 11 3C14 3 15 1 15 1V9C15 9 14 11 11 11C8 11 8 9 6 9C3 9 2 11 2 11V18H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0Z" fill="#d42828" />
+                </svg>
+              </Thumbnail>
+            </div>
           )
         })}
       </div>
