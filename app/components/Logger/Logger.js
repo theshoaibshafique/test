@@ -12,7 +12,7 @@ export class Logger {
         this.recentEvents = [];
         this.userToken = userToken;
         this.logInterval = 30000; // In ms
-        if (!userToken){
+        if (!userToken) {
             console.log('no user token')
             return;
         }
@@ -121,11 +121,11 @@ export class Logger {
                 log.values = value;
             }
             //Dont log mouseOvers too much
-            
+
             if (reducedEvents.includes(type) && existingLog >= 0) {
                 //If its the most recent event - we update it
                 const length = this.recentEvents.length;
-                if (length && this.recentEvents[length -1].id == id && value){
+                if (length && this.recentEvents[length - 1].id == id && value) {
                     displayLogs && console.log('updated log', log)
                     this.recentEvents.splice(length - 1, 1, log)
                 }
@@ -162,6 +162,9 @@ export class Logger {
             },
             data: JSON.stringify(fetchBodyJSON),
             mode: 'cors'
+        }).catch(error => {
+            console.error(error);
+
         });
     }
 

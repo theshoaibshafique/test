@@ -42,7 +42,7 @@ export default class MyProfile extends React.PureComponent {
 
         <div className="user-info-buttons">
           <p><Button disableRipple disableElevation variant="contained" className="secondary" target="_blank" onClick={() => this.redirect()}>Change Password</Button> </p>
-          <p><Button disableRipple disableElevation variant="contained" className="secondary" target="_blank" onClick={() => this.redirect()}>Change Phone Number</Button> </p>
+          <p><Button disableRipple disableElevation variant="contained" className="secondary" target="_blank" onClick={() => this.redirect()}>Change MFA Method</Button> </p>
         </div>
       </section>
     );
