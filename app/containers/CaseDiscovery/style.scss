@@ -871,7 +871,7 @@
 }
 .timeline-container {
     width: 100%;
-    transform: translate(0px, -140px);
+    transform: translate(0px, -139px);
     padding-left: 45px;
     height: 30px;
     .clip-timeline {
@@ -911,6 +911,8 @@
     }
 }
 .clip-modal {
+    // min-width: 875px;
+    // min-height: 695px;
     .close-button {
         margin-top: -34px;
         width: 100%;
@@ -923,6 +925,12 @@
     }
     .video-player {
         margin-bottom: 16px;
+        .video-js{
+            min-width: 100%;
+            min-height: 400px;
+        }
+        
+
     }
     .clip-details {
         .details-header {

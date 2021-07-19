@@ -28,6 +28,7 @@ import HalfPerson from './icons/HalfPerson.svg';
 import EmptyPerson from './icons/EmptyPerson.svg';
 import PostOpDelay from './icons/PostOpDelay.svg';
 import PreOpDelay from './icons/PreOpDelay.svg';
+import Play from './icons/Play.svg';
 import TurnoverDuration from './icons/TurnoverDuration.svg';
 import Close from './icons/Close.svg';
 import moment from 'moment/moment';
@@ -1753,7 +1754,7 @@ function HL7Chart(props) {
           outer: false,
           values: xValues,
           format: (x) => {
-            return globalFunctions.formatSecsToTime(x).substring(0,5);
+            return globalFunctions.formatSecsToTime(x).substring(0, 5);
           }
         },
         padding: hasHL7Data ? {
@@ -1931,9 +1932,13 @@ export const Thumbnail = withStyles((theme) => ({
     boxShadow: 'theme.shadows[1]',
     padding: '0',
   },
-  arrow:{
-    color:'#d42828'
-  }
+  arrow: {
+    color: '#d42828'
+  },
+  tooltipPlacementBottom: {
+    marginLeft: "-7px",
+    // marginRight: "-7px",
+  },
 }))(Tooltip);
 function ClipTimeline(props) {
   const { timeline, max } = props;
@@ -1947,17 +1952,27 @@ function ClipTimeline(props) {
       t.description = [{ 'title': 'Severity Index', 'body': ' 3 - Mild Harm' }, { 'title': 'Subcategory', 'body': ' Adverse Intraoperative Event' }, { 'title': 'Description', 'body': ' CPR' }, { 'title': 'Description', 'body': ' one more test' }];
     }
     setSelect(t);
+    
   }
+
+
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>
         {timeline.map((t, i) => {
+          const thumbnail = (
+            <div style={{ position: 'relative' }}>
+              <img src={t.thumbnail || "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"}
+                style={{ width: 140, padding: 0, borderRadius: 3 }} />
+              <img src={Play} style={{ position: 'absolute', left: 'calc(50% - 13px)', top: 'calc(50% - 13px)', width: 26, height: 26 }} />
+            </div>
+          )
           return (
-
-            <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width: `${t.duration || (Math.random() * 30*60 /duration)}%` }}>
+            <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width: `${t.duration || (Math.random() * 5 * 60 * 100 / duration)}%` }}>
               <Thumbnail
-                title={<img src={t.thumbnail || "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"}
-                  style={{ width: 160, padding: 0 }} />}
+                position="bottom"
+                title={thumbnail}
+                // open
                 arrow>
                 {/* <img onClick={() => handleSelect(t)} src={Flagged} style={{ height: 20, width: 20 }} /> */}
                 <svg onClick={() => handleSelect(t)} width="20" height="20" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
