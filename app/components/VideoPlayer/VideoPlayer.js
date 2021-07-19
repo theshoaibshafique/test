@@ -31,18 +31,18 @@ export function VideoPlayer(props) {
   const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}?asset=${videoId}&drm_type=${drmType}`;
 
   useEffect(() => {
-    if (!Node || !videoId){
+    if (!Node || !videoId) {
       return;
     }
+    let player = null;
     globalFunctions.axiosFetchWithCredentials(mediaURL, 'get', userToken, {})
       .then(result => {
         result = result.data
-        const player = videojs(
+        player = videojs(
           Node,
           videoOptions,
           function onPlayerReady() { }
         );
-        // setMyPlayer(player);
 
         const { src, token } = result;
         if (typeof player.eme === 'function') {
@@ -91,8 +91,12 @@ export function VideoPlayer(props) {
           };
         }
         player.src(playerConfig);
+
       });
-  }, [Node,videoId])
+    return () => {
+      player && player.dispose();
+    }
+  }, [Node, videoId])
   return (
     <div className="video-player">
       <link
@@ -111,7 +115,7 @@ export function VideoPlayer(props) {
         href="https://cdn.jsdelivr.net/npm/videojs-playlist-ui@3.8.0/dist/videojs-playlist-ui.vertical.css"
         rel="stylesheet"
       />
-      <div data-vjs-player>
+      <div data-vjs-player >
         <video
           ref={node => (setNode(node))}
           className="video-js vjs-theme-forest"
