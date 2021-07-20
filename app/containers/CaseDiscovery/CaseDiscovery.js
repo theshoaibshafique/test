@@ -1623,7 +1623,7 @@ function ProcedureDistribution(props) {
       contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color),
       position: function (data, width, height, element) {
         // var top = d3.mouse(element)[1] ;
-        let left = parseInt(element.getAttribute('x')) + parseInt(element.getAttribute('width'));
+        let left = parseInt(element.getAttribute('x')) - width/2 + parseInt(element.getAttribute('width'));
         return { top: 130, left: left }
       }
     },
@@ -1952,7 +1952,7 @@ function ClipTimeline(props) {
       t.description = [{ 'title': 'Severity Index', 'body': ' 3 - Mild Harm' }, { 'title': 'Subcategory', 'body': ' Adverse Intraoperative Event' }, { 'title': 'Description', 'body': ' CPR' }, { 'title': 'Description', 'body': ' one more test' }];
     }
     setSelect(t);
-    
+
   }
 
 
