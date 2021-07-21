@@ -22,20 +22,19 @@ const videoOptions = {
 };
 
 export function VideoPlayer(props) {
-  const { videoId } = props;
+  const { mediaUrl } = props;
 
   const userToken = useSelector(makeSelectToken());
   const emmPresenterMode = useSelector(selectEMMPresenterMode());
   const drmType = checkDrmType();
   const [Node, setNode] = React.useState(0);
-  const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}?asset=${videoId}&drm_type=${drmType}`;
-
+  // const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}?asset=${videoId}&drm_type=${drmType}`;
   useEffect(() => {
-    if (!Node || !videoId) {
+    if (!Node || !mediaUrl) {
       return;
     }
     let player = null;
-    globalFunctions.axiosFetchWithCredentials(mediaURL, 'get', userToken, {})
+    globalFunctions.axiosFetchWithCredentials(`${mediaUrl}&drm_type=${drmType}`, 'get', userToken, {})
       .then(result => {
         result = result.data
         player = videojs(
@@ -96,7 +95,7 @@ export function VideoPlayer(props) {
     return () => {
       player && player.dispose();
     }
-  }, [Node, videoId])
+  }, [Node, mediaUrl])
   return (
     <div className="video-player">
       <link

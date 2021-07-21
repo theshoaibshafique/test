@@ -1094,7 +1094,7 @@ function DetailedCase(props) {
 
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsOut, scheduledStart, startTime, endTime,
     duration, departmentId, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
-    procedures, timeline } } = props;
+    procedures, timeline }, flags } = props;
   const { roomSchedule: { blockStart, blockEnd, roomCases }, procedureDistribution, emmStatus: { reportId, isPublished }, hl7Parameters, tags } = props;
 
   const procedureTitle = procedures[0].procedureName;
@@ -1349,7 +1349,7 @@ function DetailedCase(props) {
                 <ProcedureDistribution {...procedureDistribution} duration={duration} />
               </Grid>
             </Grid>
-            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} />
+            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} flags={flags} />
 
 
           </div>
@@ -1623,7 +1623,7 @@ function ProcedureDistribution(props) {
       contents: (d, defaultTitleFormat, defaultValueFormat, color) => createCustomTooltip(d, defaultTitleFormat, defaultValueFormat, color),
       position: function (data, width, height, element) {
         // var top = d3.mouse(element)[1] ;
-        let left = parseInt(element.getAttribute('x')) - width/2 + parseInt(element.getAttribute('width'));
+        let left = parseInt(element.getAttribute('x')) - width / 2 + parseInt(element.getAttribute('width'));
         return { top: 130, left: left }
       }
     },
@@ -1667,7 +1667,7 @@ function ProcedureDistribution(props) {
 
 
 function HL7Chart(props) {
-  const { hl7Data, timeline } = props;
+  const { hl7Data, timeline, flags } = props;
   const logger = useSelector(makeSelectLogger());
   const chartRef = useRef(null);
   if (!hl7Data) {
@@ -1680,7 +1680,7 @@ function HL7Chart(props) {
   });
 
   const hasHL7Data = hl7Data.length > 0;
-  const hasClips = true;
+  const hasClips = flags && flags.some((f) => f.clips && f.clips.length > 0);
   const max = Math.max(...(hasHL7Data ? hl7Data[0].times : []), ...timeline.map((t) => t.time));
 
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
@@ -1786,9 +1786,8 @@ function HL7Chart(props) {
         },
         show: hasHL7Data,
         // show: false,
-        padding: {
+        padding: hasClips ? { top: 20, bottom: 50 } : {
           top: 20,
-          bottom: hasClips ? 50 : 0
         }
       }
     },
@@ -1919,7 +1918,7 @@ function HL7Chart(props) {
         <div style={{ width: '100%' }}>
           <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
           <C3Chart ref={chartRef} {...data} />
-          {hasClips && <ClipTimeline timeline={timeline} max={max} />}
+          {hasClips && <ClipTimeline flags={flags} max={max} />}
         </div>
       </div>
 
@@ -1929,7 +1928,7 @@ function HL7Chart(props) {
 }
 export const Thumbnail = withStyles((theme) => ({
   tooltip: {
-    boxShadow: 'theme.shadows[1]',
+    boxShadow: theme.shadows[1],
     padding: '0',
   },
   arrow: {
@@ -1940,35 +1939,41 @@ export const Thumbnail = withStyles((theme) => ({
     // marginRight: "-7px",
   },
 }))(Tooltip);
+
 function ClipTimeline(props) {
-  const { timeline, max } = props;
+  const { flags, max } = props;
   const duration = max + max * .025
+  const timeline = flags.map((f) => {
+    const { clips, flagId, description } = f;
+    return clips.map((c) => {
+      return { ...c, flagId, description }
+    })
+  }).flat()
 
   const [selectedMarker, setSelect] = React.useState(false);
   const handleSelect = (t) => {
     if (t) {
-      t.thumbnail = "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"
-      t.clipId = "test-30"
-      t.description = [{ 'title': 'Severity Index', 'body': ' 3 - Mild Harm' }, { 'title': 'Subcategory', 'body': ' Adverse Intraoperative Event' }, { 'title': 'Description', 'body': ' CPR' }, { 'title': 'Description', 'body': ' one more test' }];
+      t.mediaUrl = `${process.env.CASE_DISCOVERY_API}media?flag_id=${t.flagId}&clip_id=${t.clipId}`;
     }
+    
     setSelect(t);
 
   }
 
-
+  console.log(new Set(timeline.map(t => t.clipId)))
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>
         {timeline.map((t, i) => {
           const thumbnail = (
             <div style={{ position: 'relative' }}>
-              <img src={t.thumbnail || "https://dxj79d9ht70ez.cloudfront.net/test-30/test-30_480x270p.0000000.jpg"}
+              <img src={t.thumbnailSrc}
                 style={{ width: 140, padding: 0, borderRadius: 3 }} />
               <img src={Play} style={{ position: 'absolute', left: 'calc(50% - 13px)', top: 'calc(50% - 13px)', width: 26, height: 26 }} />
             </div>
           )
           return (
-            <div className='clip-marker' style={{ left: `${t.time / duration * 100}%`, width: `${t.duration || (Math.random() * 5 * 60 * 100 / duration)}%` }}>
+            <div className='clip-marker' style={{ left: `${Math.abs(t.startTime) / duration * 100}%`, width: `${(t.duration/duration * 100)}%` }}>
               <Thumbnail
                 position="bottom"
                 title={thumbnail}
@@ -1991,14 +1996,14 @@ function ClipTimeline(props) {
           <div className="close-button">
             <img src={Close} onClick={() => handleSelect(false)} />
           </div>
-          <VideoPlayer videoId={selectedMarker.clipId} />
+          <VideoPlayer mediaUrl={selectedMarker.mediaUrl} />
           <Grid container spacing={0} className="clip-details">
             <Grid item xs={12} className="details-header normal-text">Flag Details</Grid>
             {selectedMarker.description && selectedMarker.description.map((d) => {
               return (
                 <Grid item xs={6} className="detail-entry subtext">
-                  <div className="title">{d.title}:</div>
-                  <div className="body">{d.body}</div>
+                  <div className="title">{d.questionTitle}:</div>
+                  <div className="body">{d.answer}</div>
                 </Grid>
               )
             })}
