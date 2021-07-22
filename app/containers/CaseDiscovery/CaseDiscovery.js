@@ -1943,24 +1943,42 @@ export const Thumbnail = withStyles((theme) => ({
 function ClipTimeline(props) {
   const { flags, max } = props;
   const duration = max + max * .025
-  const timeline = flags.map((f) => {
+
+  const userToken = useSelector(makeSelectToken());
+  const [timeline, setTimeline] = React.useState(flags.map((f) => {
     const { clips, flagId, description } = f;
     return clips.map((c) => {
       return { ...c, flagId, description }
     })
-  }).flat()
-
+  }).flat().filter((c) => c.isActive || c.isActive == null));
   const [selectedMarker, setSelect] = React.useState(false);
-  const handleSelect = (t) => {
+  const handleSelect = (t,i) => {
     if (t) {
       t.mediaUrl = `${process.env.CASE_DISCOVERY_API}media?flag_id=${t.flagId}&clip_id=${t.clipId}`;
+      t.index = i;
     }
-    
+
     setSelect(t);
 
   }
 
-  console.log(new Set(timeline.map(t => t.clipId)))
+  const publishClip = () => {
+    globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'post', userToken, {})
+      .then(result => {
+        const tLine = [...timeline];
+        tLine[selectedMarker.index].isActive = true;
+        setTimeline(tLine)
+      }).catch((results) => {
+        console.error("oh no", results)
+      })
+  }
+
+  const publishButton = selectedMarker && selectedMarker.isActive == null && (
+    <div className="button">
+      <Button variant="outlined" className="primary" onClick={() => publishClip()}>Publish</Button>
+    </div>
+  ) || ''
+
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>
@@ -1973,14 +1991,16 @@ function ClipTimeline(props) {
             </div>
           )
           return (
-            <div className='clip-marker' style={{ left: `${Math.abs(t.startTime) / duration * 100}%`, width: `${(t.duration/duration * 100)}%` }}>
+            <div className='clip-marker' 
+              style={{ left: `${Math.abs(t.startTime) / duration * 100}%`, width: `${(t.duration / duration * 100)}%` }}
+              key={`t-${i}`}>
               <Thumbnail
                 position="bottom"
                 title={thumbnail}
                 // open
                 arrow>
                 {/* <img onClick={() => handleSelect(t)} src={Flagged} style={{ height: 20, width: 20 }} /> */}
-                <svg onClick={() => handleSelect(t)} width="20" height="20" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg onClick={() => handleSelect(t,i)} width="20" height="20" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 0C1.26522 0 1.51957 0.105357 1.70711 0.292893C1.89464 0.48043 2 0.734784 2 1V1.88C3.06 1.44 4.5 1 6 1C9 1 9 3 11 3C14 3 15 1 15 1V9C15 9 14 11 11 11C8 11 8 9 6 9C3 9 2 11 2 11V18H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0Z" fill="#d42828" />
                 </svg>
               </Thumbnail>
@@ -1996,17 +2016,22 @@ function ClipTimeline(props) {
           <div className="close-button">
             <img src={Close} onClick={() => handleSelect(false)} />
           </div>
-          <VideoPlayer mediaUrl={selectedMarker.mediaUrl} />
+
           <Grid container spacing={0} className="clip-details">
-            <Grid item xs={12} className="details-header normal-text">Flag Details</Grid>
-            {selectedMarker.description && selectedMarker.description.map((d) => {
-              return (
-                <Grid item xs={6} className="detail-entry subtext">
-                  <div className="title">{d.questionTitle}:</div>
-                  <div className="body">{d.answer}</div>
-                </Grid>
-              )
-            })}
+            <Grid item xs={9}><VideoPlayer mediaUrl={selectedMarker.mediaUrl} /></Grid>
+            <Grid item xs={3} className="flag-details normal-text">
+              <div className="details-header">Flag Details</div>
+              {selectedMarker.description && selectedMarker.description.map((d, i) => {
+                return (
+                  <div className="detail-entry subtext" key={`${d.answer}-${i}`}>
+                    <div className="title">{d.questionTitle}:</div>
+                    <div className="body">{d.answer}</div>
+                  </div>
+                )
+              })}
+              {publishButton}
+            </Grid>
+
           </Grid>
         </div>
       </Modal>

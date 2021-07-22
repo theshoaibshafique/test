@@ -15,7 +15,7 @@ const videoOptions = {
   fluid: true,
   aspectRatio: '16:9',
   controlBar: true,
-  playbackRates: [0.5, 1, 2, 3, 4],
+  // playbackRates: [0.5, 1, 2, 3, 4],
   userActions: {
     hotkeys: true
   }
@@ -99,11 +99,11 @@ export function VideoPlayer(props) {
   return (
     <div className="video-player">
       <link
-        href="https://vjs.zencdn.net/7.10.2/video-js.css"
+        href="https://unpkg.com/video.js@7/dist/video-js.min.css"
         rel="stylesheet"
       />
       <link
-        href="https://unpkg.com/@videojs/themes@1/dist/forest/index.css"
+        href="https://unpkg.com/@videojs/themes@1/dist/sea/index.css"
         rel="stylesheet"
       />
       <link
@@ -117,7 +117,7 @@ export function VideoPlayer(props) {
       <div data-vjs-player >
         <video
           ref={node => (setNode(node))}
-          className="video-js vjs-theme-forest"
+          className="video-js vjs-theme-sea"
         />
         <div className="vjs-playlist" />
       </div>

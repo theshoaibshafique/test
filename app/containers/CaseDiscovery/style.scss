@@ -910,8 +910,8 @@
         }
     }
 }
-.clip-modal {
-    // min-width: 875px;
+.Modal.clip-modal {
+    min-width: 1050px;
     // min-height: 695px;
     .close-button {
         margin-top: -34px;
@@ -925,22 +925,43 @@
     }
     .video-player {
         margin-bottom: 16px;
-        .video-js{
+        .video-js {
             min-width: 100%;
             min-height: 400px;
         }
-        
-
     }
     .clip-details {
-        .details-header {
-            font-weight: bold;
+        .flag-details {
+            padding: 20px;
+            padding-right: 0;
+            padding-top: 0;
+            position: relative;
+            max-height: 410px;
+            overflow: hidden;
+            overflow-y: auto;
+            & > div {
+                margin-bottom: 8px;
+            }
+            .details-header {
+                font-weight: bold;
+                margin-bottom: 12px;
+            }
         }
+        .button {
+            margin-top:4px;
+            margin-bottom: 0 !important;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            button {
+                margin: auto;
+            }
+        }
+
+        
         .detail-entry {
             margin: 4px 0;
-            > div {
-                margin: 4px 0;
-            }
             .title {
                 font-weight: bold;
             }
