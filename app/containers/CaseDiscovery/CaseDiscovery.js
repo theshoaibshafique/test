@@ -1951,7 +1951,7 @@ function ClipTimeline(props) {
     return clips.map((c) => {
       return { ...c, flagId, description }
     })
-  }).flat().filter((c) => c.isActive || c.isActive == null));
+  }));
   useEffect(() => {
     const fetchData = async () => {
       const getCookie = await getCdnStreamCookies(userToken);
