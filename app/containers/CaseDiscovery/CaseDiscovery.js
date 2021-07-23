@@ -1359,7 +1359,7 @@ function DetailedCase(props) {
       <Grid item xs className="schedule">
         <div className="header">
           <div className="log-click" id="or-schedule-header">{`${roomName}${!blockStart ? ' Off' : ''} Block`}</div>
-          <div className="log-click" id="or-schedule-date">{moment(scheduledStart).format('MMMM DD, YYYY')}</div>
+          <div className="log-click" id="or-schedule-date">{moment(scheduledStart).format('dddd, MMMM DD, YYYY')}</div>
 
         </div>
         <div className="timeline relative"
@@ -1780,7 +1780,7 @@ function HL7Chart(props) {
             if (x < 0) {
               return
             }
-            return parseInt(x) == parseFloat(x) ? x : parseFloat(x).toFixed(2)
+            return parseInt(x) == parseFloat(x) ? x : parseFloat(x).toFixed(1)
           }
 
         },
