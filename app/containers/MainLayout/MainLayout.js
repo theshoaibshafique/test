@@ -67,7 +67,7 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: this.containsAny(roles, ["ENHANCED M&M EDIT"]),
       sscAccess: this.containsAny(roles, ["SURGICAL CHECKLIST"]),
       efficiencyAccess: this.containsAny(roles, ["EFFICIENCY"]),
-      caseDiscoveryAccess: this.containsAny(roles, ["ADMIN"]) && (userFacility.toUpperCase() == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92" || userFacility.toUpperCase() == "0282953F-D4C9-47C0-904D-92849A394EEA"),
+      caseDiscoveryAccess: this.containsAny(roles, ["ADMIN"]) && (userFacility.toUpperCase() == "77C6F277-D2E7-4D37-AC68-BD8C9FB21B92" || userFacility.toUpperCase() == "0282953F-D4C9-47C0-904D-92849A394EEA") || this.containsAny(roles, ["SSTADMIN"]),
       emmPublishAccess: this.containsAny(roles, ["SSTADMIN"]),
       isLoading:false
     });
