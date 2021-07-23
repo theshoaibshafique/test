@@ -1952,7 +1952,7 @@ function ClipTimeline(props) {
     return clips.map((c) => {
       return { ...c, flagId, description }
     })
-  }));
+  }).flat());
   useEffect(() => {
     const fetchData = async () => {
       const getCookie = await getCdnStreamCookies(userToken);
