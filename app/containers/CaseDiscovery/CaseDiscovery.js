@@ -1178,6 +1178,7 @@ function DetailedCase(props) {
       return;
     }
     setIsLoading(true)
+    setIsRequestSubmitted(false);
     handleChangeCaseId(cId);
   }
   useEffect(() => {
