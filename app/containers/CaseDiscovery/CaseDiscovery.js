@@ -1951,7 +1951,7 @@ function ClipTimeline(props) {
     return clips.map((c) => {
       return { ...c, flagId, description }
     })
-  }).flat().filter((c) => c.isActive || c.isActive == null));
+  }).flat());
   const [selectedMarker, setSelect] = React.useState(false);
   const handleSelect = (t,i) => {
     if (t) {
