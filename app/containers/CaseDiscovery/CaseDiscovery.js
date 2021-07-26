@@ -190,13 +190,13 @@ function Case(props) {
       }
 
       <div className="subtitle" title={specialtyList.join(" & ")}>
-        {specialtyList.join(" & ")}
+      {!isShort && <span>{roomName} • </span>}{specialtyList.join(" & ")}
       </div>
       <div className="description">
         {!isShort && <span>Case ID: {emrCaseId}</span>}
         <span title={daysAgo}>{daysAgo}</span>
         {!isShort && <span>{sTime} - {eTime}</span>}
-        {!isShort && <span>{roomName}</span>}
+        
       </div>
       {tagDisplays.length > 0 && <div className="tags">
         {isShort && tagDisplays.length > MAX_SHORT_TAGS ? (
@@ -1115,7 +1115,6 @@ function DetailedCase(props) {
       <span>Case ID: {emrCaseId}</span>
       <span>Surgeon ID: {`${surgeonId}`}</span>
       <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'days'} ago)`}</span>
-      <span>{roomName}</span>
       {intubationType && <span>Intubation Type: {intubationType}</span>}
     </div>
   );
@@ -1307,7 +1306,7 @@ function DetailedCase(props) {
           )
           }
           <div className="case-description">
-            <div className="case-specialty">{specialtyList.join(" & ")}</div>
+            <div className="case-specialty">{roomName} <span> • {specialtyList.join(" & ")}</span></div>
             {description}
           </div>
           <div className="tags">
