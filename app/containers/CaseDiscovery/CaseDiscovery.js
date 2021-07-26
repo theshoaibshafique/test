@@ -35,7 +35,7 @@ import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
 import { LightTooltip, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
-import globalFunctions from '../../utils/global-functions';
+import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 import ReactDOMServer from 'react-dom/server';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -1952,6 +1952,12 @@ function ClipTimeline(props) {
       return { ...c, flagId, description }
     })
   }).flat());
+  useEffect(() => {
+    const fetchData = async () => {
+      const getCookie = await getCdnStreamCookies(userToken);
+    }
+    fetchData();
+  }, [])
   const [selectedMarker, setSelect] = React.useState(false);
   const handleSelect = (t,i) => {
     if (t) {
