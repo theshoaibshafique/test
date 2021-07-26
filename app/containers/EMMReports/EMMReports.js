@@ -7,7 +7,7 @@ import Icon from '@mdi/react'
 import { mdiClose } from '@mdi/js';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import globalFuncs from '../../utils/global-functions';
+import globalFuncs, { getCdnStreamCookies } from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
 import EMMPhaseAnalysis from './EMMPhaseAnalysis'
 
@@ -16,7 +16,7 @@ const ConfirmPublishDialog = (props) => {
   return (
     <Dialog
       open={dialogOpen}
-      onClose={()=>closePublishDialog(false)}
+      onClose={() => closePublishDialog(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       className="publish-dialog"
@@ -28,10 +28,10 @@ const ConfirmPublishDialog = (props) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={()=>closePublishDialog(false)} className="cancel-publish" color="primary">
+        <Button onClick={() => closePublishDialog(false)} className="cancel-publish" color="primary">
           Cancel
         </Button>
-        <Button onClick={()=>closePublishDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
+        <Button onClick={() => closePublishDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
           Publish
         </Button>
       </DialogActions>
@@ -44,7 +44,7 @@ const ConfirmPresenterDialog = (props) => {
   return (
     <Dialog
       open={dialogOpen}
-      onClose={()=>closePresenterDialog(false)}
+      onClose={() => closePresenterDialog(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       className="publish-dialog"
@@ -56,10 +56,10 @@ const ConfirmPresenterDialog = (props) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={()=>closePresenterDialog(false)} className="cancel-publish" color="primary">
+        <Button onClick={() => closePresenterDialog(false)} className="cancel-publish" color="primary">
           Cancel
         </Button>
-        <Button onClick={()=>closePresenterDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
+        <Button onClick={() => closePresenterDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
           Proceed
         </Button>
       </DialogActions>
@@ -73,7 +73,7 @@ const OnBoardDialog = (props) => {
     <Dialog
       className="onboarding-dialog"
       open={dialogOpen}
-      onClose={()=>dialogClose()}
+      onClose={() => dialogClose()}
     >
       <DialogContent className="onboarding-dialog-content relative">
         <IconButton disableRipple disableFocusRipple onClick={() => dialogClose()} className='close-button absolute'><CloseIcon fontSize='small' /></IconButton>
@@ -116,8 +116,8 @@ export default class EMMReports extends React.PureComponent {
     this.getReport();
     this.openOnboarding();
   };
-  componentDidUpdate(){
-    const {logger} = this.props;
+  componentDidUpdate() {
+    const { logger } = this.props;
     setTimeout(() => {
       logger && logger.connectListeners();
     }, 300)
@@ -164,6 +164,7 @@ export default class EMMReports extends React.PureComponent {
           isPublished: caseData.published
         })
       });
+    getCdnStreamCookies(`${process.env.EMMREPORT_API}/`, userToken);
   };
 
 
@@ -203,7 +204,7 @@ export default class EMMReports extends React.PureComponent {
     const { setEMMPresenterMode, setEMMPresenterDialog, logger } = this.props;
     (choice) && setEMMPresenterMode(choice);
     setEMMPresenterDialog(false);
-    logger && logger.manualAddLog('click', `toggle-presenter-mode`, {checked:choice});
+    logger && logger.manualAddLog('click', `toggle-presenter-mode`, { checked: choice });
   }
 
   closeEMMReport() {
@@ -227,50 +228,50 @@ export default class EMMReports extends React.PureComponent {
         }
         <ConfirmPublishDialog
           dialogOpen={publishDialogOpen}
-          closePublishDialog={(choice)=>this.closePublishDialog(choice)}
-          />
+          closePublishDialog={(choice) => this.closePublishDialog(choice)}
+        />
         <ConfirmPresenterDialog
           dialogOpen={emmPresenterDialog}
-          closePresenterDialog={(choice)=>this.closePresenterDialog(choice)}
+          closePresenterDialog={(choice) => this.closePresenterDialog(choice)}
         />
         <OnBoardDialog
           dialogOpen={onBoardDialogOpen}
-          dialogClose={()=>this.setState({ onBoardDialogOpen: false })}
+          dialogClose={() => this.setState({ onBoardDialogOpen: false })}
         />
         {(emmReportData) &&
           <div className={`EMM-REPORTS ${(isSafari || emmPresenterMode) && 'banner-present'}`}>
             <div className="EMM-REPORTS-WRAPPER relative">
-              <div className="close-emm subtle-subtext" onClick={()=>this.closeEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
+              <div className="close-emm subtle-subtext" onClick={() => this.closeEMMReport()}><Icon color="#000000" path={mdiClose} size={'14px'} /> Close Report</div>
               <div className={`EMM-Reports-Header relative center-align ${(showPublishButton) && 'has-publish-button'}`}>
                 <img className="absolute" src={emmLogo} />
-                <div className="onboarding-open subtle-subtext absolute" onClick={()=>this.setState({ onBoardDialogOpen: true })}>What’s this report about?</div>
+                <div className="onboarding-open subtle-subtext absolute" onClick={() => this.setState({ onBoardDialogOpen: true })}>What’s this report about?</div>
                 {
                   (showPublishButton) &&
-                    <Button variant="outlined" className="primary publish-button" onClick={() => this.setState({ publishDialogOpen : true })}>{(isPublished) ? 'Unpublish' : 'Publish'} Report</Button>
+                  <Button variant="outlined" className="primary publish-button" onClick={() => this.setState({ publishDialogOpen: true })}>{(isPublished) ? 'Unpublish' : 'Publish'} Report</Button>
                 }
                 <div className="EMM-Tab-Selector">
                   <div
                     className={`EMM-Tab center-align ${(emmReportTab == 'overview') && 'selected'}`}
-                    onClick={()=>this.switchTab('overview')}>
-                      Overview
+                    onClick={() => this.switchTab('overview')}>
+                    Overview
                   </div>
                   <div
                     className={`EMM-Tab center-align ${(emmReportTab == 'phase') && 'selected'}`}
-                    onClick={()=>this.switchTab('phase')}>
-                      Phase Analysis
+                    onClick={() => this.switchTab('phase')}>
+                    Phase Analysis
                   </div>
                 </div>
               </div>
-            {(emmReportTab === 'overview') ?
-              <EMMOverview
-                tabShowing={emmReportTab === 'overview'}
-              /> :
-              <EMMPhaseAnalysis
-                tabShowing={emmReportTab === 'phase'}
-                phases={emmReportData.enhancedMMPages}
-                isPublished={isPublished}
-              />
-            }
+              {(emmReportTab === 'overview') ?
+                <EMMOverview
+                  tabShowing={emmReportTab === 'overview'}
+                /> :
+                <EMMPhaseAnalysis
+                  tabShowing={emmReportTab === 'phase'}
+                  phases={emmReportData.enhancedMMPages}
+                  isPublished={isPublished}
+                />
+              }
             </div>
           </div>
         }

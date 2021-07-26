@@ -1955,7 +1955,7 @@ function ClipTimeline(props) {
   }).flat());
   useEffect(() => {
     const fetchData = async () => {
-      const getCookie = await getCdnStreamCookies(userToken);
+      const getCookie = await getCdnStreamCookies(process.env.CASE_DISCOVERY_API,userToken);
     }
     fetchData();
   }, [])
