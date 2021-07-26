@@ -138,10 +138,10 @@ function axiosFetchWithCredentials(url, fetchMethod, userToken, fetchBodyJSON) {
     mode: 'cors'
   });
 }
-export async function getCdnStreamCookies(userToken) {
+export async function getCdnStreamCookies(url,userToken) {
   return axios({
     method: 'get',
-    url: `${process.env.CASE_DISCOVERY_API}cookie`,
+    url: `${url}cookie`,
     headers: {
       'Authorization': 'Bearer ' + userToken,
     },

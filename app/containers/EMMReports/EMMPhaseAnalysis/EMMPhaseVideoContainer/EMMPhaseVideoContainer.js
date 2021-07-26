@@ -168,14 +168,14 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             playerConfig = {
               src: src,
               type: 'application/dash+xml',
-              // withCredentials: true,
+              withCredentials: true,
             };
           } else if (drmType === 'Widevine') {
 
             playerConfig = {
               src: src,
               type: 'application/dash+xml',
-              // withCredentials: true,
+              withCredentials: true,
               keySystems: {
                 'com.widevine.alpha': {
                   url: licenseUri,
@@ -191,7 +191,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
             playerConfig = {
               src: src,
               type: 'application/dash+xml',
-              // withCredentials: true,
+              withCredentials: true,
               keySystems: {
                 'com.microsoft.playready': {
                   url: licenseUri,

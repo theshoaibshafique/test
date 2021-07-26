@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { selectEMMPresenterMode } from '../../containers/App/emm-selectors';
 import { makeSelectToken } from '../../containers/App/selectors';
-import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
+import globalFunctions from '../../utils/global-functions';
 import videojs from 'video.js';
 import eme from 'videojs-contrib-eme'; //eslint-disable-line
 import { checkDrmType, licenseUri } from './pallycon-helper';
