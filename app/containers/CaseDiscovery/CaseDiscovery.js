@@ -1737,7 +1737,7 @@ function HL7Chart(props) {
       bottom: 80
     },
     size: hasHL7Data ? {} : {
-      height: 250
+      height: 265
     },
     data: {
       x: 'x',
