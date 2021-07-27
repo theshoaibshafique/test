@@ -688,7 +688,7 @@ export default class RequestEMM extends React.PureComponent {
                 loadOptions={(e, callback) => this.populateUserEmail(e, callback)}
                 value={this.state.inputValue}
                 onChange={(e) => this.handleUserEmailChange(e)}
-                filterOption={(candidate, input) => candidate.label.includes(input) }
+                filterOption={(candidate, input) => `${candidate.label}`.toLowerCase().includes(input.toLowerCase()) }
               />
             </Grid>
 
