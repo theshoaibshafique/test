@@ -480,9 +480,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           result.sort((a, b) => moment(b.wheelsIn).valueOf() - moment(a.wheelsIn).valueOf())
           setData({
             CASES: result,
-            SPECIALTIES: spec,
-            PROCEDURES: proc,
-            ORS: ors,
+            SPECIALTIES: spec.sort(),
+            PROCEDURES: proc.sort(),
+            ORS: ors.sort(),
             isLoading: false
           })
 
