@@ -52,6 +52,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
+import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -1943,7 +1944,7 @@ export const Thumbnail = withStyles((theme) => ({
 function ClipTimeline(props) {
   const { flags, max } = props;
   const duration = max + max * .025
-
+  const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
   const [timeline, setTimeline] = React.useState(flags.map((f) => {
@@ -2027,7 +2028,7 @@ function ClipTimeline(props) {
           <div className="close-button">
             <img src={Close} onClick={() => handleSelect(false)} />
           </div>
-
+          {isSafari && <SafariWarningBanner message={'Case Discovery contains videos that are currently not supported on Safari. We recommend using the latest version of Google Chrome or Microsoft Edge browsers for the full experience.'}/> }
           <Grid container spacing={0} className="clip-details">
             <Grid item xs={9}><VideoPlayer mediaUrl={selectedMarker.mediaUrl} /></Grid>
             <Grid item xs={3} className="flag-details normal-text">
