@@ -10,7 +10,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import globalFuncs, { getCdnStreamCookies } from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
 import EMMPhaseAnalysis from './EMMPhaseAnalysis'
-import { SafariWarningBanner } from './SafariWarningBanner';
 
 const ConfirmPublishDialog = (props) => {
   const { dialogOpen, closePublishDialog } = props;
@@ -223,7 +222,6 @@ export default class EMMReports extends React.PureComponent {
 
     return (
       <div className="EMM-REPORTS-SCROLL">
-        <div style={{textAlign:'center'}}><SafariWarningBanner message={'We are currently upgrading our video player. Please come back in 15 minutes.'}/> </div>
         {(isSafari && !emmPresenterMode) && <div className="Presenter-Mode-Banner">You are currently using an unsupported browser.</div>}
         {(emmPresenterMode) &&
           <div className="Presenter-Mode-Banner">You are in Presentation Mode</div>
