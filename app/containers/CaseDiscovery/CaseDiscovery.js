@@ -2027,6 +2027,7 @@ function ClipTimeline(props) {
           <div className="close-button">
             <img src={Close} onClick={() => handleSelect(false)} />
           </div>
+          <SafariWarningBanner message={'We are currently upgrading our video player. Please come back in 15 minutes.'}/> 
           {isSafari && <SafariWarningBanner message={'Case Discovery contains videos that are currently not supported on Safari. We recommend using the latest version of Google Chrome or Microsoft Edge browsers for the full experience.'}/> }
           <Grid container spacing={0} className="clip-details">
             <Grid item xs={9}><VideoPlayer mediaUrl={selectedMarker.mediaUrl} /></Grid>
