@@ -260,7 +260,7 @@ export default class RequestEMM extends React.PureComponent {
 
     let usersToNotify = this.state.inputValue ? this.state.inputValue.map((users) => {
       return users.value;
-    }) : '';
+    }) : [];
 
     this.setEstimatedhours();
     if (!this.isFormValid()) {
