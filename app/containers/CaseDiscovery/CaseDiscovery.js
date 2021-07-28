@@ -1998,7 +1998,8 @@ function ClipTimeline(props) {
           const thumbnail = (
             <div style={{ position: 'relative' }}>
               <img src={t.thumbnailSrc}
-                style={{ width: 140, padding: 0, borderRadius: 3 }} />
+                alt=""
+                style={{ width: 140, height: 78, padding: 0, borderRadius: 3 }} />
               <img src={Play} style={{ position: 'absolute', left: 'calc(50% - 13px)', top: 'calc(50% - 13px)', width: 26, height: 26 }} />
             </div>
           )
@@ -2009,9 +2010,7 @@ function ClipTimeline(props) {
               <Thumbnail
                 position="bottom"
                 title={thumbnail}
-                // open
                 arrow>
-                {/* <img onClick={() => handleSelect(t)} src={Flagged} style={{ height: 20, width: 20 }} /> */}
                 <svg className="log-mouseover" id={`thumbnail-${t.clipId}`} onClick={() => handleSelect(t,i)} width="20" height="20" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 0C1.26522 0 1.51957 0.105357 1.70711 0.292893C1.89464 0.48043 2 0.734784 2 1V1.88C3.06 1.44 4.5 1 6 1C9 1 9 3 11 3C14 3 15 1 15 1V9C15 9 14 11 11 11C8 11 8 9 6 9C3 9 2 11 2 11V18H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0Z" fill="#d42828" />
                 </svg>
