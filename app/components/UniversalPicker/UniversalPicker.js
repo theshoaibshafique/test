@@ -174,7 +174,7 @@ class UniversalPicker extends React.Component {
   render() {
     let specialtySelected = this.state.selectedSpecialty && this.state.selectedSpecialty.value;
     let disabled = this.props.disabled || this.props.isSpecialtyMandatory && !specialtySelected;
-
+    const defaultThreshold = globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "0 min";
     return (
       <Grid container spacing={1} justify="center" className="universal-picker">
         <span style={{ display: 'flex', alignItems: 'center', marginRight: 16 }}><SearchIcon /></span>
@@ -305,7 +305,7 @@ class UniversalPicker extends React.Component {
               </Select>
             </FormControl>
           </div>
-          <FormHelperText style={{whiteSpace:'nowrap'}}>{`${this.props.hospitalAbbr || ""} Standard`}: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "N/A"}</FormHelperText>
+          <FormHelperText style={{whiteSpace:'nowrap'}}>{`${this.props.hospitalAbbr || ""} Standard`}: {this.props.defaultThreshold >=0 ? defaultThreshold : "N/A"}</FormHelperText>
         </Grid>}
         {this.state.showOutlierThreshold && <Grid item xs={2} style={{ maxWidth: 180 }}>
           <InputLabel shrink className="filter-label">
@@ -353,7 +353,7 @@ class UniversalPicker extends React.Component {
               </Select>
             </FormControl>
           </div>
-          <FormHelperText>{`${this.props.hospitalAbbr || ""} Standard`}: {globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "N/A"}</FormHelperText>
+          <FormHelperText>{`${this.props.hospitalAbbr || ""} Standard`}: { this.props.defaultThreshold >=0 ? defaultThreshold : "N/A"}</FormHelperText>
         </Grid>}
         <Grid item xs={2} className="buttons" >
           <Button id="apply" disabled={disabled} variant="outlined" className="primary normal-text" onClick={(e) => this.props.apply()} style={{ height: 40, width: 96 }}>Apply</Button>

@@ -35,7 +35,7 @@ import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
 import { LightTooltip, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
-import globalFunctions from '../../utils/global-functions';
+import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 import ReactDOMServer from 'react-dom/server';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -52,6 +52,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
+import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -142,7 +143,7 @@ function Case(props) {
   const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick, isSaved, handleSaveCase, isShort } = props;
   const sTime = moment(wheelsIn).format("HH:mm");
   const eTime = moment(wheelsOut).format("HH:mm");
-  const diff = moment().diff(moment(wheelsIn), 'days');
+  const diff = moment().endOf('day').diff(moment(wheelsIn).endOf('day'), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
   const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
   const daysAgo = `${date} (${diff} ${diff == 1 ? 'day' : 'days'} ago)`;
@@ -190,13 +191,13 @@ function Case(props) {
       }
 
       <div className="subtitle" title={specialtyList.join(" & ")}>
-        {specialtyList.join(" & ")}
+      {!isShort && <span>{roomName} • </span>}{specialtyList.join(" & ")}
       </div>
       <div className="description">
         {!isShort && <span>Case ID: {emrCaseId}</span>}
         <span title={daysAgo}>{daysAgo}</span>
         {!isShort && <span>{sTime} - {eTime}</span>}
-        {!isShort && <span>{roomName}</span>}
+        
       </div>
       {tagDisplays.length > 0 && <div className="tags">
         {isShort && tagDisplays.length > MAX_SHORT_TAGS ? (
@@ -480,9 +481,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           result.sort((a, b) => moment(b.wheelsIn).valueOf() - moment(a.wheelsIn).valueOf())
           setData({
             CASES: result,
-            SPECIALTIES: spec,
-            PROCEDURES: proc,
-            ORS: ors,
+            SPECIALTIES: spec.sort(),
+            PROCEDURES: proc.sort(),
+            ORS: ors.sort(),
             isLoading: false
           })
 
@@ -1115,7 +1116,6 @@ function DetailedCase(props) {
       <span>Case ID: {emrCaseId}</span>
       <span>Surgeon ID: {`${surgeonId}`}</span>
       <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'days'} ago)`}</span>
-      <span>{roomName}</span>
       {intubationType && <span>Intubation Type: {intubationType}</span>}
     </div>
   );
@@ -1307,7 +1307,7 @@ function DetailedCase(props) {
           )
           }
           <div className="case-description">
-            <div className="case-specialty">{specialtyList.join(" & ")}</div>
+            <div className="case-specialty">{roomName} <span> • {specialtyList.join(" & ")}</span></div>
             {description}
           </div>
           <div className="tags">
@@ -1737,7 +1737,7 @@ function HL7Chart(props) {
       bottom: 80
     },
     size: hasHL7Data ? {} : {
-      height: 250
+      height: 265
     },
     data: {
       x: 'x',
@@ -1944,7 +1944,7 @@ export const Thumbnail = withStyles((theme) => ({
 function ClipTimeline(props) {
   const { flags, max } = props;
   const duration = max + max * .025
-
+  const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
   const [timeline, setTimeline] = React.useState(flags.map((f) => {
@@ -1953,6 +1953,12 @@ function ClipTimeline(props) {
       return { ...c, flagId, description }
     })
   }).flat());
+  useEffect(() => {
+    const fetchData = async () => {
+      const getCookie = await getCdnStreamCookies(process.env.CASE_DISCOVERY_API,userToken);
+    }
+    fetchData();
+  }, [])
   const [selectedMarker, setSelect] = React.useState(false);
   const handleSelect = (t,i) => {
     if (t) {
@@ -1992,7 +1998,8 @@ function ClipTimeline(props) {
           const thumbnail = (
             <div style={{ position: 'relative' }}>
               <img src={t.thumbnailSrc}
-                style={{ width: 140, padding: 0, borderRadius: 3 }} />
+                alt=""
+                style={{ width: 140, height: 78, padding: 0, borderRadius: 3 }} />
               <img src={Play} style={{ position: 'absolute', left: 'calc(50% - 13px)', top: 'calc(50% - 13px)', width: 26, height: 26 }} />
             </div>
           )
@@ -2003,9 +2010,7 @@ function ClipTimeline(props) {
               <Thumbnail
                 position="bottom"
                 title={thumbnail}
-                // open
                 arrow>
-                {/* <img onClick={() => handleSelect(t)} src={Flagged} style={{ height: 20, width: 20 }} /> */}
                 <svg className="log-mouseover" id={`thumbnail-${t.clipId}`} onClick={() => handleSelect(t,i)} width="20" height="20" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 0C1.26522 0 1.51957 0.105357 1.70711 0.292893C1.89464 0.48043 2 0.734784 2 1V1.88C3.06 1.44 4.5 1 6 1C9 1 9 3 11 3C14 3 15 1 15 1V9C15 9 14 11 11 11C8 11 8 9 6 9C3 9 2 11 2 11V18H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0Z" fill="#d42828" />
                 </svg>
@@ -2022,7 +2027,7 @@ function ClipTimeline(props) {
           <div className="close-button">
             <img src={Close} onClick={() => handleSelect(false)} />
           </div>
-
+          {isSafari && <SafariWarningBanner message={'Case Discovery contains videos that are currently not supported on Safari. We recommend using the latest version of Google Chrome or Microsoft Edge browsers for the full experience.'}/> }
           <Grid container spacing={0} className="clip-details">
             <Grid item xs={9}><VideoPlayer mediaUrl={selectedMarker.mediaUrl} /></Grid>
             <Grid item xs={3} className="flag-details normal-text">

@@ -524,6 +524,7 @@ export default class RequestEMM extends React.PureComponent {
                 name="operatingRoom"
                 id="or-input"
                 error={Boolean(this.state.errors.operatingRoom)}
+                filterOption={(candidate, input) => `${candidate.label}`.toLowerCase().includes(input.toLowerCase()) }
               />
               {(this.state.errors.operatingRoom) &&
                 <FormHelperText className="Mui-error" >{this.state.errors.operatingRoom}</FormHelperText>
@@ -688,7 +689,7 @@ export default class RequestEMM extends React.PureComponent {
                 loadOptions={(e, callback) => this.populateUserEmail(e, callback)}
                 value={this.state.inputValue}
                 onChange={(e) => this.handleUserEmailChange(e)}
-
+                filterOption={(candidate, input) => `${candidate.label}`.toLowerCase().includes(input.toLowerCase()) }
               />
             </Grid>
 

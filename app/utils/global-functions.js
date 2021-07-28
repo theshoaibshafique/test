@@ -138,6 +138,24 @@ function axiosFetchWithCredentials(url, fetchMethod, userToken, fetchBodyJSON) {
     mode: 'cors'
   });
 }
+export async function getCdnStreamCookies(url,userToken) {
+  return axios({
+    method: 'get',
+    url: `${url}cookie`,
+    headers: {
+      'Authorization': 'Bearer ' + userToken,
+    },
+    withCredentials: true
+  })
+    .then(response => {
+      if (response.status !== 200) {
+        throw new Error('Cannot stream');
+      }
+    })
+    .catch(err => {
+      throw err;
+    });
+}
 
 function formatDateTime(date) {
   let newDate = moment(date);

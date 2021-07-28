@@ -29,6 +29,7 @@ export function VideoPlayer(props) {
   const drmType = checkDrmType();
   const [Node, setNode] = React.useState(0);
   // const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}?asset=${videoId}&drm_type=${drmType}`;
+  
   useEffect(() => {
     if (!Node || !mediaUrl) {
       return;
@@ -53,14 +54,14 @@ export function VideoPlayer(props) {
           playerConfig = {
             src: src,
             type: 'application/dash+xml',
-            // withCredentials: true,
+            withCredentials: true,
           };
         } else if (drmType === 'Widevine') {
 
           playerConfig = {
             src: src,
             type: 'application/dash+xml',
-            // withCredentials: true,
+            withCredentials: true,
             keySystems: {
               'com.widevine.alpha': {
                 url: licenseUri,
@@ -76,7 +77,7 @@ export function VideoPlayer(props) {
           playerConfig = {
             src: src,
             type: 'application/dash+xml',
-            // withCredentials: true,
+            withCredentials: true,
             keySystems: {
               'com.microsoft.playready': {
                 url: licenseUri,
