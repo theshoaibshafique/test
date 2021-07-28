@@ -598,8 +598,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     //Filter for which cases should be INCLUDED
     return (
       (`${c.emrCaseId}`.includes(searchData.caseId)) &&
-      (!from || moment(c.wheelsIn).isAfter(from)) &&
-      (!to || moment(c.wheelsOut).isBefore(to)) &&
+      (!from || moment(c.wheelsIn).isAfter(moment(from).startOf('day'))) &&
+      (!to || moment(c.wheelsOut).isBefore(moment(to).endOf('day'))) &&
       //given the filtered `specialties` list - check that the case has at least ONE matching specialty (including secondary specialties)
       (!specialties.length || c.procedures && c.procedures.some((p) => specialties.includes(p.specialtyName))) &&
       //Given the filtered `procedures` list match every item with at least one procedure (including secondary procedures)
