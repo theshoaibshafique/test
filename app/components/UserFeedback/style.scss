@@ -22,10 +22,10 @@
         height: 0;
         transition: opacity 0.2s ease-in-out;
     }
-    .feedback-submitted{
+    .feedback-submitted {
         transition: opacity 0 none;
     }
-    
+
     &.open {
         padding: 16px 24px;
         width: 330px;
@@ -36,8 +36,8 @@
             height: 100%;
             transition: opacity 0.5s ease-in-out 0.3s;
         }
-        &.sent{
-            .feedback-form{
+        &.sent {
+            .feedback-form {
                 display: none;
             }
             .feedback-submitted {
@@ -48,19 +48,19 @@
                 flex-direction: column;
                 vertical-align: middle;
                 justify-content: center;
-                transition: opacity 0.5s ease-in-out .4s;
+                transition: opacity 0.5s ease-in-out 0.4s;
                 div {
                     padding: 4px 0;
                 }
                 .close {
                     position: fixed;
                     bottom: 40px;
-                    right: 40px;
+                    right: 50px;
                 }
             }
-        }    
+        }
     }
-    
+
     .title {
         cursor: pointer;
         display: flex;
@@ -73,7 +73,13 @@
         margin-top: 30px;
         float: right;
         &[disabled] {
-            margin-top: 70px;
+            // margin-top: 70px;
+            color: #fff;
+            opacity: 0.6;
+            position: fixed;
+            display: flex;
+            float: right;
+            right: 60px;
         }
     }
     .loader {
@@ -93,5 +99,4 @@
             transform: rotate(360deg);
         }
     }
-
 }
