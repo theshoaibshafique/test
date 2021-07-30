@@ -22,7 +22,7 @@ export function UserFeedback(props) {
   const [feedback, setFeedback] = React.useState("");
   const [sendEmail, setSendEmail] = React.useState(false);
   const [isSending, setIsSending] = React.useState(false);
-  const [isSent, setIsSent] = React.useState(true);
+  const [isSent, setIsSent] = React.useState(false);
   const userToken = useSelector(makeSelectToken());
   const classes = useStyles();
 
@@ -65,6 +65,9 @@ export function UserFeedback(props) {
           variant="outlined"
           size="small"
           fullWidth
+          inputProps={{
+            maxLength: 2000,
+          }}
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
         />
@@ -82,7 +85,7 @@ export function UserFeedback(props) {
         />
         <Button variant="outlined" className="primary send-feedback"
           onClick={() => submit()}
-          disabled={isSending}
+          disabled={isSending || !feedback}
         >
           {isSending ? <div className="loader"></div> : 'Submit'}
         </Button>
