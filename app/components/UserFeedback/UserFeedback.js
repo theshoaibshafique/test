@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import Icon from '@mdi/react';
 import { mdiChevronUp, mdiChevronDown, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import './style.scss';
 import { Button, Checkbox, FormControlLabel, InputLabel, makeStyles, TextField } from '@material-ui/core';
 import globalFunctions from '../../utils/global-functions';
-import { makeSelectToken } from '../../containers/App/selectors';
+import { makeSelectLogger, makeSelectToken } from '../../containers/App/selectors';
 import { useSelector } from 'react-redux';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 const useStyles = makeStyles((theme) => ({
@@ -17,18 +17,42 @@ const useStyles = makeStyles((theme) => ({
     opacity: .8
   },
 }));
-export function UserFeedback(props) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [feedback, setFeedback] = React.useState("");
-  const [sendEmail, setSendEmail] = React.useState(false);
-  const [isSending, setIsSending] = React.useState(false);
-  const [isSent, setIsSent] = React.useState(false);
-  const userToken = useSelector(makeSelectToken());
-  const classes = useStyles();
 
+const dataReducer = (state, event) => {
+  const { logger } = state;
+  for (const [key, value] of Object.entries(event)) {
+    if (key == 'feedback' || key == 'sendEmail'){
+      logger && logger.manualAddLog('onchange', key, value);
+    }
+  }
+  
+  return {
+    ...state,
+    ...event
+  }
+}
+export function UserFeedback(props) {
+  const logger = useSelector(makeSelectLogger());
+  const [DATA, setData] = useReducer(dataReducer, {
+    isOpen: false,
+    feedback: "",
+    sendEmail: false,
+    isSending: false,
+    isSent: false,
+    logger: logger
+  });
+  const { isOpen, feedback, sendEmail, isSending, isSent } = DATA;
+  const userToken = useSelector(makeSelectToken());
+
+  const classes = useStyles();
+  useEffect(() => {
+    if (logger && !DATA.logger){
+      setData({logger:logger})
+    }
+  }, [logger])
 
   const submit = () => {
-    setIsSending(true);
+    setData({ isSending: true });
     const jsonBody = {
       sendEmail: sendEmail,
       feedback: feedback
@@ -39,15 +63,12 @@ export function UserFeedback(props) {
       }).catch((results) => {
         console.error("oh no", results)
       }).finally(() => {
-        setFeedback("");
-        setSendEmail(false);
-        setIsSending(false);
-        setIsSent(true);
+        setData({ feedback: "", sendEmail: false, isSending: false, isSent: true })
       });
   }
   const handleOpen = (open) => {
-    setIsOpen(open);
-    setIsSent(false);
+    logger && logger.manualAddLog('click', 'toggle-user-feedback', { open: open });
+    setData({ isOpen: open, isSent: false });
   }
   return (
     <div className={`user-feedback ${isOpen && 'open'} ${isSent && 'sent'}`} >
@@ -69,7 +90,7 @@ export function UserFeedback(props) {
             maxLength: 2000,
           }}
           value={feedback}
-          onChange={(e) => setFeedback(e.target.value)}
+          onChange={(e) => setData({ feedback: e.target.value })}
         />
 
         <FormControlLabel
@@ -79,7 +100,7 @@ export function UserFeedback(props) {
               className="checkbox"
               icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
               checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-              checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} />
+              checked={sendEmail} onChange={(e) => setData({ sendEmail: e.target.checked })} />
           }
           label={<span className="label" className={classes.inputLabel}>Send follow-up email</span>}
         />
