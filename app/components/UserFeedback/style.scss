@@ -1,0 +1,97 @@
+@import "../../styles/global-styles.scss";
+.user-feedback {
+    position: fixed;
+    background-color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+
+    height: 44px;
+    bottom: 20px;
+    right: 35px;
+    width: 135px;
+
+    transition: all 0.5s ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 1px 1px 6px grey;
+    // -webkit-transition: box-shadow 0.1s ease-in;
+
+    .feedback-submitted,
+    .feedback-form {
+        margin-top: 8px;
+        opacity: 0;
+        height: 0;
+        transition: opacity 0.2s ease-in-out;
+    }
+    .feedback-submitted{
+        transition: opacity 0 none;
+    }
+    
+    &.open {
+        padding: 16px 24px;
+        width: 330px;
+        // bottom: 20px;
+        height: 400px;
+        .feedback-form {
+            opacity: 1;
+            height: 100%;
+            transition: opacity 0.5s ease-in-out 0.3s;
+        }
+        &.sent{
+            .feedback-form{
+                display: none;
+            }
+            .feedback-submitted {
+                opacity: 1;
+                text-align: center;
+                height: calc(100% - 70px);
+                display: flex;
+                flex-direction: column;
+                vertical-align: middle;
+                justify-content: center;
+                transition: opacity 0.5s ease-in-out .4s;
+                div {
+                    padding: 4px 0;
+                }
+                .close {
+                    position: fixed;
+                    bottom: 40px;
+                    right: 40px;
+                }
+            }
+        }    
+    }
+    
+    .title {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        > span {
+            margin-right: 4px;
+        }
+    }
+    .send-feedback {
+        margin-top: 30px;
+        float: right;
+        &[disabled] {
+            margin-top: 70px;
+        }
+    }
+    .loader {
+        border: 6px solid $light-grey;
+        border-top: 6px solid $light-blue;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+}

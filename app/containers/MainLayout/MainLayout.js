@@ -25,6 +25,7 @@ import globalFunctions from '../../utils/global-functions';
 import CaseDiscovery from '../CaseDiscovery/CaseDiscovery';
 import moment from 'moment';
 import Login from '../Login';
+import { UserFeedback } from '../../components/UserFeedback/UserFeedback';
 
 export default class MainLayout extends React.PureComponent {
   constructor(props) {
@@ -208,6 +209,7 @@ export default class MainLayout extends React.PureComponent {
             {this.getContainer()}
           </div>
         </div>
+        <UserFeedback/>
       </div>
     );
   }
