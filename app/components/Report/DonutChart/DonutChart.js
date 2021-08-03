@@ -138,7 +138,7 @@ export default class DonutChart extends React.PureComponent {
               return;
             }
             return (
-              <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")}
+              <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")} ref={React.createRef()}
                 onMouseOver={() => {
                   chart && chart.focus(id);
                 }}
