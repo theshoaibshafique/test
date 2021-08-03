@@ -23,14 +23,31 @@ const useStyles = makeStyles((theme) => ({
 const LegendPagination = (props) => {
     const [page, setPage] = useState(1);
     const [pageCount, setPageCount] = useState(1); 
+    const [totalHeight, setTotalHeight] = useState(0); 
     const { legendData, itemsPerPage, children, chartTitle } = props;
     
     useEffect(() => {
-      if(legendData) {
+      if(totalHeight > 0) {
+        // TODO: Check whether totalHeight is greater than legend container height (308px);
+
         // Calcuate number of legend pages and update pageCount piece of state.
-        setPageCount(Math.ceil(legendData.length / itemsPerPage));
+        // setPageCount(Math.ceil(legendData.length / itemsPerPage));
+          // console.log(Math.ceil(totalHeight/308))
+          setPageCount(Math.ceil(totalHeight/308));
       }
-    }, [legendData.length]);
+    }, [totalHeight]);
+
+    useEffect(() => {
+      let updatedHeight = 0;
+      children.forEach(el => {
+        if(el.ref.current) {
+          updatedHeight += el.ref.current.clientHeight + 8;
+        }
+      });
+      console.log(updatedHeight);
+      setTotalHeight(updatedHeight);
+      // console.log(children[0].ref.current.clientHeight)
+    }, [])
 
     /*** LEGEND PAGE CHANGE EVENT HANDLER ***/
     const onPageChange = (buttonName) => {
@@ -54,9 +71,10 @@ const LegendPagination = (props) => {
     if(!children) {
       return <div></div>
     }
+    // console.log(pageCount)
     return (
           <React.Fragment>
-            {children.slice((page - 1) * itemsPerPage, page * itemsPerPage)}
+            {children.slice((page - 1) * (children.length/pageCount), page * (children.length/pageCount))}
             {pageCount > 1 && (
                 <div className={classes.root}>
                   <LightTooltip title="First Page">
