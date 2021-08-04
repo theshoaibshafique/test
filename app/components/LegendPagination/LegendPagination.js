@@ -29,14 +29,46 @@ const LegendPagination = (props) => {
     
     useEffect(() => {
       if(totalHeight > 0) {
-        // TODO: Check whether totalHeight is greater than legend container height (308px);
+        let currentTotalHeight = 0;
+        let currentCount = 0;
+        let lastIndex;
+        // Save list of megend items to temp variable.
+        let tempChildren = [...children];
+        // Check whether totalHeight is greater than legend container height (308px);
+        if(totalHeight >= 308) {
+          // Slice tempChildren array in prep for next iteration if not on first iteration.
+          // if(children.length !== tempChildren.length) {
+          //   tempChildren = tempChildren.slice(lastIndex, undefined);
+
+          // }
+          // Loop over legend items (children) until all the legend items in temp Children have been processed.
+          while(tempChildren.length > 0) {
+            // Loop over tempChildren (legend items).
+            for(let i = 0; currentTotalHeight >= 280; i++ ) {
+              // 1. add current legend item height to currentTotalHeight.
+              currentTotalHeight += tempChildren[i].ref.current.clientHeight + 8;
+              
+              
+              // update lastIndex val.
+              lastIndex = i;
+            }
+            // reset currentTotalHeight.
+            currentTotalHeight = 0;
+            // Get count of how many legend items were looped over in last interation (i.e how many legend items on that legend page).
+            currentCount = tempChildren.slice(undefined, lastIndex + 1).length;
+            // Update tempChildren for next iteration.
+            tempChildren = tempChildren.slice(lastIndex + 1, undefined);
+            // Update legendPageData state by adding new element ot end of array, elem value is the number if legend items per that page.
+            setLegendPageData(prevState => [...prevState, currentCount]);
+          }
+        }
+      }
 
         // Calcuate number of legend pages and update pageCount piece of state.
         // setPageCount(Math.ceil(legendData.length / itemsPerPage));
           // console.log(Math.ceil(totalHeight/308))
-          setPageCount(Math.ceil(totalHeight/308));
-      }
-    }, [totalHeight]);
+          // setPageCount(Math.ceil(totalHeight/308));
+  }, [totalHeight]);
 
     useEffect(() => {
       let updatedHeight = 0;
