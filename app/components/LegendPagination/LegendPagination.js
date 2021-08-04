@@ -24,6 +24,7 @@ const LegendPagination = (props) => {
     const [page, setPage] = useState(1);
     const [pageCount, setPageCount] = useState(1); 
     const [totalHeight, setTotalHeight] = useState(0); 
+    const [legendPageData, setLegendPageData] = useState([]);
     const { legendData, itemsPerPage, children, chartTitle } = props;
     
     useEffect(() => {
