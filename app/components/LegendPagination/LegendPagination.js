@@ -25,50 +25,9 @@ const LegendPagination = (props) => {
     const [pageCount, setPageCount] = useState(1); 
     const [totalHeight, setTotalHeight] = useState(0); 
     const [legendPageData, setLegendPageData] = useState([]);
-    const { legendData, itemsPerPage, children, chartTitle } = props;
+    const { legendData,  children, chartTitle } = props;
     
-    useEffect(() => {
-      if(totalHeight > 0) {
-        let currentTotalHeight = 0;
-        let currentCount = 0;
-        let lastIndex;
-        // Save list of megend items to temp variable.
-        let tempChildren = [...children];
-        // Check whether totalHeight is greater than legend container height (308px);
-        if(totalHeight >= 308) {
-          // Slice tempChildren array in prep for next iteration if not on first iteration.
-          // if(children.length !== tempChildren.length) {
-          //   tempChildren = tempChildren.slice(lastIndex, undefined);
-
-          // }
-          // Loop over legend items (children) until all the legend items in temp Children have been processed.
-          while(tempChildren.length > 0) {
-            // Loop over tempChildren (legend items).
-            for(let i = 0; currentTotalHeight >= 280; i++ ) {
-              // 1. add current legend item height to currentTotalHeight.
-              currentTotalHeight += tempChildren[i].ref.current.clientHeight + 8;
-              
-              
-              // update lastIndex val.
-              lastIndex = i;
-            }
-            // reset currentTotalHeight.
-            currentTotalHeight = 0;
-            // Get count of how many legend items were looped over in last interation (i.e how many legend items on that legend page).
-            currentCount = tempChildren.slice(undefined, lastIndex + 1).length;
-            // Update tempChildren for next iteration.
-            tempChildren = tempChildren.slice(lastIndex + 1, undefined);
-            // Update legendPageData state by adding new element ot end of array, elem value is the number if legend items per that page.
-            setLegendPageData(prevState => [...prevState, currentCount]);
-          }
-        }
-      }
-
-        // Calcuate number of legend pages and update pageCount piece of state.
-        // setPageCount(Math.ceil(legendData.length / itemsPerPage));
-          // console.log(Math.ceil(totalHeight/308))
-          // setPageCount(Math.ceil(totalHeight/308));
-  }, [totalHeight]);
+    
 
     useEffect(() => {
       let updatedHeight = 0;
@@ -77,10 +36,43 @@ const LegendPagination = (props) => {
           updatedHeight += el.ref.current.clientHeight + 8;
         }
       });
-      console.log(updatedHeight);
+
+      // calculate how many legend items can fit in legend container and consequently how many items ot have per legend page.
+      // Check whether totalHeight is greater than a height slighty smaller than the legend container height of 308 px(270px);
+      if(updatedHeight >= 270) {
+        let updatedLegendPageData = [];
+        let currentTotalHeight = 0;
+        let currentCount = 0;
+        let lastIndex;
+        let temp = children;
+        while(temp.length > 0) {
+          // Loop over tempChildren (legend items).
+          for(let i = 0; currentTotalHeight <= 270 && i < temp.length; i++ ) {
+            // 1. add current legend item height to currentTotalHeight.
+            currentTotalHeight += temp[i].ref.current.clientHeight + 8;
+            // update lastIndex val.
+            lastIndex = i;
+          }
+          // reset currentTotalHeight.
+          currentTotalHeight = 0;
+          // Get count of how many legend items were looped over in last interation (i.e how many legend items on that legend page).
+          currentCount = temp.slice(undefined, lastIndex + 1).length;
+          // Update tempChildren for next iteration.
+          temp = temp.slice(lastIndex + 1, undefined);
+          updatedLegendPageData.push(currentCount);
+        }
+        setLegendPageData(updatedLegendPageData);
+      }
       setTotalHeight(updatedHeight);
-      // console.log(children[0].ref.current.clientHeight)
-    }, [])
+    }, [children]);
+
+    // Update pageCount piece of state based on the length of the legendPageData array.
+    useEffect(() => {
+      let updatedPageCount = 1;
+      if(legendPageData.length > 0) updatedPageCount = legendPageData.length;
+      // Update pageCount piece of state.
+      setPageCount(updatedPageCount);
+    }, [legendPageData]);
 
     /*** LEGEND PAGE CHANGE EVENT HANDLER ***/
     const onPageChange = (buttonName) => {
@@ -104,10 +96,10 @@ const LegendPagination = (props) => {
     if(!children) {
       return <div></div>
     }
-    // console.log(pageCount)
+
     return (
           <React.Fragment>
-            {children.slice((page - 1) * (children.length/pageCount), page * (children.length/pageCount))}
+            {children.slice((page - 1) * legendPageData[page - 1] || undefined, page * legendPageData[page - 1] || undefined)}
             {pageCount > 1 && (
                 <div className={classes.root}>
                   <LightTooltip title="First Page">
