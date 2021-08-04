@@ -264,6 +264,15 @@ function getWindowDimensions() {
     height
   };
 }
+function validEmail(email) {
+  var EMAIL_REGEX = process.env.ALLOW_PLUS_EMAILS
+    ? /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    : /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  if (EMAIL_REGEX.test(email)) {
+    return (true);
+  }
+  return (false);
+}
 export default {
   genericFetch,
   genericFetchWithNoReturnMessage,
@@ -278,5 +287,6 @@ export default {
   ordinal_suffix_of,
   getDiffFromMidnight,
   getWindowDimensions,
-  authFetch
+  authFetch,
+  validEmail
 };
