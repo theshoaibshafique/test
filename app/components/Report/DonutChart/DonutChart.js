@@ -131,14 +131,13 @@ export default class DonutChart extends React.PureComponent {
       <div className={`${this.state.chartID} donut-chart-detailed-legend`}>
         <LegendPagination
           legendData={this.state.legendData}
-          itemsPerPage={7}
         >
           {this.state.legendData && this.state.legendData.map(([id, value], index) => {
             if (id == "NA") {
               return;
             }
             return (
-              <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")}
+              <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")} ref={React.createRef()}
                 onMouseOver={() => {
                   chart && chart.focus(id);
                 }}
