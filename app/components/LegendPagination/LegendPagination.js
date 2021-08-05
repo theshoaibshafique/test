@@ -64,7 +64,7 @@ const LegendPagination = (props) => {
         setLegendPageData(updatedLegendPageData);
       }
       setTotalHeight(updatedHeight);
-    }, [children]);
+    }, [legendData]);
 
     // Update pageCount piece of state based on the length of the legendPageData array.
     useEffect(() => {
