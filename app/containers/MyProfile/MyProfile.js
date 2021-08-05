@@ -47,7 +47,7 @@ function EField(props) {
         value={value}
         InputProps={inputProps}
         InputLabelProps={labelProps}
-        disabled={label=='Email'}
+        disabled={label=='Email' || label=='Title'}
         error={errorMessage}
         helperText={errorMessage}
         variant="outlined"
