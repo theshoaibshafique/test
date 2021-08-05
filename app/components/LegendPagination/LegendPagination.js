@@ -42,9 +42,10 @@ const LegendPagination = (props) => {
       if(updatedHeight >= 270) {
         let updatedLegendPageData = [];
         let currentTotalHeight = 0;
-        let currentCount = 0;
+        // let currentCount = 0;
         let lastIndex;
         let temp = children;
+        let newElem;
         while(temp.length > 0) {
           // Loop over tempChildren (legend items).
           for(let i = 0; currentTotalHeight <= 270 && i < temp.length; i++ ) {
@@ -53,13 +54,19 @@ const LegendPagination = (props) => {
             // update lastIndex val.
             lastIndex = i;
           }
+          
           // reset currentTotalHeight.
           currentTotalHeight = 0;
-          // Get count of how many legend items were looped over in last interation (i.e how many legend items on that legend page).
-          currentCount = temp.slice(undefined, lastIndex + 1).length;
-          // Update tempChildren for next iteration.
+          if(updatedLegendPageData.length <= 0) {
+            newElem = [0, lastIndex + 1];
+          } else {
+            let sliceStartIdx = updatedLegendPageData[updatedLegendPageData.length - 1][1];
+            newElem = [sliceStartIdx, sliceStartIdx + (lastIndex + 1)];
+          }
           temp = temp.slice(lastIndex + 1, undefined);
-          updatedLegendPageData.push(currentCount);
+          updatedLegendPageData.push(newElem);
+          // reset newElem variable.
+          newElem = undefined;
         }
         setLegendPageData(updatedLegendPageData);
       }
@@ -99,7 +106,7 @@ const LegendPagination = (props) => {
 
     return (
           <React.Fragment>
-            {children.slice((page - 1) * legendPageData[page - 1] || undefined, page * legendPageData[page - 1] || undefined)}
+            {children.slice(legendPageData[page -1] && legendPageData[page - 1][0] || undefined, legendPageData[page -1] && legendPageData[page - 1][1] || undefined)}
             {pageCount > 1 && (
                 <div className={classes.root}>
                   <LightTooltip title="First Page">
