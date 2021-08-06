@@ -38,8 +38,8 @@ const LegendPagination = (props) => {
       });
 
       // calculate how many legend items can fit in legend container and consequently how many items ot have per legend page.
-      // Check whether totalHeight is greater than a height slighty smaller than the legend container height of 308 px(270px);
-      if(updatedHeight >= 270) {
+      // Check whether totalHeight is greater than a height slighty smaller than the legend container height of 308 px(220px);
+      if(updatedHeight >= 220) {
         let updatedLegendPageData = [];
         let currentTotalHeight = 0;
         // let currentCount = 0;
@@ -48,7 +48,7 @@ const LegendPagination = (props) => {
         let newElem;
         while(temp.length > 0) {
           // Loop over tempChildren (legend items).
-          for(let i = 0; currentTotalHeight <= 270 && i < temp.length; i++ ) {
+          for(let i = 0; currentTotalHeight <= 220 && i < temp.length; i++ ) {
             // 1. add current legend item height to currentTotalHeight.
             currentTotalHeight += temp[i].ref.current.clientHeight + 8;
             // update lastIndex val.
