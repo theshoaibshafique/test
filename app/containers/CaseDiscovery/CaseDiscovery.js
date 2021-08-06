@@ -118,6 +118,15 @@ function getTag(tag) {
   }
 }
 
+function transformTagValue(tag, value) {
+  switch(tag && tag.toLowerCase()) {
+    case "hypothermia":
+      return value.replace('35°C', '35°C / 95°F');
+    default:
+      return value;
+  }
+}
+
 function displayTags(tags, emrCaseId) {
   return tags.map((tag, i) => {
     let desc = tag.toolTip || [];
@@ -697,6 +706,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const result = []
     const tag_info = TAG_INFO;
     const isAdmin = makeSelectIsAdmin();
+    let transformedValue;
     const updateInAdmin = isAdmin && (
       <span>
         (<NavLink to={"/adminPanel/1"} className='link admin-link'>
@@ -715,6 +725,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       </span>
     );
     for (const [tag, value] of Object.entries(tag_info)) {
+      console.log('tag', tag);
       result.push(
         <Grid item xs={3} className="tag-column" key={`${tag}-${value}`}>
           <div className="info-tag">
@@ -727,7 +738,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           </div>
         </Grid>
       );
-      result.push(<Grid item xs={9} className="info-column" key='info-col'>{value}</Grid>);
+      transformedValue = transformTagValue(tag, value);
+      result.push(<Grid item xs={9} className="info-column" key='info-col'>{transformedValue}</Grid>);
     }
 
     return (
@@ -1326,8 +1338,8 @@ function DetailedCase(props) {
                   </Grid>
                   <Grid item xs className="actual-start">
 
-                    <div className="timing-header">{moment(scheduledStart).format("HH:mm:ss")}</div>
-                    <div className="timing-value">{moment(wheelsIn).format("HH:mm:ss")}</div>
+                    <div className="timing-header">{moment(scheduledStart).format("HH:mm")}</div>
+                    <div className="timing-value">{moment(wheelsIn).format("HH:mm")}</div>
                     <div className="laterality">
                       {lateralityIcon}
                     </div>
