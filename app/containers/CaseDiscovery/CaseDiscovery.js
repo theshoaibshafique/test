@@ -121,7 +121,7 @@ function getTag(tag) {
 function transformTagValue(tag, value) {
   switch(tag && tag.toLowerCase()) {
     case "hypothermia":
-      return value.replace('35°C', '35°C or 95°F');
+      return value.replace('35°C', '35°C / 95°F');
     default:
       return value;
   }
