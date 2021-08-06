@@ -1100,7 +1100,7 @@ function DetailedCase(props) {
 
   const procedureTitle = procedures[0].procedureName;
 
-  const dayDiff = moment().diff(moment(wheelsIn), 'days');
+  const dayDiff = moment().endOf('day').diff(moment(wheelsIn).endOf('day'), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
   const blockStartTime = moment(blockStart, 'HH:mm:ss');
   const blockEndTime = moment(blockEnd, 'HH:mm:ss');
