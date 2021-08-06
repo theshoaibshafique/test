@@ -1413,9 +1413,9 @@ function DetailedCase(props) {
           {/* Display all cases given  */}
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
-
-            const startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - (earliestStartTime * 60);
-            const endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
+            // We offset by "Earliest start time" (could be 6:22 am) + the straggling minutes (22mins) since the labels display only 6am
+            const startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - ((earliestStartTime + (1-earliestStartTime %1)) * 60 );
+            const endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - ((earliestStartTime+ (1-earliestStartTime %1)) * 60);
             const caseHeight = (endMins - startMins) / 60;
             return (
               <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 34 && 'short'} ${caseHeight * HOUR_SIZE <= 83 && 'medium'}`}
