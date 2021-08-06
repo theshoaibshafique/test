@@ -1338,8 +1338,8 @@ function DetailedCase(props) {
                   </Grid>
                   <Grid item xs className="actual-start">
 
-                    <div className="timing-header">{moment(scheduledStart).format("HH:mm:ss")}</div>
-                    <div className="timing-value">{moment(wheelsIn).format("HH:mm:ss")}</div>
+                    <div className="timing-header">{moment(scheduledStart).format("HH:mm")}</div>
+                    <div className="timing-value">{moment(wheelsIn).format("HH:mm")}</div>
                     <div className="laterality">
                       {lateralityIcon}
                     </div>
