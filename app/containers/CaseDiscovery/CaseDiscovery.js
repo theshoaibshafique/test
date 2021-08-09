@@ -1322,6 +1322,12 @@ function DetailedCase(props) {
             {description}
           </div>
           <div className="tags">
+          <span className="case-tag add-flag">
+              {/* <img src={PlusThick} /> */}
+              <div>
+                Add Flag
+              </div>
+            </span>
             {displayTags(tags, emrCaseId)}
           </div>
 
