@@ -715,7 +715,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       </span>)
     tag_info['Late First Case'] = (
       <span>
-        {`Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true).length > 2 ? globalFunctions.formatSecsToTime(gracePeriod, true, true) : '0 min'}`}
+        {`Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true).length > 2 ? globalFunctions.formatSecsToTime(gracePeriod, true, true) : '0 min '}`}
         {updateInAdmin}
       </span>)
     tag_info['Slow Turnover'] = (
