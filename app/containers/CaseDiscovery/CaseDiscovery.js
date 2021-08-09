@@ -31,6 +31,7 @@ import PreOpDelay from './icons/PreOpDelay.svg';
 import Play from './icons/Play.svg';
 import TurnoverDuration from './icons/TurnoverDuration.svg';
 import Close from './icons/Close.svg';
+import Plus from './icons/Plus.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
 import { LightTooltip, StyledRadio } from '../../components/SharedComponents/SharedComponents';
@@ -1323,7 +1324,7 @@ function DetailedCase(props) {
           </div>
           <div className="tags">
           <span className="case-tag add-flag">
-              {/* <img src={PlusThick} /> */}
+              <img src={Plus} />
               <div>
                 Add Flag
               </div>

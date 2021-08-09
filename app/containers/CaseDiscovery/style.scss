@@ -25,6 +25,13 @@
             background-color: #ffcfcf;
             color: #7b2d2d;
         }
+        &.add-flag {
+            align-items: center;
+            background-color: #F4F5F7;
+            color: #323232;
+            position: relative;
+            top: 8px;
+        }
     }
 }
 .app-wrapper section.case-discovery {
