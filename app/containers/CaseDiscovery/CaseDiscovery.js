@@ -1124,7 +1124,7 @@ function DetailedCase(props) {
   const scheduleDuration = (latestEndTime) - (earliestStartTime);
 
   const description = (
-    <div>
+    <div style={{lineBreak:'anywhere'}}>
       <span>Case ID: {emrCaseId}</span>
       <span>Surgeon ID: {`${surgeonId}`}</span>
       <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'days'} ago)`}</span>
