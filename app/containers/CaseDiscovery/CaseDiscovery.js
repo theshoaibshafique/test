@@ -1119,9 +1119,9 @@ function DetailedCase(props) {
   const bStartTime = globalFunctions.getDiffFromMidnight(blockStartTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
   const bEndTime = globalFunctions.getDiffFromMidnight(blockEndTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
 
-  const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
+  const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) ;
   const latestEndTime = roomCases.reduce((max, c) => globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
-  const scheduleDuration = (latestEndTime) - (earliestStartTime);
+  const scheduleDuration = Math.ceil(latestEndTime) - (earliestStartTime);
 
   const description = (
     <div style={{lineBreak:'anywhere'}}>
@@ -1391,9 +1391,9 @@ function DetailedCase(props) {
           </div>
 
           {/* Add time markers */}
-          {Array.from({ length: Math.round(scheduleDuration) }, (x, i) => {
+          {Array.from({ length: Math.ceil(scheduleDuration) }, (x, i) => {
             const now = moment().toDate()
-            let cTime = Math.round(earliestStartTime) + i;
+            let cTime = Math.floor(earliestStartTime) + i;
             now.setHours(cTime);
             now.setMinutes(0);
             const formattedTime = moment(now).format("HH:mm");
@@ -1426,8 +1426,9 @@ function DetailedCase(props) {
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
             // We offset by "Earliest start time" (could be 6:22 am) + the straggling minutes (22mins) since the labels display only 6am
-            const startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - ((earliestStartTime + (1-earliestStartTime %1)) * 60 );
-            const endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - ((earliestStartTime+ (1-earliestStartTime %1)) * 60);
+            const offset = ((earliestStartTime + (1-earliestStartTime %1) -1) * 60 );
+            let startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - offset;
+            let endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - offset;
             const caseHeight = (endMins - startMins) / 60;
             return (
               <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 34 && 'short'} ${caseHeight * HOUR_SIZE <= 83 && 'medium'}`}
