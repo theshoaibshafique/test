@@ -1174,7 +1174,6 @@ function DetailedCase(props) {
     function handleResize() {
       setWindowDimensions(globalFunctions.getWindowDimensions());
     }
-    fetchFlagReport();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
