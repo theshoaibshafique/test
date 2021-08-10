@@ -22,6 +22,7 @@
     width: fit-content;
     text-overflow: ellipsis;
     display: -webkit-box;
+    font-weight: 400;
     -webkit-line-clamp: 2; /* number of lines to show */
     -webkit-box-orient: vertical;
     &:hover{
@@ -32,6 +33,18 @@
     opacity: 0.8;
     font-weight: bold;
     margin: 24px 24px 0px 24px;
+  }
+  .item-title {
+    font-family: "Noto Sans";
+    font-size: 26px;
+    line-height: 36px;
+    color: #004f6e;
+    opacity: 0.8;
+    cursor: pointer;
+    width: fit-content;
+    max-width: 85%;
+    font-weight: bold;
+    margin-bottom: 0 !important;
   }
   .change-value {
     width: fit-content;
