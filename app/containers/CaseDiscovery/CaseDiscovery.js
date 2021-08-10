@@ -379,6 +379,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const { facilityName, gracePeriod, outlierThreshold } = DATA;
   const [USERS, setUsers] = useState([]);
   const [numShownCases, setNumShownCases] = React.useState(10);
+  // NEW
+  const [flagReport, setFlagReport] = useState(null);
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -517,13 +519,27 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         });
     }
 
+     // New
+    const fetchFlagReport = async () => {
+      await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'flag_report', 'get', userToken, {})
+        .then(result => {
+          result = result.data;
+          setFlagReport(result);
+        }).catch((error) => {
+          console.log("uh no.")
+        }).finally(() => {
+
+        });
+    }
+
     fetchCases();
 
     fetchUsers();
 
     fetchFacilityConfig();
     fetchSavedCases();
-
+    //  New
+    fetchFlagReport();
   }, []);
 
   useEffect(() => {
@@ -1158,6 +1174,7 @@ function DetailedCase(props) {
     function handleResize() {
       setWindowDimensions(globalFunctions.getWindowDimensions());
     }
+    fetchFlagReport();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
