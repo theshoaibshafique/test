@@ -1181,11 +1181,14 @@ function DetailedCase(props) {
   const HEADER_SIZE = 90;
   const HOUR_SIZE = Math.max((windowDimensions.height - HEADER_SIZE) / (scheduleDuration), 34);
   const [openRequestEMM, setOpenRequestEMM] = React.useState(false);
+  const [openAddFlag, setOpenAddFlag] = useState(false);
   const [isRequestSubmitted, setIsRequestSubmitted] = React.useState(false);
   const handleOpenRequestEMM = (open) => {
     setOpenRequestEMM(open);
     logger && logger.manualAddLog('click', open ? 'open-emm-request' : 'close-emm-request', !open && !isRequestSubmitted ? 'Closed without submission' : '');
   }
+
+  const handleOpenAddFlag = open => setOpenAddFlag(open);
 
   const reportButton = () => {
     if (isRequestSubmitted) {
@@ -1296,7 +1299,7 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-
+console.log('open add', openAddFlag)
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -1339,7 +1342,7 @@ function DetailedCase(props) {
             {description}
           </div>
           <div className="tags">
-          <span className="case-tag add-flag">
+          <span className="case-tag add-flag" onClick={() => handleOpenAddFlag(true)}>
               <img src={Plus} />
               <div>
                 Add Flag
