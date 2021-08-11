@@ -125,3 +125,20 @@ function generateFakeCases(numCases) {
     return Array.from({ length: numCases }, () => fakeCase());
 }
 
+
+/*** FLAG SUBMISSION HELPER FUNCTIONS ***/
+export const getQuestionByLocation = (flagReport, flagReportLocation) => {
+    if(flagReport && (flagReportLocation && flagReportLocation.length > 0)) {
+        let path = '';
+        for(let i = 0; i < flagReportLocation.length; i++) {
+            if(i % 2 === 0) {
+                path += `.questions[${flagReportLocation[i]}]`;
+            } else if(i % 2 !== 0) {
+                path += `.options[${flagReportLocation[i]}]`;
+            }
+        }
+        // console.log('path', `report${path}`);
+        // return question path.
+        return eval(`report${path}`);
+      }
+};

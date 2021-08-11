@@ -44,7 +44,7 @@ import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView } from './Utils';
+import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation } from './Utils';
 import { useSelector } from 'react-redux';
 import { makeSelectComplications, makeSelectIsAdmin, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
@@ -1303,7 +1303,7 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-console.log('open add', openAddFlag)
+
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
