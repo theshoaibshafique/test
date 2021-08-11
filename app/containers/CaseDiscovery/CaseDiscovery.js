@@ -379,8 +379,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const { facilityName, gracePeriod, outlierThreshold } = DATA;
   const [USERS, setUsers] = useState([]);
   const [numShownCases, setNumShownCases] = React.useState(10);
-  // NEW
+  /*** NEW - Flag Submission state ***/
   const [flagReport, setFlagReport] = useState(null);
+
+  const [flagReportLocation, setFlagReportLocation] = useState([0]);
+  const [flagData, setFlagData] = useState([]);
+  const [flagChoices, setFlagChoices] = useState([]);
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
