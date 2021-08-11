@@ -380,9 +380,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [USERS, setUsers] = useState([]);
   const [numShownCases, setNumShownCases] = React.useState(10);
   /*** NEW - Flag Submission state ***/
+  const [openAddFlag, setOpenAddFlag] = useState(false);
   const [flagReport, setFlagReport] = useState(null);
 
-  const [flagReportLocation, setFlagReportLocation] = useState([0]);
+  const [flagReportLocation, setFlagReportLocation] = useState([]);
   const [flagData, setFlagData] = useState([]);
   const [flagChoices, setFlagChoices] = useState([]);
 
@@ -551,6 +552,30 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       logger && logger.connectListeners();
     }, 300)
   });
+
+  /***  Flag submission useEffect hooks ***/
+
+  // Update the current flag question, each time flagReportLocation changes.
+  useEffect(() => {
+    let currentFlagQuestion;
+    console.log(openAddFlag);
+    // If the flag submission form is visible
+    if(openAddFlag) {
+      // 1. Retrieve current question from the flagReport, based on the flagReportLocation value.
+      currentFlagQuestion = getQuestionByLocation(flagReport, flagReportLocation);
+      console.log(currentFlagQuestion);
+      // 2. TODO: Update the flagData piece of state based on the current flag question value.
+
+    }
+  }, [flagReportLocation]);
+
+  /*** FLAG SUBMISSION HANDLERS ***/
+  const handleAddFlagClick = () => {
+    // Update flagReportLocation value.
+    setFlagReportLocation([0]);
+    // Open flag submission form UI.
+    setOpenAddFlag(true);
+  };
 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
@@ -1023,7 +1048,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         handleSaveCase={() => handleSaveCase(caseId)} USERS={USERS}
         handleChangeCaseId={handleChangeCaseId}
         hidden={!caseId}
-        showEMMReport={showEMMReport} />
+        showEMMReport={showEMMReport}
+        openAddFlag={openAddFlag} 
+        handleAddFlagClick={handleAddFlagClick}
+      />
     </section>
   );
 }
@@ -1115,7 +1143,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleAddFlagClick } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1185,14 +1213,15 @@ function DetailedCase(props) {
   const HEADER_SIZE = 90;
   const HOUR_SIZE = Math.max((windowDimensions.height - HEADER_SIZE) / (scheduleDuration), 34);
   const [openRequestEMM, setOpenRequestEMM] = React.useState(false);
-  const [openAddFlag, setOpenAddFlag] = useState(false);
   const [isRequestSubmitted, setIsRequestSubmitted] = React.useState(false);
   const handleOpenRequestEMM = (open) => {
     setOpenRequestEMM(open);
     logger && logger.manualAddLog('click', open ? 'open-emm-request' : 'close-emm-request', !open && !isRequestSubmitted ? 'Closed without submission' : '');
   }
 
-  const handleOpenAddFlag = open => setOpenAddFlag(open);
+  const handleOpenAddFlag = (open) => {
+
+  }
 
   const reportButton = () => {
     if (isRequestSubmitted) {
@@ -1346,7 +1375,7 @@ function DetailedCase(props) {
             {description}
           </div>
           <div className="tags">
-          <span className="case-tag add-flag" onClick={() => handleOpenAddFlag(true)}>
+          <span className="case-tag add-flag" onClick={handleAddFlagClick}>
               <img src={Plus} />
               <div>
                 Add Flag

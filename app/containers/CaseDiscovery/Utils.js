@@ -139,6 +139,6 @@ export const getQuestionByLocation = (flagReport, flagReportLocation) => {
         }
         // console.log('path', `report${path}`);
         // return question path.
-        return eval(`report${path}`);
+        return eval(`flagReport${path}`);
       }
 };
