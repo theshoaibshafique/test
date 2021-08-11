@@ -558,6 +558,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Update the current flag question, each time flagReportLocation changes.
   useEffect(() => {
     let currentFlagQuestion;
+    let updatedFlagData;
     console.log(openAddFlag);
     // If the flag submission form is visible
     if(openAddFlag) {
@@ -565,7 +566,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       currentFlagQuestion = getQuestionByLocation(flagReport, flagReportLocation);
       console.log(currentFlagQuestion);
       // 2. TODO: Update the flagData piece of state based on the current flag question value.
-
+      if(currentFlagQuestion) {
+        setFlagData(prevState => {
+          const isQuestionMatch = prevState.find(ques => ques.id === currentFlagQuestionid);
+          if(!isQuestionMatch) return [...prevState, { ...currentFlagQuestion, location: flagReportLocation }];
+        })
+      }
     }
   }, [flagReportLocation]);
 
@@ -576,6 +582,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     // Open flag submission form UI.
     setOpenAddFlag(true);
   };
+
+  console.log('flag data', flagData);
 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
