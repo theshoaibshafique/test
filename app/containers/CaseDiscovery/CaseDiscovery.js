@@ -1262,13 +1262,12 @@ function DetailedCase(props) {
   const HOUR_SIZE = Math.max((windowDimensions.height - HEADER_SIZE) / (scheduleDuration), 34);
   const [openRequestEMM, setOpenRequestEMM] = React.useState(false);
   const [isRequestSubmitted, setIsRequestSubmitted] = React.useState(false);
+  /*** Flag Submission State ***/
+  const [isFlagSubmitted, setIsFlagSubmitted] = useState(false);
+  
   const handleOpenRequestEMM = (open) => {
     setOpenRequestEMM(open);
     logger && logger.manualAddLog('click', open ? 'open-emm-request' : 'close-emm-request', !open && !isRequestSubmitted ? 'Closed without submission' : '');
-  }
-
-  const handleOpenAddFlag = (open) => {
-
   }
 
   const reportButton = () => {
