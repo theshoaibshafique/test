@@ -568,7 +568,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       // 2. TODO: Update the flagData piece of state based on the current flag question value.
       if(currentFlagQuestion) {
         setFlagData(prevState => {
-          const isQuestionMatch = prevState.find(ques => ques.id === currentFlagQuestionid);
+          const isQuestionMatch = prevState.find(ques => ques.id === currentFlagQuestion.id);
           if(!isQuestionMatch) return [...prevState, { ...currentFlagQuestion, location: flagReportLocation }];
         })
       }
@@ -576,11 +576,14 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   }, [flagReportLocation]);
 
   /*** FLAG SUBMISSION HANDLERS ***/
-  const handleAddFlagClick = () => {
-    // Update flagReportLocation value.
-    setFlagReportLocation([0]);
+  const handleOpenAddFlag = (open) => {
+    console.log('clicked');
+    if(!openAddFlag) {
+      // Update flagReportLocation value.
+      setFlagReportLocation([0]);
+    }
     // Open flag submission form UI.
-    setOpenAddFlag(true);
+    setOpenAddFlag(open);
   };
 
   // Render flag submission question based on question type property value.
@@ -1098,7 +1101,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         hidden={!caseId}
         showEMMReport={showEMMReport}
         openAddFlag={openAddFlag} 
-        handleAddFlagClick={handleAddFlagClick}
+        handleOpenAddFlag={handleOpenAddFlag}
       />
     </section>
   );
@@ -1191,7 +1194,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleAddFlagClick } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1264,7 +1267,7 @@ function DetailedCase(props) {
   const [isRequestSubmitted, setIsRequestSubmitted] = React.useState(false);
   /*** Flag Submission State ***/
   const [isFlagSubmitted, setIsFlagSubmitted] = useState(false);
-  
+
   const handleOpenRequestEMM = (open) => {
     setOpenRequestEMM(open);
     logger && logger.manualAddLog('click', open ? 'open-emm-request' : 'close-emm-request', !open && !isRequestSubmitted ? 'Closed without submission' : '');
@@ -1422,7 +1425,7 @@ function DetailedCase(props) {
             {description}
           </div>
           <div className="tags">
-            <span className="case-tag add-flag" onClick={handleAddFlagClick}>
+            <span className="case-tag add-flag" onClick={(e) => handleOpenAddFlag(true)}>
               <img src={Plus} />
               <div>
                 Add Flag
