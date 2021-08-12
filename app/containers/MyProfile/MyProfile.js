@@ -92,9 +92,8 @@ export default class MyProfile extends React.PureComponent {
   submit() {
     this.setState({ isLoading: true })
     const { firstName, lastName, email, jobTitle } = this.state;
-    const { roles } = this.props;
     const jsonBody = {
-      firstName, lastName, email, title: jobTitle, roles, isActive: true
+      firstName, lastName, email
     }
     globalFuncs.genericFetch(`${process.env.USER_API}profile`, 'PATCH', this.props.userToken, jsonBody)
       .then(result => {
