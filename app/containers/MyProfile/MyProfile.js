@@ -3,6 +3,8 @@ import Button from '@material-ui/core/Button';
 import globalFuncs from '../../utils/global-functions';
 import './style.scss';
 import { IconButton, InputLabel, makeStyles, TextField, withStyles } from '@material-ui/core';
+import { mdiAccountEdit } from '@mdi/js';
+import Icon from '@mdi/react'
 import EditIcon from '@material-ui/icons/Edit';
 import globalFunctions from '../../utils/global-functions';
 const styles = theme => ({
@@ -92,9 +94,8 @@ export default class MyProfile extends React.PureComponent {
   submit() {
     this.setState({ isLoading: true })
     const { firstName, lastName, email, jobTitle } = this.state;
-    const { roles } = this.props;
     const jsonBody = {
-      firstName, lastName, email, title: jobTitle, roles, isActive: true
+      firstName, lastName, email
     }
     globalFuncs.genericFetch(`${process.env.USER_API}profile`, 'PATCH', this.props.userToken, jsonBody)
       .then(result => {
@@ -114,7 +115,7 @@ export default class MyProfile extends React.PureComponent {
     return (
       <section className="my-profile">
         <div><p className="profile-title">My Profile {!isEdit && <IconButton onClick={() => this.handleChange('isEdit', !isEdit)}>
-          <EditIcon />
+          <Icon path={mdiAccountEdit} size={'31px'} style={{marginBottom:4}} />
         </IconButton>}</p></div>
 
         <div className="profile-box">
@@ -145,7 +146,7 @@ export default class MyProfile extends React.PureComponent {
         </div>
         <div ></div>
         <div className="buttons" hidden={!isEdit}>
-          <Button disableRipple disableElevation id="reset" variant="contained" className="secondary reset" onClick={() => this.reset()}>Cancel</Button>
+          <Button disableRipple disableElevation id="reset" className="reset" onClick={() => this.reset()}>Cancel</Button>
           <Button disableRipple disableElevation id="save" variant="outlined" className="primary" disabled={(this.state.isLoading) || !this.isValid()} onClick={() => this.submit()}>
             {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}</Button>
         </div>

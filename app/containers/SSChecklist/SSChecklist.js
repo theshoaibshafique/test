@@ -62,7 +62,13 @@ export default class SSChecklist extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     if (prevProps.reportType != this.props.reportType) {
-      this.setState({ reportType: this.props.reportType, reportData: [] }, () => {
+      //If they change the page without setting a start/endDate we use the default date
+      let {startDate, endDate, defaultStartDate, defaultEndDate} = this.state;
+      if (!endDate || !startDate) {
+        startDate= defaultStartDate
+        endDate= defaultEndDate
+      }
+      this.setState({ reportType: this.props.reportType, reportData: [], startDate, endDate }, () => {
         this.getReportLayout();
       })
     }
@@ -109,7 +115,8 @@ export default class SSChecklist extends React.PureComponent {
         const ors = result.filters.ORs;
         this.setState({
           earliestStartDate, latestEndDate, startDate, endDate, pendingWarning, complianceGoal, engagementGoal, qualityGoal,
-          specialties, ors, hasItemChecked
+          specialties, ors, hasItemChecked,
+          defaultStartDate: startDate, defaultEndDate: endDate
         }, () => {
           if (this.state.reportType.toLowerCase() == "quality" && !hasItemChecked) {
             this.notLoading();
@@ -163,6 +170,9 @@ export default class SSChecklist extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
+    if (!this.state.endDate || !this.state.startDate) {
+      return;
+    }
     this.setState({ tileRequest: [], reportData: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
       () => {
 
@@ -415,7 +425,7 @@ export default class SSChecklist extends React.PureComponent {
               userToken={this.props.userToken}
               defaultState={this.state}
               apply={() => this.getReportLayout()}
-              disabled={this.state.isFilterApplied}
+              disabled={Boolean(this.state.isFilterApplied || !this.state.startDate || !this.state.endDate)}
               updateState={(key, value) => this.updateState(key, value)}
             />
           </Grid>
