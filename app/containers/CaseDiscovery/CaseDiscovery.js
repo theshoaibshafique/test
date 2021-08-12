@@ -1670,27 +1670,27 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = props => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag }) => {
 
   return (
     <div className="request-emm-modal">
       <div className="close-button">
-        <img src={Close} onClick={() => handleOpenRequestEMM(false)} />
+        <img src={Close} onClick={() => handleOpenAddFlag(false)} />
       </div>
-      {isRequestSubmitted ?
+      {isFlagSubmitted ?
         (<Grid container spacing={2} direction="column">
           <Grid item xs={12} className="header" style={{ maxWidth: 'none', marginBottom: 0 }}>
             <p>Thank you for submitting your request!</p>
           </Grid>
           <Grid item xs>
             Please note the Enhanced M&M ID for the report to be generated:
-            <span style={{ fontWeight: 'bold' }}>{` ${isRequestSubmitted}`}</span>
+            <span style={{ fontWeight: 'bold' }}>{` ${isFlagSubmitted}`}</span>
           </Grid>
           <Grid item xs>
             We will notify you when the report is ready on Insights for viewing.
           </Grid>
           <Grid item xs>
-            <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => handleOpenRequestEMM(false)}>Close</Button>
+            <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => handleOpenAddFlag(false)}>Close</Button>
           </Grid>
         </Grid>
         ) :
@@ -1699,12 +1699,12 @@ const AddFlagForm = props => {
             Submit Flag
           </div>
           <div className="subtitle">
-            {procedureTitle}
+            {/*procedureTitle*/`test`}
           </div>
           <div className="description">
-            {`test`}
+            {/*requestEMMDescription*/`test`}
           </div>
-            {flagData.map(el => renderFlagQuestion(el))}
+            {/* {flagData.map(el => renderFlagQuestion(el))} */}
       
         </div>}
     </div>
