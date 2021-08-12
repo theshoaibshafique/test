@@ -163,6 +163,9 @@ export default class SSChecklist extends React.PureComponent {
 
   getReportLayout() {
     this.state.source && this.state.source.cancel('Cancel outdated report calls');
+    if (!this.state.endDate || !this.state.startDate) {
+      return;
+    }
     this.setState({ tileRequest: [], reportData: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
       () => {
 
@@ -415,7 +418,7 @@ export default class SSChecklist extends React.PureComponent {
               userToken={this.props.userToken}
               defaultState={this.state}
               apply={() => this.getReportLayout()}
-              disabled={this.state.isFilterApplied}
+              disabled={Boolean(this.state.isFilterApplied || !this.state.startDate || !this.state.endDate)}
               updateState={(key, value) => this.updateState(key, value)}
             />
           </Grid>
