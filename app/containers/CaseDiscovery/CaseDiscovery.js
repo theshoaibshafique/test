@@ -589,7 +589,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       switch(flagData.type.toLowerCase()) {
         case 'single-choice':
         case 'multiple-choice':
-          return 'dropdown';
+          // TODO: render select list.
+          return 'AddFlagDropdown';
         case 'input':
           return 'input';
         default:
@@ -1398,7 +1399,7 @@ function DetailedCase(props) {
             {description}
           </div>
           <div className="tags">
-          <span className="case-tag add-flag" onClick={handleAddFlagClick}>
+            <span className="case-tag add-flag" onClick={handleAddFlagClick}>
               <img src={Plus} />
               <div>
                 Add Flag
@@ -1640,6 +1641,78 @@ function DetailedCase(props) {
     </Grid>
   )
 }
+
+/***  ADD FLAG FORM COMPONENT. ***/
+const AddFlagForm = props => {
+
+  return (
+    <div className="request-emm-modal">
+      <div className="close-button">
+        <img src={Close} onClick={() => handleOpenRequestEMM(false)} />
+      </div>
+      {isRequestSubmitted ?
+        (<Grid container spacing={2} direction="column">
+          <Grid item xs={12} className="header" style={{ maxWidth: 'none', marginBottom: 0 }}>
+            <p>Thank you for submitting your request!</p>
+          </Grid>
+          <Grid item xs>
+            Please note the Enhanced M&M ID for the report to be generated:
+            <span style={{ fontWeight: 'bold' }}>{` ${isRequestSubmitted}`}</span>
+          </Grid>
+          <Grid item xs>
+            We will notify you when the report is ready on Insights for viewing.
+          </Grid>
+          <Grid item xs>
+            <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => handleOpenRequestEMM(false)}>Close</Button>
+          </Grid>
+        </Grid>
+        ) :
+        <div className="request-emm">
+          <div className="header">
+            Submit Flag
+          </div>
+          <div className="subtitle">
+            {procedureTitle}
+          </div>
+          <div className="description">
+            {`test`}
+          </div>
+            {flagData.map(el => renderFlagQuestion(el))}
+      
+        </div>}
+    </div>
+  );
+}
+
+const AddFlagDropdown = props => (
+  <React.Fragment>
+    <TagsSelect
+      title="Complications"
+      placeholder="Select 1 or more"
+      options={COMPLICATIONS}
+      id="complications"
+      handleChange={handleChange}
+      searchData={requestData}
+    />
+    {!isComplicationFilled && !isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please select a complication</FormHelperText>}
+    <div className="input-label">
+      <Checkbox
+        disableRipple
+        id="other-complication-checkbox"
+        icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+        checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+        checked={isComplicationOtherChecked} onChange={(e) => setIsComplicationOtherChecked(e.target.checked)} />Other
+    </div>
+    {isComplicationOtherChecked && <TextField
+      id="complication-other"
+      variant="outlined"
+      size="small"
+      name="complicationValue"
+      onChange={(e) => handleChange('complicationOther', e.target.value)}
+    />}
+    {!isComplicationFilled && isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please enter a complication</FormHelperText>}
+  </React.Fragment>
+);
 
 
 const requestReducer = (state, event) => {
