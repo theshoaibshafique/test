@@ -583,6 +583,21 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     setOpenAddFlag(true);
   };
 
+  // Render flag submission question based on question type property value.
+  const renderFlagQuestion = flagData => {
+    if(flagData) {
+      switch(flagData.type.toLowerCase()) {
+        case 'single-choice':
+        case 'multiple-choice':
+          return 'dropdown';
+        case 'input':
+          return 'input';
+        default:
+          return null;
+      }
+    }
+  };
+
   console.log('flag data', flagData);
 
   // Scrol to top on filter change 
