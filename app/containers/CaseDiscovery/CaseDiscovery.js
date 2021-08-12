@@ -603,7 +603,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Render flag input component based on the option type for question of type input.
   const renderFlagInput = optionType => {
-    switch(optionType) {
+    switch(optionType.toLowerCase()) {
       case 'date':
       case 'datetime':
         return <AddFlagDatePicker />
@@ -1741,7 +1741,7 @@ const AddFlagDropdown = props => (
 const AddFlagInput = ({ optionType, title }) => (
   <React.Fragment>
     <InputLabel className={classes.inputLabel}>{title}</InputLabel>
-
+    {renderFlagInput(optionType)}
   </React.Fragment>
 );
 
