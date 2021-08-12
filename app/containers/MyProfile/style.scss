@@ -32,7 +32,9 @@
     .buttons {
         width: 235px;
         margin-top: 16px;
-        
+        .reset {
+            color: #028cc8;
+        }
         button {
             width: calc(50% - 8px);
             &:first-child{
