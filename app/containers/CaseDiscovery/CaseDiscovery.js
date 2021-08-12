@@ -601,6 +601,28 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
   };
 
+  // Render flag input component based on the option type for question of type input.
+  const renderFlagInput = optionType => {
+    switch(optionType) {
+      case 'date':
+      case 'datetime':
+        return <AddFlagDatePicker />
+      case 'numeric-integer':
+      case 'numeric-float':
+      case 'free-text':
+        return <TextField
+                id="complication-other"
+                variant="outlined"
+                size="small"
+                name="complicationValue"
+                type={optionType === 'numeric-integer || numeric-float' ? 'number' : 'text'}
+                onChange={(e) => handleChange('complicationOther', e.target.value)}
+              />
+      default:
+        return null;
+    }
+  };
+
   console.log('flag data', flagData);
 
   // Scrol to top on filter change 
