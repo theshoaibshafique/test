@@ -115,7 +115,7 @@ export default class MyProfile extends React.PureComponent {
     return (
       <section className="my-profile">
         <div><p className="profile-title">My Profile {!isEdit && <IconButton onClick={() => this.handleChange('isEdit', !isEdit)}>
-          <Icon path={mdiAccountEdit} size={'31px'} />
+          <Icon path={mdiAccountEdit} size={'31px'} style={{marginBottom:4}} />
         </IconButton>}</p></div>
 
         <div className="profile-box">
