@@ -1719,7 +1719,32 @@ const AddFlagDropdown = props => (
 const AddFlagInput = ({ optionType, title }) => (
   <React.Fragment>
     <InputLabel className={classes.inputLabel}>{title}</InputLabel>
-    
+
+  </React.Fragment>
+);
+
+const AddFlagDatePicker = props => (
+  <React.Fragment>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <DatePicker
+        disableToolbar
+        size="small"
+        variant="inline"
+        format="MM/dd/yyyy"
+        name="complicationDate"
+        minDate={scheduledStart}
+        maxDate={moment()}
+        placeholder="Pick Date"
+        inputVariant="outlined"
+        className="complicationDate"
+        autoOk
+        value={requestData.complicationDate || null}
+        inputProps={{ autoComplete: 'off' }}
+        onChange={(e, v) => handleChange('complicationDate', e)}
+        id="complicationDate"
+      />
+    </MuiPickersUtilsProvider>
+    {!isComplicationDateFilled && <FormHelperText className="Mui-error" >Please select a complication date</FormHelperText>}
   </React.Fragment>
 );
 
