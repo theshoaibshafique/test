@@ -592,6 +592,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           // TODO: render select list.
           return 'AddFlagDropdown';
         case 'input':
+          // render AddFlagInput
+          // pass down the option type to render correct input type. i.e. date / datetime / integer/ float /freetext
           return 'input';
         default:
           return null;
@@ -1711,6 +1713,13 @@ const AddFlagDropdown = props => (
       onChange={(e) => handleChange('complicationOther', e.target.value)}
     />}
     {!isComplicationFilled && isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please enter a complication</FormHelperText>}
+  </React.Fragment>
+);
+
+const AddFlagInput = ({ optionType, title }) => (
+  <React.Fragment>
+    <InputLabel className={classes.inputLabel}>{title}</InputLabel>
+    
   </React.Fragment>
 );
 
