@@ -593,7 +593,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         case 'single-choice':
         case 'multiple-choice':
           // TODO: render select list.
-          return 'AddFlagDropdown';
+          return (
+            <div>
+              <h4>{flagData.title}</h4>
+              {flagData.options.filter(opt => opt.type !== 'choice-other').map(opt => <div key={opt.id}>{opt.title}</div>)}
+            </div>
+          )
         case 'input':
           // render AddFlagInput
           // pass down the option type to render correct input type. i.e. date / datetime / integer/ float /freetext
@@ -641,7 +646,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       setFlagReportLocation(updateFlagLocation);
     // Handle flag option selection for multiple choice flag question.
     } else if(questionType.toLowerCase() === 'multiple-choice') {
-      
+
     }
   };
 
