@@ -626,6 +626,25 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
   };
 
+  // Handle flag option selection
+  const handleFlagSelect = (questionType, optionIndex) => {
+    // Handle flag option selection for single choice flag question.
+    if(questionType.toLowerCase() === 'single-choice') {
+      let updateFlagLocation = [...flagReportLocation];
+      // 1. Get the questions property for the selected option.
+      const tempFlagLocation = [...flagReportLocation, optionIndex];
+      const selectedOption = getQuestionByLocation(flagReport, tempFlagLocation);
+      // 2. If the questions property is not null, update flagReportLocation to point to the next question.
+      if(selectedOption.questions) {
+        updateFlagLocation = [...flagReportLocation,,optionIndex, 0];
+      }
+      setFlagReportLocation(updateFlagLocation);
+    // Handle flag option selection for multiple choice flag question.
+    } else if(questionType.toLowerCase() === 'multiple-choice') {
+      
+    }
+  };
+
   console.log('flag data', flagData);
 
   // Scrol to top on filter change 
