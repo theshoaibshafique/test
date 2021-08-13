@@ -596,7 +596,14 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           return (
             <div>
               <h4>{flagData.title}</h4>
-              {flagData.options.filter(opt => opt.type !== 'choice-other').map(opt => <div key={opt.id}>{opt.title}</div>)}
+              {flagData.options.filter(opt => opt.type !== 'choice-other').map((opt, idx) => 
+                  <div 
+                    key={opt.id} 
+                    onClick={() => handleFlagSelect(flagData.type, idx)}>
+                      {opt.title}
+                  </div>
+                )
+              }
             </div>
           )
         case 'input':
@@ -641,7 +648,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       const selectedOption = getQuestionByLocation(flagReport, tempFlagLocation);
       // 2. If the questions property is not null, update flagReportLocation to point to the next question.
       if(selectedOption.questions) {
-        updateFlagLocation = [...flagReportLocation,,optionIndex, 0];
+        updateFlagLocation = [...flagReportLocation, optionIndex, 0];
       }
       setFlagReportLocation(updateFlagLocation);
     // Handle flag option selection for multiple choice flag question.
