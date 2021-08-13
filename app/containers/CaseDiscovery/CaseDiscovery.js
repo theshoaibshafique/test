@@ -1102,6 +1102,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         showEMMReport={showEMMReport}
         openAddFlag={openAddFlag} 
         handleOpenAddFlag={handleOpenAddFlag}
+        flagData={flagData}
+        renderFlagQuestion={renderFlagQuestion}
       />
     </section>
   );
@@ -1194,7 +1196,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1665,12 +1667,23 @@ function DetailedCase(props) {
         </div>
 
       </Modal>
+      <Modal
+        open={openAddFlag}
+        onClose={() => handleOpenAddFlag(false)}
+      >
+        <AddFlagForm 
+          isFlagSubmitted={isFlagSubmitted}
+          handleOpenAddFlag={handleOpenAddFlag}
+          flagData={flagData}
+          renderFlagQuestion={renderFlagQuestion} 
+        />
+      </Modal>
     </Grid>
   )
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag }) => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion }) => {
 
   return (
     <div className="request-emm-modal">
@@ -1704,7 +1717,7 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag }) => {
           <div className="description">
             {/*requestEMMDescription*/`test`}
           </div>
-            {/* {flagData.map(el => renderFlagQuestion(el))} */}
+            {flagData && flagData.map(el => renderFlagQuestion(el))}
       
         </div>}
     </div>
