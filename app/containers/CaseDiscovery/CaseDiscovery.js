@@ -1858,7 +1858,9 @@ function ProcedureDistribution(props) {
   const range = [duration, ...globalFunctions.range(Math.max(0, mu - 4.5 * sigma), mu + 4.5 * sigma, sigma / 20)].sort();
   // console.log(range)
   const chartRef = useRef(null);
-
+  if (!shape || !scale){
+    return <div></div>
+  }
 
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
     d = d[0]
@@ -1906,9 +1908,9 @@ function ProcedureDistribution(props) {
       }
     },
     grid: {
-      x: {
+      x: duration > 0 ? {
         lines: [{ "value": duration, "text": globalFunctions.formatSecsToTime(duration, true, true), "class": "marker" }]
-      },
+      } : {},
     },
     legend: {
       show: false
