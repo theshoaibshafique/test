@@ -384,6 +384,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [flagReport, setFlagReport] = useState(null);
 
   const [flagReportLocation, setFlagReportLocation] = useState([]);
+  const [flagLocationPopped, setFlagLocationPopped] = useState(false);
   const [flagData, setFlagData] = useState([]);
   const [flagChoices, setFlagChoices] = useState([]);
 
@@ -574,6 +575,27 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       }
     }
   }, [flagReportLocation]);
+
+  // Pop last 2 elements of flagReportLocation array off when the current questions array at the current 'level' has no more questions.
+  useEffect(() => {
+    // if atleast 2 elements have been removed from the end of the flagReportLocation array.
+    if(flagLocationPopped) {
+      let updatedFlagLocation = [...flagReportLocation];
+      // Check whether we are not yet at the last question in the current questions array.
+      if((getQuestionCount(flagReport, flagReportLocation) && getQuestionCount(flagReport, flagReportLocation) - 1) > flagReportLocation[flagReportLocation.length - 1]) {
+        // If not at last element in questions array, increment last value in flagReportLocation array by 1 to render next ques. in array.
+        updatedFlagLocation[updatedFlagLocation.length - 1] = updatedFlagLocation[updatedFlagLocation,length - 1] + 1;
+      // If we are already at the last question in current questions array.
+      } else {
+        // Remove laste 2 elems in flagReportLocation array.
+        updatedFlagLocation = updatedFlagLocation.slice(0, -2);
+        // Check whether flagReportLocation array is empty, if so reset flagLocationPopped state val to false.
+        if(flagReportLocation.length === 0) setFlagLocationPopped(false);
+      }
+      // Update flagReportLocation state.
+      setFlagReportLocation(updatedFlagLocation);
+    }
+  }, [flagLocationPopped, flagReportLocation.length]);
 
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = (open) => {
