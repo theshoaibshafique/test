@@ -140,5 +140,25 @@ export const getQuestionByLocation = (flagReport, flagReportLocation) => {
         // console.log('path', `report${path}`);
         // return question path.
         return eval(`flagReport${path}`);
-      }
+        }
 };
+
+export const getQuestionCount = (flagReport, flagReportLocation) => {
+    let path = '';
+    for(let i = 0; i < flagReportLocation.length; i++) {
+      // If we are at an even index and at the last element in the location array.
+      if(i % 2 === 0 && i === flagReportLocation.length - 1) {
+        // concat .questions to path.
+        path += `.questions`;
+      } else if(i % 2 === 0 && i !== flagReportLocation.length - 1) {
+        path += `.questions[${flagReportLocation[i]}]`;
+      } else if(i % 2 !== 0) {
+        path += `.options[${flagReportLocation[i]}]`;
+      }
+    }
+    // console.log(eval(`report${path}`));
+    const questionArray = eval(`flagReport${path}`);
+    if(questionArray) {
+      return questionArray.length;
+    }
+  };
