@@ -44,7 +44,7 @@ import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation } from './Utils';
+import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation, getQuestionCount } from './Utils';
 import { useSelector } from 'react-redux';
 import { makeSelectComplications, makeSelectIsAdmin, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
@@ -649,6 +649,19 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       // 2. If the questions property is not null, update flagReportLocation to point to the next question.
       if(selectedOption.questions) {
         updateFlagLocation = [...flagReportLocation, optionIndex, 0];
+        // If the questions property is null update flagReportLocation accordingly.
+      } else {
+        // get the number of questions in the current questions array.
+        const questionCount = getQuestionCount(flagReport, flagReportLocation);
+        // Check whether there is another question in the questions array (i.e whether the current ques is not the last ques in the questions array).
+        if((questionCount && questionCount.length - 1) > flagReportLocation[flagReportLocation.length - 1]) {
+          const lastLocation = updateFlagLocation.pop();
+          updateFlagLocation = [...updateFlagLocation, lastLocation + 1];
+          // check whether we are currently looking at the last question in the questions array.
+        } else if((questionCount && questionCount.length - 1) <= flagReportLocation[flagReportLocation.length - 1]) {
+          updateFlagLocation = updateFlagLocation.slice(0, -2);
+          // TODO: add isPopped state to comp and update to true.
+        }
       }
       setFlagReportLocation(updateFlagLocation);
     // Handle flag option selection for multiple choice flag question.
