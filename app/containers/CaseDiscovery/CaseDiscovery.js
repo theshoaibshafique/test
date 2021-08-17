@@ -54,6 +54,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
+import FlagSubmission from '../FlagSubmission/FlagSubmission';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -610,23 +611,27 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Render flag submission question based on question type property value.
   const renderFlagQuestion = flagData => {
+    console.log('flag data', flagData);
     if(flagData) {
       switch(flagData.type.toLowerCase()) {
         case 'single-choice':
         case 'multiple-choice':
           // TODO: render select list.
           return (
-            <div>
-              <h4>{flagData.title}</h4>
-              {flagData.options.filter(opt => opt.type !== 'choice-other').map((opt, idx) => 
-                  <div 
-                    key={opt.id} 
-                    onClick={() => handleFlagSelect(flagData.type, idx)}>
-                      {opt.title}
-                  </div>
-                )
-              }
-            </div>
+            // <div>
+            //   <h4>{flagData.title}</h4>
+            //   {flagData.options.filter(opt => opt.type !== 'choice-other').map((opt, idx) => 
+            //       <div 
+            //         key={opt.id} 
+            //         onClick={() => handleFlagSelect(flagData.type, idx)}>
+            //           {opt.title}
+            //       </div>
+            //     )
+            //   }
+            // </div>
+            <FlagSubmission
+              options={flagData.options.filter(opt => opt.type !== 'choice-other')}
+            />
           )
         case 'input':
           // render AddFlagInput
