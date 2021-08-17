@@ -631,6 +631,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             // </div>
             <FlagSubmission
               options={flagData.options.filter(opt => opt.type !== 'choice-other')}
+              questionType={flagData.type}
+              onSelect={handleFlagSelect}
             />
           )
         case 'input':
