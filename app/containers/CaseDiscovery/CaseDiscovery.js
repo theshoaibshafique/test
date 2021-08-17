@@ -1742,7 +1742,9 @@ function DetailedCase(props) {
           isFlagSubmitted={isFlagSubmitted}
           handleOpenAddFlag={handleOpenAddFlag}
           flagData={flagData}
-          renderFlagQuestion={renderFlagQuestion} 
+          renderFlagQuestion={renderFlagQuestion}
+          procedureTitle={procedureTitle}
+          requestEMMDescription={requestEMMDescription} 
         />
       </Modal>
     </Grid>
@@ -1750,7 +1752,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion }) => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription }) => {
 
   return (
     <div className="request-emm-modal">
@@ -1779,10 +1781,10 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
             Submit Flag
           </div>
           <div className="subtitle">
-            {/*procedureTitle*/`test`}
+            {procedureTitle}
           </div>
           <div className="description">
-            {/*requestEMMDescription*/`test`}
+            {requestEMMDescription}
           </div>
             {flagData && flagData.map(el => renderFlagQuestion(el))}
       
