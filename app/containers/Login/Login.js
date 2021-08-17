@@ -138,6 +138,7 @@ export default class Login extends React.PureComponent {
 
   setLogger() {
     if (this.props.logger) {
+      this.props.logger.userToken = this.props.userToken;
       return;
     }
 
