@@ -123,6 +123,7 @@ export default class Login extends React.PureComponent {
     localStorage.setItem('refreshToken', JSON.stringify({ refreshToken: refreshToken, expiresAt: expiresAt * 1000 }));
     this.props.setUserToken(accessToken);
     if (this.props.logger) {
+      this.props.logger.userToken = this.props.userToken;
       return;
     }
     globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', accessToken, {})
@@ -137,11 +138,6 @@ export default class Login extends React.PureComponent {
   }
 
   setLogger() {
-    if (this.props.logger) {
-      this.props.logger.userToken = this.props.userToken;
-      return;
-    }
-
     this.props.setLogger(new Logger(this.props.userToken))
   }
 
