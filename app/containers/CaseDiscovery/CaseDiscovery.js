@@ -683,6 +683,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         } else if((questionCount && questionCount.length - 1) <= flagReportLocation[flagReportLocation.length - 1]) {
           updateFlagLocation = updateFlagLocation.slice(0, -2);
           // TODO: add isPopped state to comp and update to true.
+          setFlagLocationPopped(true);
         }
       }
       setFlagReportLocation(updateFlagLocation);
