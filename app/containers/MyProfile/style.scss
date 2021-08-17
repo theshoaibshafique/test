@@ -1,7 +1,7 @@
+@import "../../styles/global-styles";
 .profile-title {
     font-size: 26px;
     line-height: 36px;
-    padding-bottom: 25px;
 }
 
 .profile-box {
@@ -13,9 +13,11 @@
 }
 
 .user-info-buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 450px;
+    margin: 16px 0;
+    
+    button { 
+        width: 235px;
+    }
 }
 
 .first-column {
@@ -25,4 +27,45 @@
 .bottom-spacer {
     padding-bottom: 30px;
     padding-top: 4px;
+}
+.my-profile{
+    .buttons {
+        width: 235px;
+        margin-top: 16px;
+        .reset {
+            color: #028cc8;
+        }
+        button {
+            width: calc(50% - 8px);
+            &:first-child{
+                margin-right: 16px;
+            }
+            &[disabled] {
+                color: #fff;
+                opacity: 0.6;
+            }
+        }
+    }
+    .loader {
+        border: 6px solid $light-grey;
+        border-top: 6px solid $light-blue;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    .user-field{
+        .MuiFormHelperText-contained{
+            margin-left: 0;
+        }
+    }
 }

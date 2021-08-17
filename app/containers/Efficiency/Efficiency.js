@@ -59,13 +59,11 @@ export default class Efficiency extends React.PureComponent {
       if (selectedSpecialty && !selectedSpecialty.value) {
         selectedSpecialty = "";
       }
-      let startDate = this.state.startDate;
-      let endDate = this.state.endDate;
-      //if either are null then set to last valid date or latest date with data
-      if (!startDate || !endDate) {
-        const recentSearchCache = JSON.parse(localStorage.getItem('efficiencyFilter-' + this.props.userEmail));
-        startDate = moment(recentSearchCache.startDate) || moment().subtract(1, 'month').startOf('month');
-        endDate = moment(recentSearchCache.endDate) || moment().subtract(1, 'month').endOf('month');
+      //If they change the page without setting a start/endDate we use the default date
+      let {startDate, endDate, defaultStartDate, defaultEndDate} = this.state;
+      if (!endDate || !startDate) {
+        startDate= defaultStartDate
+        endDate= defaultEndDate
       }
       this.setState({
         reportType: this.props.reportType,
@@ -150,7 +148,8 @@ export default class Efficiency extends React.PureComponent {
         this.setState({
           earliestStartDate, latestEndDate, startDate, endDate, fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, pendingWarning,
           gracePeriodMinute, outlierThresholdHrs, outlierThresholdMinute, hasEMR: result.hasEMR, hospitalAbbr: result.abbreviation,
-          specialties, ors
+          specialties, ors,
+          defaultStartDate: startDate, defaultEndDate: endDate
         }, () => {
           this.getReportLayout();
         });

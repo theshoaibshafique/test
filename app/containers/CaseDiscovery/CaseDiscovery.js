@@ -118,6 +118,15 @@ function getTag(tag) {
   }
 }
 
+function transformTagValue(tag, value) {
+  switch(tag && tag.toLowerCase()) {
+    case "hypothermia":
+      return value.replace('35°C', '35°C / 95°F');
+    default:
+      return value;
+  }
+}
+
 function displayTags(tags, emrCaseId) {
   return tags.map((tag, i) => {
     let desc = tag.toolTip || [];
@@ -697,6 +706,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const result = []
     const tag_info = TAG_INFO;
     const isAdmin = makeSelectIsAdmin();
+    let transformedValue;
     const updateInAdmin = isAdmin && (
       <span>
         (<NavLink to={"/adminPanel/1"} className='link admin-link'>
@@ -705,7 +715,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       </span>)
     tag_info['Late First Case'] = (
       <span>
-        {`Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true)}`}
+        {`Identifies cases that were the first case of the block and had a late start beyond the ${facilityName} specified grace period of ${globalFunctions.formatSecsToTime(gracePeriod, true, true).length > 2 ? globalFunctions.formatSecsToTime(gracePeriod, true, true) : '0 min '}`}
         {updateInAdmin}
       </span>)
     tag_info['Slow Turnover'] = (
@@ -727,7 +737,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           </div>
         </Grid>
       );
-      result.push(<Grid item xs={9} className="info-column" key='info-col'>{value}</Grid>);
+      transformedValue = transformTagValue(tag, value);
+      result.push(<Grid item xs={9} className="info-column" key='info-col'>{transformedValue}</Grid>);
     }
 
     return (
@@ -1100,19 +1111,19 @@ function DetailedCase(props) {
 
   const procedureTitle = procedures[0].procedureName;
 
-  const dayDiff = moment().diff(moment(wheelsIn), 'days');
+  const dayDiff = moment().endOf('day').diff(moment(wheelsIn).endOf('day'), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
   const blockStartTime = moment(blockStart, 'HH:mm:ss');
   const blockEndTime = moment(blockEnd, 'HH:mm:ss');
   const bStartTime = globalFunctions.getDiffFromMidnight(blockStartTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
   const bEndTime = globalFunctions.getDiffFromMidnight(blockEndTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
 
-  const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) - 1;
+  const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) ;
   const latestEndTime = roomCases.reduce((max, c) => globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
-  const scheduleDuration = (latestEndTime) - (earliestStartTime);
+  const scheduleDuration = Math.ceil(latestEndTime) - (earliestStartTime);
 
   const description = (
-    <div>
+    <div style={{lineBreak:'anywhere'}}>
       <span>Case ID: {emrCaseId}</span>
       <span>Surgeon ID: {`${surgeonId}`}</span>
       <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'days'} ago)`}</span>
@@ -1326,8 +1337,8 @@ function DetailedCase(props) {
                   </Grid>
                   <Grid item xs className="actual-start">
 
-                    <div className="timing-header">{moment(scheduledStart).format("HH:mm:ss")}</div>
-                    <div className="timing-value">{moment(wheelsIn).format("HH:mm:ss")}</div>
+                    <div className="timing-header">{moment(scheduledStart).format("HH:mm")}</div>
+                    <div className="timing-value">{moment(wheelsIn).format("HH:mm")}</div>
                     <div className="laterality">
                       {lateralityIcon}
                     </div>
@@ -1379,9 +1390,9 @@ function DetailedCase(props) {
           </div>
 
           {/* Add time markers */}
-          {Array.from({ length: Math.round(scheduleDuration) }, (x, i) => {
+          {Array.from({ length: Math.ceil(scheduleDuration) }, (x, i) => {
             const now = moment().toDate()
-            let cTime = Math.round(earliestStartTime) + i;
+            let cTime = Math.floor(earliestStartTime) + i;
             now.setHours(cTime);
             now.setMinutes(0);
             const formattedTime = moment(now).format("HH:mm");
@@ -1413,9 +1424,10 @@ function DetailedCase(props) {
           {/* Display all cases given  */}
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
-
-            const startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - (earliestStartTime * 60);
-            const endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - (earliestStartTime * 60);
+            // We offset by "Earliest start time" (could be 6:22 am) + the straggling minutes (22mins) since the labels display only 6am
+            const offset = ((earliestStartTime + (1-earliestStartTime %1) -1) * 60 );
+            let startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - offset;
+            let endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - offset;
             const caseHeight = (endMins - startMins) / 60;
             return (
               <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 34 && 'short'} ${caseHeight * HOUR_SIZE <= 83 && 'medium'}`}
@@ -1589,7 +1601,9 @@ function ProcedureDistribution(props) {
   const range = [duration, ...globalFunctions.range(Math.max(0, mu - 4.5 * sigma), mu + 4.5 * sigma, sigma / 20)].sort();
   // console.log(range)
   const chartRef = useRef(null);
-
+  if (!shape || !scale){
+    return <div></div>
+  }
 
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
     d = d[0]
@@ -1637,9 +1651,9 @@ function ProcedureDistribution(props) {
       }
     },
     grid: {
-      x: {
+      x: duration > 0 ? {
         lines: [{ "value": duration, "text": globalFunctions.formatSecsToTime(duration, true, true), "class": "marker" }]
-      },
+      } : {},
     },
     legend: {
       show: false

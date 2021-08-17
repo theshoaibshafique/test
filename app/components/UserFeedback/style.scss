@@ -29,8 +29,8 @@
     &.open {
         padding: 16px 24px;
         width: 330px;
-        // bottom: 20px;
         height: 400px;
+        z-index: 301;
         .feedback-form {
             opacity: 1;
             height: 100%;
