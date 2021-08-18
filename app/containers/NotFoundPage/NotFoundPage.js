@@ -5,8 +5,7 @@
  */
 
 import React from 'react';
-import './style.scss';
-import { Grid } from '@material-ui/core';
+import GenericMessage from '../GenericMessage';
 
 export default class NotFoundPage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -20,17 +19,7 @@ export default class NotFoundPage extends React.PureComponent { // eslint-disabl
 
   render() {
     return (
-      <div className="not-found-page">
-        <Grid container spacing={0} direction="column" justify="center">
-          <Grid item xs className="title">
-            Page Not Found
-        </Grid>
-          <div item xs className="title-break"></div>
-          <Grid item xs className="content normal-text">
-            The page you are looking for might have been removed, had its name changed, or temporarily unavailable. Contact your administrator or go back to the previous page.
-        </Grid>
-        </Grid>
-      </div>
+      <GenericMessage title={'Page Not Found'} message={'The page you are looking for might have been removed, had its name changed, or temporarily unavailable. Contact your administrator or go back to the previous page.'}/>
     );
   }
 }
