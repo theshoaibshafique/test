@@ -644,7 +644,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const urlParams = new URLSearchParams(window.location.search)
   //Open the caseId through URL
-  const manualCaseId = urlParams.get('case_id')
+  const manualCaseId = urlParams.get('caseId')
   //Remove from URL
   if (manualCaseId){
     window.history.pushState({}, document.title, window.location.pathname);
