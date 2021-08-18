@@ -387,6 +387,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [flagLocationPopped, setFlagLocationPopped] = useState(false);
   const [flagData, setFlagData] = useState([]);
   const [flagChoices, setFlagChoices] = useState([]);
+  const [isFlagOtherChecked, setIsFlagOtherChecked] = useState(false);
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -633,8 +634,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                       id="other-complication-checkbox"
                       icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
                       checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-                      // checked={isComplicationOtherChecked} 
-                      // onChange={(e) => setIsComplicationOtherChecked(e.target.checked)} 
+                      checked={isFlagOtherChecked} 
+                      onChange={(e) => setIsFlagOtherChecked(e.target.checked)} 
                     />
                       Other
                   </div>
