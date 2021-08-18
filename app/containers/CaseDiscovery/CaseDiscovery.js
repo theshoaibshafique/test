@@ -633,6 +633,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
               options={flagData.options.filter(opt => opt.type !== 'choice-other')}
               questionType={flagData.type}
               onSelect={handleFlagSelect}
+              isRequired={flagData.isRequired}
             />
           )
         case 'input':

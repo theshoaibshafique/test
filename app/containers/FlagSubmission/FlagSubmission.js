@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
-const FlagSubmission = ({ title, questionType, options, onSelect }) => {
+const FlagSubmission = ({ title, questionType, options, onSelect, isRequired }) => {
   const [value, setValue] = useState(null);
 
   // OnChange handler.
@@ -16,15 +16,18 @@ const FlagSubmission = ({ title, questionType, options, onSelect }) => {
   };
 
   return (
-    <Autocomplete
-      id="combo-box-demo"
-      value={value}
-      onChange={onOptionChange}
-      options={options}
-      getOptionLabel={(option) => option.title}
-      style={{ width: '100%' }}
-      renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
-    />
+    <React.Fragment>
+      <p>{`(${!isRequired ? 'required' : 'optional'})`}</p>
+      <Autocomplete
+        id="combo-box-demo"
+        value={value}
+        onChange={onOptionChange}
+        options={options}
+        getOptionLabel={(option) => option.title}
+        style={{ width: '100%' }}
+        renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
+      />
+    </React.Fragment>
   );
 };
 
