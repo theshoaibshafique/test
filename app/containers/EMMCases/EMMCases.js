@@ -110,7 +110,7 @@ export default class EMMCases extends React.PureComponent {
               requestId: savedResult.name,
               procedureNames: this.hashMapSearch(surgeryMap, savedResult.procedure),
               complicationNames: this.hashMapSearch(complicationsMap, savedResult.complications),
-              operatingRoom: operatingRoom,
+              operatingRoom: operatingRoom || savedResult.roomName,
               reportPublished: savedResult.enhancedMMPublished,
               enhancedMMReferenceName: savedResult.enhancedMMReferenceName
             })

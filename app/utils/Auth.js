@@ -19,6 +19,7 @@ export function redirectLogin(logger) {
     logger && logger.sendLogs();
     const state = `&state=${generate_code_verifier()}`;
     localStorage.setItem('state', state);
+    localStorage.setItem('redirect', window.location.pathname + window.location.search)
 
     const parameters = `${redirectUri}${code_challenge}${code_challenge_method}${clientId}${state}${response_type}${grant_type}${scope}`
     return  `${url}${parameters}`;

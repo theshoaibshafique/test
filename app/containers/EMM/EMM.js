@@ -67,13 +67,23 @@ export default class EMM extends React.PureComponent {
             }
           });
 
+
           this.setState({
             procedureNames: procedureNames,
             complicationNames: complicationList.join(', '),
-            operatingRoom: operatingRoom,
+            operatingRoom: operatingRoom || result.roomName,
             compDate: new Date(result.postOpDate).toLocaleDateString(),
             enhancedMMReferenceName: result.enhancedMMReferenceName,
             enhancedMMPublished: result.enhancedMMPublished
+          }, () => {
+            const urlParams = new URLSearchParams(window.location.search)
+            //Open the caseId through URL
+            const isOpen = urlParams.get('open');
+            //Remove from URL
+            if (isOpen) {
+              window.history.pushState({}, document.title, window.location.pathname);
+              this.openReport();
+            }
           });
         }
       });

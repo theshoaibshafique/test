@@ -10,6 +10,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import globalFuncs, { getCdnStreamCookies } from '../../utils/global-functions';
 import EMMOverview from './EMMOverview'
 import EMMPhaseAnalysis from './EMMPhaseAnalysis'
+import GenericMessage from '../GenericMessage';
 
 const ConfirmPublishDialog = (props) => {
   const { dialogOpen, closePublishDialog } = props;
@@ -220,6 +221,27 @@ export default class EMMReports extends React.PureComponent {
     if (emmReportData)
       showPublishButton = emmPublishAccess && !emmReportData.published && !isPublished
 
+    let displayView = null;
+    if (emmReportData && !emmReportData.facilityName){
+      displayView = (
+        <div style={{height:'50vh'}}>
+          <GenericMessage title={'Report Not Found'} message={'Please contact your administrator'}/>
+        </div>
+      )
+    } else if (emmReportTab === 'overview') {
+      displayView = <EMMOverview
+        tabShowing={emmReportTab === 'overview'}
+      />
+    } else {
+      displayView = <EMMPhaseAnalysis
+        tabShowing={emmReportTab === 'phase'}
+        phases={emmReportData.enhancedMMPages}
+        isPublished={isPublished}
+      />
+    }
+
+
+
     return (
       <div className="EMM-REPORTS-SCROLL">
         {(isSafari && !emmPresenterMode) && <div className="Presenter-Mode-Banner">You are currently using an unsupported browser.</div>}
@@ -262,16 +284,7 @@ export default class EMMReports extends React.PureComponent {
                   </div>
                 </div>
               </div>
-              {(emmReportTab === 'overview') ?
-                <EMMOverview
-                  tabShowing={emmReportTab === 'overview'}
-                /> :
-                <EMMPhaseAnalysis
-                  tabShowing={emmReportTab === 'phase'}
-                  phases={emmReportData.enhancedMMPages}
-                  isPublished={isPublished}
-                />
-              }
+              {displayView}
             </div>
           </div>
         }

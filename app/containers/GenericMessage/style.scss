@@ -1,11 +1,11 @@
-.no-access {
+.generic-message {
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 100%;
   .title {
-    color: #004f6e;
+    color: #004F6E;
     font-family: "Noto Sans";
     font-size: 26px;
     letter-spacing: 0;
@@ -14,9 +14,9 @@
   .title-break {
     height: 1px;
     width: 120px;
-    background-color: #c8c8c8;
-    margin: auto;
-    margin-top: 8px;
+    background-color: #C8C8C8;
+    margin:auto;
+    margin-top:8px;
     margin-bottom: 24px;
   }
   .content {
