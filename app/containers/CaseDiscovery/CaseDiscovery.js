@@ -387,7 +387,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [flagLocationPopped, setFlagLocationPopped] = useState(false);
   const [flagData, setFlagData] = useState([]);
   const [flagChoices, setFlagChoices] = useState([]);
-  const [isFlagOtherChecked, setIsFlagOtherChecked] = useState(false);
+  const [isFlagOtherChecked, setIsFlagOtherChecked] = useState({});
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -609,6 +609,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     setOpenAddFlag(open);
   };
 
+
   // Render flag submission question based on question type property value.
   const renderFlagQuestion = flagData => {
     console.log('flag data', flagData);
@@ -625,6 +626,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                 questionType={flagData.type}
                 onSelect  ={handleFlagSelect}
                 isRequired={flagData.isRequired}
+                disabled={isFlagOtherChecked[flagData.id]}
               />
               {flagData.options.some(opt => opt.type === 'choice-other') &&
                 (
@@ -634,11 +636,26 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                       id="other-complication-checkbox"
                       icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
                       checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-                      checked={isFlagOtherChecked} 
-                      onChange={(e) => setIsFlagOtherChecked(e.target.checked)} 
+                      checked={isFlagOtherChecked[flagData.id]} 
+                      onChange={(e) => setIsFlagOtherChecked(prevState => {
+                        // console.log('checked val', e.target.checked)
+                        return {...prevState, [flagData.id]: e.target && e.target.checked}
+                      })} 
                     />
                       Other
                   </div>
+                )
+              }
+              {isFlagOtherChecked[flagData.id] && 
+                (
+                  <TextField
+                    id="complication-other"
+                    variant="outlined"
+                    size="small"
+                    name="complicationValue"
+                    type="text"
+                    onChange={(e) => handleChange('complicationOther', e.target.value)}
+                  />
                 )
               }
             </React.Fragment>
@@ -710,6 +727,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   };
 
   console.log('flag data', flagData);
+  console.log('isFlagOtherChecked', isFlagOtherChecked);
 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
@@ -1809,7 +1827,7 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
   );
 };
 
-const FlagSelect = ({ title, questionType, options, onSelect, isRequired }) => {
+const FlagSelect = ({ title, questionType, options, onSelect, isRequired, disabled }) => {
   const [value, setValue] = useState(null);
 
   const classes = useStyles();
@@ -1840,6 +1858,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired }) => {
         getOptionLabel={(option) => option.title}
         style={{ width: '100%' }}
         multiple={questionType === 'multiple-choice'}
+        disabled={disabled}
         renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
       />
     </React.Fragment>
