@@ -629,10 +629,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             //     )
             //   }
             // </div>
-            <FlagSubmission
+            <FlagSelect
+              title={flagData.title}
               options={flagData.options.filter(opt => opt.type !== 'choice-other')}
               questionType={flagData.type}
-              onSelect={handleFlagSelect}
               isRequired={flagData.isRequired}
             />
           )
@@ -1799,7 +1799,42 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
         </div>}
     </div>
   );
-}
+};
+
+const FlagSelect = ({ title, questionType, options, isRequired }) => {
+  const [value, setValue] = useState(null);
+
+  const classes = useStyles();
+
+  // OnChange handler.
+  const onOptionChange = (event, newValue) => {
+    // Retrieve selected options index.
+    const optionIndex = options.findIndex(opt => opt.id === newValue.id);
+    setValue(newValue);
+    // Load next flag question.
+    handleFlagSelect(questionType, optionIndex);
+  };
+
+  return (
+    <React.Fragment>
+      <div className="select-header">
+        <InputLabel className={classes.inputLabel}>{`${title} (${isRequired ? 'required' : 'optional'})`}</InputLabel>
+        <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
+          Clear
+        </div>
+      </div>
+      <Autocomplete
+        id="combo-box-demo"
+        value={value}
+        onChange={onOptionChange}
+        options={options}
+        getOptionLabel={(option) => option.title}
+        style={{ width: '100%' }}
+        renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
+      />
+    </React.Fragment>
+  );
+};
 
 const AddFlagInput = ({ optionType, title }) => (
   <React.Fragment>
