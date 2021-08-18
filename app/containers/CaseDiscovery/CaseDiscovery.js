@@ -1770,7 +1770,7 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
       {isFlagSubmitted ?
         (<Grid container spacing={2} direction="column">
           <Grid item xs={12} className="header" style={{ maxWidth: 'none', marginBottom: 0 }}>
-            <p>Thank you for submitting your request!</p>
+            <p>Thank you for submitting flag!</p>
           </Grid>
           <Grid item xs>
             Please note the Enhanced M&M ID for the report to be generated:
@@ -1800,36 +1800,6 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
     </div>
   );
 }
-
-const AddFlagDropdown = props => (
-  <React.Fragment>
-    <TagsSelect
-      title="Complications"
-      placeholder="Select 1 or more"
-      options={COMPLICATIONS}
-      id="complications"
-      handleChange={handleChange}
-      searchData={requestData}
-    />
-    {!isComplicationFilled && !isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please select a complication</FormHelperText>}
-    <div className="input-label">
-      <Checkbox
-        disableRipple
-        id="other-complication-checkbox"
-        icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-        checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-        checked={isComplicationOtherChecked} onChange={(e) => setIsComplicationOtherChecked(e.target.checked)} />Other
-    </div>
-    {isComplicationOtherChecked && <TextField
-      id="complication-other"
-      variant="outlined"
-      size="small"
-      name="complicationValue"
-      onChange={(e) => handleChange('complicationOther', e.target.value)}
-    />}
-    {!isComplicationFilled && isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please enter a complication</FormHelperText>}
-  </React.Fragment>
-);
 
 const AddFlagInput = ({ optionType, title }) => (
   <React.Fragment>
