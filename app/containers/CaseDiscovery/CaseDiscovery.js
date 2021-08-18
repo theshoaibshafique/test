@@ -54,7 +54,6 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
-import FlagSubmission from '../FlagSubmission/FlagSubmission';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -618,23 +617,31 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         case 'multiple-choice':
           // TODO: render select list.
           return (
-            // <div>
-            //   <h4>{flagData.title}</h4>
-            //   {flagData.options.filter(opt => opt.type !== 'choice-other').map((opt, idx) => 
-            //       <div 
-            //         key={opt.id} 
-            //         onClick={() => handleFlagSelect(flagData.type, idx)}>
-            //           {opt.title}
-            //       </div>
-            //     )
-            //   }
-            // </div>
-            <FlagSelect
-              title={flagData.title}
-              options={flagData.options.filter(opt => opt.type !== 'choice-other')}
-              questionType={flagData.type}
-              isRequired={flagData.isRequired}
-            />
+            <React.Fragment>
+              <FlagSelect
+                title={flagData.title}
+                options={flagData.options.filter(opt => opt.type !== 'choice-other')}
+                questionType={flagData.type}
+                onSelect  ={handleFlagSelect}
+                isRequired={flagData.isRequired}
+              />
+              {flagData.options.some(opt => opt.type === 'choice-other') &&
+                (
+                  <div className="input-label">
+                    <Checkbox
+                      disableRipple
+                      id="other-complication-checkbox"
+                      icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                      checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                      // checked={isComplicationOtherChecked} 
+                      // onChange={(e) => setIsComplicationOtherChecked(e.target.checked)} 
+                    />
+                      Other
+                  </div>
+                )
+              }
+            </React.Fragment>
+
           )
         case 'input':
           // render AddFlagInput
@@ -1801,7 +1808,7 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
   );
 };
 
-const FlagSelect = ({ title, questionType, options, isRequired }) => {
+const FlagSelect = ({ title, questionType, options, onSelect, isRequired }) => {
   const [value, setValue] = useState(null);
 
   const classes = useStyles();
@@ -1812,7 +1819,7 @@ const FlagSelect = ({ title, questionType, options, isRequired }) => {
     const optionIndex = options.findIndex(opt => opt.id === newValue.id);
     setValue(newValue);
     // Load next flag question.
-    handleFlagSelect(questionType, optionIndex);
+    onSelect(questionType, optionIndex);
   };
 
   return (
@@ -1825,11 +1832,13 @@ const FlagSelect = ({ title, questionType, options, isRequired }) => {
       </div>
       <Autocomplete
         id="combo-box-demo"
+        size="small"
         value={value}
         onChange={onOptionChange}
         options={options}
         getOptionLabel={(option) => option.title}
         style={{ width: '100%' }}
+        multiple={questionType === 'multiple-choice'}
         renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
       />
     </React.Fragment>
