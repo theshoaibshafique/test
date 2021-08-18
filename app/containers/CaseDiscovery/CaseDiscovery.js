@@ -622,30 +622,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             <React.Fragment>
               <FlagSelect
                 title={flagData.title}
-                options={flagData.options.sort((a, b) => a.optionOrder - b.optionOrder)}
+                options={flagData.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other - Please specify'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
                 questionType={flagData.type}
                 onSelect  ={handleFlagSelect}
                 isRequired={flagData.isRequired}
                 disabled={isFlagOtherChecked[flagData.id]}
               />
-              {flagData.options.some(opt => opt.type === 'choice-other') &&
-                (
-                  <div className="input-label">
-                    <Checkbox
-                      disableRipple
-                      id="other-complication-checkbox"
-                      icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                      checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-                      checked={isFlagOtherChecked[flagData.id]} 
-                      onChange={(e) => setIsFlagOtherChecked(prevState => {
-                        // console.log('checked val', e.target.checked)
-                        return {...prevState, [flagData.id]: e.target && e.target.checked}
-                      })} 
-                    />
-                      Other
-                  </div>
-                )
-              }
+       
               {isFlagOtherChecked[flagData.id] && 
                 (
                   <TextField
