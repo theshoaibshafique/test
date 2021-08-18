@@ -67,6 +67,7 @@ export default class EMM extends React.PureComponent {
             }
           });
 
+
           this.setState({
             procedureNames: procedureNames,
             complicationNames: complicationList.join(', '),
@@ -74,6 +75,15 @@ export default class EMM extends React.PureComponent {
             compDate: new Date(result.postOpDate).toLocaleDateString(),
             enhancedMMReferenceName: result.enhancedMMReferenceName,
             enhancedMMPublished: result.enhancedMMPublished
+          }, () => {
+            const urlParams = new URLSearchParams(window.location.search)
+            //Open the caseId through URL
+            const isOpen = urlParams.get('open');
+            //Remove from URL
+            if (isOpen) {
+              window.history.pushState({}, document.title, window.location.pathname);
+              this.openReport();
+            }
           });
         }
       });

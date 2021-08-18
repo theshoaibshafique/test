@@ -642,8 +642,15 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const isCustomDate = searchData.date.selected == "Custom";
 
+  const urlParams = new URLSearchParams(window.location.search)
+  //Open the caseId through URL
+  const manualCaseId = urlParams.get('caseId')
+  //Remove from URL
+  if (manualCaseId){
+    window.history.pushState({}, document.title, window.location.pathname);
+  }
   // Set CaseID for detailed case view
-  const [caseId, setCaseId] = React.useState(null);
+  const [caseId, setCaseId] = React.useState(manualCaseId);
   const handleChangeCaseId = (cId) => {
     //Handle close case
     if (!cId && DETAILED_CASE) {
@@ -985,6 +992,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           setDetailedCase(result)
         }).catch((error) => {
           console.log("oh no " + error)
+          setCaseId(null)
         }).finally(() => {
 
         });

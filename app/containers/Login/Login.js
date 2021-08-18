@@ -27,7 +27,7 @@ export default class Login extends React.PureComponent {
       return;
     }
     if (window.location.pathname == "/") {
-      this.props.pushUrl('/dashboard');
+      this.redirect()
       return;
     }
     if (!refreshToken) {
@@ -51,9 +51,10 @@ export default class Login extends React.PureComponent {
     );
   }
 
-  userJustLoggedIn = receivedToken => {
-    this.props.userInfo(receivedToken);
-    this.props.pushUrl('/dashboard');
+  redirect() {
+    const redirect = localStorage.getItem('redirect')
+    localStorage.setItem('redirect', null)
+    this.props.pushUrl(redirect || '/dashboard');
   }
 
   async login(auth_code) {
@@ -78,7 +79,7 @@ export default class Login extends React.PureComponent {
           localStorage.setItem('verifier_list', null);
           this.processAuthentication(result.data);
           success = true;
-          this.props.pushUrl('/dashboard');
+          this.redirect()
         }).catch(error => {
           console.error(error);
           logger && logger.manualAddLog('session', `error_login_auth`, {'verifier': verifier, 'error': error});
