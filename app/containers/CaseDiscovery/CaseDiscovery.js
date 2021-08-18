@@ -561,12 +561,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   useEffect(() => {
     let currentFlagQuestion;
     let updatedFlagData;
-    console.log(openAddFlag);
+    // console.log(openAddFlag);
     // If the flag submission form is visible
     if(openAddFlag) {
       // 1. Retrieve current question from the flagReport, based on the flagReportLocation value.
       currentFlagQuestion = getQuestionByLocation(flagReport, flagReportLocation);
-      console.log(currentFlagQuestion);
+      console.log('current question in useEffect to update flagData', currentFlagQuestion);
       // 2. TODO: Update the flagData piece of state based on the current flag question value.
       if(currentFlagQuestion) {
         setFlagData(prevState => {
@@ -612,7 +612,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Render flag submission question based on question type property value.
   const renderFlagQuestion = flagData => {
-    console.log('flag data', flagData);
+    // console.log('flag data', flagData);
     if(flagData) {
       switch(flagData.type.toLowerCase()) {
         case 'single-choice':
@@ -684,8 +684,11 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         updateFlagLocation = [...flagReportLocation, optionIndex, 0];
         // If the questions property is null update flagReportLocation accordingly.
       } else {
+        console.log('null question!!')
         // get the number of questions in the current questions array.
         const questionCount = getQuestionCount(flagReport, flagReportLocation);
+        console.log('question count', questionCount)
+        console.log('last value in location -1', flagReportLocation[flagReportLocation.length - 1]);
         // Check whether there is another question in the questions array (i.e whether the current ques is not the last ques in the questions array).
         if((questionCount && questionCount.length - 1) > flagReportLocation[flagReportLocation.length - 1]) {
           const lastLocation = updateFlagLocation.pop();
@@ -705,7 +708,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   };
 
   console.log('flag data', flagData);
-  console.log('isFlagOtherChecked', isFlagOtherChecked);
+  console.log('flag location', flagReportLocation);
+  // console.log('isFlagOtherChecked', isFlagOtherChecked);
 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
@@ -1514,13 +1518,13 @@ function DetailedCase(props) {
             {description}
           </div>
           <div className="tags">
+            {displayTags(tags, emrCaseId)}
             <span className="case-tag add-flag" onClick={(e) => handleOpenAddFlag(true)}>
               <img src={Plus} />
               <div>
                 Add Flag
               </div>
             </span>
-            {displayTags(tags, emrCaseId)}
           </div>
 
           <div className="timing-graphs" id="timing-graphs">
