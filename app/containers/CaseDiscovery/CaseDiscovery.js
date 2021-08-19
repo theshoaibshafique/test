@@ -1846,7 +1846,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
   return (
     <React.Fragment>
       <div className="select-header">
-        <InputLabel className={classes.inputLabel}>{`${title} (${isRequired ? 'required' : 'optional'})`}</InputLabel>
+        <InputLabel className={classes.inputLabel}>{`${title} ${isRequired ? '' : '(optional)'}`}</InputLabel>
         <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
           Clear
         </div>
