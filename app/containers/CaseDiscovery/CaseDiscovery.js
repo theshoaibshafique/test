@@ -566,14 +566,18 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     if(openAddFlag) {
       // 1. Retrieve current question from the flagReport, based on the flagReportLocation value.
       currentFlagQuestion = getQuestionByLocation(flagReport, flagReportLocation);
-      console.log('current question in useEffect to update flagData', currentFlagQuestion);
+      // console.log('current question in useEffect to update flagData', currentFlagQuestion);
       // 2. TODO: Update the flagData piece of state based on the current flag question value.
       if(currentFlagQuestion) {
         setFlagData(prevState => {
           const isQuestionMatch = prevState.find(ques => ques.id === currentFlagQuestion.id);
+          // console.log('isQuestionMatch', isQuestionMatch);
+          // If current question not yet in flagData array, add it.
           if(!isQuestionMatch) return [...prevState, { ...currentFlagQuestion, location: flagReportLocation }];
+          // else return flagData as is.
+          else return prevState;
         })
-      }
+      } 
     }
   }, [flagReportLocation]);
 
@@ -581,26 +585,29 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   useEffect(() => {
     // if atleast 2 elements have been removed from the end of the flagReportLocation array.
     if(flagLocationPopped) {
+      console.log('location in pop useeffect hook', flagReportLocation)
       let updatedFlagLocation = [...flagReportLocation];
       // Check whether we are not yet at the last question in the current questions array.
-      if((getQuestionCount(flagReport, flagReportLocation) && getQuestionCount(flagReport, flagReportLocation) - 1) > flagReportLocation[flagReportLocation.length - 1]) {
+      if((getQuestionCount(flagReport, flagReportLocation) - 1) > flagReportLocation[flagReportLocation.length - 1]) {
         // If not at last element in questions array, increment last value in flagReportLocation array by 1 to render next ques. in array.
-        updatedFlagLocation[updatedFlagLocation.length - 1] = updatedFlagLocation[updatedFlagLocation,length - 1] + 1;
+        updatedFlagLocation[updatedFlagLocation.length - 1] = updatedFlagLocation[updatedFlagLocation.length - 1] + 1;
+        setFlagReportLocation(updatedFlagLocation);
+
       // If we are already at the last question in current questions array.
       } else {
         // Remove laste 2 elems in flagReportLocation array.
         updatedFlagLocation = updatedFlagLocation.slice(0, -2);
         // Check whether flagReportLocation array is empty, if so reset flagLocationPopped state val to false.
         if(flagReportLocation.length === 0) setFlagLocationPopped(false);
+        setFlagReportLocation(updatedFlagLocation);
       }
       // Update flagReportLocation state.
-      setFlagReportLocation(updatedFlagLocation);
+      // setFlagReportLocation(updatedFlagLocation);
     }
   }, [flagLocationPopped, flagReportLocation.length]);
 
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = (open) => {
-    console.log('clicked');
     if(!openAddFlag) {
       // Update flagReportLocation value.
       setFlagReportLocation([0]);
@@ -682,12 +689,14 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         console.log('question count', questionCount)
         console.log('last value in location -1', flagReportLocation[flagReportLocation.length - 1]);
         // Check whether there is another question in the questions array (i.e whether the current ques is not the last ques in the questions array).
-        if((questionCount && questionCount.length - 1) > flagReportLocation[flagReportLocation.length - 1]) {
+        if((questionCount - 1) > flagReportLocation[flagReportLocation.length - 1]) {
           const lastLocation = updateFlagLocation.pop();
           updateFlagLocation = [...updateFlagLocation, lastLocation + 1];
           // check whether we are currently looking at the last question in the questions array.
-        } else if((questionCount && questionCount.length - 1) <= flagReportLocation[flagReportLocation.length - 1]) {
+        } else if((questionCount - 1) <= flagReportLocation[flagReportLocation.length - 1]) {
+          console.log('slice last 2 off location');
           updateFlagLocation = updateFlagLocation.slice(0, -2);
+          console.log('update flag location', updateFlagLocation);
           // TODO: add isPopped state to comp and update to true.
           setFlagLocationPopped(true);
         }
@@ -699,8 +708,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
   };
 
-  console.log('flag data', flagData);
-  console.log('flag location', flagReportLocation);
+  // console.log('flag data', flagData);
+  // console.log('flag location', flagReportLocation);
   // console.log('isFlagOtherChecked', isFlagOtherChecked);
 
   // Scrol to top on filter change 
@@ -1816,12 +1825,11 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
 
   // OnChange handler.
   const onOptionChange = (event, newValue) => {
-    console.log('select value', newValue);
     // Retrieve selected options index.
     const optionIndex = options.findIndex(opt => opt.id === newValue.id);
     setValue(newValue);
 
-    if(newValue.type === 'choice') {
+    if(newValue.type === 'choice-other') {
       setIsFlagChoiceOther(prevState => {
         return { ...prevState, [questionId]: true}
       });
