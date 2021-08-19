@@ -671,16 +671,16 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   };
 
   // Handle flag option selection
-  const handleFlagSelect = (questionType, optionIndex) => {
+  const handleFlagSelect = (questionType, optionObject) => {
     // Handle flag option selection for single choice flag question.
     if(questionType.toLowerCase() === 'single-choice') {
       let updateFlagLocation = [...flagReportLocation];
       // 1. Get the questions property for the selected option.
-      const tempFlagLocation = [...flagReportLocation, optionIndex];
+      const tempFlagLocation = [...flagReportLocation, optionObject.optionIndex];
       const selectedOption = getQuestionByLocation(flagReport, tempFlagLocation);
       // 2. If the questions property is not null, update flagReportLocation to point to the next question.
       if(selectedOption.questions) {
-        updateFlagLocation = [...flagReportLocation, optionIndex, 0];
+        updateFlagLocation = [...flagReportLocation, optionObject.optionIndex, 0];
         // If the questions property is null update flagReportLocation accordingly.
       } else {
         console.log('null question!!')
@@ -1827,6 +1827,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
   const onOptionChange = (event, newValue) => {
     // Retrieve selected options index.
     const optionIndex = options.findIndex(opt => opt.id === newValue.id);
+    const optionObj  = { ...newValue, optionIndex };
     setValue(newValue);
 
     if(newValue.type === 'choice-other') {
@@ -1839,7 +1840,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
       });
     }
     // Load next flag question.
-    onSelect(questionType, optionIndex);
+    onSelect(questionType, optionObj);
   };
 
   return (
