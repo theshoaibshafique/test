@@ -1820,6 +1820,18 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
 
 const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsFlagChoiceOther, questionId }) => {
   const [value, setValue] = useState(null);
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+     // 1. Animate state set to true.
+     const timeout = setTimeout(() => {
+      setAnimate(true);
+    }, 200);
+    // Clean up timeout before effect runs.
+    return () => {
+      clearTimeout(timeout);
+    }
+  }, []);
 
   const classes = useStyles();
 
@@ -1844,7 +1856,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
   };
 
   return (
-    <React.Fragment>
+    <div className={`flag-select ${animate ? 'animate' : ''}`}>
       <div className="select-header">
         <InputLabel className={classes.inputLabel}>{`${title} ${isRequired ? '' : '(optional)'}`}</InputLabel>
         <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
@@ -1862,7 +1874,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
         multiple={questionType === 'multiple-choice'}
         renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
       />
-    </React.Fragment>
+    </div>
   );
 };
 
