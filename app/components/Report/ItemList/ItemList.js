@@ -66,18 +66,11 @@ export default class ItemList extends React.PureComponent {
       tag = <Icon color="#009483" path={mdiTrendingUp} size={'24px'} />
     }
     return (
-      <LightTooltip interactive arrow
-        title={tooltip}
-        placement="right" fontSize="small"
-      >
-        <div className={`change-value normal-text ${className} log-mouseover`}  id={`trending-tooltip-${valueX}`} description={JSON.stringify({toolTip:tooltip, trend:valueY})}>
-          <span>{`${valueY}%`}</span>
-          <span>{tag}</span>
-        </div>
-      </LightTooltip>
-
+      <div className={`change-value normal-text ${className} log-mouseover`}  id={`trending-tooltip-${valueX}`} description={JSON.stringify({toolTip:tooltip, trend:valueY})}>
+        <span>{`${valueY}%`}</span>
+        <span>{tag}</span>
+      </div>
     )
-
   }
   sortClick(key){
     //if element exists we're descending
