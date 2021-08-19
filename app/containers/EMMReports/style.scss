@@ -75,7 +75,7 @@ $onboardwidth: 875px;
 
 .EMM-REPORTS-SCROLL {
     height: 100%;
-    overflow-y: auto;
+    width: calc(100vw - 15px);
 }
 
 .Presenter-Mode-Banner {
@@ -90,7 +90,6 @@ $onboardwidth: 875px;
 .EMM-REPORTS {
     padding: 24px 40px;
     margin: 0px auto;
-    overflow-y: auto;
     font-size: 18px;
     .EMM-REPORTS-WRAPPER {
         max-width: 1440px;
