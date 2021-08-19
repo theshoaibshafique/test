@@ -387,7 +387,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [flagLocationPopped, setFlagLocationPopped] = useState(false);
   const [flagData, setFlagData] = useState([]);
   const [flagChoices, setFlagChoices] = useState([]);
-  const [isFlagOtherChecked, setIsFlagOtherChecked] = useState({});
+  const [isFlagChoiceOther, setIsFlagChoiceOther] = useState({});
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -626,11 +626,17 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                 questionType={flagData.type}
                 onSelect  ={handleFlagSelect}
                 isRequired={flagData.isRequired}
-                disabled={isFlagOtherChecked[flagData.id]}
+                setIsFlagChoiceOther={setIsFlagChoiceOther}
+                questionId={flagData.id}
+                // disabled={isFlagOtherChecked[flagData.id]}
               />
        
-              {isFlagOtherChecked[flagData.id] && 
-                (
+              {isFlagChoiceOther[flagData.id] && 
+                (<React.Fragment>
+                  <div className="select-header">
+                    <InputLabel className={classes.inputLabel}>Other</InputLabel>
+                  </div>
+
                   <TextField
                     id="complication-other"
                     variant="outlined"
@@ -638,7 +644,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                     name="complicationValue"
                     type="text"
                     onChange={(e) => handleChange('complicationOther', e.target.value)}
+                    // style={{margin: '36px 0'}}
+                    
                   />
+                </React.Fragment>
                 )
               }
             </React.Fragment>
@@ -1800,16 +1809,27 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
   );
 };
 
-const FlagSelect = ({ title, questionType, options, onSelect, isRequired, disabled }) => {
+const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsFlagChoiceOther, questionId }) => {
   const [value, setValue] = useState(null);
 
   const classes = useStyles();
 
   // OnChange handler.
   const onOptionChange = (event, newValue) => {
+    console.log('select value', newValue);
     // Retrieve selected options index.
     const optionIndex = options.findIndex(opt => opt.id === newValue.id);
     setValue(newValue);
+
+    if(newValue.type === 'choice') {
+      setIsFlagChoiceOther(prevState => {
+        return { ...prevState, [questionId]: true}
+      });
+    } else {
+      setIsFlagChoiceOther(prevState => {
+        return { ...prevState, [questionId]: false}
+      });
+    }
     // Load next flag question.
     onSelect(questionType, optionIndex);
   };
@@ -1831,7 +1851,6 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, disabl
         getOptionLabel={(option) => option.title}
         style={{ width: '100%' }}
         multiple={questionType === 'multiple-choice'}
-        disabled={disabled}
         renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
       />
     </React.Fragment>
