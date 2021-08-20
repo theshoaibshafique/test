@@ -1877,6 +1877,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
         getOptionLabel={(option) => option.title}
         style={{ width: '100%' }}
         multiple={questionType === 'multiple-choice'}
+        disableCloseOnSelect={false}
         renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
       />
     </div>
