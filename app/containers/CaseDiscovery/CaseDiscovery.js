@@ -672,44 +672,84 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Handle flag option selection
   const handleFlagSelect = (questionType, questionId, optionObject) => {
+       // Update question in flagData Array to include user's choice and set completed property to true.
+      // a. Retrieve the index of current question in flagData array.
+      const questionIndex = flagData.findIndex(ques => ques.id === questionId);
+      const currentQuestion = flagData[questionIndex];
+      // b. Update current question value in the flagData array.
+      let updatedFlagData = [...flagData];
+      updatedFlagData[questionIndex] = {...updatedFlagData[questionIndex], completed: true, choices: [optionObject]}
+
+    // 1. Get the questions property for the selected option.
+    const tempFlagLocation = [...flagReportLocation, optionObject.optionIndex];
+    const selectedOption = getQuestionByLocation(flagReport, tempFlagLocation);
+
     // Handle flag option selection for single choice flag question.
     if(questionType.toLowerCase() === 'single-choice') {
       let updateFlagLocation = [...flagReportLocation];
-      // 1. Get the questions property for the selected option.
-      const tempFlagLocation = [...flagReportLocation, optionObject.optionIndex];
-      const selectedOption = getQuestionByLocation(flagReport, tempFlagLocation);
-      // 2. If the questions property is not null, update flagReportLocation to point to the next question.
-      if(selectedOption.questions) {
-        updateFlagLocation = [...flagReportLocation, optionObject.optionIndex, 0];
-        // If the questions property is null update flagReportLocation accordingly.
-      } else {
-        console.log('null question!!')
-        // get the number of questions in the current questions array.
-        const questionCount = getQuestionCount(flagReport, flagReportLocation);
-        console.log('question count', questionCount)
-        console.log('last value in location -1', flagReportLocation[flagReportLocation.length - 1]);
-        // Check whether there is another question in the questions array (i.e whether the current ques is not the last ques in the questions array).
-        if((questionCount - 1) > flagReportLocation[flagReportLocation.length - 1]) {
-          const lastLocation = updateFlagLocation.pop();
-          updateFlagLocation = [...updateFlagLocation, lastLocation + 1];
-          // check whether we are currently looking at the last question in the questions array.
-        } else if((questionCount - 1) <= flagReportLocation[flagReportLocation.length - 1]) {
-          console.log('slice last 2 off location');
-          updateFlagLocation = updateFlagLocation.slice(0, -2);
-          console.log('update flag location', updateFlagLocation);
-          // TODO: add isPopped state to comp and update to true.
-          setFlagLocationPopped(true);
+      
+      // Check whether this question had been previously completed/answered.
+      if(currentQuestion.completed) {
+        // 2. If the questions property is not null, update flagReportLocation 
+        if(selectedOption.questions) {
+          updateFlagLocation.splice(-2, 2, optionObject.optionIndex, 0);
+           // If the questions property is null update flagReportLocation accordingly.
+        } else {
+          console.log('null question!!')
+          // get the number of questions in the current questions array.
+          const questionCount = getQuestionCount(flagReport, flagReportLocation);
+          console.log('question count', questionCount)
+          console.log('last value in location -1', flagReportLocation[flagReportLocation.length - 1]);
+          // Check whether there is another question in the questions array (i.e whether the current ques is not the last ques in the questions array).
+          if((questionCount - 1) > flagReportLocation[flagReportLocation.length - 1]) {
+            const lastLocation = updateFlagLocation.pop();
+            updateFlagLocation = [...updateFlagLocation, lastLocation + 1];
+            // check whether we are currently looking at the last question in the questions array.
+          } else if((questionCount - 1) <= flagReportLocation[flagReportLocation.length - 1]) {
+            console.log('slice last 2 off location');
+            updateFlagLocation = updateFlagLocation.slice(0, -2);
+            console.log('update flag location', updateFlagLocation);
+            // TODO: add isPopped state to comp and update to true.
+            setFlagLocationPopped(true);
+          }
         }
+        // Question not previously answered/completed.  
+      } else {
+         // 2. If the questions property is not null, update flagReportLocation to point to the next question.
+         if(selectedOption.questions) {
+           updateFlagLocation = [...flagReportLocation, optionObject.optionIndex, 0];
+           // If the questions property is null update flagReportLocation accordingly.
+         } else {
+           console.log('null question!!')
+           // get the number of questions in the current questions array.
+           const questionCount = getQuestionCount(flagReport, flagReportLocation);
+           console.log('question count', questionCount)
+           console.log('last value in location -1', flagReportLocation[flagReportLocation.length - 1]);
+           // Check whether there is another question in the questions array (i.e whether the current ques is not the last ques in the questions array).
+           if((questionCount - 1) > flagReportLocation[flagReportLocation.length - 1]) {
+             const lastLocation = updateFlagLocation.pop();
+             updateFlagLocation = [...updateFlagLocation, lastLocation + 1];
+             // check whether we are currently looking at the last question in the questions array.
+           } else if((questionCount - 1) <= flagReportLocation[flagReportLocation.length - 1]) {
+             console.log('slice last 2 off location');
+             updateFlagLocation = updateFlagLocation.slice(0, -2);
+             console.log('update flag location', updateFlagLocation);
+             // TODO: add isPopped state to comp and update to true.
+             setFlagLocationPopped(true);
+           }
+         }
       }
       setFlagReportLocation(updateFlagLocation);
     // Handle flag option selection for multiple choice flag question.
     } else if(questionType.toLowerCase() === 'multiple-choice') {
-
+        // TODO: Add logic for option select, question type of multiple-choice
     }
+     // c. Update flagData piece of state.
+     setFlagData(updatedFlagData);
   };
 
-  // console.log('flag data', flagData);
-  // console.log('flag location', flagReportLocation);
+  console.log('flag data', flagData);
+  console.log('flag location', flagReportLocation);
   // console.log('isFlagOtherChecked', isFlagOtherChecked);
 
   // Scrol to top on filter change 
