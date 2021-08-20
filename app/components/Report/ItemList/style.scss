@@ -29,6 +29,9 @@
       text-decoration: underline;
     }
   }
+  .normal-text {
+    font-size: 14px;
+  }
   .title {
     opacity: 0.8;
     font-weight: bold;
@@ -42,7 +45,8 @@
     opacity: 0.8;
     cursor: pointer;
     width: fit-content;
-    max-width: 85%;
+    // max-width: 85%;
+    max-width: 95%;
     font-weight: bold;
     margin-bottom: 0 !important;
   }
