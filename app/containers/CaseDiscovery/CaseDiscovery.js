@@ -573,7 +573,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           const isQuestionMatch = prevState.find(ques => ques.id === currentFlagQuestion.id);
           // console.log('isQuestionMatch', isQuestionMatch);
           // If current question not yet in flagData array, add it.
-          if(!isQuestionMatch) return [...prevState, { ...currentFlagQuestion, location: flagReportLocation }];
+          if(!isQuestionMatch) return [...prevState, { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] }];
           // else return flagData as is.
           else return prevState;
         })
@@ -1842,6 +1842,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
 
   // OnChange handler.
   const onOptionChange = (event, newValue) => {
+    console.log('new value', newValue)
     // Retrieve selected options index.
     const optionIndex = options.findIndex(opt => opt.id === newValue.id);
     const optionObj  = { ...newValue, optionIndex };
@@ -1857,7 +1858,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
       });
     }
     // Load next flag question.
-    onSelect(questionType, optionObj);
+    if(newValue) onSelect(questionType, optionObj);
   };
 
   return (
