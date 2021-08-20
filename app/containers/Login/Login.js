@@ -158,7 +158,7 @@ export default class Login extends React.PureComponent {
   };
 
   getOperatingRooms() {
-    globalFunctions.genericFetch(process.env.CASE_DISCOVERY_API + "rooms", 'get', this.props.userToken, {})
+    globalFunctions.genericFetch(process.env.EMR_API + "rooms", 'get', this.props.userToken, {})
       .then(result => {
         if (result != 'error') {
           this.props.setOperatingRoom(result)
