@@ -559,6 +559,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Update the current flag question, each time flagReportLocation changes.
   useEffect(() => {
+    console.log('update flag data hook')
     let currentFlagQuestion;
     let updatedFlagData;
     // console.log(openAddFlag);
@@ -566,16 +567,25 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     if(openAddFlag) {
       // 1. Retrieve current question from the flagReport, based on the flagReportLocation value.
       currentFlagQuestion = getQuestionByLocation(flagReport, flagReportLocation);
+      console.log('current flag ques', currentFlagQuestion);
       // console.log('current question in useEffect to update flagData', currentFlagQuestion);
       // 2. TODO: Update the flagData piece of state based on the current flag question value.
       if(currentFlagQuestion) {
         setFlagData(prevState => {
-          const isQuestionMatch = prevState.find(ques => ques.id === currentFlagQuestion.id);
+          const questionIndex = prevState.findIndex(ques => ques.id === currentFlagQuestion.id || ques.title === currentFlagQuestion.title);
+          if(questionIndex === -1) {
+            return [...prevState,  { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] }]
+          } else {
+            prevState[questionIndex] = { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] };
+            return prevState;
+          }
+
+          // ALTERNATE
           // console.log('isQuestionMatch', isQuestionMatch);
           // If current question not yet in flagData array, add it.
-          if(!isQuestionMatch) return [...prevState, { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] }];
-          // else return flagData as is.
-          else return prevState;
+          // if(!isQuestionMatch) return [...prevState, { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] }];
+          // // else return flagData as is.
+          // else return prevState;
         })
       } 
     }
@@ -671,17 +681,27 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   };
 
   // Handle flag option selection
-  const handleFlagSelect = (questionType, questionId, optionObject) => {
+  const handleFlagSelect = (questionType, questionId, questionTitle, optionObject) => {
        // Update question in flagData Array to include user's choice and set completed property to true.
       // a. Retrieve the index of current question in flagData array.
-      const questionIndex = flagData.findIndex(ques => ques.id === questionId);
+      const questionIndex = flagData.findIndex(ques => ques.id === questionId || ques.title === questionTitle);
       const currentQuestion = flagData[questionIndex];
       // b. Update current question value in the flagData array.
       let updatedFlagData = [...flagData];
       updatedFlagData[questionIndex] = {...updatedFlagData[questionIndex], completed: true, choices: [optionObject]}
 
+      let workingFlagLocation = [...flagReportLocation];
+      if(currentQuestion.completed) {
+        console.log('working flag loc before pop', workingFlagLocation)
+        workingFlagLocation.splice(-2, 2);
+        workingFlagLocation.push(optionObject.optionIndex);
+        console.log('working flag loc after push', workingFlagLocation)
+      } else {
+        workingFlagLocation = [...flagReportLocation, optionObject.optionIndex];
+      }
+      
     // 1. Get the questions property for the selected option.
-    const tempFlagLocation = [...flagReportLocation, optionObject.optionIndex];
+    const tempFlagLocation = workingFlagLocation;
     const selectedOption = getQuestionByLocation(flagReport, tempFlagLocation);
 
     // Handle flag option selection for single choice flag question.
@@ -748,6 +768,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
      setFlagData(updatedFlagData);
   };
 
+  console.log('flagReport: ', flagReport)
   console.log('flag data', flagData);
   console.log('flag location', flagReportLocation);
   // console.log('isFlagOtherChecked', isFlagOtherChecked);
@@ -1898,7 +1919,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
       });
     }
     // Load next flag question.
-    if(newValue) onSelect(questionType, questionId, optionObj);
+    if(newValue) onSelect(questionType, questionId, title, optionObj);
   };
 
   return (
