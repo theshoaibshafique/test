@@ -355,7 +355,7 @@ export default class RequestEMM extends React.PureComponent {
 
   async populateOperatingRooms(e, callback) {
 
-    return await globalFuncs.genericFetch(process.env.CASE_DISCOVERY_API + "rooms" , 'get', this.props.userToken, {})
+    return await globalFuncs.genericFetch(process.env.EMR_API + "rooms" , 'get', this.props.userToken, {})
       .then(result => {
         let operatingRooms = result.map(r => ({value:r.id, label:r.display}));
         
@@ -370,7 +370,7 @@ export default class RequestEMM extends React.PureComponent {
     this.populateSpecialtyList();
   }
   populateSpecialtyList() {
-    globalFunctions.genericFetch(process.env.CASE_DISCOVERY_API + "procedures", 'get', this.props.userToken, {})
+    globalFunctions.genericFetch(process.env.EMR_API + "procedures", 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           let procedureList = result.map(r => ({name:r, value:r}))
