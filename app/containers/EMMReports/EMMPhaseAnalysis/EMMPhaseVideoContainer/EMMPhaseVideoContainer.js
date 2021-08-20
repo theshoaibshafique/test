@@ -16,6 +16,7 @@ import {
   base64EncodeUint8Array,
   arrayToString
 } from '../../../../components/VideoPlayer/pallycon-helper';
+import { SSTSwitch } from '../../../../components/SharedComponents/SharedComponents';
 const videoOptions = {
   autoplay: true,
   controls: true,
@@ -29,23 +30,6 @@ const videoOptions = {
     hotkeys: true
   }
 };
-const SSTSwitch = withStyles((theme) => ({
-  switchBase: {
-    color: '#ABABAB',
-    '&$checked': {
-      color: '#3DB3E3',
-    },
-    '&$checked + $track': {
-      opacity: 1,
-      backgroundColor: '#028CC8',
-    },
-  },
-  checked: {},
-  track: {
-    opacity: 1,
-    backgroundColor: '#575757'
-  }
-}))(Switch);
 
 export default class EMMPhaseVideoContainer extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { makeStyles, Radio, Tab, Tabs, Tooltip, withStyles } from '@material-ui/core';
+import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles } from '@material-ui/core';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -133,3 +133,21 @@ export function StyledRadio(props) {
     />
   );
 }
+
+export const SSTSwitch = withStyles((theme) => ({
+  switchBase: {
+    color: '#ABABAB',
+    '&$checked': {
+      color: '#3DB3E3',
+    },
+    '&$checked + $track': {
+      opacity: 1,
+      backgroundColor: '#028CC8',
+    },
+  },
+  checked: {},
+  track: {
+    opacity: 1,
+    backgroundColor: '#575757'
+  }
+}))(Switch);

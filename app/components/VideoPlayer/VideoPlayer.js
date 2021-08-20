@@ -22,23 +22,31 @@ const videoOptions = {
 };
 
 export function VideoPlayer(props) {
-  const { mediaUrl } = props;
+  const { params, presenterMode } = props;
 
   const userToken = useSelector(makeSelectToken());
-  const emmPresenterMode = useSelector(selectEMMPresenterMode());
   const drmType = checkDrmType();
   const [Node, setNode] = React.useState(0);
-  // const mediaURL = `${(emmPresenterMode) ? process.env.PRESENTER_API : process.env.MEDIA_API}?asset=${videoId}&drm_type=${drmType}`;
+  const [mediaPlayer, setPlayer] = React.useState(null);
+  
+  //Delete the player on close
+  useEffect(() => {
+    return () => {
+      mediaPlayer && mediaPlayer.dispose();
+    }
+  }, [])
   
   useEffect(() => {
-    if (!Node || !mediaUrl) {
+    if (!Node || !params) {
       return;
     }
-    let player = null;
+    let player = mediaPlayer;
+    const mediaUrl = `${process.env.CASE_DISCOVERY_API}${(presenterMode) ? 'presenter' : 'media'}${params}`;
     globalFunctions.axiosFetchWithCredentials(`${mediaUrl}&drm_type=${drmType}`, 'get', userToken, {})
       .then(result => {
         result = result.data
-        player = videojs(
+        //Re-use the player if src swap (player already exists)
+        player = player || videojs(
           Node,
           videoOptions,
           function onPlayerReady() { }
@@ -50,7 +58,7 @@ export function VideoPlayer(props) {
         }
 
         let playerConfig;
-        if (emmPresenterMode) {
+        if (presenterMode) {
           playerConfig = {
             src: src,
             type: 'application/dash+xml',
@@ -91,12 +99,9 @@ export function VideoPlayer(props) {
           };
         }
         player.src(playerConfig);
-
+        setPlayer(player);
       });
-    return () => {
-      player && player.dispose();
-    }
-  }, [Node, mediaUrl])
+  }, [Node, presenterMode, params])
   return (
     <div className="video-player">
       <link
