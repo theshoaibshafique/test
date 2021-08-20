@@ -671,7 +671,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   };
 
   // Handle flag option selection
-  const handleFlagSelect = (questionType, optionObject) => {
+  const handleFlagSelect = (questionType, questionId, optionObject) => {
     // Handle flag option selection for single choice flag question.
     if(questionType.toLowerCase() === 'single-choice') {
       let updateFlagLocation = [...flagReportLocation];
@@ -1858,7 +1858,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
       });
     }
     // Load next flag question.
-    if(newValue) onSelect(questionType, optionObj);
+    if(newValue) onSelect(questionType, questionId, optionObj);
   };
 
   return (
