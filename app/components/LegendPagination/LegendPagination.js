@@ -32,7 +32,7 @@ const LegendPagination = (props) => {
     useEffect(() => {
       let updatedHeight = 0;
       children.forEach(el => {
-        if(el.ref.current) {
+        if(el && el.ref && el.ref.current) {
           updatedHeight += el.ref.current.clientHeight + 8;
         }
       });
