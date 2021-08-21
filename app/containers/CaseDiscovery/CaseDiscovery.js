@@ -574,12 +574,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         setFlagData(prevState => {
           const questionIndex = prevState.findIndex(ques => ques.id === currentFlagQuestion.id || ques.title === currentFlagQuestion.title);
           if(questionIndex === -1) {
-            return [...prevState,  { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] }]
+            updatedFlagData = [...prevState, { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] }];
+            return updatedFlagData;
           } else {
-            prevState[questionIndex] = { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] };
-            return prevState;
+            updatedFlagData = [...prevState];
+            updatedFlagData[questionIndex] = { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] };
+            return updatedFlagData;
           }
-
           // ALTERNATE
           // console.log('isQuestionMatch', isQuestionMatch);
           // If current question not yet in flagData array, add it.
