@@ -383,7 +383,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [openAddFlag, setOpenAddFlag] = useState(false);
   const [flagReport, setFlagReport] = useState(null);
 
-  const [flagReportLocation, setFlagReportLocation] = useState([]);
+  const [flagReportLocation, setFlagReportLocation] = useState([0]);
   const [flagLocationPopped, setFlagLocationPopped] = useState(false);
   const [flagData, setFlagData] = useState([]);
   const [flagChoices, setFlagChoices] = useState([]);
@@ -557,40 +557,17 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   /***  Flag submission useEffect hooks ***/
 
-  // Update the current flag question, each time flagReportLocation changes.
+  // Set initial value of flagData array when component first mounts, thus rendering the first flag question.
   useEffect(() => {
-    console.log('update flag data hook')
-    let currentFlagQuestion;
-    let updatedFlagData;
-    // console.log(openAddFlag);
-    // If the flag submission form is visible
-    if(openAddFlag) {
+    if(flagReportLocation.length > 0 && flagReport) {
+      let currentFlagQuestion;
+      let updatedFlagData;
       // 1. Retrieve current question from the flagReport, based on the flagReportLocation value.
       currentFlagQuestion = getQuestionByLocation(flagReport, flagReportLocation);
-      console.log('current flag ques', currentFlagQuestion);
-      // console.log('current question in useEffect to update flagData', currentFlagQuestion);
-      // 2. TODO: Update the flagData piece of state based on the current flag question value.
-      if(currentFlagQuestion) {
-        setFlagData(prevState => {
-          const questionIndex = prevState.findIndex(ques => ques.id === currentFlagQuestion.id || ques.title === currentFlagQuestion.title);
-          if(questionIndex === -1) {
-            updatedFlagData = [...prevState, { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] }];
-            return updatedFlagData;
-          } else {
-            updatedFlagData = [...prevState];
-            updatedFlagData[questionIndex] = { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] };
-            return updatedFlagData;
-          }
-          // ALTERNATE
-          // console.log('isQuestionMatch', isQuestionMatch);
-          // If current question not yet in flagData array, add it.
-          // if(!isQuestionMatch) return [...prevState, { ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] }];
-          // // else return flagData as is.
-          // else return prevState;
-        })
-      } 
+      // 2. Update the flagData piece of state based on the current flag question value.
+      if(currentFlagQuestion) setFlagData([{ ...currentFlagQuestion, location: flagReportLocation, completed: false, choices: [] }]);
     }
-  }, [flagReportLocation]);
+  }, [flagReport]);
 
   // Pop last 2 elements of flagReportLocation array off when the current questions array at the current 'level' has no more questions.
   useEffect(() => {
@@ -621,7 +598,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleOpenAddFlag = (open) => {
     if(!openAddFlag) {
       // Update flagReportLocation value.
-      setFlagReportLocation([0]);
+      // setFlagReportLocation([0]);
     }
     // Open flag submission form UI.
     setOpenAddFlag(open);
