@@ -1965,9 +1965,9 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
     <div className={`flag-select ${animate ? 'animate' : ''}`}>
       <div className="select-header">
         <InputLabel className={classes.inputLabel}>{`${title} ${isRequired ? '' : '(optional)'}`}</InputLabel>
-        <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
+        {/* <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
           Clear
-        </div>
+        </div> */}
       </div>
       <Autocomplete
         id="combo-box-demo"
@@ -1980,6 +1980,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
         multiple={questionType === 'multiple-choice'}
         disableCloseOnSelect={false}
         renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
+        autoFocus
       />
     </div>
   );
