@@ -1840,9 +1840,11 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
             {requestEMMDescription}
           </div>
           {flagData && flagData.map(el => renderFlagQuestion(el))}
-          <Button variant="outlined" className="primary send-request"
+          <Button 
+            variant="outlined" 
+            className="primary send-request submit-flag"
             onClick={() => console.log('flag submitted')}
-            // disabled={isSending}
+            disabled={flagData && flagData.length < 4 || flagData && flagData.some(el => !el.completed)/*isSending*/}
           >
             {/*isSending*/false ? <div className="loader"></div> : 'Submit Flag'}
           </Button>

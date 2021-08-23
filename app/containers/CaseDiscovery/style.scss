@@ -34,7 +34,7 @@
             cursor: pointer;
         }
         &.disabled {
-            opacity: 0.8;
+            opacity: 0.2;
             cursor: default;
         }
     }
@@ -818,8 +818,14 @@
         margin-top: auto;
         align-self: baseline;
         width: 161px;
+    }
+    .submit-flag {
         position: relative;
         bottom: -40px;
+        &:disabled {
+            opacity: 0.2;
+            color: #fff;
+        }
     }
 
     .loader {
