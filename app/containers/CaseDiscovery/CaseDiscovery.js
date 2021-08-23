@@ -762,6 +762,20 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
   };
 
+  // Submit flag.
+  const handleFlagSubmit = (flag, handleSetIsFlagSubmitted) => {
+      // globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
+      //   .then(result => {
+      //     result = result.data;
+      //     console.log('flag submitted', result);
+      //     setIsFlagSubmitted(true);
+      //   }).catch((error) => {
+      //     console.log("uh no.")
+      //   }).finally(() => {
+
+      //   });
+  };
+
   // console.log('flagReport: ', flagReport)
   console.log('flag data', flagData);
   // console.log('flag location', flagReportLocation);
@@ -1252,6 +1266,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         flagData={flagData}
         renderFlagQuestion={renderFlagQuestion}
         flagReport={flagReport}
+        // handleFlagSubmit={handleFlagSubmit}
       />
     </section>
   );
@@ -1344,7 +1359,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport, handleFlagSubmit } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1827,6 +1842,8 @@ function DetailedCase(props) {
           renderFlagQuestion={renderFlagQuestion}
           procedureTitle={procedureTitle}
           requestEMMDescription={requestEMMDescription} 
+          // handleFlagSubmit={handleFlagSubmit}
+          setIsFlagSubmitted={setIsFlagSubmitted}
         />
       </Modal>
     </Grid>
@@ -1834,7 +1851,25 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription }) => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted }) => {
+
+  const onFlagSubmit = () => {
+    console.log('flag submitted')
+    const newFlag = {
+      reportId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+      roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+      localTime: new Date().toJSON(),
+      utcTime: new Date().toJSON(),
+      options: [
+        {
+          optionId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          attribute: null
+        }
+      ]
+    };
+    setIsFlagSubmitted(true);
+    // handleFlagSubmit(newFlag, setIsFlagSubmitted);
+  }
 
   return (
     <div className="request-emm-modal">
@@ -1847,11 +1882,11 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
             <p>Thank you for submitting flag!</p>
           </Grid>
           <Grid item xs>
-            Please note the Enhanced M&M ID for the report to be generated:
-            <span style={{ fontWeight: 'bold' }}>{` ${isFlagSubmitted}`}</span>
+            {/* Please note the Enhanced M&M ID for the report to be generated: */}
+            {/* <span style={{ fontWeight: 'bold' }}>{` ${isFlagSubmitted}`}</span> */}
           </Grid>
           <Grid item xs>
-            We will notify you when the report is ready on Insights for viewing.
+            {/* We will notify you when the report is ready on Insights for viewing. */}
           </Grid>
           <Grid item xs>
             <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => handleOpenAddFlag(false)}>Close</Button>
@@ -1872,7 +1907,7 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
           <Button 
             variant="outlined" 
             className="primary send-request submit-flag"
-            onClick={() => console.log('flag submitted')}
+            onClick={onFlagSubmit}
             disabled={flagData && flagData.length < 4 || flagData && flagData.some(el => !el.completed)/*isSending*/}
           >
             {/*isSending*/false ? <div className="loader"></div> : 'Submit Flag'}
