@@ -623,7 +623,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                 title={flagData.title}
                 options={flagData.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other - Please specify'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
                 questionType={flagData.type}
-                onSelect  ={handleFlagSelect}
+                onSelect  ={[handleFlagSelect, handleFlagUpdate]}
                 isRequired={flagData.isRequired}
                 setIsFlagChoiceOther={setIsFlagChoiceOther}
                 questionId={flagData.id}
@@ -1858,7 +1858,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
       });
     }
     // Load next flag question.
-    if(newValue) onSelect(questionType, questionId, title, optionObj);
+    if(newValue) onSelect[0](questionType, questionId, title, optionObj);
     // TODO: Add logic for if value is not null and old value is not equal to new value i.e. changing option for an already completed/answered question.
     
   };
