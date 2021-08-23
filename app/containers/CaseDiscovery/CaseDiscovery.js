@@ -8,7 +8,7 @@ import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, Tooltip, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, TextField, Tooltip, withStyles } from '@material-ui/core';
 import { DATE_OPTIONS, TAGS, TAG_INFO } from './constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -34,7 +34,7 @@ import Close from './icons/Close.svg';
 import Plus from './icons/Plus.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
-import { LightTooltip, StyledRadio } from '../../components/SharedComponents/SharedComponents';
+import { LightTooltip, SSTSwitch, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
@@ -120,7 +120,7 @@ function getTag(tag) {
 }
 
 function transformTagValue(tag, value) {
-  switch(tag && tag.toLowerCase()) {
+  switch (tag && tag.toLowerCase()) {
     case "hypothermia":
       return value.replace('35°C', '35°C / 95°F');
     default:
@@ -201,13 +201,13 @@ function Case(props) {
       }
 
       <div className="subtitle" title={specialtyList.join(" & ")}>
-      {!isShort && <span>{roomName} • </span>}{specialtyList.join(" & ")}
+        {!isShort && <span>{roomName} • </span>}{specialtyList.join(" & ")}
       </div>
       <div className="description">
         {!isShort && <span>Case ID: {emrCaseId}</span>}
         <span title={daysAgo}>{daysAgo}</span>
         {!isShort && <span>{sTime} - {eTime}</span>}
-        
+
       </div>
       {tagDisplays.length > 0 && <div className="tags">
         {isShort && tagDisplays.length > MAX_SHORT_TAGS ? (
@@ -853,7 +853,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   //Open the caseId through URL
   const manualCaseId = urlParams.get('caseId')
   //Remove from URL
-  if (manualCaseId){
+  if (manualCaseId) {
     window.history.pushState({}, document.title, window.location.pathname);
   }
   // Set CaseID for detailed case view
@@ -1125,7 +1125,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                 variant="contained" className="primary"
                 onClick={() => handleShowTagsModal(false)}>
                 Close
-            </Button>
+              </Button>
             </div>
           </div>
 
@@ -1168,7 +1168,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                 logger && logger.manualAddLog('click', 'load-more', filterCases.slice(numShownCases, numShownCases + 10).map(formatCaseForLogs));
               }}>
                 Load More
-          </Button>}
+              </Button>}
             </div>
           )
           }
@@ -1339,12 +1339,12 @@ function DetailedCase(props) {
   const bStartTime = globalFunctions.getDiffFromMidnight(blockStartTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
   const bEndTime = globalFunctions.getDiffFromMidnight(blockEndTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
 
-  const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime) ;
+  const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime);
   const latestEndTime = roomCases.reduce((max, c) => globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
   const scheduleDuration = Math.ceil(latestEndTime) - (earliestStartTime);
 
   const description = (
-    <div style={{lineBreak:'anywhere'}}>
+    <div style={{ lineBreak: 'anywhere' }}>
       <span>Case ID: {emrCaseId}</span>
       <span>Surgeon ID: {`${surgeonId}`}</span>
       <span>{date} {`(${dayDiff} ${dayDiff == 1 ? 'Day' : 'days'} ago)`}</span>
@@ -1579,7 +1579,7 @@ function DetailedCase(props) {
                     {Math.abs(startDiff) < 1 ?
                       <div className={`early`}>
                         On Time
-                    </div>
+                      </div>
                       :
                       <div className={`${startDiff > 0 ? 'late' : 'early'}`}>
                         {globalFunctions.formatSecsToTime(Math.abs(startDiff - (startDiff % 60)), true, true)} {`${startDiff > 0 ? 'late' : 'early'}`}
@@ -1656,7 +1656,7 @@ function DetailedCase(props) {
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
             // We offset by "Earliest start time" (could be 6:22 am) + the straggling minutes (22mins) since the labels display only 6am
-            const offset = ((earliestStartTime + (1-earliestStartTime %1) -1) * 60 );
+            const offset = ((earliestStartTime + (1 - earliestStartTime % 1) - 1) * 60);
             let startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - offset;
             let endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - offset;
             const caseHeight = (endMins - startMins) / 60;
@@ -1992,7 +1992,7 @@ function ProcedureDistribution(props) {
   const range = [duration, ...globalFunctions.range(Math.max(0, mu - 4.5 * sigma), mu + 4.5 * sigma, sigma / 20)].sort();
   // console.log(range)
   const chartRef = useRef(null);
-  if (!shape || !scale){
+  if (!shape || !scale) {
     return <div></div>
   }
 
@@ -2352,6 +2352,49 @@ function ClipTimeline(props) {
   const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
+  const [presenterMode, setPresenterMode] = React.useState(false);
+  const [presenterDialog, setPresenterDialog] = React.useState(false);
+  const closePresenterDialog = (choice) => {
+    (choice) && setPresenterMode(choice);
+    setPresenterDialog(false);
+    logger && logger.manualAddLog('click', `toggle-presenter-mode`, { checked: choice });
+  }
+  const ConfirmPresenterDialog = (props) => {
+    return (
+      <Dialog
+        open={presenterDialog}
+        onClose={() => setPresenterDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        className="publish-dialog"
+      >
+        <DialogTitle className="red">Warning</DialogTitle>
+        <DialogContent>
+          <DialogContentText className="confirm-publish-text subtle-subtext">
+            By enabling Presentation Mode, this report will no longer be protected by Digital Rights Management (DRM). The Presentation Mode feature will allow you to broadcast this report over web conferencing apps such as MS Teams, however, as a result, it will also decrease the level of protection. Please ensure you enable Presentation Mode only prior to your presentation and disable it immediately thereafter. Do you wish to proceed?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => closePresenterDialog(false)} className="cancel-publish" color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => closePresenterDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
+            Proceed
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
+  const switchPresenterMode = () => {
+    if (!presenterMode) {
+      //need to show warning if previous state is non presentation mode
+      setPresenterDialog(true)
+    } else {
+      //otherwise, can just turn off presentation mode
+      setPresenterMode(false)
+      logger && logger.manualAddLog('click', `toggle-presenter-mode`, { checked: false });
+    }
+  }
   const [timeline, setTimeline] = React.useState(flags.map((f) => {
     const { clips, flagId, description } = f;
     return clips.map((c) => {
@@ -2360,14 +2403,14 @@ function ClipTimeline(props) {
   }).flat());
   useEffect(() => {
     const fetchData = async () => {
-      const getCookie = await getCdnStreamCookies(process.env.CASE_DISCOVERY_API,userToken);
+      const getCookie = await getCdnStreamCookies(process.env.CASE_DISCOVERY_API, userToken);
     }
     fetchData();
   }, [])
   const [selectedMarker, setSelect] = React.useState(false);
-  const handleSelect = (t,i) => {
+  const handleSelect = (t, i) => {
     if (t) {
-      t.mediaUrl = `${process.env.CASE_DISCOVERY_API}media?flag_id=${t.flagId}&clip_id=${t.clipId}`;
+      t.params = `?flag_id=${t.flagId}&clip_id=${t.clipId}`;
       logger && logger.manualAddLog('click', `open-clip-${t.clipId}`, t)
       t.index = i;
     } else {
@@ -2409,14 +2452,14 @@ function ClipTimeline(props) {
             </div>
           )
           return (
-            <div className='clip-marker' 
+            <div className='clip-marker'
               style={{ left: `${Math.abs(t.startTime) / duration * 100}%`, width: `${(t.duration / duration * 100)}%` }}
               key={`t-${i}`}>
               <Thumbnail
                 position="bottom"
                 title={thumbnail}
                 arrow>
-                <svg className="log-mouseover" id={`thumbnail-${t.clipId}`} onClick={() => handleSelect(t,i)} width="20" height="20" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="log-mouseover" id={`thumbnail-${t.clipId}`} onClick={() => handleSelect(t, i)} width="20" height="20" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 0C1.26522 0 1.51957 0.105357 1.70711 0.292893C1.89464 0.48043 2 0.734784 2 1V1.88C3.06 1.44 4.5 1 6 1C9 1 9 3 11 3C14 3 15 1 15 1V9C15 9 14 11 11 11C8 11 8 9 6 9C3 9 2 11 2 11V18H0V1C0 0.734784 0.105357 0.48043 0.292893 0.292893C0.48043 0.105357 0.734784 0 1 0Z" fill="#d42828" />
                 </svg>
               </Thumbnail>
@@ -2428,14 +2471,29 @@ function ClipTimeline(props) {
         open={selectedMarker}
         onClose={() => handleSelect(false)}
       >
-        <div className="Modal clip-modal">
+        <div className="Modal clip-modal" style={presenterMode ? {paddingTop:0} : {}}>
+          {(presenterMode) &&
+            <div className="Presenter-Mode-Banner">You are in Presentation Mode</div>
+          }
           <div className="close-button">
             <img src={Close} onClick={() => handleSelect(false)} />
           </div>
-          {isSafari && <SafariWarningBanner message={'Case Discovery contains videos that are currently not supported on Safari. We recommend using the latest version of Google Chrome or Microsoft Edge browsers for the full experience.'}/> }
+
+          {isSafari && <SafariWarningBanner message={'Case Discovery contains videos that are currently not supported on Safari. We recommend using the latest version of Google Chrome or Microsoft Edge browsers for the full experience.'} />}
           <Grid container spacing={0} className="clip-details">
-            <Grid item xs={9}><VideoPlayer mediaUrl={selectedMarker.mediaUrl} /></Grid>
+            <Grid item xs={9}><VideoPlayer params={selectedMarker.params} presenterMode={presenterMode} /></Grid>
             <Grid item xs={3} className="flag-details normal-text">
+              <div>
+                <FormControlLabel
+                  control={
+                    <SSTSwitch
+                      checked={presenterMode}
+                      onChange={switchPresenterMode}
+                    />
+                  }
+                  label="Presentation Mode"
+                />
+              </div>
               <div className="details-header">Flag Details</div>
               {selectedMarker.description && selectedMarker.description.map((d, i) => {
                 return (
@@ -2451,6 +2509,9 @@ function ClipTimeline(props) {
           </Grid>
         </div>
       </Modal>
+      <ConfirmPresenterDialog
+        dialogOpen={presenterDialog}
+      />
     </div>
   )
 }

@@ -386,7 +386,7 @@
                 margin: 12px 0;
             }
             span {
-                margin: 0 12px 0 0 ;
+                margin: 0 12px 0 0;
                 white-space: nowrap;
             }
         }
@@ -941,8 +941,8 @@
         width: 100%;
         position: absolute;
         padding: 0 44px;
-        cursor: pointer;
         img {
+            cursor: pointer;
             float: right;
         }
     }
@@ -971,7 +971,7 @@
             }
         }
         .button {
-            margin-top:4px;
+            margin-top: 4px;
             margin-bottom: 0 !important;
             width: 100%;
             position: absolute;
@@ -982,7 +982,6 @@
             }
         }
 
-        
         .detail-entry {
             margin: 4px 0;
             .title {
@@ -990,8 +989,30 @@
             }
         }
     }
+    .Presenter-Mode-Banner {
+        background: #004f6e;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 18px;
+        color: $white;
+        width: calc(100% + 80px);
+        margin-left: -40px;
+        margin-bottom: 40px;
+        border-radius: 4px 4px 0 0;
+    }
 }
-
+.publish-dialog {
+    .MuiPaper-root {
+        padding: 16px;
+    }
+    h2 {
+        opacity: 0.8;
+    }
+    .cancel-publish {
+        color: #028cc8 !important;
+    }
+}
 @media (max-height: 960px) {
     .tag-info-modal {
         max-height: 524px;
