@@ -571,38 +571,44 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Pop last 2 elements of flagReportLocation array off when the current questions array at the current 'level' has no more questions.
   useEffect(() => {
     // if atleast 2 elements have been removed from the end of the flagReportLocation array.
+    console.log('is flag popped', flagLocationPopped);
     if(flagLocationPopped) {
-      // console.log('location in pop useeffect hook', flagReportLocation)
+      console.log('location in pop useeffect hook', flagReportLocation)
       let updatedLocation = [...flagReportLocation];
-      // Check whether we are not yet at the last question in the current questions array.
       if((getQuestionCount(flagReport, flagReportLocation) - 1) > flagReportLocation[flagReportLocation.length - 1]) {
-        // If not at last element in questions array, increment last value in flagReportLocation array by 1 to render next ques. in array.
-        updatedLocation[updatedLocation.length - 1] = updatedLocation[updatedLocation.length - 1] + 1;
+        let lastLoc = updatedLocation[updatedLocation.length - 1];
+        lastLoc += 1;
+        updatedLocation[updatedLocation.length - 1] = lastLoc;
         // setFlagReportLocation(updatedFlagLocation);
-
-      // If we are already at the last question in current questions array.
       } else {
-        // Remove last 2 elems in flagReportLocation array.
         updatedLocation = updatedLocation.slice(0, -2);
-        // Check whether flagReportLocation array is empty, if so reset flagLocationPopped state val to false.
         if(flagReportLocation.length === 0) setFlagLocationPopped(false);
         // setFlagReportLocation(updatedLocation);
       }
-      // Update flagReportLocation state.
-      setFlagReportLocation(updatedLocation);
-      let updatedFlagData = [...flagData];
       const nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
-      if(nextQuestion) {
-        const nextQuestionIndex = updatedFlagData.findIndex(ques => ques.id === nextQuestion.id || ques.title === nextQuestion.title);
-        if(nextQuestionIndex === -1) {
-          updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
-          // TODO,moy not be needed, remove.
-        } else {
-          updatedFlagData[nextQuestionIndex] = { ...nextQuestion, location: updatedLocation, completed: false, choices: [] };
-        }
-        // console.log('updated location useEffect hook', updatedLocation);
-        setFlagData(updatedFlagData);
-      }
+      let isNextQuestionPresent;
+      if(nextQuestion) isNextQuestionPresent = flagData.find(ques => ques.id === nextQuestion.id || ques.title === nextQuestion.title);
+      if(nextQuestion && !isNextQuestionPresent) setFlagData(prevState => {
+        return [...prevState, { ...nextQuestion, location, location: updatedLocation, completed: false, choices: [] }]
+      })
+      setFlagReportLocation(updatedLocation);
+
+      // let updatedFlagData = [...flagData];
+      // const nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
+      // console.log('next ques pop hook', nextQuestion)
+      // if(nextQuestion) {
+      //   const nextQuestionIndex = updatedFlagData.findIndex(ques => ques.id === nextQuestion.id || ques.title === nextQuestion.title);
+      //   if(nextQuestionIndex === -1) {
+      //     updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
+      //     // TODO,moy not be needed, remove.
+      //   } else {
+      //     updatedFlagData;
+      //     console.log('next question in pop effect', updatedFlagData[nextQuestionIndex]);
+      //     updatedFlagData[nextQuestionIndex] = { ...nextQuestion, location: updatedLocation, completed: false, choices: [] };
+      //   }
+      //   // console.log('updated location useEffect hook', updatedLocation);
+      //   setFlagData(updatedFlagData);
+      // }
     }
   }, [flagLocationPopped, flagReportLocation.length]);
 
@@ -664,33 +670,53 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Handle flag option selection
   const handleFlagSelect = (questionType, questionId, questionTitle, optionObject) => {
-    let updatedFlagData;
+    let updatedFlagData = [...flagData];
+    let nextQuestion;
+    updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
+    console.log('updated flag data in flagSelect', updatedFlagData);
+
     let updatedLocation = flagReportLocation.concat(optionObject.optionIndex);
-    const nextQuestionsArray = getQuestionByLocation(flagReport, updatedLocation).questions;
-    if(nextQuestionsArray) {
+    console.log('updated location in flag select', updatedLocation);
+    const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
+    console.log('netx q array', selectedOpt)
+    if(selectedOpt.questions) {
       updatedLocation = updatedLocation.concat(0);
+      nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
+      updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
       setFlagReportLocation(updatedLocation);
+      console.log('update flag data', updatedFlagData);
+      // setFlagData(updatedFlagData);
     } else {
       const currentQuestionCount = getQuestionCount(flagReport, flagReportLocation) - 1;
       updatedLocation.pop();
       if(currentQuestionCount > flagReportLocation[flagReportLocation.length - 1]) {
-        setFlagReportLocation(updatedLocation[updatedLocation.length - 1] = updatedLocation[updatedLocation.length - 1] + 1);
+        const tempLocation = [...updatedLocation];
+        let lastLocEl = tempLocation[tempLocation.length - 1];
+        lastLocEl = lastLocEl + 1;
+        tempLocation[tempLocation.length - 1] = lastLocEl; 
+        nextQuestion = getQuestionByLocation(flagReport, tempLocation);
+        updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: tempLocation, completed: false, choices: [] });
+        // setFlagData(updatedFlagData);
+        setFlagReportLocation(tempLocation);
       } else {
+
         setFlagReportLocation(updatedLocation.slice(0, -2));
         setFlagLocationPopped(true);
       }
     }
     // TODO: break out in FN.
-    const nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
-    // console.log('next question', nextQuestion);
-    // console.log('updated Location', updatedLocation);
-    const nextQuestionIndex = flagData.findIndex(ques => ques.id === nextQuestion.id || ques.title === nextQuestion.title);
-    if(nextQuestionIndex === -1) {
-      updatedFlagData = flagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
-    } else {
-      updatedFlagData = [...flagData];
-      updatedFlagData[nextQuestionIndex] = { ...nextQuestion, location: updatedLocation, completed: false, choices: [] };
-    }
+    // nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
+    // // console.log('next question', nextQuestion);
+    // // console.log('updated Location', updatedLocation);
+    // const nextQuestionIndex = flagData.findIndex(ques => ques.id === nextQuestion.id || ques.title === nextQuestion.title);
+    // if(nextQuestionIndex === -1) {
+    //   updatedFlagData = flagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
+    //   // setFlagData(updatedFlagData);
+    // } else {
+    //   // updatedFlagData = [...flagData];
+    //   updatedFlagData[nextQuestionIndex] = { ...nextQuestion, location: updatedLocation, completed: false, choices: [] };
+    //   // setFlagData(updatedFlagData);
+    // }
     setFlagData(updatedFlagData);
   };
 
@@ -700,12 +726,15 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     let updatedFlagData = [...flagData];
     const currQuestionIndex = updatedFlagData.findIndex(ques => ques.id === questionId);
     const currentQuestion = flagData[currQuestionIndex];
+
+    updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
+
     // console.log('current question in handleFlagUpdate', currentQuestion);
     let nextQuestion = getQuestionByLocation(flagReport, [...currentQuestion.location, optionObject.optionIndex]).questions;
     console.log('next   question in handleFlagUpdate', nextQuestion);
     if(nextQuestion) {
       console.log('current ques', updatedFlagData[currQuestionIndex]);
-      updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], completed: true, choices: [{ ...optionObject, attribute: null }]};
+      // updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], completed: true, choices: [{ ...optionObject, attribute: null }]};
       updatedFlagData = updatedFlagData.slice(0, (currQuestionIndex + 1)).concat({ ...nextQuestion[0], location: [...currentQuestion.location, optionObject.optionIndex, 0], completed: false, choices: [] });
       console.log('update flag data in handleFlagUpdate', updatedFlagData);
       // console.log('next question in handleFlagupdate', nextQuestion);
@@ -721,7 +750,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         newLocation = [...newLocation, lastLoc + 1];
         nextQuestion = getQuestionByLocation(flagReport, newLocation);
         updatedLocation = newLocation;
-        updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], completed: true, choices: [{ ...optionObject, attribute: null }]};
+        // updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], completed: true, choices: [{ ...optionObject, attribute: null }]};
         updatedFlagData = updatedFlagData.slice(0, (currQuestionIndex + 1)).concat({ ...nextQuestion, location: newLocation, completed: false, choices: [] });
         setFlagReportLocation(updatedLocation);
       } else {
