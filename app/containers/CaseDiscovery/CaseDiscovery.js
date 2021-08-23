@@ -694,6 +694,19 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     setFlagData(updatedFlagData);
   };
 
+  // Handle updating a previously completed flag's option(s).
+  const handleFlagUpdate = (questionType, questionId, questionTitle, optionObject) => {
+    let updatedLocation = [...flagReportLocation];
+    let updatedFlagData = [...flagData];
+    const currQuestionIndex = updatedFlagData.findIndex(ques => ques.id === questionId);
+    const nextQuestion = getQuestionByLocation(flagReport, [...updatedLocation, optionObject.optionIndex]);
+    if(nextQuestion) {
+      updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], choices: [{ ...optionObject, attribute: null }]};
+      updatedFlagData = updatedFlagData.slice(0, currQuestionIndex + 1).concat({ ...nextQuestion, location: [...updatedLocation, optionObject.optionIndex, 0], completed: false, choices: [] });
+      setFlagData(updatedFlagData);
+    }
+  };
+
   // console.log('flagReport: ', flagReport)
   console.log('flag data', flagData);
   // console.log('flag location', flagReportLocation);
@@ -1846,6 +1859,8 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
     }
     // Load next flag question.
     if(newValue) onSelect(questionType, questionId, title, optionObj);
+    // TODO: Add logic for if value is not null and old value is not equal to new value i.e. changing option for an already completed/answered question.
+    
   };
 
   return (
