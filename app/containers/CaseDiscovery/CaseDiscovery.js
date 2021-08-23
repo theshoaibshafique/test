@@ -621,7 +621,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             <React.Fragment>
               <FlagSelect
                 title={flagData.title}
-                options={flagData.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other - Please specify'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
+                options={flagData.options.filter(opt => opt.type !== 'choice-other')./*map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other - Please specify'} : opt)*/sort((a, b) => a.optionOrder - b.optionOrder)}
                 questionType={flagData.type}
                 onSelect  ={[handleFlagSelect, handleFlagUpdate]}
                 isRequired={flagData.isRequired}
