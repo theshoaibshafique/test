@@ -699,10 +699,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     let updatedLocation = [...flagReportLocation];
     let updatedFlagData = [...flagData];
     const currQuestionIndex = updatedFlagData.findIndex(ques => ques.id === questionId);
-    const nextQuestion = getQuestionByLocation(flagReport, [...updatedLocation, optionObject.optionIndex]);
+    const currentQuestion = flagData[currQuestionIndex];
+    const nextQuestion = getQuestionByLocation(flagReport, [...currentQuestion.location, optionObject.optionIndex, 0]);
     if(nextQuestion) {
       updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], choices: [{ ...optionObject, attribute: null }]};
-      updatedFlagData = updatedFlagData.slice(0, currQuestionIndex + 1).concat({ ...nextQuestion, location: [...updatedLocation, optionObject.optionIndex, 0], completed: false, choices: [] });
+      updatedFlagData = updatedFlagData.slice(0, currQuestionIndex + 1).concat({ ...nextQuestion, location: [...currentQuestion.location, optionObject.optionIndex, 0], completed: false, choices: [] });
+      // console.log('update flag data in handleFlagUpdate', updatedFlagData);
+      // console.log('next question in handleFlagupdate', nextQuestion);
       setFlagData(updatedFlagData);
     }
   };
@@ -1843,10 +1846,10 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
   // OnChange handler.
   const onOptionChange = (event, newValue) => {
     // console.log('new value', newValue)
+    // console.log('current value', value);
     // Retrieve selected options index.
     const optionIndex = options.findIndex(opt => opt.id === newValue.id);
     const optionObj  = { ...newValue, optionIndex };
-    setValue(newValue);
 
     if(newValue.type === 'choice-other') {
       setIsFlagChoiceOther(prevState => {
@@ -1857,10 +1860,14 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
         return { ...prevState, [questionId]: false}
       });
     }
-    // Load next flag question.
-    if(newValue) onSelect[0](questionType, questionId, title, optionObj);
-    // TODO: Add logic for if value is not null and old value is not equal to new value i.e. changing option for an already completed/answered question.
-    
+    // If value is already selected.
+    if(value) {
+      // Load next flag question.
+      if(newValue) onSelect[1](questionType, questionId, title, optionObj)
+    } else {
+      if(newValue) onSelect[0](questionType, questionId, title, optionObj);
+    }
+    setValue(newValue);
   };
 
   return (
