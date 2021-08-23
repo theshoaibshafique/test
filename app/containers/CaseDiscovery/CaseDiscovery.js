@@ -700,12 +700,35 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     let updatedFlagData = [...flagData];
     const currQuestionIndex = updatedFlagData.findIndex(ques => ques.id === questionId);
     const currentQuestion = flagData[currQuestionIndex];
-    const nextQuestion = getQuestionByLocation(flagReport, [...currentQuestion.location, optionObject.optionIndex, 0]);
+    // console.log('current question in handleFlagUpdate', currentQuestion);
+    let nextQuestion = getQuestionByLocation(flagReport, [...currentQuestion.location, optionObject.optionIndex]).questions;
+    console.log('next   question in handleFlagUpdate', nextQuestion);
     if(nextQuestion) {
-      updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], choices: [{ ...optionObject, attribute: null }]};
-      updatedFlagData = updatedFlagData.slice(0, currQuestionIndex + 1).concat({ ...nextQuestion, location: [...currentQuestion.location, optionObject.optionIndex, 0], completed: false, choices: [] });
-      // console.log('update flag data in handleFlagUpdate', updatedFlagData);
+      console.log('current ques', updatedFlagData[currQuestionIndex]);
+      updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], completed: true, choices: [{ ...optionObject, attribute: null }]};
+      updatedFlagData = updatedFlagData.slice(0, (currQuestionIndex + 1)).concat({ ...nextQuestion[0], location: [...currentQuestion.location, optionObject.optionIndex, 0], completed: false, choices: [] });
+      console.log('update flag data in handleFlagUpdate', updatedFlagData);
       // console.log('next question in handleFlagupdate', nextQuestion);
+      setFlagData(updatedFlagData);
+    } else {
+      const questionCount = getQuestionCount(flagReport, currentQuestion.location) - 1;
+      console.log('question count', questionCount, currentQuestion.location);
+      if(questionCount > currentQuestion.location[currentQuestion.location.length - 1]) {
+        console.log('there is another question');
+        console.log('Current location', currentQuestion.location);
+        let newLocation = [ ...currentQuestion.location];
+        const lastLoc = newLocation.pop();
+        newLocation = [...newLocation, lastLoc + 1];
+        nextQuestion = getQuestionByLocation(flagReport, newLocation);
+        updatedLocation = newLocation;
+        updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], completed: true, choices: [{ ...optionObject, attribute: null }]};
+        updatedFlagData = updatedFlagData.slice(0, (currQuestionIndex + 1)).concat({ ...nextQuestion, location: newLocation, completed: false, choices: [] });
+        setFlagReportLocation(updatedLocation);
+      } else {
+        updatedLocation = currentQuestion.location.slice(0, -2);
+        setFlagReportLocation(updatedLocation);
+        setFlagLocationPopped(true);
+      }
       setFlagData(updatedFlagData);
     }
   };
