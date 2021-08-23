@@ -1222,6 +1222,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         handleOpenAddFlag={handleOpenAddFlag}
         flagData={flagData}
         renderFlagQuestion={renderFlagQuestion}
+        flagReport={flagReport}
       />
     </section>
   );
@@ -1314,7 +1315,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1546,12 +1547,13 @@ function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId)}
-            <span className="case-tag add-flag" onClick={(e) => handleOpenAddFlag(true)}>
+            {flagReport && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''}`} onClick={(e) => { if(flagReport) handleOpenAddFlag(true)}} >
               <img src={Plus} />
               <div>
                 Add Flag
               </div>
             </span>
+            }
           </div>
 
           <div className="timing-graphs" id="timing-graphs">
