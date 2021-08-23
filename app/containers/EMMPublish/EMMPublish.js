@@ -78,7 +78,7 @@ export default class EMMPublish extends React.PureComponent {
 
           this.setState({
             emmCases: result.map((emmCase) => {
-              let room = this.props.operatingRooms.find(room => room.id.toUpperCase() == emmCase.roomName) || { 'display': '' };
+              let room = this.props.operatingRooms.find(room => room.id.toUpperCase() == emmCase.roomName) || { 'display': emmCase.roomName };
               let surgeryList = this.state.specialties.map((specialty) => specialty.procedures).flatten() || [];
               return {
                 requestID: emmCase.name,
@@ -170,7 +170,7 @@ export default class EMMPublish extends React.PureComponent {
                 title=""
                 columns={[
                   { title: this.generateTitle('Facility'), field: 'facilityName', defaultSort: 'desc' },
-                  { title: this.generateTitle('OR'), field: 'roomName', width: 20 },
+                  { title: this.generateTitle('OR'), field: 'roomName' },
                   { title: this.generateTitle('Procedure'), field: 'procedures' },
                   { title: this.generateTitle('Complication'), field: 'complications' },
                   { title: this.generateTitle('Published'), field: 'enhancedMMPublished', lookup: { 'true': 'Yes', 'false': 'No' }, width: 20 },
