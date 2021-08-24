@@ -32,6 +32,9 @@
             position: relative;
             top: 8px;
             cursor: pointer;
+            &:hover {
+                background-color: darken(#F4F5F7, 5);
+            }
         }
         &.disabled {
             opacity: 0.2;
