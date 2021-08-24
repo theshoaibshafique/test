@@ -1970,6 +1970,7 @@ function DetailedCase(props) {
           setChoiceOtherOptionObject={setChoiceOtherOptionObject}
           choiceOtherOptionObject={choiceOtherOptionObject}
           roomIds={roomIds}
+          roomName={roomName}
         />
       </Modal>
     </Grid>
@@ -1977,7 +1978,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds }) => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName }) => {
 
   useEffect(() => {
     setIsFlagSubmitted(false);
@@ -1999,7 +2000,16 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
     };
     setIsFlagSubmitted(true);
     // handleFlagSubmit(newFlag, setIsFlagSubmitted);
-  }
+  };
+
+  const translateRoomNametoId = () => {
+    if(roomIds && roomName) {
+      const room = roomIds.find(room => room.display === roomName);
+      if(room) return room.id;
+    }
+  };
+
+  console.log(translateRoomNametoId());
 
   return (
     <div className="request-emm-modal">
