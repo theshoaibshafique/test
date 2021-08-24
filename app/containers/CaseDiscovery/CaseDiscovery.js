@@ -627,7 +627,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             <React.Fragment>
               <FlagSelect
                 title={flagData.title}
-                options={flagData.options.filter(opt => opt.type !== 'choice-other')./*map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other - Please specify'} : opt)*/sort((a, b) => a.optionOrder - b.optionOrder)}
+                options={flagData.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other - Please specify'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
                 questionType={flagData.type}
                 onSelect  ={[handleFlagSelect, handleFlagUpdate]}
                 isRequired={flagData.isRequired}
@@ -668,8 +668,50 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
   };
 
+  const handleChoiceOtherSelect = (questionId, optionText, optionObject) => {
+    setIsFlagChoiceOther(true);
+    if(optionText) {
+      // Update current question in flagData.
+      const updatedFlagData = [...flagData];
+      const updatedLocation = [...flagReportLocation];
+      const currentQuesIdx = flagData.findIndex(ques => ques.id === questionId);
+      updatedFlagData[currentQuesIdx] = { ...updatedFlagData[currentQuesIdx], completed: true, choices: [{ ...optionObject, attribute: optionText }]};
+      console.log('updated flag Data', updatedFlagData);
+      setFlagData(updatedFlagData);
+
+      // Update Location to add next question to flagData array.
+      const nextQuestionsArray = getQuestionByLocation(flagReport, [...flagReportLocation, optionObject.optionIndex]);
+      console.log(nextQuestionsArray);
+      if(nextQuestionsArray.questions) {
+        updatedLocation = [...updatedLocation, optionObject.optionIndex, 0];
+        setFlagReportLocation(updatedLocation);
+        // setFlagReportLocation(prevState => [...prevState, optionObject.optionIndex, 0]);
+      } else {
+        const questionCount = getQuestionCount(flagReport, flagReportLocation) - 1;
+        if(questionCount > flagReportLocation[flagReportLocation.length - 1]) {
+          let lastLocEl = updatedLocation.splice(-1, 1);
+          lastLocEl += 1;
+          updatedLocation.concat(lastLocEl);
+          setFlagReportLocation(updatedLocation);
+        } else {
+          updatedLocation = updatedLocation.slice(0, -2);
+          setFlagReportLocation(updatedLocation);
+          setFlagLocationPopped(true);
+        }
+      }
+    }
+  };
+
   // Handle flag option selection
   const handleFlagSelect = (questionType, questionId, questionTitle, optionObject) => {
+    // Handle selection of choice-other option type.
+    if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
+
+    // Handle selection of standard 'choice' option type.
+    } else {
+
+    }
+
     let updatedFlagData = [...flagData];
     let nextQuestion;
     updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
@@ -1386,7 +1428,7 @@ function DetailedCase(props) {
   const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime);
   const latestEndTime = roomCases.reduce((max, c) => globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
   const scheduleDuration = Math.ceil(latestEndTime) - (earliestStartTime);
-
+    
   const description = (
     <div style={{ lineBreak: 'anywhere' }}>
       <span>Case ID: {emrCaseId}</span>
