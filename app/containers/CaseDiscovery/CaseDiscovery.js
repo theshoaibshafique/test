@@ -684,7 +684,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                       endAdornment: (
                         <InputAdornment title={choiceOtherInputActive ? 'Submit' : 'Edit'}>
                           <IconButton 
-                            onClick={() => handleChoiceOtherSelect(flagData.id, flagInputOtherValue[flagData.title], choiceOtherOptionObject )}
+                            onClick={() => choiceOtherInputActive ? handleChoiceOtherSelect(flagData.id, flagInputOtherValue[flagData.title], choiceOtherOptionObject ) : setChoiceOtherInputActive(true)}
                             disabled={!flagInputOtherValue[flagData.title]}
                           >
                             {!choiceOtherInputActive && <EditIcon />} 
@@ -693,7 +693,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                         </InputAdornment>
                       )
                     }}
-                    // style={{margin: '36px 0'}}
+                    style={{color: choiceOtherInputActive ? 'blue' : ''}}
                   />
                 </React.Fragment>
                 )
