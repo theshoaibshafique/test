@@ -1979,10 +1979,23 @@ function DetailedCase(props) {
 
 /***  ADD FLAG FORM COMPONENT. ***/
 const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName }) => {
+  
+  const translateRoomNametoId = () => {
+    if(roomIds && roomName) {
+      const room = roomIds.find(room => room.display === roomName);
+      if(room) return room.id;
+    }
+  };
+  
+  const [roomId, setRoomId] = useState(() => translateRoomNametoId()); 
 
   useEffect(() => {
     setIsFlagSubmitted(false);
   }, []);
+
+  useEffect(() => {
+    setRoomId(translateRoomNametoId());
+  }, [roomName]);
 
   const onFlagSubmit = () => {
     console.log('flag submitted')
@@ -2002,14 +2015,9 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
     // handleFlagSubmit(newFlag, setIsFlagSubmitted);
   };
 
-  const translateRoomNametoId = () => {
-    if(roomIds && roomName) {
-      const room = roomIds.find(room => room.display === roomName);
-      if(room) return room.id;
-    }
-  };
+ 
 
-  console.log(translateRoomNametoId());
+  console.log('id', roomId);
 
   return (
     <div className="request-emm-modal">
