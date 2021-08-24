@@ -573,8 +573,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Update flagData array if necessary when flagReportLocation changes.
   useEffect(() => {
-    if(flagReportLocation.length > 0 && flagReport) {
+    if(flagReportLocation.length > 0 && flagReport && !flagLocationPopped) {
       const nextQuestion = getQuestionByLocation(flagReport, flagReportLocation);
+      // console.log('next question in hook', nextQuestion)
       const transformedNextQuestion = { ...nextQuestion, location: flagReportLocation, completed: false, choices: [] };
       if(nextQuestion) {
         const nextQuestionIndex = flagData.findIndex(ques => ques.id === nextQuestion.id);
@@ -638,7 +639,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
     // scrollToTop();
   };
-  console.log('input val', flagInputOtherValue);
+  // console.log('input val', flagInputOtherValue);
   // Render flag submission question based on question type property value.
   const renderFlagQuestion = flagData => {
     // console.log('flag data', flagData);
@@ -760,18 +761,18 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         let updatedFlagData = [...flagData];
         let nextQuestion;
         updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
-        console.log('updated flag data in flagSelect', updatedFlagData);
+        // console.log('updated flag data in flagSelect', updatedFlagData);
     
         let updatedLocation = flagReportLocation.concat(optionObject.optionIndex);
-        console.log('updated location in flag select', updatedLocation);
+        // console.log('updated location in flag select', updatedLocation);
         const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
-        console.log('netx q array', selectedOpt)
+        // console.log('netx q array', selectedOpt)
         if(selectedOpt.questions) {
           updatedLocation = updatedLocation.concat(0);
-          nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
-          updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
+          // nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
+          // updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
           setFlagReportLocation(updatedLocation);
-          console.log('update flag data', updatedFlagData);
+          // console.log('update flag data', updatedFlagData);
           // setFlagData(updatedFlagData);
         } else {
           const currentQuestionCount = getQuestionCount(flagReport, flagReportLocation) - 1;
@@ -781,8 +782,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             let lastLocEl = tempLocation[tempLocation.length - 1];
             lastLocEl = lastLocEl + 1;
             tempLocation[tempLocation.length - 1] = lastLocEl; 
-            nextQuestion = getQuestionByLocation(flagReport, tempLocation);
-            updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: tempLocation, completed: false, choices: [] });
+            // nextQuestion = getQuestionByLocation(flagReport, tempLocation);
+            // updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: tempLocation, completed: false, choices: [] });
             // setFlagData(updatedFlagData);
             setFlagReportLocation(tempLocation);
           } else {
@@ -790,7 +791,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             setFlagReportLocation(updatedLocation.slice(0, -2));
             setFlagLocationPopped(true);
           }
-  
       }
       setFlagData(updatedFlagData);
   
@@ -870,7 +870,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   };
 
   // console.log('flagReport: ', flagReport)
-  console.log('flag data', flagData);
+  // console.log('flag data', flagData);
   // console.log('flag location', flagReportLocation);
   // console.log('isFlagOtherChecked', isFlagOtherChecked);
 
