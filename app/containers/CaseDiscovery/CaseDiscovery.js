@@ -753,6 +753,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       // Handle selection of choice-other option type.
       if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
         setIsFlagChoiceOther(prevState => ({ ...prevState, questionId: true }));
+        // Make sure text field is editable.
+        if(!choiceOtherInputActive) setChoiceOtherInputActive(prevState => !prevState);
         // handleChoiceOtherSelect(questionId, '', optionObject)
       // Handle selection of standard 'choice' option type.
       } else {
