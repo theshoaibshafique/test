@@ -764,13 +764,14 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
         // console.log('updated flag data in flagSelect', updatedFlagData);
     
-        let updatedLocation = flagReportLocation.length > 0 ? flagReportLocation.concat(optionObject.optionIndex) : flagData[currentQuestionIndex].location.concat(optionObject.optionIndex);
-        // console.log('updated location in flag select', updatedLocation);
+        let updatedLocation = [...flagData[currentQuestionIndex].location, optionObject.optionIndex];
+      
+        console.log('updated location in flag select', flagReportLocation);
         const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
         // console.log('netx q array', selectedOpt)
         if(selectedOpt.questions) {
           updatedLocation = updatedLocation.concat(0);
-          console.log('updated location in handleFlagSelect', updatedLocation);
+          // console.log('updated location in handleFlagSelect', updatedLocation);
           // nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
           // updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
           setFlagReportLocation(updatedLocation);
