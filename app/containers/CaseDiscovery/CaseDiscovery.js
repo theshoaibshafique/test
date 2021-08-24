@@ -2091,6 +2091,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
         disableCloseOnSelect={false}
         renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
         autoFocus
+        disableClearable
       />
     </div>
   );
