@@ -670,7 +670,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
                   <TextField
                     // id="complication-other"
-                    // disabled={true}
+                    disabled={!choiceOtherInputActive}
                     id={`${flagData.title}-other`}
                     variant="outlined"
                     size="small"
