@@ -390,6 +390,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [isFlagChoiceOther, setIsFlagChoiceOther] = useState({});
   const [flagInputOtherValue, setFlagInputOtherValue] = useState({});
   const [choiceOtherOptionObject, setChoiceOtherOptionObject] = useState(null);
+  const [choiceOtherInputActive, setChoiceOtherInputActive] = useState(true);
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -729,50 +730,57 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Handle flag option selection
   const handleFlagSelect = (questionType, questionId, questionTitle, optionObject) => {
-    // Handle selection of choice-other option type.
-    if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
-      setIsFlagChoiceOther(prevState => ({ ...prevState, questionId: true }));
-      // handleChoiceOtherSelect(questionId, '', optionObject)
-    // Handle selection of standard 'choice' option type.
+    const currentQuestionIndex = flagData.findIndex(ques => ques.id === questionId);
+    if(flagData[currentQuestionIndex].choices.find(choice => choice.id === optionObject.id)) {
+      // Do nothing,no need to update flagReportLocation.
+      return;
     } else {
-
-      // TODO: refactor.
-      let updatedFlagData = [...flagData];
-      let nextQuestion;
-      updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
-      console.log('updated flag data in flagSelect', updatedFlagData);
-  
-      let updatedLocation = flagReportLocation.concat(optionObject.optionIndex);
-      console.log('updated location in flag select', updatedLocation);
-      const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
-      console.log('netx q array', selectedOpt)
-      if(selectedOpt.questions) {
-        updatedLocation = updatedLocation.concat(0);
-        nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
-        updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
-        setFlagReportLocation(updatedLocation);
-        console.log('update flag data', updatedFlagData);
-        // setFlagData(updatedFlagData);
+      // Handle selection of choice-other option type.
+      if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
+        setIsFlagChoiceOther(prevState => ({ ...prevState, questionId: true }));
+        // handleChoiceOtherSelect(questionId, '', optionObject)
+      // Handle selection of standard 'choice' option type.
       } else {
-        const currentQuestionCount = getQuestionCount(flagReport, flagReportLocation) - 1;
-        updatedLocation.pop();
-        if(currentQuestionCount > flagReportLocation[flagReportLocation.length - 1]) {
-          const tempLocation = [...updatedLocation];
-          let lastLocEl = tempLocation[tempLocation.length - 1];
-          lastLocEl = lastLocEl + 1;
-          tempLocation[tempLocation.length - 1] = lastLocEl; 
-          nextQuestion = getQuestionByLocation(flagReport, tempLocation);
-          updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: tempLocation, completed: false, choices: [] });
-          // setFlagData(updatedFlagData);
-          setFlagReportLocation(tempLocation);
-        } else {
   
-          setFlagReportLocation(updatedLocation.slice(0, -2));
-          setFlagLocationPopped(true);
-        }
-
-    }
-    setFlagData(updatedFlagData);
+        // TODO: refactor.
+        let updatedFlagData = [...flagData];
+        let nextQuestion;
+        updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
+        console.log('updated flag data in flagSelect', updatedFlagData);
+    
+        let updatedLocation = flagReportLocation.concat(optionObject.optionIndex);
+        console.log('updated location in flag select', updatedLocation);
+        const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
+        console.log('netx q array', selectedOpt)
+        if(selectedOpt.questions) {
+          updatedLocation = updatedLocation.concat(0);
+          nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
+          updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
+          setFlagReportLocation(updatedLocation);
+          console.log('update flag data', updatedFlagData);
+          // setFlagData(updatedFlagData);
+        } else {
+          const currentQuestionCount = getQuestionCount(flagReport, flagReportLocation) - 1;
+          updatedLocation.pop();
+          if(currentQuestionCount > flagReportLocation[flagReportLocation.length - 1]) {
+            const tempLocation = [...updatedLocation];
+            let lastLocEl = tempLocation[tempLocation.length - 1];
+            lastLocEl = lastLocEl + 1;
+            tempLocation[tempLocation.length - 1] = lastLocEl; 
+            nextQuestion = getQuestionByLocation(flagReport, tempLocation);
+            updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: tempLocation, completed: false, choices: [] });
+            // setFlagData(updatedFlagData);
+            setFlagReportLocation(tempLocation);
+          } else {
+    
+            setFlagReportLocation(updatedLocation.slice(0, -2));
+            setFlagLocationPopped(true);
+          }
+  
+      }
+      setFlagData(updatedFlagData);
+  
+      }
 
     }
     // TODO: break out in FN.
