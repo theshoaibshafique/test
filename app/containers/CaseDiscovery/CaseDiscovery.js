@@ -392,6 +392,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [flagInputOtherValue, setFlagInputOtherValue] = useState({});
   const [choiceOtherOptionObject, setChoiceOtherOptionObject] = useState(null);
   const [choiceOtherInputActive, setChoiceOtherInputActive] = useState(true);
+  const [roomIds, setRoomIds] = useState(null);
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -460,6 +461,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         .then(result => {
           result = result.data;
           const { facilityName, fcotsThreshold, turnoverThreshold } = result;
+
+          // Set roomIds local state for flag submission.
+          setRoomIds(result.filters.ORs);
 
           setData({
             facilityName: facilityName,
@@ -892,9 +896,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   };
 
   // console.log('flagReport: ', flagReport)
-  console.log('flag data', flagData);
-  console.log('flag location', flagReportLocation);
+  // console.log('flag data', flagData);
+  // console.log('flag location', flagReportLocation);
   // console.log('isFlagOtherChecked', isFlagOtherChecked);
+  console.log('room iDS', roomIds);
 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
