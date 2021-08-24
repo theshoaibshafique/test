@@ -571,6 +571,20 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
   }, [flagReport]);
 
+  // Update flagData array if necessary when flagReportLocation changes.
+  useEffect(() => {
+    if(flagReportLocation.length > 0 && flagReport) {
+      const nextQuestion = getQuestionByLocation(flagReport, flagReportLocation);
+      const transformedNextQuestion = { ...nextQuestion, location: flagReportLocation, completed: false, choices: [] };
+      if(nextQuestion) {
+        const nextQuestionIndex = flagData.findIndex(ques => ques.id === nextQuestion.id);
+        const updatedFlagData = nextQuestionIndex !== -1 ? [...flagData.slice(0, nextQuestionIndex), transformedNextQuestion] : [...flagData, transformedNextQuestion];
+        console.log('updated flag data in flag data hook', updatedFlagData);
+        setFlagData(updatedFlagData);
+      }
+    }
+  }, [flagReportLocation]);
+
   // Pop last 2 elements of flagReportLocation array off when the current questions array at the current 'level' has no more questions.
   useEffect(() => {
     // if atleast 2 elements have been removed from the end of the flagReportLocation array.
