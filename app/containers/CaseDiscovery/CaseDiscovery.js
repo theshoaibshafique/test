@@ -632,7 +632,18 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   }, [flagLocationPopped, flagReportLocation.length]);
 
   /*** FLAG SUBMISSION HANDLERS ***/
-  const handleOpenAddFlag = open => setOpenAddFlag(open);
+  const handleOpenAddFlag = open => {
+    setOpenAddFlag(open);
+    /* if(isFlagSubmitted) */ setIsFlagSubmitted(false);
+    // Reset all flag submission state to defaults.
+    setFlagReportLocation([0]);
+    setFlagLocationPopped(false);
+    setFlagData([]);
+    setIsFlagChoiceOther({});
+    setFlagInputOtherValue({});
+    setChoiceOtherOptionObject(null);
+    setChoiceOtherInputActive(true);
+  };
 
   const handleFlagInputChange = (event, title)  => {
     const val = event.target.value;
@@ -1960,6 +1971,10 @@ function DetailedCase(props) {
 
 /***  ADD FLAG FORM COMPONENT. ***/
 const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject }) => {
+
+  useEffect(() => {
+    setIsFlagSubmitted(false);
+  }, []);
 
   const onFlagSubmit = () => {
     console.log('flag submitted')
