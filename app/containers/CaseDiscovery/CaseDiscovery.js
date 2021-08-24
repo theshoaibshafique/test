@@ -34,6 +34,7 @@ import Close from './icons/Close.svg';
 import Plus from './icons/Plus.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
+import CheckIcon from '@material-ui/icons/Check';
 import { LightTooltip, SSTSwitch, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
@@ -386,8 +387,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [flagReportLocation, setFlagReportLocation] = useState([0]);
   const [flagLocationPopped, setFlagLocationPopped] = useState(false);
   const [flagData, setFlagData] = useState([]);
-  const [flagChoices, setFlagChoices] = useState([]);
   const [isFlagChoiceOther, setIsFlagChoiceOther] = useState({});
+  const [flagInputOtherValue, setFlagInputOtherValue] = useState({});
+  const [choiceOtherOptionObject, setChoiceOtherOptionObject] = useState(null);
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -615,6 +617,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => setOpenAddFlag(open);
 
+  const handleFlagInputChange = (event, title)  => {
+    const val = event.target.value;
+
+    setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
+    // scrollToTop();
+  };
+  console.log('input val', flagInputOtherValue);
   // Render flag submission question based on question type property value.
   const renderFlagQuestion = flagData => {
     // console.log('flag data', flagData);
@@ -633,6 +642,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                 isRequired={flagData.isRequired}
                 setIsFlagChoiceOther={setIsFlagChoiceOther}
                 questionId={flagData.id}
+                setChoiceOtherOptionObject={setChoiceOtherOptionObject}
                 // disabled={isFlagOtherChecked[flagData.id]}
               />
        
@@ -643,14 +653,29 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                   </div>
 
                   <TextField
-                    id="complication-other"
+                    // id="complication-other"
+                    // disabled={true}
+                    id={`${flagData.title}-other`}
                     variant="outlined"
                     size="small"
-                    name="complicationValue"
+                    name={`${flagData.title}Other`}
                     type="text"
-                    onChange={(e) => handleChange('complicationOther', e.target.value)}
+                    placeholder="Your custom text here"
+                    value={flagInputOtherValue[flagData.title]}
+                    onChange={(e) => handleFlagInputChange(e, flagData.title)}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment>
+                          <IconButton 
+                            onClick={() => handleChoiceOtherSelect(flagData.id, flagInputOtherValue[flagData.title], choiceOtherOptionObject )}
+                            disabled={!flagInputOtherValue[flagData.title]}
+                          >
+                            <CheckIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
                     // style={{margin: '36px 0'}}
-                    
                   />
                 </React.Fragment>
                 )
@@ -669,11 +694,11 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   };
 
   const handleChoiceOtherSelect = (questionId, optionText, optionObject) => {
-    setIsFlagChoiceOther(true);
+    // setIsFlagChoiceOther(prevState => ({ ...prevState, questionId: true }));
     if(optionText) {
       // Update current question in flagData.
       const updatedFlagData = [...flagData];
-      const updatedLocation = [...flagReportLocation];
+      let updatedLocation = [...flagReportLocation];
       const currentQuesIdx = flagData.findIndex(ques => ques.id === questionId);
       updatedFlagData[currentQuesIdx] = { ...updatedFlagData[currentQuesIdx], completed: true, choices: [{ ...optionObject, attribute: optionText }]};
       console.log('updated flag Data', updatedFlagData);
@@ -706,45 +731,49 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleFlagSelect = (questionType, questionId, questionTitle, optionObject) => {
     // Handle selection of choice-other option type.
     if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
-
+      setIsFlagChoiceOther(prevState => ({ ...prevState, questionId: true }));
+      // handleChoiceOtherSelect(questionId, '', optionObject)
     // Handle selection of standard 'choice' option type.
     } else {
 
-    }
-
-    let updatedFlagData = [...flagData];
-    let nextQuestion;
-    updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
-    console.log('updated flag data in flagSelect', updatedFlagData);
-
-    let updatedLocation = flagReportLocation.concat(optionObject.optionIndex);
-    console.log('updated location in flag select', updatedLocation);
-    const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
-    console.log('netx q array', selectedOpt)
-    if(selectedOpt.questions) {
-      updatedLocation = updatedLocation.concat(0);
-      nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
-      updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
-      setFlagReportLocation(updatedLocation);
-      console.log('update flag data', updatedFlagData);
-      // setFlagData(updatedFlagData);
-    } else {
-      const currentQuestionCount = getQuestionCount(flagReport, flagReportLocation) - 1;
-      updatedLocation.pop();
-      if(currentQuestionCount > flagReportLocation[flagReportLocation.length - 1]) {
-        const tempLocation = [...updatedLocation];
-        let lastLocEl = tempLocation[tempLocation.length - 1];
-        lastLocEl = lastLocEl + 1;
-        tempLocation[tempLocation.length - 1] = lastLocEl; 
-        nextQuestion = getQuestionByLocation(flagReport, tempLocation);
-        updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: tempLocation, completed: false, choices: [] });
+      // TODO: refactor.
+      let updatedFlagData = [...flagData];
+      let nextQuestion;
+      updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
+      console.log('updated flag data in flagSelect', updatedFlagData);
+  
+      let updatedLocation = flagReportLocation.concat(optionObject.optionIndex);
+      console.log('updated location in flag select', updatedLocation);
+      const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
+      console.log('netx q array', selectedOpt)
+      if(selectedOpt.questions) {
+        updatedLocation = updatedLocation.concat(0);
+        nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
+        updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
+        setFlagReportLocation(updatedLocation);
+        console.log('update flag data', updatedFlagData);
         // setFlagData(updatedFlagData);
-        setFlagReportLocation(tempLocation);
       } else {
+        const currentQuestionCount = getQuestionCount(flagReport, flagReportLocation) - 1;
+        updatedLocation.pop();
+        if(currentQuestionCount > flagReportLocation[flagReportLocation.length - 1]) {
+          const tempLocation = [...updatedLocation];
+          let lastLocEl = tempLocation[tempLocation.length - 1];
+          lastLocEl = lastLocEl + 1;
+          tempLocation[tempLocation.length - 1] = lastLocEl; 
+          nextQuestion = getQuestionByLocation(flagReport, tempLocation);
+          updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: tempLocation, completed: false, choices: [] });
+          // setFlagData(updatedFlagData);
+          setFlagReportLocation(tempLocation);
+        } else {
+  
+          setFlagReportLocation(updatedLocation.slice(0, -2));
+          setFlagLocationPopped(true);
+        }
 
-        setFlagReportLocation(updatedLocation.slice(0, -2));
-        setFlagLocationPopped(true);
-      }
+    }
+    setFlagData(updatedFlagData);
+
     }
     // TODO: break out in FN.
     // nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
@@ -759,7 +788,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     //   updatedFlagData[nextQuestionIndex] = { ...nextQuestion, location: updatedLocation, completed: false, choices: [] };
     //   // setFlagData(updatedFlagData);
     // }
-    setFlagData(updatedFlagData);
+    
   };
 
   // Handle updating a previously completed flag's option(s).
@@ -1308,6 +1337,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         flagData={flagData}
         renderFlagQuestion={renderFlagQuestion}
         flagReport={flagReport}
+        setChoiceOtherOptionObject={setChoiceOtherOptionObject}
+        choiceOtherOptionObject={choiceOtherOptionObject}
         // handleFlagSubmit={handleFlagSubmit}
       />
     </section>
@@ -1401,7 +1432,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport, handleFlagSubmit } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport, handleFlagSubmit, setChoiceOtherOptionObject, choiceOtherOptionObject } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1886,6 +1917,8 @@ function DetailedCase(props) {
           requestEMMDescription={requestEMMDescription} 
           // handleFlagSubmit={handleFlagSubmit}
           setIsFlagSubmitted={setIsFlagSubmitted}
+          setChoiceOtherOptionObject={setChoiceOtherOptionObject}
+          choiceOtherOptionObject={choiceOtherOptionObject}
         />
       </Modal>
     </Grid>
@@ -1893,7 +1926,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted }) => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject }) => {
 
   const onFlagSubmit = () => {
     console.log('flag submitted')
@@ -1959,7 +1992,7 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
   );
 };
 
-const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsFlagChoiceOther, questionId }) => {
+const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsFlagChoiceOther, questionId, setChoiceOtherOptionObject }) => {
   const [value, setValue] = useState(null);
   const [animate, setAnimate] = useState(false);
 
@@ -1988,6 +2021,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
       setIsFlagChoiceOther(prevState => {
         return { ...prevState, [questionId]: true}
       });
+      setChoiceOtherOptionObject(optionObj);
     } else {
       setIsFlagChoiceOther(prevState => {
         return { ...prevState, [questionId]: false}
