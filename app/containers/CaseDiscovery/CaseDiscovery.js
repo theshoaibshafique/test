@@ -1388,6 +1388,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         flagReport={flagReport}
         setChoiceOtherOptionObject={setChoiceOtherOptionObject}
         choiceOtherOptionObject={choiceOtherOptionObject}
+        roomIds={roomIds}
         // handleFlagSubmit={handleFlagSubmit}
       />
     </section>
@@ -1481,7 +1482,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport, handleFlagSubmit, setChoiceOtherOptionObject, choiceOtherOptionObject } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport, handleFlagSubmit, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1968,6 +1969,7 @@ function DetailedCase(props) {
           setIsFlagSubmitted={setIsFlagSubmitted}
           setChoiceOtherOptionObject={setChoiceOtherOptionObject}
           choiceOtherOptionObject={choiceOtherOptionObject}
+          roomIds={roomIds}
         />
       </Modal>
     </Grid>
@@ -1975,7 +1977,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject }) => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds }) => {
 
   useEffect(() => {
     setIsFlagSubmitted(false);
