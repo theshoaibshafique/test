@@ -714,22 +714,26 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     if(optionText) {
       // Update current question in flagData.
       const updatedFlagData = [...flagData];
-      let updatedLocation = [...flagReportLocation];
       const currentQuesIdx = flagData.findIndex(ques => ques.id === questionId);
+      const currentQuesLoc = flagData[currentQuesIdx].location;
+      let updatedLocation = [...currentQuesLoc];
       updatedFlagData[currentQuesIdx] = { ...updatedFlagData[currentQuesIdx], completed: true, choices: [{ ...optionObject, attribute: optionText }]};
       console.log('updated flag Data', updatedFlagData);
       setFlagData(updatedFlagData);
 
+      // After submit make text input none editable.
+      if(choiceOtherInputActive) setChoiceOtherInputActive(false);
+
       // Update Location to add next question to flagData array.
-      const nextQuestionsArray = getQuestionByLocation(flagReport, [...flagReportLocation, optionObject.optionIndex]);
-      console.log(nextQuestionsArray);
+      const nextQuestionsArray = getQuestionByLocation(flagReport, [...updatedLocation, optionObject.optionIndex]);
+      // console.log(nextQuestionsArray);
       if(nextQuestionsArray.questions) {
         updatedLocation = [...updatedLocation, optionObject.optionIndex, 0];
         setFlagReportLocation(updatedLocation);
         // setFlagReportLocation(prevState => [...prevState, optionObject.optionIndex, 0]);
       } else {
-        const questionCount = getQuestionCount(flagReport, flagReportLocation) - 1;
-        if(questionCount > flagReportLocation[flagReportLocation.length - 1]) {
+        const questionCount = getQuestionCount(flagReport, currentQuesLoc) - 1;
+        if(questionCount > currentQuesLoc[currentQuesLoc.length - 1]) {
           let lastLocEl = updatedLocation.splice(-1, 1);
           lastLocEl += 1;
           updatedLocation.concat(lastLocEl);
