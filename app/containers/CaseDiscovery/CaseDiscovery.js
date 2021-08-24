@@ -578,7 +578,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       // console.log('next question in hook', nextQuestion)
       const transformedNextQuestion = { ...nextQuestion, location: flagReportLocation, completed: false, choices: [] };
       if(nextQuestion) {
-        const nextQuestionIndex = flagData.findIndex(ques => ques.id === nextQuestion.id);
+        const nextQuestionIndex = flagData.findIndex(ques => ques.id === nextQuestion.id || ques.title === nextQuestion.title);
         const updatedFlagData = nextQuestionIndex !== -1 ? [...flagData.slice(0, nextQuestionIndex), transformedNextQuestion] : [...flagData, transformedNextQuestion];
         console.log('updated flag data in flag data hook', updatedFlagData);
         setFlagData(updatedFlagData);
@@ -590,7 +590,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   useEffect(() => {
     // if atleast 2 elements have been removed from the end of the flagReportLocation array.
     console.log('is flag popped', flagLocationPopped);
-    if(flagLocationPopped) {
+    if(flagLocationPopped && flagReportLocation.length > 0) {
       console.log('location in pop useeffect hook', flagReportLocation)
       let updatedLocation = [...flagReportLocation];
       if((getQuestionCount(flagReport, flagReportLocation) - 1) > flagReportLocation[flagReportLocation.length - 1]) {
@@ -654,7 +654,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                 title={flagData.title}
                 options={flagData.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other - Please specify'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
                 questionType={flagData.type}
-                onSelect  ={[handleFlagSelect, handleFlagUpdate]}
+                onSelect  ={handleFlagSelect}
                 isRequired={flagData.isRequired}
                 setIsFlagChoiceOther={setIsFlagChoiceOther}
                 questionId={flagData.id}
@@ -756,19 +756,21 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         // handleChoiceOtherSelect(questionId, '', optionObject)
       // Handle selection of standard 'choice' option type.
       } else {
-  
+        
+        if(flagData[currentQuestionIndex].choices.length > 0) setFlagLocationPopped(false);
         // TODO: refactor.
         let updatedFlagData = [...flagData];
         let nextQuestion;
         updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques);
         // console.log('updated flag data in flagSelect', updatedFlagData);
     
-        let updatedLocation = flagReportLocation.concat(optionObject.optionIndex);
+        let updatedLocation = flagReportLocation.length > 0 ? flagReportLocation.concat(optionObject.optionIndex) : flagData[currentQuestionIndex].location.concat(optionObject.optionIndex);
         // console.log('updated location in flag select', updatedLocation);
         const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
         // console.log('netx q array', selectedOpt)
         if(selectedOpt.questions) {
           updatedLocation = updatedLocation.concat(0);
+          console.log('updated location in handleFlagSelect', updatedLocation);
           // nextQuestion = getQuestionByLocation(flagReport, updatedLocation);
           // updatedFlagData = updatedFlagData.concat({ ...nextQuestion, location: updatedLocation, completed: false, choices: [] });
           setFlagReportLocation(updatedLocation);
@@ -870,8 +872,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   };
 
   // console.log('flagReport: ', flagReport)
-  // console.log('flag data', flagData);
-  // console.log('flag location', flagReportLocation);
+  console.log('flag data', flagData);
+  console.log('flag location', flagReportLocation);
   // console.log('isFlagOtherChecked', isFlagOtherChecked);
 
   // Scrol to top on filter change 
@@ -2049,13 +2051,14 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
         return { ...prevState, [questionId]: false}
       });
     }
+    if(newValue) onSelect(questionType, questionId, title, optionObj);
     // If value is already selected.
-    if(value) {
-      // Load next flag question.
-      if(newValue) onSelect[1](questionType, questionId, title, optionObj)
-    } else {
-      if(newValue) onSelect[0](questionType, questionId, title, optionObj);
-    }
+    // if(value) {
+    //   // Load next flag question.
+    //   if(newValue) onSelect[1](questionType, questionId, title, optionObj)
+    // } else {
+    //   if(newValue) onSelect[0](questionType, questionId, title, optionObj);
+    // }
     setValue(newValue);
   };
 
