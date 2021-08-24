@@ -35,6 +35,7 @@ import Plus from './icons/Plus.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
+import EditIcon from '@material-ui/icons/Edit';
 import { LightTooltip, SSTSwitch, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
@@ -681,12 +682,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                     onChange={(e) => handleFlagInputChange(e, flagData.title)}
                     InputProps={{
                       endAdornment: (
-                        <InputAdornment>
+                        <InputAdornment title={choiceOtherInputActive ? 'Submit' : 'Edit'}>
                           <IconButton 
                             onClick={() => handleChoiceOtherSelect(flagData.id, flagInputOtherValue[flagData.title], choiceOtherOptionObject )}
                             disabled={!flagInputOtherValue[flagData.title]}
                           >
-                            <CheckIcon />
+                            {!choiceOtherInputActive && <EditIcon />} 
+                            {choiceOtherInputActive && <CheckIcon />}
                           </IconButton>
                         </InputAdornment>
                       )
