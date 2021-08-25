@@ -397,7 +397,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
-
+    // console.log('CASES', CASES);
   useEffect(() => {
     if (!logger) {
       return;
@@ -725,11 +725,11 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         setFlagReportLocation(updatedLocation);
         // setFlagReportLocation(prevState => [...prevState, optionObject.optionIndex, 0]);
       } else {
-        const questionCount = getQuestionCount(flagReport, currentQuesLoc) - 1;
+        const questionCount = getQuestionCount(flagReport, flagReportLocation) - 1;
         if(questionCount > currentQuesLoc[currentQuesLoc.length - 1]) {
-          let lastLocEl = updatedLocation.splice(-1, 1);
-          lastLocEl += 1;
-          updatedLocation.concat(lastLocEl);
+          let lastLocEl = updatedLocation[updatedLocation.length - 1];
+          lastLocEl = lastLocEl + 1;
+          updatedLocation[updatedLocation.length - 1] = lastLocEl;
           setFlagReportLocation(updatedLocation);
         } else {
           updatedLocation = updatedLocation.slice(0, -2);
@@ -749,6 +749,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     } else {
       // Handle selection of choice-other option type.
       if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
+        console.log('')
         setIsFlagChoiceOther(prevState => ({ ...prevState, questionId: true }));
         // Make sure text field is editable.
         if(!choiceOtherInputActive) setChoiceOtherInputActive(prevState => !prevState);
@@ -1041,8 +1042,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   }
 
   // console.log('flagReport',flagReport);
-  // console.log('flagData',flagReport);
-  // console.log('flagReport',flagReport);
+  // console.log('flagData',flagData);
+  // console.log('location',flagReportLocation);
 
   const renderTagInfo = () => {
     const result = []
