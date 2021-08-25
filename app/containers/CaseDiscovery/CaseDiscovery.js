@@ -519,7 +519,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         })
 
     }
-
+    console.log('cases', CASES)
     const fetchSavedCases = async () => {
       await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + "bookmarks", 'get', userToken, {})
         .then(result => {
@@ -1044,7 +1044,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // console.log('flagReport',flagReport);
   // console.log('flagData',flagData);
   // console.log('location',flagReportLocation);
-
   const renderTagInfo = () => {
     const result = []
     const tag_info = TAG_INFO;
@@ -1309,7 +1308,23 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // const [isLoading, setIsLoading] = useState(true);
   const [DETAILED_CASE, setDetailedCase] = useState(null);
-  const [reloadCase, setReloadCase] = useState(false);
+  const [reloadCase, setReloadCase] = useState(null);
+
+  // Custom Hook to compare prev state val to current.
+  const useCompare = (val) => {
+    const prevVal =usePrevious(val);
+    return prevVal !== val;
+  };
+
+  const usePrevious = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  };
+
+  const hasCaseIdChanged = useCompare(caseId);
 
   useEffect(() => {
     if (caseId == null) {
@@ -1327,6 +1342,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           }
 
           setDetailedCase(result)
+          // Update this case object val in the master CASES piece of state.
+          setData({
+            'CASES': CASES.map(el => el.caseId === caseId ? { ...el, tags: result.tags} : el)
+          });
         }).catch((error) => {
           console.log("oh no " + error)
           setCaseId(null)
@@ -1335,7 +1354,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         });
     }
     // Refetch case when caseId changes or when reloadCase piece of state changes to true(case is reloaded after a new flag is submitted).
-    if(caseId || reloadCase === true) {
+    if(hasCaseIdChanged || reloadCase !== null) {
       fetchCases()
     } 
 
@@ -1453,7 +1472,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport, handleFlagSubmit, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, setReloadCase } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport, handleFlagSubmit, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, setReloadCase, setData } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1947,6 +1966,7 @@ function DetailedCase(props) {
           wheelsInLocal={wheelsIn}
           wheelsInUtc={wheelsInUtc}
           setReloadCase={setReloadCase}
+          caseId={caseId}
         />
       </Modal>
     </Grid>
@@ -1954,7 +1974,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName, wheelsInLocal, wheelsInUtc, setReloadCase }) => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName, wheelsInLocal, wheelsInUtc, setReloadCase, caseId }) => {
   
   const translateRoomNametoId = () => {
     if(roomIds && roomName) {
@@ -1988,11 +2008,12 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, r
         })
       };
       handleFlagSubmit(newFlag, setIsFlagSubmitted);
+    
       setTimeout(() => {
-        setReloadCase(true);
+        setReloadCase(caseId);
       }, 500);
       setTimeout(() => {
-        setReloadCase(false);
+        setReloadCase(null);
       }, 600);
     }
   };
