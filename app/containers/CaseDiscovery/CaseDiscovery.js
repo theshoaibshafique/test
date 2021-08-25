@@ -666,6 +666,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           return (
             <React.Fragment>
               <FlagSelect
+                key={flagData.title}
                 title={flagData.title}
                 options={flagData.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other - Please specify'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
                 questionType={flagData.type}
@@ -885,7 +886,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
         .then(result => {
           result = result.data;
-          console.log('flag submitted', result);
           handleSetIsFlagSubmitted(true);
         }).catch((error) => {
           console.log("uh no.")
@@ -894,7 +894,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         });
   };
 
-  console.log('flagReport: ', flagReport)
+  // console.log('flagReport: ', flagReport)
   // console.log('flag data', flagData);
   // console.log('flag location', flagReportLocation);
   // console.log('isFlagOtherChecked', isFlagOtherChecked);
@@ -1668,7 +1668,7 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-  console.log('flags', flags);
+
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -2018,10 +2018,6 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, r
     }
   };
 
- 
-
-  console.log('id', roomId);
-
   return (
     <div className="request-emm-modal">
       <div className="close-button">
@@ -2082,6 +2078,10 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
       clearTimeout(timeout);
     }
   }, []);
+
+  useEffect(() => {
+    setValue(null)
+  }, [questionId])
 
   const classes = useStyles();
 
