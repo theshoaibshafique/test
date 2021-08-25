@@ -882,23 +882,22 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Submit flag.
   const handleFlagSubmit = (flag, handleSetIsFlagSubmitted) => {
-      // globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
-      //   .then(result => {
-      //     result = result.data;
-      //     console.log('flag submitted', result);
-      //     setIsFlagSubmitted(true);
-      //   }).catch((error) => {
-      //     console.log("uh no.")
-      //   }).finally(() => {
+      globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
+        .then(result => {
+          result = result.data;
+          console.log('flag submitted', result);
+          handleSetIsFlagSubmitted(true);
+        }).catch((error) => {
+          console.log("uh no.")
+        }).finally(() => {
 
-      //   });
+        });
   };
 
-  // console.log('flagReport: ', flagReport)
+  console.log('flagReport: ', flagReport)
   // console.log('flag data', flagData);
   // console.log('flag location', flagReportLocation);
   // console.log('isFlagOtherChecked', isFlagOtherChecked);
-  console.log('room iDS', roomIds);
 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
@@ -1388,7 +1387,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         setChoiceOtherOptionObject={setChoiceOtherOptionObject}
         choiceOtherOptionObject={choiceOtherOptionObject}
         roomIds={roomIds}
-        // handleFlagSubmit={handleFlagSubmit}
+        handleFlagSubmit={handleFlagSubmit}
       />
     </section>
   );
@@ -1669,7 +1668,7 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-
+  console.log('flags', flags);
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -1713,12 +1712,13 @@ function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId)}
-            {flagReport && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''}`} onClick={(e) => { if(flagReport) handleOpenAddFlag(true)}} >
-              <img src={Plus} />
-              <div>
-                Add Flag
-              </div>
-            </span>
+            {(flagReport && flags.length <= 0 && dayDiff <= 25) && 
+              <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''}`} onClick={(e) => { if(flagReport) handleOpenAddFlag(true)}} >
+                <img src={Plus} />
+                <div>
+                  Add Flag
+                </div>
+              </span>
             }
           </div>
 
@@ -1960,11 +1960,12 @@ function DetailedCase(props) {
         <AddFlagForm 
           isFlagSubmitted={isFlagSubmitted}
           handleOpenAddFlag={handleOpenAddFlag}
+          reportId={flagReport.reportId}
           flagData={flagData}
           renderFlagQuestion={renderFlagQuestion}
           procedureTitle={procedureTitle}
           requestEMMDescription={requestEMMDescription} 
-          // handleFlagSubmit={handleFlagSubmit}
+          handleFlagSubmit={handleFlagSubmit}
           setIsFlagSubmitted={setIsFlagSubmitted}
           setChoiceOtherOptionObject={setChoiceOtherOptionObject}
           choiceOtherOptionObject={choiceOtherOptionObject}
@@ -1977,7 +1978,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName }) => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName }) => {
   
   const translateRoomNametoId = () => {
     if(roomIds && roomName) {
@@ -1998,20 +1999,23 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, renderFlagQ
 
   const onFlagSubmit = () => {
     console.log('flag submitted')
-    const newFlag = {
-      reportId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-      roomId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-      localTime: new Date().toJSON(),
-      utcTime: new Date().toJSON(),
-      options: [
-        {
-          optionId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-          attribute: null
-        }
-      ]
-    };
-    setIsFlagSubmitted(true);
-    // handleFlagSubmit(newFlag, setIsFlagSubmitted);
+    if(reportId, flagData) {
+      const newFlag = {
+        reportId,
+        roomId,
+        localTime: new Date().toJSON(),
+        utcTime: new Date().toJSON(),
+        options: flagData.map(el => {
+          return {
+            optionId: el.choices[0].id,
+            attribute: el.choices[0].attribute
+          }
+        })
+      };
+      console.log(newFlag);
+      // setIsFlagSubmitted(true);
+      handleFlagSubmit(newFlag, setIsFlagSubmitted);
+    }
   };
 
  
