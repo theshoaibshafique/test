@@ -1305,6 +1305,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // const [isLoading, setIsLoading] = useState(true);
   const [DETAILED_CASE, setDetailedCase] = useState(null);
+  const [reloadCase, setReloadCase] = useState(false);
 
   useEffect(() => {
     if (caseId == null) {
@@ -1329,10 +1330,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
         });
     }
-    fetchCases()
+    // Refetch case when caseId changes or when reloadCase piece of state changes to true(case is reloaded after a new flag is submitted).
+    if(caseId || reloadCase === true) {
+      fetchCases()
+    } 
 
 
-  }, [caseId]);
+  }, [caseId, reloadCase]);
 
   return (
     <section className="case-discovery">
@@ -1352,6 +1356,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         choiceOtherOptionObject={choiceOtherOptionObject}
         roomIds={roomIds}
         handleFlagSubmit={handleFlagSubmit}
+        setReloadCase={setReloadCase}
       />
     </section>
   );
@@ -1444,7 +1449,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport, handleFlagSubmit, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagData, renderFlagQuestion, flagReport, handleFlagSubmit, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, setReloadCase } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1454,7 +1459,7 @@ function DetailedCase(props) {
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
 
-  const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsOut, scheduledStart, startTime, endTime,
+  const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsInUtc, wheelsOut, scheduledStart, startTime, endTime,
     duration, departmentId, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
     procedures, timeline }, flags } = props;
   const { roomSchedule: { blockStart, blockEnd, roomCases }, procedureDistribution, emmStatus: { reportId, isPublished }, hl7Parameters, tags } = props;
@@ -1935,6 +1940,9 @@ function DetailedCase(props) {
           choiceOtherOptionObject={choiceOtherOptionObject}
           roomIds={roomIds}
           roomName={roomName}
+          wheelsInLocal={wheelsIn}
+          wheelsInUtc={wheelsInUtc}
+          setReloadCase={setReloadCase}
         />
       </Modal>
     </Grid>
@@ -1942,7 +1950,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName }) => {
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName, wheelsInLocal, wheelsInUtc, setReloadCase }) => {
   
   const translateRoomNametoId = () => {
     if(roomIds && roomName) {
@@ -1966,8 +1974,8 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, r
       const newFlag = {
         reportId,
         roomId,
-        localTime: new Date().toJSON(),
-        utcTime: new Date().toJSON(),
+        localTime: wheelsInLocal,
+        utcTime: wheelsInUtc,
         options: flagData.map(el => {
           return {
             optionId: el.choices[0].id,
@@ -1975,11 +1983,15 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, r
           }
         })
       };
-      // setIsFlagSubmitted(true);
       handleFlagSubmit(newFlag, setIsFlagSubmitted);
+      setTimeout(() => {
+        setReloadCase(true);
+      }, 500);
+      setTimeout(() => {
+        setReloadCase(false);
+      }, 600);
     }
   };
-
   return (
     <div className="request-emm-modal">
       <div className="close-button">
