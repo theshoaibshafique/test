@@ -1040,6 +1040,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     )
   }
 
+  // console.log('flagReport',flagReport);
+  // console.log('flagData',flagReport);
+  // console.log('flagReport',flagReport);
 
   const renderTagInfo = () => {
     const result = []
@@ -2120,7 +2123,7 @@ const FlagTextInput = ({ choiceOtherInputActive, flagData, choiceOtherOptionObje
   const handleFlagInputChange = (event, title)  => {
     const val = event.target.value;
 
-    if(val) setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
+    setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
     // scrollToTop();
   };
 
