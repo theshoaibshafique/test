@@ -638,7 +638,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => {
     setOpenAddFlag(open);
-    /* if(isFlagSubmitted) */ setIsFlagSubmitted(false);
     // Reset all flag submission state to defaults.
     setFlagReportLocation([0]);
     setFlagLocationPopped(false);
