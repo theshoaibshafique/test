@@ -1924,7 +1924,7 @@ function DetailedCase(props) {
         <AddFlagForm 
           isFlagSubmitted={isFlagSubmitted}
           handleOpenAddFlag={handleOpenAddFlag}
-          reportId={flagReport.reportId}
+          reportId={flagReport && flagReport.reportId}
           flagData={flagData}
           renderFlagQuestion={renderFlagQuestion}
           procedureTitle={procedureTitle}
