@@ -594,7 +594,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // Pop last 2 elements of flagReportLocation array off when the current questions array at the current 'level' has no more questions.
   useEffect(() => {
     // if atleast 2 elements have been removed from the end of the flagReportLocation array.
-    console.log('is flag popped', flagLocationPopped);
     if(flagLocationPopped && flagReportLocation.length > 0) {
       console.log('location in pop useeffect hook', flagReportLocation)
       let updatedLocation = [...flagReportLocation];
@@ -657,7 +656,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // console.log('input val', flagInputOtherValue);
   // Render flag submission question based on question type property value.
   const renderFlagQuestion = flagData => {
-    // console.log('flag data', flagData);
     if(flagData) {
       switch(flagData.type.toLowerCase()) {
         case 'single-choice':
@@ -684,31 +682,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                     <InputLabel className={classes.inputLabel}>Other</InputLabel>
                   </div>
 
-                  <TextField
-                    // id="complication-other"
-                    disabled={!choiceOtherInputActive}
-                    id={`${flagData.title}-other`}
-                    variant="outlined"
-                    size="small"
-                    name={`${flagData.title}Other`}
-                    type="text"
-                    placeholder="Your custom text here"
-                    value={flagInputOtherValue[flagData.title]}
-                    onChange={(e) => handleFlagInputChange(e, flagData.title)}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment title={choiceOtherInputActive ? 'Submit' : 'Edit'}>
-                          <IconButton 
-                            onClick={() => choiceOtherInputActive ? handleChoiceOtherSelect(flagData.id, flagInputOtherValue[flagData.title], choiceOtherOptionObject ) : setChoiceOtherInputActive(true)}
-                            disabled={!flagInputOtherValue[flagData.title]}
-                          >
-                            {!choiceOtherInputActive && <EditIcon />} 
-                            {choiceOtherInputActive && <CheckIcon />}
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                    style={{color: choiceOtherInputActive ? 'blue' : ''}}
+                  <MemoizedFlagTextInput 
+                    choiceOtherInputActive={choiceOtherInputActive}
+                    flagData={flagData}
+                    choiceOtherOptionObject={choiceOtherOptionObject}
+                    handleChoiceOtherSelect={handleChoiceOtherSelect}
+                    setChoiceOtherInputActive={setChoiceOtherInputActive}
                   />
                 </React.Fragment>
                 )
@@ -735,7 +714,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       const currentQuesLoc = flagData[currentQuesIdx].location;
       let updatedLocation = [...currentQuesLoc];
       updatedFlagData[currentQuesIdx] = { ...updatedFlagData[currentQuesIdx], completed: true, choices: [{ ...optionObject, attribute: optionText }]};
-      console.log('updated flag Data', updatedFlagData);
       setFlagData(updatedFlagData);
 
       // After submit make text input none editable.
@@ -789,7 +767,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     
         let updatedLocation = [...flagData[currentQuestionIndex].location, optionObject.optionIndex];
       
-        console.log('updated location in flag select', flagReportLocation);
         const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
         // console.log('netx q array', selectedOpt)
         if(selectedOpt.questions) {
@@ -850,20 +827,14 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     // console.log('current question in handleFlagUpdate', currentQuestion);
     let nextQuestion = getQuestionByLocation(flagReport, [...currentQuestion.location, optionObject.optionIndex]).questions;
-    console.log('next   question in handleFlagUpdate', nextQuestion);
     if(nextQuestion) {
-      console.log('current ques', updatedFlagData[currQuestionIndex]);
       // updatedFlagData[currQuestionIndex] = { ...updatedFlagData[currQuestionIndex], completed: true, choices: [{ ...optionObject, attribute: null }]};
       updatedFlagData = updatedFlagData.slice(0, (currQuestionIndex + 1)).concat({ ...nextQuestion[0], location: [...currentQuestion.location, optionObject.optionIndex, 0], completed: false, choices: [] });
-      console.log('update flag data in handleFlagUpdate', updatedFlagData);
       // console.log('next question in handleFlagupdate', nextQuestion);
       setFlagData(updatedFlagData);
     } else {
       const questionCount = getQuestionCount(flagReport, currentQuestion.location) - 1;
-      console.log('question count', questionCount, currentQuestion.location);
       if(questionCount > currentQuestion.location[currentQuestion.location.length - 1]) {
-        console.log('there is another question');
-        console.log('Current location', currentQuestion.location);
         let newLocation = [ ...currentQuestion.location];
         const lastLoc = newLocation.pop();
         newLocation = [...newLocation, lastLoc + 1];
@@ -1998,7 +1969,6 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, r
   }, [roomName]);
 
   const onFlagSubmit = () => {
-    console.log('flag submitted')
     if(reportId, flagData) {
       const newFlag = {
         reportId,
@@ -2012,7 +1982,6 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, r
           }
         })
       };
-      console.log(newFlag);
       // setIsFlagSubmitted(true);
       handleFlagSubmit(newFlag, setIsFlagSubmitted);
     }
@@ -2139,6 +2108,48 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
     </div>
   );
 };
+
+const FlagTextInput = ({ choiceOtherInputActive, flagData, choiceOtherOptionObject, handleChoiceOtherSelect, setChoiceOtherInputActive }) => {
+  const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
+
+  const handleFlagInputChange = (event, title)  => {
+    const val = event.target.value;
+
+    if(val) setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
+    // scrollToTop();
+  };
+
+  return (
+    <TextField
+      // id="complication-other"
+      disabled={!choiceOtherInputActive}
+      id={`${flagData.title}-other`}
+      variant="outlined"
+      size="small"
+      name={`${flagData.title}Other`}
+      type="text"
+      placeholder="Your custom text here"
+      value={flagInputOtherValue[flagData.title]}
+      onChange={(e) => handleFlagInputChange(e, flagData.title)}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment title={choiceOtherInputActive ? 'Submit' : 'Edit'}>
+            <IconButton 
+              onClick={() => choiceOtherInputActive ? handleChoiceOtherSelect(flagData.id, flagInputOtherValue[flagData.title], choiceOtherOptionObject ) : setChoiceOtherInputActive(true)}
+              disabled={!flagInputOtherValue[flagData.title]}
+            >
+              {!choiceOtherInputActive && <EditIcon />} 
+              {choiceOtherInputActive && <CheckIcon />}
+            </IconButton>
+          </InputAdornment>
+        )
+      }}
+      style={{color: choiceOtherInputActive ? 'blue' : ''}}
+    />
+  )
+};
+
+const MemoizedFlagTextInput = React.memo(FlagTextInput);
 
 const AddFlagInput = ({ optionType, title }) => (
   <React.Fragment>
