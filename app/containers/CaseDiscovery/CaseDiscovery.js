@@ -585,7 +585,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       if(nextQuestion) {
         const nextQuestionIndex = flagData.findIndex(ques => ques.id === nextQuestion.id || ques.title === nextQuestion.title);
         const updatedFlagData = nextQuestionIndex !== -1 ? [...flagData.slice(0, nextQuestionIndex), transformedNextQuestion] : [...flagData, transformedNextQuestion];
-        console.log('updated flag data in flag data hook', updatedFlagData);
         setFlagData(updatedFlagData);
       }
     }
@@ -595,7 +594,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   useEffect(() => {
     // if atleast 2 elements have been removed from the end of the flagReportLocation array.
     if(flagLocationPopped && flagReportLocation.length > 0) {
-      console.log('location in pop useeffect hook', flagReportLocation)
       let updatedLocation = [...flagReportLocation];
       if((getQuestionCount(flagReport, flagReportLocation) - 1) > flagReportLocation[flagReportLocation.length - 1]) {
         let lastLoc = updatedLocation[updatedLocation.length - 1];
@@ -864,11 +862,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
         });
   };
-
-  // console.log('flagReport: ', flagReport)
-  // console.log('flag data', flagData);
-  // console.log('flag location', flagReportLocation);
-  // console.log('isFlagOtherChecked', isFlagOtherChecked);
 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
