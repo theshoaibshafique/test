@@ -66,6 +66,14 @@ const useStyles = makeStyles((theme) => ({
     color: '#323232',
     opacity: .8
   },
+  inputLabelFlag: {
+    fontFamily: 'Noto Sans',
+    fontSize: 16,
+    marginBottom: 10,
+    marginTop: 25,
+    color: '#323232',
+    opacity: .8
+  },
   clear: {
     fontFamily: 'Noto Sans',
     fontSize: 16,
@@ -660,7 +668,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         case 'multiple-choice':
           // TODO: render select list.
           return (
-            <React.Fragment>
+            <div style={{marginBottom: '1rem'}}>
               <FlagSelect
                 key={flagData.title}
                 title={flagData.title}
@@ -677,7 +685,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
               {isFlagChoiceOther[flagData.id] && 
                 (<React.Fragment>
                   <div className="select-header">
-                    <InputLabel className={classes.inputLabel}>Other</InputLabel>
+                    <InputLabel className={classes.inputLabelFlag}>Other</InputLabel>
                   </div>
 
                   <MemoizedFlagTextInput 
@@ -690,7 +698,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
                 </React.Fragment>
                 )
               }
-            </React.Fragment>
+            </div>
 
           )
         case 'input':
@@ -2116,7 +2124,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
   return (
     <div className={`flag-select ${animate ? 'animate' : ''}`}>
       <div className="select-header">
-        <InputLabel className={classes.inputLabel}>{`${title} ${isRequired ? '' : '(optional)'}`}</InputLabel>
+        <InputLabel className={classes.inputLabelFlag}>{`${title} ${isRequired ? '' : '(optional)'}`}</InputLabel>
         {/* <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
           Clear
         </div> */}
@@ -2131,7 +2139,7 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
         style={{ width: '100%' }}
         multiple={questionType === 'multiple-choice'}
         disableCloseOnSelect={false}
-        renderInput={(params) => <TextField {...params} label={questionType === 'multiple-choice' ? 'Select 1 or more' : 'Select 1'} variant="outlined" />}
+        renderInput={(params) => <TextField {...params} /*label={questionType === 'multiple-choice' ? 'Select 1 or more' : ''}*/ variant="outlined" />}
         autoFocus
         disableClearable
       />
@@ -2183,7 +2191,7 @@ const MemoizedFlagTextInput = React.memo(FlagTextInput);
 
 const AddFlagInput = ({ optionType, title }) => (
   <React.Fragment>
-    <InputLabel className={classes.inputLabel}>{title}</InputLabel>
+    <InputLabel className={classes.inputLabelFlag}>{title}</InputLabel>
     {renderFlagInput(optionType)}
   </React.Fragment>
 );
