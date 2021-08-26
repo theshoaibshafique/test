@@ -1718,10 +1718,8 @@ function DetailedCase(props) {
             {displayTags(tags, emrCaseId)}
             {(flagReport && flags.length <= 0 && dayDiff <= 25) && 
               <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''}`} onClick={(e) => { if(flagReport) handleOpenAddFlag(true)}} >
-                <img src={Plus} />
-                <div>
-                  Add Flag
-                </div>
+                <span><img src={Plus} /></span>
+                <div>Add Flag</div>
               </span>
             }
           </div>

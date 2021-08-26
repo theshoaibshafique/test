@@ -29,9 +29,10 @@
             align-items: center;
             background-color: #F4F5F7;
             color: #323232;
-            position: relative;
-            top: 8px;
+            // position: relative;
+            // top: 8px;
             cursor: pointer;
+            transition: background-color .5s ease-out;
             &:hover {
                 background-color: darken(#F4F5F7, 5);
             }
