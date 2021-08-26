@@ -56,6 +56,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
+import { green } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -88,6 +89,9 @@ const useStyles = makeStyles((theme) => ({
   sortButton: {
     display: 'block',
     margin: 0
+  },
+  adornedEnd: {
+    paddingRight: 0
   }
 }));
 const MenuProps = {
@@ -527,7 +531,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         })
 
     }
-    console.log('cases', CASES)
+
     const fetchSavedCases = async () => {
       await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + "bookmarks", 'get', userToken, {})
         .then(result => {
@@ -2154,6 +2158,9 @@ const FlagSelect = ({ title, questionType, options, onSelect, isRequired, setIsF
 const FlagTextInput = ({ choiceOtherInputActive, flagData, choiceOtherOptionObject, handleChoiceOtherSelect, setChoiceOtherInputActive }) => {
   const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
 
+  const classes = useStyles();
+  
+
   const handleFlagInputChange = (event, title)  => {
     const val = event.target.value;
 
@@ -2164,6 +2171,7 @@ const FlagTextInput = ({ choiceOtherInputActive, flagData, choiceOtherOptionObje
   return (
     <TextField
       // id="complication-other"
+      className={classes.flagTextIcon}
       disabled={!choiceOtherInputActive}
       id={`${flagData.title}-other`}
       variant="outlined"
@@ -2178,19 +2186,22 @@ const FlagTextInput = ({ choiceOtherInputActive, flagData, choiceOtherOptionObje
         endAdornment: (
           <InputAdornment title={choiceOtherInputActive ? 'Submit' : 'Edit'}>
             <IconButton 
+              style={{ color: flagInputOtherValue[flagData.title] ?  choiceOtherInputActive ? green[500] : '' : '' }}
               onClick={() => choiceOtherInputActive ? handleChoiceOtherSelect(flagData.id, flagInputOtherValue[flagData.title], choiceOtherOptionObject ) : setChoiceOtherInputActive(true)}
               disabled={!flagInputOtherValue[flagData.title]}
             >
-              {!choiceOtherInputActive && <EditIcon />} 
+              {!choiceOtherInputActive && <EditIcon  />} 
               {choiceOtherInputActive && <CheckIcon />}
             </IconButton>
           </InputAdornment>
-        )
+        ),
+        classes: {
+          adornedEnd: classes.adornedEnd
+         }
       }}
       inputProps={{
         maxLength: 128
       }}
-      style={{color: choiceOtherInputActive ? 'blue' : ''}}
     />
   )
 };
