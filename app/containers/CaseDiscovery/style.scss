@@ -704,6 +704,16 @@
 }
 
 .request-emm-modal {
+    &.modal-content {
+        // opacity: 0;
+        transform: translateX(100%);
+        transition: all .5s ease-in-out;
+        &.animate {
+            opacity: 1;
+            transform: translateX((0));
+        }
+    }
+  
     .request-emm {
         height: 100%;
         display: flex;
@@ -852,6 +862,11 @@
         }
     }
 }
+
+.add-flag-modal-content {
+   
+}
+
 
 .tag-info-modal {
     .admin-link {

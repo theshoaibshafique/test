@@ -1981,6 +1981,7 @@ function DetailedCase(props) {
           wheelsInUtc={wheelsInUtc}
           setReloadCase={setReloadCase}
           caseId={caseId}
+          openAddFlag={openAddFlag}
         />
       </Modal>
     </Grid>
@@ -1988,8 +1989,19 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName, wheelsInLocal, wheelsInUtc, setReloadCase, caseId }) => {
-  
+const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, renderFlagQuestion, procedureTitle, requestEMMDescription, handleFlagSubmit, setIsFlagSubmitted, setChoiceOtherOptionObject, choiceOtherOptionObject, roomIds, roomName, wheelsInLocal, wheelsInUtc, setReloadCase, caseId, openAddFlag }) => {
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    // 1. Animate state set to true.
+    const timeout = setTimeout(() => {
+     setAnimate(true);
+   }, 200);
+   // Clean up timeout before effect runs.
+   return () => {
+     clearTimeout(timeout);
+   }
+ }, []);
   const translateRoomNametoId = () => {
     if(roomIds && roomName) {
       const room = roomIds.find(room => room.display === roomName);
@@ -2032,7 +2044,7 @@ const AddFlagForm = ({ isFlagSubmitted, handleOpenAddFlag, flagData, reportId, r
     }
   };
   return (
-    <div className="request-emm-modal">
+    <div className={`request-emm-modal modal-content ${animate ? ' animate' : ''}`}>
       <div className="close-button">
         <img src={Close} onClick={() => handleOpenAddFlag(false)} />
       </div>
