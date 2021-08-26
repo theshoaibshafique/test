@@ -2163,6 +2163,7 @@ const FlagTextInput = ({ choiceOtherInputActive, flagData, choiceOtherOptionObje
       disabled={!choiceOtherInputActive}
       id={`${flagData.title}-other`}
       variant="outlined"
+      fullWidth
       size="small"
       name={`${flagData.title}Other`}
       type="text"
@@ -2181,6 +2182,9 @@ const FlagTextInput = ({ choiceOtherInputActive, flagData, choiceOtherOptionObje
             </IconButton>
           </InputAdornment>
         )
+      }}
+      inputProps={{
+        maxLength: 128
       }}
       style={{color: choiceOtherInputActive ? 'blue' : ''}}
     />
