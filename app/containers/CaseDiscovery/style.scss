@@ -626,9 +626,12 @@
                     top: -8px;
                     left: 8px;
                     position: absolute;
-                    background: rgba(245, 248, 250, 1);
+                    background: rgba(245, 248, 250, 0);
                     padding: 4px;
                     border-radius: 4px;
+                    &.start-boundary, &.end-boundary {
+                        background-color: rgba(245, 248, 250, 1);
+                    }
                 }
             }
             .case-block {

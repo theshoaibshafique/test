@@ -1800,7 +1800,11 @@ function DetailedCase(props) {
                   // top: `${i * HOUR_SIZE}px`,
                   height: `${HOUR_SIZE}px`,
                 }}>
-                <div className="log-click" id={`hour-marker-${formattedTime}`}>{formattedTime}</div>
+                <div 
+                  className={`log-click${moment(blockStartTime).format('HH:mm') === formattedTime ? ' start-boundary' : ''}${moment(blockEndTime).format('HH:mm') === formattedTime ? ' end-boundary' : ''}`} 
+                  id={`hour-marker-${formattedTime}`}>
+                    {formattedTime}
+                  </div>
               </div>
             )
           })}
