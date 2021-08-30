@@ -1689,6 +1689,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   const SELECT_OPTION = 'SELECT_OPTION';
   const GET_NEXT_FLAG_LOCATION = 'GET_NEXT_FLAG_LOCATION';
   const SAVE_CHOICE_OTHER = 'SAVE_CHOICE_OTHER';
+  const CHOICE_OTHER_EMPTY = 'CHOICE_OTHER_EMPTY';
   const TOGGLE_CHOICE_OTHER_ACTIVE = 'TOGGLE_CHOICE_OTHER_ACTIVE';
   const SELECT_MULTI_OPTION = 'SELECT_MULTI_OPTION';
   const SENDING_FLAG = 'SENDING_FLAG';
@@ -1725,6 +1726,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           flagData: updatedFlagData
         }
       case UPDATE_QUESTIONS:
+        updatedFlagData = [...state.flagData];
         const nextQuestion = getQuestionByLocation(flagReport, state.flagReportLocation);
         let transformedNextQuestion;
         if(nextQuestion) transformedNextQuestion = { ...nextQuestion, location: state.flagReportLocation, completed: false, choices: [] };
@@ -1866,6 +1868,14 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             ...state.choiceOtherInputActive,
             [questionId]: false
           }
+        };
+      case CHOICE_OTHER_EMPTY:
+        questionId = action.payload.questionId;
+        updatedFlagData = [...state.flagData];
+        updatedFlagData = updatedFlagData.map(ques => ques.id === questionId ? { ...ques, completed: false, choices: [{ ...ques.choices[0], attribute: null }] } : ques);
+        return {
+          ...state,
+          flagData: updatedFlagData
         };
       case TOGGLE_CHOICE_OTHER_ACTIVE:
         questionId = action.payload.questionId;
@@ -2035,14 +2045,14 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   // Set initial value of flagData array when component first mounts, thus rendering the first flag question.
   useEffect(() => {
     if(flagState.flagReportLocation.length > 0 && flagReport) {
-      flagDispatch({ type: 'SET_INITIAL_QUESTION' });
+      flagDispatch({ type: SET_INITIAL_QUESTION });
     }
   }, [flagReport]);
 
   // Update flagData array if necessary when flagReportLocation changes.
   useEffect(() => {
     if(flagState.flagReportLocation.length > 0 && flagReport && !flagState.flagLocationPopped) {
-      flagDispatch({ type: 'UPDATE_QUESTIONS' });
+      flagDispatch({ type: UPDATE_QUESTIONS });
     }
   }, [flagState.flagReportLocation]);
 
@@ -2063,6 +2073,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     payload: { questionId, optionObject }
   });
   const handleSaveChoiceOther = (value, questionId) => flagDispatch({ type: SAVE_CHOICE_OTHER, payload: { value, questionId }});
+  const handleChoiceOtherEmpty = (questionId) => flagDispatch({ type: CHOICE_OTHER_EMPTY, payload: { questionId }});
   const handleToggleChoiceOtherActive = (questionId) => flagDispatch({ type: TOGGLE_CHOICE_OTHER_ACTIVE, payload: { questionId } });
   const handleMultiOptionSelect = (questionId, optionObject) => flagDispatch({ 
     type: SELECT_MULTI_OPTION, 
@@ -2108,12 +2119,13 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                       <div className="select-header">
                         <InputLabel className={classes.inputLabelFlag}>Other</InputLabel>
                       </div>
-    
                       <MemoizedFlagTextInput 
                         choiceOtherInputActive={flagState.choiceOtherInputActive[question.id]}
                         question={question}
                         handleSaveChoiceOther={handleSaveChoiceOther}
                         handleToggleChoiceOtherActive={handleToggleChoiceOtherActive}
+                        handleChoiceOtherEmpty={handleChoiceOtherEmpty}
+                        flagData={flagState.flagData}
                       />
                     </React.Fragment>
                     )
@@ -2173,6 +2185,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       handleFlagSubmit(newFlag);
     }
   };
+  console.log('flagData', flagState.flagData);
   return (
     <React.Fragment>
       <div className="close-button">
@@ -2211,7 +2224,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             variant="outlined" 
             className="primary send-request submit-flag"
             onClick={onFlagSubmit}
-            disabled={flagState.flagReportLocation.length > 0 || flagState.flagData && flagState.flagData.some(el => !el.completed) || flagState.isSendingFlagng}
+            disabled={flagState.flagReportLocation.length > 0 || flagState.flagData && flagState.flagData.some(el => !el.completed) || flagState.isSendingFlagng || 
+              flagState.flagData.some(el => el.choices.includes(choice => choice.attribute === null))}
           >
             {flagState.isSendingFlag ? <div className="loader"></div> : 'Submit Flag'}
           </Button>
@@ -2282,7 +2296,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
   );
 };
 
-const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive }) => {
+const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData }) => {
   const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
 
   const classes = useStyles();
@@ -2290,8 +2304,15 @@ const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive
   const handleFlagInputChange = (event, title)  => {
     const val = event.target.value;
 
+    if(/*!flagInputOtherValue[title]*/val === '') handleChoiceOtherEmpty(question.id);
+
     setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
     // scrollToTop();
+  };
+
+  const handleInputBlur = (event, title) => {
+    const currChoiceOtherVal = flagData.find(ques => ques.id === question.id).choices[0].attribute;
+    if(event.target.value === currChoiceOtherVal) handleToggleChoiceOtherActive(question.id);
   };
 
   const onChoiceOtherSubmit = () => {
@@ -2307,6 +2328,7 @@ const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive
   return (
     <TextField
       // id="complication-other"
+      onBlur={handleInputBlur}
       className={classes.flagTextIcon}
       disabled={!choiceOtherInputActive}
       id={`${question.title}-other`}
