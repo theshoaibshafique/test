@@ -395,6 +395,16 @@
             }
         }
 
+        .add-flag-transition-exit {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .add-flag-transition-exit-active {
+            opacity: 0;
+            transform: translateY(500px);
+            transition: all 1000ms;;
+        } 
+
         .timing-graphs {
             margin-top: 18px;
             .procedure-distribution {
@@ -704,16 +714,6 @@
 }
 
 .request-emm-modal {
-    &.modal-content {
-        // opacity: 0;
-        transform: translateX(100%);
-        transition: all .5s ease-in-out;
-        &.animate {
-            opacity: 1;
-            transform: translateX((0));
-        }
-    }
-  
     .request-emm {
         height: 100%;
         display: flex;
@@ -762,6 +762,11 @@
         mix-blend-mode: normal;
         margin-bottom: 26px;
         max-width: 290px;
+
+        &.flag-submit {
+            display: flex;
+            align-items: center;
+        }
     }
     .subtitle {
         font-style: normal;
