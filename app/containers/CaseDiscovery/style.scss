@@ -395,16 +395,6 @@
             }
         }
 
-        .add-flag-transition-exit {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .add-flag-transition-exit-active {
-            opacity: 0;
-            transform: translateY(500px);
-            transition: all 1000ms;;
-        } 
-
         .timing-graphs {
             margin-top: 18px;
             .procedure-distribution {

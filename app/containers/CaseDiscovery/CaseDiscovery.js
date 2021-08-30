@@ -148,17 +148,16 @@ function displayTags(tags, emrCaseId) {
     tag = tag.tagName || tag;
     return (
       <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
-        return <div key={i}>{line}</div>
-      })} arrow={true}>
-        <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} key={tag}>
-          <span>
-            {getTag(tag)}
+          return <div key={i}>{line}</div>
+        })} arrow={true}>
+          <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} key={tag}>
+            <span>
+              {getTag(tag)}
+            </span>
+            <div className="display">{tag}</div>
+
           </span>
-          <div className="display">{tag}</div>
-
-        </span>
       </LightTooltip>
-
     )
   })
 }
@@ -1406,18 +1405,10 @@ function DetailedCase(props) {
           <div className="tags">
             {displayTags(tags, emrCaseId)}
             {(flagReport && flags.length <= 0 && dayDiff <= 25 || !flagNotSubmitted) &&
-              <CSSTransition 
-                in={flagNotSubmitted} 
-                timeout={1000} 
-                classNames="add-flag-transition"
-                exit={true}
-                unmountOnExit
-              >
-                <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''}`} onClick={(e) => { if(flagReport) handleOpenAddFlag(true)}} >
-                  <span><img src={Plus} /></span>
-                  <div>Add Flag</div>
-                </span>
-              </CSSTransition> 
+              <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''}`} onClick={(e) => { if(flagReport) handleOpenAddFlag(true)}} >
+                <span><img src={Plus} /></span>
+                <div>Add Flag</div>
+              </span>
             }
           </div>
 
@@ -1661,7 +1652,7 @@ function DetailedCase(props) {
         onClose={() => handleOpenAddFlag(false)}
       >
         <Slide direction="left" in={openAddFlag} mountOnEnter unmountOnExit timeout={700}>
-          <div style={{height: '100%'}}>
+          <div className="request-emm-modal">
             <AddFlagForm
               handleOpenAddFlag={handleOpenAddFlag}
               flagReport={flagReport}
@@ -2146,7 +2137,6 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
       .then(result => {
         flagDispatch({ type: FLAG_SUCCESS });
-        setFlagNotSubmitted(false);
         handleOpenAddFlag(false);
         setTimeout(() => {
           setReloadCase(caseId);
@@ -2154,7 +2144,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         }, 700);
         setTimeout(() => {
           setReloadCase(null);
-        }, 750);
+          setFlagNotSubmitted(false);
+        }, 800);
         result = result.data;
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
@@ -2183,7 +2174,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     }
   };
   return (
-    <div className="request-emm-modal modal-content">
+    <React.Fragment>
       <div className="close-button">
         <img src={Close} onClick={() => handleOpenAddFlag(false)} />
       </div>
@@ -2225,7 +2216,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             {flagState.isSendingFlag ? <div className="loader"></div> : 'Submit Flag'}
           </Button>
         </div>}
-    </div>
+      </React.Fragment>
   );
 };
 
