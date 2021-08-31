@@ -2158,20 +2158,17 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
       .then(result => {
         flagDispatch({ type: FLAG_SUCCESS });
+        setShowAddFlag(false);
         handleOpenAddFlag(false);
-        setTimeout(() => {
-          setReloadCase(caseId);
-        }, 900);
-        setTimeout(() => {
-          // Hide add flag button
-          setShowAddFlag(false);
-        }, 1000);
-        setTimeout(() => {
-          setReloadCase(null);
-          setShowNewFlag(true)
-        }, 950);
+        // setTimeout(() => {
+        //   setReloadCase(caseId);
+        // }, 900);
+        // setTimeout(() => {
+        //   setReloadCase(null);
+        //   setShowNewFlag(true)
+        // }, 950);
         result = result.data;
-        // console.log("result submission end point", result);
+        console.log("result submission end point", result);
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
         console.log("uh no.")

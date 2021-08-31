@@ -395,6 +395,14 @@
             }
         }
 
+        .add-flag-fade-exit {
+            opacity: 1;
+        }
+        .add-flag-fade-exit-active {
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+
         .timing-graphs {
             margin-top: 18px;
             .procedure-distribution {
