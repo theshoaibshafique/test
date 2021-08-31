@@ -1,14 +1,17 @@
 import axios from 'axios';
 import moment from 'moment/moment';
 
-function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
+function genericFetch(api, fetchMethod, token, fetchBodyJSON) {
+  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
+  
   if (fetchMethod === 'get') {
     return fetch(api, {
       method: fetchMethod,
       mode: 'cors',
       headers: {
         'Authorization': 'Bearer ' + userToken,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-AUTH': roleToken
       }
     }).then(response => {
       if (response) {
@@ -61,13 +64,15 @@ function genericFetch(api, fetchMethod, userToken, fetchBodyJSON) {
   }
 }
 
-function genericFetchWithNoReturnMessage(api, fetchMethod, userToken, fetchBodyJSON) {
+function genericFetchWithNoReturnMessage(api, fetchMethod, token, fetchBodyJSON) {
+  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
   return fetch(api, {
     method: fetchMethod,
     mode: 'cors',
     headers: {
       'Authorization': 'Bearer ' + userToken,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-AUTH':roleToken
     },
     body: JSON.stringify(fetchBodyJSON)
   }).then(response => {
@@ -88,16 +93,18 @@ function genericFetchWithNoReturnMessage(api, fetchMethod, userToken, fetchBodyJ
     })
 }
 
-function axiosFetch(url, fetchMethod, userToken, fetchBodyJSON, cancelToken) {
+function axiosFetch(url, fetchMethod, token, fetchBodyJSON, cancelToken) {
   if (!url) {
     return;
   }
+  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
   return axios({
     method: fetchMethod,
     url: url,
     headers: {
       'Authorization': 'Bearer ' + userToken,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-AUTH':roleToken
     },
     data: JSON.stringify(fetchBodyJSON),
     mode: 'cors',
@@ -122,28 +129,32 @@ function authFetch(url, fetchMethod, body) {
   });
 }
 
-function axiosFetchWithCredentials(url, fetchMethod, userToken, fetchBodyJSON) {
+function axiosFetchWithCredentials(url, fetchMethod, token, fetchBodyJSON) {
   if (!url) {
     return;
   }
+  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
   return axios({
     method: fetchMethod,
     url: url,
     headers: {
       'Authorization': 'Bearer ' + userToken,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-AUTH':roleToken
     },
     withCredentials: true,
     data: JSON.stringify(fetchBodyJSON),
     mode: 'cors'
   });
 }
-export async function getCdnStreamCookies(url,userToken) {
+export async function getCdnStreamCookies(url,token) {
+  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
   return axios({
     method: 'get',
     url: `${url}cookie`,
     headers: {
       'Authorization': 'Bearer ' + userToken,
+      'X-AUTH':roleToken
     },
     withCredentials: true
   })

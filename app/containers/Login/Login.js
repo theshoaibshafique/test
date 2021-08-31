@@ -54,7 +54,7 @@ export default class Login extends React.PureComponent {
   redirect() {
     const redirect = localStorage.getItem('redirect')
     localStorage.removeItem('redirect')
-    this.props.pushUrl(redirect ||  '/dashboard');
+    this.props.pushUrl(redirect || '/dashboard');
   }
 
   async login(auth_code) {
@@ -63,7 +63,7 @@ export default class Login extends React.PureComponent {
     const verifier_list = JSON.parse(localStorage.getItem('verifier_list')) || [];
     let success = false;
     for (const verifier of verifier_list) {
-      if (success){
+      if (success) {
         break;
       }
       const body = {
@@ -73,7 +73,7 @@ export default class Login extends React.PureComponent {
         code_verifier: verifier,
         code: auth_code
       }
-      
+
       await globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
         .then(result => {
           localStorage.setItem('verifier_list', null);
@@ -82,10 +82,10 @@ export default class Login extends React.PureComponent {
           this.redirect()
         }).catch(error => {
           console.error(error);
-          logger && logger.manualAddLog('session', `error_login_auth`, {'verifier': verifier, 'error': error});
+          logger && logger.manualAddLog('session', `error_login_auth`, { 'verifier': verifier, 'error': error });
         });
     }
-    if (!success){
+    if (!success) {
       logger && logger.sendLogs();
       localStorage.setItem('verifier_list', null);
       window.location.replace(redirectLogin(logger));
@@ -106,28 +106,34 @@ export default class Login extends React.PureComponent {
       window.location.replace(redirectLogin(logger))
       return;
     }
-    logger && logger.manualAddLog('session', `refresh_token`, {'refresh_token': refreshToken});
+    logger && logger.manualAddLog('session', `refresh_token`, { 'refresh_token': refreshToken });
     globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
       .then(result => {
         this.processAuthentication(result.data);
       }).catch(error => {
         console.error(error)
-        logger && logger.manualAddLog('session', `error_refresh_token`, {'refresh_token': refreshToken, 'error':error});
+        logger && logger.manualAddLog('session', `error_refresh_token`, { 'refresh_token': refreshToken, 'error': error });
         logger && logger.sendLogs();
         localStorage.setItem('refreshToken', null);
         window.location.replace(redirectLogin(logger))
       });
   };
 
-  processAuthentication(data) {
+  async processAuthentication(data) {
     const { accessToken, expiresAt, refreshToken } = data;
     localStorage.setItem('refreshToken', JSON.stringify({ refreshToken: refreshToken, expiresAt: expiresAt * 1000 }));
-    this.props.setUserToken(accessToken);
+    
+    const roleToken = await globalFunctions.genericFetch(`${process.env.USER_V2_API}roles`, 'get', accessToken, {})
+      .catch((results) => {
+        console.error("oh no", results)
+      });
+    const token = { userToken: accessToken, roleToken: roleToken }
+    this.props.setUserToken(token);
     if (this.props.logger) {
       this.props.logger.userToken = this.props.userToken;
       return;
     }
-    globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', accessToken, {})
+    await globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', token, {})
       .then(result => {
         this.props.setProfile(result);
         this.getOperatingRooms(result.facilityId);
@@ -136,6 +142,7 @@ export default class Login extends React.PureComponent {
       }).catch((results) => {
         console.error("oh no", results)
       });
+
   }
 
   setLogger() {

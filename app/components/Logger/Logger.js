@@ -147,7 +147,8 @@ export class Logger {
         });
     }
 
-    postLogs(url, fetchMethod, userToken, appId, fetchBodyJSON) {
+    postLogs(url, fetchMethod, token, appId, fetchBodyJSON) {
+        const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
         if (!url || !userToken) {
             console.log('No User Token provided')
             return;
@@ -158,7 +159,8 @@ export class Logger {
             headers: {
                 'Authorization': 'Bearer ' + userToken,
                 'x-app-id': appId,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-AUTH':roleToken
             },
             data: JSON.stringify(fetchBodyJSON),
             mode: 'cors'
