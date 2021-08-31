@@ -123,18 +123,17 @@ export default class Login extends React.PureComponent {
     const { accessToken, expiresAt, refreshToken } = data;
     localStorage.setItem('refreshToken', JSON.stringify({ refreshToken: refreshToken, expiresAt: expiresAt * 1000 }));
     
-    await globalFunctions.genericFetch(`${process.env.USER_V2_API}roles`, 'get', accessToken, {})
-      .then(result => {
-        this.props.setUserToken({ userToken: accessToken, roleToken: result });
-      }).catch((results) => {
+    const roleToken = await globalFunctions.genericFetch(`${process.env.USER_V2_API}roles`, 'get', accessToken, {})
+      .catch((results) => {
         console.error("oh no", results)
       });
-    
+    const token = { userToken: accessToken, roleToken: roleToken }
+    this.props.setUserToken(token);
     if (this.props.logger) {
       this.props.logger.userToken = this.props.userToken;
       return;
     }
-    await globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', accessToken, {})
+    await globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', token, {})
       .then(result => {
         this.props.setProfile(result);
         this.getOperatingRooms(result.facilityId);
