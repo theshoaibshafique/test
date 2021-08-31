@@ -1361,7 +1361,7 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-  console.log('flags', flags)
+
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -1780,7 +1780,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 
         if(state.flagData[currentQuestionIndex].choices.find(choice => choice.id === optionObject.id)) {
           // Do nothing,no need to update flagReportLocation.
-          return;
+          return updatedStateValue;
         } else {
           // // Handle selection of choice-other option type.
           if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
@@ -2171,6 +2171,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           setShowNewFlag(true)
         }, 950);
         result = result.data;
+        // console.log("result submission end point", result);
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
         console.log("uh no.")
@@ -2197,7 +2198,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       handleFlagSubmit(newFlag);
     }
   };
-  console.log('flagData', flagState.flagData);
+  // console.log('flagReportLocation', flagState.flagReportLocation);
+
   return (
     <React.Fragment>
       <div className="close-button">
