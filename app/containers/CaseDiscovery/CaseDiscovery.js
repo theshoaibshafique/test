@@ -1288,8 +1288,9 @@ function DetailedCase(props) {
   const [isComplicationOtherChecked, setIsComplicationOtherChecked] = React.useState(false);
   const [isSending, setIsSending] = React.useState(false);
 
-  // Flag Submission state.
-  const [flagNotSubmitted, setFlagNotSubmitted] = React.useState(true);
+  // Flag submission state.
+  const [showAddFlag, setShowAddFlag] = React.useState(true);
+  const [showNewFlag, setShowNewFlag] = React.useState(false);
 
   // Change/update the filter for request ID
   const handleChange = (event, value) => {
@@ -1360,7 +1361,7 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-
+  console.log('flags', flags)
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -1404,11 +1405,18 @@ function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId)}
-            {(flagReport && flags.length <= 0 && dayDiff <= 25 || !flagNotSubmitted) &&
-              <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''}`} onClick={(e) => { if(flagReport) handleOpenAddFlag(true)}} >
-                <span><img src={Plus} /></span>
-                <div>Add Flag</div>
-              </span>
+            {(flagReport && flags.length <= 0 && dayDiff <= 25 && showAddFlag) &&
+              // <CSSTransition
+              //   in={flags.length === 0}
+              //   timeout={1000}
+              //   exit={true}
+              //   classNames="add-flag-fade"
+              // >
+                <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
+                  <span><img src={Plus} /></span>
+                  <div>Add Flag</div>
+                </span>
+              // </CSSTransition>
             }
           </div>
 
@@ -1666,8 +1674,8 @@ function DetailedCase(props) {
               setReloadCase={setReloadCase}
               caseId={caseId}
               openAddFlag={openAddFlag}
-              flagNotSubmitted={flagNotSubmitted}
-              setFlagNotSubmitted={setFlagNotSubmitted}
+              setShowAddFlag={setShowAddFlag}
+              setShowNewFlag={setShowAddFlag}
             />
           </div>
         </Slide>
@@ -1677,7 +1685,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, setReloadCase, caseId, openAddFlag, flagReport, flagNotSubmitted, setFlagNotSubmitted }) => {
+const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, setReloadCase, caseId, openAddFlag, flagReport, setShowAddFlag, setShowNewFlag }) => {
   // Retrieve userToken from redux store 
   const userToken = useSelector(makeSelectToken());
 
@@ -2113,6 +2121,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                     isRequired={question.isRequired}
                     questionId={question.id}
                     handleMultiOptionSelect={handleMultiOptionSelect}
+                    flagData={flagState.flagData}
                   />
                   {flagState.isFlagChoiceOther[question.id] && 
                     (<React.Fragment>
@@ -2152,16 +2161,18 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         handleOpenAddFlag(false);
         setTimeout(() => {
           setReloadCase(caseId);
-          setFlagNotSubmitted(false);
-        }, 700);
+        }, 900);
+        setTimeout(() => {
+          // Hide add flag button
+          setShowAddFlag(false);
+        }, 1000);
         setTimeout(() => {
           setReloadCase(null);
-          setFlagNotSubmitted(false);
-        }, 800);
+          setShowNewFlag(true)
+        }, 950);
         result = result.data;
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
-        setFlagNotSubmitted(true);
         console.log("uh no.")
       }).finally(() => {
 
@@ -2172,6 +2183,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     if(reportId, flagState.flagData) {
       const newFlag = {
         reportId,
+        caseId,
         roomId,
         localTime: wheelsInLocal,
         utcTime: wheelsInUtc,
@@ -2234,7 +2246,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   );
 };
 
-const FlagSelect = ({ title, questionType, options, isRequired, questionId, handleOptionSelect, handleMultiOptionSelect }) => {
+const FlagSelect = ({ title, questionType, options, isRequired, questionId, handleOptionSelect, handleMultiOptionSelect, flagData }) => {
   const [value, setValue] = useState(null);
   const [animate, setAnimate] = useState(false);
 
@@ -2271,28 +2283,36 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
   };
 
   return (
-    <div className={`flag-select ${animate ? 'animate' : ''}`}>
-      <div className="select-header">
-        <InputLabel className={classes.inputLabelFlag}>{`${title} ${isRequired ? '' : '(optional)'}`}</InputLabel>
-        {/* <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
-          Clear
-        </div> */}
+    <CSSTransition
+      in={/*flagData.includes(ques => ques.id === questionId)*/false}
+      timeout={1000}
+      exit={true}
+      enter={false}
+      classNames="flag-select-fade-out"
+    >
+      <div className={`flag-select ${animate ? 'animate' : ''}`}>
+        <div className="select-header">
+          <InputLabel className={classes.inputLabelFlag}>{`${title} ${isRequired ? '' : '(optional)'}`}</InputLabel>
+          {/* <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
+            Clear
+          </div> */}
+        </div>
+        <Autocomplete
+          id="combo-box-demo"
+          size="small"
+          value={value}
+          onChange={onOptionChange}
+          options={options}
+          getOptionLabel={(option) => option.title || ''}
+          style={{ width: '100%' }}
+          multiple={questionType === 'multiple-choice'}
+          disableCloseOnSelect={false}
+          renderInput={(params) => <TextField {...params} /*label={questionType === 'multiple-choice' ? 'Select 1 or more' : ''}*/ variant="outlined" />}
+          autoFocus
+          disableClearable
+        />
       </div>
-      <Autocomplete
-        id="combo-box-demo"
-        size="small"
-        value={value}
-        onChange={onOptionChange}
-        options={options}
-        getOptionLabel={(option) => option.title || ''}
-        style={{ width: '100%' }}
-        multiple={questionType === 'multiple-choice'}
-        disableCloseOnSelect={false}
-        renderInput={(params) => <TextField {...params} /*label={questionType === 'multiple-choice' ? 'Select 1 or more' : ''}*/ variant="outlined" />}
-        autoFocus
-        disableClearable
-      />
-    </div>
+    </CSSTransition>
   );
 };
 
