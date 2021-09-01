@@ -48,7 +48,7 @@ import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation, getQuestionCount } from './Utils';
 import { useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectIsAdmin, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -143,6 +143,7 @@ function transformTagValue(tag, value) {
 }
 
 function displayTags(tags, emrCaseId) {
+  console.log('tags in displayTags', tags);
   return tags.map((tag, i) => {
     let desc = tag.toolTip || [];
     tag = tag.tagName || tag;
@@ -396,6 +397,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [openAddFlag, setOpenAddFlag] = useState(false);
   const [flagReport, setFlagReport] = useState(null);
   const [roomIds, setRoomIds] = useState(null);
+  const firstName = useSelector(makeSelectFirstName());
+  const lastName = useSelector(makeSelectLastName());
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -571,6 +574,16 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     setOpenAddFlag(open);
   };
 
+  const handleSetCases = (res, caseId) => {
+    const index = CASES.findIndex(el => el.caseId === caseId);
+    console.log('index', index)
+    CASES[index] = { ...CASES[index], tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...CASES[index].tags]};
+    // console.log('updated case', CASES[index]);
+    return setData({
+      [CASES]: CASES/*CASES.map(el => el.caseId === caseId ? { ...el, tags: [flagObject, ...el.tags]} : el)*/
+    });
+  };
+ 
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
   const scrollToTop = () => {
@@ -715,7 +728,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     setShowTagsModal(show);
   }
 
-
+  console.log('CASES', CASES)
   const getCasesView = () => {
     if (filterCases && filterCases.length) {
 
@@ -1012,7 +1025,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // const [isLoading, setIsLoading] = useState(true);
   const [DETAILED_CASE, setDetailedCase] = useState(null);
-  const [reloadCase, setReloadCase] = useState(null);
 
   // Custom Hook to compare prev state val to current.
   const useCompare = (val) => {
@@ -1046,10 +1058,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           }
 
           setDetailedCase(result)
-          // Update this case object val in the master CASES piece of state.
-          setData({
-            'CASES': CASES.map(el => el.caseId === caseId ? { ...el, tags: result.tags} : el)
-          });
+         
         }).catch((error) => {
           console.log("oh no " + error)
           setCaseId(null)
@@ -1057,13 +1066,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
         });
     }
-    // Refetch case when caseId changes or when reloadCase piece of state changes to true(case is reloaded after a new flag is submitted).
-    if(hasCaseIdChanged || reloadCase !== null) {
-      fetchCases()
-    } 
-
-
-  }, [caseId, reloadCase]);
+    fetchCases();
+  }, [caseId]);
 
   return (
     <section className="case-discovery">
@@ -1078,7 +1082,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         handleOpenAddFlag={handleOpenAddFlag}
         flagReport={flagReport}
         roomIds={roomIds}
-        setReloadCase={setReloadCase}
+        handleSetCases={handleSetCases}
       />
     </section>
   );
@@ -1171,7 +1175,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagReport, roomIds, setReloadCase, setData } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagReport, roomIds, setData, handleSetCases } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1361,7 +1365,8 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-
+  console.log('tags', tags);
+  console.log('flags', flags);
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -1405,14 +1410,14 @@ function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId)}
-            {(flagReport && flags.length <= 0 && dayDiff <= 25 && showAddFlag) &&
+            {/*(flagReport && flags.length <= 0 && dayDiff <= 25 && showAddFlag) &&*/
               // <CSSTransition
               //   in={flags.length === 0}
               //   timeout={1000}
               //   exit={true}
               //   classNames="add-flag-fade"
               // >
-                <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
+                <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} ${!showAddFlag || !flagReport && flags.length > 0 || dayDiff > 21 ? 'hidden' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
                   <span><img src={Plus} /></span>
                   <div>Add Flag</div>
                 </span>
@@ -1671,11 +1676,11 @@ function DetailedCase(props) {
               roomName={roomName}
               wheelsInLocal={wheelsIn}
               wheelsInUtc={wheelsInUtc}
-              setReloadCase={setReloadCase}
               caseId={caseId}
               openAddFlag={openAddFlag}
               setShowAddFlag={setShowAddFlag}
               setShowNewFlag={setShowAddFlag}
+              handleSetCases={handleSetCases}
             />
           </div>
         </Slide>
@@ -1685,9 +1690,11 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, setReloadCase, caseId, openAddFlag, flagReport, setShowAddFlag, setShowNewFlag }) => {
+const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag, setShowNewFlag, handleSetCases }) => {
   // Retrieve userToken from redux store 
   const userToken = useSelector(makeSelectToken());
+  const firstName = useSelector(makeSelectFirstName());
+  const lastName = useSelector(makeSelectLastName());
 
   // USEREDUCER ACTION TYPES.
   const SET_INITIAL_QUESTION = 'SET_INITIAL_QUESTION';
@@ -2151,6 +2158,19 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         });
       }
     };
+    
+  // const addFlagtoCases = (flagRes) => {
+  //   let toolTipArray = flagRes.description.map(el => `${el.questionTitle}: ${answer}`);
+  //   toolTipArray = [...toolTipArray, `Submitted By: ${firstName} ${lastName}`];
+    
+  //   const newFlagObject = {
+  //     tagName: 'Flagged',
+  //     toolTip: toolTipArray
+  //   };
+  //   setData({
+  //     'CASES': CASES.map(el => el.caseId === caseId ? { ...el, tags: tags.unshift(newFlagObject)} : el)
+  //   });
+  // };
 
    // Submit flag.
    const handleFlagSubmit = (flag) => {
@@ -2158,17 +2178,26 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
       .then(result => {
         flagDispatch({ type: FLAG_SUCCESS });
+        result = result.data;
+        console.log('result', result.description);
+        const toolTipArray = result.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`);
+
+        const newFlagObject = {
+          tagName: 'Flagged',
+          toolTip: toolTipArray
+        };
+
+        console.log('new flag obj', newFlagObject);
+
+        // return newFlagObject;
+        handleSetCases(result, caseId);
+        // setData({
+        //   'CASES': CASES.map(el => el.caseId === caseId ? { ...el, tags: tags.unshift({ tagName: 'Flagged', toolTip: toolTipArray })} : el)
+        // });
         setShowAddFlag(false);
         handleOpenAddFlag(false);
-        // setTimeout(() => {
-        //   setReloadCase(caseId);
-        // }, 900);
-        // setTimeout(() => {
-        //   setReloadCase(null);
-        //   setShowNewFlag(true)
-        // }, 950);
-        result = result.data;
-        console.log("result submission end point", result);
+        // addFlagtoCases(result);
+        // console.log("result submission end point", result);
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
         console.log("uh no.")
@@ -2195,8 +2224,6 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       handleFlagSubmit(newFlag);
     }
   };
-  // console.log('flagReportLocation', flagState.flagReportLocation);
-
   return (
     <React.Fragment>
       <div className="close-button">
