@@ -1715,6 +1715,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     flagInputOtherValue: {},
     isSendingFlag: false,
     flagError: null,
+    choiceOtherInputError: {}
   };
 
   const flagReducer = (state, action) => {
@@ -1776,7 +1777,10 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 
         let currentQuestionIndex = state.flagData.findIndex(ques => ques.id === questionId);
 
+        const currentQuesOptions = state.flagData[currentQuestionIndex].options.sort((a, b) => a.optionOrder - b.optionOrder);
+
         let updatedStateValue = { ...state };
+
 
         if(state.flagData[currentQuestionIndex].choices.find(choice => choice.id === optionObject.id)) {
           // Do nothing,no need to update flagReportLocation.
@@ -1821,9 +1825,10 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
               flagData: updatedStateValue.flagData.map(ques => ques.id === questionId ? { ...ques, completed: false, choices: [{ ...optionObject, attribute: null }] } : ques)
             };
           }
-          let updatedLocation = [...state.flagData[currentQuestionIndex].location, optionObject.optionIndex];
-        
-          const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
+          let updatedLocation = [...state.flagData[currentQuestionIndex].location, optionObject.optionOrder - 1];
+
+          // const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
+          const selectedOpt = currentQuesOptions[optionObject.optionOrder - 1];
           if(selectedOpt.questions) {
             updatedStateValue = {
               ...updatedStateValue,
@@ -2209,7 +2214,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             <img src={Flagged} style={{ height: 24, width: 24, opacity: 0.8, margin: '0 6px 0 0', color: '#7b2d2d' }} />
             Submit Flag
           </div>
-          <div className="subtitle">
+          <div className="subtitle" title={procedureTitle}>
             {procedureTitle}
           </div>
           <div className="description">
