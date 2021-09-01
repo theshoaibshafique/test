@@ -55,6 +55,7 @@ import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { green } from '@material-ui/core/colors';
+import StateManager from 'react-select';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -1703,6 +1704,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   const SENDING_FLAG = 'SENDING_FLAG';
   const FLAG_SUCCESS = 'FLAG_SUCCESS';
   const FLAG_FAIL =  'FLAG_FAIL';
+  const CLEAR_INPUT_ERROR = 'CLEAR_INPUT_ERROR';
 
   // UseReducer initial state.
   const initial_state = {
@@ -1781,6 +1783,18 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 
         let updatedStateValue = { ...state };
 
+        // Check whether previous question's selected option is choie-other and if it's value is null.
+        if(currentQuestionIndex > 0) {
+          const prevQuestionId = state.flagData[currentQuestionIndex - 1].id;
+          const inputError = state.flagData[currentQuestionIndex - 1].choices.includes(choice => choice.type === 'choice-other' && choice.attribute === null)
+          updatedStateValue = {
+            ...updatedStateValue,
+            choiceOtherInputError: {
+              ...updatedStateValue.choiceOtherInputError,
+              [prevQuestionId]: !inputError
+            }
+          }
+        }
 
         if(state.flagData[currentQuestionIndex].choices.find(choice => choice.id === optionObject.id)) {
           // Do nothing,no need to update flagReportLocation.
@@ -1876,6 +1890,15 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         return {
           ...state,
           flagData: updatedFlagData
+        };
+      case CLEAR_INPUT_ERROR:
+        questionId = action.payload.questionId
+        return {
+          ...state,
+          choiceOtherInputError: {
+            ...state.choiceOtherInputError,
+            [questionId]: false
+          }
         };
       case SELECT_MULTI_OPTION:
         questionId = action.payload.questionId;
@@ -2060,6 +2083,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     type: SELECT_MULTI_OPTION, 
     payload: { questionId, optionObject }
   });
+  const handleClearInputError = (questionId) => flagDispatch({ type: CLEAR_INPUT_ERROR, payload: { questionId } });
 
   const translateRoomNametoId = () => {
     if(roomIds && roomName) {
@@ -2110,6 +2134,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                         handleToggleChoiceOtherActive={handleToggleChoiceOtherActive}
                         handleChoiceOtherEmpty={handleChoiceOtherEmpty}
                         flagData={flagState.flagData}
+                        choiceOtherInputError={flagState.choiceOtherInputError}
+                        handleClearInputError={handleClearInputError}
                       />
                     </div>
                     )
@@ -2301,7 +2327,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
   );
 };
 
-const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData }) => {
+const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData, choiceOtherInputError, handleClearInputError }) => {
   const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
   const [inputError, setInputError] = useState({});
 
@@ -2320,10 +2346,11 @@ const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive
       setInputError(prevState => ({
         ...prevState,
         [question.id]: false
-      }))
+      }));
+      handleClearInputError(question.id);
     }
     setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
-    // Update flagData state in realtimeas value is entered.
+    // Update flagData state in realtime as value is entered.
     // todo: rename to handleUpdateChoiceOther
     handleSaveChoiceOther(val, question.id);
   };
@@ -2336,17 +2363,7 @@ const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive
       }));
     }
   };
-
-  // const onChoiceOtherSubmit = () => {
-  //   if(choiceOtherInputActive) {
-  //     if(flagInputOtherValue[question.title]) {
-  //       handleSaveChoiceOther(flagInputOtherValue[question.title], question.id);
-  //     }
-  //   } else {
-  //     handleToggleChoiceOtherActive(question.id);
-  //   }
-  // };
-
+ 
   return (
     <TextField
       // id="complication-other"
@@ -2362,8 +2379,8 @@ const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive
       placeholder="Please specify"
       value={flagInputOtherValue[question.title]}
       onChange={(e) => handleFlagInputChange(e, question.title)}
-      helperText={inputError[question.id] && `Please enter a ${question && question.title.toLowerCase()}`}
-      error={inputError[question.id]}
+      helperText={inputError[question.id] || choiceOtherInputError[question.id] && `Please enter a ${question && question.title.toLowerCase()}`}
+      error={inputError[question.id] || choiceOtherInputError[question.id]}
       inputProps={{
         maxLength: 128
       }}
