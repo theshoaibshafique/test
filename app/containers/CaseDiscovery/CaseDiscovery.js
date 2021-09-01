@@ -34,8 +34,6 @@ import Close from './icons/Close.svg';
 import Plus from './icons/Plus.svg';
 import moment from 'moment/moment';
 import CloseIcon from '@material-ui/icons/Close';
-import CheckIcon from '@material-ui/icons/Check';
-import EditIcon from '@material-ui/icons/Edit';
 import { LightTooltip, SSTSwitch, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
@@ -143,7 +141,6 @@ function transformTagValue(tag, value) {
 }
 
 function displayTags(tags, emrCaseId) {
-  console.log('tags in displayTags', tags);
   return tags.map((tag, i) => {
     let desc = tag.toolTip || [];
     tag = tag.tagName || tag;
@@ -576,9 +573,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const handleSetCases = (res, caseId) => {
     const index = CASES.findIndex(el => el.caseId === caseId);
-    console.log('index', index)
     CASES[index] = { ...CASES[index], tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...CASES[index].tags]};
-    // console.log('updated case', CASES[index]);
     return setData({
       [CASES]: CASES/*CASES.map(el => el.caseId === caseId ? { ...el, tags: [flagObject, ...el.tags]} : el)*/
     });
@@ -728,7 +723,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     setShowTagsModal(show);
   }
 
-  console.log('CASES', CASES)
   const getCasesView = () => {
     if (filterCases && filterCases.length) {
 
@@ -1365,8 +1359,7 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-  console.log('tags', tags);
-  console.log('flags', flags);
+
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -1417,7 +1410,7 @@ function DetailedCase(props) {
               //   exit={true}
               //   classNames="add-flag-fade"
               // >
-                <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} ${!showAddFlag || !flagReport && flags.length > 0 || dayDiff > 21 ? 'hidden' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
+                <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} ${!showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21 ? 'hidden' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
                   <span><img src={Plus} /></span>
                   <div>Add Flag</div>
                 </span>
@@ -1798,15 +1791,6 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                 [questionId]: true
               }
             };
-            if(!updatedStateValue.choiceOtherInputActive[questionId]) {
-              updatedStateValue = {
-                ...updatedStateValue,
-                choiceOtherInputActive: {
-                  ...updatedStateValue.choiceOtherInputActive,
-                  [questionId]: true
-                }
-              };
-            }
           // Handle selection of standard 'choice' option type.
           } else {
             updatedStateValue = {
@@ -1834,7 +1818,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           } else if(optionObject.type === 'choice-other') {
             updatedStateValue = {
               ...updatedStateValue,
-              flagData: updatedStateValue.flagData.map(ques => ques.id === questionId ? { ...ques, choices: [{ ...optionObject, attribute: null }] } : ques),
+              flagData: updatedStateValue.flagData.map(ques => ques.id === questionId ? { ...ques, completed: false, choices: [{ ...optionObject, attribute: null }] } : ques)
             };
           }
           let updatedLocation = [...state.flagData[currentQuestionIndex].location, optionObject.optionIndex];
@@ -1875,14 +1859,10 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         const { value } = action.payload;
         questionId = action.payload.questionId
 
-        updatedFlagData = state.flagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: ques.choices.map(el => ({ ...el, attribute: value})) } : ques);
+        updatedFlagData = state.flagData.map(ques => ques.id === questionId ? { ...ques, completed: value ? true : false, choices: ques.choices.map(el => ({ ...el, attribute: value ? value : null })) } : ques);
         return {
           ...state,
-          flagData: updatedFlagData,
-          choiceOtherInputActive: {
-            ...state.choiceOtherInputActive,
-            [questionId]: false
-          }
+          flagData: updatedFlagData
         };
       case CHOICE_OTHER_EMPTY:
         questionId = action.payload.questionId;
@@ -1891,15 +1871,6 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         return {
           ...state,
           flagData: updatedFlagData
-        };
-      case TOGGLE_CHOICE_OTHER_ACTIVE:
-        questionId = action.payload.questionId;
-        return {
-          ...state,
-          choiceOtherInputActive: {
-            ...state.choiceOtherInputActive,
-            [questionId]: !state.choiceOtherInputActive[questionId]
-          }
         };
       case SELECT_MULTI_OPTION:
         questionId = action.payload.questionId;
@@ -1924,23 +1895,13 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                 [questionId]: true
               }
             };
-            if(!updatedStateValue.choiceOtherInputActive[questionId]) {
-              updatedStateValue = {
-                ...updatedStateValue,
-                choiceOtherInputActive: {
-                  ...updatedStateValue.choiceOtherInputActive,
-                  [questionId]: true
-                }
-              };
-            }
-
           // Handle selection of standard 'choice' option type.
           } else {
             updatedStateValue = {
               ...updatedStateValue,
               isFlagChoiceOther: {
-                ...updatedStateValue.isFlagChoiceOther,
-                [questionId]: false
+                // ...updatedStateValue.isFlagChoiceOther,
+                // [questionId]: false
               }
             }
           }
@@ -2181,16 +2142,12 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       .then(result => {
         flagDispatch({ type: FLAG_SUCCESS });
         result = result.data;
-        console.log('result', result.description);
         const toolTipArray = result.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`);
 
         const newFlagObject = {
           tagName: 'Flagged',
           toolTip: toolTipArray
         };
-
-        console.log('new flag obj', newFlagObject);
-
         // return newFlagObject;
         handleSetCases(result, caseId);
         // setData({
@@ -2199,7 +2156,6 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         setShowAddFlag(false);
         handleOpenAddFlag(false);
         // addFlagtoCases(result);
-        // console.log("result submission end point", result);
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
         console.log("uh no.")
@@ -2264,8 +2220,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             variant="outlined" 
             className="primary send-request submit-flag"
             onClick={onFlagSubmit}
-            disabled={flagState.flagReportLocation.length > 0 || flagState.flagData && flagState.flagData.some(el => !el.completed) || flagState.isSendingFlagng || 
-              flagState.flagData.some(el => el.choices.includes(choice => choice.attribute === null))}
+            disabled={flagState.flagData && flagState.flagData.some(el => el.completed === false) || flagState.isSendingFlag}
           >
             {flagState.isSendingFlag ? <div className="loader"></div> : 'Submit Flag'}
           </Button>
@@ -2321,9 +2276,6 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
       <div className={`flag-select ${animate ? 'animate' : ''}`}>
         <div className="select-header">
           <InputLabel className={classes.inputLabelFlag}>{`${title} ${isRequired ? '' : '(optional)'}`}</InputLabel>
-          {/* <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
-            Clear
-          </div> */}
         </div>
         <Autocomplete
           id="combo-box-demo"
@@ -2346,39 +2298,56 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
 
 const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData }) => {
   const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
+  const [inputError, setInputError] = useState({});
 
   const classes = useStyles();
   
   const handleFlagInputChange = (event, title)  => {
     const val = event.target.value;
 
-    if(/*!flagInputOtherValue[title]*/val === '') handleChoiceOtherEmpty(question.id);
-
-    setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
-    // scrollToTop();
-  };
-
-  const handleInputBlur = (event, title) => {
-    const currChoiceOtherVal = flagData.find(ques => ques.id === question.id).choices[0].attribute;
-    if(event.target.value === currChoiceOtherVal) handleToggleChoiceOtherActive(question.id);
-  };
-
-  const onChoiceOtherSubmit = () => {
-    if(choiceOtherInputActive) {
-      if(flagInputOtherValue[question.title]) {
-        handleSaveChoiceOther(flagInputOtherValue[question.title], question.id);
-      }
+    if(val === '' && inputError[question.id]) {
+      /*handleChoiceOtherEmpty(question.id)*/
+      setInputError(prevState => ({ 
+        ...prevState,
+        [question.id]: true
+      }));
     } else {
-      handleToggleChoiceOtherActive(question.id);
+      setInputError(prevState => ({
+        ...prevState,
+        [question.id]: false
+      }))
+    }
+    setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
+    // Update flagData state in realtimeas value is entered.
+    // todo: rename to handleUpdateChoiceOther
+    handleSaveChoiceOther(val, question.id);
+  };
+
+  const handleInputBlur = (event, id) => {
+    if(!event.target.value) {
+      setInputError(prevState => ({ 
+        ...prevState,
+        [id]: true
+      }));
     }
   };
+
+  // const onChoiceOtherSubmit = () => {
+  //   if(choiceOtherInputActive) {
+  //     if(flagInputOtherValue[question.title]) {
+  //       handleSaveChoiceOther(flagInputOtherValue[question.title], question.id);
+  //     }
+  //   } else {
+  //     handleToggleChoiceOtherActive(question.id);
+  //   }
+  // };
 
   return (
     <TextField
       // id="complication-other"
-      onBlur={handleInputBlur}
+      onBlur={(e) => handleInputBlur(e, question.id)}
       className={classes.flagTextIcon}
-      disabled={!choiceOtherInputActive}
+      // disabled={!choiceOtherInputActive}
       id={`${question.title}-other`}
       variant="outlined"
       fullWidth
@@ -2388,23 +2357,8 @@ const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive
       placeholder="Please specify"
       value={flagInputOtherValue[question.title]}
       onChange={(e) => handleFlagInputChange(e, question.title)}
-      // InputProps={{
-      //   endAdornment: (
-      //     <InputAdornment title={choiceOtherInputActive ? 'Submit' : 'Edit'}>
-      //       <IconButton 
-      //         style={{ color: flagInputOtherValue[question.title] ?  choiceOtherInputActive ? green[500] : '' : '' }}
-      //         onClick={onChoiceOtherSubmit}
-      //         disabled={!flagInputOtherValue[question.title]}
-      //       >
-      //         {!choiceOtherInputActive && <EditIcon  />} 
-      //         {choiceOtherInputActive && <CheckIcon />}
-      //       </IconButton>
-      //     </InputAdornment>
-      //   ),
-      //   classes: {
-      //     adornedEnd: classes.adornedEnd
-      //    }
-      // }}
+      helperText={inputError[question.id] && `Please enter a ${question && question.title.toLowerCase()}`}
+      error={inputError[question.id]}
       inputProps={{
         maxLength: 128
       }}
