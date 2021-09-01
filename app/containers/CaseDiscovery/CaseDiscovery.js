@@ -2122,7 +2122,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                   <FlagSelect
                     key={question.title}
                     title={question.title}
-                    options={question.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other - Please specify'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
+                    options={question.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
                     questionType={question.type}
                     handleOptionSelect={handleOptionSelect}
                     isRequired={question.isRequired}
@@ -2131,10 +2131,12 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                     flagData={flagState.flagData}
                   />
                   {flagState.isFlagChoiceOther[question.id] && 
-                    (<React.Fragment>
-                      <div className="select-header">
-                        <InputLabel className={classes.inputLabelFlag}>Other</InputLabel>
-                      </div>
+                    (<div className="flag-text-input-container">
+                      {false && 
+                        <div className="select-header">
+                          <InputLabel className={classes.inputLabelFlag}>Other</InputLabel>
+                        </div>
+                      }
                       <MemoizedFlagTextInput 
                         choiceOtherInputActive={flagState.choiceOtherInputActive[question.id]}
                         question={question}
@@ -2143,7 +2145,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                         handleChoiceOtherEmpty={handleChoiceOtherEmpty}
                         flagData={flagState.flagData}
                       />
-                    </React.Fragment>
+                    </div>
                     )
                   }
                 </div>
@@ -2383,26 +2385,26 @@ const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive
       size="small"
       name={`${question.title}Other`}
       type="text"
-      placeholder="Your custom text here"
+      placeholder="Please specify"
       value={flagInputOtherValue[question.title]}
       onChange={(e) => handleFlagInputChange(e, question.title)}
-      InputProps={{
-        endAdornment: (
-          <InputAdornment title={choiceOtherInputActive ? 'Submit' : 'Edit'}>
-            <IconButton 
-              style={{ color: flagInputOtherValue[question.title] ?  choiceOtherInputActive ? green[500] : '' : '' }}
-              onClick={onChoiceOtherSubmit}
-              disabled={!flagInputOtherValue[question.title]}
-            >
-              {!choiceOtherInputActive && <EditIcon  />} 
-              {choiceOtherInputActive && <CheckIcon />}
-            </IconButton>
-          </InputAdornment>
-        ),
-        classes: {
-          adornedEnd: classes.adornedEnd
-         }
-      }}
+      // InputProps={{
+      //   endAdornment: (
+      //     <InputAdornment title={choiceOtherInputActive ? 'Submit' : 'Edit'}>
+      //       <IconButton 
+      //         style={{ color: flagInputOtherValue[question.title] ?  choiceOtherInputActive ? green[500] : '' : '' }}
+      //         onClick={onChoiceOtherSubmit}
+      //         disabled={!flagInputOtherValue[question.title]}
+      //       >
+      //         {!choiceOtherInputActive && <EditIcon  />} 
+      //         {choiceOtherInputActive && <CheckIcon />}
+      //       </IconButton>
+      //     </InputAdornment>
+      //   ),
+      //   classes: {
+      //     adornedEnd: classes.adornedEnd
+      //    }
+      // }}
       inputProps={{
         maxLength: 128
       }}
