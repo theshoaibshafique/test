@@ -288,6 +288,23 @@ class UserFields extends React.Component {
               }
               label={<Typography className="subtext">Efficiency</Typography>}
             />}
+            {this.includesRole("Case Discovery") && <FormControlLabel
+              control={
+                <Checkbox
+                  disableRipple
+                  icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                  checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
+                  className="SST-Checkbox"
+                  id="caseDiscoveryAccess"
+                  name="caseDiscoveryAccess"
+                  disabled={isAdmin}
+                  onChange={this.props.handleFormChange}
+                  checked={this.checkPermissions("Case Discovery")}
+                  value="Case Discovery"
+                />
+              }
+              label={<Typography className="subtext">Case Discovery</Typography>}
+            />}
           </FormControl>
         </Grid>
       </Grid>

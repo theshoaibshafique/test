@@ -92,6 +92,10 @@ const makeSelectEMMAccess = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('userRoles').filter(role => role.toUpperCase() === 'ENHANCED M&M VIEW').length === 1
 );
+const makeSelectEMMRequestAccess = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('userRoles').filter(role => role.toUpperCase() === 'ENHANCED M&M EDIT').length === 1
+);
 
 const makeSelectRoles = () => createSelector(
   selectGlobal,
@@ -123,6 +127,7 @@ export {
   makeSelectIsPresenter,
   makeSelectIsAdmin,
   makeSelectEMMAccess,
+  makeSelectEMMRequestAccess,
   makeSelectRoles,
   makeSelectLogger
 };
