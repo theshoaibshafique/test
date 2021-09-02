@@ -132,9 +132,9 @@ export const getQuestionByLocation = (flagReport, flagReportLocation) => {
         let path = '';
         for(let i = 0; i < flagReportLocation.length; i++) {
             if(i % 2 === 0) {
-                path += `.questions[${flagReportLocation[i]}]`;
+                path += `.questions.sort((a, b) => a.questionOrder - b.questionOrder)[${flagReportLocation[i]}]`;
             } else if(i % 2 !== 0) {
-                path += `.options[${flagReportLocation[i]}]`;
+                path += `.options.sort((a, b) => a.optionOrder - b.optionOrder)[${flagReportLocation[i]}]`;
             }
         }
         // console.log('path', `report${path}`);

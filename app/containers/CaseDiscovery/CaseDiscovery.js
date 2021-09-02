@@ -1896,8 +1896,10 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           }
           let updatedLocation = [...state.flagData[currentQuestionIndex].location, optionObject.optionOrder - 1];
 
-          // const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
-          const selectedOpt = currentQuesOptions[optionObject.optionOrder - 1];
+          let selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
+          // Sort returned questions by questionOrder property.
+          if(selectedOpt.questions) selectedOpt = { ...selectedOpt, questions: selectedOpt.questions.sort((a, b) => a.questionOrder - b.questionOrder)};
+          // const selectedOpt = currentQuesOptions[optionObject.optionOrder - 1];
           if(selectedOpt.questions) {
             updatedStateValue = {
               ...updatedStateValue,
