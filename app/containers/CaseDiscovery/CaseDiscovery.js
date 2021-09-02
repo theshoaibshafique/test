@@ -147,16 +147,21 @@ function displayTags(tags, emrCaseId) {
     tag = tag.tagName || tag;
     return (
       <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
-          return <div key={i}>{line}</div>
-        })} arrow={true}>
-          <span className={`case-tag ${tag} log-mouseover`} id={`${tag}-tag-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} key={tag}>
-            <span>
-              {getTag(tag)}
-            </span>
-            <div className="display">{tag}</div>
+            return <div key={i}>{line}</div>
+          })} arrow={true}>
+              <span 
+                className={`case-tag ${tag} log-mouseover`} 
+                id={`${tag}-tag-${emrCaseId}`} 
+                description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} 
+                key={tag}
+              >
+                <span>
+                  {getTag(tag)}
+                </span>
+                <div className="display">{tag}</div>
 
-          </span>
-      </LightTooltip>
+              </span>
+        </LightTooltip>
     )
   })
 }
@@ -1064,12 +1069,23 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     fetchCases();
   }, [caseId]);
 
+  // FLAG SUBMISSION HANDLER - UPDATE DETAILED CASE, ADDING NEWLY SUBMITTED FLAG TO CASE.
+  const handleUpdateDetailedCase = (res) => {
+    if(res) {
+      setDetailedCase(prevState => ({
+        ...prevState,
+        tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...prevState.tags]
+      }));
+    }
+  };
+
   return (
     <section className="case-discovery">
       <div hidden={caseId}>{searchView}</div>
       <DetailedCase {...DETAILED_CASE}
         isSaved={savedCases.includes(caseId)}
-        handleSaveCase={() => handleSaveCase(caseId)} USERS={USERS}
+        handleSaveCase={() => handleSaveCase(caseId)} 
+        USERS={USERS}
         handleChangeCaseId={handleChangeCaseId}
         hidden={!caseId}
         showEMMReport={showEMMReport}
@@ -1078,6 +1094,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         flagReport={flagReport}
         roomIds={roomIds}
         handleSetCases={handleSetCases}
+        handleUpdateDetailedCase={handleUpdateDetailedCase}
       />
     </section>
   );
@@ -1170,7 +1187,7 @@ function RecommendedCases(props) {
 
 
 function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagReport, roomIds, setData, handleSetCases } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagReport, roomIds, setData, handleSetCases, handleUpdateDetailedCase } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -1360,8 +1377,7 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-  console.log('flags in detailedCase', flags);
-  console.log('Ts in detailedCase', tags);
+
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -1405,19 +1421,10 @@ function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId)}
-            {/*(flagReport && flags.length <= 0 && dayDiff <= 25 && showAddFlag) &&*/
-              // <CSSTransition
-              //   in={flags.length === 0}
-              //   timeout={1000}
-              //   exit={true}
-              //   classNames="add-flag-fade"
-              // >
-                <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} ${!showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21 ? 'hidden' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
-                  <span><img src={Plus} /></span>
-                  <div>Add Flag</div>
-                </span>
-              // </CSSTransition>
-            }
+              <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} ${!showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21 ? 'hidden' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
+                <span><img src={Plus} /></span>
+                <div>Add Flag</div>
+              </span>
           </div>
 
           <div className="timing-graphs" id="timing-graphs">
@@ -1676,6 +1683,7 @@ function DetailedCase(props) {
               setShowAddFlag={setShowAddFlag}
               setShowNewFlag={setShowAddFlag}
               handleSetCases={handleSetCases}
+              handleUpdateDetailedCase={handleUpdateDetailedCase}
             />
           </div>
         </Slide>
@@ -1685,7 +1693,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag, setShowNewFlag, handleSetCases }) => {
+const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag, setShowNewFlag, handleSetCases, handleUpdateDetailedCase }) => {
   // Retrieve userToken from redux store 
   const userToken = useSelector(makeSelectToken());
   const firstName = useSelector(makeSelectFirstName());
@@ -2182,7 +2190,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           tagName: 'Flagged',
           toolTip: toolTipArray
         };
-        // return newFlagObject;
+        handleUpdateDetailedCase(result);
         handleSetCases(result, caseId);
         // setData({
         //   'CASES': CASES.map(el => el.caseId === caseId ? { ...el, tags: tags.unshift({ tagName: 'Flagged', toolTip: toolTipArray })} : el)
