@@ -151,7 +151,7 @@ class SSTNav extends React.Component {
               </Collapse>
             }
             {(this.props.caseDiscoveryAccess) &&
-              <ListItem disableGutters><NavLink to="/caseDiscovery" className='text-link' >Case Discovery<img style={{margin:'0px 0px 2px 4px', width:60, float:'right'}} src={alphaTag}/></NavLink></ListItem>
+              <ListItem disableGutters><NavLink to="/caseDiscovery" className='text-link' >Case Discovery</NavLink></ListItem>
             }
           </List>
         </Grid>
