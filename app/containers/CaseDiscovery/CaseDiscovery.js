@@ -1423,10 +1423,10 @@ function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId)}
-              <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} ${(!isAdmin || !showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21) ? 'hidden' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
+              {!(!isAdmin || !showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
                 <span><img src={Plus} /></span>
                 <div>Add Flag</div>
-              </span>
+              </span>}
           </div>
 
           <div className="timing-graphs" id="timing-graphs">

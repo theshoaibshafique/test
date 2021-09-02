@@ -136,26 +136,26 @@ export default class Login extends React.PureComponent {
     await globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', token, {})
       .then(result => {
         this.props.setProfile(result);
-        this.getOperatingRooms(result.facilityId);
-        this.getComplications();
-        this.setLogger();
+        this.getOperatingRooms(token);
+        this.getComplications(token);
+        this.setLogger(token);
       }).catch((results) => {
         console.error("oh no", results)
       });
 
   }
 
-  setLogger() {
-    this.props.setLogger(new Logger(this.props.userToken))
+  setLogger(token) {
+    this.props.setLogger(new Logger(token))
   }
 
 
-  getComplications() {
+  getComplications(token) {
     if (this.props.complications && this.props.complications.length > 0) {
       return;
     }
 
-    globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/complications', 'get', this.props.userToken, {})
+    globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/complications', 'get', token, {})
       .then(result => {
         result = result.data
         this.props.setComplicationList(result);
@@ -164,8 +164,8 @@ export default class Login extends React.PureComponent {
       })
   };
 
-  getOperatingRooms() {
-    globalFunctions.genericFetch(process.env.EMR_API + "rooms", 'get', this.props.userToken, {})
+  getOperatingRooms(token) {
+    globalFunctions.genericFetch(process.env.EMR_API + "rooms", 'get', token, {})
       .then(result => {
         if (result != 'error') {
           this.props.setOperatingRoom(result)
