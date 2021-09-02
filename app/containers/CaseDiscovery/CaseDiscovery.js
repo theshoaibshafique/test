@@ -1205,6 +1205,7 @@ function DetailedCase(props) {
   const { roomSchedule: { blockStart, blockEnd, roomCases }, procedureDistribution, emmStatus: { reportId, isPublished }, hl7Parameters, tags } = props;
 
   const procedureTitle = procedures[0].procedureName;
+  const specialtyTitle = procedures[0].specialtyName;
 
   const dayDiff = moment().endOf('day').diff(moment(wheelsIn).endOf('day'), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
@@ -1348,14 +1349,13 @@ function DetailedCase(props) {
     let complicationList = requestData.complications.map((c) => c.display);
     let jsonBody = {
       "roomName": roomName,
-      "specialty": ["Unknown Specialty"],
+      "specialty": [specialtyTitle || "Unknown Specialty"],
       "procedure": [procedureTitle],
       "complications": requestData.complicationOther ? [...complicationList, requestData.complicationOther] : complicationList,
       "postOpDate": requestData.complicationDate,
       "operationDate": globalFunctions.formatDateTime(scheduledStart),
       "notes": requestData.notes,
       "usersToNotify": requestData.users.map((c) => c.id),
-      "departmentName": departmentId,
       "facilityName": userFacility
     }
     logger && logger.manualAddLog('click', 'submit-emm-request', jsonBody);
