@@ -2324,7 +2324,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
      // 1. Animate state set to true.
      const timeout = setTimeout(() => {
       setAnimate(true);
-    }, 200);
+    }, 100);
     // Clean up timeout before effect runs.
     return () => {
       clearTimeout(timeout);
