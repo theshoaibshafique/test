@@ -1360,7 +1360,8 @@ function DetailedCase(props) {
       logger && logger.connectListeners();
     }, 300)
   });
-
+  console.log('flags in detailedCase', flags);
+  console.log('Ts in detailedCase', tags);
   return (
     <Grid container spacing={0} className="case-discovery-detailed" hidden={hidden}>
       {isLoading ? <Grid item xs className="detailed-case"><LoadingIndicator /></Grid> :
@@ -1689,7 +1690,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   const userToken = useSelector(makeSelectToken());
   const firstName = useSelector(makeSelectFirstName());
   const lastName = useSelector(makeSelectLastName());
-
+  
   // USEREDUCER ACTION TYPES.
   const SET_INITIAL_QUESTION = 'SET_INITIAL_QUESTION';
   const UPDATE_QUESTIONS = 'UPDATE_QUESTIONS';
@@ -1717,7 +1718,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     flagInputOtherValue: {},
     isSendingFlag: false,
     flagError: null,
-    choiceOtherInputError: {}
+    choiceOtherInputError: {},
+    choiceOtherFocus: null
   };
 
   const flagReducer = (state, action) => {
@@ -1807,16 +1809,16 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
               isFlagChoiceOther: {
                 ...updatedStateValue.isFlagChoiceOther,
                 [questionId]: true
-              }
+              },
+              choiceOtherFocus: `${questionId}Other`
             };
           // Handle selection of standard 'choice' option type.
           } else {
+            const updatedisFlagChoiceOther = {...updatedStateValue.isFlagChoiceOther};
+            delete updatedisFlagChoiceOther[questionId];
             updatedStateValue = {
               ...updatedStateValue,
-              isFlagChoiceOther: {
-                ...updatedStateValue.isFlagChoiceOther,
-                [questionId]: false
-              }
+              isFlagChoiceOther: updatedisFlagChoiceOther,
             }
           }
           // TODO: may not be necessary.
@@ -1846,7 +1848,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           if(selectedOpt.questions) {
             updatedStateValue = {
               ...updatedStateValue,
-              flagReportLocation: updatedLocation.concat(0)
+              flagReportLocation: updatedLocation.concat(0),
             }
 
           // If selected options' questions value is null.
@@ -1893,12 +1895,11 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         };
       case CLEAR_INPUT_ERROR:
         questionId = action.payload.questionId
+        const updatedInputErrorState = { ...state.choiceOtherInputError };
+        delete updatedInputErrorState[questionId];
         return {
           ...state,
-          choiceOtherInputError: {
-            ...state.choiceOtherInputError,
-            [questionId]: false
-          }
+          choiceOtherInputError: updatedInputErrorState
         };
       case SELECT_MULTI_OPTION:
         questionId = action.payload.questionId;
@@ -2119,6 +2120,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                     questionId={question.id}
                     handleMultiOptionSelect={handleMultiOptionSelect}
                     flagData={flagState.flagData}
+                    handleClearInputError={handleClearInputError}
                   />
                   {flagState.isFlagChoiceOther[question.id] && 
                     (<div className="flag-text-input-container">
@@ -2136,6 +2138,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                         flagData={flagState.flagData}
                         choiceOtherInputError={flagState.choiceOtherInputError}
                         handleClearInputError={handleClearInputError}
+                        isFocused={flagState.choiceOtherFocus}
                       />
                     </div>
                     )
@@ -2260,7 +2263,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   );
 };
 
-const FlagSelect = ({ title, questionType, options, isRequired, questionId, handleOptionSelect, handleMultiOptionSelect, flagData }) => {
+const FlagSelect = ({ title, questionType, options, isRequired, questionId, handleOptionSelect, handleMultiOptionSelect, flagData, handleClearInputError }) => {
   const [value, setValue] = useState(null);
   const [animate, setAnimate] = useState(false);
 
@@ -2292,13 +2295,15 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
       if(questionType === 'single-choice') handleOptionSelect(questionId, optionObj);
       // handle option selection for question type of multiple-choice
       if(questionType === 'multiple-choice') handleMultiOptionSelect(questionId, optionObj);
+
+      if(optionObj.type !== 'choice-other') handleClearInputError(questionId);
     }
     setValue(newValue);
   };
 
   return (
     <CSSTransition
-      in={/*flagData.includes(ques => ques.id === questionId)*/false}
+    in={/*flagData.includes(ques => ques.id === questionId)*/false}
       timeout={1000}
       exit={true}
       enter={false}
@@ -2319,7 +2324,6 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
           multiple={questionType === 'multiple-choice'}
           disableCloseOnSelect={false}
           renderInput={(params) => <TextField {...params} /*label={questionType === 'multiple-choice' ? 'Select 1 or more' : ''}*/ variant="outlined" />}
-          autoFocus
           disableClearable
         />
       </div>
@@ -2327,7 +2331,8 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
   );
 };
 
-const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData, choiceOtherInputError, handleClearInputError }) => {
+const FlagTextInput = (props) => {
+  const { handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData, choiceOtherInputError, handleClearInputError, isFocused } = props;
   const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
   const [inputError, setInputError] = useState({});
 
@@ -2363,13 +2368,11 @@ const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive
       }));
     }
   };
- 
   return (
     <TextField
       // id="complication-other"
       onBlur={(e) => handleInputBlur(e, question.id)}
       className={classes.flagTextIcon}
-      // disabled={!choiceOtherInputActive}
       id={`${question.title}-other`}
       variant="outlined"
       fullWidth
@@ -2379,11 +2382,12 @@ const FlagTextInput = ({ handleSaveChoiceOther, question, choiceOtherInputActive
       placeholder="Please specify"
       value={flagInputOtherValue[question.title]}
       onChange={(e) => handleFlagInputChange(e, question.title)}
-      helperText={inputError[question.id] || choiceOtherInputError[question.id] && `Please enter a ${question && question.title.toLowerCase()}`}
+      helperText={(inputError[question.id] || choiceOtherInputError[question.id]) && `Please enter a ${question && question.title.toLowerCase()}`}
       error={inputError[question.id] || choiceOtherInputError[question.id]}
       inputProps={{
         maxLength: 128
       }}
+      autoFocus={isFocused === `${question.id}Other`}
     />
   )
 };
