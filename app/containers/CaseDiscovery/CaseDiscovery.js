@@ -141,29 +141,72 @@ function transformTagValue(tag, value) {
   }
 }
 
-function displayTags(tags, emrCaseId) {
-  return tags.map((tag, i) => {
-    let desc = tag.toolTip || [];
-    tag = tag.tagName || tag;
-    return (
-      <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
-            return <div key={i}>{line}</div>
-          })} arrow={true}>
-              <span 
-                className={`case-tag ${tag} log-mouseover`} 
-                id={`${tag}-tag-${emrCaseId}`} 
-                description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} 
-                key={tag}
-              >
-                <span>
-                  {getTag(tag)}
-                </span>
-                <div className="display">{tag}</div>
+function displayTags(tags, emrCaseId, detailed = null) {
+  if(detailed) {
+    return  <TransitionGroup 
+              component={null}
+              appear={false}  
+              enter={true}
+              exit={true}
+            >
+              {
+                tags.map((tag, i) => {
+                  let desc = tag.toolTip || [];
+                  tag = tag.tagName || tag;
+                  return (
+                    <CSSTransition 
+                      key={`${tag}-${i}`}
+                      classNames="tag-fade"
+                      timeout={1000}
+                      appear={true}
+                      enter={false}
+                      exit={false}
+                    >
+                      <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
+                            return <div key={i}>{line}</div>
+                          })} arrow={true}>
+                              <span 
+                                className={`case-tag ${tag} log-mouseover`} 
+                                id={`${tag}-tag-${emrCaseId}`} 
+                                description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} 
+                                key={tag}
+                              >
+                                <span>
+                                  {getTag(tag)}
+                                </span>
+                                <div className="display">{tag}</div>
+                
+                              </span>
+                        </LightTooltip>
+                    </CSSTransition>
+                  )
+                })
+              }
+            </TransitionGroup>
+  } else {
+    return  tags.map((tag, i) => {
+      let desc = tag.toolTip || [];
+      tag = tag.tagName || tag;
+      return (
+        <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
+              return <div key={i}>{line}</div>
+            })} arrow={true}>
+                <span 
+                  className={`case-tag ${tag} log-mouseover`} 
+                  id={`${tag}-tag-${emrCaseId}`} 
+                  description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} 
+                  key={tag}
+                >
+                  <span>
+                    {getTag(tag)}
+                  </span>
+                  <div className="display">{tag}</div>
 
-              </span>
-        </LightTooltip>
-    )
-  })
+                </span>
+          </LightTooltip>
+      )
+    })
+  }
 }
 
 function Case(props) {
@@ -1422,11 +1465,11 @@ function DetailedCase(props) {
             {description}
           </div>
           <div className="tags">
-            {displayTags(tags, emrCaseId)}
-              {!(!isAdmin || !showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
-                <span><img src={Plus} /></span>
-                <div>Add Flag</div>
-              </span>}
+            {displayTags(tags, emrCaseId, true)}
+            {!(!isAdmin || !showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
+              <span><img src={Plus} /></span>
+              <div>Add Flag</div>
+            </span>}
           </div>
 
           <div className="timing-graphs" id="timing-graphs">

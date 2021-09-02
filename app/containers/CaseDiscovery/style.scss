@@ -4,6 +4,24 @@
     .tags {
         margin: 4px -4px;
         width: 100%;
+        .tag-fade-enter, .tag-fade-appear {
+            opacity: 0;
+            // transform: translateY(50%);
+        }
+        .tag-fade-enter-active, .tag-fade-appear-active {
+            opacity: 1;
+            // transform: translateY(0);
+            transition: opacity 1000ms ease-in/*, transform 1000ms*/;
+        }
+        .tag-fade-exit {
+            opacity: 1;
+            // transform: translateY(0);
+        }
+        .tag-fade-exit-active {
+            opacity: 0;
+            // transform: translateY(-50%);
+            transition: opacity 1000ms ease-in/*, transform 1000ms*/;
+        }
     }
     .case-tag {
         border-radius: 8px;
