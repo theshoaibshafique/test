@@ -656,14 +656,17 @@
                 position: relative;
                 div {
                     // margin-top: -8px;
-                    top: -8px;
+                    top: -12px;
                     left: 8px;
                     position: absolute;
                     background: rgba(245, 248, 250, 0);
                     padding: 4px;
                     border-radius: 4px;
-                    &.start-boundary, &.end-boundary {
-                        background-color: rgba(245, 248, 250, 1);
+                    &.start-boundary {
+                        background: linear-gradient(to top, rgba(245, 248, 250, 1), 80%, rgba(245, 248, 250, 0));
+                    }
+                    &.end-boundary {
+                        background: linear-gradient(to bottom, rgba(245, 248, 250, 1), 80%, rgba(245, 248, 250, 0));
                     }
                 }
             }
