@@ -46,7 +46,7 @@ import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation, getQuestionCount } from './Utils';
 import { useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectComplications, makeSelectEMMRequestAccess, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -1196,6 +1196,8 @@ function DetailedCase(props) {
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
+  const isAdmin = useSelector(makeSelectIsAdmin());
+  const hasRequestEMMAccess = useSelector(makeSelectEMMRequestAccess());
 
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsInUtc, wheelsOut, scheduledStart, startTime, endTime,
     duration, departmentId, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
@@ -1270,7 +1272,7 @@ function DetailedCase(props) {
       return <LightTooltip title={"eM&M request submitted successfully"} arrow>
         <div><Button variant="outlined" className="primary disabled" onClick={() => null} disabled>Request eM&M</Button></div>
       </LightTooltip>
-    } else if (dayDiff <= 21) {
+    } else if (dayDiff <= 21 && hasRequestEMMAccess) {
       return <Button variant="outlined" className="primary" onClick={() => handleOpenRequestEMM(true)}>Request eM&M</Button>
     } else {
       return <div></div>
@@ -1421,7 +1423,7 @@ function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId)}
-              <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} ${!showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21 ? 'hidden' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
+              <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} ${(!isAdmin || !showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21) ? 'hidden' : ''}`} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
                 <span><img src={Plus} /></span>
                 <div>Add Flag</div>
               </span>
@@ -2835,6 +2837,7 @@ function ClipTimeline(props) {
   const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
+  const isAdmin = useSelector(makeSelectIsAdmin());
   const [presenterMode, setPresenterMode] = React.useState(false);
   const [presenterDialog, setPresenterDialog] = React.useState(false);
   const closePresenterDialog = (choice) => {
@@ -2966,7 +2969,7 @@ function ClipTimeline(props) {
           <Grid container spacing={0} className="clip-details">
             <Grid item xs={9}><VideoPlayer params={selectedMarker.params} presenterMode={presenterMode} /></Grid>
             <Grid item xs={3} className="flag-details normal-text">
-              <div>
+              {isAdmin && <div>
                 <FormControlLabel
                   control={
                     <SSTSwitch
@@ -2976,7 +2979,7 @@ function ClipTimeline(props) {
                   }
                   label="Presentation Mode"
                 />
-              </div>
+              </div>}
               <div className="details-header">Flag Details</div>
               {selectedMarker.description && selectedMarker.description.map((d, i) => {
                 return (
