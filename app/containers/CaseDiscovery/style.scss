@@ -25,6 +25,14 @@
             background-color: #ffcfcf;
             color: #7b2d2d;
         }
+        &.flag-tag-0 {
+            // opacity: 0;
+            // transform: translateY(-5%);
+            // transition: opacity 1000ms/*, transform 500ms*/; 
+            &.animate {
+                // opacity: 1;
+            }
+        }
         &.add-flag {
             align-items: center;
             background-color: #F4F5F7;
@@ -33,6 +41,11 @@
             // top: 8px;
             cursor: pointer;
             transition: background-color .5s ease-out;
+            &.hidden {
+                visibility: hidden;
+                opacity: 0;
+                transition: visibility .3s, opacity .3s;
+            }
             &:hover {
                 background-color: darken(#F4F5F7, 5);
             }
@@ -41,6 +54,7 @@
             opacity: 0.2;
             cursor: default;
         }
+       
     }
 }
 .app-wrapper section.case-discovery {
@@ -395,6 +409,14 @@
             }
         }
 
+        .add-flag-fade-exit {
+            opacity: 1;
+        }
+        .add-flag-fade-exit-active {
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+
         .timing-graphs {
             margin-top: 18px;
             .procedure-distribution {
@@ -704,16 +726,6 @@
 }
 
 .request-emm-modal {
-    &.modal-content {
-        // opacity: 0;
-        transform: translateX(100%);
-        transition: all .5s ease-in-out;
-        &.animate {
-            opacity: 1;
-            transform: translateX((0));
-        }
-    }
-  
     .request-emm {
         height: 100%;
         display: flex;
@@ -726,6 +738,9 @@
         .animate {
             opacity: 1;
             transform: translateX(0);
+        }
+        .flag-text-input-container {
+            margin-top: 1rem;
         }
     }
 
@@ -762,6 +777,11 @@
         mix-blend-mode: normal;
         margin-bottom: 26px;
         max-width: 290px;
+
+        &.flag-submit {
+            display: flex;
+            align-items: center;
+        }
     }
     .subtitle {
         font-style: normal;
