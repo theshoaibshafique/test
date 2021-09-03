@@ -617,6 +617,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => {
+    logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
     setOpenAddFlag(open);
   };
 
@@ -1743,6 +1744,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   const userToken = useSelector(makeSelectToken());
   const firstName = useSelector(makeSelectFirstName());
   const lastName = useSelector(makeSelectLastName());
+  const logger = useSelector(makeSelectLogger());
   
   // USEREDUCER ACTION TYPES.
   const SET_INITIAL_QUESTION = 'SET_INITIAL_QUESTION';
@@ -2245,18 +2247,20 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
    // Submit flag.
    const handleFlagSubmit = (flag) => {
     flagDispatch({ type: SENDING_FLAG });
+    
     globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
       .then(result => {
         flagDispatch({ type: FLAG_SUCCESS });
         result = result.data;
         const toolTipArray = result.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`);
-
+        
         const newFlagObject = {
           tagName: 'Flagged',
           toolTip: toolTipArray
         };
         handleUpdateDetailedCase(result);
         handleSetCases(result, caseId);
+        logger.manualAddLog('click', 'submit-flag', flag)
         // setData({
         //   'CASES': CASES.map(el => el.caseId === caseId ? { ...el, tags: tags.unshift({ tagName: 'Flagged', toolTip: toolTipArray })} : el)
         // });
@@ -2340,7 +2344,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
   const [value, setValue] = useState({});
   const [animate, setAnimate] = useState(false);
   const [flagOptions, setflagOptions] = useState([options]);
-
+  const logger = useSelector(makeSelectLogger());
   useEffect(() => {
      // 1. Animate state set to true.
      const timeout = setTimeout(() => {
@@ -2373,6 +2377,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
 
       if(optionObj.type !== 'choice-other') handleClearInputError(questionId);
     }
+    logger.manualAddLog('onchange',title, newValue)
     setValue(newValue);
   };
   // console.log('value', value);
@@ -2410,12 +2415,11 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
 const FlagTextInput = (props) => {
   const { handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData, choiceOtherInputError, handleClearInputError, handleSetOtherInputError, isFocused } = props;
   const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
-
+  const logger = useSelector(makeSelectLogger());
   const classes = useStyles();
   
   const handleFlagInputChange = (event, title)  => {
     const val = event.target.value;
-
     if(val === '' && choiceOtherInputError[question.id]) {
       /*handleChoiceOtherEmpty(question.id)*/
       handleSetOtherInputError(questionId);
@@ -2432,6 +2436,7 @@ const FlagTextInput = (props) => {
       // }));
       handleClearInputError(question.id);
     }
+    logger.manualAddLog('onchange',title,val)
     setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
     // Update flagData state in realtime as value is entered.
     // todo: rename to handleUpdateChoiceOther
