@@ -1352,7 +1352,11 @@ function DetailedCase(props) {
 
   // Flag submission state.
   const [showAddFlag, setShowAddFlag] = React.useState(true);
-  const [showNewFlag, setShowNewFlag] = React.useState(false);
+
+  // Flag Submission useEffect hook: Reset showAddFlag state to true when new case is rendered.
+  useEffect(() => {
+    if(!showAddFlag) setShowAddFlag(true);
+  }, [caseId]);
 
   // Change/update the filter for request ID
   const handleChange = (event, value) => {
@@ -1726,7 +1730,6 @@ function DetailedCase(props) {
               caseId={caseId}
               openAddFlag={openAddFlag}
               setShowAddFlag={setShowAddFlag}
-              setShowNewFlag={setShowAddFlag}
               handleSetCases={handleSetCases}
               handleUpdateDetailedCase={handleUpdateDetailedCase}
             />
@@ -1738,7 +1741,7 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag, setShowNewFlag, handleSetCases, handleUpdateDetailedCase }) => {
+const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag, handleSetCases, handleUpdateDetailedCase }) => {
   // Retrieve userToken from redux store 
   const userToken = useSelector(makeSelectToken());
   const firstName = useSelector(makeSelectFirstName());
@@ -2257,12 +2260,16 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         };
         handleUpdateDetailedCase(result);
         handleSetCases(result, caseId);
+<<<<<<< Updated upstream
         // setData({
         //   'CASES': CASES.map(el => el.caseId === caseId ? { ...el, tags: tags.unshift({ tagName: 'Flagged', toolTip: toolTipArray })} : el)
         // });
+=======
+        logger.manualAddLog('click', 'submit-flag', flag)
+       
+>>>>>>> Stashed changes
         setShowAddFlag(false);
         handleOpenAddFlag(false);
-        // addFlagtoCases(result);
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
         console.log("uh no.")
