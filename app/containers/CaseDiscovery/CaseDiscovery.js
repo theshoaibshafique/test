@@ -1335,6 +1335,8 @@ function DetailedCase(props) {
   }
   useEffect(() => {
     setIsLoading(false);
+    // Reset add flag - show state to initial value new case is rendered.
+    if(!showAddFlag) setShowAddFlag(true);
   }, [caseId]);
 
   const [requestData, setRequestData] = useReducer(requestReducer, {
@@ -1353,11 +1355,6 @@ function DetailedCase(props) {
 
   // Flag submission state.
   const [showAddFlag, setShowAddFlag] = React.useState(true);
-
-  // Flag Submission useEffect hook: Reset showAddFlag state to true when new case is rendered.
-  useEffect(() => {
-    if(!showAddFlag) setShowAddFlag(true);
-  }, [caseId]);
 
   // Change/update the filter for request ID
   const handleChange = (event, value) => {
