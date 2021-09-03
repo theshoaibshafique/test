@@ -2196,7 +2196,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
               return (
                 <div style={{marginBottom: '1rem'}} key={question.title}>
                   <FlagSelect
-                    key={question.title && question.options}
+                    key={question.title}
                     title={question.title}
                     options={question.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
                     questionType={question.type}
@@ -2339,6 +2339,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 const FlagSelect = ({ title, questionType, options, isRequired, questionId, handleOptionSelect, handleMultiOptionSelect, flagData, handleClearInputError, key }) => {
   const [value, setValue] = useState({});
   const [animate, setAnimate] = useState(false);
+  const [flagOptions, setflagOptions] = useState([options]);
 
   useEffect(() => {
      // 1. Animate state set to true.
@@ -2351,9 +2352,10 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
     }
   }, []);
 
-  // useEffect(() => {
-  //   setValue(null)
-  // }, [key])
+  useEffect(() => {
+    setValue(null)
+    // setflagOptions([ ...options])
+  }, [questionId])
 
   const classes = useStyles();
 
