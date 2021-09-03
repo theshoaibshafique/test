@@ -450,6 +450,31 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
 
+
+  const urlParams = new URLSearchParams(window.location.search)
+  //Open the caseId through URL
+  const manualCaseId = urlParams.get('caseId')
+  //Remove from URL
+  if (manualCaseId) {
+    window.history.pushState({}, document.title, window.location.pathname);
+  }
+  // Set CaseID for detailed case view
+  const [caseId, setCaseId] = React.useState(manualCaseId);
+  const handleChangeCaseId = (cId) => {
+    //Handle close case
+    if (!cId && DETAILED_CASE) {
+      const emrCId = DETAILED_CASE.metaData && DETAILED_CASE.metaData.emrCaseId;
+      const oldCase = CASES.find((c) => c.emrCaseId == emrCId);
+
+      logger && logger.manualAddLog('click', `close-case-${emrCId}`, formatCaseForLogs(oldCase));
+
+      setTimeout(() => {
+        logger && logger.manualAddLog('session', 'cases-in-view', getCasesInView());
+      }, 300)
+    }
+    setCaseId(cId);
+  }
+
   useEffect(() => {
     if (!logger) {
       return;
@@ -607,6 +632,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     fetchSavedCases();
     // Fetch flag submission schema.
     fetchFlagReport();
+    
+    document.getElementById('caseDiscovery-nav').addEventListener("click", (x) => {
+      setCaseId(null)
+    })
   }, []);
 
   useEffect(() => {
@@ -739,29 +768,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const isCustomDate = searchData.date.selected == "Custom";
 
-  const urlParams = new URLSearchParams(window.location.search)
-  //Open the caseId through URL
-  const manualCaseId = urlParams.get('caseId')
-  //Remove from URL
-  if (manualCaseId) {
-    window.history.pushState({}, document.title, window.location.pathname);
-  }
-  // Set CaseID for detailed case view
-  const [caseId, setCaseId] = React.useState(manualCaseId);
-  const handleChangeCaseId = (cId) => {
-    //Handle close case
-    if (!cId && DETAILED_CASE) {
-      const emrCId = DETAILED_CASE.metaData && DETAILED_CASE.metaData.emrCaseId;
-      const oldCase = CASES.find((c) => c.emrCaseId == emrCId);
-
-      logger && logger.manualAddLog('click', `close-case-${emrCId}`, formatCaseForLogs(oldCase));
-
-      setTimeout(() => {
-        logger && logger.manualAddLog('session', 'cases-in-view', getCasesInView());
-      }, 300)
-    }
-    setCaseId(cId);
-  }
 
   const [showTagsModal, setShowTagsModal] = React.useState(false);
 
