@@ -1531,7 +1531,7 @@ function DetailedCase(props) {
           {/* Highlight Scheduled block */}
           <div className="scheduled-block absolute"
             style={{
-              top: `${(bStartTime - earliestStartTime) * HOUR_SIZE}px`,
+              top: `${(bStartTime - Math.floor(earliestStartTime)) * HOUR_SIZE}px`,
               height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`
             }}
             hidden={!blockStart}
@@ -1567,7 +1567,7 @@ function DetailedCase(props) {
             <div className="absolute log-mouseover"
               id="block-hours-tooltip"
               style={{
-                top: `${(bStartTime - earliestStartTime) * HOUR_SIZE}px`,
+                top: `${(bStartTime - Math.floor(earliestStartTime)) * HOUR_SIZE}px`,
                 height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`,
                 width: `100%`
               }}
