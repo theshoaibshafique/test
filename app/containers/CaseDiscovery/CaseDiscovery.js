@@ -2166,7 +2166,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
               return (
                 <div style={{marginBottom: '1rem'}} key={question.title}>
                   <FlagSelect
-                    key={question.title}
+                    key={question.title && question.options}
                     title={question.title}
                     options={question.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
                     questionType={question.type}
@@ -2318,8 +2318,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   );
 };
 
-const FlagSelect = ({ title, questionType, options, isRequired, questionId, handleOptionSelect, handleMultiOptionSelect, flagData, handleClearInputError }) => {
-  const [value, setValue] = useState(null);
+const FlagSelect = ({ title, questionType, options, isRequired, questionId, handleOptionSelect, handleMultiOptionSelect, flagData, handleClearInputError, key }) => {
+  const [value, setValue] = useState({});
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
@@ -2333,9 +2333,9 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
     }
   }, []);
 
-  useEffect(() => {
-    setValue(null)
-  }, [questionId])
+  // useEffect(() => {
+  //   setValue(null)
+  // }, [key])
 
   const classes = useStyles();
 
@@ -2355,7 +2355,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
     }
     setValue(newValue);
   };
-
+  // console.log('value', value);
   return (
     <CSSTransition
     in={/*flagData.includes(ques => ques.id === questionId)*/false}
@@ -2380,6 +2380,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
           disableCloseOnSelect={false}
           renderInput={(params) => <TextField {...params} /*label={questionType === 'multiple-choice' ? 'Select 1 or more' : ''}*/ variant="outlined" />}
           disableClearable
+          defaultvalue={null}
         />
       </div>
     </CSSTransition>
