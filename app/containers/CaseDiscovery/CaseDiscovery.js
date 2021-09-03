@@ -1759,6 +1759,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   const FLAG_SUCCESS = 'FLAG_SUCCESS';
   const FLAG_FAIL =  'FLAG_FAIL';
   const CLEAR_INPUT_ERROR = 'CLEAR_INPUT_ERROR';
+  const SET_OTHER_INPUT_ERROR = 'SET_OTHER_INPUT_ERROR';
 
   // UseReducer initial state.
   const initial_state = {
@@ -1975,6 +1976,15 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           ...state,
           choiceOtherInputError: updatedInputErrorState
         };
+      case SET_OTHER_INPUT_ERROR:
+        questionId = action.payload.questionId;
+        return {
+          ...state,
+          choiceOtherInputError: {
+            ...state.choiceOtherInputError,
+            [questionId]: true
+          }
+        };
       case SELECT_MULTI_OPTION:
         questionId = action.payload.questionId;
         optionObject = action.payload.optionObject;
@@ -2159,7 +2169,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     payload: { questionId, optionObject }
   });
   const handleClearInputError = (questionId) => flagDispatch({ type: CLEAR_INPUT_ERROR, payload: { questionId } });
-
+  const handleSetOtherInputError = (questionId) => flagDispatch({ type: SET_OTHER_INPUT_ERROR, payload: { questionId } });
+  
   const translateRoomNametoId = () => {
     if(roomIds && roomName) {
       const room = roomIds.find(room => room.display === roomName);
@@ -2212,6 +2223,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                         flagData={flagState.flagData}
                         choiceOtherInputError={flagState.choiceOtherInputError}
                         handleClearInputError={handleClearInputError}
+                        handleSetOtherInputError={handleSetOtherInputError}
                         isFocused={flagState.choiceOtherFocus}
                       />
                     </div>
@@ -2230,19 +2242,6 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       }
     };
     
-  // const addFlagtoCases = (flagRes) => {
-  //   let toolTipArray = flagRes.description.map(el => `${el.questionTitle}: ${answer}`);
-  //   toolTipArray = [...toolTipArray, `Submitted By: ${firstName} ${lastName}`];
-    
-  //   const newFlagObject = {
-  //     tagName: 'Flagged',
-  //     toolTip: toolTipArray
-  //   };
-  //   setData({
-  //     'CASES': CASES.map(el => el.caseId === caseId ? { ...el, tags: tags.unshift(newFlagObject)} : el)
-  //   });
-  // };
-
    // Submit flag.
    const handleFlagSubmit = (flag) => {
     flagDispatch({ type: SENDING_FLAG });
@@ -2407,26 +2406,28 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
 };
 
 const FlagTextInput = (props) => {
-  const { handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData, choiceOtherInputError, handleClearInputError, isFocused } = props;
+  const { handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData, choiceOtherInputError, handleClearInputError, handleSetOtherInputError, isFocused } = props;
   const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
-  const [inputError, setInputError] = useState({});
 
   const classes = useStyles();
   
   const handleFlagInputChange = (event, title)  => {
     const val = event.target.value;
 
-    if(val === '' && inputError[question.id]) {
+    if(val === '' && choiceOtherInputError[question.id]) {
       /*handleChoiceOtherEmpty(question.id)*/
-      setInputError(prevState => ({ 
-        ...prevState,
-        [question.id]: true
-      }));
+      handleSetOtherInputError(questionId);
+      // TODO: Remove
+      // setInputError(prevState => ({ 
+      //   ...prevState,
+      //   [question.id]: true
+      // }));
     } else {
-      setInputError(prevState => ({
-        ...prevState,
-        [question.id]: false
-      }));
+      // TODO: Remove
+      // setInputError(prevState => ({
+      //   ...prevState,
+      //   [question.id]: false
+      // }));
       handleClearInputError(question.id);
     }
     setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
@@ -2437,10 +2438,12 @@ const FlagTextInput = (props) => {
 
   const handleInputBlur = (event, id) => {
     if(!event.target.value) {
-      setInputError(prevState => ({ 
-        ...prevState,
-        [id]: true
-      }));
+      handleSetOtherInputError(id);
+      // TDOD: Remove.
+      // setInputError(prevState => ({ 
+      //   ...prevState,
+      //   [id]: true
+      // }));
     }
   };
   return (
@@ -2457,8 +2460,8 @@ const FlagTextInput = (props) => {
       placeholder="Please specify"
       value={flagInputOtherValue[question.title]}
       onChange={(e) => handleFlagInputChange(e, question.title)}
-      helperText={(inputError[question.id] || choiceOtherInputError[question.id]) && `Please enter a ${question && question.title.toLowerCase()}`}
-      error={inputError[question.id] || choiceOtherInputError[question.id]}
+      helperText={choiceOtherInputError[question.id] && `Please enter a ${question && question.title.toLowerCase()}`}
+  error={choiceOtherInputError[question.id] /*|| inputError[question.id]*/}
       inputProps={{
         maxLength: 128
       }}
