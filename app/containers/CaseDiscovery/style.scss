@@ -20,7 +20,7 @@
         .tag-fade-exit-active {
             opacity: 0;
             // transform: translateY(-50%);
-            transition: opacity 1000ms ease-in/*, transform 1000ms*/;
+            transition: opacity 1ms ease-in/*, transform 1000ms*/;
         }
     }
     .case-tag {

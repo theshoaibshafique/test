@@ -145,9 +145,9 @@ function displayTags(tags, emrCaseId, detailed = null) {
   if(detailed) {
     return  <TransitionGroup 
               component={null}
-              appear={true}  
+              appear={false}  
               enter={true}
-              exit={/*tags.length > 0*/true}
+              exit={/*tags.length > 0*/false}
             >
               {
                 tags.map((tag, i) => {
