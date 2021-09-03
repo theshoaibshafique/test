@@ -1765,7 +1765,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     flagReportLocation: [0],
     flagLocationPopped: false,
     flagData: [],
-    isFlagChoiceOther: {},
+    // isFlagChoiceOther: {},
     choiceOtherOptionObject: null,
     choiceOtherInputActive: {},
     flagInputOtherValue: {},
@@ -1785,7 +1785,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         currentFlagQuestion = getQuestionByLocation(flagReport, state.flagReportLocation);
         // 2. Update the flagData piece of state based on the current flag question value.
         if(currentFlagQuestion) {
-          updatedFlagData = [{ ...currentFlagQuestion, location: state.flagReportLocation, completed: false, choices: [] }];
+          updatedFlagData = [{ ...currentFlagQuestion, location: state.flagReportLocation, completed: false, showChoiceOther: null, choices: [] }];
         }
         return {
           ...state,
@@ -1795,7 +1795,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         updatedFlagData = [...state.flagData];
         const nextQuestion = getQuestionByLocation(flagReport, state.flagReportLocation);
         let transformedNextQuestion;
-        if(nextQuestion) transformedNextQuestion = { ...nextQuestion, location: state.flagReportLocation, completed: false, choices: [] };
+        if(nextQuestion) transformedNextQuestion = { ...nextQuestion, location: state.flagReportLocation, completed: false, showChoiceOther: null, choices: [] };
         if(nextQuestion) {
           const nextQuestionIndex = state.flagData.findIndex(ques => ques.id === nextQuestion.id || ques.title === nextQuestion.title);
           updatedFlagData = nextQuestionIndex !== -1 ? [...state.flagData.slice(0, nextQuestionIndex), transformedNextQuestion] : [...state.flagData, transformedNextQuestion];
@@ -1804,15 +1804,18 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           ...state,
           flagData: updatedFlagData
         }
+        // TODO: remove below case, not needed as this is being handled in SELECT_OPTION for option type of choice.
       case SELECT_TYPE_CHOICE:
         questionId = action.payload.questionId;
-        return {
-          ...state,
-          isFlagChoiceOther: {
-            ...state.isFlagChoiceOther,
-            [questionId]: false
-          }
-        }
+        return state;
+        // return {
+        //   ...state,
+          // isFlagChoiceOther: {
+          //   ...state.isFlagChoiceOther,
+          //   [questionId]: false
+          // }
+          // flagData: state.flagData.map(ques => ques.id === questionId)
+        // }
       case SELECT_TYPE_CHOICE_OTHER:
         questionId = action.payload.questionId;
         const choiceOtherOptionObject = action.payload.choiceOtherOptionObject;
@@ -1821,10 +1824,12 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         };
         updatedStateVal = {
           ...updatedStateVal,
-          isFlagChoiceOther: {
-            ...updatedStateVal.isFlagChoiceOther,
-            questionId: true
-          },
+          // TODO: Line below is technically not needed as we are setting showChoiceOther to true in SELECT_OPTION action.
+          flagData: updatedStateVal.flagData.map((ques) => ques.id === questionId ? { ...ques, showChoiceOther: true } : ques),
+          // isFlagChoiceOther: {
+          //   ...updatedStateVal.isFlagChoiceOther,
+          //   questionId: true
+          // },
           choiceOtherOptionObject: choiceOtherOptionObject
         };
       return updatedStateVal;
@@ -1839,14 +1844,14 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         let updatedStateValue = { ...state };
 
         // Check whether previous question's selected option is choie-other and if it's value is null.
-        if(currentQuestionIndex > 0) {
+        if((currentQuestionIndex > 0) && (state.flagData[currentQuestionIndex - 1].choices.includes(choice => choice.type === 'choice-other' && choice.attribute === null))) {
           const prevQuestionId = state.flagData[currentQuestionIndex - 1].id;
-          const inputError = state.flagData[currentQuestionIndex - 1].choices.includes(choice => choice.type === 'choice-other' && choice.attribute === null)
+          // const inputError = state.flagData[currentQuestionIndex - 1].choices.includes(choice => choice.type === 'choice-other' && choice.attribute === null)
           updatedStateValue = {
             ...updatedStateValue,
             choiceOtherInputError: {
               ...updatedStateValue.choiceOtherInputError,
-              [prevQuestionId]: !inputError
+              [prevQuestionId]: state.flagData[currentQuestionIndex - 1].choices.includes(choice => choice.type === 'choice-other' && choice.attribute === null)
             }
           }
         }
@@ -1855,23 +1860,37 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           // Do nothing,no need to update flagReportLocation.
           return updatedStateValue;
         } else {
+          // updatedStateValue = {
+          //   ...updatedStateValue,
+          //   flagData: updatedStateValue.flagData.map((ques, i) => i > )
+          // }
           // // Handle selection of choice-other option type.
           if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
             updatedStateValue = {
               ...updatedStateValue,
-              isFlagChoiceOther: {
-                ...updatedStateValue.isFlagChoiceOther,
-                [questionId]: true
-              },
+              // isFlagChoiceOther: {
+              //   ...updatedStateValue.isFlagChoiceOther,
+              //   [questionId]: true
+              // },
+              flagData: updatedStateValue.flagData.map((ques, i) => {
+                if(i === currentQuestionIndex) {
+                  return { ...ques, showChoiceOther: true };
+                } else if(i > currentQuestionIndex) {
+                  return { ...ques, showChoiceOther: false };
+                } else if(i < currentQuestionIndex) {
+                  return ques;
+                }
+              }),
               choiceOtherFocus: `${questionId}Other`
             };
           // Handle selection of standard 'choice' option type.
           } else {
-            const updatedisFlagChoiceOther = {...updatedStateValue.isFlagChoiceOther};
-            delete updatedisFlagChoiceOther[questionId];
+            // const updatedisFlagChoiceOther = {...updatedStateValue.isFlagChoiceOther};
+            // delete updatedisFlagChoiceOther[questionId];
             updatedStateValue = {
               ...updatedStateValue,
-              isFlagChoiceOther: updatedisFlagChoiceOther,
+              flagData: updatedStateValue.flagData.map((ques, i) => i >= currentQuestionIndex ? { ...ques, showChoiceOther: false } : ques)
+              // isFlagChoiceOther: updatedisFlagChoiceOther,
             }
           }
           // TODO: may not be necessary.
@@ -2177,7 +2196,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                     flagData={flagState.flagData}
                     handleClearInputError={handleClearInputError}
                   />
-                  {flagState.isFlagChoiceOther[question.id] && 
+                  {/*flagState.isFlagChoiceOther[question.id]*/ question.showChoiceOther && 
                     (<div className="flag-text-input-container">
                       {false && 
                         <div className="select-header">
@@ -2358,7 +2377,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
   // console.log('value', value);
   return (
     <CSSTransition
-    in={/*flagData.includes(ques => ques.id === questionId)*/false}
+    in={flagData.find(ques => ques.id === questionId)}
       timeout={1000}
       exit={true}
       enter={false}
