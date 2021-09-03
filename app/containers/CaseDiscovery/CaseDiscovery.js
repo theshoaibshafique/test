@@ -145,9 +145,9 @@ function displayTags(tags, emrCaseId, detailed = null) {
   if(detailed) {
     return  <TransitionGroup 
               component={null}
-              appear={false}  
+              appear={true}  
               enter={true}
-              exit={true}
+              exit={/*tags.length > 0*/true}
             >
               {
                 tags.map((tag, i) => {
@@ -159,8 +159,8 @@ function displayTags(tags, emrCaseId, detailed = null) {
                       classNames="tag-fade"
                       timeout={1000}
                       appear={true}
-                      enter={false}
-                      exit={false}
+                      enter={true}
+                      exit={true}
                     >
                       <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
                             return <div key={i}>{line}</div>
@@ -2376,7 +2376,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
   // console.log('value', value);
   return (
     <CSSTransition
-    in={flagData.find(ques => ques.id === questionId)}
+    in={flagData.includes(ques => ques.id === questionId)}
       timeout={1000}
       exit={true}
       enter={false}
@@ -2398,7 +2398,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
           disableCloseOnSelect={false}
           renderInput={(params) => <TextField {...params} /*label={questionType === 'multiple-choice' ? 'Select 1 or more' : ''}*/ variant="outlined" />}
           disableClearable
-          defaultvalue={null}
+          defaultValue={null}
         />
       </div>
     </CSSTransition>
@@ -2471,39 +2471,6 @@ const FlagTextInput = (props) => {
 };
 
 const MemoizedFlagTextInput = React.memo(FlagTextInput);
-
-const AddFlagInput = ({ optionType, title }) => (
-  <React.Fragment>
-    <InputLabel className={classes.inputLabelFlag}>{title}</InputLabel>
-    {renderFlagInput(optionType)}
-  </React.Fragment>
-);
-
-const AddFlagDatePicker = props => (
-  <React.Fragment>
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <DatePicker
-        disableToolbar
-        size="small"
-        variant="inline"
-        format="MM/dd/yyyy"
-        name="complicationDate"
-        minDate={scheduledStart}
-        maxDate={moment()}
-        placeholder="Pick Date"
-        inputVariant="outlined"
-        className="complicationDate"
-        autoOk
-        value={requestData.complicationDate || null}
-        inputProps={{ autoComplete: 'off' }}
-        onChange={(e, v) => handleChange('complicationDate', e)}
-        id="complicationDate"
-      />
-    </MuiPickersUtilsProvider>
-    {!isComplicationDateFilled && <FormHelperText className="Mui-error" >Please select a complication date</FormHelperText>}
-  </React.Fragment>
-);
-
 
 const requestReducer = (state, event) => {
   if (event.name == 'date-clear') {
