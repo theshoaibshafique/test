@@ -1107,7 +1107,7 @@ export const TAG_INFO = {
     "Flagged": "Identifies cases that have been flagged on operating room touch screen",
     "Hypoxia": "Identifies cases where the percentage of procedure time patient was hypoxic (blood oxygen saturation below 94%) was 95th percentile or above",
     "Hypotension": "Identifies cases where the percentage of procedure time patient was hypotensive (mean arterial blood pressure below 65mmHg) was 95th percentile or above",
-    "Hypothermia": "Identifies cases where the percentage of procedure time patient was hypothermic (temperature below 35°C) was 95th percentile or above",
+    "Hypothermia": "Identifies cases where the percentage of procedure time patient was hypothermic (temperature below 35°C / 95°F) was 95th percentile or above",
     "Long Procedure": "Identifies cases where procedure duration was 95th percentile or above for given procedure type",
     "Slow Pre-Op": "Identifies cases where the period of time between patient entering operating room, and procedure start, was 95th percentile or above",
     "Slow Post-Op": "Identifies cases where the period of time between procedure end, and patient exiting operating room, was 95th percentile or above",

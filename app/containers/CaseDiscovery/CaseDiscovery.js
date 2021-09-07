@@ -54,8 +54,6 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
-import { green } from '@material-ui/core/colors';
-import StateManager from 'react-select';
 
 const useStyles = makeStyles((theme) => ({
   inputLabel: {
@@ -129,15 +127,6 @@ function getTag(tag) {
       return <img src={PreOpDelay} />
     default:
       break;
-  }
-}
-
-function transformTagValue(tag, value) {
-  switch (tag && tag.toLowerCase()) {
-    case "hypothermia":
-      return value.replace('35°C', '35°C / 95°F');
-    default:
-      return value;
   }
 }
 
@@ -846,8 +835,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           </div>
         </Grid>
       );
-      transformedValue = transformTagValue(tag, value);
-      result.push(<Grid item xs={9} className="info-column" key='info-col'>{transformedValue}</Grid>);
+      result.push(<Grid item xs={9} className="info-column" key='info-col'>{value}</Grid>);
     }
 
     return (
@@ -1476,7 +1464,7 @@ function DetailedCase(props) {
             {displayTags(tags, emrCaseId, true)}
             {!(!isAdmin || !showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
               <span><img src={Plus} /></span>
-              <div>Add Flag</div>
+              <div className="display">Add Flag</div>
             </span>}
           </div>
 
