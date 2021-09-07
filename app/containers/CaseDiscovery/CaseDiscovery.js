@@ -646,6 +646,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => {
+    logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
     setOpenAddFlag(open);
   };
 
@@ -1340,6 +1341,8 @@ function DetailedCase(props) {
   }
   useEffect(() => {
     setIsLoading(false);
+    // Reset add flag - show state to initial value new case is rendered.
+    if(!showAddFlag) setShowAddFlag(true);
   }, [caseId]);
 
   const [requestData, setRequestData] = useReducer(requestReducer, {
@@ -1358,7 +1361,6 @@ function DetailedCase(props) {
 
   // Flag submission state.
   const [showAddFlag, setShowAddFlag] = React.useState(true);
-  const [showNewFlag, setShowNewFlag] = React.useState(false);
 
   // Change/update the filter for request ID
   const handleChange = (event, value) => {
@@ -1535,7 +1537,7 @@ function DetailedCase(props) {
           {/* Highlight Scheduled block */}
           <div className="scheduled-block absolute"
             style={{
-              top: `${(bStartTime - earliestStartTime) * HOUR_SIZE}px`,
+              top: `${(bStartTime - Math.floor(earliestStartTime)) * HOUR_SIZE}px`,
               height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`
             }}
             hidden={!blockStart}
@@ -1571,7 +1573,7 @@ function DetailedCase(props) {
             <div className="absolute log-mouseover"
               id="block-hours-tooltip"
               style={{
-                top: `${(bStartTime - earliestStartTime) * HOUR_SIZE}px`,
+                top: `${(bStartTime - Math.floor(earliestStartTime)) * HOUR_SIZE}px`,
                 height: `${(bEndTime - bStartTime) * HOUR_SIZE}px`,
                 width: `100%`
               }}
@@ -1607,111 +1609,112 @@ function DetailedCase(props) {
         open={openRequestEMM}
         onClose={() => handleOpenRequestEMM(false)}
       >
-        <div className="request-emm-modal">
-          <div className="close-button">
-            <img src={Close} onClick={() => handleOpenRequestEMM(false)} />
-          </div>
-          {isRequestSubmitted ?
-            (<Grid container spacing={2} direction="column">
-              <Grid item xs={12} className="header" style={{ maxWidth: 'none', marginBottom: 0 }}>
-                <p>Thank you for submitting your request!</p>
+        <Slide direction="left" in={openRequestEMM} mountOnEnter unmountOnExit timeout={700}>
+          <div className="request-emm-modal">
+            <div className="close-button">
+              <img src={Close} onClick={() => handleOpenRequestEMM(false)} />
+            </div>
+            {isRequestSubmitted ?
+              (<Grid container spacing={2} direction="column">
+                <Grid item xs={12} className="header" style={{ maxWidth: 'none', marginBottom: 0 }}>
+                  <p>Thank you for submitting your request!</p>
+                </Grid>
+                <Grid item xs>
+                  Please note the Enhanced M&M ID for the report to be generated:
+                  <span style={{ fontWeight: 'bold' }}>{` ${isRequestSubmitted}`}</span>
+                </Grid>
+                <Grid item xs>
+                  We will notify you when the report is ready on Insights for viewing.
+                </Grid>
+                <Grid item xs>
+                  <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => handleOpenRequestEMM(false)}>Close</Button>
+                </Grid>
               </Grid>
-              <Grid item xs>
-                Please note the Enhanced M&M ID for the report to be generated:
-                <span style={{ fontWeight: 'bold' }}>{` ${isRequestSubmitted}`}</span>
-              </Grid>
-              <Grid item xs>
-                We will notify you when the report is ready on Insights for viewing.
-              </Grid>
-              <Grid item xs>
-                <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => handleOpenRequestEMM(false)}>Close</Button>
-              </Grid>
-            </Grid>
-            ) :
-            <div className="request-emm">
-              <div className="header">
-                Request for Enhanced M&M
-              </div>
-              <div className="subtitle">
-                {procedureTitle}
-              </div>
-              <div className="description">
-                {requestEMMDescription}
-              </div>
+              ) :
+              <div className="request-emm">
+                <div className="header">
+                  Request for Enhanced M&M
+                </div>
+                <div className="subtitle">
+                  {procedureTitle}
+                </div>
+                <div className="description">
+                  {requestEMMDescription}
+                </div>
 
-              <TagsSelect
-                title="Complications"
-                placeholder="Select 1 or more"
-                options={COMPLICATIONS}
-                id="complications"
-                handleChange={handleChange}
-                searchData={requestData}
-              />
-              {!isComplicationFilled && !isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please select a complication</FormHelperText>}
-              <div className="input-label">
-                <Checkbox
-                  disableRipple
-                  id="other-complication-checkbox"
-                  icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                  checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-                  checked={isComplicationOtherChecked} onChange={(e) => setIsComplicationOtherChecked(e.target.checked)} />Other
-              </div>
-              {isComplicationOtherChecked && <TextField
-                id="complication-other"
-                variant="outlined"
-                size="small"
-                name="complicationValue"
-                onChange={(e) => handleChange('complicationOther', e.target.value)}
-              />}
-              {!isComplicationFilled && isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please enter a complication</FormHelperText>}
-              <InputLabel className={classes.inputLabel}>Date of Complication</InputLabel>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <DatePicker
-                  disableToolbar
-                  size="small"
-                  variant="inline"
-                  format="MM/dd/yyyy"
-                  name="complicationDate"
-                  minDate={scheduledStart}
-                  maxDate={moment()}
-                  placeholder="Pick Date"
-                  inputVariant="outlined"
-                  className="complicationDate"
-                  autoOk
-                  value={requestData.complicationDate || null}
-                  inputProps={{ autoComplete: 'off' }}
-                  onChange={(e, v) => handleChange('complicationDate', e)}
-                  id="complicationDate"
+                <TagsSelect
+                  title="Complications"
+                  placeholder="Select 1 or more"
+                  options={COMPLICATIONS}
+                  id="complications"
+                  handleChange={handleChange}
+                  searchData={requestData}
                 />
-              </MuiPickersUtilsProvider>
-              {!isComplicationDateFilled && <FormHelperText className="Mui-error" >Please select a complication date</FormHelperText>}
-              <TagsSelect
-                title="Additional users to receive updates on request status (Optional)"
-                placeholder="Select users"
-                options={USERS.map((u) => { return { "display": `${u.firstName} ${u.lastName}`, "id": u.userName } })}
-                id="users"
-                handleChange={handleChange}
-                searchData={requestData}
-              />
-              <InputLabel className={classes.inputLabel}>Notes (Optional)</InputLabel>
-              <TextField
-                multiline
-                className="notes-field"
-                rows="8"
-                variant="outlined"
-                onChange={(e) => handleChange('notes', e.target.value)}
-              />
+                {!isComplicationFilled && !isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please select a complication</FormHelperText>}
+                <div className="input-label">
+                  <Checkbox
+                    disableRipple
+                    id="other-complication-checkbox"
+                    icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+                    checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                    checked={isComplicationOtherChecked} onChange={(e) => setIsComplicationOtherChecked(e.target.checked)} />Other
+                </div>
+                {isComplicationOtherChecked && <TextField
+                  id="complication-other"
+                  variant="outlined"
+                  size="small"
+                  name="complicationValue"
+                  onChange={(e) => handleChange('complicationOther', e.target.value)}
+                />}
+                {!isComplicationFilled && isComplicationOtherChecked && <FormHelperText className="Mui-error" >Please enter a complication</FormHelperText>}
+                <InputLabel className={classes.inputLabel}>Date of Complication</InputLabel>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DatePicker
+                    disableToolbar
+                    size="small"
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    name="complicationDate"
+                    minDate={scheduledStart}
+                    maxDate={moment()}
+                    placeholder="Pick Date"
+                    inputVariant="outlined"
+                    className="complicationDate"
+                    autoOk
+                    value={requestData.complicationDate || null}
+                    inputProps={{ autoComplete: 'off' }}
+                    onChange={(e, v) => handleChange('complicationDate', e)}
+                    id="complicationDate"
+                  />
+                </MuiPickersUtilsProvider>
+                {!isComplicationDateFilled && <FormHelperText className="Mui-error" >Please select a complication date</FormHelperText>}
+                <TagsSelect
+                  title="Additional users to receive updates on request status (Optional)"
+                  placeholder="Select users"
+                  options={USERS.map((u) => { return { "display": `${u.firstName} ${u.lastName}`, "id": u.userName } })}
+                  id="users"
+                  handleChange={handleChange}
+                  searchData={requestData}
+                />
+                <InputLabel className={classes.inputLabel}>Notes (Optional)</InputLabel>
+                <TextField
+                  multiline
+                  className="notes-field"
+                  rows="8"
+                  variant="outlined"
+                  onChange={(e) => handleChange('notes', e.target.value)}
+                />
 
-              <Button variant="outlined" className="primary send-request"
-                onClick={() => submit()}
-                disabled={isSending}
+                <Button variant="outlined" className="primary send-request"
+                  onClick={() => submit()}
+                  disabled={isSending}
 
-              >
-                {isSending ? <div className="loader"></div> : 'Request eM&M'}
-              </Button>
-            </div>}
-        </div>
-
+                >
+                  {isSending ? <div className="loader"></div> : 'Request eM&M'}
+                </Button>
+              </div>}
+          </div>
+        </Slide>
       </Modal>
       <Modal
         open={openAddFlag}
@@ -1732,7 +1735,6 @@ function DetailedCase(props) {
               caseId={caseId}
               openAddFlag={openAddFlag}
               setShowAddFlag={setShowAddFlag}
-              setShowNewFlag={setShowAddFlag}
               handleSetCases={handleSetCases}
               handleUpdateDetailedCase={handleUpdateDetailedCase}
             />
@@ -1744,11 +1746,12 @@ function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag, setShowNewFlag, handleSetCases, handleUpdateDetailedCase }) => {
+const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag, handleSetCases, handleUpdateDetailedCase }) => {
   // Retrieve userToken from redux store 
   const userToken = useSelector(makeSelectToken());
   const firstName = useSelector(makeSelectFirstName());
   const lastName = useSelector(makeSelectLastName());
+  const logger = useSelector(makeSelectLogger());
   
   // USEREDUCER ACTION TYPES.
   const SET_INITIAL_QUESTION = 'SET_INITIAL_QUESTION';
@@ -2202,7 +2205,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
               return (
                 <div style={{marginBottom: '1rem'}} key={question.title}>
                   <FlagSelect
-                    key={question.title && question.options}
+                    key={question.title}
                     title={question.title}
                     options={question.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
                     questionType={question.type}
@@ -2251,24 +2254,23 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
    // Submit flag.
    const handleFlagSubmit = (flag) => {
     flagDispatch({ type: SENDING_FLAG });
+    
     globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
       .then(result => {
         flagDispatch({ type: FLAG_SUCCESS });
         result = result.data;
         const toolTipArray = result.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`);
-
+        
         const newFlagObject = {
           tagName: 'Flagged',
           toolTip: toolTipArray
         };
         handleUpdateDetailedCase(result);
         handleSetCases(result, caseId);
-        // setData({
-        //   'CASES': CASES.map(el => el.caseId === caseId ? { ...el, tags: tags.unshift({ tagName: 'Flagged', toolTip: toolTipArray })} : el)
-        // });
+        logger.manualAddLog('click', 'submit-flag', flag)
+       
         setShowAddFlag(false);
         handleOpenAddFlag(false);
-        // addFlagtoCases(result);
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
         console.log("uh no.")
@@ -2345,7 +2347,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 const FlagSelect = ({ title, questionType, options, isRequired, questionId, handleOptionSelect, handleMultiOptionSelect, flagData, handleClearInputError, key }) => {
   const [value, setValue] = useState({});
   const [animate, setAnimate] = useState(false);
-
+  const [flagOptions, setflagOptions] = useState([options]);
+  const logger = useSelector(makeSelectLogger());
   useEffect(() => {
      // 1. Animate state set to true.
      const timeout = setTimeout(() => {
@@ -2357,9 +2360,10 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
     }
   }, []);
 
-  // useEffect(() => {
-  //   setValue(null)
-  // }, [key])
+  useEffect(() => {
+    setValue(null)
+    // setflagOptions([ ...options])
+  }, [questionId])
 
   const classes = useStyles();
 
@@ -2377,6 +2381,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
 
       if(optionObj.type !== 'choice-other') handleClearInputError(questionId);
     }
+    logger.manualAddLog('onchange',title, newValue)
     setValue(newValue);
   };
   // console.log('value', value);
@@ -2414,12 +2419,11 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
 const FlagTextInput = (props) => {
   const { handleSaveChoiceOther, question, choiceOtherInputActive, handleToggleChoiceOtherActive, handleChoiceOtherEmpty, flagData, choiceOtherInputError, handleClearInputError, handleSetOtherInputError, isFocused } = props;
   const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
-
+  const logger = useSelector(makeSelectLogger());
   const classes = useStyles();
   
   const handleFlagInputChange = (event, title)  => {
     const val = event.target.value;
-
     if(val === '' && choiceOtherInputError[question.id]) {
       /*handleChoiceOtherEmpty(question.id)*/
       handleSetOtherInputError(questionId);
@@ -2436,6 +2440,7 @@ const FlagTextInput = (props) => {
       // }));
       handleClearInputError(question.id);
     }
+    logger.manualAddLog('onchange',title,val)
     setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
     // Update flagData state in realtime as value is entered.
     // todo: rename to handleUpdateChoiceOther
