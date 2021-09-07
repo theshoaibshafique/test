@@ -15,25 +15,15 @@ import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import MagnifyingGlass from './icons/MagnifyingGlass.svg';
 import ArrowsDownUp from './icons/ArrowsDownUp.svg';
-import CaseDuration from './icons/CaseDuration.svg';
-import eMM from './icons/eMM.svg';
-import FirstCase from './icons/FirstCase.svg';
 import Flagged from './icons/Flag.svg';
-import Hypotension from './icons/Hypotension.svg';
-import Hypothermia from './icons/Hypothermia.svg';
-import Hypoxia from './icons/Hypoxia.svg';
-import LateStart from './icons/LateStart.svg';
 import FullPerson from './icons/FullPerson.svg';
 import HalfPerson from './icons/HalfPerson.svg';
 import EmptyPerson from './icons/EmptyPerson.svg';
-import PostOpDelay from './icons/PostOpDelay.svg';
-import PreOpDelay from './icons/PreOpDelay.svg';
 import Play from './icons/Play.svg';
-import TurnoverDuration from './icons/TurnoverDuration.svg';
 import Close from './icons/Close.svg';
 import Plus from './icons/Plus.svg';
 import moment from 'moment/moment';
-import CloseIcon from '@material-ui/icons/Close';
+
 import { LightTooltip, SSTSwitch, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
@@ -44,7 +34,7 @@ import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation, getQuestionCount } from './Utils';
+import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation, getQuestionCount, getPresetDates } from './Utils';
 import { useSelector } from 'react-redux';
 import { makeSelectComplications, makeSelectEMMRequestAccess, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
@@ -54,43 +44,9 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
+import { Case } from './Case';
+import { displayTags, getTag, TagsSelect, useStyles } from './helper-components';
 
-const useStyles = makeStyles((theme) => ({
-  inputLabel: {
-    fontFamily: 'Noto Sans',
-    fontSize: 16,
-    marginBottom: 10,
-    marginTop: 30,
-    color: '#323232',
-    opacity: .8
-  },
-  inputLabelFlag: {
-    fontFamily: 'Noto Sans',
-    fontSize: 16,
-    marginBottom: 10,
-    marginTop: 25,
-    color: '#323232',
-    opacity: .8
-  },
-  clear: {
-    fontFamily: 'Noto Sans',
-    fontSize: 16,
-    marginTop: 30,
-    color: '#919191',
-    opacity: .8,
-    cursor: 'pointer'
-  },
-  search: {
-    marginBottom: 10
-  },
-  sortButton: {
-    display: 'block',
-    margin: 0
-  },
-  adornedEnd: {
-    paddingRight: 0
-  }
-}));
 const MenuProps = {
   PaperProps: {
     style: {
@@ -99,279 +55,7 @@ const MenuProps = {
   },
 }
 
-function getTag(tag) {
-  switch (`${tag}`.toLowerCase()) {
-    case "flagged":
-      return <img src={Flagged} style={{ height: 24, width: 24 }} />
-    case "hypothermia":
-      return <img src={Hypothermia} />
-    case "hypoxia":
-      return <img src={Hypoxia} />
-    case "hypotension":
-      return <img src={Hypotension} />
-    case "long procedure":
-      return <img src={CaseDuration} />
-    case "case delay":
-    case "late start":
-      return <img src={LateStart} />
-    case "slow turnover":
-      return <img src={TurnoverDuration} />
-    case "late first case":
-    case "first case":
-      return <img src={FirstCase} />
-    case "eM&M":
-      return <img src={eMM} />
-    case "slow post-op":
-      return <img src={PostOpDelay} />
-    case "slow pre-op":
-      return <img src={PreOpDelay} />
-    default:
-      break;
-  }
-}
 
-function displayTags(tags, emrCaseId, detailed = null) {
-  if (detailed) {
-    return <TransitionGroup
-      component={null}
-      appear={false}
-      enter={true}
-      exit={/*tags.length > 0*/false}
-    >
-      {
-        tags.map((tag, i) => {
-          let desc = tag.toolTip || [];
-          tag = tag.tagName || tag;
-          return (
-            <CSSTransition
-              key={`${tag}-${i}`}
-              classNames="tag-fade"
-              timeout={1000}
-              appear={true}
-              enter={true}
-              exit={true}
-            >
-              <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
-                return <div key={i}>{line}</div>
-              })} arrow={true}>
-                <span
-                  className={`case-tag ${tag} log-mouseover`}
-                  id={`${tag}-tag-${emrCaseId}`}
-                  description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })}
-                  key={tag}
-                >
-                  <span>
-                    {getTag(tag)}
-                  </span>
-                  <div className="display">{tag}</div>
-
-                </span>
-              </LightTooltip>
-            </CSSTransition>
-          )
-        })
-      }
-    </TransitionGroup>
-  } else {
-    return tags.map((tag, i) => {
-      let desc = tag.toolTip || [];
-      tag = tag.tagName || tag;
-      return (
-        <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
-          return <div key={i}>{line}</div>
-        })} arrow={true}>
-          <span
-            className={`case-tag ${tag} log-mouseover`}
-            id={`${tag}-tag-${emrCaseId}`}
-            description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })}
-            key={tag}
-          >
-            <span>
-              {getTag(tag)}
-            </span>
-            <div className="display">{tag}</div>
-
-          </span>
-        </LightTooltip>
-      )
-    })
-  }
-}
-
-function Case(props) {
-  const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick, isSaved, handleSaveCase, isShort } = props;
-  const sTime = moment(wheelsIn).format("HH:mm");
-  const eTime = moment(wheelsOut).format("HH:mm");
-  const diff = moment().endOf('day').diff(moment(wheelsIn).endOf('day'), 'days');
-  const date = moment(wheelsOut).format("MMMM DD");
-  const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
-  const daysAgo = `${date} (${diff} ${diff == 1 ? 'day' : 'days'} ago)`;
-  const tagDisplays = displayTags(tags, emrCaseId);
-
-  const procedureList = [...new Set(procedures.slice(1).map((p) => p.procedureName))];
-  const specialtyList = [...new Set(procedures.map((p) => p.specialtyName))];
-  const logger = useSelector(makeSelectLogger());
-  const handleClick = () => {
-    onClick();
-    logger.manualAddLog('click', `open-case-${emrCaseId}`, formatCaseForLogs(props))
-  }
-  const MAX_SHORT_TAGS = 4;
-  return (
-    <div className={`case ${isShort && 'short'}`} description={JSON.stringify(formatCaseForLogs(props))} key={emrCaseId} onClick={handleClick} >
-      <div className="case-header">
-        <div className="title" title={procedureName}>
-          {procedureName}
-        </div>
-        <div >
-          <IconButton
-            className={`save-toggle ${!isSaved && 'not-saved'}  ${isShort && 'short-icon'}`} onClick={(e) => { e.stopPropagation(); handleSaveCase() }}
-            style={{ marginTop: -6, marginBottom: -11 }} title={isSaved ? "Remove from saved cases" : "Save case"}>
-            {isSaved ? <StarIcon style={{ color: '#EEDF58', fontSize: 29 }} /> : <StarBorderIcon style={{ color: '#828282', fontSize: 29 }} />}
-          </IconButton>
-
-        </div>
-      </div>
-
-      {procedureList.length > 0 && (
-        <div className="description additional-procedure">
-          {`Additional Procedure${procedureList.length == 1 ? '' : 's'}`}
-          <LightTooltip arrow title={
-            <div>
-              <span>{`Additional Procedure${procedureList.length > 1 ? 's' : ''}`}</span>
-              <ul style={{ margin: '4px 0px' }}>
-                {procedureList.map((line, index) => { return <li key={index}>{line}</li> })}
-              </ul>
-            </div>
-          }>
-            <InfoOutlinedIcon className="log-mouseover" id={`additional-procedure-tooltip-${emrCaseId}`} description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: procedureList })} style={{ fontSize: 16, margin: '0 0 4px 4px' }} />
-          </LightTooltip>
-        </div>
-      )
-      }
-
-      <div className="subtitle" title={specialtyList.join(" & ")}>
-        {!isShort && <span>{roomName} • </span>}{specialtyList.join(" & ")}
-      </div>
-      <div className="description">
-        {!isShort && <span>Case ID: {emrCaseId}</span>}
-        <span title={daysAgo}>{daysAgo}</span>
-        {!isShort && <span>{sTime} - {eTime}</span>}
-
-      </div>
-      {tagDisplays.length > 0 && <div className="tags">
-        {isShort && tagDisplays.length > MAX_SHORT_TAGS ? (
-          <span className="plus-text subtext">
-            {tagDisplays.slice(0, MAX_SHORT_TAGS)}
-            <span style={{ opacity: .8 }} >+{tagDisplays.length - MAX_SHORT_TAGS}</span>
-          </span>
-        ) : tagDisplays}
-      </div>}
-    </div>
-  )
-}
-
-function TagsSelect(props) {
-  const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, handleChangeIncludeAllTags, freeSolo, groupBy } = props;
-  let [value, setValue] = React.useState(searchData[id]);
-  let [includeAll, setIncludeAll] = React.useState(includeAllTags);
-  const classes = useStyles();
-
-  useEffect(() => {
-    setValue(searchData[id]);
-  }, [props.searchData]);
-
-  useEffect(() => {
-    setIncludeAll(includeAllTags);
-  }, [props.includeAllTags]);
-
-  const filterOptions = (o, state) => {
-    // Dont show any options until the user has typed
-    const { inputValue } = state;
-    if (groupBy && !inputValue) {
-      return []
-    }
-    return o.filter((op) => {
-      op = op.display || op
-      return `${op}`.toLowerCase().includes(inputValue.toLowerCase())
-    })
-  };
-
-  return (
-    <div>
-      <div className="select-header">
-        <InputLabel className={classes.inputLabel}>{title}</InputLabel>
-        <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
-          Clear
-        </div>
-      </div>
-      <Autocomplete
-        multiple
-        size="small"
-        freeSolo={freeSolo}
-        id={id}
-        options={options}
-        disableClearable
-        clearOnEscape
-        groupBy={(option) => groupBy}
-        filterOptions={filterOptions}
-        getOptionLabel={option => option.display || option}
-        value={value || []}
-        renderTags={() => null}
-        onChange={(event, value) => handleChange(id, value)}
-        renderInput={params => (
-          <TextField
-            {...params}
-            variant="outlined"
-            name={id}
-            placeholder={placeholder}
-          />
-        )}
-      />
-
-      {includeToggle && (value && value.length > 0) && (
-        <div className="include-toggle">
-          <RadioGroup aria-label="position" name="position" value={includeAll}>
-            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
-            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all of these tags</span>} />
-          </RadioGroup>
-        </div>
-      )}
-
-      {value && value.length > 0 && <div className="tags">
-        {value.map((tag, i) => {
-          return (
-            <span key={i} className={"tag"} >
-              <span><div className="display">{tag.display || tag}</div></span>
-              <span>
-                <CloseIcon fontSize='small' className='delete' onClick={(a) => {
-                  handleChange(id, value.filter(function (value, arrIndex) {
-                    return i !== arrIndex;
-                  }))
-                }} />
-              </span>
-
-            </span>
-          )
-        })}
-      </div>}
-    </div>
-  )
-}
-
-const getPresetDates = (option) => {
-  switch (option) {
-    case 'Any Time':
-      return { from: moment("2019-08-15"), to: moment('2022-04-04') }
-    case 'Past week':
-      return { from: moment().subtract(7, 'days'), to: moment() }
-    case 'Past month':
-      return { from: moment().subtract(1, 'months'), to: moment() }
-    case 'Past year':
-      return { from: moment().subtract(1, 'years'), to: moment() }
-    default:
-      return {}
-  }
-}
 
 const searchReducer = (state, event) => {
   if (event.name == 'date-clear') {
