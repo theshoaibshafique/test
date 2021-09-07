@@ -131,59 +131,33 @@ function getTag(tag) {
 }
 
 function displayTags(tags, emrCaseId, detailed = null) {
-  if(detailed) {
-    return  <TransitionGroup 
-              component={null}
-              appear={false}  
+  if (detailed) {
+    return <TransitionGroup
+      component={null}
+      appear={false}
+      enter={true}
+      exit={/*tags.length > 0*/false}
+    >
+      {
+        tags.map((tag, i) => {
+          let desc = tag.toolTip || [];
+          tag = tag.tagName || tag;
+          return (
+            <CSSTransition
+              key={`${tag}-${i}`}
+              classNames="tag-fade"
+              timeout={1000}
+              appear={true}
               enter={true}
-              exit={/*tags.length > 0*/false}
+              exit={true}
             >
-              {
-                tags.map((tag, i) => {
-                  let desc = tag.toolTip || [];
-                  tag = tag.tagName || tag;
-                  return (
-                    <CSSTransition 
-                      key={`${tag}-${i}`}
-                      classNames="tag-fade"
-                      timeout={1000}
-                      appear={true}
-                      enter={true}
-                      exit={true}
-                    >
-                      <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
-                            return <div key={i}>{line}</div>
-                          })} arrow={true}>
-                              <span 
-                                className={`case-tag ${tag} log-mouseover`} 
-                                id={`${tag}-tag-${emrCaseId}`} 
-                                description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} 
-                                key={tag}
-                              >
-                                <span>
-                                  {getTag(tag)}
-                                </span>
-                                <div className="display">{tag}</div>
-                
-                              </span>
-                        </LightTooltip>
-                    </CSSTransition>
-                  )
-                })
-              }
-            </TransitionGroup>
-  } else {
-    return  tags.map((tag, i) => {
-      let desc = tag.toolTip || [];
-      tag = tag.tagName || tag;
-      return (
-        <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
-              return <div key={i}>{line}</div>
-            })} arrow={true}>
-                <span 
-                  className={`case-tag ${tag} log-mouseover`} 
-                  id={`${tag}-tag-${emrCaseId}`} 
-                  description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })} 
+              <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
+                return <div key={i}>{line}</div>
+              })} arrow={true}>
+                <span
+                  className={`case-tag ${tag} log-mouseover`}
+                  id={`${tag}-tag-${emrCaseId}`}
+                  description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })}
                   key={tag}
                 >
                   <span>
@@ -192,7 +166,33 @@ function displayTags(tags, emrCaseId, detailed = null) {
                   <div className="display">{tag}</div>
 
                 </span>
-          </LightTooltip>
+              </LightTooltip>
+            </CSSTransition>
+          )
+        })
+      }
+    </TransitionGroup>
+  } else {
+    return tags.map((tag, i) => {
+      let desc = tag.toolTip || [];
+      tag = tag.tagName || tag;
+      return (
+        <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
+          return <div key={i}>{line}</div>
+        })} arrow={true}>
+          <span
+            className={`case-tag ${tag} log-mouseover`}
+            id={`${tag}-tag-${emrCaseId}`}
+            description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })}
+            key={tag}
+          >
+            <span>
+              {getTag(tag)}
+            </span>
+            <div className="display">{tag}</div>
+
+          </span>
+        </LightTooltip>
       )
     })
   }
@@ -600,7 +600,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         });
     }
 
-     // New
+    // New
     const fetchFlagReport = async () => {
       await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'flag_report', 'get', userToken, {})
         .then(result => {
@@ -621,7 +621,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     fetchSavedCases();
     // Fetch flag submission schema.
     fetchFlagReport();
-    
+
     document.getElementById('caseDiscovery-nav').addEventListener("click", (x) => {
       setCaseId(null)
     })
@@ -641,12 +641,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const handleSetCases = (res, caseId) => {
     const index = CASES.findIndex(el => el.caseId === caseId);
-    CASES[index] = { ...CASES[index], tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...CASES[index].tags]};
+    CASES[index] = { ...CASES[index], tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...CASES[index].tags] };
     return setData({
       [CASES]: CASES/*CASES.map(el => el.caseId === caseId ? { ...el, tags: [flagObject, ...el.tags]} : el)*/
     });
   };
- 
+
   // Scrol to top on filter change 
   const topElementRef = useRef(null)
   const scrollToTop = () => {
@@ -1066,7 +1066,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Custom Hook to compare prev state val to current.
   const useCompare = (val) => {
-    const prevVal =usePrevious(val);
+    const prevVal = usePrevious(val);
     return prevVal !== val;
   };
 
@@ -1096,7 +1096,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           }
 
           setDetailedCase(result)
-         
+
         }).catch((error) => {
           console.log("oh no " + error)
           setCaseId(null)
@@ -1109,7 +1109,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // FLAG SUBMISSION HANDLER - UPDATE DETAILED CASE, ADDING NEWLY SUBMITTED FLAG TO CASE.
   const handleUpdateDetailedCase = (res) => {
-    if(res) {
+    if (res) {
       setDetailedCase(prevState => ({
         ...prevState,
         tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...prevState.tags]
@@ -1122,12 +1122,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       <div hidden={caseId}>{searchView}</div>
       <DetailedCase {...DETAILED_CASE}
         isSaved={savedCases.includes(caseId)}
-        handleSaveCase={() => handleSaveCase(caseId)} 
+        handleSaveCase={() => handleSaveCase(caseId)}
         USERS={USERS}
         handleChangeCaseId={handleChangeCaseId}
         hidden={!caseId}
         showEMMReport={showEMMReport}
-        openAddFlag={openAddFlag} 
+        openAddFlag={openAddFlag}
         handleOpenAddFlag={handleOpenAddFlag}
         flagReport={flagReport}
         roomIds={roomIds}
@@ -1255,7 +1255,7 @@ function DetailedCase(props) {
   const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime);
   const latestEndTime = roomCases.reduce((max, c) => globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
   const scheduleDuration = Math.ceil(latestEndTime) - (earliestStartTime);
-    
+
   const description = (
     <div style={{ lineBreak: 'anywhere' }}>
       <span>Case ID: {emrCaseId}</span>
@@ -1330,7 +1330,7 @@ function DetailedCase(props) {
   useEffect(() => {
     setIsLoading(false);
     // Reset add flag - show state to initial value new case is rendered.
-    if(!showAddFlag) setShowAddFlag(true);
+    if (!showAddFlag) setShowAddFlag(true);
   }, [caseId]);
 
   const [requestData, setRequestData] = useReducer(requestReducer, {
@@ -1462,7 +1462,7 @@ function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId, true)}
-            {!(!isAdmin || !showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => {if(flagReport) handleOpenAddFlag(true)}} >
+            {!(!isAdmin || !showAddFlag || !flagReport || flags.length > 0 || dayDiff > 21) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => { if (flagReport) handleOpenAddFlag(true) }} >
               <span><img src={Plus} /></span>
               <div className="display">Add Flag</div>
             </span>}
@@ -1546,11 +1546,11 @@ function DetailedCase(props) {
                   // top: `${i * HOUR_SIZE}px`,
                   height: `${HOUR_SIZE}px`,
                 }}>
-                <div 
-                  className={`log-click${moment(blockStartTime).format('HH:mm') === formattedTime ? ' start-boundary' : ''}${moment(blockEndTime).format('HH:mm') === formattedTime ? ' end-boundary' : ''}`} 
+                <div
+                  className={`log-click${moment(blockStartTime).format('HH:mm') === formattedTime ? ' start-boundary' : ''}${moment(blockEndTime).format('HH:mm') === formattedTime ? ' end-boundary' : ''}`}
                   id={`hour-marker-${formattedTime}`}>
-                    {formattedTime}
-                  </div>
+                  {formattedTime}
+                </div>
               </div>
             )
           })}
@@ -1715,7 +1715,7 @@ function DetailedCase(props) {
               flagReport={flagReport}
               reportId={flagReport && flagReport.reportId}
               procedureTitle={procedureTitle}
-              requestEMMDescription={requestEMMDescription} 
+              requestEMMDescription={requestEMMDescription}
               roomIds={roomIds}
               roomName={roomName}
               wheelsInLocal={wheelsIn}
@@ -1740,11 +1740,11 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   const firstName = useSelector(makeSelectFirstName());
   const lastName = useSelector(makeSelectLastName());
   const logger = useSelector(makeSelectLogger());
-  
+
   // USEREDUCER ACTION TYPES.
   const SET_INITIAL_QUESTION = 'SET_INITIAL_QUESTION';
   const UPDATE_QUESTIONS = 'UPDATE_QUESTIONS';
-  const SELECT_TYPE_CHOICE =  'SELECT_TYPE_CHOICE';
+  const SELECT_TYPE_CHOICE = 'SELECT_TYPE_CHOICE';
   const SELECT_TYPE_CHOICE_OTHER = 'SELECT_TYPE_CHOICE_OTHER';
   const SELECT_OPTION = 'SELECT_OPTION';
   const GET_NEXT_FLAG_LOCATION = 'GET_NEXT_FLAG_LOCATION';
@@ -1754,7 +1754,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   const SELECT_MULTI_OPTION = 'SELECT_MULTI_OPTION';
   const SENDING_FLAG = 'SENDING_FLAG';
   const FLAG_SUCCESS = 'FLAG_SUCCESS';
-  const FLAG_FAIL =  'FLAG_FAIL';
+  const FLAG_FAIL = 'FLAG_FAIL';
   const CLEAR_INPUT_ERROR = 'CLEAR_INPUT_ERROR';
   const SET_OTHER_INPUT_ERROR = 'SET_OTHER_INPUT_ERROR';
 
@@ -1776,13 +1776,13 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   const flagReducer = (state, action) => {
     let questionId;
     let updatedFlagData = state.flagData;
-    switch(action.type) {
+    switch (action.type) {
       case SET_INITIAL_QUESTION:
         let currentFlagQuestion;
         // 1. Retrieve current question from the flagReport, based on the flagReportLocation value.
         currentFlagQuestion = getQuestionByLocation(flagReport, state.flagReportLocation);
         // 2. Update the flagData piece of state based on the current flag question value.
-        if(currentFlagQuestion) {
+        if (currentFlagQuestion) {
           updatedFlagData = [{ ...currentFlagQuestion, location: state.flagReportLocation, completed: false, showChoiceOther: null, choices: [] }];
         }
         return {
@@ -1793,8 +1793,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         updatedFlagData = [...state.flagData];
         const nextQuestion = getQuestionByLocation(flagReport, state.flagReportLocation);
         let transformedNextQuestion;
-        if(nextQuestion) transformedNextQuestion = { ...nextQuestion, location: state.flagReportLocation, completed: false, showChoiceOther: null, choices: [] };
-        if(nextQuestion) {
+        if (nextQuestion) transformedNextQuestion = { ...nextQuestion, location: state.flagReportLocation, completed: false, showChoiceOther: null, choices: [] };
+        if (nextQuestion) {
           const nextQuestionIndex = state.flagData.findIndex(ques => ques.id === nextQuestion.id || ques.title === nextQuestion.title);
           updatedFlagData = nextQuestionIndex !== -1 ? [...state.flagData.slice(0, nextQuestionIndex), transformedNextQuestion] : [...state.flagData, transformedNextQuestion];
         }
@@ -1802,18 +1802,18 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           ...state,
           flagData: updatedFlagData
         }
-        // TODO: remove below case, not needed as this is being handled in SELECT_OPTION for option type of choice.
+      // TODO: remove below case, not needed as this is being handled in SELECT_OPTION for option type of choice.
       case SELECT_TYPE_CHOICE:
         questionId = action.payload.questionId;
         return state;
-        // return {
-        //   ...state,
-          // isFlagChoiceOther: {
-          //   ...state.isFlagChoiceOther,
-          //   [questionId]: false
-          // }
-          // flagData: state.flagData.map(ques => ques.id === questionId)
-        // }
+      // return {
+      //   ...state,
+      // isFlagChoiceOther: {
+      //   ...state.isFlagChoiceOther,
+      //   [questionId]: false
+      // }
+      // flagData: state.flagData.map(ques => ques.id === questionId)
+      // }
       case SELECT_TYPE_CHOICE_OTHER:
         questionId = action.payload.questionId;
         const choiceOtherOptionObject = action.payload.choiceOtherOptionObject;
@@ -1830,7 +1830,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           // },
           choiceOtherOptionObject: choiceOtherOptionObject
         };
-      return updatedStateVal;
+        return updatedStateVal;
       case SELECT_OPTION:
         questionId = action.payload.questionId;
         let optionObject = action.payload.optionObject;
@@ -1842,7 +1842,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         let updatedStateValue = { ...state };
 
         // Check whether previous question's selected option is choie-other and if it's value is null.
-        if((currentQuestionIndex > 0) && (state.flagData[currentQuestionIndex - 1].choices.includes(choice => choice.type === 'choice-other' && choice.attribute === null))) {
+        if ((currentQuestionIndex > 0) && (state.flagData[currentQuestionIndex - 1].choices.includes(choice => choice.type === 'choice-other' && choice.attribute === null))) {
           const prevQuestionId = state.flagData[currentQuestionIndex - 1].id;
           // const inputError = state.flagData[currentQuestionIndex - 1].choices.includes(choice => choice.type === 'choice-other' && choice.attribute === null)
           updatedStateValue = {
@@ -1854,7 +1854,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           }
         }
 
-        if(state.flagData[currentQuestionIndex].choices.find(choice => choice.id === optionObject.id)) {
+        if (state.flagData[currentQuestionIndex].choices.find(choice => choice.id === optionObject.id)) {
           // Do nothing,no need to update flagReportLocation.
           return updatedStateValue;
         } else {
@@ -1863,7 +1863,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           //   flagData: updatedStateValue.flagData.map((ques, i) => i > )
           // }
           // // Handle selection of choice-other option type.
-          if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
+          if (optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
             updatedStateValue = {
               ...updatedStateValue,
               // isFlagChoiceOther: {
@@ -1871,17 +1871,17 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
               //   [questionId]: true
               // },
               flagData: updatedStateValue.flagData.map((ques, i) => {
-                if(i === currentQuestionIndex) {
+                if (i === currentQuestionIndex) {
                   return { ...ques, showChoiceOther: true };
-                } else if(i > currentQuestionIndex) {
+                } else if (i > currentQuestionIndex) {
                   return { ...ques, showChoiceOther: false };
-                } else if(i < currentQuestionIndex) {
+                } else if (i < currentQuestionIndex) {
                   return ques;
                 }
               }),
               choiceOtherFocus: `${questionId}Other`
             };
-          // Handle selection of standard 'choice' option type.
+            // Handle selection of standard 'choice' option type.
           } else {
             // const updatedisFlagChoiceOther = {...updatedStateValue.isFlagChoiceOther};
             // delete updatedisFlagChoiceOther[questionId];
@@ -1892,7 +1892,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             }
           }
           // TODO: may not be necessary.
-          if(state.flagData[currentQuestionIndex].choices.length > 0) {
+          if (state.flagData[currentQuestionIndex].choices.length > 0) {
             updatedStateValue = { ...updatedStateValue, flagLocationPopped: false };
 
           }
@@ -1900,12 +1900,12 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           let nextQuestion;
 
           // Set completed to true for current question answered if the selected option type is not choice-other.
-          if(optionObject.type === 'choice') {
+          if (optionObject.type === 'choice') {
             updatedStateValue = {
               ...updatedStateValue,
               flagData: updatedStateValue.flagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [{ ...optionObject, attribute: null }] } : ques),
             };
-          } else if(optionObject.type === 'choice-other') {
+          } else if (optionObject.type === 'choice-other') {
             updatedStateValue = {
               ...updatedStateValue,
               flagData: updatedStateValue.flagData.map(ques => ques.id === questionId ? { ...ques, completed: false, choices: [{ ...optionObject, attribute: null }] } : ques)
@@ -1915,29 +1915,29 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 
           let selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
           // Sort returned questions by questionOrder property.
-          if(selectedOpt.questions) selectedOpt = { ...selectedOpt, questions: selectedOpt.questions.sort((a, b) => a.questionOrder - b.questionOrder)};
+          if (selectedOpt.questions) selectedOpt = { ...selectedOpt, questions: selectedOpt.questions.sort((a, b) => a.questionOrder - b.questionOrder) };
           // const selectedOpt = currentQuesOptions[optionObject.optionOrder - 1];
-          if(selectedOpt.questions) {
+          if (selectedOpt.questions) {
             updatedStateValue = {
               ...updatedStateValue,
               flagReportLocation: updatedLocation.concat(0),
             }
 
-          // If selected options' questions value is null.
+            // If selected options' questions value is null.
           } else {
             const currentQuestionCount = getQuestionCount(flagReport, state.flagReportLocation) - 1;
             updatedLocation.pop();
             // If there is another question at this level that has NOT been traversed.
-            if(currentQuestionCount > updatedLocation[updatedLocation.length - 1]) {
+            if (currentQuestionCount > updatedLocation[updatedLocation.length - 1]) {
               const tempLocation = [...updatedLocation];
               let lastLocEl = tempLocation[tempLocation.length - 1];
               lastLocEl = lastLocEl + 1;
-              tempLocation[tempLocation.length - 1] = lastLocEl; 
+              tempLocation[tempLocation.length - 1] = lastLocEl;
               updatedStateValue = {
                 ...updatedStateValue,
                 flagReportLocation: [...tempLocation]
               };
-            // If all questions at this level have been traversed.
+              // If all questions at this level have been traversed.
             } else {
               updatedStateValue = {
                 ...updatedStateValue,
@@ -1991,13 +1991,13 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         updatedStateValue = { ...state };
 
         // If an already selected option is selected again
-        if(state.flagData[currentQuestionIndex].choices.find(choice => choice.id === optionObject.id)) {
+        if (state.flagData[currentQuestionIndex].choices.find(choice => choice.id === optionObject.id)) {
           // Do nothing,no need to update flagReportLocation.
           return;
-        // If a new option is selected.
+          // If a new option is selected.
         } else {
           // Handle selection of choice-other option type.
-          if(optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
+          if (optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
             updatedStateValue = {
               ...updatedStateValue,
               isFlagChoiceOther: {
@@ -2005,7 +2005,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
                 [questionId]: true
               }
             };
-          // Handle selection of standard 'choice' option type.
+            // Handle selection of standard 'choice' option type.
           } else {
             updatedStateValue = {
               ...updatedStateValue,
@@ -2015,9 +2015,9 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
               }
             }
           }
-            
+
           // TODO: may not be necessary.
-          if(state.flagData[currentQuestionIndex].choices.length > 0) {
+          if (state.flagData[currentQuestionIndex].choices.length > 0) {
             updatedStateValue = { ...updatedStateValue, flagLocationPopped: false };
 
           }
@@ -2025,12 +2025,12 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           let nextQuestion;
 
           // Set completed to true for current question answered if the select option type is not choice-other.
-          if(optionObject.type === 'choice') {
+          if (optionObject.type === 'choice') {
             updatedStateValue = {
               ...updatedStateValue,
               flagData: updatedStateValue.flagData.map(ques => ques.id === questionId ? { ...ques, completed: true, choices: [...ques.choices, { ...optionObject, attribute: null }] } : ques)
             };
-          } else if(optionObject.type === 'choice-other') {
+          } else if (optionObject.type === 'choice-other') {
             updatedStateValue = {
               ...updatedStateValue,
               flagData: updatedStateValue.flagData.map(ques => ques.id === questionId ? { ...ques, choices: [...ques.choices, { ...optionObject, attribute: null }] } : ques),
@@ -2038,29 +2038,29 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           }
           // Append an option index of 0 to the end of the current location array since for multi-choice questions it does not matter which optionIndex is used to fetch the next question as long as atleast one option is selected we can fetch the next question.
           updatedLocation = [...state.flagData[currentQuestionIndex].location, 0];
-        
+
           const selectedOpt = getQuestionByLocation(flagReport, updatedLocation);
           // If next questions value is not null
-          if(selectedOpt.questions) {
+          if (selectedOpt.questions) {
             updatedStateValue = {
               ...updatedStateValue,
               flagReportLocation: updatedLocation.concat(0)
             };
-          // If selected option's questions value is null.
+            // If selected option's questions value is null.
           } else {
             const currentQuestionCount = getQuestionCount(flagReport, state.flagReportLocation) - 1;
             updatedLocation.pop();
             // If there is another question at this level that has NOT been traversed.
-            if(currentQuestionCount > updatedLocation[updatedLocation.length - 1]) {
+            if (currentQuestionCount > updatedLocation[updatedLocation.length - 1]) {
               const tempLocation = [...updatedLocation];
               let lastLocEl = tempLocation[tempLocation.length - 1];
               lastLocEl = lastLocEl + 1;
-              tempLocation[tempLocation.length - 1] = lastLocEl; 
+              tempLocation[tempLocation.length - 1] = lastLocEl;
               updatedStateValue = {
                 ...updatedStateValue,
                 flagReportLocation: [...tempLocation]
               };
-            // If all questions at this level have been traversed.
+              // If all questions at this level have been traversed.
             } else {
               updatedStateValue = {
                 ...updatedStateValue,
@@ -2072,9 +2072,9 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         }
         return updatedStateValue;
       case GET_NEXT_FLAG_LOCATION:
-        let updatedState = {...state};
+        let updatedState = { ...state };
         let updatedLocation = [...state.flagReportLocation];
-        if((getQuestionCount(flagReport, state.flagReportLocation) - 1) > state.flagReportLocation[state.flagReportLocation.length - 1]) {
+        if ((getQuestionCount(flagReport, state.flagReportLocation) - 1) > state.flagReportLocation[state.flagReportLocation.length - 1]) {
           let lastLoc = updatedLocation[updatedLocation.length - 1];
           lastLoc += 1;
           updatedLocation[updatedLocation.length - 1] = lastLoc;
@@ -2088,7 +2088,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             ...updatedState,
             flagReportLocation: updatedLocation
           };
-          if(state.flagReportLocation.length === 0) {
+          if (state.flagReportLocation.length === 0) {
             updatedState = {
               ...updatedState,
               flagLocationPopped: false
@@ -2097,8 +2097,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         }
         const nextQuestionVal = getQuestionByLocation(flagReport, updatedLocation);
         let isNextQuestionPresent;
-        if(nextQuestionVal) isNextQuestionPresent = state.flagData.find(ques => ques.id === nextQuestionVal.id || ques.title === nextQuestionVal.title);
-        if(nextQuestionVal && !isNextQuestionPresent) {
+        if (nextQuestionVal) isNextQuestionPresent = state.flagData.find(ques => ques.id === nextQuestionVal.id || ques.title === nextQuestionVal.title);
+        if (nextQuestionVal && !isNextQuestionPresent) {
           updatedState = {
             ...updatedState,
             flagData: [...updatedState.flagData, { ...nextQuestionVal, location: updatedLocation, completed: false, choices: [] }]
@@ -2113,7 +2113,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         };
       case FLAG_SUCCESS:
         return {
-         ...initial_state,
+          ...initial_state,
         }
       case FLAG_FAIL:
         return {
@@ -2130,22 +2130,22 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 
   // Set initial value of flagData array when component first mounts, thus rendering the first flag question.
   useEffect(() => {
-    if(flagState.flagReportLocation.length > 0 && flagReport) {
+    if (flagState.flagReportLocation.length > 0 && flagReport) {
       flagDispatch({ type: SET_INITIAL_QUESTION });
     }
   }, [flagReport]);
 
   // Update flagData array if necessary when flagReportLocation changes.
   useEffect(() => {
-    if(flagState.flagReportLocation.length > 0 && flagReport && !flagState.flagLocationPopped) {
+    if (flagState.flagReportLocation.length > 0 && flagReport && !flagState.flagLocationPopped) {
       flagDispatch({ type: UPDATE_QUESTIONS });
     }
   }, [flagState.flagReportLocation]);
 
-    // Pop last 2 elements of flagReportLocation array off when the current questions array at the current 'level' has no more questions.
+  // Pop last 2 elements of flagReportLocation array off when the current questions array at the current 'level' has no more questions.
   useEffect(() => {
     // if atleast 2 elements have been removed from the end of the flagReportLocation array.
-    if(flagState.flagLocationPopped && flagState.flagReportLocation.length > 0) {
+    if (flagState.flagLocationPopped && flagState.flagReportLocation.length > 0) {
       flagDispatch({ type: GET_NEXT_FLAG_LOCATION });
     }
   }, [flagState.flagLocationPopped, flagState.flagReportLocation.length]);
@@ -2154,101 +2154,101 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   // TODO: Remove both functions below, not being used.
   const handleSelectTypeChoice = (questionId) => ({ type: SELECT_TYPE_CHOICE, payload: { questionId } });
   const handleSelectTypeChoiceOther = (questionId, optionObject) => ({ type: SELECT_TYPE_CHOICE_OTHER, payload: { questionId, choiceOtherOptionObject: optionObject } });
-  const handleOptionSelect = (questionId, optionObject) => flagDispatch({ 
-    type: SELECT_OPTION, 
+  const handleOptionSelect = (questionId, optionObject) => flagDispatch({
+    type: SELECT_OPTION,
     payload: { questionId, optionObject }
   });
-  const handleSaveChoiceOther = (value, questionId) => flagDispatch({ type: SAVE_CHOICE_OTHER, payload: { value, questionId }});
-  const handleChoiceOtherEmpty = (questionId) => flagDispatch({ type: CHOICE_OTHER_EMPTY, payload: { questionId }});
+  const handleSaveChoiceOther = (value, questionId) => flagDispatch({ type: SAVE_CHOICE_OTHER, payload: { value, questionId } });
+  const handleChoiceOtherEmpty = (questionId) => flagDispatch({ type: CHOICE_OTHER_EMPTY, payload: { questionId } });
   const handleToggleChoiceOtherActive = (questionId) => flagDispatch({ type: TOGGLE_CHOICE_OTHER_ACTIVE, payload: { questionId } });
-  const handleMultiOptionSelect = (questionId, optionObject) => flagDispatch({ 
-    type: SELECT_MULTI_OPTION, 
+  const handleMultiOptionSelect = (questionId, optionObject) => flagDispatch({
+    type: SELECT_MULTI_OPTION,
     payload: { questionId, optionObject }
   });
   const handleClearInputError = (questionId) => flagDispatch({ type: CLEAR_INPUT_ERROR, payload: { questionId } });
   const handleSetOtherInputError = (questionId) => flagDispatch({ type: SET_OTHER_INPUT_ERROR, payload: { questionId } });
-  
+
   const translateRoomNametoId = () => {
-    if(roomIds && roomName) {
+    if (roomIds && roomName) {
       const room = roomIds.find(room => room.display === roomName);
-      if(room) return room.id;
+      if (room) return room.id;
     }
   };
-  
-  const [roomId, setRoomId] = useState(() => translateRoomNametoId()); 
+
+  const [roomId, setRoomId] = useState(() => translateRoomNametoId());
 
   useEffect(() => {
     setRoomId(translateRoomNametoId());
   }, [roomName]);
 
   const classes = useStyles();
-    // Render flag submission question based on question type property value.
-    const renderFlagQuestions = flagData => {
-      if(flagData) {
-        return flagData.map(question => {
-          switch(question.type.toLowerCase()) {
-            case 'single-choice':
-            case 'multiple-choice':
-              // Render select list.
-              return (
-                <div style={{marginBottom: '1rem'}} key={question.title}>
-                  <FlagSelect
-                    key={question.title}
-                    title={question.title}
-                    options={question.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other'} : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
-                    questionType={question.type}
-                    handleOptionSelect={handleOptionSelect}
-                    isRequired={question.isRequired}
-                    questionId={question.id}
-                    handleMultiOptionSelect={handleMultiOptionSelect}
-                    flagData={flagState.flagData}
-                    handleClearInputError={handleClearInputError}
-                  />
-                  {/*flagState.isFlagChoiceOther[question.id]*/ question.showChoiceOther && 
-                    (<div className="flag-text-input-container">
-                      {false && 
-                        <div className="select-header">
-                          <InputLabel className={classes.inputLabelFlag}>Other</InputLabel>
-                        </div>
-                      }
-                      <MemoizedFlagTextInput 
-                        choiceOtherInputActive={flagState.choiceOtherInputActive[question.id]}
-                        question={question}
-                        handleSaveChoiceOther={handleSaveChoiceOther}
-                        handleToggleChoiceOtherActive={handleToggleChoiceOtherActive}
-                        handleChoiceOtherEmpty={handleChoiceOtherEmpty}
-                        flagData={flagState.flagData}
-                        choiceOtherInputError={flagState.choiceOtherInputError}
-                        handleClearInputError={handleClearInputError}
-                        handleSetOtherInputError={handleSetOtherInputError}
-                        isFocused={flagState.choiceOtherFocus}
-                      />
-                    </div>
-                    )
-                  }
-                </div>
-              )
-            case 'input':
-              // render AddFlagInput
-              // pass down the option type to render correct input type. i.e. date / datetime / integer/ float /freetext
-              return 'input';
-            default:
-              return null;
-          }
-        });
-      }
-    };
-    
-   // Submit flag.
-   const handleFlagSubmit = (flag) => {
+  // Render flag submission question based on question type property value.
+  const renderFlagQuestions = flagData => {
+    if (flagData) {
+      return flagData.map(question => {
+        switch (question.type.toLowerCase()) {
+          case 'single-choice':
+          case 'multiple-choice':
+            // Render select list.
+            return (
+              <div style={{ marginBottom: '1rem' }} key={question.title}>
+                <FlagSelect
+                  key={question.title}
+                  title={question.title}
+                  options={question.options.map(opt => opt.type === 'choice-other' ? { ...opt, title: 'Other' } : opt).sort((a, b) => a.optionOrder - b.optionOrder)}
+                  questionType={question.type}
+                  handleOptionSelect={handleOptionSelect}
+                  isRequired={question.isRequired}
+                  questionId={question.id}
+                  handleMultiOptionSelect={handleMultiOptionSelect}
+                  flagData={flagState.flagData}
+                  handleClearInputError={handleClearInputError}
+                />
+                {/*flagState.isFlagChoiceOther[question.id]*/ question.showChoiceOther &&
+                  (<div className="flag-text-input-container">
+                    {false &&
+                      <div className="select-header">
+                        <InputLabel className={classes.inputLabelFlag}>Other</InputLabel>
+                      </div>
+                    }
+                    <MemoizedFlagTextInput
+                      choiceOtherInputActive={flagState.choiceOtherInputActive[question.id]}
+                      question={question}
+                      handleSaveChoiceOther={handleSaveChoiceOther}
+                      handleToggleChoiceOtherActive={handleToggleChoiceOtherActive}
+                      handleChoiceOtherEmpty={handleChoiceOtherEmpty}
+                      flagData={flagState.flagData}
+                      choiceOtherInputError={flagState.choiceOtherInputError}
+                      handleClearInputError={handleClearInputError}
+                      handleSetOtherInputError={handleSetOtherInputError}
+                      isFocused={flagState.choiceOtherFocus}
+                    />
+                  </div>
+                  )
+                }
+              </div>
+            )
+          case 'input':
+            // render AddFlagInput
+            // pass down the option type to render correct input type. i.e. date / datetime / integer/ float /freetext
+            return 'input';
+          default:
+            return null;
+        }
+      });
+    }
+  };
+
+  // Submit flag.
+  const handleFlagSubmit = (flag) => {
     flagDispatch({ type: SENDING_FLAG });
-    
+
     globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
       .then(result => {
         flagDispatch({ type: FLAG_SUCCESS });
         result = result.data;
         const toolTipArray = result.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`);
-        
+
         const newFlagObject = {
           tagName: 'Flagged',
           toolTip: toolTipArray
@@ -2256,7 +2256,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         handleUpdateDetailedCase(result);
         handleSetCases(result, caseId);
         logger.manualAddLog('click', 'submit-flag', flag)
-       
+
         setShowAddFlag(false);
         handleOpenAddFlag(false);
       }).catch((error) => {
@@ -2268,7 +2268,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
   };
 
   const onFlagSubmit = () => {
-    if(reportId, flagState.flagData) {
+    if (reportId, flagState.flagData) {
       const newFlag = {
         reportId,
         caseId,
@@ -2296,7 +2296,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             <p>Unable to submit flag</p>
           </Grid>
           <Grid item xs>
-            An Error was encountered while attempting to submit your flag: 
+            An Error was encountered while attempting to submit your flag:
             {/* <span style={{ fontWeight: 'bold' }}>{` ${isFlagSubmitted}`}</span> */}
           </Grid>
           <Grid item xs>
@@ -2319,8 +2319,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             {requestEMMDescription}
           </div>
           {renderFlagQuestions(flagState.flagData)}
-          <Button 
-            variant="outlined" 
+          <Button
+            variant="outlined"
             className="primary send-request submit-flag"
             onClick={onFlagSubmit}
             disabled={flagState.flagData && flagState.flagData.some(el => el.completed === false) || flagState.isSendingFlag}
@@ -2328,7 +2328,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             {flagState.isSendingFlag ? <div className="loader"></div> : 'Submit Flag'}
           </Button>
         </div>}
-      </React.Fragment>
+    </React.Fragment>
   );
 };
 
@@ -2338,8 +2338,8 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
   const [flagOptions, setflagOptions] = useState([options]);
   const logger = useSelector(makeSelectLogger());
   useEffect(() => {
-     // 1. Animate state set to true.
-     const timeout = setTimeout(() => {
+    // 1. Animate state set to true.
+    const timeout = setTimeout(() => {
       setAnimate(true);
     }, 100);
     // Clean up timeout before effect runs.
@@ -2359,23 +2359,23 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
   const onOptionChange = (event, newValue) => {
     // Retrieve selected options index.
     const optionIndex = options.findIndex(opt => opt.id === newValue.id);
-    const optionObj  = { ...newValue, optionIndex };
+    const optionObj = { ...newValue, optionIndex };
 
-    if(newValue) {
+    if (newValue) {
       // handle option selection for question type of single-choice
-      if(questionType === 'single-choice') handleOptionSelect(questionId, optionObj);
+      if (questionType === 'single-choice') handleOptionSelect(questionId, optionObj);
       // handle option selection for question type of multiple-choice
-      if(questionType === 'multiple-choice') handleMultiOptionSelect(questionId, optionObj);
+      if (questionType === 'multiple-choice') handleMultiOptionSelect(questionId, optionObj);
 
-      if(optionObj.type !== 'choice-other') handleClearInputError(questionId);
+      if (optionObj.type !== 'choice-other') handleClearInputError(questionId);
     }
-    logger.manualAddLog('onchange',title, newValue)
+    logger.manualAddLog('onchange', title, newValue)
     setValue(newValue);
   };
   // console.log('value', value);
   return (
     <CSSTransition
-    in={flagData.includes(ques => ques.id === questionId)}
+      in={flagData.includes(ques => ques.id === questionId)}
       timeout={1000}
       exit={true}
       enter={false}
@@ -2409,10 +2409,10 @@ const FlagTextInput = (props) => {
   const [flagInputOtherValue, setFlagInputOtherValue] = useState('');
   const logger = useSelector(makeSelectLogger());
   const classes = useStyles();
-  
-  const handleFlagInputChange = (event, title)  => {
+
+  const handleFlagInputChange = (event, title) => {
     const val = event.target.value;
-    if(val === '' && choiceOtherInputError[question.id]) {
+    if (val === '' && choiceOtherInputError[question.id]) {
       /*handleChoiceOtherEmpty(question.id)*/
       handleSetOtherInputError(questionId);
       // TODO: Remove
@@ -2428,7 +2428,7 @@ const FlagTextInput = (props) => {
       // }));
       handleClearInputError(question.id);
     }
-    logger.manualAddLog('onchange',title,val)
+    logger.manualAddLog('onchange', title, val)
     setFlagInputOtherValue(prevState => ({ ...prevState, [title]: val }));
     // Update flagData state in realtime as value is entered.
     // todo: rename to handleUpdateChoiceOther
@@ -2436,7 +2436,7 @@ const FlagTextInput = (props) => {
   };
 
   const handleInputBlur = (event, id) => {
-    if(!event.target.value) {
+    if (!event.target.value) {
       handleSetOtherInputError(id);
       // TDOD: Remove.
       // setInputError(prevState => ({ 
@@ -2460,7 +2460,7 @@ const FlagTextInput = (props) => {
       value={flagInputOtherValue[question.title]}
       onChange={(e) => handleFlagInputChange(e, question.title)}
       helperText={choiceOtherInputError[question.id] && `Please enter a ${question && question.title.toLowerCase()}`}
-  error={choiceOtherInputError[question.id] /*|| inputError[question.id]*/}
+      error={choiceOtherInputError[question.id] /*|| inputError[question.id]*/}
       inputProps={{
         maxLength: 128
       }}
@@ -2991,7 +2991,7 @@ function ClipTimeline(props) {
         open={selectedMarker}
         onClose={() => handleSelect(false)}
       >
-        <div className="Modal clip-modal" style={presenterMode ? {paddingTop:0} : {}}>
+        <div className="Modal clip-modal" style={presenterMode ? { paddingTop: 0 } : {}}>
           {(presenterMode) &&
             <div className="Presenter-Mode-Banner">You are in Presentation Mode</div>
           }
