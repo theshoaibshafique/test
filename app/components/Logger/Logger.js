@@ -47,7 +47,8 @@ export class Logger {
 
     sendExitLogs() {
         this.exitLogs.forEach((log) => {
-            this.manualAddLog(...log);
+            const {event, id, value} = log
+            this.manualAddLog(event, id, value);
         })
         displayLogs && console.log("with exit logs " + this.recentEvents);
         this.sendLogs();

@@ -469,7 +469,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       return;
     }
     logger.manualAddLog('session', 'open-case-discovery');
-    logger.exitLogs.push(['session', 'close-case-discovery', "Exited/Refreshed page"]);
+    logger.exitLogs.push({event:'session', id:'close-case-discovery', value:"Exited/Refreshed page"});
     return () => {
       if (!logger) {
         return
