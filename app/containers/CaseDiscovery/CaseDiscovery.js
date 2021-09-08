@@ -72,7 +72,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const { CASES, SPECIALTIES, PROCEDURES, ORS, isLoading, savedCases } = DATA;
   const { facilityName, gracePeriod, outlierThreshold } = DATA;
   const [USERS, setUsers] = useState([]);
-  
+
   const [flagReport, setFlagReport] = useState(null);
   const [roomIds, setRoomIds] = useState(null);
   const firstName = useSelector(makeSelectFirstName());
@@ -229,19 +229,26 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     }
 
-    const fetchSavedCases = async () => {
-      await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + "bookmarks", 'get', userToken, {})
-        .then(result => {
-          result = result.data;
-          setData({
-            'savedCases': result
-          })
-        }).catch((error) => {
-          console.log("uh no.")
-        }).finally(() => {
+    const getOverviewData = (endpoint) => globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + endpoint, 'get', userToken, {});
+    const fetchRecentFlags = getOverviewData("recent_flags");
+    const fetchRecentClips = getOverviewData("recent_clips");
+    const fetchRecommendations = getOverviewData("recommendations");
+    const fetchSavedCases = getOverviewData("bookmarks");
+    const fetchOverview = getOverviewData("overview");
 
-        });
-    }
+
+    Promise.all([fetchRecentFlags, fetchRecentClips, fetchRecommendations, fetchSavedCases, fetchOverview].map(function (e) {
+      return e && e.then(function (result) {
+        return result && result.data;
+      })
+    })).then(([recentFlags, recentClips, recommendations, savedCases, overview]) => {
+      setData({
+        recentFlags, recentClips, recommendations, 
+        savedCases, overview
+      });
+    }).catch(function (results) {
+
+    });
 
     // New
     const fetchFlagReport = async () => {
@@ -261,7 +268,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     fetchUsers();
 
     fetchFacilityConfig();
-    fetchSavedCases();
+    // fetchSavedCases();
     // Fetch flag submission schema.
     fetchFlagReport();
 
@@ -276,7 +283,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }, 300)
   });
 
-  
+
 
   const handleSetCases = (res, caseId) => {
     const index = CASES.findIndex(el => el.caseId === caseId);

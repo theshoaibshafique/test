@@ -116,7 +116,7 @@ export function BrowseCases(props) {
 
   const handleClose = (event) => {
     setAnchorEl(null);
-    if (!event.target.value) {
+    if (event.target.value != undefined) {
       logger && logger.manualAddLog('click', 'sort-cases', event.target.value ? 'oldest to recent' : 'recent to oldest');
       setIsOldest(event.target.value)
     }
