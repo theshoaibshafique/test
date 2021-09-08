@@ -1,21 +1,22 @@
 import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import moment from 'moment/moment';
-import CaseDuration from './icons/CaseDuration.svg';
-import eMM from './icons/eMM.svg';
-import FirstCase from './icons/FirstCase.svg';
-import Flagged from './icons/Flag.svg';
-import Hypotension from './icons/Hypotension.svg';
-import Hypothermia from './icons/Hypothermia.svg';
-import Hypoxia from './icons/Hypoxia.svg';
-import LateStart from './icons/LateStart.svg';
-import PostOpDelay from './icons/PostOpDelay.svg';
-import PreOpDelay from './icons/PreOpDelay.svg';
-import TurnoverDuration from './icons/TurnoverDuration.svg';
+import CaseDuration from '../icons/CaseDuration.svg';
+import eMM from '../icons/eMM.svg';
+import FirstCase from '../icons/FirstCase.svg';
+import Flagged from '../icons/Flag.svg';
+import Hypotension from '../icons/Hypotension.svg';
+import Hypothermia from '../icons/Hypothermia.svg';
+import Hypoxia from '../icons/Hypoxia.svg';
+import LateStart from '../icons/LateStart.svg';
+import PostOpDelay from '../icons/PostOpDelay.svg';
+import PreOpDelay from '../icons/PreOpDelay.svg';
+import TurnoverDuration from '../icons/TurnoverDuration.svg';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { LightTooltip, StyledRadio } from '../../components/SharedComponents/SharedComponents';
+
 import { FormControlLabel, InputLabel, makeStyles, RadioGroup, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CloseIcon from '@material-ui/icons/Close';
+import { LightTooltip, StyledRadio } from '../../../components/SharedComponents/SharedComponents';
 
 export function getTag(tag) {
   switch (`${tag}`.toLowerCase()) {

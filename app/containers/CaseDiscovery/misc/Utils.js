@@ -3,7 +3,7 @@ import moment from 'moment/moment';
 export function getPresetDates (option) {
   switch (option) {
     case 'Any Time':
-      return { from: moment("2019-08-15"), to: moment('2022-04-04') }
+      return { from: moment("2000-08-15"), to: moment('2122-04-04') }
     case 'Past week':
       return { from: moment().subtract(7, 'days'), to: moment() }
     case 'Past month':

@@ -5,10 +5,10 @@ import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
-import { formatCaseForLogs } from './Utils';
+import { formatCaseForLogs } from './misc/Utils';
 import { useSelector } from 'react-redux';
 import { makeSelectLogger } from '../App/selectors';
-import { displayTags } from './helper-components';
+import { displayTags } from './misc/helper-components';
 
 export function Case(props) {
     const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick, isSaved, handleSaveCase, isShort } = props;

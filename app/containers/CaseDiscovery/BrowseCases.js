@@ -5,8 +5,8 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@materi
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import MagnifyingGlass from './icons/MagnifyingGlass.svg';
 import ArrowsDownUp from './icons/ArrowsDownUp.svg';
-import { DATE_OPTIONS, TAGS, TAG_INFO } from './constants';
-import { getTag, TagsSelect, useStyles } from './helper-components';
+import { DATE_OPTIONS, TAGS, TAG_INFO } from './misc/constants';
+import { getTag, TagsSelect, useStyles } from './misc/helper-components';
 import { Case } from './Case';
 import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
