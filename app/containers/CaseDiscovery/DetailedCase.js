@@ -1426,7 +1426,9 @@ function HL7Chart(props) {
 
   const hasHL7Data = hl7Data.length > 0;
   const hasClips = flags && flags.some((f) => f.clips && f.clips.length > 0);
-  const max = Math.max(...(hasHL7Data ? hl7Data[0].times : []), ...timeline.map((t) => t.time));
+  const flagTimes = hasClips && flags.map((f) => f.clips && f.clips.map((c) => c.startTime)).flat();
+  const min = Math.min(...flagTimes, 0);
+  const max = Math.max(...(hasHL7Data ? hl7Data[0].times : []), ...timeline.map((t) => t.time), ...flagTimes);
 
   const createCustomTooltip = (d, defaultTitleFormat, defaultValueFormat, color) => {
 
@@ -1460,7 +1462,7 @@ function HL7Chart(props) {
       </div>);
   }
 
-  const xRange = globalFunctions.range(0, max, 900);
+  const xRange = globalFunctions.range(min - min % 900, max, 900);
   let xValues = [];
   let maxVal = 5;
 
@@ -1499,17 +1501,17 @@ function HL7Chart(props) {
           outer: false,
           values: xValues,
           format: (x) => {
-            return globalFunctions.formatSecsToTime(x).substring(0, 5);
+            return (x < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(x)).substring(0, 5);
           }
         },
         padding: hasHL7Data ? {
           // left: max * .025,
           // right: max * .025,
-          left: 3,
+          left: min < 0 ? Math.abs(min) : 3,
           right: max * .025,
         } : {
           // left: max * .05,
-          left: 0,
+          left: min < 0 ? Math.abs(min) : 0,
           right: max * .025,
         }
       },
@@ -1663,7 +1665,7 @@ function HL7Chart(props) {
         <div style={{ width: '100%' }}>
           <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
           <C3Chart ref={chartRef} {...data} />
-          {hasClips && <ClipTimeline flags={flags} max={max} />}
+          {hasClips && <ClipTimeline flags={flags} max={max} min={min} />}
         </div>
       </div>
 
@@ -1686,8 +1688,8 @@ export const Thumbnail = withStyles((theme) => ({
 }))(Tooltip);
 
 function ClipTimeline(props) {
-  const { flags, max } = props;
-  const duration = max + max * .025
+  const { flags, max, min } = props;
+  const duration = max + ( min < 0 ? Math.abs(min) : 0) + max * .025 
   const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
@@ -1793,7 +1795,7 @@ function ClipTimeline(props) {
           )
           return (
             <div className='clip-marker'
-              style={{ left: `${Math.abs(t.startTime) / duration * 100}%`, width: `${(t.duration / duration * 100)}%` }}
+              style={{ left: `${(t.startTime + Math.abs(min)) / duration * 100}%`, width: `${(t.duration / duration * 100)}%` }}
               key={`t-${i}`}>
               <Thumbnail
                 position="bottom"
