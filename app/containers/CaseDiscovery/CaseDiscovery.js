@@ -57,7 +57,6 @@ const dataReducer = (state, event) => {
 }
 
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
-  const { showEMMReport } = props;
 
   const [DATA, setData] = useReducer(dataReducer, {
     CASES: [],
@@ -361,7 +360,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         USERS={USERS}
         handleChangeCaseId={handleChangeCaseId}
         hidden={!caseId}
-        showEMMReport={showEMMReport}
         flagReport={flagReport}
         roomIds={roomIds}
         handleSetCases={handleSetCases}

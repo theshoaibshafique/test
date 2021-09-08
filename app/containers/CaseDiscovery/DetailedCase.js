@@ -40,7 +40,7 @@ import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { Case } from './Case';
 import { displayTags, getTag, TagsSelect, useStyles } from './misc/helper-components';
 export function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase,flagReport, roomIds, setData, handleSetCases, handleUpdateDetailedCase } = props;
+  const { hidden, handleChangeCaseId, USERS, isSaved, handleSaveCase,flagReport, roomIds, setData, handleSetCases, handleUpdateDetailedCase } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
