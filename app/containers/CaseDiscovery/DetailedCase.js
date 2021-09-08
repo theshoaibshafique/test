@@ -40,7 +40,7 @@ import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { Case } from './Case';
 import { displayTags, getTag, TagsSelect, useStyles } from './misc/helper-components';
 export function DetailedCase(props) {
-  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase, openAddFlag, handleOpenAddFlag, flagReport, roomIds, setData, handleSetCases, handleUpdateDetailedCase } = props;
+  const { hidden, showEMMReport, handleChangeCaseId, USERS, isSaved, handleSaveCase,flagReport, roomIds, setData, handleSetCases, handleUpdateDetailedCase } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -164,6 +164,13 @@ export function DetailedCase(props) {
 
   // Flag submission state.
   const [showAddFlag, setShowAddFlag] = React.useState(true);
+  /*** NEW - Flag Submission state ***/
+  const [openAddFlag, setOpenAddFlag] = useState(false);
+  /*** FLAG SUBMISSION HANDLERS ***/
+  const handleOpenAddFlag = open => {
+    logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
+    setOpenAddFlag(open);
+  };
 
   // Change/update the filter for request ID
   const handleChange = (event, value) => {

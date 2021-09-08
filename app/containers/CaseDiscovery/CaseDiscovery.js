@@ -73,8 +73,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const { CASES, SPECIALTIES, PROCEDURES, ORS, isLoading, savedCases } = DATA;
   const { facilityName, gracePeriod, outlierThreshold } = DATA;
   const [USERS, setUsers] = useState([]);
-  /*** NEW - Flag Submission state ***/
-  const [openAddFlag, setOpenAddFlag] = useState(false);
+  
   const [flagReport, setFlagReport] = useState(null);
   const [roomIds, setRoomIds] = useState(null);
   const firstName = useSelector(makeSelectFirstName());
@@ -278,11 +277,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }, 300)
   });
 
-  /*** FLAG SUBMISSION HANDLERS ***/
-  const handleOpenAddFlag = open => {
-    logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
-    setOpenAddFlag(open);
-  };
+  
 
   const handleSetCases = (res, caseId) => {
     const index = CASES.findIndex(el => el.caseId === caseId);
@@ -367,8 +362,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         handleChangeCaseId={handleChangeCaseId}
         hidden={!caseId}
         showEMMReport={showEMMReport}
-        openAddFlag={openAddFlag}
-        handleOpenAddFlag={handleOpenAddFlag}
         flagReport={flagReport}
         roomIds={roomIds}
         handleSetCases={handleSetCases}
