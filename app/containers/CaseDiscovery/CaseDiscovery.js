@@ -8,7 +8,7 @@ import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, Slide, TextField, Tooltip, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, Slide, Tab, Tabs, TextField, Tooltip, withStyles } from '@material-ui/core';
 import { DATE_OPTIONS, TAGS, TAG_INFO } from './misc/constants';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -23,7 +23,7 @@ import Close from './icons/Close.svg';
 import Plus from './icons/Plus.svg';
 import moment from 'moment/moment';
 
-import { LightTooltip, SSTSwitch, StyledRadio } from '../../components/SharedComponents/SharedComponents';
+import { LightTooltip, SSTSwitch, StyledRadio, TabPanel } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
@@ -44,7 +44,7 @@ import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { Case } from './Case';
-import { displayTags, getTag, TagsSelect, useStyles } from './misc/helper-components';
+import { StyledTabs, StyledTab } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 
@@ -69,8 +69,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     gracePeriod: 0,
     outlierThreshold: 0
   });
-  const { CASES, SPECIALTIES, PROCEDURES, ORS, isLoading, savedCases } = DATA;
-  const { facilityName, gracePeriod, outlierThreshold } = DATA;
+  const { CASES, savedCases } = DATA;
   const [USERS, setUsers] = useState([]);
 
   const [flagReport, setFlagReport] = useState(null);
@@ -136,7 +135,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const casesWindow = document.getElementById('cases-id');
 
     // Listen for scroll events
-    casesWindow.addEventListener('scroll', (event) => {
+    casesWindow && casesWindow.addEventListener('scroll', (event) => {
 
       // Clear our timeout throughout the scroll
       window.clearTimeout(isScrolling);
@@ -243,7 +242,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       })
     })).then(([recentFlags, recentClips, recommendations, savedCases, overview]) => {
       setData({
-        recentFlags, recentClips, recommendations, 
+        recentFlags, recentClips, recommendations,
         savedCases, overview
       });
     }).catch(function (results) {
@@ -292,9 +291,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       [CASES]: CASES/*CASES.map(el => el.caseId === caseId ? { ...el, tags: [flagObject, ...el.tags]} : el)*/
     });
   };
-
-
-
 
   const handleSaveCase = async (caseId) => {
     const isSav = savedCases.includes(caseId);
@@ -352,14 +348,38 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
   };
 
+  const [tabIndex, setTabIndex] = useState(0);
+  const handleTabChange = (obj, tabIndex) => {
+    setTabIndex(tabIndex);
+  }
+
   return (
     <section className="case-discovery">
       <div hidden={caseId}>
-        <BrowseCases
-          handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
-          handleSaveCase={handleSaveCase}
-          {...DATA}
-        />
+        <StyledTabs
+          value={tabIndex}
+          onChange={(obj, value) => handleTabChange(obj, value)}
+          indicatorColor="primary"
+          textColor="primary"
+        >
+          <StyledTab label={"OVERVIEW"} />
+          <Divider orientation='vertical' style={{height:20, margin: 'auto 0'}}/>
+          <StyledTab label="BROWSE" />
+        </StyledTabs>
+
+        <TabPanel value={tabIndex} index={0}>
+          <div>
+            Overview Page
+          </div>
+        </TabPanel>
+        <TabPanel value={tabIndex} index={2}>
+          <BrowseCases
+            handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
+            handleSaveCase={handleSaveCase}
+            {...DATA}
+          />
+        </TabPanel>
+
       </div>
       <DetailedCase {...DETAILED_CASE}
         isSaved={savedCases.includes(caseId)}

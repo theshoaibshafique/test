@@ -13,7 +13,7 @@ import PreOpDelay from '../icons/PreOpDelay.svg';
 import TurnoverDuration from '../icons/TurnoverDuration.svg';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-import { FormControlLabel, InputLabel, makeStyles, RadioGroup, TextField } from '@material-ui/core';
+import { FormControlLabel, InputLabel, makeStyles, RadioGroup, Tab, Tabs, TextField, withStyles } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CloseIcon from '@material-ui/icons/Close';
 import { LightTooltip, StyledRadio } from '../../../components/SharedComponents/SharedComponents';
@@ -100,7 +100,7 @@ export function displayTags(tags, emrCaseId, detailed = null) {
       let desc = tag.toolTip || [];
       tag = tag.tagName || tag;
       return (
-        createTag(tag,desc, i)
+        createTag(tag, desc, i)
       )
     })
   }
@@ -108,123 +108,152 @@ export function displayTags(tags, emrCaseId, detailed = null) {
 
 
 export const useStyles = makeStyles((theme) => ({
-    inputLabel: {
-      fontFamily: 'Noto Sans',
-      fontSize: 16,
-      marginBottom: 10,
-      marginTop: 30,
-      color: '#323232',
-      opacity: .8
-    },
-    inputLabelFlag: {
-      fontFamily: 'Noto Sans',
-      fontSize: 16,
-      marginBottom: 10,
-      marginTop: 25,
-      color: '#323232',
-      opacity: .8
-    },
-    clear: {
-      fontFamily: 'Noto Sans',
-      fontSize: 16,
-      marginTop: 30,
-      color: '#919191',
-      opacity: .8,
-      cursor: 'pointer'
-    },
-    search: {
-      marginBottom: 10
-    },
-    sortButton: {
-      display: 'block',
-      margin: 0
-    }
-  }));
+  inputLabel: {
+    fontFamily: 'Noto Sans',
+    fontSize: 16,
+    marginBottom: 10,
+    marginTop: 30,
+    color: '#323232',
+    opacity: .8
+  },
+  inputLabelFlag: {
+    fontFamily: 'Noto Sans',
+    fontSize: 16,
+    marginBottom: 10,
+    marginTop: 25,
+    color: '#323232',
+    opacity: .8
+  },
+  clear: {
+    fontFamily: 'Noto Sans',
+    fontSize: 16,
+    marginTop: 30,
+    color: '#919191',
+    opacity: .8,
+    cursor: 'pointer'
+  },
+  search: {
+    marginBottom: 10
+  },
+  sortButton: {
+    display: 'block',
+    margin: 0
+  }
+}));
 
 export function TagsSelect(props) {
-    const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, handleChangeIncludeAllTags, freeSolo, groupBy } = props;
-    let [value, setValue] = React.useState(searchData[id]);
-    let [includeAll, setIncludeAll] = React.useState(includeAllTags);
-    const classes = useStyles();
-  
-    useEffect(() => {
-      setValue(searchData[id]);
-    }, [props.searchData]);
-  
-    useEffect(() => {
-      setIncludeAll(includeAllTags);
-    }, [props.includeAllTags]);
-  
-    const filterOptions = (o, state) => {
-      // Dont show any options until the user has typed
-      const { inputValue } = state;
-      if (groupBy && !inputValue) {
-        return []
-      }
-      return o.filter((op) => {
-        op = op.display || op
-        return `${op}`.toLowerCase().includes(inputValue.toLowerCase())
-      })
-    };
-  
-    return (
-      <div>
-        <div className="select-header">
-          <InputLabel className={classes.inputLabel}>{title}</InputLabel>
-          <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
-            Clear
-          </div>
+  const { title, options, id, handleChange, searchData, placeholder, includeToggle, includeAllTags, handleChangeIncludeAllTags, freeSolo, groupBy } = props;
+  let [value, setValue] = React.useState(searchData[id]);
+  let [includeAll, setIncludeAll] = React.useState(includeAllTags);
+  const classes = useStyles();
+
+  useEffect(() => {
+    setValue(searchData[id]);
+  }, [props.searchData]);
+
+  useEffect(() => {
+    setIncludeAll(includeAllTags);
+  }, [props.includeAllTags]);
+
+  const filterOptions = (o, state) => {
+    // Dont show any options until the user has typed
+    const { inputValue } = state;
+    if (groupBy && !inputValue) {
+      return []
+    }
+    return o.filter((op) => {
+      op = op.display || op
+      return `${op}`.toLowerCase().includes(inputValue.toLowerCase())
+    })
+  };
+
+  return (
+    <div>
+      <div className="select-header">
+        <InputLabel className={classes.inputLabel}>{title}</InputLabel>
+        <div hidden={!value || value.length <= 0} className={classes.clear} onClick={() => handleChange(id, [])}>
+          Clear
         </div>
-        <Autocomplete
-          multiple
-          size="small"
-          freeSolo={freeSolo}
-          id={id}
-          options={options}
-          disableClearable
-          clearOnEscape
-          groupBy={(option) => groupBy}
-          filterOptions={filterOptions}
-          getOptionLabel={option => option.display || option}
-          value={value || []}
-          renderTags={() => null}
-          onChange={(event, value) => handleChange(id, value)}
-          renderInput={params => (
-            <TextField
-              {...params}
-              variant="outlined"
-              name={id}
-              placeholder={placeholder}
-            />
-          )}
-        />
-  
-        {includeToggle && (value && value.length > 0) && (
-          <div className="include-toggle">
-            <RadioGroup aria-label="position" name="position" value={includeAll}>
-              <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
-              <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all of these tags</span>} />
-            </RadioGroup>
-          </div>
-        )}
-  
-        {value && value.length > 0 && <div className="tags">
-          {value.map((tag, i) => {
-            return (
-              <span key={i} className={"tag"} >
-                <span><div className="display">{tag.display || tag}</div></span>
-                <span>
-                  <CloseIcon fontSize='small' className='delete' onClick={(a) => {
-                    handleChange(id, value.filter(function (value, arrIndex) {
-                      return i !== arrIndex;
-                    }))
-                  }} />
-                </span>
-  
-              </span>
-            )
-          })}
-        </div>}
       </div>
-    )
+      <Autocomplete
+        multiple
+        size="small"
+        freeSolo={freeSolo}
+        id={id}
+        options={options}
+        disableClearable
+        clearOnEscape
+        groupBy={(option) => groupBy}
+        filterOptions={filterOptions}
+        getOptionLabel={option => option.display || option}
+        value={value || []}
+        renderTags={() => null}
+        onChange={(event, value) => handleChange(id, value)}
+        renderInput={params => (
+          <TextField
+            {...params}
+            variant="outlined"
+            name={id}
+            placeholder={placeholder}
+          />
+        )}
+      />
+
+      {includeToggle && (value && value.length > 0) && (
+        <div className="include-toggle">
+          <RadioGroup aria-label="position" name="position" value={includeAll}>
+            <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
+            <FormControlLabel value={1} control={<StyledRadio checked={includeAll == 1} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches all of these tags</span>} />
+          </RadioGroup>
+        </div>
+      )}
+
+      {value && value.length > 0 && <div className="tags">
+        {value.map((tag, i) => {
+          return (
+            <span key={i} className={"tag"} >
+              <span><div className="display">{tag.display || tag}</div></span>
+              <span>
+                <CloseIcon fontSize='small' className='delete' onClick={(a) => {
+                  handleChange(id, value.filter(function (value, arrIndex) {
+                    return i !== arrIndex;
+                  }))
+                }} />
+              </span>
+
+            </span>
+          )
+        })}
+      </div>}
+    </div>
+  )
+}
+
+export const StyledTabs = withStyles({
+  root: {
+    marginTop: '2em'
+  },
+  indicator: {
+    display: 'none'
+  },
+  flexContainer: {
+    justifyContent: 'center'
+  },
+})((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
+
+export const StyledTab = withStyles((theme) => ({
+  root: {
+    textTransform: 'none',
+    fontSize: 18,
+    fontFamily: 'Noto Sans',
+    fontWeight: 'bold',
+    color: '#BCBCBC',
+    '&:focus': {
+      opacity: 1,
+    },
+
+  },
+  selected: {
+    color: '#004F6E !important'
   }
+}))((props) => <Tab disableRipple {...props} />);
