@@ -1149,28 +1149,47 @@
 
 .case-discovery-overview {
     display: flex;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    overflow-x: hidden;
     > div {
         margin: 16px 24px;
         &:first-child {
             margin: 16px 24px 0 0;
         }
     }
-    .carousel-list{
-        .title.normal-text{
+    .carousel-list {
+        height: 100%;
+        margin-bottom: 24px;
+
+        .title.normal-text {
             margin-left: 8px;
+        }
+        .thumbnail-case {
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: inset 0 0 0 1000px rgba(0, 79, 110, 0.6);
+            .title {
+                // -webkit-text-stroke: 0.5px black;
+                // background: black;
+                // padding: 2px 4px;
+                // border-radius: 4px;
+            }
         }
     }
     .title {
         font-weight: 700;
-        color: #3E6A81;
+        color: #3e6a81;
         text-transform: uppercase;
     }
-    .overview-tile{
+    .overview-tile {
         padding: 16px 25px;
         border-radius: 8px;
 
         .overview-info,
-        .title{
+        .title {
             margin-bottom: 12px;
         }
         .date-options {
@@ -1179,41 +1198,40 @@
             flex-wrap: wrap;
             margin: 12px 0 16px;
             font-weight: 700;
-            div{
+            div {
                 cursor: pointer;
-                background: #EFEFEF;
-                color: #8F8F8F;
+                background: #efefef;
+                color: #8f8f8f;
                 border-radius: 4px;
                 margin: 3px;
                 width: fit-content;
                 min-width: 60px;
-                padding:4px 8px;
+                padding: 4px 8px;
                 text-align: center;
-                :first-child{
+                :first-child {
                     margin-left: 0;
                 }
             }
-            .selected{
-                background: #004F6E;
-                color: #FFFFFF;
+            .selected {
+                background: #004f6e;
+                color: #ffffff;
             }
         }
-        .overview-tag{
+        .overview-tag {
             display: flex;
             justify-content: space-between;
             margin-bottom: 4px;
-            div{
+            div {
                 vertical-align: middle;
             }
         }
-        .overview-info{
+        .overview-info {
             display: flex;
             justify-content: space-between;
             div {
                 color: #565656;
                 text-transform: uppercase;
             }
-            
         }
     }
 }

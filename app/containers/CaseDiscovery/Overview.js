@@ -4,28 +4,35 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
 import { makeSelectToken, makeSelectUserFacility } from '../App/selectors';
-import { Case } from './Case';
+import { Case, ThumbnailCase } from './Case';
 import { getTag } from './misc/helper-components';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, savedCases, recentSaved, overview } = props;
-
+    const {handleChangeCaseId, handleSaveCase} = props;
+    const commonProps = {handleChangeCaseId, handleSaveCase, savedCases};
+    const [showCarousel, setShowCarousel] = React.useState(true);
+    // useEffect(() => {
+    //     setTimeout(()=>{
+    //         setShowCarousel(true);
+    //     },3000)
+    // },[])
     return (
         <div className="case-discovery-overview">
             <div>
                 {overview && <OverviewTile overview={overview} />}
             </div>
-            <div className="carousel-list">
+            <div className="carousel-list" style={showCarousel ? {} : {opacity:0}}>
                 <div className="title normal-text">Recommended Cases</div>
-                <CarouselCases cases={recommendations} savedCases={savedCases} />
+                <CarouselCases cases={recommendations} {...commonProps} isInfinite/>
 
                 <div className="title normal-text">Recently Flagged Cases</div>
-                <CarouselCases cases={recentFlags} savedCases={savedCases} />
+                <CarouselCases cases={recentFlags} {...commonProps} />
 
                 <div className="title normal-text">Saved Cases</div>
-                <CarouselCases cases={recentSaved} savedCases={savedCases} />
+                <CarouselCases cases={recentSaved} {...commonProps} isInfinite/>
 
-                {/* <div className="title normal-text">Most Recent Thumbnail Clips</div>
-                <CarouselCases cases={recentClips} savedCases={savedCases} isThumbnail /> */}
+                <div className="title normal-text">Recently Flagged Clips</div>
+                <CarouselCases cases={recentClips} {...commonProps} isThumbnail />
             </div>
         </div>
     )
@@ -37,7 +44,7 @@ function OverviewTile(props) {
     const { cases, rooms, tags } = overview && overview[timeframe] || {
         cases: null, rooms: null, tags: []
     };
-    const changeDate = (key) => () => setTimeframe(key); 
+    const changeDate = (key) => () => setTimeframe(key);
     const isSelectedDate = (key) => key == timeframe ? 'selected' : '';
     return (
         <Card variant="outlined" className="overview-tile">
@@ -49,11 +56,11 @@ function OverviewTile(props) {
                 <div className={`subtle-text ${isSelectedDate('all')}`} onClick={changeDate('all')}>All</div>
             </div>
             <div className="overview-info subtext">
-                <div className="bold">Total Cases</div>
+                <div className="bold subtle-subtext">Total Cases</div>
                 <div>{cases}</div>
             </div>
             <div className="overview-info subtext">
-                <div className="bold">Operating Rooms</div>
+                <div className="bold subtle-subtext">Operating Rooms</div>
                 <div>{rooms}</div>
             </div>
             <div className="title normal-text">TAGS</div>
@@ -89,9 +96,9 @@ const responsive = {
 };
 
 function CarouselCases(props) {
-    const { handleChangeCaseId, cases, savedCases, handleSaveCase } = props;
+    const { handleChangeCaseId, cases, savedCases, handleSaveCase, isThumbnail, isInfinite } = props;
     const [CASES, setCases] = useState([]);
-    const isInfinite = true;
+    
     useEffect(() => {
         if (!cases) {
             return;
@@ -99,43 +106,57 @@ function CarouselCases(props) {
         setCases(cases);
     }, [cases])
 
-    const Controls = ({ next, previous, goToSlide, carouselState, carouselState:{currentSlide, slidesToShow, totalItems},  ...rest }) => {
-        
-        if (!totalItems){
+    const Controls = ({ next, previous, goToSlide, carouselState, carouselState: { currentSlide, slidesToShow, totalItems }, ...rest }) => {
+
+        if (!totalItems) {
             return ''
         }
         return (
             <div className="rec-header">
-                {(isInfinite || currentSlide >0) && <div className="left-arrow" onClick={() => previous()}></div>}
-                {(isInfinite || slidesToShow*currentSlide < totalItems) && <div className="right-arrow" onClick={() => next()}></div>}
+                {(isInfinite || currentSlide > 0) && <div className="left-arrow" onClick={() => previous()}></div>}
+                {(isInfinite || slidesToShow * currentSlide < totalItems) && <div className="right-arrow" onClick={() => next()}></div>}
             </div>
         )
+    }
+    const renderCase = (c, i) => {
+
+        if (isThumbnail) {
+            return <ThumbnailCase
+                key={i}
+                onClick={() => handleChangeCaseId(c.caseId)}
+                {...c}
+                isSaved={savedCases.includes(c.caseId)}
+                handleSaveCase={() => handleSaveCase(c.caseId)}
+            />
+        } else {
+            return <Case
+                isShort
+                key={i}
+                onClick={() => handleChangeCaseId(c.caseId)}
+                {...c}
+                isSaved={savedCases.includes(c.caseId)}
+                handleSaveCase={() => handleSaveCase(c.caseId)} />
+
+        }
+
     }
 
     return (<div className="carousel-cases">
 
         <Carousel
             className={'carousel'}
-            id="carousel" // default ''
+            // id="carousel" // default ''
             infinite={isInfinite}
             showDots={false}
             responsive={responsive}
-            autoPlay={true}
+            // autoPlay={true}
             autoPlaySpeed={6500}
             arrows={false}
             renderButtonGroupOutside={true}
             customButtonGroup={<Controls />}
         >
             {
-                CASES.map((c, i) => (
-                    <Case
-                        isShort
-                        key={i}
-                        onClick={() => handleChangeCaseId(c.caseId)}
-                        {...c}
-                        isSaved={savedCases.includes(c.caseId)}
-                        handleSaveCase={() => handleSaveCase(c.caseId)} />
-                ))
+                CASES.map((c, i) => renderCase(c, i))
             }
         </Carousel>
 

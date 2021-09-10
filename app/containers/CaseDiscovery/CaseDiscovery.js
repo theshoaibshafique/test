@@ -64,7 +64,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     SPECIALTIES: [],
     PROCEDURES: [],
     ORS: [],
-    OVERVIEW_DATA: {},
+    OVERVIEW_DATA: null,
     isLoading: true,
     savedCases: [],
     facilityName: "",
@@ -242,8 +242,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       })
     })).then(([recentFlags, recentClips, recommendations, savedCases, recentSaved, overview]) => {
       setData({
+        savedCases,
         OVERVIEW_DATA: {recentFlags, recentClips, recommendations,
-          savedCases, recentSaved, overview}
+          recentSaved, overview}
       });
     }).catch(function (results) {
 
@@ -368,8 +369,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         </StyledTabs>
 
         <TabPanel value={tabIndex} index={0}>
-          <Overview {...OVERVIEW_DATA}
-          />
+          {OVERVIEW_DATA && <Overview 
+          handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
+          handleSaveCase={handleSaveCase}
+          savedCases={savedCases}
+          {...OVERVIEW_DATA}
+          />}
         </TabPanel>
         <TabPanel value={tabIndex} index={2}>
           <BrowseCases

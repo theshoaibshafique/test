@@ -16,7 +16,7 @@ import { makeSelectIsAdmin, makeSelectLogger } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import { useSelector } from 'react-redux';
-import { getCasesInView } from './misc/Utils';
+import { getCasesInView, getPresetDates } from './misc/Utils';
 
 const MenuProps = {
   PaperProps: {
