@@ -83,13 +83,13 @@ export function Case(props) {
 }
 
 export function ThumbnailCase(props) {
-  const { caseId, thumbnailSrc, toolTip, isSaved, handleSaveCase, onClick } = props;
+  const { title, caseId, thumbnailSrc, toolTip, isSaved, handleSaveCase, onClick } = props;
   const logger = useSelector(makeSelectLogger());
   const handleClick = () => {
     onClick();
     logger.manualAddLog('click', `open-case-${caseId}`, formatCaseForLogs(props))
   }
-  const title = "Clinical Practice";
+  
   const tagDisplays = displayTags([{ tagName: 'Flagged', toolTip }], caseId);
   return (
     <div className="case short thumbnail-case"
