@@ -4,14 +4,16 @@
     .tags {
         margin: 4px -4px;
         width: 100%;
-        .tag-fade-enter, .tag-fade-appear {
+        .tag-fade-enter,
+        .tag-fade-appear {
             opacity: 0;
             // transform: translateY(50%);
         }
-        .tag-fade-enter-active, .tag-fade-appear-active {
+        .tag-fade-enter-active,
+        .tag-fade-appear-active {
             opacity: 1;
             // transform: translateY(0);
-            transition: opacity 1000ms ease-in/*, transform 1000ms*/;
+            transition: opacity 1000ms ease-in /*, transform 1000ms*/;
         }
         .tag-fade-exit {
             opacity: 1;
@@ -20,7 +22,7 @@
         .tag-fade-exit-active {
             opacity: 0;
             // transform: translateY(-50%);
-            transition: opacity 1ms ease-in/*, transform 1000ms*/;
+            transition: opacity 1ms ease-in /*, transform 1000ms*/;
         }
     }
     .case-tag {
@@ -45,36 +47,33 @@
         }
         &.add-flag {
             align-items: center;
-            background-color: #F4F5F7;
+            background-color: #f4f5f7;
             color: #323232;
             // position: relative;
             // top: 8px;
             cursor: pointer;
-            transition: background-color .5s ease-out;
+            transition: background-color 0.5s ease-out;
             &.hidden {
                 visibility: hidden;
                 opacity: 0;
-                transition: visibility .3s, opacity .3s;
+                transition: visibility 0.3s, opacity 0.3s;
             }
             &:hover {
-                background-color: darken(#F4F5F7, 5);
+                background-color: darken(#f4f5f7, 5);
             }
         }
         &.disabled {
             opacity: 0.2;
             cursor: default;
         }
-       
     }
 }
 .app-wrapper section.case-discovery {
     overflow: hidden;
     padding: 0px;
 }
-
+.case-discovery-overview,
 .case-discovery-search {
-    // max-width: 1198px;
-    // margin: auto !important;
     padding: 0 0 0 2em;
     .header,
     .header-label {
@@ -746,7 +745,7 @@
         .flag-select {
             opacity: 0;
             transform: translateY(-5%);
-            transition: opacity 500ms, transform 250ms; 
+            transition: opacity 500ms, transform 250ms;
         }
         .animate {
             opacity: 1;
@@ -895,11 +894,6 @@
         }
     }
 }
-
-.add-flag-modal-content {
-   
-}
-
 
 .tag-info-modal {
     .admin-link {
@@ -1102,9 +1096,10 @@
     transition: all 500ms ease-in;
 }
 
-.recommended-cases {
+.carousel-cases {
     display: flex;
     flex-direction: column-reverse;
+    margin-bottom: 24px;
     .case-tag img {
         width: 22px !important;
         height: 22px !important;
@@ -1112,8 +1107,8 @@
     .rec-header {
         display: flex;
         justify-content: space-between;
-        // max-width: 90%;
-        width: 90%;
+        position: relative;
+        width: 100%;
         margin: auto;
         margin-bottom: 8px;
         font-size: 18px;
@@ -1122,9 +1117,12 @@
     .left-arrow {
         width: 0;
         height: 0;
-        border-top: 8px solid transparent;
-        border-bottom: 8px solid transparent;
-        border-right: 8px solid rgba(51, 51, 51, 0.6);
+        top: 85px;
+        left: -20px;
+        position: absolute;
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        border-right: 12px solid rgba(51, 51, 51, 0.6);
         margin-right: 10px !important;
         margin-top: 3px !important;
         cursor: pointer;
@@ -1133,9 +1131,12 @@
     .right-arrow {
         width: 0;
         height: 0;
-        border-top: 8px solid transparent;
-        border-bottom: 8px solid transparent;
-        border-left: 8px solid rgba(51, 51, 51, 0.6);
+        top: 85px;
+        right: -18px;
+        position: absolute;
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        border-left: 12px solid rgba(51, 51, 51, 0.6);
 
         margin-top: 3px !important;
         cursor: pointer;
@@ -1143,6 +1144,77 @@
     .case-tag img {
         width: 22px !important;
         height: 22px !important;
+    }
+}
+
+.case-discovery-overview {
+    display: flex;
+    > div {
+        margin: 16px 24px;
+        &:first-child {
+            margin: 16px 24px 0 0;
+        }
+    }
+    .carousel-list{
+        .title.normal-text{
+            margin-left: 8px;
+        }
+    }
+    .title {
+        font-weight: 700;
+        color: #3E6A81;
+        text-transform: uppercase;
+    }
+    .overview-tile{
+        padding: 16px 25px;
+        border-radius: 8px;
+
+        .overview-info,
+        .title{
+            margin-bottom: 12px;
+        }
+        .date-options {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 12px 0 16px;
+            font-weight: 700;
+            div{
+                cursor: pointer;
+                background: #EFEFEF;
+                color: #8F8F8F;
+                border-radius: 4px;
+                margin: 3px;
+                width: fit-content;
+                min-width: 60px;
+                padding:4px 8px;
+                text-align: center;
+                :first-child{
+                    margin-left: 0;
+                }
+            }
+            .selected{
+                background: #004F6E;
+                color: #FFFFFF;
+            }
+        }
+        .overview-tag{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            div{
+                vertical-align: middle;
+            }
+        }
+        .overview-info{
+            display: flex;
+            justify-content: space-between;
+            div {
+                color: #565656;
+                text-transform: uppercase;
+            }
+            
+        }
     }
 }
 
@@ -1155,7 +1227,7 @@
             max-width: 1180px;
         }
     }
-    .recommended-cases {
+    .carousel-cases {
         width: 85%;
         max-width: 1180px;
     }
@@ -1177,14 +1249,13 @@
             flex-basis: 74%;
         }
     }
-    .recommended-cases {
+    .carousel-cases {
         width: 95%;
     }
 }
 
 @media (max-width: 1280px) {
     .case-discovery-search {
-        padding: 0 0 0 20px;
         .filters {
             min-width: 28%;
             width: 28%;

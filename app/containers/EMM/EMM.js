@@ -81,7 +81,6 @@ export default class EMM extends React.PureComponent {
             const isOpen = urlParams.get('open');
             //Remove from URL
             if (isOpen) {
-              window.history.pushState({}, document.title, window.location.pathname);
               this.openReport();
             }
           });

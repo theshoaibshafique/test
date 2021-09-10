@@ -47,6 +47,7 @@ import { Case } from './Case';
 import { StyledTabs, StyledTab } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
+import { Overview } from './Overview';
 
 
 const dataReducer = (state, event) => {
@@ -63,13 +64,14 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     SPECIALTIES: [],
     PROCEDURES: [],
     ORS: [],
+    OVERVIEW_DATA: {},
     isLoading: true,
     savedCases: [],
     facilityName: "",
     gracePeriod: 0,
     outlierThreshold: 0
   });
-  const { CASES, savedCases } = DATA;
+  const { CASES, OVERVIEW_DATA,  savedCases } = DATA;
   const [USERS, setUsers] = useState([]);
 
   const [flagReport, setFlagReport] = useState(null);
@@ -85,10 +87,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const urlParams = new URLSearchParams(window.location.search)
   //Open the caseId through URL
   const manualCaseId = urlParams.get('caseId')
-  //Remove from URL
-  if (manualCaseId) {
-    window.history.pushState({}, document.title, window.location.pathname);
-  }
   // Set CaseID for detailed case view
   const [caseId, setCaseId] = React.useState(manualCaseId);
   const handleChangeCaseId = (cId) => {
@@ -233,17 +231,19 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchRecentClips = getOverviewData("recent_clips");
     const fetchRecommendations = getOverviewData("recommendations");
     const fetchSavedCases = getOverviewData("bookmarks");
+    const fetchRecentSaved = getOverviewData("recent_bookmarks");
     const fetchOverview = getOverviewData("overview");
+    
 
 
-    Promise.all([fetchRecentFlags, fetchRecentClips, fetchRecommendations, fetchSavedCases, fetchOverview].map(function (e) {
+    Promise.all([fetchRecentFlags, fetchRecentClips, fetchRecommendations, fetchSavedCases, fetchRecentSaved, fetchOverview].map(function (e) {
       return e && e.then(function (result) {
         return result && result.data;
       })
-    })).then(([recentFlags, recentClips, recommendations, savedCases, overview]) => {
+    })).then(([recentFlags, recentClips, recommendations, savedCases, recentSaved, overview]) => {
       setData({
-        recentFlags, recentClips, recommendations,
-        savedCases, overview
+        OVERVIEW_DATA: {recentFlags, recentClips, recommendations,
+          savedCases, recentSaved, overview}
       });
     }).catch(function (results) {
 
@@ -368,9 +368,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         </StyledTabs>
 
         <TabPanel value={tabIndex} index={0}>
-          <div>
-            Overview Page
-          </div>
+          <Overview {...OVERVIEW_DATA}
+          />
         </TabPanel>
         <TabPanel value={tabIndex} index={2}>
           <BrowseCases
@@ -396,89 +395,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   );
 }
 
-function RecommendedCases(props) {
-  const { handleChangeCaseId, savedCases, handleSaveCase } = props;
-  const userFacility = useSelector(makeSelectUserFacility());
-  const userToken = useSelector(makeSelectToken());
-  const [CASES, setCases] = useState([]);
-
-  useEffect(() => {
-    const fetchRecCases = async () => {
-      await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}recommendations?facility_id=${userFacility}`, 'get', userToken, {})
-        .then(result => {
-          result = result.data;
-          result.forEach((c) => {
-            const { procedures, roomName } = c;
-            c.procedures = procedures.map((p) => {
-              const { procedureName } = p;
-              p.procedureName = procedureName.replace(/,(?=[^\s])/g, ', ');
-              return p;
-            });
-          });
-          setCases(result);
-        }).catch((error) => {
-          console.log("uh no.")
-        }).finally(() => {
-
-        });
-    }
-    fetchRecCases();
-  }, [])
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1280 },
-      items: 3,
-      slidesToSlide: 1 // optional, default to 1.
-    },
-    tablet: {
-      breakpoint: { max: 1280, min: 464 },
-      items: 2,
-      slidesToSlide: 1 // optional, default to 1.
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-      slidesToSlide: 1 // optional, default to 1.
-    }
-  };
-  const Controls = ({ next, previous, goToSlide, ...rest }) => {
-    return (
-      <div className="rec-header">
-        <div className="left-arrow" onClick={() => previous()}></div>
-        <div>Cases of Interest</div>
-        <div className="right-arrow" onClick={() => next()}></div>
-      </div>
-    )
-  }
-  return (<div className="recommended-cases">
-
-    <Carousel
-      className={'carousel'}
-      id="carousel" // default ''
-      infinite={true}
-      showDots={false}
-      responsive={responsive}
-      autoPlay={true}
-      autoPlaySpeed={6500}
-      arrows={false}
-      renderButtonGroupOutside={true}
-      customButtonGroup={<Controls />}
-    >
-      {
-        CASES.map((c, i) => (
-          <Case
-            isShort
-            key={i}
-            onClick={() => handleChangeCaseId(c.caseId)}
-            {...c}
-            isSaved={savedCases.includes(c.caseId)}
-            handleSaveCase={() => handleSaveCase(c.caseId)} />
-        ))
-      }
-    </Carousel>
-
-  </div>)
-}
 
 
 
