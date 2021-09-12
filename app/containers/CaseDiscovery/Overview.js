@@ -8,8 +8,8 @@ import { Case, EmptyCase, ThumbnailCase } from './Case';
 import { getTag } from './misc/helper-components';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, savedCases, recentSaved, overview } = props;
-    const {handleChangeCaseId, handleSaveCase} = props;
-    const commonProps = {handleChangeCaseId, handleSaveCase, savedCases};
+    const { handleChangeCaseId, handleSaveCase } = props;
+    const commonProps = { handleChangeCaseId, handleSaveCase, savedCases };
     const [showCarousel, setShowCarousel] = React.useState(true);
     // useEffect(() => {
     //     setTimeout(()=>{
@@ -21,18 +21,30 @@ export function Overview(props) {
             <div>
                 {overview && <OverviewTile overview={overview} />}
             </div>
-            <div className="carousel-list" style={showCarousel ? {} : {opacity:0}}>
-                <div className="title normal-text">Recommended Cases</div>
-                <CarouselCases cases={recommendations} {...commonProps} isInfinite/>
+            <div className="carousel-list" style={showCarousel ? {} : { opacity: 0 }}>
+                <CarouselCases
+                    cases={recommendations}
+                    title="Recommended Cases"
+                    {...commonProps}
+                    isInfinite />
 
-                <div className="title normal-text">Recently Flagged Cases</div>
-                <CarouselCases cases={recentFlags} {...commonProps} />
+                <CarouselCases
+                    cases={recentFlags}
+                    title="Recently Flagged Cases"
+                    {...commonProps}
+                />
 
-                <div className="title normal-text">Saved Cases</div>
-                <CarouselCases cases={recentSaved} {...commonProps} isInfinite/>
+                <CarouselCases
+                    cases={recentSaved}
+                    title="Saved Cases"
+                    {...commonProps}
+                    isInfinite />
 
-                <div className="title normal-text">Recently Flagged Clips</div>
-                <CarouselCases cases={recentClips} {...commonProps} isThumbnail />
+                <CarouselCases
+                    cases={recentClips}
+                    title="Recently Flagged Clips"
+                    {...commonProps}
+                    isThumbnail />
             </div>
         </div>
     )
@@ -44,7 +56,7 @@ function OverviewTile(props) {
     const { cases, rooms, tags } = overview && overview[timeframe] || {
         cases: null, rooms: null, tags: []
     };
-    tags.sort((a,b) => b.count - a.count );
+    tags.sort((a, b) => b.count - a.count);
     const changeDate = (key) => () => setTimeframe(key);
     const isSelectedDate = (key) => key == timeframe ? 'selected' : '';
     return (
@@ -97,11 +109,15 @@ const responsive = {
 };
 
 function CarouselCases(props) {
-    const { cases, savedCases, isThumbnail, isInfinite } = props;
-    const {handleChangeCaseId, handleSaveCase} = props;
+    const { cases, savedCases, isThumbnail, isInfinite, title } = props;
+    const { handleChangeCaseId, handleSaveCase } = props;
+    const caseLength = cases && cases.length || 0;
     const hasMinCases = cases.length > 3;
-    const [CASES, setCases] = useState(!hasMinCases ? [...cases, ...(new Array(3 - cases.length))] : cases);
-    
+    const [CASES, setCases] = useState(cases);
+    if (!caseLength){
+        return ''
+    }
+
 
     const Controls = ({ next, previous, goToSlide, carouselState, carouselState: { currentSlide, slidesToShow, totalItems }, ...rest }) => {
         if (!totalItems) {
@@ -109,9 +125,9 @@ function CarouselCases(props) {
         }
         let showLeft = currentSlide > 0;
         let showRight = slidesToShow * currentSlide < totalItems;
-        if (!hasMinCases){
+        if (!hasMinCases) {
             showLeft = showRight = false;
-        } else if (isInfinite){
+        } else if (isInfinite) {
             showLeft = showRight = true;
         }
         return (
@@ -122,9 +138,7 @@ function CarouselCases(props) {
         )
     }
     const renderCase = (c, i) => {
-        if (!c){
-            return <EmptyCase message="SAVED CASE"/>
-        } else if (isThumbnail) {
+        if (isThumbnail) {
             return <ThumbnailCase
                 key={i}
                 onClick={() => handleChangeCaseId(c.caseId)}
@@ -145,24 +159,28 @@ function CarouselCases(props) {
 
     }
 
-    return (<div className="carousel-cases">
+    return (
+        <React.Fragment>
+            <div className="title normal-text">{title}</div>
+            <div className="carousel-cases">
+                <Carousel
+                    className={'carousel'}
+                    // id="carousel" // default ''
+                    infinite={isInfinite}
+                    showDots={false}
+                    responsive={responsive}
+                    // autoPlay={true}
+                    autoPlaySpeed={6500}
+                    arrows={false}
+                    renderButtonGroupOutside={true}
+                    customButtonGroup={<Controls />}
+                >
+                    {
+                        CASES.map((c, i) => renderCase(c, i))
+                    }
+                </Carousel>
 
-        <Carousel
-            className={'carousel'}
-            // id="carousel" // default ''
-            infinite={isInfinite}
-            showDots={false}
-            responsive={responsive}
-            // autoPlay={true}
-            autoPlaySpeed={6500}
-            arrows={false}
-            renderButtonGroupOutside={true}
-            customButtonGroup={<Controls />}
-        >
-            {
-                CASES.map((c, i) => renderCase(c, i))
-            }
-        </Carousel>
-
-    </div>)
+            </div>
+        </React.Fragment>
+    )
 }

@@ -71,7 +71,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     gracePeriod: 0,
     outlierThreshold: 0
   });
-  const { CASES, OVERVIEW_DATA,  savedCases } = DATA;
+  const { CASES, OVERVIEW_DATA, savedCases } = DATA;
   const [USERS, setUsers] = useState([]);
 
   const [flagReport, setFlagReport] = useState(null);
@@ -233,7 +233,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchSavedCases = getOverviewData("bookmarks");
     const fetchRecentSaved = getOverviewData("recent_bookmarks");
     const fetchOverview = getOverviewData("overview");
-    
+
 
 
     Promise.all([fetchRecentFlags, fetchRecentClips, fetchRecommendations, fetchSavedCases, fetchRecentSaved, fetchOverview].map(function (e) {
@@ -243,8 +243,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     })).then(([recentFlags, recentClips, recommendations, savedCases, recentSaved, overview]) => {
       setData({
         savedCases,
-        OVERVIEW_DATA: {recentFlags, recentClips, recommendations,
-          recentSaved, overview}
+        OVERVIEW_DATA: {
+          recentFlags, recentClips, recommendations,
+          recentSaved, overview
+        }
       });
     }).catch(function (results) {
 
@@ -295,6 +297,22 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   const handleSaveCase = async (caseId) => {
     const isSav = savedCases.includes(caseId);
+    const recentSaved = OVERVIEW_DATA.recentSaved || [];
+    const index = recentSaved.map((c) => c.caseId).indexOf(caseId);
+    if (index > -1) {
+      recentSaved.splice(index, 1)
+    } else {
+      const found = CASES.find(c => c.caseId == caseId);
+      if (found) {
+        recentSaved.push(found)
+      }
+    }
+    setData({
+      OVERVIEW_DATA: {
+        ...OVERVIEW_DATA,
+        recentSaved
+      }
+    })
     await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
         logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
@@ -364,16 +382,16 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           textColor="primary"
         >
           <StyledTab label={"OVERVIEW"} />
-          <Divider orientation='vertical' style={{height:20, margin: 'auto 0'}}/>
+          <Divider orientation='vertical' style={{ height: 20, margin: 'auto 0' }} />
           <StyledTab label="BROWSE" />
         </StyledTabs>
 
         <TabPanel value={tabIndex} index={0}>
-          {OVERVIEW_DATA && <Overview 
-          handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
-          handleSaveCase={handleSaveCase}
-          savedCases={savedCases}
-          {...OVERVIEW_DATA}
+          {OVERVIEW_DATA && <Overview
+            handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
+            handleSaveCase={handleSaveCase}
+            savedCases={savedCases}
+            {...OVERVIEW_DATA}
           />}
         </TabPanel>
         <TabPanel value={tabIndex} index={2}>
