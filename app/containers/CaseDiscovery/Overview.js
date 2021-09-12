@@ -4,7 +4,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
 import { makeSelectToken, makeSelectUserFacility } from '../App/selectors';
-import { Case, ThumbnailCase } from './Case';
+import { Case, EmptyCase, ThumbnailCase } from './Case';
 import { getTag } from './misc/helper-components';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, savedCases, recentSaved, overview } = props;
@@ -44,6 +44,7 @@ function OverviewTile(props) {
     const { cases, rooms, tags } = overview && overview[timeframe] || {
         cases: null, rooms: null, tags: []
     };
+    tags.sort((a,b) => b.count - a.count );
     const changeDate = (key) => () => setTimeframe(key);
     const isSelectedDate = (key) => key == timeframe ? 'selected' : '';
     return (
@@ -96,31 +97,34 @@ const responsive = {
 };
 
 function CarouselCases(props) {
-    const { handleChangeCaseId, cases, savedCases, handleSaveCase, isThumbnail, isInfinite } = props;
-    const [CASES, setCases] = useState([]);
+    const { cases, savedCases, isThumbnail, isInfinite } = props;
+    const {handleChangeCaseId, handleSaveCase} = props;
+    const hasMinCases = cases.length > 3;
+    const [CASES, setCases] = useState(!hasMinCases ? [...cases, ...(new Array(3 - cases.length))] : cases);
     
-    useEffect(() => {
-        if (!cases) {
-            return;
-        }
-        setCases(cases);
-    }, [cases])
 
     const Controls = ({ next, previous, goToSlide, carouselState, carouselState: { currentSlide, slidesToShow, totalItems }, ...rest }) => {
-
         if (!totalItems) {
             return ''
         }
+        let showLeft = currentSlide > 0;
+        let showRight = slidesToShow * currentSlide < totalItems;
+        if (!hasMinCases){
+            showLeft = showRight = false;
+        } else if (isInfinite){
+            showLeft = showRight = true;
+        }
         return (
             <div className="rec-header">
-                {(isInfinite || currentSlide > 0) && <div className="left-arrow" onClick={() => previous()}></div>}
-                {(isInfinite || slidesToShow * currentSlide < totalItems) && <div className="right-arrow" onClick={() => next()}></div>}
+                {showLeft && <div className="left-arrow" onClick={() => previous()}></div>}
+                {showRight && <div className="right-arrow" onClick={() => next()}></div>}
             </div>
         )
     }
     const renderCase = (c, i) => {
-
-        if (isThumbnail) {
+        if (!c){
+            return <EmptyCase message="SAVED CASE"/>
+        } else if (isThumbnail) {
             return <ThumbnailCase
                 key={i}
                 onClick={() => handleChangeCaseId(c.caseId)}

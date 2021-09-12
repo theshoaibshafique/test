@@ -52,7 +52,7 @@ export function getTag(tag) {
 export function displayTags(tags, emrCaseId, detailed = null) {
   //Helper function that creates the tag
   const createTag = (tag, desc, i) => (
-    <LightTooltip key={`${tag}-${i}`} title={desc.map((line, i) => {
+    <LightTooltip key={`${tag}-${i}`} title={[tag,...desc].map((line, i) => {
       return <div key={i}>{line}</div>
     })} arrow={true}>
       <span

@@ -1171,11 +1171,16 @@
             flex-direction: column;
             justify-content: space-between;
             box-shadow: inset 0 0 0 1000px rgba(0, 79, 110, 0.6);
-            .title {
-                // -webkit-text-stroke: 0.5px black;
-                // background: black;
-                // padding: 2px 4px;
-                // border-radius: 4px;
+        }
+        .empty-case {
+            border: 2px dashed rgba(0, 0, 0, 0.12);
+            cursor: unset;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(0, 0, 0, 0.4);
+            &:hover {
+                box-shadow: none;
             }
         }
     }

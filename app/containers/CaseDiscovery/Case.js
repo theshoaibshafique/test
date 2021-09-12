@@ -89,16 +89,16 @@ export function ThumbnailCase(props) {
     onClick();
     logger.manualAddLog('click', `open-case-${caseId}`, formatCaseForLogs(props))
   }
-  
+
   const tagDisplays = displayTags([{ tagName: 'Flagged', toolTip }], caseId);
   return (
     <div className="case short thumbnail-case"
-      style={{background:`url(${thumbnailSrc})`}}
+      style={{ background: `url(${thumbnailSrc})` }}
       description={JSON.stringify(formatCaseForLogs(props))}
       key={caseId}
       onClick={handleClick} >
       <div className="case-header">
-        <div className="title" title={title} style={{color:"#fff"}}>
+        <div className="title" title={title} style={{ color: "#fff" }}>
           {title}
         </div>
         <div >
@@ -114,6 +114,15 @@ export function ThumbnailCase(props) {
         {tagDisplays}
       </div>
 
+    </div>
+  )
+}
+
+export function EmptyCase(props) {
+  const { message } = props;
+  return (
+    <div className="case short empty-case" >
+      {message}
     </div>
   )
 }
