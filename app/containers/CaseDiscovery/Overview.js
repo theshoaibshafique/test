@@ -12,18 +12,12 @@ export function Overview(props) {
     const { recentFlags, recentClips, recommendations, savedCases, recentSaved, overview } = props;
     const { handleChangeCaseId, handleSaveCase, handleFilterChange } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase, savedCases };
-    const [showCarousel, setShowCarousel] = React.useState(true);
-    // useEffect(() => {
-    //     setTimeout(()=>{
-    //         setShowCarousel(true);
-    //     },3000)
-    // },[])
     return (
         <div className="case-discovery-overview">
             <div>
                 <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
             </div>
-            <div className="carousel-list" style={showCarousel ? {} : { opacity: 0 }}>
+            <div className="carousel-list">
                 <CarouselCases
                     cases={recommendations}
                     title="Recommended Cases"
@@ -33,18 +27,21 @@ export function Overview(props) {
                 <CarouselCases
                     cases={recentFlags}
                     title="Recently Flagged Cases"
+                    message="No Recently Flagged Cases"
                     {...commonProps}
                 />
 
                 <CarouselCases
                     cases={recentSaved}
                     title="Saved Cases"
+                    message="No Saved Cases"
                     {...commonProps}
                     isInfinite />
 
                 <CarouselCases
                     cases={recentClips}
                     title="Recently Flagged Clips"
+                    message="No Recently Flagged Clips"
                     {...commonProps}
                     isThumbnail />
             </div>
@@ -119,13 +116,13 @@ const responsive = {
 };
 
 function CarouselCases(props) {
-    const { cases, savedCases, isThumbnail, isInfinite, title } = props;
+    const { cases, savedCases, isThumbnail, isInfinite, title, message } = props;
     const { handleChangeCaseId, handleSaveCase } = props;
     const caseLength = cases && cases.length || 0;
     const hasMinCases = cases.length > 3;
     const [CASES, setCases] = useState(cases);
     if (!caseLength){
-        return ''
+        cases.push(null)
     }
 
 
@@ -148,7 +145,9 @@ function CarouselCases(props) {
         )
     }
     const renderCase = (c, i) => {
-        if (isThumbnail) {
+        if (!c){
+            return <EmptyCase message={message}/>
+        } if (isThumbnail) {
             return <ThumbnailCase
                 key={i}
                 onClick={() => handleChangeCaseId(c.caseId)}
@@ -175,11 +174,10 @@ function CarouselCases(props) {
             <div className="carousel-cases">
                 <Carousel
                     className={'carousel'}
-                    // id="carousel" // default ''
                     infinite={isInfinite}
                     showDots={false}
                     responsive={responsive}
-                    // autoPlay={true}
+                    autoPlay={true}
                     autoPlaySpeed={6500}
                     arrows={false}
                     renderButtonGroupOutside={true}

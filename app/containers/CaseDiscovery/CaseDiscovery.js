@@ -349,7 +349,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleSaveCase = async (caseId) => {
     const isSav = savedCases.includes(caseId);
     const recentSaved = OVERVIEW_DATA.recentSaved || [];
-    const index = recentSaved.map((c) => c.caseId).indexOf(caseId);
+    const index = recentSaved.map((c) => c && c.caseId).indexOf(caseId);
     if (index > -1) {
       recentSaved.splice(index, 1)
     } else {

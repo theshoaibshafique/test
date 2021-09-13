@@ -1172,17 +1172,18 @@
             justify-content: space-between;
             box-shadow: inset 0 0 0 1000px rgba(0, 79, 110, 0.6);
         }
-        // .empty-case {
-        //     border: 2px dashed rgba(0, 0, 0, 0.12);
-        //     cursor: unset;
-        //     display: flex;
-        //     justify-content: center;
-        //     align-items: center;
-        //     color: rgba(0, 0, 0, 0.4);
-        //     &:hover {
-        //         box-shadow: none;
-        //     }
-        // }
+        .empty-case {
+            border: 2px dashed rgba(0, 0, 0, 0.12);
+            cursor: unset;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(0, 0, 0, 0.4);
+            &:hover {
+                box-shadow: none;
+            }
+            min-height: 160px;
+        }
     }
     .title {
         font-weight: 700;
@@ -1256,12 +1257,15 @@
     }
 }
 @media (max-width: $desktop-width) {
-    .case-discovery-overview .overview-tile .date-options div{
+    .case-discovery-overview .overview-tile .date-options div {
         width: 100%;
     }
     .carousel-cases {
         width: 65%;
         max-width: 1180px;
+        .react-multi-carousel-item {
+            min-width: 250px;
+        }
     }
 }
 
@@ -1284,6 +1288,9 @@
     }
     .carousel-cases {
         width: 95%;
+        .react-multi-carousel-item {
+            min-width: 374px;
+        }
     }
 }
 
