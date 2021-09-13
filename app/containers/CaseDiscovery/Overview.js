@@ -121,9 +121,6 @@ function CarouselCases(props) {
     const caseLength = cases && cases.length || 0;
     const hasMinCases = cases.length > 3;
     const [CASES, setCases] = useState(cases);
-    if (!caseLength){
-        cases.push(null)
-    }
 
 
     const Controls = ({ next, previous, goToSlide, carouselState, carouselState: { currentSlide, slidesToShow, totalItems }, ...rest }) => {
@@ -184,7 +181,7 @@ function CarouselCases(props) {
                     customButtonGroup={<Controls />}
                 >
                     {
-                        CASES.map((c, i) => renderCase(c, i))
+                        (caseLength ? CASES : [null]).map((c, i) => renderCase(c, i))
                     }
                 </Carousel>
 
