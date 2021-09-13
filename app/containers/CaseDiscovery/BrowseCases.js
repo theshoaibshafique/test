@@ -98,29 +98,19 @@ export function BrowseCases(props) {
 
   const getCasesView = () => {
     if (filterCases && filterCases.length) {
-
       return (
-        
+        <TransitionGroup>{
           filterCases.map((c, i) => (
-            <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} isSaved={savedCases.includes(c.caseId)} handleSaveCase={() => handleSaveCase(c.caseId)} />
+            <CSSTransition
+              key={c.caseId}
+              timeout={500}
+              classNames="item"
+            >
+              <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} isSaved={savedCases.includes(c.caseId)} handleSaveCase={() => handleSaveCase(c.caseId)} />
+            </CSSTransition>
           )).slice(0, numShownCases)
-        
+        }</TransitionGroup>
       )
-      // ### TODO: figure out how to re-add transition effects
-
-      // return (
-      //   <TransitionGroup>{
-      //     filterCases.map((c, i) => (
-      //       <CSSTransition
-      //         key={c.caseId}
-      //         timeout={500}
-      //         classNames="item"
-      //       >
-      //         <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} isSaved={savedCases.includes(c.caseId)} handleSaveCase={() => handleSaveCase(c.caseId)} />
-      //       </CSSTransition>
-      //     )).slice(0, numShownCases)
-      //   }</TransitionGroup>
-      // )
     }
     return (
       <div className="no-cases">

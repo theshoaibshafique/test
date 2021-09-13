@@ -1227,7 +1227,7 @@
             justify-content: space-between;
             margin-bottom: 4px;
             div {
-                vertical-align: middle;
+                align-self: center;
             }
         }
         .overview-info {
@@ -1251,11 +1251,21 @@
         }
     }
     .carousel-cases {
-        width: 85%;
+        width: 65%;
         max-width: 1180px;
     }
 }
-@media (max-width: 1600px) {
+@media (max-width: $desktop-width) {
+    .case-discovery-overview .overview-tile .date-options div{
+        width: 100%;
+    }
+    .carousel-cases {
+        width: 65%;
+        max-width: 1180px;
+    }
+}
+
+@media (min-width: 1600px) {
     .case-discovery-search {
         .no-cases,
         .case,
@@ -1288,5 +1298,9 @@
             max-width: 72%;
             flex-basis: 72%;
         }
+    }
+    .carousel-cases {
+        width: 50%;
+        max-width: 1180px;
     }
 }
