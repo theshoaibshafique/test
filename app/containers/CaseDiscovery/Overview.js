@@ -5,10 +5,12 @@ import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
 import { makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { Case, EmptyCase, ThumbnailCase } from './Case';
+import { DATE_OPTIONS } from './misc/constants';
 import { getTag } from './misc/helper-components';
+import { getPresetDates } from './misc/Utils';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, savedCases, recentSaved, overview } = props;
-    const { handleChangeCaseId, handleSaveCase } = props;
+    const { handleChangeCaseId, handleSaveCase, handleFilterChange } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase, savedCases };
     const [showCarousel, setShowCarousel] = React.useState(true);
     // useEffect(() => {
@@ -19,7 +21,7 @@ export function Overview(props) {
     return (
         <div className="case-discovery-overview">
             <div>
-                {overview && <OverviewTile overview={overview} />}
+                <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
             </div>
             <div className="carousel-list" style={showCarousel ? {} : { opacity: 0 }}>
                 <CarouselCases
@@ -50,8 +52,15 @@ export function Overview(props) {
     )
 }
 
+const dateMap = {
+    all: DATE_OPTIONS[0],
+    week: DATE_OPTIONS[1],
+    month: DATE_OPTIONS[2],
+    year: DATE_OPTIONS[3]
+}
+
 function OverviewTile(props) {
-    const { overview } = props;
+    const { overview, handleFilterChange } = props;
     const [timeframe, setTimeframe] = React.useState('month');
     const { cases, rooms, tags } = overview && overview[timeframe] || {
         cases: null, rooms: null, tags: []
@@ -59,6 +68,7 @@ function OverviewTile(props) {
     tags.sort((a, b) => b.count - a.count);
     const changeDate = (key) => () => setTimeframe(key);
     const isSelectedDate = (key) => key == timeframe ? 'selected' : '';
+    const date = {selected: dateMap[timeframe], ...getPresetDates(dateMap[timeframe])}
     return (
         <Card variant="outlined" className="overview-tile">
             <div className="title normal-text">OVERVIEW</div>
@@ -79,7 +89,7 @@ function OverviewTile(props) {
             <div className="title normal-text">TAGS</div>
             {tags.map((t) => (
                 <div className="overview-tag subtext">
-                    <span className={`case-tag ${t.name}`}>
+                    <span className={`case-tag pointer ${t.name}`} onClick={() => {handleFilterChange('overview', {tags:[t.name], date })}}>
                         <span>{getTag(t.name)}</span>
                         <div className="display">{t.name}</div>
                     </span>

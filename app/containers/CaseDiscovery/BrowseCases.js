@@ -16,7 +16,7 @@ import { makeSelectIsAdmin, makeSelectLogger } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import { useSelector } from 'react-redux';
-import { getCasesInView, getPresetDates } from './misc/Utils';
+import { formatCaseForLogs, getCasesInView, getPresetDates } from './misc/Utils';
 
 const MenuProps = {
   PaperProps: {
@@ -26,83 +26,18 @@ const MenuProps = {
   }
 }
 
-const searchReducer = (state, event) => {
-  if (event.name == 'date-clear') {
-    event.name = 'date'
-  } else if (event.name == 'date') {
-    event.value = {
-      selected: event.value.key,
-      ...getPresetDates(event.value.key)
-    }
-  } else if (event.name == 'custom-to') {
-    event.name = 'date'
-    event.value = {
-      ...state.date,
-      to: event.value,
-    }
 
-  } else if (event.name == 'custom-from') {
-    event.name = 'date'
-    event.value = {
-      ...state.date,
-      from: event.value
-    }
-  }
-  const logger = event.logger;
-  logger && logger.manualAddLog('onchange', event.name, event.value)
-  return {
-    ...state,
-    [event.name]: event.value
-  }
-}
 
 export function BrowseCases(props) {
-  const {handleChangeCaseId, handleSaveCase} = props;
+  const {handleChangeCaseId, handleSaveCase, handleFilterChange, searchData} = props;
   const {CASES, SPECIALTIES, PROCEDURES, ORS, isLoading, savedCases} = props;
   const { facilityName, gracePeriod, outlierThreshold } = props;
-  //TODO: replace min/maxDate
-  const minDate = moment().subtract(100, 'years');
-  const maxDate = moment();
-  const defaultDate = {
-    selected: DATE_OPTIONS[0],
-    from: minDate,
-    to: maxDate
-  };
+  
   const [numShownCases, setNumShownCases] = React.useState(10);
   const logger = useSelector(makeSelectLogger());
 
-  const [searchData, setSearchData] = useReducer(searchReducer, {
-    date: defaultDate,
-    caseId: "",
-    specialties: [],
-    procedures: [],
-    tags: [],
-    roomNames: [],
-    onlySavedCases: false
-  });
+  
   const classes = useStyles();
-
-  // Scrol to top on filter change 
-  const topElementRef = useRef(null)
-  const scrollToTop = () => {
-    topElementRef.current.scrollIntoView(true);
-    document.getElementById("cases-id").scrollTop -= 100;
-    //Log the top elements manually after animation
-    setTimeout(() => {
-      logger && logger.manualAddLog('scroll', 'cases-in-view', getCasesInView());
-    }, 1000)
-  }
-
-  // Change/update the filter
-  const handleChange = (event, value) => {
-    scrollToTop();
-
-    setSearchData({
-      name: event,
-      value: value,
-      logger: logger
-    })
-  }
 
   
 
@@ -165,18 +100,27 @@ export function BrowseCases(props) {
     if (filterCases && filterCases.length) {
 
       return (
-        <TransitionGroup>{
+        
           filterCases.map((c, i) => (
-            <CSSTransition
-              key={c.caseId}
-              timeout={500}
-              classNames="item"
-            >
-              <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} isSaved={savedCases.includes(c.caseId)} handleSaveCase={() => handleSaveCase(c.caseId)} />
-            </CSSTransition>
+            <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} isSaved={savedCases.includes(c.caseId)} handleSaveCase={() => handleSaveCase(c.caseId)} />
           )).slice(0, numShownCases)
-        }</TransitionGroup>
+        
       )
+      // ### TODO: figure out how to re-add transition effects
+
+      // return (
+      //   <TransitionGroup>{
+      //     filterCases.map((c, i) => (
+      //       <CSSTransition
+      //         key={c.caseId}
+      //         timeout={500}
+      //         classNames="item"
+      //       >
+      //         <Case key={i} onClick={() => handleChangeCaseId(c.caseId)} {...c} isSaved={savedCases.includes(c.caseId)} handleSaveCase={() => handleSaveCase(c.caseId)} />
+      //       </CSSTransition>
+      //     )).slice(0, numShownCases)
+      //   }</TransitionGroup>
+      // )
     }
     return (
       <div className="no-cases">
@@ -248,6 +192,20 @@ export function BrowseCases(props) {
     setShowTagsModal(show);
   }
 
+  // Scrol to top on filter change 
+  const scrollToTop = () => {
+    // topElementRef.current.scrollIntoView(true);
+    document.getElementById("cases-id").scrollTop = 0;
+    //Log the top elements manually after animation
+    setTimeout(() => {
+      logger && logger.manualAddLog('scroll', 'cases-in-view', getCasesInView());
+    }, 1000)
+  }
+  const handleChange = (e,v) => {
+    scrollToTop();
+    handleFilterChange(e,v)
+  }
+
   
   return (
     <Grid container spacing={0} className="case-discovery-search">
@@ -282,7 +240,7 @@ export function BrowseCases(props) {
 
         <div className="select-header">
           <InputLabel className={classes.inputLabel}>Date</InputLabel>
-          <div hidden={searchData.date.selected == "Any Time"} className={classes.clear} onClick={(e, v) => handleChange('date-clear', defaultDate)}>
+          <div hidden={searchData.date.selected == "Any Time"} className={classes.clear} onClick={(e, v) => handleChange('date-clear')}>
             Clear
           </div>
         </div>
@@ -419,11 +377,6 @@ export function BrowseCases(props) {
 
       </Grid>
       <Grid item xs={9} className="case-container">
-        {/* <RecommendedCases
-          savedCases={savedCases}
-          handleSaveCase={handleSaveCase}
-          handleChangeCaseId={handleChangeCaseId}
-        /> */}
         <div style={{ position: 'relative' }}>
           <div className="header">
             <div className="header-label">
@@ -446,7 +399,6 @@ export function BrowseCases(props) {
           </div>
           {isLoading ? <LoadingIndicator /> : (
             <div id="cases-id" className="cases">
-              <div ref={topElementRef}></div>
               {getCasesView()}
               {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" id="load-more" disableElevation onClick={() => {
                 setNumShownCases(numShownCases + 10);

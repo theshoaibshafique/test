@@ -257,3 +257,22 @@ export const StyledTab = withStyles((theme) => ({
     color: '#004F6E !important'
   }
 }))((props) => <Tab disableRipple {...props} />);
+
+export function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      // TODO: find a better way to hide "OVERVIEW" page
+      // We always keep Overview (index =0) rendered because the carousels glitch otherwise
+      hidden={value !== index && index!=0}
+      style={value !== index && index==0 ? {position:'absolute', left:-10000} : {}}
+      id={`nav-tabpanel-${index}`}
+      aria-labelledby={`nav-tab-${index}`}
+      {...other}
+    >
+      {children}
+    </div>
+  );
+}

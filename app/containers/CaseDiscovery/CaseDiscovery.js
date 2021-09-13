@@ -23,7 +23,7 @@ import Close from './icons/Close.svg';
 import Plus from './icons/Plus.svg';
 import moment from 'moment/moment';
 
-import { LightTooltip, SSTSwitch, StyledRadio, TabPanel } from '../../components/SharedComponents/SharedComponents';
+import { LightTooltip, SSTSwitch, StyledRadio } from '../../components/SharedComponents/SharedComponents';
 import ArrowBack from '@material-ui/icons/ArrowBackIos';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
@@ -44,7 +44,7 @@ import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { Case } from './Case';
-import { StyledTabs, StyledTab } from './misc/helper-components';
+import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
@@ -54,6 +54,57 @@ const dataReducer = (state, event) => {
   return {
     ...state,
     ...event
+  }
+}
+const minDate = moment().subtract(100, 'years');
+const maxDate = moment();
+const defaultDate = {
+  selected: DATE_OPTIONS[0],
+  from: minDate,
+  to: maxDate
+};
+const defaultState = {
+  date: defaultDate,
+  caseId: "",
+  specialties: [],
+  procedures: [],
+  tags: [],
+  roomNames: [],
+  onlySavedCases: false
+};
+const searchReducer = (state, event) => {
+  if (event.name == 'overview'){
+    return {
+      ...defaultState,
+      ...event.value
+    }
+  } else if (event.name == 'date-clear') {
+    event.name = 'date'
+    event.value = defaultDate;
+  } else if (event.name == 'date') {
+    event.value = {
+      selected: event.value.key,
+      ...getPresetDates(event.value.key)
+    }
+  } else if (event.name == 'custom-to') {
+    event.name = 'date'
+    event.value = {
+      ...state.date,
+      to: event.value,
+    }
+
+  } else if (event.name == 'custom-from') {
+    event.name = 'date'
+    event.value = {
+      ...state.date,
+      from: event.value
+    }
+  }
+  const logger = event.logger;
+  logger && logger.manualAddLog('onchange', event.name, event.value)
+  return {
+    ...state,
+    [event.name]: event.value
   }
 }
 
@@ -372,6 +423,18 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     setTabIndex(tabIndex);
   }
 
+
+  // Change/update the filter
+  const handleFilterChange = (event, value) => {
+    setSearchData({
+      name: event,
+      value: value,
+      logger: logger
+    })
+  }
+
+  const [searchData, setSearchData] = useReducer(searchReducer, defaultState);
+
   return (
     <section className="case-discovery">
       <div hidden={caseId}>
@@ -391,11 +454,14 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
             handleSaveCase={handleSaveCase}
             savedCases={savedCases}
+            handleFilterChange={(e, v) => { handleFilterChange(e, v); setTabIndex(2) }}
             {...OVERVIEW_DATA}
-          />}
+          /> || <LoadingIndicator />}
         </TabPanel>
         <TabPanel value={tabIndex} index={2}>
           <BrowseCases
+            searchData={searchData}
+            handleFilterChange={(e, v) => handleFilterChange(e, v)}
             handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
             handleSaveCase={handleSaveCase}
             {...DATA}
