@@ -6,9 +6,10 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
 import { formatCaseForLogs } from './misc/Utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectLogger } from '../App/selectors';
 import { displayTags } from './misc/helper-components';
+import { setFlaggedClip } from '../App/cd-actions';
 const MAX_SHORT_TAGS = 4;
 export function Case(props) {
   const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick, isSaved, handleSaveCase, isShort } = props;
@@ -83,12 +84,16 @@ export function Case(props) {
 }
 
 export function ThumbnailCase(props) {
-  const { title, caseId, thumbnailSrc, toolTip, isSaved, handleSaveCase, onClick } = props;
+  const { title, caseId, thumbnailSrc, toolTip, isSaved, clipId, flagId, handleSaveCase, onClick } = props;
   const logger = useSelector(makeSelectLogger());
+  const dispatch = useDispatch();
   const handleClick = () => {
+    dispatch(setFlaggedClip({clipId,flagId}));
     onClick();
     logger.manualAddLog('click', `open-case-${caseId}`, formatCaseForLogs(props))
   }
+  
+
 
   const tagDisplays = displayTags([{ tagName: 'Flagged', toolTip }], caseId, true);
   return (

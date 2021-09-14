@@ -34,7 +34,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation, getQuestionCount, getPresetDates } from './misc/Utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectComplications, makeSelectEMMRequestAccess, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
@@ -48,6 +48,8 @@ import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
+import { showDetailedCase } from '../App/cd-actions';
+import { selectDetailedCase } from '../App/cd-selectors';
 
 
 const dataReducer = (state, event) => {
@@ -109,6 +111,7 @@ const searchReducer = (state, event) => {
 }
 
 export default function CaseDiscovery(props) { // eslint-disable-line react/prefer-stateless-function
+  const dispatch = useDispatch();
 
   const [DATA, setData] = useReducer(dataReducer, {
     CASES: [],
@@ -133,7 +136,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
-
+  const DETAILED_CASE = useSelector(selectDetailedCase());
+  
 
   const urlParams = new URLSearchParams(window.location.search)
   //Open the caseId through URL
@@ -379,11 +383,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
 
   // const [isLoading, setIsLoading] = useState(true);
-  const [DETAILED_CASE, setDetailedCase] = useState(null);
 
   useEffect(() => {
     if (caseId == null) {
-      setDetailedCase(null)
+      dispatch(showDetailedCase(null));
       return;
     }
 
@@ -396,8 +399,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             logger && logger.manualAddLog('click', `swap-case-${result.metaData.emrCaseId}`, formatCaseForLogs(newCase));
           }
 
-          setDetailedCase(result)
-
+          dispatch(showDetailedCase(result));
         }).catch((error) => {
           console.log("oh no " + error)
           setCaseId(null)
@@ -411,10 +413,11 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   // FLAG SUBMISSION HANDLER - UPDATE DETAILED CASE, ADDING NEWLY SUBMITTED FLAG TO CASE.
   const handleUpdateDetailedCase = (res) => {
     if (res) {
-      setDetailedCase(prevState => ({
-        ...prevState,
+      dispatch(showDetailedCase({
+        ...DETAILED_CASE,
         tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...prevState.tags]
       }));
+      
     }
   };
 

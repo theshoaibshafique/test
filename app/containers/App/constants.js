@@ -29,3 +29,6 @@ export const EMM_PUBLISH_ACCESS = 'insights - set emm publish access'
 export const EMM_PRESENTER_DIALOG = 'insights - set emm presenter dialog'
 export const EMM_PRESENTER_MODE = 'insights - set emm presenter mode'
 export const DEFAULT_LOCALE = 'en';
+
+export const CD_DETAILED_CASE = 'insights - set Detailed Case data'
+export const CD_FLAGGED_CLIP = 'insights - set Flagged Case data'

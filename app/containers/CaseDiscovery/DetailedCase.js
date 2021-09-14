@@ -28,7 +28,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { isUndefined } from 'lodash';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation, getQuestionCount, getPresetDates } from './misc/Utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectComplications, makeSelectEMMRequestAccess, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
@@ -39,12 +39,14 @@ import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { Case } from './Case';
 import { displayTags, getTag, TagsSelect, useStyles } from './misc/helper-components';
+import { selectFlaggedClip } from '../App/cd-selectors';
+import { setFlaggedClip } from '../App/cd-actions';
 export function DetailedCase(props) {
   const { hidden, handleChangeCaseId, USERS, isSaved, handleSaveCase,flagReport, roomIds, setData, handleSetCases, handleUpdateDetailedCase } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
-
+  
   const COMPLICATIONS = useSelector(makeSelectComplications());
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -1696,6 +1698,7 @@ function ClipTimeline(props) {
   const isAdmin = useSelector(makeSelectIsAdmin());
   const [presenterMode, setPresenterMode] = React.useState(false);
   const [presenterDialog, setPresenterDialog] = React.useState(false);
+  const dispatch = useDispatch();
   const closePresenterDialog = (choice) => {
     (choice) && setPresenterMode(choice);
     setPresenterDialog(false);
@@ -1757,11 +1760,21 @@ function ClipTimeline(props) {
       t.index = i;
     } else {
       logger && logger.manualAddLog('click', `close-clip-${selectedMarker.clipId}`)
+      dispatch(setFlaggedClip(null));
     }
 
     setSelect(t);
 
   }
+  const flaggedClip = useSelector(selectFlaggedClip());
+  useEffect(() => {
+    if (!flaggedClip){
+      return;
+    }
+    const i = timeline.findIndex((t) => t.clipId == flaggedClip.clipId);
+    handleSelect(timeline[i], i);
+    
+  },[flaggedClip])
 
   const publishClip = () => {
     globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'post', userToken, {})

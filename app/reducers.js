@@ -7,6 +7,7 @@ import { combineReducers } from 'redux-immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import globalReducer from 'containers/App/reducer';
 import emmReducer from 'containers/App/emm-reducer';
+import cdReducer from 'containers/App/cd-reducer';
 
 /*
  * routeReducer
@@ -44,6 +45,7 @@ export default function createReducer(injectedReducers) {
     route: routeReducer,
     global: globalReducer,
     emm: emmReducer,
+    cd: cdReducer,
     ...injectedReducers,
   });
 }
