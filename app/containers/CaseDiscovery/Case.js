@@ -18,7 +18,7 @@ export function Case(props) {
   const date = moment(wheelsOut).format("MMMM DD");
   const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
   const daysAgo = `${date} (${diff} ${diff == 1 ? 'day' : 'days'} ago)`;
-  const tagDisplays = displayTags(tags, emrCaseId);
+  const tagDisplays = displayTags(tags, emrCaseId, isShort);
 
   const procedureList = [...new Set(procedures.slice(1).map((p) => p.procedureName))];
   const specialtyList = [...new Set(procedures.map((p) => p.specialtyName))];
@@ -90,7 +90,7 @@ export function ThumbnailCase(props) {
     logger.manualAddLog('click', `open-case-${caseId}`, formatCaseForLogs(props))
   }
 
-  const tagDisplays = displayTags([{ tagName: 'Flagged', toolTip }], caseId);
+  const tagDisplays = displayTags([{ tagName: 'Flagged', toolTip }], caseId, true);
   return (
     <div className="case short thumbnail-case"
       style={{ background: `url(${thumbnailSrc})` }}

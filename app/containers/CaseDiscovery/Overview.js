@@ -14,13 +14,18 @@ export function Overview(props) {
     const commonProps = { handleChangeCaseId, handleSaveCase, savedCases };
     return (
         <div className="case-discovery-overview">
-            <div>
-                <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
-            </div>
+            <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
             <div className="carousel-list">
                 <CarouselCases
                     cases={recommendations}
                     title="Recommended Cases"
+                    {...commonProps}
+                    isInfinite />
+
+                <CarouselCases
+                    cases={recentSaved}
+                    title="Saved Cases"
+                    message="No Saved Cases"
                     {...commonProps}
                     isInfinite />
 
@@ -30,13 +35,6 @@ export function Overview(props) {
                     message="No Recently Flagged Cases"
                     {...commonProps}
                 />
-
-                <CarouselCases
-                    cases={recentSaved}
-                    title="Saved Cases"
-                    message="No Saved Cases"
-                    {...commonProps}
-                    isInfinite />
 
                 <CarouselCases
                     cases={recentClips}
@@ -65,7 +63,7 @@ function OverviewTile(props) {
     tags.sort((a, b) => b.count - a.count);
     const changeDate = (key) => () => setTimeframe(key);
     const isSelectedDate = (key) => key == timeframe ? 'selected' : '';
-    const date = {selected: dateMap[timeframe], ...getPresetDates(dateMap[timeframe])}
+    const date = { selected: dateMap[timeframe], ...getPresetDates(dateMap[timeframe]) }
     return (
         <Card variant="outlined" className="overview-tile">
             <div className="title normal-text">OVERVIEW</div>
@@ -86,11 +84,11 @@ function OverviewTile(props) {
             <div className="title normal-text">TAGS</div>
             {tags.map((t) => (
                 <div className="overview-tag subtext">
-                    <span className={`case-tag pointer ${t.name}`} onClick={() => {handleFilterChange('overview', {tags:[t.name], date })}}>
+                    <span className={`case-tag pointer ${t.name}`} onClick={() => { handleFilterChange('overview', { tags: [t.name], date }) }}>
                         <span>{getTag(t.name)}</span>
                         <div className="display">{t.name}</div>
                     </span>
-                    <div>{t.count}</div>
+                    <div style={{ marginLeft: '8px' }}>{t.count}</div>
                 </div>
             ))}
         </Card>
@@ -142,8 +140,8 @@ function CarouselCases(props) {
         )
     }
     const renderCase = (c, i) => {
-        if (!c){
-            return <EmptyCase message={message}/>
+        if (!c) {
+            return <EmptyCase message={message} />
         } if (isThumbnail) {
             return <ThumbnailCase
                 key={i}

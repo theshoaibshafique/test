@@ -75,6 +75,12 @@
 .case-discovery-overview,
 .case-discovery-search {
     padding: 0 0 0 2em;
+    .no-cases,
+    .case,
+    .header {
+        width: 85%;
+        max-width: 1180px;
+    }
     .header,
     .header-label {
         font-family: "Noto Sans";
@@ -1100,6 +1106,11 @@
     display: flex;
     flex-direction: column-reverse;
     margin-bottom: 24px;
+    width: 80%;
+    max-width: 1180px;
+    .react-multi-carousel-item {
+        min-width: 250px;
+    }
     .case-tag img {
         width: 22px !important;
         height: 22px !important;
@@ -1193,7 +1204,7 @@
     .overview-tile {
         padding: 16px 25px;
         border-radius: 8px;
-
+        min-width: 375px;
         .overview-info,
         .title {
             margin-bottom: 12px;
@@ -1242,34 +1253,7 @@
     }
 }
 
-@media (min-width: $desktop-width) {
-    .case-discovery-search {
-        .no-cases,
-        .case,
-        .header {
-            width: 85%;
-            max-width: 1180px;
-        }
-    }
-    .carousel-cases {
-        width: 65%;
-        max-width: 1180px;
-    }
-}
-@media (max-width: $desktop-width) {
-    .case-discovery-overview .overview-tile .date-options div {
-        width: 100%;
-    }
-    .carousel-cases {
-        width: 65%;
-        max-width: 1180px;
-        .react-multi-carousel-item {
-            min-width: 250px;
-        }
-    }
-}
-
-@media (min-width: 1600px) {
+@media (max-width: 1600px) {
     .case-discovery-search {
         .no-cases,
         .case,
@@ -1286,10 +1270,50 @@
             flex-basis: 74%;
         }
     }
+    .case-discovery-overview .overview-tile {
+        min-width: 26%;
+        .date-options div {
+            width: 100%;
+        }
+    }
     .carousel-cases {
-        width: 95%;
+        width: 65%;
         .react-multi-carousel-item {
-            min-width: 374px;
+            min-width: 220px;
+        }
+    }
+}
+
+// @media (min-width: $desktop-width) {
+//     .case-discovery-search {
+//         .no-cases,
+//         .case,
+//         .header {
+//             width: 85%;
+//             max-width: 1180px;
+//         }
+//     }
+//     .case-discovery-overview .overview-tile {
+//         // min-width: 26%;
+//         max-width: 30%;
+//     }
+//     .carousel-cases {
+//         width: 75%;
+//         max-width: 1180px;
+//         .react-multi-carousel-item {
+//             min-width: 250px;
+//         }
+//     }
+// }
+@media (max-width: $desktop-width) {
+    .case-discovery-overview .overview-tile {
+        min-width: 25%;
+    }
+    .carousel-cases {
+        width: 60%;
+        max-width: 1180px;
+        .react-multi-carousel-item {
+            min-width: 220px;
         }
     }
 }

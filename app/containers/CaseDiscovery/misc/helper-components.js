@@ -49,11 +49,11 @@ export function getTag(tag) {
   }
 }
 
-export function displayTags(tags, emrCaseId, detailed = null) {
+export function displayTags(tags, emrCaseId, isShort, detailed = null) {
   //Helper function that creates the tag
   const createTag = (tag, desc, i) => (
-    <LightTooltip key={`${tag}-${i}`} title={[`${tag}:`,...desc].map((line, i) => {
-      return <div key={i}>{line}</div>
+    <LightTooltip key={`${tag}-${i}`} title={(isShort ? [`${tag}:`,...desc]:desc).map((line, i) => {
+      return <div key={i} style={i==0&&isShort?{marginBottom:4}:{}}>{line}</div>
     })} arrow={true}>
       <span
         className={`case-tag ${tag} log-mouseover`}
