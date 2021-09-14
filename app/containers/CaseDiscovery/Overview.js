@@ -126,7 +126,8 @@ function CarouselCases(props) {
             return ''
         }
         let showLeft = currentSlide > 0;
-        let showRight = slidesToShow * currentSlide < totalItems;
+        let showRight = slidesToShow * (currentSlide+1) < totalItems;
+        
         if (!hasMinCases) {
             showLeft = showRight = false;
         } else if (isInfinite) {

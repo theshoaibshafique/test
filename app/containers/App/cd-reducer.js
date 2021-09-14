@@ -24,13 +24,11 @@ const initialState = fromJS({
 });
 
 function cdReducer(state = initialState, action) {
-  console.log(action.type);
   switch (action.type) {
     case CD_DETAILED_CASE:
       return state
         .set('detailedCase', action.detailedCase)
     case CD_FLAGGED_CLIP:
-      console.log('HERE', action)
       return state
         .set('flaggedClip', action.flaggedClip)
     default:
