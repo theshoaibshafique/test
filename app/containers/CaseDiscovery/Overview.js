@@ -24,10 +24,10 @@ export function Overview(props) {
 
                 <CarouselCases
                     cases={recentSaved}
-                    title="Saved Cases"
-                    message="No Saved Cases"
+                    title="Recently Saved Cases"
+                    message="No Recently Saved Cases"
                     {...commonProps}
-                    isInfinite />
+                    />
 
                 <CarouselCases
                     cases={recentFlags}
