@@ -376,7 +376,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           'savedCases': result
         })
       }).catch((error) => {
-        console.log("uh no.")
+        console.log("uh no", error)
       });
 
   }
@@ -415,7 +415,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     if (res) {
       dispatch(showDetailedCase({
         ...DETAILED_CASE,
-        tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...prevState.tags]
+        tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...DETAILED_CASE.tags]
       }));
       
     }
