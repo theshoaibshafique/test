@@ -20,7 +20,12 @@ import {
   CD_CASES,
   CD_FLAGGED_CLIP,
   CD_OVERVIEW,
-  CD_SAVED_CASES
+  CD_SAVED_CASES,
+  CD_RECOMMENDATIONS,
+  CD_RECENT_SAVED,
+  CD_RECENT_FLAGS,
+  CD_OVERVIEW_DATA,
+  CD_OVERVIEW_TILE
 } from './constants';
 
 export function showDetailedCase(detailedCase) {
@@ -53,7 +58,35 @@ export function setFlaggedClip(flaggedClip) {
 
 export function setOverviewData(overviewData){
   return {
-    type: CD_OVERVIEW,
+    type: CD_OVERVIEW_DATA,
     overviewData
+  }
+}
+
+export function setOverviewTile(overview){
+  return {
+    type: CD_OVERVIEW_TILE,
+    overview
+  }
+}
+
+export function setRecentFlags(recentFlags){
+  return {
+    type: CD_RECENT_FLAGS,
+    recentFlags
+  }
+}
+
+export function setRecommendations(recommendations){
+  return {
+    type: CD_RECOMMENDATIONS,
+    recommendations
+  }
+}
+
+export function setRecentSaved(recentSaved){
+  return {
+    type: CD_RECENT_SAVED,
+    recentSaved
   }
 }

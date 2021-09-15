@@ -32,6 +32,10 @@ export const DEFAULT_LOCALE = 'en';
 
 export const CD_DETAILED_CASE = 'insights - set Detailed Case data'
 export const CD_CASES = 'insights - set Case List'
-export const CD_OVERVIEW = 'insights - set Overview Data'
+export const CD_OVERVIEW_DATA = 'insights - set Overview Data'
+export const CD_OVERVIEW_TILE = 'insights - set Overview Tile'
 export const CD_SAVED_CASES = 'insights - set Saved cases'
+export const CD_RECENT_FLAGS = 'insights - set Recent Flags cases'
+export const CD_RECOMMENDATIONS = 'insights - set Recommendations'
+export const CD_RECENT_SAVED = 'insights - set Recently saved cases'
 export const CD_FLAGGED_CLIP = 'insights - set Flagged Case data'

@@ -40,7 +40,7 @@ import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { Case } from './Case';
 import { displayTags, getTag, TagsSelect, useStyles } from './misc/helper-components';
 import { selectCases, selectDetailedCase, selectFlaggedClip, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
-import { setCases, setFlaggedClip, setOverviewData, showDetailedCase } from '../App/cd-actions';
+import { setCases, setFlaggedClip, setOverviewData, setOverviewTile, setRecentFlags, setRecentSaved, setRecommendations, showDetailedCase } from '../App/cd-actions';
 export function DetailedCase(props) {
   const { hidden, handleChangeCaseId, USERS, isSaved, handleSaveCase, flagReport, roomIds } = props;
   if (props.metaData == null) {
@@ -1071,7 +1071,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     flagDispatch({ type: SENDING_FLAG });
 
     globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
-      .then(result => {
+      .then(async  result => {
         flagDispatch({ type: FLAG_SUCCESS });
         result = result.data;
         const toolTipArray = result.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`);
@@ -1089,26 +1089,30 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           const index = caseList.findIndex(el => el.caseId === caseId);
           if (index > -1){
             caseList[index] = { ...caseList[index], tags: [newFlagObject, ...caseList[index].tags] };
-            return true
           }
+          return index;
         }
         //Add flag to CASES list
-        if (updateCases(CASES)){
-          dispatch(setCases(CASES));  
+        const index = updateCases(CASES) || 0;
+        dispatch(setCases(CASES));
+        //Add to recently flagged list (tag added CASES update)
+        recentFlags.unshift(CASES[index]);
+        dispatch(setRecentFlags(recentFlags));
+        //Update Overview tiles if the case exists there
+        if (updateCases(recommendations) > -1){
+          dispatch(setRecommendations(recommendations));
         }
-        updateCases(recentFlags);
-        updateCases(recentClips);
-        updateCases(recommendations);
-        updateCases(recentSaved);
-        dispatch(setOverviewData({
-          recentFlags, recentClips, recommendations,
-          recentSaved, overview, savedCases
-        }));
+        if (updateCases(recentSaved) > -1){
+          dispatch(setRecentSaved(recentSaved))
+        }
 
         logger.manualAddLog('click', 'submit-flag', flag)
 
         setShowAddFlag(false);
         handleOpenAddFlag(false);
+        //Update Overview tile for Flag count
+        const overviewData = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'overview', 'get', userToken, {});
+        dispatch(setOverviewTile(overviewData.data))
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
         console.log("oh no", error)
