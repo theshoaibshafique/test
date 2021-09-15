@@ -341,7 +341,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     } else {
       const found = CASES.find(c => c.caseId == caseId);
       if (found) {
-        recentSaved.push(found)
+        recentSaved.unshift(found)
       }
     }
     dispatch(setOverviewData({
