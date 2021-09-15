@@ -121,20 +121,24 @@ function CarouselCases(props) {
     
     const [CASES, setCases] = useState(cases);
     const caseLength = CASES && CASES.length || 0;
-    const hasMinCases = CASES && CASES.length > 3;
+    const CAROUSEL_SIZE = 3;
+    const hasMinCases = CASES && CASES.length > CAROUSEL_SIZE;
     useEffect(() => {
         if (cases && cases.length){
             setCases(cases)
         }
     }, [cases])
-
+    
     const Controls = ({ next, previous, goToSlide, carouselState, carouselState: { currentSlide, slidesToShow, totalItems }, ...rest }) => {
         if (!totalItems) {
             return ''
         }
         let showLeft = currentSlide > 0;
-        let showRight = slidesToShow * (currentSlide+1) < totalItems;
-        
+        slidesToShow = Math.floor(caseLength/CAROUSEL_SIZE) + caseLength%CAROUSEL_SIZE;
+        let showRight = (CAROUSEL_SIZE + currentSlide) < caseLength;
+        if ((currentSlide+CAROUSEL_SIZE) > caseLength && currentSlide > 0){
+            goToSlide(currentSlide-1);
+        }
         if (!hasMinCases) {
             showLeft = showRight = false;
         } else if (isInfinite) {

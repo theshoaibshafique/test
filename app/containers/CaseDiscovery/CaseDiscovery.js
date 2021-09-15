@@ -48,7 +48,7 @@ import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
-import { setCases, setOverviewData, setSavedCases, showDetailedCase } from '../App/cd-actions';
+import { setCases, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase } from '../App/cd-actions';
 import { selectCases, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
 
 
@@ -344,11 +344,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         recentSaved.unshift(found)
       }
     }
-    dispatch(setOverviewData({
-      ...OVERVIEW_DATA, recentSaved, savedCases
-    }));
+    dispatch(setRecentSaved(recentSaved));
     
-    await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
+    globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
         logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
         result = result.data;
@@ -356,7 +354,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       }).catch((error) => {
         console.log("oh no", error)
       });
-
+    
+    // const recentSavedData = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'recent_bookmarks', 'get', userToken, {});
+    // dispatch(setRecentSaved(recentSavedData.data));
   }
 
 
