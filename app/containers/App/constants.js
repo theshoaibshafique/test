@@ -31,4 +31,7 @@ export const EMM_PRESENTER_MODE = 'insights - set emm presenter mode'
 export const DEFAULT_LOCALE = 'en';
 
 export const CD_DETAILED_CASE = 'insights - set Detailed Case data'
+export const CD_CASES = 'insights - set Case List'
+export const CD_OVERVIEW = 'insights - set Overview Data'
+export const CD_SAVED_CASES = 'insights - set Saved cases'
 export const CD_FLAGGED_CLIP = 'insights - set Flagged Case data'

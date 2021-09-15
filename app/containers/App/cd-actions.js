@@ -17,7 +17,10 @@
 
 import {
   CD_DETAILED_CASE,
-  CD_FLAGGED_CLIP
+  CD_CASES,
+  CD_FLAGGED_CLIP,
+  CD_OVERVIEW,
+  CD_SAVED_CASES
 } from './constants';
 
 export function showDetailedCase(detailedCase) {
@@ -27,9 +30,17 @@ export function showDetailedCase(detailedCase) {
   };
 }
 
-export function hideDetailedCase() {
+export function setCases(cases) {
   return {
-    type: CD_DETAILED_CASE
+    type: CD_CASES,
+    cases
+  }
+}
+
+export function setSavedCases(savedCases) {
+  return {
+    type: CD_SAVED_CASES,
+    savedCases
   }
 }
 
@@ -40,3 +51,9 @@ export function setFlaggedClip(flaggedClip) {
   }
 }
 
+export function setOverviewData(overviewData){
+  return {
+    type: CD_OVERVIEW,
+    overviewData
+  }
+}

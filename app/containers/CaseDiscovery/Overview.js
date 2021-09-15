@@ -3,13 +3,15 @@ import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
+import { selectSavedCases } from '../App/cd-selectors';
 import { makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { Case, EmptyCase, ThumbnailCase } from './Case';
 import { DATE_OPTIONS } from './misc/constants';
 import { getTag } from './misc/helper-components';
 import { getPresetDates } from './misc/Utils';
 export function Overview(props) {
-    const { recentFlags, recentClips, recommendations, savedCases, recentSaved, overview } = props;
+    const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
+    const savedCases = useSelector(selectSavedCases());
     const { handleChangeCaseId, handleSaveCase, handleFilterChange } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase, savedCases };
     return (
@@ -116,10 +118,15 @@ const responsive = {
 function CarouselCases(props) {
     const { cases, savedCases, isThumbnail, isInfinite, title, message } = props;
     const { handleChangeCaseId, handleSaveCase } = props;
-    const caseLength = cases && cases.length || 0;
-    const hasMinCases = cases.length > 3;
+    
     const [CASES, setCases] = useState(cases);
-
+    const caseLength = CASES && CASES.length || 0;
+    const hasMinCases = CASES && CASES.length > 3;
+    useEffect(() => {
+        if (cases && cases.length){
+            setCases(cases)
+        }
+    }, [cases])
 
     const Controls = ({ next, previous, goToSlide, carouselState, carouselState: { currentSlide, slidesToShow, totalItems }, ...rest }) => {
         if (!totalItems) {
@@ -173,7 +180,7 @@ function CarouselCases(props) {
                     infinite={isInfinite}
                     showDots={false}
                     responsive={responsive}
-                    autoPlay={true}
+                    autoPlay={isInfinite}
                     autoPlaySpeed={6500}
                     arrows={false}
                     renderButtonGroupOutside={true}

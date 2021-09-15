@@ -39,14 +39,14 @@ import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { Case } from './Case';
 import { displayTags, getTag, TagsSelect, useStyles } from './misc/helper-components';
-import { selectFlaggedClip } from '../App/cd-selectors';
-import { setFlaggedClip } from '../App/cd-actions';
+import { selectCases, selectDetailedCase, selectFlaggedClip, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
+import { setCases, setFlaggedClip, setOverviewData, showDetailedCase } from '../App/cd-actions';
 export function DetailedCase(props) {
-  const { hidden, handleChangeCaseId, USERS, isSaved, handleSaveCase,flagReport, roomIds, setData, handleSetCases, handleUpdateDetailedCase } = props;
+  const { hidden, handleChangeCaseId, USERS, isSaved, handleSaveCase, flagReport, roomIds } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
-  
+
   const COMPLICATIONS = useSelector(makeSelectComplications());
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
@@ -545,8 +545,6 @@ export function DetailedCase(props) {
               caseId={caseId}
               openAddFlag={openAddFlag}
               setShowAddFlag={setShowAddFlag}
-              handleSetCases={handleSetCases}
-              handleUpdateDetailedCase={handleUpdateDetailedCase}
             />
           </div>
         </Slide>
@@ -556,12 +554,19 @@ export function DetailedCase(props) {
 }
 
 /***  ADD FLAG FORM COMPONENT. ***/
-const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag, handleSetCases, handleUpdateDetailedCase }) => {
+const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag }) => {
   // Retrieve userToken from redux store 
   const userToken = useSelector(makeSelectToken());
   const firstName = useSelector(makeSelectFirstName());
   const lastName = useSelector(makeSelectLastName());
   const logger = useSelector(makeSelectLogger());
+  const DETAILED_CASE = useSelector(selectDetailedCase());
+  const CASES = useSelector(selectCases());
+  const savedCases = useSelector(selectSavedCases());
+  //Used to update overview page when a flag is added
+  const { recentFlags, recentClips, recommendations,
+    recentSaved, overview } = useSelector(selectOverviewData())
+  const dispatch = useDispatch();
 
   // USEREDUCER ACTION TYPES.
   const SET_INITIAL_QUESTION = 'SET_INITIAL_QUESTION';
@@ -1075,15 +1080,38 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           tagName: 'Flagged',
           toolTip: toolTipArray
         };
-        handleUpdateDetailedCase(result);
-        handleSetCases(result, caseId);
+        //Add flag to Detailed Case
+        dispatch(showDetailedCase({
+          ...DETAILED_CASE,
+          tags: [newFlagObject, ...DETAILED_CASE.tags]
+        }));
+        const updateCases = (caseList) => {
+          const index = caseList.findIndex(el => el.caseId === caseId);
+          if (index > -1){
+            caseList[index] = { ...caseList[index], tags: [newFlagObject, ...caseList[index].tags] };
+            return true
+          }
+        }
+        //Add flag to CASES list
+        if (updateCases(CASES)){
+          dispatch(setCases(CASES));  
+        }
+        updateCases(recentFlags);
+        updateCases(recentClips);
+        updateCases(recommendations);
+        updateCases(recentSaved);
+        dispatch(setOverviewData({
+          recentFlags, recentClips, recommendations,
+          recentSaved, overview, savedCases
+        }));
+
         logger.manualAddLog('click', 'submit-flag', flag)
 
         setShowAddFlag(false);
         handleOpenAddFlag(false);
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
-        console.log("uh no", error)
+        console.log("oh no", error)
       }).finally(() => {
 
       });
@@ -1691,7 +1719,7 @@ export const Thumbnail = withStyles((theme) => ({
 
 function ClipTimeline(props) {
   const { flags, max, min } = props;
-  const duration = max + ( min < 0 ? Math.abs(min) : 0) + max * .025 
+  const duration = max + (min < 0 ? Math.abs(min) : 0) + max * .025
   const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
@@ -1768,13 +1796,13 @@ function ClipTimeline(props) {
   }
   const flaggedClip = useSelector(selectFlaggedClip());
   useEffect(() => {
-    if (!flaggedClip){
+    if (!flaggedClip) {
       return;
     }
     const i = timeline.findIndex((t) => t.clipId == flaggedClip.clipId);
     handleSelect(timeline[i], i);
-    
-  },[flaggedClip])
+
+  }, [flaggedClip])
 
   const publishClip = () => {
     globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'post', userToken, {})

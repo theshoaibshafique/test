@@ -17,6 +17,8 @@ import { NavLink } from 'react-router-dom';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import { useSelector } from 'react-redux';
 import { formatCaseForLogs, getCasesInView, getPresetDates } from './misc/Utils';
+import { selectCases, selectSavedCases } from '../App/cd-selectors';
+import DateFnsUtils from '@date-io/date-fns';
 
 const MenuProps = {
   PaperProps: {
@@ -30,15 +32,17 @@ const MenuProps = {
 
 export function BrowseCases(props) {
   const {handleChangeCaseId, handleSaveCase, handleFilterChange, searchData} = props;
-  const {CASES, SPECIALTIES, PROCEDURES, ORS, isLoading, savedCases} = props;
+  const {SPECIALTIES, PROCEDURES, ORS, isLoading } = props;
   const { facilityName, gracePeriod, outlierThreshold } = props;
   
   const [numShownCases, setNumShownCases] = React.useState(10);
   const logger = useSelector(makeSelectLogger());
-
+  const CASES = useSelector(selectCases());
+  const savedCases = useSelector(selectSavedCases());
   
   const classes = useStyles();
-
+  const minDate = moment().subtract(100, 'years');
+  const maxDate = moment();
   
 
   // for Sorting the cases

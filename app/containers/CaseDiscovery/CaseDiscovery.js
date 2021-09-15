@@ -48,8 +48,8 @@ import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
-import { showDetailedCase } from '../App/cd-actions';
-import { selectDetailedCase } from '../App/cd-selectors';
+import { setCases, setOverviewData, setSavedCases, showDetailedCase } from '../App/cd-actions';
+import { selectCases, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
 
 
 const dataReducer = (state, event) => {
@@ -114,30 +114,27 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const dispatch = useDispatch();
 
   const [DATA, setData] = useReducer(dataReducer, {
-    CASES: [],
     SPECIALTIES: [],
     PROCEDURES: [],
     ORS: [],
-    OVERVIEW_DATA: null,
     isLoading: true,
-    savedCases: [],
     facilityName: "",
     gracePeriod: 0,
     outlierThreshold: 0
   });
-  const { CASES, OVERVIEW_DATA, savedCases } = DATA;
+  const OVERVIEW_DATA = useSelector(selectOverviewData());
+  const savedCases = useSelector(selectSavedCases());
   const [USERS, setUsers] = useState([]);
 
   const [flagReport, setFlagReport] = useState(null);
   const [roomIds, setRoomIds] = useState(null);
-  const firstName = useSelector(makeSelectFirstName());
-  const lastName = useSelector(makeSelectLastName());
+
 
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
   const DETAILED_CASE = useSelector(selectDetailedCase());
-  
+  const CASES = useSelector(selectCases());
 
   const urlParams = new URLSearchParams(window.location.search)
   //Open the caseId through URL
@@ -211,7 +208,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           setUsers(result);
 
         }).catch((error) => {
-          console.log("uh no.")
+          console.log("oh no", error)
         }).finally(() => {
 
         });
@@ -232,7 +229,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             outlierThreshold: turnoverThreshold
           })
         }).catch((error) => {
-          console.log("uh no.")
+          console.log("oh no", error)
         }).finally(() => {
 
         });
@@ -266,9 +263,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
               ors.push(roomName);
             }
           });
-          result.sort((a, b) => moment(b.wheelsIn).valueOf() - moment(a.wheelsIn).valueOf())
+          result.sort((a, b) => moment(b.wheelsIn).valueOf() - moment(a.wheelsIn).valueOf());
+          dispatch(setCases(result));
           setData({
-            CASES: result,
             SPECIALTIES: spec.sort(),
             PROCEDURES: proc.sort(),
             ORS: ors.sort(),
@@ -276,7 +273,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           })
 
         }).catch((error) => {
-          console.log("uh oh")
+          console.log("uh oh", error)
         })
 
     }
@@ -289,20 +286,15 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchRecentSaved = getOverviewData("recent_bookmarks");
     const fetchOverview = getOverviewData("overview");
 
-
-
     Promise.all([fetchRecentFlags, fetchRecentClips, fetchRecommendations, fetchSavedCases, fetchRecentSaved, fetchOverview].map(function (e) {
       return e && e.then(function (result) {
         return result && result.data;
       })
     })).then(([recentFlags, recentClips, recommendations, savedCases, recentSaved, overview]) => {
-      setData({
-        savedCases,
-        OVERVIEW_DATA: {
-          recentFlags, recentClips, recommendations,
-          recentSaved, overview
-        }
-      });
+      dispatch(setOverviewData({
+        recentFlags, recentClips, recommendations,
+        recentSaved, overview, savedCases
+      }));
     }).catch(function (results) {
 
     });
@@ -314,7 +306,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           result = result.data;
           setFlagReport(result);
         }).catch((error) => {
-          console.log("uh no.")
+          console.log("oh no",error)
         }).finally(() => {
 
         });
@@ -325,7 +317,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     fetchUsers();
 
     fetchFacilityConfig();
-    // fetchSavedCases();
     // Fetch flag submission schema.
     fetchFlagReport();
 
@@ -341,15 +332,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   });
 
 
-
-  const handleSetCases = (res, caseId) => {
-    const index = CASES.findIndex(el => el.caseId === caseId);
-    CASES[index] = { ...CASES[index], tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...CASES[index].tags] };
-    return setData({
-      [CASES]: CASES/*CASES.map(el => el.caseId === caseId ? { ...el, tags: [flagObject, ...el.tags]} : el)*/
-    });
-  };
-
   const handleSaveCase = async (caseId) => {
     const isSav = savedCases.includes(caseId);
     const recentSaved = OVERVIEW_DATA.recentSaved || [];
@@ -362,21 +344,17 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         recentSaved.push(found)
       }
     }
-    setData({
-      OVERVIEW_DATA: {
-        ...OVERVIEW_DATA,
-        recentSaved
-      }
-    })
+    dispatch(setOverviewData({
+      ...OVERVIEW_DATA, recentSaved, savedCases
+    }));
+    
     await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
         logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
         result = result.data;
-        setData({
-          'savedCases': result
-        })
+        dispatch(setSavedCases(result))
       }).catch((error) => {
-        console.log("uh no", error)
+        console.log("oh no", error)
       });
 
   }
@@ -409,17 +387,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
     fetchCases();
   }, [caseId]);
-
-  // FLAG SUBMISSION HANDLER - UPDATE DETAILED CASE, ADDING NEWLY SUBMITTED FLAG TO CASE.
-  const handleUpdateDetailedCase = (res) => {
-    if (res) {
-      dispatch(showDetailedCase({
-        ...DETAILED_CASE,
-        tags: [{ tagName: 'Flagged', toolTip: res && res.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`) }, ...DETAILED_CASE.tags]
-      }));
-      
-    }
-  };
 
   const [tabIndex, setTabIndex] = useState(0);
   const handleTabChange = (obj, tabIndex) => {
@@ -456,7 +423,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           {OVERVIEW_DATA && <Overview
             handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
             handleSaveCase={handleSaveCase}
-            savedCases={savedCases}
             handleFilterChange={(e, v) => { handleFilterChange(e, v); setTabIndex(2) }}
             {...OVERVIEW_DATA}
           /> || <LoadingIndicator />}
@@ -480,8 +446,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         hidden={!caseId}
         flagReport={flagReport}
         roomIds={roomIds}
-        handleSetCases={handleSetCases}
-        handleUpdateDetailedCase={handleUpdateDetailedCase}
       />
     </section>
   );
