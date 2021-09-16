@@ -21,7 +21,8 @@ import {
   CD_RECENT_FLAGS,
   CD_RECOMMENDATIONS,
   CD_RECENT_SAVED,
-  CD_OVERVIEW_DATA
+  CD_OVERVIEW_DATA,
+  CD_EXIT
 } from './constants';
 
 // The initial state of the App
@@ -74,6 +75,18 @@ function cdReducer(state = initialState, action) {
     case CD_FLAGGED_CLIP:
       return state
         .set('flaggedClip', action.flaggedClip)
+    case CD_EXIT:
+      console.log('EXIT')
+      return state
+        .set('detailedCase', null)
+        .set('flaggedClip', null)
+        .set('cases', [])
+        .set('recentFlags', null)
+        .set('recentClips', null)
+        .set('recommendations', null)
+        .set('recentSaved', null)
+        .set('overviewTile', null)
+        .set('savedCases', [])
     default:
       return state;
   }

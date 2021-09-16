@@ -30,6 +30,7 @@ export const EMM_PRESENTER_DIALOG = 'insights - set emm presenter dialog'
 export const EMM_PRESENTER_MODE = 'insights - set emm presenter mode'
 export const DEFAULT_LOCALE = 'en';
 
+export const CD_EXIT = 'insights - Exit Case Discovery'
 export const CD_DETAILED_CASE = 'insights - set Detailed Case data'
 export const CD_CASES = 'insights - set Case List'
 export const CD_OVERVIEW_DATA = 'insights - set Overview Data'

@@ -19,14 +19,20 @@ import {
   CD_DETAILED_CASE,
   CD_CASES,
   CD_FLAGGED_CLIP,
-  CD_OVERVIEW,
   CD_SAVED_CASES,
   CD_RECOMMENDATIONS,
   CD_RECENT_SAVED,
   CD_RECENT_FLAGS,
   CD_OVERVIEW_DATA,
-  CD_OVERVIEW_TILE
+  CD_OVERVIEW_TILE,
+  CD_EXIT
 } from './constants';
+
+export function exitCaseDiscovery() {
+  return {
+    type: CD_EXIT
+  };
+}
 
 export function showDetailedCase(detailedCase) {
   return {

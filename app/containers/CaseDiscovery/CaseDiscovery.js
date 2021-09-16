@@ -48,7 +48,7 @@ import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
-import { setCases, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase } from '../App/cd-actions';
+import { exitCaseDiscovery, setCases, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase } from '../App/cd-actions';
 import { selectCases, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
 
 
@@ -323,6 +323,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     document.getElementById('caseDiscovery-nav').addEventListener("click", (x) => {
       setCaseId(null)
     })
+
+    return () => {
+      dispatch(exitCaseDiscovery());
+    }
   }, []);
 
   useEffect(() => {
@@ -340,13 +344,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       recentSaved.splice(index, 1)
     } else {
       const found = CASES.find(c => c.caseId == caseId);
-      if (found) {
+      if (found && !isSav) {
         recentSaved.unshift(found)
       }
     }
     dispatch(setRecentSaved(recentSaved));
     
-    globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
+    await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
         logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
         result = result.data;
