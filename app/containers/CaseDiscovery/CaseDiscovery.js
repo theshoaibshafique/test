@@ -411,7 +411,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   return (
     <section className="case-discovery">
-      <div hidden={caseId}>
+      {/* TODO: find a better way to hide overview  */}
+      {/* Currently we always keep it rendered so carousels dont glitch */}
+      <div style={caseId ? {position:'absolute', left:-10000} : {}}>
         <StyledTabs
           value={tabIndex}
           onChange={(obj, value) => handleTabChange(obj, value)}

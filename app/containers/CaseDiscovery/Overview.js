@@ -136,7 +136,7 @@ function CarouselCases(props) {
         let showLeft = currentSlide > 0;
         slidesToShow = Math.floor(caseLength/CAROUSEL_SIZE) + caseLength%CAROUSEL_SIZE;
         let showRight = (CAROUSEL_SIZE + currentSlide) < caseLength;
-        if ((currentSlide+CAROUSEL_SIZE) > caseLength && currentSlide > 0){
+        if (((currentSlide%caseLength)+CAROUSEL_SIZE) > caseLength && currentSlide > 0){
             goToSlide(currentSlide-1);
         }
         if (!hasMinCases) {
