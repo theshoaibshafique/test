@@ -52,9 +52,9 @@ export default class Login extends React.PureComponent {
   }
 
   redirect() {
-    const redirect = localStorage.getItem('redirect')
+    const redirect = localStorage.getItem('redirect') || '/dashboard'
     localStorage.removeItem('redirect')
-    this.props.pushUrl(redirect || '/dashboard');
+    this.props.pushUrl(redirect.includes("state") ? '/dashboard' : redirect);
   }
 
   async login(auth_code) {
