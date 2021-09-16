@@ -75,7 +75,7 @@ const defaultState = {
   onlySavedCases: false
 };
 const searchReducer = (state, event) => {
-  if (event.name == 'overview'){
+  if (event.name == 'overview') {
     return {
       ...defaultState,
       ...event.value
@@ -306,7 +306,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           result = result.data;
           setFlagReport(result);
         }).catch((error) => {
-          console.log("oh no",error)
+          console.log("oh no", error)
         }).finally(() => {
 
         });
@@ -348,9 +348,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         recentSaved.unshift(found)
       }
     }
-    dispatch(setRecentSaved(recentSaved));
-    
-    await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
+    dispatch(setRecentSaved(recentSaved.slice(0,5)));
+
+    globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
         logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
         result = result.data;
@@ -358,9 +358,11 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       }).catch((error) => {
         console.log("oh no", error)
       });
+    if (recentSaved.length == 4){
+      const recentSavedData = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'recent_bookmarks', 'get', userToken, {});
+      dispatch(setRecentSaved(recentSavedData.data));
+    }
     
-    // const recentSavedData = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'recent_bookmarks', 'get', userToken, {});
-    // dispatch(setRecentSaved(recentSavedData.data));
   }
 
 
@@ -413,7 +415,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     <section className="case-discovery">
       {/* TODO: find a better way to hide overview  */}
       {/* Currently we always keep it rendered so carousels dont glitch */}
-      <div style={caseId ? {position:'absolute', left:-10000} : {}}>
+      <div style={caseId ? { position: 'absolute', left: -10000 } : {}}>
         <StyledTabs
           value={tabIndex}
           onChange={(obj, value) => handleTabChange(obj, value)}

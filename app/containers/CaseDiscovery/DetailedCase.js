@@ -1097,7 +1097,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         dispatch(setCases(CASES));
         //Add to recently flagged list (tag added CASES update)
         recentFlags.unshift(CASES[index]);
-        dispatch(setRecentFlags(recentFlags));
+        dispatch(setRecentFlags(recentFlags.slice(0,5)));
         //Update Overview tiles if the case exists there
         if (updateCases(recommendations) > -1){
           dispatch(setRecommendations(recommendations));

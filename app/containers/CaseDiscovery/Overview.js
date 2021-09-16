@@ -20,27 +20,27 @@ export function Overview(props) {
             <div className="carousel-list">
                 <CarouselCases
                     cases={recommendations}
-                    title="Recommended Cases"
+                    title="Cases of Interest"
                     {...commonProps}
                     isInfinite />
 
                 <CarouselCases
                     cases={recentSaved}
-                    title="Recently Saved Cases"
-                    message="No Recently Saved Cases"
+                    title="Most Recently Saved Cases"
+                    message="No Saved Cases"
                     {...commonProps}
                     />
 
                 <CarouselCases
                     cases={recentFlags}
-                    title="Recently Flagged Cases"
+                    title="Most Recently Flagged Cases"
                     message="No Recently Flagged Cases"
                     {...commonProps}
                 />
 
                 <CarouselCases
                     cases={recentClips}
-                    title="Recently Flagged Clips"
+                    title="Most Recently Flagged Clips"
                     message="No Recently Flagged Clips"
                     {...commonProps}
                     isThumbnail />
@@ -136,8 +136,8 @@ function CarouselCases(props) {
         let showLeft = currentSlide > 0;
         slidesToShow = Math.floor(caseLength/CAROUSEL_SIZE) + caseLength%CAROUSEL_SIZE;
         let showRight = (CAROUSEL_SIZE + currentSlide) < caseLength;
-        if (((currentSlide%caseLength)+CAROUSEL_SIZE) > caseLength && currentSlide > 0){
-            goToSlide(currentSlide-1);
+        if (caseLength <= CAROUSEL_SIZE && currentSlide > 0){
+            goToSlide(0);
         }
         if (!hasMinCases) {
             showLeft = showRight = false;
