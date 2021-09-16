@@ -81,6 +81,7 @@
     "react-router-redux": "5.0.0-alpha.6",
     "react-scripts": "2.1.8",
     "react-select": "3.0.8",
+    "react-spring": "8.0.25",
     "react-table": "6.9.2",
     "react-thunk": "1.0.0",
     "react-transition-group": "^4.4.1",

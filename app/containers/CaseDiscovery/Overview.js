@@ -5,10 +5,12 @@ import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
 import { selectSavedCases } from '../App/cd-selectors';
 import { makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
 import { DATE_OPTIONS } from './misc/constants';
 import { getTag } from './misc/helper-components';
 import { getPresetDates } from './misc/Utils';
+import { Dns } from '@material-ui/icons';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
     const savedCases = useSelector(selectSavedCases());
@@ -29,7 +31,7 @@ export function Overview(props) {
                     title="Most Recently Saved Cases"
                     message="No Saved Cases"
                     {...commonProps}
-                    />
+                />
 
                 <CarouselCases
                     cases={recentFlags}
@@ -66,6 +68,18 @@ function OverviewTile(props) {
     const changeDate = (key) => () => setTimeframe(key);
     const isSelectedDate = (key) => key == timeframe ? 'selected' : '';
     const date = { selected: dateMap[timeframe], ...getPresetDates(dateMap[timeframe]) }
+    const height = 42;
+
+    const transitions = useTransition(
+        tags.map((data, i) => ({ ...data, y: i * height })),
+        d => d.name,
+        {
+            from: { position: "absolute", opacity: 0 },
+            leave: { height: 0, opacity: 0 },
+            enter: ({ y }) => ({ y, opacity: 1 }),
+            update: ({ y }) => ({ y })
+        }
+    );
     return (
         <Card variant="outlined" className="overview-tile">
             <div className="title normal-text">OVERVIEW</div>
@@ -84,15 +98,24 @@ function OverviewTile(props) {
                 <div>{rooms}</div>
             </div>
             <div className="title normal-text">TAGS</div>
-            {tags.map((t) => (
-                <div className="overview-tag subtext">
-                    <span className={`case-tag pointer ${t.name}`} onClick={() => { handleFilterChange('overview', { tags: [t.name], date }) }}>
-                        <span>{getTag(t.name)}</span>
-                        <div className="display">{t.name}</div>
+            <div style={{height:height*transitions.length, position:'relative'}}>
+            {transitions.map(({ item, props: { y, ...rest }, key }, index) => (
+                <animated.div
+                    key={key}
+                    className="overview-tag subtext"
+                    style={{
+                        transform: y.interpolate(y => `translate3d(0,${y}px,0)`),
+                        ...rest
+                    }}
+                >
+                    <span className={`case-tag pointer ${item.name}`} onClick={() => { handleFilterChange('overview', { tags: [item.name], date }) }}>
+                        <span>{getTag(item.name)}</span>
+                        <div className="display">{item.name}</div>
                     </span>
-                    <div style={{ marginLeft: '8px' }}>{t.count}</div>
-                </div>
+                    <div style={{ marginLeft: '8px' }}>{item.count}</div>
+                </animated.div>
             ))}
+            </div>
         </Card>
     )
 }
@@ -118,25 +141,25 @@ const responsive = {
 function CarouselCases(props) {
     const { cases, savedCases, isThumbnail, isInfinite, title, message } = props;
     const { handleChangeCaseId, handleSaveCase } = props;
-    
+
     const [CASES, setCases] = useState(cases);
     const caseLength = CASES && CASES.length || 0;
     const CAROUSEL_SIZE = 3;
     const hasMinCases = CASES && CASES.length > CAROUSEL_SIZE;
     useEffect(() => {
-        if (cases && cases.length){
+        if (cases && cases.length) {
             setCases(cases)
         }
     }, [cases])
-    
+
     const Controls = ({ next, previous, goToSlide, carouselState, carouselState: { currentSlide, slidesToShow, totalItems }, ...rest }) => {
         if (!totalItems) {
             return ''
         }
         let showLeft = currentSlide > 0;
-        slidesToShow = Math.floor(caseLength/CAROUSEL_SIZE) + caseLength%CAROUSEL_SIZE;
+        slidesToShow = Math.floor(caseLength / CAROUSEL_SIZE) + caseLength % CAROUSEL_SIZE;
         let showRight = (CAROUSEL_SIZE + currentSlide) < caseLength;
-        if (caseLength <= CAROUSEL_SIZE && currentSlide > 0){
+        if (caseLength <= CAROUSEL_SIZE && currentSlide > 0) {
             goToSlide(0);
         }
         if (!hasMinCases) {
