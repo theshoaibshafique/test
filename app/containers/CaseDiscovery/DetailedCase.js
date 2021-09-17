@@ -36,10 +36,10 @@ import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { displayTags, TagsSelect, useStyles } from './misc/helper-components';
-import { selectCases, selectDetailedCase, selectFlaggedClip, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
+import { selectCases, selectDetailedCase, selectFlaggedClip, selectFlagReport, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
 import { setCases, setFlaggedClip, setOverviewTile, setRecentFlags, setRecentSaved, setRecommendations, showDetailedCase } from '../App/cd-actions';
 export function DetailedCase(props) {
-  const { hidden, handleChangeCaseId, USERS, isSaved, handleSaveCase, flagReport, roomIds } = props;
+  const { hidden, handleChangeCaseId, USERS, isSaved, handleSaveCase, roomIds } = props;
   if (props.metaData == null) {
     return <div hidden={hidden}><LoadingIndicator /></div>
   }
@@ -49,6 +49,7 @@ export function DetailedCase(props) {
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
   const isAdmin = useSelector(makeSelectIsAdmin());
+  const flagReport = useSelector(selectFlagReport());
   const hasRequestEMMAccess = useSelector(makeSelectEMMRequestAccess());
 
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsInUtc, wheelsOut, scheduledStart, startTime, endTime,

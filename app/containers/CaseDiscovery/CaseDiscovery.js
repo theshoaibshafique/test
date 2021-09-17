@@ -21,7 +21,7 @@ import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
-import { exitCaseDiscovery, setCases, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase } from '../App/cd-actions';
+import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase } from '../App/cd-actions';
 import { selectCases, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
 
 
@@ -99,7 +99,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const savedCases = useSelector(selectSavedCases());
   const [USERS, setUsers] = useState([]);
 
-  const [flagReport, setFlagReport] = useState(null);
   const [roomIds, setRoomIds] = useState(null);
 
 
@@ -277,7 +276,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'flag_report', 'get', userToken, {})
         .then(result => {
           result = result.data;
-          setFlagReport(result);
+          dispatch(setFlagReport(result));
         }).catch((error) => {
           console.log("oh no", error)
         }).finally(() => {
@@ -427,7 +426,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         USERS={USERS}
         handleChangeCaseId={handleChangeCaseId}
         hidden={!caseId}
-        flagReport={flagReport}
         roomIds={roomIds}
       />
     </section>

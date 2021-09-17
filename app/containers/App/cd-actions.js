@@ -25,7 +25,8 @@ import {
   CD_RECENT_FLAGS,
   CD_OVERVIEW_DATA,
   CD_OVERVIEW_TILE,
-  CD_EXIT
+  CD_EXIT,
+  CD_FLAG_REPORT
 } from './constants';
 
 export function exitCaseDiscovery() {
@@ -94,5 +95,12 @@ export function setRecentSaved(recentSaved){
   return {
     type: CD_RECENT_SAVED,
     recentSaved
+  }
+}
+
+export function setFlagReport(flagReport){
+  return {
+    type: CD_FLAG_REPORT,
+    flagReport
   }
 }

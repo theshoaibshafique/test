@@ -22,7 +22,8 @@ import {
   CD_RECOMMENDATIONS,
   CD_RECENT_SAVED,
   CD_OVERVIEW_DATA,
-  CD_EXIT
+  CD_EXIT,
+  CD_FLAG_REPORT
 } from './constants';
 
 // The initial state of the App
@@ -36,7 +37,9 @@ const initialState = fromJS({
   recommendations: null,
   recentSaved: null,
   overviewTile: null,
-  savedCases: []
+  savedCases: [],
+
+  flagReport: null
 });
 
 function cdReducer(state = initialState, action) {
@@ -75,6 +78,9 @@ function cdReducer(state = initialState, action) {
     case CD_FLAGGED_CLIP:
       return state
         .set('flaggedClip', action.flaggedClip)
+    case CD_FLAG_REPORT:
+      return state
+        .set('flagReport',action.flagReport)
     case CD_EXIT:
       console.log('EXIT')
       return state

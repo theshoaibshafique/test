@@ -39,11 +39,17 @@ const selectSavedCases = () => createSelector(
   (cdState) => cdState.get('savedCases')
 );
 
+const selectFlagReport = () => createSelector(
+  selectCD,
+  (cdState) => cdState.get('flagReport')
+);
+
 
 export {
   selectDetailedCase,
   selectFlaggedClip,
   selectCases,
   selectOverviewData,
-  selectSavedCases
+  selectSavedCases,
+  selectFlagReport
 };

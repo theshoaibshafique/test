@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
-import { selectSavedCases } from '../App/cd-selectors';
+import { selectFlagReport, selectSavedCases } from '../App/cd-selectors';
 import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
 import { DATE_OPTIONS } from './misc/constants';
@@ -11,7 +11,7 @@ import { getTag } from './misc/helper-components';
 import { getPresetDates } from './misc/Utils';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
-    
+    const flagReport = useSelector(selectFlagReport());
     const { handleChangeCaseId, handleSaveCase, handleFilterChange } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase };
     return (
@@ -34,14 +34,16 @@ export function Overview(props) {
                 <CarouselCases
                     cases={recentFlags}
                     title="Most Recently Flagged Cases"
-                    message="No Recently Flagged Cases"
+                    message={flagReport ?
+                        "Most Recently Flagged Cases" : "No Recently Flagged Cases"}
                     {...commonProps}
                 />
 
                 <CarouselCases
                     cases={recentClips}
                     title="Most Recently Flagged Clips"
-                    message="No Recently Flagged Clips"
+                    message={(flagReport && flagReport.clipsDefault)
+                        ? "No Recently Flagged Clips" : "Flag Clips Disabled"}
                     {...commonProps}
                     isThumbnail />
             </div>
@@ -96,23 +98,23 @@ function OverviewTile(props) {
                 <div>{rooms}</div>
             </div>
             <div className="title normal-text">TAGS</div>
-            <div style={{height:height*transitions.length, position:'relative'}}>
-            {transitions.map(({ item, props: { y, ...rest }, key }, index) => (
-                <animated.div
-                    key={key}
-                    className="overview-tag subtext"
-                    style={{
-                        transform: y.interpolate(y => `translate3d(0,${y}px,0)`),
-                        ...rest
-                    }}
-                >
-                    <span className={`case-tag pointer ${item.name}`} onClick={() => { handleFilterChange('overview', { tags: [item.name], date }) }}>
-                        <span>{getTag(item.name)}</span>
-                        <div className="display">{item.name}</div>
-                    </span>
-                    <div style={{ marginLeft: '8px' }}>{item.count}</div>
-                </animated.div>
-            ))}
+            <div style={{ height: height * transitions.length, position: 'relative' }}>
+                {transitions.map(({ item, props: { y, ...rest }, key }, index) => (
+                    <animated.div
+                        key={key}
+                        className="overview-tag subtext"
+                        style={{
+                            transform: y.interpolate(y => `translate3d(0,${y}px,0)`),
+                            ...rest
+                        }}
+                    >
+                        <span className={`case-tag pointer ${item.name}`} onClick={() => { handleFilterChange('overview', { tags: [item.name], date }) }}>
+                            <span>{getTag(item.name)}</span>
+                            <div className="display">{item.name}</div>
+                        </span>
+                        <div style={{ marginLeft: '8px' }}>{item.count}</div>
+                    </animated.div>
+                ))}
             </div>
         </Card>
     )
