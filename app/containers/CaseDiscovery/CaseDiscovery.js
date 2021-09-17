@@ -4,46 +4,19 @@
  * This is the page we show when the user visits a url that doesn't have a route
  */
 
-import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import 'c3/c3.css';
-import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, Slide, Tab, Tabs, TextField, Tooltip, withStyles } from '@material-ui/core';
-import { DATE_OPTIONS, TAGS, TAG_INFO } from './misc/constants';
-import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-
-import Flagged from './icons/Flag.svg';
-import FullPerson from './icons/FullPerson.svg';
-import HalfPerson from './icons/HalfPerson.svg';
-import EmptyPerson from './icons/EmptyPerson.svg';
-import Play from './icons/Play.svg';
-import Close from './icons/Close.svg';
-import Plus from './icons/Plus.svg';
+import { Divider } from '@material-ui/core';
+import { DATE_OPTIONS } from './misc/constants';
 import moment from 'moment/moment';
 
-import { LightTooltip, SSTSwitch, StyledRadio } from '../../components/SharedComponents/SharedComponents';
-import ArrowBack from '@material-ui/icons/ArrowBackIos';
-import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
+import globalFunctions from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
-import ReactDOMServer from 'react-dom/server';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Icon from '@mdi/react';
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
-import { isUndefined } from 'lodash';
-import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { log_norm_cdf, log_norm_pdf, formatCaseForLogs, getCasesInView, getQuestionByLocation, getQuestionCount, getPresetDates } from './misc/Utils';
+import { formatCaseForLogs, getCasesInView, getPresetDates } from './misc/Utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectEMMRequestAccess, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
-import { NavLink } from 'react-router-dom';
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import Carousel from 'react-multi-carousel';
+import { makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import 'react-multi-carousel/lib/styles.css';
-import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
-import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
-import { Case } from './Case';
 import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
@@ -340,29 +313,31 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const isSav = savedCases.includes(caseId);
     const recentSaved = OVERVIEW_DATA.recentSaved || [];
     const index = recentSaved.map((c) => c && c.caseId).indexOf(caseId);
-    if (index > -1) {
-      recentSaved.splice(index, 1)
-    } else {
+    //If save
+    if (index < 0) {
       const found = CASES.find(c => c.caseId == caseId);
-      if (found && !isSav) {
+      if (found) {
         recentSaved.unshift(found)
+        dispatch(setRecentSaved(recentSaved.slice(0, 5)));
       }
     }
-    dispatch(setRecentSaved(recentSaved.slice(0,5)));
 
-    globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
+
+    const result = await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
         logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
         result = result.data;
-        dispatch(setSavedCases(result))
+        return result
       }).catch((error) => {
         console.log("oh no", error)
       });
-    if (recentSaved.length == 4){
+    // If they're unsaving we wait for savedCases to be updated before getting the next cases
+    if (index > -1) {
       const recentSavedData = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'recent_bookmarks', 'get', userToken, {});
       dispatch(setRecentSaved(recentSavedData.data));
     }
-    
+
+    dispatch(setSavedCases(result));
   }
 
 

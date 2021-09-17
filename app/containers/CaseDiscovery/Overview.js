@@ -1,21 +1,19 @@
-import { Card, Grid } from '@material-ui/core';
+import { Card } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
 import { selectSavedCases } from '../App/cd-selectors';
-import { makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
 import { DATE_OPTIONS } from './misc/constants';
 import { getTag } from './misc/helper-components';
 import { getPresetDates } from './misc/Utils';
-import { Dns } from '@material-ui/icons';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
-    const savedCases = useSelector(selectSavedCases());
+    
     const { handleChangeCaseId, handleSaveCase, handleFilterChange } = props;
-    const commonProps = { handleChangeCaseId, handleSaveCase, savedCases };
+    const commonProps = { handleChangeCaseId, handleSaveCase };
     return (
         <div className="case-discovery-overview">
             <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
@@ -139,7 +137,8 @@ const responsive = {
 };
 
 function CarouselCases(props) {
-    const { cases, savedCases, isThumbnail, isInfinite, title, message } = props;
+    const { cases, isThumbnail, isInfinite, title, message } = props;
+    const savedCases = useSelector(selectSavedCases());
     const { handleChangeCaseId, handleSaveCase } = props;
 
     const [CASES, setCases] = useState(cases);
@@ -147,7 +146,7 @@ function CarouselCases(props) {
     const CAROUSEL_SIZE = 3;
     const hasMinCases = CASES && CASES.length > CAROUSEL_SIZE;
     useEffect(() => {
-        if (cases && cases.length) {
+        if (cases) {
             setCases(cases)
         }
     }, [cases])
