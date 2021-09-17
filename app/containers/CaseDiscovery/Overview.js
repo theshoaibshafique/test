@@ -8,7 +8,8 @@ import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
 import { DATE_OPTIONS } from './misc/constants';
 import { getTag } from './misc/helper-components';
-import { getPresetDates } from './misc/Utils';
+import { formatCaseForLogs, getPresetDates } from './misc/Utils';
+import { makeSelectLogger } from '../App/selectors';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
     const flagReport = useSelector(selectFlagReport());
@@ -61,11 +62,19 @@ const dateMap = {
 function OverviewTile(props) {
     const { overview, handleFilterChange } = props;
     const [timeframe, setTimeframe] = React.useState('month');
+    const logger = useSelector(makeSelectLogger());
     const { cases, rooms, tags } = overview && overview[timeframe] || {
         cases: null, rooms: null, tags: []
     };
     tags.sort((a, b) => b.count - a.count);
-    const changeDate = (key) => () => setTimeframe(key);
+    const changeDate = (key) => () => {
+        setTimeframe(key);
+        logger.manualAddLog('click', `change-date-range-${key}`, overview[key]);
+    }
+    const handleFilterClick = (event, value) => {
+        handleFilterChange(event, value);
+        logger.manualAddLog('click', `tag-click-to-browse`, value);
+    };
     const isSelectedDate = (key) => key == timeframe ? 'selected' : '';
     const date = { selected: dateMap[timeframe], ...getPresetDates(dateMap[timeframe]) }
     const height = 42;
@@ -80,6 +89,7 @@ function OverviewTile(props) {
             update: ({ y }) => ({ y })
         }
     );
+
     return (
         <Card variant="outlined" className="overview-tile">
             <div className="title normal-text">OVERVIEW</div>
@@ -108,7 +118,7 @@ function OverviewTile(props) {
                             ...rest
                         }}
                     >
-                        <span className={`case-tag pointer ${item.name}`} onClick={() => { handleFilterChange('overview', { tags: [item.name], date }) }}>
+                        <span className={`case-tag pointer ${item.name}`} onClick={() => { handleFilterClick('overview', { tags: [item.name], date }) }}>
                             <span>{getTag(item.name)}</span>
                             <div className="display">{item.name}</div>
                         </span>
@@ -141,6 +151,7 @@ const responsive = {
 function CarouselCases(props) {
     const { cases, isThumbnail, isInfinite, title, message } = props;
     const savedCases = useSelector(selectSavedCases());
+    const logger = useSelector(makeSelectLogger());
     const { handleChangeCaseId, handleSaveCase } = props;
 
     const [CASES, setCases] = useState(cases);
@@ -157,6 +168,7 @@ function CarouselCases(props) {
         if (!totalItems) {
             return ''
         }
+
         let showLeft = currentSlide > 0;
         slidesToShow = Math.floor(caseLength / CAROUSEL_SIZE) + caseLength % CAROUSEL_SIZE;
         let showRight = (CAROUSEL_SIZE + currentSlide) < caseLength;
@@ -168,10 +180,21 @@ function CarouselCases(props) {
         } else if (isInfinite) {
             showLeft = showRight = true;
         }
+        
+        const prevClick = () => {
+            previous();
+            const casesToLog = CASES.slice(currentSlide%caseLength-1, (currentSlide%caseLength) + 2).map((c) => formatCaseForLogs(c));
+            logger.manualAddLog('click', `${title}-previous-arrow`, casesToLog)
+        }
+        const nextClick = () => {
+            next();
+            const casesToLog = CASES.slice(currentSlide%(caseLength)+1, (currentSlide%caseLength) + 4).map((c) => formatCaseForLogs(c));
+            logger.manualAddLog('click', `${title}-next-arrow`, casesToLog)
+        }
         return (
             <div className="rec-header">
-                {showLeft && <div className="left-arrow" onClick={() => previous()}></div>}
-                {showRight && <div className="right-arrow" onClick={() => next()}></div>}
+                {showLeft && <div className="left-arrow" onClick={() => prevClick()}></div>}
+                {showRight && <div className="right-arrow" onClick={() => nextClick()}></div>}
             </div>
         )
     }

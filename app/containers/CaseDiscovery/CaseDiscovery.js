@@ -371,6 +371,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const [tabIndex, setTabIndex] = useState(0);
   const handleTabChange = (obj, tabIndex) => {
     setTabIndex(tabIndex);
+    const tabLabel = tabIndex == 0 ? "overview" : "browse";
+    logger && logger.manualAddLog('click', `change-tab-${tabLabel}`, tabLabel);
   }
 
 
