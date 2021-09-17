@@ -18,7 +18,7 @@ export class Logger {
         }
         this._addLog = this.addLog.bind(this);
         this._exitLog = this.sendExitLogs.bind(this);
-        this.exitLogs = [];
+        this.exitLogs = [{ event: 'session', id: 'close-insights', value: "Exited/Refreshed page" }];
         //Add close window/refresh listener
         this.connectExitListener();
         this.sendLogs();

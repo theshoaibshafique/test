@@ -54,11 +54,14 @@ class SSTNav extends React.Component {
     this.setState({ menu: null })
   }
 
-  logout(){
+  logout() {
     const { refreshToken, expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
     const body = {
       refresh_token: refreshToken || ""
     }
+    const { logger } = this.props;
+    logger.manualAddLog('session', 'user-logout');
+    logger.sendLogs()
     localStorage.setItem('refreshToken', null);
     globalFunctions.authFetch(`${process.env.AUTH_API}revoke`, 'POST', body)
       .then(result => {
@@ -174,7 +177,7 @@ class SSTNav extends React.Component {
                 <NavLink to="/my-profile" onClick={() => this.closeMenu()} style={{ color: 'unset', textDecoration: 'none' }} >My Profile</NavLink>
               </MenuItem>
               <MenuItem className="sst-menu-item">
-                <div onClick={() =>  this.logout()}>Logout</div>
+                <div onClick={() => this.logout()}>Logout</div>
               </MenuItem>
             </Menu>
             {/* <div hidden ><NavLink to="/" className='text-link' isActive={() => false} >{this.props.userLogin}</NavLink></div> */}

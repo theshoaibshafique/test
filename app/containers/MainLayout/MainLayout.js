@@ -201,6 +201,7 @@ export default class MainLayout extends React.PureComponent {
                   caseDiscoveryAccess={this.state.caseDiscoveryAccess}
                   pathname={this.props.location.pathname}
                   isLoading={this.state.isLoading}
+                  logger={this.props.logger}
                 />
               </Drawer>
             </Hidden>
