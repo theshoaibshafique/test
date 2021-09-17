@@ -98,7 +98,7 @@ export function ThumbnailCase(props) {
   const tagDisplays = displayTags([{ tagName: 'Flagged', toolTip }], caseId, true);
   return (
     <div className="case short thumbnail-case"
-      style={{ background: `url(${thumbnailSrc})` }}
+      style={{ background: `url(${thumbnailSrc})`, backgroundSize:'contain' }}
       description={JSON.stringify(formatCaseForLogs(props))}
       key={caseId}
       onClick={handleClick} >
