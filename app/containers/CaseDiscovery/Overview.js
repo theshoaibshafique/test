@@ -37,8 +37,8 @@ export function Overview(props) {
                 <CarouselCases
                     cases={recentFlags}
                     title="Most Recently Flagged Cases"
-                    message={flagReport ?
-                        "Most Recently Flagged Cases" : "No Recently Flagged Cases"}
+                    message={flagReport && (recentFlags && recentFlags.length) ?
+                        "Most Recently Flagged Cases" : "No Flagged Cases"}
                     {...commonProps}
                 />
 
