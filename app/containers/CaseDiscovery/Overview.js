@@ -42,9 +42,9 @@ export function Overview(props) {
 
                 <CarouselCases
                     cases={recentClips}
-                    title="Most Recently Flagged Clips"
+                    title="Most Recently Clipped Flags"
                     message={(flagReport && flagReport.clipsDefault)
-                        ? "No Recently Flagged Clips" : "Flag Clips Disabled"}
+                        ? "No Recently Clipped Flags" : "Flag Clips Disabled"}
                     {...commonProps}
                     isThumbnail />
             </div>
