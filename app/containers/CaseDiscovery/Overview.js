@@ -15,6 +15,8 @@ export function Overview(props) {
     const flagReport = useSelector(selectFlagReport());
     const { handleChangeCaseId, handleSaveCase, handleFilterChange } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase };
+    console.log('recent flags', recentFlags);
+    console.log('recent clips', recentClips);
     return (
         <div className="case-discovery-overview">
             <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
@@ -42,9 +44,9 @@ export function Overview(props) {
 
                 <CarouselCases
                     cases={recentClips}
-                    title="Most Recently Clipped Flags"
+                    title="Most Recent Flag Clips"
                     message={(flagReport && flagReport.clipsDefault)
-                        ? "No Recently Clipped Flags" : "Flag Clips Disabled"}
+                        ? "No Flag Clips" : "Flag Clips Disabled"}
                     {...commonProps}
                     isThumbnail />
             </div>
