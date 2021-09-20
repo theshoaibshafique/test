@@ -212,7 +212,7 @@ export function DetailedCase(props) {
       "procedure": [procedureTitle],
       "complications": requestData.complicationOther ? [...complicationList, requestData.complicationOther] : complicationList,
       "postOpDate": requestData.complicationDate,
-      "operationDate": globalFunctions.formatDateTime(scheduledStart),
+      "operationDate": globalFunctions.formatDateTime(wheelsIn),
       "notes": requestData.notes,
       "usersToNotify": requestData.users.map((c) => c.id),
       "facilityName": userFacility
