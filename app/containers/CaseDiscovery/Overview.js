@@ -15,8 +15,6 @@ export function Overview(props) {
     const flagReport = useSelector(selectFlagReport());
     const { handleChangeCaseId, handleSaveCase, handleFilterChange } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase };
-    console.log('recent flags', recentFlags);
-    console.log('recent clips', recentClips);
     return (
         <div className="case-discovery-overview">
             <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
