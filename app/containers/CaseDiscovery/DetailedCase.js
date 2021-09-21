@@ -164,6 +164,7 @@ export function DetailedCase(props) {
 
   // Flag submission state.
   const [showAddFlag, setShowAddFlag] = React.useState(true);
+  const [isMayo, setIsMayo] = React.useState(() => userFacility);
   /*** NEW - Flag Submission state ***/
   const [openAddFlag, setOpenAddFlag] = useState(false);
   /*** FLAG SUBMISSION HANDLERS ***/
