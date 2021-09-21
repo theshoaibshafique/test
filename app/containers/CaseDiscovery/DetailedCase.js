@@ -164,7 +164,7 @@ export function DetailedCase(props) {
 
   // Flag submission state.
   const [showAddFlag, setShowAddFlag] = React.useState(true);
-  const [isMayo, setIsMayo] = React.useState(() => userFacility);
+  const [isMayo, setIsMayo] = React.useState(() => userFacility === 'e47585ea-a19f-4800-ac53-90f1777a7c96');
   /*** NEW - Flag Submission state ***/
   const [openAddFlag, setOpenAddFlag] = useState(false);
   /*** FLAG SUBMISSION HANDLERS ***/
@@ -172,6 +172,11 @@ export function DetailedCase(props) {
     logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
     setOpenAddFlag(open);
   };
+
+  // Update isMayo state to true if current userFacility val is mayo's facility id.
+  useEffect(() => {
+    if(userFacility) setIsMayo(userFacility === 'e47585ea-a19f-4800-ac53-90f1777a7c96');
+  }, [userFacility]);
 
   // Change/update the filter for request ID
   const handleChange = (event, value) => {
