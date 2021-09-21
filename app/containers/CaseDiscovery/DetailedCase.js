@@ -288,7 +288,7 @@ export function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId, false, true)}
-            {!(!isAdmin || !showAddFlag || !flagReport || flags.length > 0 || dayDiff > 100) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => { if (flagReport) handleOpenAddFlag(true) }} >
+            {((isAdmin || isMayo) && showAddFlag && flagReport && flags.length <= 0 && dayDiff <= 21) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => { if (flagReport) handleOpenAddFlag(true) }} >
               <span><img src={Plus} /></span>
               <div className="display">Add Flag</div>
             </span>}
