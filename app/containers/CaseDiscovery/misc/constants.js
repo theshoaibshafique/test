@@ -422,7 +422,7 @@ export const TAGS = [
     "Hypothermia", 
     "Hypoxia", 
     "Late First Case", 
-    "Long Procedure", 
+    "Long Case", 
     "Slow Post-Op", 
     "Slow Pre-Op", 
     "Slow Turnover"]
