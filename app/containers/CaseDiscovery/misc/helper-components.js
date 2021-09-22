@@ -29,6 +29,7 @@ export function getTag(tag) {
     case "hypotension":
       return <img src={Hypotension} />
     case "long procedure":
+    case "long case":
       return <img src={CaseDuration} />
     case "case delay":
     case "late start":
