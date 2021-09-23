@@ -449,13 +449,6 @@ export function DetailedCase(props) {
                 <div className="header">
                   Request for Enhanced M&M
                 </div>
-                <div className="subtitle">
-                  {procedureTitle}
-                </div>
-                <div className="description">
-                  {requestEMMDescription}
-                </div>
-
                 <TagsSelect
                   title="Complications"
                   placeholder="Select 1 or more"
