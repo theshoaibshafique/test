@@ -1163,12 +1163,6 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             <img src={Flagged} style={{ height: 24, width: 24, opacity: 0.8, margin: '0 6px 0 0', color: '#7b2d2d' }} />
             Submit Flag
           </div>
-          <div className="subtitle" title={procedureTitle}>
-            {procedureTitle}
-          </div>
-          <div className="description">
-            {requestEMMDescription}
-          </div>
           {renderFlagQuestions(flagState.flagData)}
           <Button
             variant="outlined"
