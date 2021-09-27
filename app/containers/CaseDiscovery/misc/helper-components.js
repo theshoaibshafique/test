@@ -53,53 +53,29 @@ export function getTag(tag) {
 export function displayTags(tags, emrCaseId, isShort, detailed = null) {
   //Helper function that creates the tag
   const createTag = (tag, desc, i) => {
-    if(tag && tag.toLowerCase() === 'flagged') {
-      return (
-        <LightTooltip key={`${tag}-${i}`} title={(isShort ? [`${tag}:`,...desc]:desc).map((line, i) => {
-          return <div key={i} style={i==0&&isShort?{marginBottom:4}:{}}>{
-              line === 'Flagged:' ?
-              line :
-              <React.Fragment>
-                <span style={{fontWeight: 'bold'}}>{line && line.substring(0, line.indexOf(':') + 1)}</span>
-                <span>{line && line.substring(line.indexOf(':') + 1)}</span>
-              </React.Fragment>
-              
-            }</div>
-        })} arrow={true}>
-          <span
-            className={`case-tag ${tag} log-mouseover`}
-            id={`${tag}-tag-${emrCaseId}`}
-            description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })}
-            key={tag}
-          >
-            <span>
-              {getTag(tag)}
-            </span>
-            <div className="display">{tag}</div>
-    
+    return (
+      <LightTooltip key={`${tag}-${i}`} title={(isShort ? [`${tag}:`,...desc]:desc).map((line, i) => {
+        return <div key={i} style={i==0&&isShort?{marginBottom:4}:{}}>
+            <React.Fragment>
+              <span style={{fontWeight: 'bold'}}>{line && line.substring(0, line.indexOf(':') + 1)}</span>
+              <span>{line && line.substring(line.indexOf(':') + 1)}</span>
+            </React.Fragment>
+          </div>
+      })} arrow={true}>
+        <span
+          className={`case-tag ${tag} log-mouseover`}
+          id={`${tag}-tag-${emrCaseId}`}
+          description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })}
+          key={tag}
+        >
+          <span>
+            {getTag(tag)}
           </span>
-        </LightTooltip>
-      )
-    } else {
-      return (
-        <LightTooltip key={`${tag}-${i}`} title={(isShort ? [`${tag}:`,...desc]:desc).map((line, i) => {
-          return <div key={i} style={i==0&&isShort?{marginBottom:4}:{}}>{line}</div>
-        })} arrow={true}>
-          <span
-            className={`case-tag ${tag} log-mouseover`}
-            id={`${tag}-tag-${emrCaseId}`}
-            description={JSON.stringify({ emrCaseId: emrCaseId, toolTip: desc })}
-            key={tag}
-          >
-            <span>
-              {getTag(tag)}
-            </span>
-            <div className="display">{tag}</div>
-    
-          </span>
-        </LightTooltip>
-      )
-    }
+          <div className="display">{tag}</div>
+  
+        </span>
+      </LightTooltip>
+    )
   }
   if (detailed) {
     return <TransitionGroup
