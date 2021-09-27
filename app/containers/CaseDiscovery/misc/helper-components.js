@@ -55,10 +55,11 @@ export function displayTags(tags, emrCaseId, isShort, detailed = null) {
   const createTag = (tag, desc, i) => {
     return (
       <LightTooltip key={`${tag}-${i}`} title={(isShort ? [`${tag}:`,...desc]:desc).map((line, i) => {
+        const colonPosition = line.indexOf(':') + 1;
         return <div key={i} style={i==0&&isShort?{marginBottom:4}:{}}>
             <React.Fragment>
-              <span style={{fontWeight: 'bold'}}>{line && line.substring(0, line.indexOf(':') + 1)}</span>
-              <span>{line && line.substring(line.indexOf(':') + 1)}</span>
+              <span style={{fontWeight: 'bold'}}>{line.substring(0, colonPosition)}</span>
+              <span>{line.substring(colonPosition)}</span>
             </React.Fragment>
           </div>
       })} arrow={true}>
