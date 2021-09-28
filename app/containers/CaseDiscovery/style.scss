@@ -1007,7 +1007,7 @@
         }
     }
     .video-player {
-        margin-bottom: 16px;
+        margin-bottom: 8px;
         .video-js {
             min-width: 100%;
             min-height: 400px;
@@ -1029,6 +1029,11 @@
                 font-weight: bold;
                 margin-bottom: 12px;
             }
+        }
+        .clip-information {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
         }
         .button {
             margin-top: 4px;
@@ -1125,16 +1130,31 @@
         font-size: 18px;
         line-height: 23px;
     }
+    .case-tag img {
+        width: 22px !important;
+        height: 22px !important;
+    }
+    .left-arrow{
+        top: 85px;
+        left: -20px;
+        margin-right: 10px !important;
+        position: absolute;
+    }
+    .right-arrow{
+        top: 85px;
+        right: -18px;
+        margin-top: 3px !important;
+        position: absolute;
+    }
+}
+.carousel-cases,.clip-modal{
     .left-arrow {
         width: 0;
         height: 0;
-        top: 85px;
-        left: -20px;
-        position: absolute;
         border-top: 12px solid transparent;
         border-bottom: 12px solid transparent;
         border-right: 12px solid rgba(51, 51, 51, 0.6);
-        margin-right: 10px !important;
+        
         margin-top: 3px !important;
         cursor: pointer;
     }
@@ -1142,22 +1162,25 @@
     .right-arrow {
         width: 0;
         height: 0;
-        top: 85px;
-        right: -18px;
-        position: absolute;
         border-top: 12px solid transparent;
         border-bottom: 12px solid transparent;
         border-left: 12px solid rgba(51, 51, 51, 0.6);
-
-        margin-top: 3px !important;
         cursor: pointer;
     }
-    .case-tag img {
-        width: 22px !important;
-        height: 22px !important;
+}
+.clip-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .left-arrow{
+        margin-left: -24px;
+        margin-right: 24px;
+    }
+    .right-arrow{
+        margin-right: -24px;
+        margin-left: 24px;
     }
 }
-
 .case-discovery-overview {
     display: flex;
     max-height: calc(100vh - 80px);
@@ -1286,27 +1309,6 @@
     }
 }
 
-// @media (min-width: $desktop-width) {
-//     .case-discovery-search {
-//         .no-cases,
-//         .case,
-//         .header {
-//             width: 85%;
-//             max-width: 1180px;
-//         }
-//     }
-//     .case-discovery-overview .overview-tile {
-//         // min-width: 26%;
-//         max-width: 30%;
-//     }
-//     .carousel-cases {
-//         width: 75%;
-//         max-width: 1180px;
-//         .react-multi-carousel-item {
-//             min-width: 250px;
-//         }
-//     }
-// }
 @media (max-width: $desktop-width) {
     .case-discovery-overview .overview-tile {
         min-width: 25%;

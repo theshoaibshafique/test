@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel,Modal, Slide, TextField, Tooltip, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel, Modal, Slide, TextField, Tooltip, withStyles } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -175,7 +175,7 @@ export function DetailedCase(props) {
 
   // Update isMayo state to true if current userFacility val is mayo's facility id.
   useEffect(() => {
-    if(userFacility) setIsMayo(userFacility === 'e47585ea-a19f-4800-ac53-90f1777a7c96');
+    if (userFacility) setIsMayo(userFacility === 'e47585ea-a19f-4800-ac53-90f1777a7c96');
   }, [userFacility]);
 
   // Change/update the filter for request ID
@@ -1068,7 +1068,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     flagDispatch({ type: SENDING_FLAG });
 
     globalFunctions.axiosFetchWithCredentials(process.env.CASE_DISCOVERY_API + 'case_flag', 'post', userToken, flag)
-      .then(async  result => {
+      .then(async result => {
         flagDispatch({ type: FLAG_SUCCESS });
         result = result.data;
         const toolTipArray = result.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`);
@@ -1084,7 +1084,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         }));
         const updateCases = (caseList) => {
           const index = caseList.findIndex(el => el.caseId === caseId);
-          if (index > -1){
+          if (index > -1) {
             caseList[index] = { ...caseList[index], tags: [newFlagObject, ...caseList[index].tags] };
           }
           return index;
@@ -1094,12 +1094,12 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         dispatch(setCases(CASES));
         //Add to recently flagged list (tag added CASES update)
         recentFlags.unshift(CASES[index]);
-        dispatch(setRecentFlags(recentFlags.slice(0,5)));
+        dispatch(setRecentFlags(recentFlags.slice(0, 5)));
         //Update Overview tiles if the case exists there
-        if (updateCases(recommendations) > -1){
+        if (updateCases(recommendations) > -1) {
           dispatch(setRecommendations(recommendations));
         }
-        if (updateCases(recentSaved) > -1){
+        if (updateCases(recentSaved) > -1) {
           dispatch(setRecentSaved(recentSaved))
         }
 
@@ -1785,10 +1785,10 @@ function ClipTimeline(props) {
       logger && logger.manualAddLog('click', `close-clip-${selectedMarker.clipId}`)
       dispatch(setFlaggedClip(null));
     }
-
     setSelect(t);
 
   }
+  // Open Selected Flagged Clip from Overview page;
   const flaggedClip = useSelector(selectFlaggedClip());
   useEffect(() => {
     if (!flaggedClip) {
@@ -1816,7 +1816,13 @@ function ClipTimeline(props) {
       <Button variant="outlined" className="primary" onClick={() => publishClip()}>Publish</Button>
     </div>
   ) || ''
+  const { startTime, index } = selectedMarker;
+  const endTime = startTime + selectedMarker.duration;
+  const displayStart = (startTime < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(startTime));
+  const displayEnd = (endTime < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(endTime));
 
+  const leftArrow = index > 0 ? <div className="left-arrow" onClick={() => handleSelect(timeline[index - 1], index - 1)}></div> : ""
+  const rightArrow = index < timeline.length-1 ? <div className="right-arrow" onClick={() => handleSelect(timeline[index + 1], index + 1)}></div> : ""
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>
@@ -1858,33 +1864,45 @@ function ClipTimeline(props) {
           </div>
 
           {isSafari && <SafariWarningBanner message={'Case Discovery contains videos that are currently not supported on Safari. We recommend using the latest version of Google Chrome or Microsoft Edge browsers for the full experience.'} />}
-          <Grid container spacing={0} className="clip-details">
-            <Grid item xs={9}><VideoPlayer params={selectedMarker.params} presenterMode={presenterMode} /></Grid>
-            <Grid item xs={3} className="flag-details normal-text">
-              {isAdmin && <div>
-                <FormControlLabel
-                  control={
-                    <SSTSwitch
-                      checked={presenterMode}
-                      onChange={switchPresenterMode}
-                    />
-                  }
-                  label="Presentation Mode"
-                />
-              </div>}
-              <div className="details-header">Flag Details</div>
-              {selectedMarker.description && selectedMarker.description.map((d, i) => {
-                return (
-                  <div className="detail-entry subtext" key={`${d.answer}-${i}`}>
-                    <div className="title">{d.questionTitle}:</div>
-                    <div className="body">{d.answer}</div>
-                  </div>
-                )
-              })}
-              {publishButton}
-            </Grid>
+          <div className="clip-container">
+            {leftArrow}
+            <Grid container spacing={0} className="clip-details">
+              <Grid item xs={9}>
+                <VideoPlayer params={selectedMarker.params} presenterMode={presenterMode} />
+                <div className="subtle-text clip-information">
+                  <div>({displayStart} to {displayEnd})</div>
+                  <div>{index + 1} of {timeline.length} Clips</div>
+                </div>
+              </Grid>
+              <Grid item xs={3} className="flag-details normal-text">
+                {isAdmin && <div>
+                  <FormControlLabel
+                    control={
+                      <SSTSwitch
+                        checked={presenterMode}
+                        onChange={switchPresenterMode}
+                      />
+                    }
+                    label="Presentation Mode"
+                  />
+                </div>}
+                <div className="details-header">
+                  Flag Details
+                </div>
+                {selectedMarker.description && selectedMarker.description.map((d, i) => {
+                  return (
+                    <div className="detail-entry subtext" key={`${d.answer}-${i}`}>
+                      <div className="title">{d.questionTitle}:</div>
+                      <div className="body">{d.answer}</div>
+                    </div>
+                  )
+                })}
+                {publishButton}
+              </Grid>
 
-          </Grid>
+            </Grid>
+            {rightArrow}
+          </div>
         </div>
       </Modal>
       <ConfirmPresenterDialog
