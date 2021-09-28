@@ -1821,8 +1821,8 @@ function ClipTimeline(props) {
   const displayStart = (startTime < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(startTime));
   const displayEnd = (endTime < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(endTime));
 
-  const leftArrow = index > 0 ? <div className="left-arrow" onClick={() => handleSelect(timeline[index - 1], index - 1)}></div> : ""
-  const rightArrow = index < timeline.length-1 ? <div className="right-arrow" onClick={() => handleSelect(timeline[index + 1], index + 1)}></div> : ""
+  const leftArrow = index > 0 ? <div className="left-arrow" onClick={() => handleSelect(timeline[index - 1], index - 1)}></div> : <div className="left-arrow disabled" ></div>
+  const rightArrow = index < timeline.length-1 ? <div className="right-arrow" onClick={() => handleSelect(timeline[index + 1], index + 1)}></div> : <div className="right-arrow disabled" ></div>
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>

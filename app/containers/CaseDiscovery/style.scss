@@ -1180,6 +1180,12 @@
         margin-right: -24px;
         margin-left: 24px;
     }
+    .left-arrow, .right-arrow {
+        &.disabled{
+            cursor: default;
+            opacity: .3;
+        }
+    }
 }
 .case-discovery-overview {
     display: flex;
