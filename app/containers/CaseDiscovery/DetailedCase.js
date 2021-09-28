@@ -1353,8 +1353,9 @@ function ProcedureDistribution(props) {
   const logger = useSelector(makeSelectLogger());
   const mu = scale;
   const sigma = shape * scale;
-  const range = [duration, ...globalFunctions.range(Math.max(0, mu - 4.5 * sigma), mu + 4.5 * sigma, sigma / 20)].sort();
-  // console.log(range)
+  const lower = Math.max(0, Math.min(duration - (0.2 * sigma), mu - (3.5 * sigma)))
+  const upper = Math.max(mu + (3.5 * sigma), duration + (0.2 * sigma))
+  const range = [duration, ...globalFunctions.range(lower, upper, sigma / 20)].sort();
   const chartRef = useRef(null);
   if (!shape || !scale) {
     return <div></div>
@@ -1822,7 +1823,7 @@ function ClipTimeline(props) {
   const displayEnd = (endTime < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(endTime));
 
   const leftArrow = index > 0 ? <div className="left-arrow" onClick={() => handleSelect(timeline[index - 1], index - 1)}></div> : <div className="left-arrow disabled" ></div>
-  const rightArrow = index < timeline.length-1 ? <div className="right-arrow" onClick={() => handleSelect(timeline[index + 1], index + 1)}></div> : <div className="right-arrow disabled" ></div>
+  const rightArrow = index < timeline.length - 1 ? <div className="right-arrow" onClick={() => handleSelect(timeline[index + 1], index + 1)}></div> : <div className="right-arrow disabled" ></div>
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>

@@ -264,7 +264,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       await fetchFacilityConfig();
       await fetchUsers();
       // Fetch flag submission schema.
-      await fetchFlagReport();
+      await  fetchFlagReport();
     }
 
     const getOverviewData = (endpoint) => globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + endpoint, 'get', userToken, {});
@@ -276,10 +276,10 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         return result && result.data;
       })
     })).then(([savedCases, overview]) => {
-      const { tagOverview, recommendations, recentBookmarks, recentFlags, recentClips } = overview;
+      const {tagOverview, recommendations, recentBookmarks, recentFlags, recentClips} = overview;
       dispatch(setOverviewData({
         recentFlags, recentClips, recommendations,
-        recentSaved: recentBookmarks, overview: tagOverview, savedCases
+        recentSaved:recentBookmarks, overview:tagOverview, savedCases
       }));
     }).catch(function (results) {
       console.log("uh oh", results)
@@ -303,13 +303,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   });
 
 
-  const handleSaveCase = async (caseId) => {
+  const handleSaveCase = async (caseId, caseObj) => {
     const isSav = savedCases.includes(caseId);
     const recentSaved = OVERVIEW_DATA.recentSaved || [];
     const index = recentSaved.map((c) => c && c.caseId).indexOf(caseId);
     //If save
     if (index < 0) {
-      const found = CASES.find(c => c.caseId == caseId);
+      const found = caseObj || CASES.find(c => c.caseId == caseId);
       if (found) {
         recentSaved.unshift(found)
         dispatch(setRecentSaved(recentSaved.slice(0, 5)));
