@@ -181,8 +181,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
         }).catch((error) => {
           console.log("oh no", error)
-        }).finally(() => {
-
         });
     }
 
@@ -202,8 +200,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
           })
         }).catch((error) => {
           console.log("oh no", error)
-        }).finally(() => {
-
         });
     }
 
@@ -250,6 +246,27 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     }
 
+    // New
+    const fetchFlagReport = async () => {
+      await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'flag_report', 'get', userToken, {})
+        .then(result => {
+          result = result.data;
+          dispatch(setFlagReport(result));
+        }).catch((error) => {
+          console.log("oh no", error)
+        });
+    }
+
+    //To be called after overfiew is loaded
+    const fetchAll = async () => {
+      await fetchCases();
+
+      await fetchFacilityConfig();
+      await fetchUsers();
+      // Fetch flag submission schema.
+      await fetchFlagReport();
+    }
+
     const getOverviewData = (endpoint) => globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + endpoint, 'get', userToken, {});
     const fetchSavedCases = getOverviewData("bookmarks");
     const fetchOverview = getOverviewData("overview");
@@ -259,35 +276,16 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         return result && result.data;
       })
     })).then(([savedCases, overview]) => {
-      const {tagOverview, recommendations, recentBookmarks, recentFlags, recentClips} = overview;
+      const { tagOverview, recommendations, recentBookmarks, recentFlags, recentClips } = overview;
       dispatch(setOverviewData({
         recentFlags, recentClips, recommendations,
-        recentSaved:recentBookmarks, overview:tagOverview, savedCases
+        recentSaved: recentBookmarks, overview: tagOverview, savedCases
       }));
     }).catch(function (results) {
       console.log("uh oh", results)
+    }).finally(() => {
+      fetchAll();
     });
-
-    // New
-    const fetchFlagReport = async () => {
-      await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'flag_report', 'get', userToken, {})
-        .then(result => {
-          result = result.data;
-          dispatch(setFlagReport(result));
-        }).catch((error) => {
-          console.log("oh no", error)
-        }).finally(() => {
-
-        });
-    }
-
-    fetchCases();
-
-    fetchUsers();
-
-    fetchFacilityConfig();
-    // Fetch flag submission schema.
-    fetchFlagReport();
 
     document.getElementById('caseDiscovery-nav').addEventListener("click", (x) => {
       setCaseId(null)
