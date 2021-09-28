@@ -251,24 +251,21 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
 
     const getOverviewData = (endpoint) => globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + endpoint, 'get', userToken, {});
-    const fetchRecentFlags = getOverviewData("recent_flags");
-    const fetchRecentClips = getOverviewData("recent_clips");
-    const fetchRecommendations = getOverviewData("recommendations");
     const fetchSavedCases = getOverviewData("bookmarks");
-    const fetchRecentSaved = getOverviewData("recent_bookmarks");
     const fetchOverview = getOverviewData("overview");
 
-    Promise.all([fetchRecentFlags, fetchRecentClips, fetchRecommendations, fetchSavedCases, fetchRecentSaved, fetchOverview].map(function (e) {
+    Promise.all([fetchSavedCases, fetchOverview].map(function (e) {
       return e && e.then(function (result) {
         return result && result.data;
       })
-    })).then(([recentFlags, recentClips, recommendations, savedCases, recentSaved, overview]) => {
+    })).then(([savedCases, overview]) => {
+      const {tagOverview, recommendations, recentBookmarks, recentFlags, recentClips} = overview;
       dispatch(setOverviewData({
         recentFlags, recentClips, recommendations,
-        recentSaved, overview, savedCases
+        recentSaved:recentBookmarks, overview:tagOverview, savedCases
       }));
     }).catch(function (results) {
-
+      console.log("uh oh", results)
     });
 
     // New
