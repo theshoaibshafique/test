@@ -403,7 +403,7 @@ export function DetailedCase(props) {
             let endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - offset;
             const caseHeight = (endMins - startMins) / 60;
             return (
-              <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 34 && 'short'} ${caseHeight * HOUR_SIZE <= 83 && 'medium'}`}
+              <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 49 && 'short'} ${caseHeight * HOUR_SIZE <= 83 && 'medium'}`}
                 onClick={() => updateCaseId(c.caseId)}
                 style={{
                   top: `${(startMins / 60) * HOUR_SIZE}px`,
