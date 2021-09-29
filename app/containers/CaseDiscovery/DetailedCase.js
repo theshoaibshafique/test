@@ -410,7 +410,7 @@ export function DetailedCase(props) {
                   height: `${caseHeight * HOUR_SIZE}px`,
                   minHeight: HOUR_SIZE
                 }}>
-                <div className="case-title">{procedureName}</div>
+                <div className="case-title" title={procedureName}>{procedureName}</div>
                 {caseHeight > 1 && <div className="case-time">{moment(wheelsIn).format("HH:mm")} - {moment(wheelsOut).format("HH:mm")}</div>}
               </div>
             )
