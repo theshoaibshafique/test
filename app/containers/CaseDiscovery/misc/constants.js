@@ -1105,10 +1105,10 @@ export const DETAILED_CASE = {
 
 export const TAG_INFO = {
     "Flagged": "Identifies cases that have been flagged on operating room touch screen or by insights user within 21 days of the case",
-    "Hypoxia": "Identifies cases where the percentage of procedure time patient was hypoxic (blood oxygen saturation below 94%) was 95th percentile or above",
-    "Hypotension": "Identifies cases where the percentage of procedure time patient was hypotensive (mean arterial blood pressure below 65mmHg) was 95th percentile or above",
-    "Hypothermia": "Identifies cases where the percentage of procedure time patient was hypothermic (temperature below 35°C / 95°F) was 95th percentile or above",
-    "Long Case": "Identifies cases where case duration was 95th percentile or above for given procedure type",
+    "Hypoxia": "Identifies cases where the patient experienced sustained hypoxia (blood oxygen saturation below 90%) during the procedure",
+    "Hypotension": "Identifies cases where the patient had an elevated risk of postoperative adverse outcomes due to sustained hypotension (mean arterial blood pressure below 65 mmHg) during the procedure",
+    "Hypothermia": "Identifies cases where the patient had an elevated risk of surgical site infection due to sustained hypothermia (temperature below 35°C / 95°F) during the procedure",
+    "Long Case": "Identifies cases where the case duration was in the 95th percentile or above for given procedure type, and cases with significantly longer durations than was allotted for the case",
     "Slow Pre-Op": "Identifies cases where the period of time between patient entering operating room, and procedure start, was 95th percentile or above",
     "Slow Post-Op": "Identifies cases where the period of time between procedure end, and patient exiting operating room, was 95th percentile or above",
     "Case Delay": "Identifies cases where the delay from the scheduled start was 60 minutes or longer"
