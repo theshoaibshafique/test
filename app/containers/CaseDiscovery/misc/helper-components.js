@@ -240,7 +240,12 @@ export function TagsSelect(props) {
 
 export const StyledTabs = withStyles({
   root: {
-    marginTop: '2em'
+    marginTop: '2em',
+    background:"linear-gradient(180deg, #ffffff 80.33%, rgba(255, 255, 255, 0) 107.41%)",
+    position:'fixed',
+    width:'85%',
+    zIndex:2,
+    paddingBottom:16
   },
   indicator: {
     display: 'none'
@@ -276,7 +281,7 @@ export function TabPanel(props) {
       // TODO: find a better way to hide "OVERVIEW" page
       // We always keep Overview (index =0) rendered because the carousels glitch otherwise
       hidden={value !== index && index!=0}
-      style={value !== index && index==0 ? {position:'absolute', left:-10000} : {}}
+      style={value !== index && index==0 ? {position:'absolute', left:-10000,paddingTop:80} : {paddingTop:80}}
       id={`nav-tabpanel-${index}`}
       aria-labelledby={`nav-tab-${index}`}
       {...other}
