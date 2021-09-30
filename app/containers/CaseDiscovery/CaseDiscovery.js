@@ -76,7 +76,7 @@ const searchReducer = (state, event) => {
     }
   }
   const logger = event.logger;
-  logger && logger.manualAddLog('onchange', event.name, event.value)
+  logger?.manualAddLog('onchange', event.name, event.value)
   return {
     ...state,
     [event.name]: event.value
@@ -116,13 +116,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleChangeCaseId = (cId) => {
     //Handle close case
     if (!cId && DETAILED_CASE) {
-      const emrCId = DETAILED_CASE.metaData && DETAILED_CASE.metaData.emrCaseId;
+      const emrCId = DETAILED_CASE.metaData?.emrCaseId;
       const oldCase = CASES.find((c) => c.emrCaseId == emrCId);
 
-      logger && logger.manualAddLog('click', `close-case-${emrCId}`, formatCaseForLogs(oldCase));
+      logger?.manualAddLog('click', `close-case-${emrCId}`, formatCaseForLogs(oldCase));
 
       setTimeout(() => {
-        logger && logger.manualAddLog('session', 'cases-in-view', getCasesInView());
+        logger?.manualAddLog('session', 'cases-in-view', getCasesInView());
       }, 300)
     }
     setCaseId(cId);
@@ -157,7 +157,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const casesWindow = document.getElementById('cases-id');
 
     // Listen for scroll events
-    casesWindow && casesWindow.addEventListener('scroll', (event) => {
+    casesWindow?.addEventListener('scroll', (event) => {
 
       // Clear our timeout throughout the scroll
       window.clearTimeout(isScrolling);
@@ -272,8 +272,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchOverview = getOverviewData("overview");
 
     Promise.all([fetchSavedCases, fetchOverview].map(function (e) {
-      return e && e.then(function (result) {
-        return result && result.data;
+      return e?.then(function (result) {
+        return result?.data;
       })
     })).then(([savedCases, overview]) => {
       const {tagOverview, recommendations, recentBookmarks, recentFlags, recentClips} = overview;
@@ -298,7 +298,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   useEffect(() => {
     setTimeout(() => {
-      logger && logger.connectListeners();
+      logger?.connectListeners();
     }, 300)
   });
 
@@ -306,7 +306,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleSaveCase = async (caseId, caseObj) => {
     const isSav = savedCases.includes(caseId);
     const recentSaved = OVERVIEW_DATA.recentSaved || [];
-    const index = recentSaved.map((c) => c && c.caseId).indexOf(caseId);
+    const index = recentSaved.map((c) => c?.caseId).indexOf(caseId);
     //If save
     if (index < 0) {
       const found = caseObj || CASES.find(c => c.caseId == caseId);
@@ -319,7 +319,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     const result = await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
-        logger && logger.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
+        logger?.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
         result = result.data;
         return result
       }).catch((error) => {
@@ -347,9 +347,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
         .then(result => {
           result = result.data
-          if (result.metaData && result.metaData.emrCaseId && DETAILED_CASE) {
+          if (result.metaData?.emrCaseId && DETAILED_CASE) {
             const newCase = CASES.find((c) => c.emrCaseId == result.metaData.emrCaseId);
-            logger && logger.manualAddLog('click', `swap-case-${result.metaData.emrCaseId}`, formatCaseForLogs(newCase));
+            logger?.manualAddLog('click', `swap-case-${result.metaData.emrCaseId}`, formatCaseForLogs(newCase));
           }
 
           dispatch(showDetailedCase(result));
@@ -367,7 +367,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const handleTabChange = (obj, tabIndex) => {
     setTabIndex(tabIndex);
     const tabLabel = tabIndex == 0 ? "overview" : "browse";
-    logger && logger.manualAddLog('click', `change-tab-${tabLabel}`, tabLabel);
+    logger?.manualAddLog('click', `change-tab-${tabLabel}`, tabLabel);
   }
 
 

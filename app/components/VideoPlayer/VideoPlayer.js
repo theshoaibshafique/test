@@ -32,7 +32,7 @@ export function VideoPlayer(props) {
   //Delete the player on close
   useEffect(() => {
     return () => {
-      mediaPlayer && mediaPlayer.dispose();
+      mediaPlayer?.dispose();
     }
   }, [])
   

@@ -87,7 +87,7 @@ export default class HorizontalBarChart extends React.PureComponent {
             <Grid item xs={12} className="chart-subtitle subtle-subtext" style={{ textAlign: 'center', marginBottom: 40 }}>
               {this.props.subTitle}
             </Grid>
-            {this.props.dataPoints && this.props.dataPoints.map((point) => {
+            {this.props.dataPoints?.map((point) => {
               return (
                 <Grid container key={point.title}>
                   <Grid item xs={8}>

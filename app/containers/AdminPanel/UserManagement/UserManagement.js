@@ -73,7 +73,7 @@ export default class UserManagement extends React.PureComponent {
     }
     const {logger} = this.props;
     setTimeout(() => {
-      logger && logger.connectListeners();
+      logger?.connectListeners();
     }, 300)
   }
 
@@ -101,7 +101,7 @@ export default class UserManagement extends React.PureComponent {
           permissions: rowData.roles || rowData.permissions,
           id: rowData.tableData.id,
       };
-      logger && logger.manualAddLog('click', `open-${view}-modal`, userData);
+      logger?.manualAddLog('click', `open-${view}-modal`, userData);
       this.setState({
         userValue: {
           ...userData,
@@ -110,7 +110,7 @@ export default class UserManagement extends React.PureComponent {
       });
 
     } else {
-      logger && logger.manualAddLog('click', `open-${view}-modal`);
+      logger?.manualAddLog('click', `open-${view}-modal`);
     }
 
     this.setState({
@@ -125,7 +125,7 @@ export default class UserManagement extends React.PureComponent {
 
   resetModal() {
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', `close-${this.state.currentView}-modal`);
+    logger?.manualAddLog('click', `close-${this.state.currentView}-modal`);
     this.setState({
       open: false,
       currentView: 'add',
@@ -228,14 +228,14 @@ export default class UserManagement extends React.PureComponent {
       let targetIndex = currentUserValue["permissions"].indexOf(e.target.value);
       if (targetIndex < 0) {
         currentUserValue["permissions"].push(e.target.value);
-        logger && logger.manualAddLog('onchange', `user-update-permissions-add`, e.target.value);
+        logger?.manualAddLog('onchange', `user-update-permissions-add`, e.target.value);
       } else {
         currentUserValue["permissions"].splice(targetIndex, 1);
-        logger && logger.manualAddLog('onchange', `user-update-permissions-remove`, e.target.value);
+        logger?.manualAddLog('onchange', `user-update-permissions-remove`, e.target.value);
       }
     } else {
       currentUserValue[e.target.name] = e.target.value;
-      logger && logger.manualAddLog('onchange', `user-update-${e.target.name}`, e.target.value);
+      logger?.manualAddLog('onchange', `user-update-${e.target.name}`, e.target.value);
     }
     this.setState({userValue: currentUserValue});
   };
@@ -356,7 +356,7 @@ export default class UserManagement extends React.PureComponent {
   }
   logClick(key){
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', `${key}`);
+    logger?.manualAddLog('click', `${key}`);
   }
 
   sortClick(key){
@@ -366,7 +366,7 @@ export default class UserManagement extends React.PureComponent {
     //Check if its the same title
     let isSameTitle = titleElement.length && key == titleElement[0].textContent;
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', `sort-user-list-${key}`, element.length && isSameTitle ? 'desc' : 'asc');
+    logger?.manualAddLog('click', `sort-user-list-${key}`, element.length && isSameTitle ? 'desc' : 'asc');
   }
   generateTitle(title){
     // Generate a title element for the logs

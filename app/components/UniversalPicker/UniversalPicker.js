@@ -172,7 +172,7 @@ class UniversalPicker extends React.Component {
   }
 
   render() {
-    let specialtySelected = this.state.selectedSpecialty && this.state.selectedSpecialty.value;
+    let specialtySelected = this.state.selectedSpecialty?.value;
     let disabled = this.props.disabled || this.props.isSpecialtyMandatory && !specialtySelected;
     const defaultThreshold = globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "0 min";
     return (

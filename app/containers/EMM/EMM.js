@@ -40,7 +40,7 @@ export default class EMM extends React.PureComponent {
         if (result === 'error' || result === 'conflict') {
 
         } else {
-          let surgeryList = this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || [];
+          let surgeryList = this.props.specialties?.map((specialty) => specialty.procedures).flatten() || [];
 
           let procedureNames = [];
           let complicationList = [];
@@ -53,7 +53,7 @@ export default class EMM extends React.PureComponent {
 
           result.complications.map((complication) => {
             let match = false;
-            this.props.complications && this.props.complications.map((comp) => {
+            this.props.complications?.map((comp) => {
               if (complication.toUpperCase() === comp.id.toUpperCase()) {
                 complicationList.push(comp.display);
                 match = true;

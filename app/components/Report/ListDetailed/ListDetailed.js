@@ -16,7 +16,7 @@ export default class ListDetailed extends React.PureComponent {
     super(props);
     this.state = {
       dataPoints: this.props.dataPoints,
-      procedures: this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || []
+      procedures: this.props.specialties?.map((specialty) => specialty.procedures).flatten() || []
     }
   };
 
@@ -34,7 +34,7 @@ export default class ListDetailed extends React.PureComponent {
 
   renderList() {
 
-    return this.props.dataPoints && this.props.dataPoints.map((point, index) => {
+    return this.props.dataPoints?.map((point, index) => {
       return (<Grid container spacing={0} key={index}>
         <Grid item xs={10} className={point.subTitle ? "list-subtitle subtle-subtext" : "list-title normal-text"}>
           {

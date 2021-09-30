@@ -128,7 +128,7 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
 
     const {title, logger} = this.props;
     if (d){
-      logger && logger.manualAddLog('onchange', `area-time-series-domain-${title}`, {domain:d});
+      logger?.manualAddLog('onchange', `area-time-series-domain-${title}`, {domain:d});
     }
   }
 
@@ -178,10 +178,10 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     })
     let chartData = this.state.chartData;
     chartData.data.columns = [...columns, na];
-    let chart = this.chartRef.current && this.chartRef.current.chart;
+    let chart = this.chartRef.current?.chart;
 
-    chart && chart.load(chartData);
-    chart && chart.groups([Object.keys(formattedData)]);
+    chart?.load(chartData);
+    chart?.groups([Object.keys(formattedData)]);
     let domain = [this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")];
     if (this.props.startDate.format("YYYY-MM-DD") == this.props.endDate.format("YYYY-MM-DD")) {
       domain = [this.props.startDate.clone().add(-1, 'day').format("YYYY-MM-DD"), this.props.endDate.clone().add(1, 'day').format("YYYY-MM-DD")]
@@ -205,20 +205,20 @@ export default class TimeSeriesAreaChart extends React.PureComponent {
     const xValue = moment(d[0].x).format('MMM DD');
     let na = d.filter((point) => point.value == null && point.id != "NA").map((point) => point.id) || [];
     if (na.length == d.length - 1) {
-      logger && logger.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d.map((p) => p.value)});
+      logger?.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d.map((p) => p.value)});
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{xValue}</div>
           <div>Unavailable - at least five turnovers required in last 30 days</div>
         </div>);
     }
-    logger && logger.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d.map((p) => p.value)});
+    logger?.manualAddLog('mouseover', `area-time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d.map((p) => p.value)});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{xValue}</div>
         <div>Total Duration: {d.map(point => point.value).reduce((a, b) => a + b)} min</div>
         {tooltipData.map((line) => {
-          return line && line.map((line) => { return <div style={!line ? { margin: 8 } : {}}>{line}</div> })
+          return line?.map((line) => { return <div style={!line ? { margin: 8 } : {}}>{line}</div> })
         })}
       </div>);
   }

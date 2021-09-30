@@ -13,7 +13,7 @@ export default class Checklist extends React.PureComponent {
     super(props);
     this.state = {
       dataPoints: this.props.dataPoints,
-      procedures: this.props.specialties && this.props.specialties.map((specialty) => specialty.procedures).flatten() || []
+      procedures: this.props?.specialties?.map((specialty) => specialty.procedures).flatten() || []
     }
   };
 

@@ -95,7 +95,7 @@ export default class EMMCases extends React.PureComponent {
   componentDidMount() {
     let { surgeryMap, complicationsMap, operatingRoomMap } = this.state;
     let localSearchCache = JSON.parse(localStorage.getItem('recentSearch-'+this.props.userEmail));
-    if (localSearchCache && localSearchCache.length > 0) {
+    if (localSearchCache?.length > 0) {
       //Call Api to get most recent list
       globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/list', 'POST', this.props.userToken, localSearchCache)
         .then(result => {
@@ -104,7 +104,7 @@ export default class EMMCases extends React.PureComponent {
             if (!savedResult){
               return;
             }
-            let operatingRoom = operatingRoomMap.get(savedResult.roomName && savedResult.roomName.toUpperCase());
+            let operatingRoom = operatingRoomMap.get(savedResult?.roomName?.toUpperCase());
 
             recentSearch.push({
               requestId: savedResult.name,
@@ -138,13 +138,13 @@ export default class EMMCases extends React.PureComponent {
     if (requestID) {
       this.reset();
       const {logger} = this.props;
-      logger && logger.manualAddLog('click', `emm-case-search-button`);
+      logger?.manualAddLog('click', `emm-case-search-button`);
       globalFuncs.genericFetch(process.env.EMMREQUEST_API + '/?request_id=' + this.state.requestID, 'get', this.props.userToken, {})
       .then(result => {
         if (result === 'error' || result === 'conflict' || !result) {
           this.setState({ noMatch: true })
         } else {
-          let operatingRoom = operatingRoomMap.get(result.roomName && result.roomName.toUpperCase());
+          let operatingRoom = operatingRoomMap.get(result?.roomName?.toUpperCase());
 
           let report = {
             requestId: result.name,
@@ -180,7 +180,7 @@ export default class EMMCases extends React.PureComponent {
 
   handleFormChange(e) {
     const {logger} = this.props;
-    logger && logger.manualAddLog('onchange', `emm-case-search`, e.target.value.trim());
+    logger?.manualAddLog('onchange', `emm-case-search`, e.target.value.trim());
     this.setState({ requestID: e.target.value.trim() });
   };
 

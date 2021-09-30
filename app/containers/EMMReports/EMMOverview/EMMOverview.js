@@ -70,12 +70,12 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
   render() {
     const { tabShowing } = this.props;
     const { emmReportData, emmReportData: { distractionScore, technicalPerformanceScore, adverseEventRate, checklistScore, checklists, phasesOfInterest, caseDuration, hypotension, hypothermia, hypoxia }, specialties, complications } = this.props;
-    const hasHypotension = hypotension && hypotension.dataPoints && hypotension.dataPoints.length;
-    const hasHypothermia = hypothermia && hypothermia.dataPoints && hypothermia.dataPoints.length;
-    const hasHypoxia = hypoxia && hypoxia.dataPoints && hypoxia.dataPoints.length;
+    const hasHypotension = hypotension?.dataPoints?.length;
+    const hasHypothermia = hypothermia?.dataPoints?.length;
+    const hasHypoxia = hypoxia?.dataPoints?.length;
     const hasHL7 = (hasHypotension || hasHypothermia || hasHypoxia);
     const adverseEventRateTitle = adverseEventRate.dataPoints[0].valueX.substr(0, adverseEventRate.dataPoints[0].valueX.length - 3)
-    const specialty = [...new Set(this.state.caseProcedures && this.state.caseProcedures.map((caseProcedure) => caseProcedure.specialty))].join(' · ');
+    const specialty = [...new Set(this.state.caseProcedures?.map((caseProcedure) => caseProcedure.specialty))].join(' · ');
     return (
       <div
         className="Emm-Reports-Overview"
@@ -83,7 +83,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
       >
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <div className="EMM-Overview-Title">{this.state.caseProcedures && this.state.caseProcedures.map((caseProcedure) => caseProcedure.procedure).join(' · ')}</div>
+            <div className="EMM-Overview-Title">{this.state.caseProcedures?.map((caseProcedure) => caseProcedure.procedure).join(' · ')}</div>
             <div className="EMM-Overview-Subtitle">
               {`${specialty ? specialty + " — " : ''}${globalFuncs.formatSecsToTime(caseDuration, true)}`}
             </div>

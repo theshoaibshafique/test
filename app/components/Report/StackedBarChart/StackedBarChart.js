@@ -146,19 +146,19 @@ export default class StackedBarChart extends React.PureComponent {
       chartData.bar.width = 80;
     }
 
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData.data);
-    chart && chart.groups([Object.keys(formattedData)]);
+    let chart = this.chartRef.current?.chart;
+    chart?.load(chartData.data);
+    chart?.groups([Object.keys(formattedData)]);
     //Load actual data for animation
     setTimeout(() => {
       chartData.data.columns = columns
-      chart = this.chartRef.current && this.chartRef.current.chart;
-      chart && chart.load(chartData.data);
+      chart = this.chartRef.current?.chart;
+      chart?.load(chartData.data);
       if (zData.length > 0) {
         setTimeout(() => {
-          chart = this.chartRef.current && this.chartRef.current.chart;
+          chart = this.chartRef.current?.chart;
           chartData.data.columns = columns
-          chart && chart.load(chartData.data);
+          chart?.load(chartData.data);
         }, 500);
       }
 
@@ -170,7 +170,7 @@ export default class StackedBarChart extends React.PureComponent {
   }
 
   createCustomLabel(v, id, i, j) {
-    if (id && id == "Total") {
+    if (id == "Total") {
       return v == null ? "N/A" : v;
     }
   }
@@ -191,7 +191,7 @@ export default class StackedBarChart extends React.PureComponent {
       );
     } else {
       const {logger, title} = this.props;
-    logger && logger.manualAddLog('mouseover', `stacked-bar-tooltip-${title}`, {toolTip:tooltipData, xValue:valueX, yValue: d[0].value});
+      logger?.manualAddLog('mouseover', `stacked-bar-tooltip-${title}`, {toolTip:tooltipData, xValue:valueX, yValue: d[0].value});
       return ReactDOMServer.renderToString(
         <div className="chartTooltip subtle-subtext" >
           {tooltipData.map((line) => {

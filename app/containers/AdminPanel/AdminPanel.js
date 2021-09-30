@@ -19,7 +19,7 @@ export default class AdminPanel extends React.PureComponent {
   handleChange(obj, tabIndex) {
     const {logger} = this.props;
     
-    logger && logger.manualAddLog('click', 'swap-tab', TABS[tabIndex]);
+    logger?.manualAddLog('click', 'swap-tab', TABS[tabIndex]);
     this.setState({ tabIndex });
   }
   componentDidMount() {
@@ -34,7 +34,7 @@ export default class AdminPanel extends React.PureComponent {
   componentDidUpdate(){
     const {logger} = this.props;
     setTimeout(() => {
-      logger && logger.connectListeners();
+      logger?.connectListeners();
     }, 300)
   }
 
@@ -86,7 +86,7 @@ export default class AdminPanel extends React.PureComponent {
   }
 
   render() {
-
+    const hasSSC = (this.state.sscConfig?.checklists?.length > 0);
     return (
       <div className="admin-panel">
         <div className="header">
@@ -100,7 +100,7 @@ export default class AdminPanel extends React.PureComponent {
         >
           <StyledTab label="User Management" />
           <StyledTab label="Efficiency" />
-          {(this.state.sscConfig && this.state.sscConfig.checklists && this.state.sscConfig.checklists.length > 0) && <StyledTab label="Surgical Safety Checklist" />}
+          {hasSSC && <StyledTab label="Surgical Safety Checklist" /> || <span/>}
         </StyledTabs>
         <TabPanel value={this.state.tabIndex} index={0}>
           <UserManagement />
@@ -113,12 +113,12 @@ export default class AdminPanel extends React.PureComponent {
             submit={(updates) => this.submitEfficiencyConfig(updates)}
           />
         </TabPanel>
-        <TabPanel value={this.state.tabIndex} index={2}>
+        {hasSSC && <TabPanel value={this.state.tabIndex} index={2}>
           <SSCSettings
             sscConfig={this.state.sscConfig}
             submit={(updates) => this.submitSSCConfig(updates)}
           />
-        </TabPanel>
+        </TabPanel>}
 
       </div>
     );

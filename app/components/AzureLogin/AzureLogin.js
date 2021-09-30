@@ -66,7 +66,7 @@ class AzureLogin extends React.Component {
 
 
   getSpecialty(userFacility) {
-    if (this.props.specialties && this.props.specialties.length > 0) {
+    if (this.props?.specialties?.length > 0) {
       return;
     }
     globalFunctions.genericFetch(process.env.SPECIALTY_API + "/" + userFacility, 'get', this.props.userToken, {})
@@ -75,7 +75,7 @@ class AzureLogin extends React.Component {
           if (result == 'error' || !result) {
             return;
           }
-          this.props.setSpecialtyList(result.filter && result.filter(s => s && s.value));
+          this.props.setSpecialtyList(result?.filter(s => s?.value));
         } else {
 
           // error
@@ -84,7 +84,7 @@ class AzureLogin extends React.Component {
   };
 
   getComplications() {
-    if (this.props.complications && this.props.complications.length > 0) {
+    if (this.props.complications?.length > 0) {
       return;
     }
 

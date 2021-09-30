@@ -81,8 +81,8 @@ export default class HorizontalBarChart extends React.PureComponent {
     });
     let chartData = this.state.chartData;
     chartData.data.columns = [formattedData.x, formattedData.y];
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData);
+    let chart = this.chartRef.current?.chart;
+    chart?.load(chartData);
 
     this.setState({ chartData, colours, isLoaded: true })
   }

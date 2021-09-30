@@ -10,7 +10,7 @@ export default class LineChart extends React.PureComponent {
     super(props);
 
     this.chartRef = React.createRef();
-    const pointCount = this.props.dataPoints && this.props.dataPoints.filter((point) => point.valueY).length;
+    const pointCount = this.props.dataPoints?.filter((point) => point.valueY)?.length;
     // debugger;
     this.state = {
       chartID: 'lineChartDetailed',
@@ -100,13 +100,13 @@ export default class LineChart extends React.PureComponent {
       })
     });
 
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData.data);
+    let chart = this.chartRef?.current?.chart;
+    chart?.load(chartData.data);
     //Load actual data for animation
     setTimeout(() => {
       chartData.data.columns = columns
-      chart = this.chartRef.current && this.chartRef.current.chart;
-      chart && chart.load(chartData.data);
+      chart = this.chartRef.current?.chart;
+      chart?.load(chartData.data);
     }, 500);
 
     this.setState({ chartData, legendData, isLoaded: true })

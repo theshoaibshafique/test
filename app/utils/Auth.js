@@ -15,8 +15,8 @@ export function redirectLogin(logger) {
     const challenge = generate_code_challenge(code_verifier);
     const code_challenge = `&code_challenge=${challenge}`;
     
-    logger && logger.manualAddLog('session', `verifier_and_challenge`, {'verifier': code_verifier, 'challenge':challenge});
-    logger && logger.sendLogs();
+    logger?.manualAddLog('session', `verifier_and_challenge`, {'verifier': code_verifier, 'challenge':challenge});
+    logger?.sendLogs();
     const state = `&state=${generate_code_verifier()}`;
     localStorage.setItem('state', state);
     localStorage.setItem('redirect', window.location.pathname + window.location.search)

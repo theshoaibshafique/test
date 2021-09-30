@@ -17,7 +17,7 @@ export function Case(props) {
   const eTime = moment(wheelsOut).format("HH:mm");
   const diff = moment().endOf('day').diff(moment(wheelsIn).endOf('day'), 'days');
   const date = moment(wheelsOut).format("MMMM DD");
-  const { specialtyName, procedureName } = procedures && procedures.length && procedures[0];
+  const { specialtyName, procedureName } = procedures?.length && procedures[0];
   const daysAgo = `${date} (${diff} ${diff == 1 ? 'day' : 'days'} ago)`;
   const tagDisplays = displayTags(tags, emrCaseId, isShort);
 

@@ -56,7 +56,7 @@ export default class Efficiency extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.reportType != this.props.reportType) {
       let selectedSpecialty = this.state.selectedSpecialty
-      if (selectedSpecialty && !selectedSpecialty.value) {
+      if (!selectedSpecialty?.value) {
         selectedSpecialty = "";
       }
       //If they change the page without setting a start/endDate we use the default date
@@ -78,7 +78,7 @@ export default class Efficiency extends React.PureComponent {
     }
     const {logger} = this.props;
     setTimeout(() => {
-      logger && logger.connectListeners();
+      logger?.connectListeners();
     }, 300)
   }
 
@@ -215,24 +215,24 @@ export default class Efficiency extends React.PureComponent {
 
 
   getReportLayout() {
-    this.state.source && this.state.source.cancel('Cancel outdated report calls');
+    this.state.source?.cancel('Cancel outdated report calls');
     if (!this.state.endDate || !this.state.startDate) {
       return;
     }
     this.setState({ reportData: [], globalData: [], isFilterApplied: true, isLoading: true, source: axios.CancelToken.source() },
       () => {
         const filter = this.getFilterLayout(this.state.reportType);
-        const specialty = filter.showSpecialty && this.state.selectedSpecialty && this.state.selectedSpecialty.id;
+        const specialty = filter.showSpecialty && this.state.selectedSpecialty?.id;
         const jsonBody = {
           "dashboardName": this.state.reportType,
           "facilityName": this.props.userFacility,
 
-          "startDate": this.state.startDate && this.state.startDate.format('YYYY-MM-DD'),
-          "endDate": this.state.endDate && this.state.endDate.format('YYYY-MM-DD'),
+          "startDate": this.state.startDate?.format('YYYY-MM-DD'),
+          "endDate": this.state.endDate?.format('YYYY-MM-DD'),
 
-          "roomName": (filter.showOR || filter.showOR2) && this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.id || null,
+          "roomName": (filter.showOR || filter.showOR2) && this.state.selectedOperatingRoom?.id || null,
           "specialtyName": specialty == "" ? null : specialty,
-          "procedureName": filter.showProcedure && this.state.selectedProcedure && this.state.selectedProcedure.id,
+          "procedureName": filter.showProcedure && this.state.selectedProcedure?.id,
           "threshold": this.calculateThreshold(this.state.reportType)
         }
 
@@ -244,7 +244,7 @@ export default class Efficiency extends React.PureComponent {
             } else if (result) {
               // result = JSON.parse(result);
 
-              if (result.tiles && result.tiles.length > 0) {
+              if (result.tiles?.length > 0) {
                 const reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
                 const globalData = this.groupTiles(result.globalTiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
                 this.setState({ reportData, globalData, isLoading: false });
@@ -272,7 +272,7 @@ export default class Efficiency extends React.PureComponent {
 
   updateState(key, value) {
     const {logger} = this.props;
-    logger && logger.manualAddLog('onchange', `update-${key}`, value);
+    logger?.manualAddLog('onchange', `update-${key}`, value);
     this.setState({
       [key]: value,
       isFilterApplied: false
@@ -316,12 +316,12 @@ export default class Efficiency extends React.PureComponent {
 
   handleTabChange(obj, tabIndex) {
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', 'swap-tab', tabIndex ? 'Global Comparison' : 'My Hospital');
+    logger?.manualAddLog('click', 'swap-tab', tabIndex ? 'Global Comparison' : 'My Hospital');
     this.setState({ tabIndex });
   }
 
   renderDashboard() {
-    let reportData = this.state.reportData && this.state.reportData || []
+    let reportData = this.state.reportData || []
     if (this.state.isLandingPage) {
       return <span>
         <StyledTabs
@@ -366,7 +366,7 @@ export default class Efficiency extends React.PureComponent {
   renderTiles(reportData = this.state.reportData, includeExcludedMessage = true) {
     //Tiles of the same type get a different colour
     let tileTypeCount = {};
-    let result = reportData && reportData.map((tileGroup, index) => {
+    let result = reportData?.map((tileGroup, index) => {
       return (
         tileGroup.group.map((tile, i) => {
           tileTypeCount[tile.tileType] = tileTypeCount[tile.tileType] ? tileTypeCount[tile.tileType] + 1 : 1;
@@ -405,7 +405,7 @@ export default class Efficiency extends React.PureComponent {
           message={tile.description || tile.body}
         />
       case 'TABLE':
-        return <Table procedures={this.state.selectedSpecialty && this.state.selectedSpecialty.procedures} dataPointRows={tile.dataPointRows} description={tile.description || tile.body} />
+        return <Table procedures={this.state.selectedSpecialty?.procedures} dataPointRows={tile.dataPointRows} description={tile.description || tile.body} />
       case 'BARCHART':
         let pattern = this.state.chartColours.slice(tile.tileTypeCount - 1 % this.state.chartColours.length);
         return <BarChart

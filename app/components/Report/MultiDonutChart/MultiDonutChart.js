@@ -39,19 +39,19 @@ export default class MultiDonutChart extends React.PureComponent {
     return <div className={`${this.state.chartID} multi-donut-chart-detailed-legend`}>
 
       {legendData.map((id, index) => {
-        const chart = this.state.chartRefs[0].current && this.state.chartRefs[0].current.chart;
+        const chart = this.state.chartRefs[0]?.current?.chart;
         return (
           <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")}
             onMouseOver={() => {
               this.state.chartRefs.map((chartRef) => {
                 let chart = chartRef.current.chart;
-                chart && chart.focus(id);
+                chart?.focus(id);
               })
             }}
             onMouseOut={() => {
               this.state.chartRefs.map((chartRef) => {
                 let chart = chartRef.current.chart;
-                chart && chart.revert();
+                chart?.revert();
               })
             }}
             key={index}>

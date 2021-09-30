@@ -145,7 +145,7 @@ function Phase(props) {
 
 function Goal(props) {
   let { goal, currentGoal, title, tooltip, onChange, id } = props;
-  const clss = title && title.toLowerCase().replace(/\s/g, '');
+  const clss = title?.toLowerCase().replace(/\s/g, '');
 
   //Keep track of your own Value and only update Goal on Committed (Better performance)
   let [value, setValue] = React.useState(goal);
@@ -207,7 +207,7 @@ export default class SSCSettings extends React.PureComponent {
     const { sscConfig } = this.props;
     const { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
     this.state = {
-      checklists: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists || [])),
+      checklists: JSON.parse(JSON.stringify(sscConfig?.checklists || [])),
       isChanged: false,
       isPhaseChanged: {},
       complianceGoal: complianceGoal,
@@ -220,7 +220,7 @@ export default class SSCSettings extends React.PureComponent {
       const { sscConfig } = this.props;
       const { complianceGoal, engagementGoal, qualityGoal } = sscConfig;
       this.setState({
-        checklists: sscConfig && sscConfig.checklists || [],
+        checklists: sscConfig?.checklists || [],
         complianceGoal: complianceGoal,
         engagementGoal: engagementGoal,
         qualityGoal: qualityGoal
@@ -241,7 +241,7 @@ export default class SSCSettings extends React.PureComponent {
         ...isPhaseChanged,
         [checklists[cIndex].phases[pIndex].phaseId]: true
       };
-      logger && logger.manualAddLog('click', `ssc-settings-toggle-item-${item.questionName}`, {checked: item.isActive});
+      logger?.manualAddLog('click', `ssc-settings-toggle-item-${item.questionName}`, {checked: item.isActive});
     } else if (pIndex >= 0) {
       const phase = checklists[cIndex].phases[pIndex];
       phase.isActive = !phase.isActive;
@@ -255,7 +255,7 @@ export default class SSCSettings extends React.PureComponent {
         ...isPhaseChanged,
         [checklists[cIndex].phases[pIndex].phaseId]: true
       };
-      logger && logger.manualAddLog('click', `ssc-settings-toggle-phase-${phase.phaseName}`, {checked: phase.isActive});
+      logger?.manualAddLog('click', `ssc-settings-toggle-phase-${phase.phaseName}`, {checked: phase.isActive});
     } //Eventually different checklists will be toggleable
 
     this.setState({
@@ -267,7 +267,7 @@ export default class SSCSettings extends React.PureComponent {
 
   updateGoal(title, goal = null) {
     const {logger} = this.props;
-    logger && logger.manualAddLog('onchange', `ssc-settings-goal-${title}`, goal ? goal : {checked: false});
+    logger?.manualAddLog('onchange', `ssc-settings-goal-${title}`, goal ? goal : {checked: false});
     switch (title) {
       case "Compliance Score":
         this.setState({ complianceGoal: goal })
@@ -325,7 +325,7 @@ export default class SSCSettings extends React.PureComponent {
       ]
     }
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', `ssc-settings-submit`);
+    logger?.manualAddLog('click', `ssc-settings-submit`);
     this.setState({ isLoading: true }, () => {
       this.props.submit(jsonBody).then(() => {
         this.setState({
@@ -341,9 +341,9 @@ export default class SSCSettings extends React.PureComponent {
     const { sscConfig } = this.props;
     const { complianceGoal, engagementGoal, qualityGoal } = sscConfig || {};
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', `ssc-settings-reset`);
+    logger?.manualAddLog('click', `ssc-settings-reset`);
     this.setState({
-      checklists: JSON.parse(JSON.stringify(sscConfig && sscConfig.checklists)),
+      checklists: JSON.parse(JSON.stringify(sscConfig?.checklists)),
       isChanged: false,
       isPhaseChanged: {},
       complianceGoal,

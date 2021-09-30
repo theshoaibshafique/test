@@ -117,7 +117,7 @@ export function DetailedCase(props) {
 
   const handleOpenRequestEMM = (open) => {
     setOpenRequestEMM(open);
-    logger && logger.manualAddLog('click', open ? 'open-emm-request' : 'close-emm-request', !open && !isRequestSubmitted ? 'Closed without submission' : '');
+    logger?.manualAddLog('click', open ? 'open-emm-request' : 'close-emm-request', !open && !isRequestSubmitted ? 'Closed without submission' : '');
   }
 
   const reportButton = () => {
@@ -198,16 +198,16 @@ export function DetailedCase(props) {
     if (isComplicationOtherChecked) {
       if (!requestData.complicationOther) {
         setIsComplicationFilled(false);
-        logger && logger.manualAddLog('click', 'submit-validation-error', 'complication-empty');
+        logger?.manualAddLog('click', 'submit-validation-error', 'complication-empty');
         return;
       }
     } else if (requestData.complications.length < 1) {
-      logger && logger.manualAddLog('click', 'submit-validation-error', 'complication-empty');
+      logger?.manualAddLog('click', 'submit-validation-error', 'complication-empty');
       setIsComplicationFilled(false);
       return;
     }
     if (!requestData.complicationDate) {
-      logger && logger.manualAddLog('click', 'submit-validation-error', 'complication-date-empty');
+      logger?.manualAddLog('click', 'submit-validation-error', 'complication-date-empty');
       setIsComplicationDateFilled(false);
       return;
     }
@@ -223,7 +223,7 @@ export function DetailedCase(props) {
       "usersToNotify": requestData.users.map((c) => c.id),
       "facilityName": userFacility
     }
-    logger && logger.manualAddLog('click', 'submit-emm-request', jsonBody);
+    logger?.manualAddLog('click', 'submit-emm-request', jsonBody);
     setIsSending(true);
     globalFunctions.genericFetch(process.env.EMMREQUEST_API, 'post', userToken, jsonBody)
       .then(result => {
@@ -241,7 +241,7 @@ export function DetailedCase(props) {
   // Connect logger
   useEffect(() => {
     setTimeout(() => {
-      logger && logger.connectListeners();
+      logger?.connectListeners();
     }, 300)
   });
 
@@ -532,7 +532,7 @@ export function DetailedCase(props) {
             <AddFlagForm
               handleOpenAddFlag={handleOpenAddFlag}
               flagReport={flagReport}
-              reportId={flagReport && flagReport.reportId}
+              reportId={flagReport?.reportId}
               procedureTitle={procedureTitle}
               requestEMMDescription={requestEMMDescription}
               roomIds={roomIds}
@@ -687,7 +687,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           //   flagData: updatedStateValue.flagData.map((ques, i) => i > )
           // }
           // // Handle selection of choice-other option type.
-          if (optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
+          if (optionObject?.type?.toLowerCase() === 'choice-other') {
             updatedStateValue = {
               ...updatedStateValue,
               // isFlagChoiceOther: {
@@ -821,7 +821,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
           // If a new option is selected.
         } else {
           // Handle selection of choice-other option type.
-          if (optionObject.type && optionObject.type.toLowerCase() === 'choice-other') {
+          if (optionObject?.type?.toLowerCase() === 'choice-other') {
             updatedStateValue = {
               ...updatedStateValue,
               isFlagChoiceOther: {
@@ -1168,7 +1168,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
             variant="outlined"
             className="primary send-request submit-flag"
             onClick={onFlagSubmit}
-            disabled={flagState.flagData && flagState.flagData.some(el => el.completed === false) || flagState.isSendingFlag}
+            disabled={flagState?.flagData?.some(el => el.completed === false) || flagState.isSendingFlag}
           >
             {flagState.isSendingFlag ? <div className="loader"></div> : 'Submit Flag'}
           </Button>
@@ -1304,7 +1304,7 @@ const FlagTextInput = (props) => {
       placeholder="Please specify"
       value={flagInputOtherValue[question.title]}
       onChange={(e) => handleFlagInputChange(e, question.title)}
-      helperText={choiceOtherInputError[question.id] && `Please enter a ${question && question.title.toLowerCase()}`}
+      helperText={choiceOtherInputError[question.id] && `Please enter a ${question?.title.toLowerCase()}`}
       error={choiceOtherInputError[question.id] /*|| inputError[question.id]*/}
       inputProps={{
         maxLength: 128
@@ -1339,7 +1339,7 @@ const requestReducer = (state, event) => {
     }
   }
   const logger = event.logger
-  logger && logger.manualAddLog('onchange', event.name, event.value);
+  logger?.manualAddLog('onchange', event.name, event.value);
 
   return {
     ...state,
@@ -1367,7 +1367,7 @@ function ProcedureDistribution(props) {
 
     const time = globalFunctions.formatSecsToTime(seconds, true, true);
     const percentile = `${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(d.x, scale, shape) * 100))} percentile`;
-    logger && logger.manualAddLog('mouseover', `procedure-time-tooltip`, { xValue: time, yValue: percentile })
+    logger?.manualAddLog('mouseover', `procedure-time-tooltip`, { xValue: time, yValue: percentile })
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
@@ -1451,8 +1451,8 @@ function HL7Chart(props) {
   });
 
   const hasHL7Data = hl7Data.length > 0;
-  const hasClips = flags && flags.some((f) => f.clips && f.clips.length > 0);
-  const flagTimes = hasClips && flags.map((f) => f.clips && f.clips.map((c) => c.startTime)).flat();
+  const hasClips = flags?.some((f) => f?.clips?.length > 0);
+  const flagTimes = hasClips && flags.map((f) => f?.clips?.map((c) => c.startTime)).flat() || [];
   const min = Math.min(...flagTimes, 0);
   const max = Math.max(...(hasHL7Data ? hl7Data[0].times : []), ...timeline.map((t) => t.time), ...flagTimes);
 
@@ -1466,7 +1466,7 @@ function HL7Chart(props) {
       }
       const time = globalFunctions.formatSecsToTime(d.x);
       const text = value.text;
-      logger && logger.manualAddLog('mouseover', `hl7-tooltip-${d.name}`, { xValue: time, zValue: text, name: d.name })
+      logger?.manualAddLog('mouseover', `hl7-tooltip-${d.name}`, { xValue: time, zValue: text, name: d.name })
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           <div>{time}</div>
@@ -1474,17 +1474,17 @@ function HL7Chart(props) {
         </div>);
     }
 
-    let hl7 = d.find((e) => e && e.id != "y");
-    let y = d.find((e) => e && e.id == "y");
+    let hl7 = d.find((e) => e?.id != "y");
+    let y = d.find((e) => e?.id == "y");
     let value = y && timeline.find((e) => e.time == y.x);
-    let x = hl7 && hl7.x || y && y.x;
+    let x = hl7?.x || y?.x;
     const time = globalFunctions.formatSecsToTime(x);
-    logger && logger.manualAddLog('mouseover', `hl7-tooltip-${hl7 && hl7.name}`, { xValue: time, yValue: hl7 && hl7.value, zValue: value && value.text, name: hl7 && hl7.name })
+    logger?.manualAddLog('mouseover', `hl7-tooltip-${hl7?.name}`, { xValue: time, yValue: hl7?.value, zValue: value?.text, name: hl7?.name })
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         <div>{time}</div>
         {value && <div>{value.text}</div>}
-        {hl7 && hl7.value && <div>{`${hl7.id}: ${hl7.value}${unitMap[hl7.id]}`}</div>}
+        {hl7?.value && <div>{`${hl7.id}: ${hl7.value}${unitMap[hl7.id]}`}</div>}
       </div>);
   }
 
@@ -1610,7 +1610,7 @@ function HL7Chart(props) {
   const handleChangeIndex = (index) => {
     setIndex(index);
     const { times, values, unit, title, y } = hl7Data[index];
-    logger && logger.manualAddLog('click', `change-hl7-selection-${title}`, title);
+    logger?.manualAddLog('click', `change-hl7-selection-${title}`, title);
   }
   if (hasHL7Data) {
     const { times, values, unit, title, y } = hl7Data[index];
@@ -1629,7 +1629,7 @@ function HL7Chart(props) {
 
 
   useEffect(() => {
-    const chart = chartRef && chartRef.current && chartRef.current.chart;
+    const chart = chartRef?.current?.chart;
     if (chart) {
       setTimeout(() => {
         d3.selectAll(`#hl7-chart .marker text`).style('transform', 'translate(18px, 0px) rotate(-90deg)')
@@ -1649,7 +1649,7 @@ function HL7Chart(props) {
     parent.insertBefore(content, parent.firstChild)
 
     //Log initial setup 
-    logger && logger.manualAddLog('session', `initial-hl7`, hl7Data.map((h) => {
+    logger?.manualAddLog('session', `initial-hl7`, hl7Data.map((h) => {
       return { abbreviation: h.abbreviation, title: h.title }
     }));
 
@@ -1661,8 +1661,8 @@ function HL7Chart(props) {
     }
     const { times, values, unit, title, y } = hl7Data[index];
 
-    const chart = chartRef && chartRef.current && chartRef.current.chart;
-    chart && chart.load({
+    const chart = chartRef?.current?.chart;
+    chart?.load({
       columns: [
         ['x', ...times],
         [title, ...values],
@@ -1726,7 +1726,7 @@ function ClipTimeline(props) {
   const closePresenterDialog = (choice) => {
     (choice) && setPresenterMode(choice);
     setPresenterDialog(false);
-    logger && logger.manualAddLog('click', `toggle-presenter-mode`, { checked: choice });
+    logger?.manualAddLog('click', `toggle-presenter-mode`, { checked: choice });
   }
   const ConfirmPresenterDialog = (props) => {
     return (
@@ -1761,7 +1761,7 @@ function ClipTimeline(props) {
     } else {
       //otherwise, can just turn off presentation mode
       setPresenterMode(false)
-      logger && logger.manualAddLog('click', `toggle-presenter-mode`, { checked: false });
+      logger?.manualAddLog('click', `toggle-presenter-mode`, { checked: false });
     }
   }
   const [timeline, setTimeline] = React.useState(flags.map((f) => {
@@ -1780,10 +1780,10 @@ function ClipTimeline(props) {
   const handleSelect = (t, i) => {
     if (t) {
       t.params = `?flag_id=${t.flagId}&clip_id=${t.clipId}`;
-      logger && logger.manualAddLog('click', `open-clip-${t.clipId}`, t)
+      logger?.manualAddLog('click', `open-clip-${t.clipId}`, t)
       t.index = i;
     } else {
-      logger && logger.manualAddLog('click', `close-clip-${selectedMarker.clipId}`)
+      logger?.manualAddLog('click', `close-clip-${selectedMarker.clipId}`)
       dispatch(setFlaggedClip(null));
     }
     setSelect(t);
@@ -1805,14 +1805,14 @@ function ClipTimeline(props) {
       .then(result => {
         const tLine = [...timeline];
         tLine[selectedMarker.index].isActive = true;
-        logger && logger.manualAddLog('click', `publish-clip-${selectedMarker.clipId}`, selectedMarker)
+        logger?.manualAddLog('click', `publish-clip-${selectedMarker.clipId}`, selectedMarker)
         setTimeline(tLine)
       }).catch((results) => {
         console.error("oh no", results)
       })
   }
 
-  const publishButton = selectedMarker && selectedMarker.isActive == null && (
+  const publishButton = selectedMarker?.isActive == null && (
     <div className="button">
       <Button variant="outlined" className="primary" onClick={() => publishClip()}>Publish</Button>
     </div>
@@ -1890,7 +1890,7 @@ function ClipTimeline(props) {
                 <div className="details-header">
                   Flag Details
                 </div>
-                {selectedMarker.description && selectedMarker.description.map((d, i) => {
+                {selectedMarker?.description?.map((d, i) => {
                   return (
                     <div className="detail-entry subtext" key={`${d.answer}-${i}`}>
                       <div className="title">{d.questionTitle}:</div>

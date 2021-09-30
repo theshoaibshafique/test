@@ -30,7 +30,7 @@ export default class EMMPhaseAnalysis extends React.PureComponent { // eslint-di
     this.props.setEmmPhaseIndex(phaseIndex)
     const {logger} = this.props;
     const { phaseTitles } = this.state;
-    logger && logger.manualAddLog('click', `switch-tab-${phaseTitles[phaseIndex]}`);
+    logger?.manualAddLog('click', `switch-tab-${phaseTitles[phaseIndex]}`);
   }
 
   getPhaseTime(startTime, endTime) {

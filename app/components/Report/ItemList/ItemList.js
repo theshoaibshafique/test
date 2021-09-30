@@ -79,7 +79,7 @@ export default class ItemList extends React.PureComponent {
     //Check if its the same title
     let isSameTitle = titleElement.length && key == titleElement[0].textContent;
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', `sort-item-list-${key}`, element.length && isSameTitle ? 'desc' : 'asc');
+    logger?.manualAddLog('click', `sort-item-list-${key}`, element.length && isSameTitle ? 'desc' : 'asc');
   }
   
   render() {

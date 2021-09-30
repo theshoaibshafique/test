@@ -57,7 +57,7 @@ export function BrowseCases(props) {
   const handleClose = (event) => {
     setAnchorEl(null);
     if (event.target.value != undefined) {
-      logger && logger.manualAddLog('click', 'sort-cases', event.target.value ? 'oldest to recent' : 'recent to oldest');
+      logger?.manualAddLog('click', 'sort-cases', event.target.value ? 'oldest to recent' : 'recent to oldest');
       setIsOldest(event.target.value)
     }
 
@@ -71,7 +71,7 @@ export function BrowseCases(props) {
   const [includeAllTags, setIncludeAllTags] = React.useState(0);
 
   const handleChangeIncludeAllTags = (includeAllTags) => {
-    logger && logger.manualAddLog('click', 'match-tags', includeAllTags == 1 ? 'Matches all tags' : 'Matches any tags');
+    logger?.manualAddLog('click', 'match-tags', includeAllTags == 1 ? 'Matches all tags' : 'Matches any tags');
     setIncludeAllTags(includeAllTags)
   }
 
@@ -84,9 +84,9 @@ export function BrowseCases(props) {
       (!from || moment(c.wheelsIn).isAfter(moment(from).startOf('day'))) &&
       (!to || moment(c.wheelsOut).isBefore(moment(to).endOf('day'))) &&
       //given the filtered `specialties` list - check that the case has at least ONE matching specialty (including secondary specialties)
-      (!specialties.length || c.procedures && c.procedures.some((p) => specialties.includes(p.specialtyName))) &&
+      (!specialties.length || c?.procedures?.some((p) => specialties.includes(p.specialtyName))) &&
       //Given the filtered `procedures` list match every item with at least one procedure (including secondary procedures)
-      (!procedures.length || procedures.every((p) => c.procedures && c.procedures.some(pr => pr.procedureName.toLowerCase().includes(p.toLowerCase())))) &&
+      (!procedures.length || procedures.every((p) => c?.procedures?.some(pr => pr.procedureName.toLowerCase().includes(p.toLowerCase())))) &&
       (!roomNames.length || roomNames.includes(c.roomName)) &&
       (!searchData.tags.length || (includeAllTags == 1 && searchData.tags.every((t) => cTags.includes(t))) || (includeAllTags == 0 && cTags.some((t) => searchData.tags.includes(t)))) &&
       (!searchData.onlySavedCases || (savedCases.includes(c.caseId)))
@@ -101,7 +101,7 @@ export function BrowseCases(props) {
 
 
   const getCasesView = () => {
-    if (filterCases && filterCases.length) {
+    if (filterCases?.length) {
       return (
         <TransitionGroup>{
           filterCases.map((c, i) => (
@@ -181,7 +181,7 @@ export function BrowseCases(props) {
 
   const handleShowTagsModal = (show) => {
     if (!show) {
-      logger && logger.manualAddLog('click', 'close-learn-more-tags', null);
+      logger?.manualAddLog('click', 'close-learn-more-tags', null);
     }
     setShowTagsModal(show);
   }
@@ -192,7 +192,7 @@ export function BrowseCases(props) {
     document.getElementById("cases-id").scrollTop = 0;
     //Log the top elements manually after animation
     setTimeout(() => {
-      logger && logger.manualAddLog('scroll', 'cases-in-view', getCasesInView());
+      logger?.manualAddLog('scroll', 'cases-in-view', getCasesInView());
     }, 1000)
   }
   const handleChange = (e,v) => {
@@ -374,7 +374,7 @@ export function BrowseCases(props) {
         <div style={{ position: 'relative' }}>
           <div className="header">
             <div className="header-label">
-              {!isLoading && `${filterCases && filterCases.length || 0} Cases`}
+              {!isLoading && `${filterCases?.length || 0} Cases`}
             </div>
             <div>
               <Button className={classes.sortButton} onClick={handleClick} disableRipple>
@@ -396,7 +396,7 @@ export function BrowseCases(props) {
               {getCasesView()}
               {(numShownCases < filterCases.length) && <Button variant="contained" className="load-more" id="load-more" disableElevation onClick={() => {
                 setNumShownCases(numShownCases + 10);
-                logger && logger.manualAddLog('click', 'load-more', filterCases.slice(numShownCases, numShownCases + 10).map(formatCaseForLogs));
+                logger?.manualAddLog('click', 'load-more', filterCases.slice(numShownCases, numShownCases + 10).map(formatCaseForLogs));
               }}>
                 Load More
               </Button>}

@@ -102,7 +102,7 @@ export default class ReportScore extends React.PureComponent {
 
   render() {
     const { title, toolTip, total, dataPoints, goal } = this.props
-    let compareValue = dataPoints && dataPoints.length && dataPoints[0] || false;
+    let compareValue = dataPoints?.length && dataPoints[0] || false;
     return (
       <LoadingOverlay
         active={false}

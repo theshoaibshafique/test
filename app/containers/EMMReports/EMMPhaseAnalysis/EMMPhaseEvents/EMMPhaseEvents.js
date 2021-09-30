@@ -24,7 +24,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
   toggleShowOnlyAE(showOnlyAE) {
     this.setState({ showOnlyAE: !showOnlyAE });
     const { logger } = this.props;
-    logger && logger.manualAddLog('click', `toggle-show-only-ae`, { checked: !showOnlyAE });
+    logger?.manualAddLog('click', `toggle-show-only-ae`, { checked: !showOnlyAE });
   }
 
   getEventsTitle(isOpenProcedure) {
@@ -100,11 +100,11 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
               const AEEventTitle = this.getAEEventTitle(data, index, isOpenProcedure);
               const timeSelectClick = () => {
                 this.aeSelected(data.startTime, data.assets[0], index, isLapProcedure);
-                logger && logger.manualAddLog('click', `time-select-${data.subTitle}`, { time: data.startTime });
+                logger?.manualAddLog('click', `time-select-${data.subTitle}`, { time: data.startTime });
               }
               const aeSelect = () => {
                 this.aeSelected(data.startTime, data.assets[0], index);
-                logger && logger.manualAddLog('click', `ae-select-${data.title}`, { time: data.startTime });
+                logger?.manualAddLog('click', `ae-select-${data.title}`, { time: data.startTime });
               }
               return <div className={`phase-events ${this.shouldHighlight(data.startTime, data.endTime, index, isLapProcedure)}`} key={`dataPoints${index}`}>
                 <div key={`phaseEvent${index}`}
@@ -120,7 +120,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
                 {data.dataPoints.map((aeEvent, index) => {
                   const seekVideo = () => {
                     this.props.seekVideo(parseInt(aeEvent.valueX));
-                    logger && logger.manualAddLog('click', `ae-select-${aeEvent.title}`, { time: data.startTime });
+                    logger?.manualAddLog('click', `ae-select-${aeEvent.title}`, { time: data.startTime });
                   }
                   return <div key={`aeEvent${index}`} className="event subtle-subtext flex" onClick={seekVideo}>
                     <div className="event-circle" />{aeEvent.title}

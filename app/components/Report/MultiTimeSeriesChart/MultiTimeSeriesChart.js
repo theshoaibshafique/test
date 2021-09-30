@@ -16,7 +16,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
 
     this.chartRef = React.createRef();
     const { dataPoints } = this.props;
-    const valueYs = dataPoints && dataPoints.map((point) => point.valueY).filter((y) => y) || [];
+    const valueYs = dataPoints?.map((point) => point.valueY).filter((y) => y) || [];
     this.state = {
       chartID: 'MultiTimeSeriesChart',
       legendData: [],
@@ -174,12 +174,12 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
         return parseInt(x) == x ? 0 : x;
       })
     });
-    let chart = this.chartRef.current && this.chartRef.current.chart;
+    let chart = this.chartRef.current?.chart;
 
-    chart && chart.load(chartData);
+    chart?.load(chartData);
     setTimeout(() => {
       chartData.data.columns = columns;
-      chart && chart.load(chartData.data);
+      chart?.load(chartData.data);
     }, 500);
 
     this.setState({ chartData, tooltipData, legendData, tooltipLegendData, unavailableEndDate, isLoaded: true })
@@ -191,7 +191,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
     const {logger, title} = this.props;
     const unavail = "Unavailable - no data in last 30 days";
     if (na.length == d.length - 1) {
-      logger && logger.manualAddLog('mouseover', `multi-time-series-tooltip-${title}`, {toolTip:[xValue, unavail], xValue:xValue, yValue: d.map((p) => p.value)});
+      logger?.manualAddLog('mouseover', `multi-time-series-tooltip-${title}`, {toolTip:[xValue, unavail], xValue:xValue, yValue: d.map((p) => p.value)});
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext" >
           <div>{xValue}</div>
@@ -200,7 +200,7 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
     }
     d= d.filter((point) => point.value != null && point.id != "NA");
     const tooltip = d.map((point) => `${point.id}: ${point.value}`);
-    logger && logger.manualAddLog('mouseover', `multi-time-series-tooltip-${title}`, {toolTip:[...tooltip, ...na], xValue:xValue, yValue: d.map((p) => p.value)});
+    logger?.manualAddLog('mouseover', `multi-time-series-tooltip-${title}`, {toolTip:[...tooltip, ...na], xValue:xValue, yValue: d.map((p) => p.value)});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext" >
         <div>{xValue}</div>
@@ -272,10 +272,10 @@ export default class MultiTimeSeriesChart extends React.PureComponent {
               id={id.replace(/[^A-Z0-9]+/ig, "")}
               key={index}
               onMouseOver={() => {
-                chart && chart.focus(id);
+                chart?.focus(id);
               }}
               onMouseOut={() => {
-                chart && chart.revert();
+                chart?.revert();
               }}
             >
               <div className="legend-title">

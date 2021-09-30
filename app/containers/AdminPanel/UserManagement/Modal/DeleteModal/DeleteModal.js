@@ -26,7 +26,7 @@ class DeleteModal extends React.Component {
       "roles": containsAdmin ? this.props.roleNames : this.props.userValue.permissions
     }
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', this.props.userValue.isActive ? 'disable-user' :  'enable-user', this.props.userValue.currentUser);
+    logger?.manualAddLog('click', this.props.userValue.isActive ? 'disable-user' :  'enable-user', this.props.userValue.currentUser);
     globalFuncs.genericFetch(`${process.env.USER_API}profile`, 'PATCH', this.props.userToken, jsonBody)
       .then(result => {
         if (result === 'error' || result === 'conflict') {

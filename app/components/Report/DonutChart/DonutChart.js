@@ -100,8 +100,8 @@ export default class DonutChart extends React.PureComponent {
     let chartData = this.state.chartData;
     //Set as 0 by default and "load" columns later for animation
     chartData.data.columns = legendData;
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData);
+    let chart = this.chartRef.current?.chart;
+    chart?.load(chartData);
     this.setState({ chartData, xData, tooltipLegendData, tooltipData, legendData, isLoaded: true })
   }
 
@@ -114,7 +114,7 @@ export default class DonutChart extends React.PureComponent {
       return;
     }
     const {logger, title} = this.props;
-    logger && logger.manualAddLog('mouseover', `donut-tooltip-${title}`, {toolTip:tooltipData, xValue:d[0].id, yValue: d[0].value});
+    logger?.manualAddLog('mouseover', `donut-tooltip-${title}`, {toolTip:tooltipData, xValue:d[0].id, yValue: d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {
@@ -132,17 +132,17 @@ export default class DonutChart extends React.PureComponent {
         <LegendPagination
           legendData={this.state.legendData}
         >
-          {this.state.legendData && this.state.legendData.map(([id, value], index) => {
+          {this.state.legendData?.map(([id, value], index) => {
             if (id == "NA") {
               return;
             }
             return (
               <div className="legend-item subtle-subtext" id={id.replace(/[^A-Z0-9]+/ig, "")} ref={React.createRef()}
                 onMouseOver={() => {
-                  chart && chart.focus(id);
+                  chart?.focus(id);
                 }}
                 onMouseOut={() => {
-                  chart && chart.revert();
+                  chart?.revert();
                 }}
                 key={index}>
                 <div className="legend-title">

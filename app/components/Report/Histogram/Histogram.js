@@ -123,9 +123,9 @@ export default class Histogram extends React.PureComponent {
     });
     let chartData = this.state.chartData;
     chartData.data.columns = [formattedData.x, formattedData.y];
-    let chart = this.chartRef.current && this.chartRef.current.chart;
+    let chart = this.chartRef.current?.chart;
 
-    chart && chart.load(chartData);
+    chart?.load(chartData);
     const indexOfMax = formattedData.y.slice(1).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
     const leftSpan = Math.min(Math.round(formattedData.y.length * .1), 10)
     const rightSpan = Math.min(Math.round(formattedData.y.length * .2), 15)
@@ -145,7 +145,7 @@ export default class Histogram extends React.PureComponent {
       return;
     }
     const {title, logger} = this.props;
-    logger && logger.manualAddLog('mouseover', `histogram-tooltip-${title}`, {toolTip: tooltipData, xValue:d[0].x, yValue:d[0].value});
+    logger?.manualAddLog('mouseover', `histogram-tooltip-${title}`, {toolTip: tooltipData, xValue:d[0].x, yValue:d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {
@@ -164,7 +164,7 @@ export default class Histogram extends React.PureComponent {
   }
 
   handleBrush(d) {
-    const MAX_TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length * .4);
+    const MAX_TICK_WIDTH = this.props.dataPoints?.length * .4;
     // let chart = this.chartRef.current && this.chartRef.current.chart.element;
     // var visibilityThreshold = chart.clientWidth / MAX_TICK_WIDTH;
     var allTicks = Array.from(document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`));
@@ -190,7 +190,7 @@ export default class Histogram extends React.PureComponent {
 
     const {title, logger} = this.props;
     if (d){
-      logger && logger.manualAddLog('onchange', `time-series-domain-${title}`, {domain:d});
+      logger?.manualAddLog('onchange', `time-series-domain-${title}`, {domain:d});
     }
   }
 

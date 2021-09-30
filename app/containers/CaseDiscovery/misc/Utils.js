@@ -143,7 +143,7 @@ function generateFakeCases(numCases) {
 
 /*** FLAG SUBMISSION HELPER FUNCTIONS ***/
 export const getQuestionByLocation = (flagReport, flagReportLocation) => {
-  if (flagReport && (flagReportLocation && flagReportLocation.length > 0)) {
+  if (flagReport && (flagReportLocation?.length > 0)) {
     let path = '';
     for (let i = 0; i < flagReportLocation.length; i++) {
       if (i % 2 === 0) {

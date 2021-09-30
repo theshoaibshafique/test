@@ -141,17 +141,17 @@ export default class AreaChart extends React.PureComponent {
     chartData.axis.x.label.text = this.props.footer;
     chartData.axis.y.label.text = this.props.subTitle;
 
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData.data);
+    let chart = this.chartRef.current?.chart;
+    chart?.load(chartData.data);
     //Load actual data for animation
     setTimeout(() => {
       chartData.data.columns = columns
-      chart = this.chartRef.current && this.chartRef.current.chart;
-      chart && chart.load(chartData.data);
+      chart = this.chartRef.current?.chart;
+      chart?.load(chartData.data);
       setTimeout(() => {
         chartData.data.columns = columns
-        chart = this.chartRef.current && this.chartRef.current.chart;
-        chart && chart.load(chartData.data);
+        chart = this.chartRef.current?.chart;
+        chart?.load(chartData.data);
       }, 500);
     }, 500);
 

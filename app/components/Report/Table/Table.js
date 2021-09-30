@@ -44,7 +44,7 @@ export default class Table extends React.PureComponent {
   }
 
   calculateRows(rawDataPointRows){
-    let dataPointRows = rawDataPointRows && rawDataPointRows.map(dataPointRow => {
+    let dataPointRows = rawDataPointRows?.map(dataPointRow => {
       return dataPointRow.columns.map(column => {
         let { key, value } = column;
         switch (key) {
@@ -61,7 +61,7 @@ export default class Table extends React.PureComponent {
         return column;
       });
     });
-    let dataPoints = dataPointRows && dataPointRows.map(value => {
+    let dataPoints = dataPointRows?.map(value => {
       return value.reduce((accumulator, currentValue) => {
         accumulator[currentValue.key] = currentValue.value;
         return accumulator;

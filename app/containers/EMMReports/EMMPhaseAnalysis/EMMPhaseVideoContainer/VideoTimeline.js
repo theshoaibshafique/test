@@ -40,7 +40,7 @@ const VideoTimeline = (props) => {
         adverseEvents.map((event, index) => {
           const clickEvent = () => {
             seekVideo(parseInt(event.valueX));
-            logger && logger.manualAddLog('click', `ae-select`, { time: parseInt(event.valueX) });
+            logger?.manualAddLog('click', `ae-select`, { time: parseInt(event.valueX) });
           }
           return <div
                     key={`adverseEvent${index}`}

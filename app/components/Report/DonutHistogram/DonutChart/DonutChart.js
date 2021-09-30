@@ -66,8 +66,8 @@ export default class DonutChart extends React.PureComponent {
     let chartData = this.state.chartData;
     chartData.data.columns = columns;
 
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData);
+    let chart = this.chartRef?.current?.chart;
+    chart?.load(chartData);
     this.setState({ chartData, isLoaded: true })
   }
 

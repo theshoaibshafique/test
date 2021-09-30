@@ -99,13 +99,13 @@ export default class Histogram extends React.PureComponent {
   }
 
   handleBrush(d) {
-    const MAX_TICK_WIDTH = this.props.dataPoints && (this.props.dataPoints.length * .4);
+    const MAX_TICK_WIDTH = (this.props.dataPoints?.length * .4);
     // let chart = this.chartRef.current && this.chartRef.current.chart.element;
     // var visibilityThreshold = chart.clientWidth / MAX_TICK_WIDTH;
     var allTicks = Array.from(document.querySelectorAll(`.${this.state.chartID} .c3-axis-x.c3-axis > g`));
     const bar = document.querySelector(`.${this.state.chartID} .c3-event-rect`);
     //Center tick between bars
-    const tickOffset = bar && bar.getAttribute('width') / 2;
+    const tickOffset = bar?.getAttribute('width') / 2;
     var whitelist = allTicks.filter((tick, index) => index % 10 == 0);
     var visibleTicks = allTicks
       .filter(tick => !tick.querySelector("line[y2='0']"));
@@ -138,12 +138,12 @@ export default class Histogram extends React.PureComponent {
     });
     let chartData = this.state.chartData;
     chartData.data.columns = [formattedData.x, ['y', ...new Array(formattedData.y.length).fill(0)]];
-    let chart = this.chartRef.current && this.chartRef.current.chart;
+    let chart = this.chartRef?.current?.chart;
 
-    chart && chart.load(chartData);
+    chart?.load(chartData);
     setTimeout(() => {
       chartData.data.columns = [formattedData.x, formattedData.y];
-      chart && chart.load(chartData.data);
+      chart?.load(chartData.data);
     }, 500);
 
     this.setState({ chartData, colours, tooltipData, isLoaded: true })
@@ -155,7 +155,7 @@ export default class Histogram extends React.PureComponent {
       return;
     }
     const {title, logger} = this.props;
-    logger && logger.manualAddLog('mouseover', `histogram-tooltip-${title}`, {toolTip: tooltipData, xValue:d[0].x, yValue:d[0].value});
+    logger?.manualAddLog('mouseover', `histogram-tooltip-${title}`, {toolTip: tooltipData, xValue:d[0].x, yValue:d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {

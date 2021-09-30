@@ -22,7 +22,7 @@ const dataReducer = (state, event) => {
   const { logger } = state;
   for (const [key, value] of Object.entries(event)) {
     if (key == 'feedback' || key == 'sendEmail'){
-      logger && logger.manualAddLog('onchange', key, value);
+      logger?.manualAddLog('onchange', key, value);
     }
   }
   
@@ -67,7 +67,7 @@ export function UserFeedback(props) {
       });
   }
   const handleOpen = (open) => {
-    logger && logger.manualAddLog('click', 'toggle-user-feedback', { open: open });
+    logger?.manualAddLog('click', 'toggle-user-feedback', { open: open });
     setData({ isOpen: open, isSent: false });
   }
   return (

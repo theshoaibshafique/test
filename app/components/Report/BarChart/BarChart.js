@@ -34,7 +34,7 @@ export default class BarChart extends React.PureComponent {
         },
         bar: {
           width: {
-            ratio: this.props.dataPoints && this.props.dataPoints.length <= 3 ? .2 : .4
+            ratio: this.props?.dataPoints?.length <= 3 ? .2 : .4
           }
         },
         tooltip: {
@@ -146,18 +146,18 @@ export default class BarChart extends React.PureComponent {
 
     chartData.axis.x.label.text = this.props.xAxis;
     chartData.axis.y.label.text = this.props.yAxis;
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData);
+    let chart = this.chartRef.current?.chart;
+    chart?.load(chartData);
     //Load actual data for animation
     setTimeout(() => {
       chartData.data.columns = columns
-      chart = this.chartRef.current && this.chartRef.current.chart;
-      chart && chart.load(chartData.data);
+      chart = this.chartRef.current?.chart;
+      chart?.load(chartData.data);
       if (zData.length > 0) {
         setTimeout(() => {
           chartData.data.columns = columns
-          chart = this.chartRef.current && this.chartRef.current.chart;
-          chart && chart.load(chartData.data);
+          chart = this.chartRef.current?.chart;
+          chart?.load(chartData.data);
         }, 500);
       }
     }, 500);
@@ -191,7 +191,7 @@ export default class BarChart extends React.PureComponent {
         </div>);
     } else {
       const {title, logger} = this.props;
-      logger && logger.manualAddLog('mouseover', `bar-tooltip-${title}`, {toolTip: tooltipData, xValue:x, yValue:d[0].value});
+      logger?.manualAddLog('mouseover', `bar-tooltip-${title}`, {toolTip: tooltipData, xValue:x, yValue:d[0].value});
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext">
           {tooltipData.map((line) => {

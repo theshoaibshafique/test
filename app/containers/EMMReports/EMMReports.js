@@ -120,7 +120,7 @@ export default class EMMReports extends React.PureComponent {
   componentDidUpdate() {
     const { logger } = this.props;
     setTimeout(() => {
-      logger && logger.connectListeners();
+      logger?.connectListeners();
     }, 300)
   }
 
@@ -172,7 +172,7 @@ export default class EMMReports extends React.PureComponent {
   switchTab(currentTab) {
     const { emmReportTab, logger } = this.props;
     if (currentTab != emmReportTab) {
-      logger && logger.manualAddLog('click', 'swap-tab', (emmReportTab == 'overview') ? 'phase' : 'overview');
+      logger?.manualAddLog('click', 'swap-tab', (emmReportTab == 'overview') ? 'phase' : 'overview');
       this.props.setEmmTab((emmReportTab == 'overview') ? 'phase' : 'overview')
     }
   }
@@ -183,7 +183,7 @@ export default class EMMReports extends React.PureComponent {
       "name": emmReportData.name,
       "published": true
     }
-    logger && logger.manualAddLog('click', 'publish-report');
+    logger?.manualAddLog('click', 'publish-report');
     globalFuncs.genericFetch(process.env.EMMPUBLISH_API, 'PATCH', userToken, jsonBody)
       .then(result => {
         if (result !== 'error' && result !== 'conflict') {
@@ -205,7 +205,7 @@ export default class EMMReports extends React.PureComponent {
     const { setEMMPresenterMode, setEMMPresenterDialog, logger } = this.props;
     (choice) && setEMMPresenterMode(choice);
     setEMMPresenterDialog(false);
-    logger && logger.manualAddLog('click', `toggle-presenter-mode`, { checked: choice });
+    logger?.manualAddLog('click', `toggle-presenter-mode`, { checked: choice });
   }
 
   closeEMMReport() {
@@ -222,7 +222,7 @@ export default class EMMReports extends React.PureComponent {
       showPublishButton = emmPublishAccess && !emmReportData.published && !isPublished
 
     let displayView = null;
-    if (emmReportData && !emmReportData.facilityName){
+    if (!emmReportData?.facilityName){
       displayView = (
         <div style={{height:'50vh'}}>
           <GenericMessage title={'Report Not Found'} message={'Please contact your administrator'}/>

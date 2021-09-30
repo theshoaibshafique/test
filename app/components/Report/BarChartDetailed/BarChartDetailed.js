@@ -126,12 +126,12 @@ export default class BarChartDetailed extends React.PureComponent {
     chartData.axis.x.label.text = this.props.footer;
     chartData.axis.y.label.text = this.props.subTitle;
 
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData.data);
+    let chart = this.chartRef.current?.chart;
+    chart?.load(chartData.data);
     //Load actual data for animation
     setTimeout(() => {
       chartData.data.columns = columns
-      chart && chart.load(chartData.data);
+      chart?.load(chartData.data);
     }, 500);
     this.setState({ chartData, legendData, isLoaded: true })
   }
@@ -170,7 +170,7 @@ export default class BarChartDetailed extends React.PureComponent {
                 <div className="legend-title" id={id.replace(/[^A-Z0-9]+/ig, "")}>
                   <span className="circle" style={{ color: chart.color(id) }} /><div style={{ margin: '-4px 0px 0px 4px' }}> {id}</div>
                 </div>
-                <div className={`link subtle-text ${value && value.substring(1)}`} >
+                <div className={`link subtle-text ${value?.substring(1)}`} >
                   <a>Learn More</a>
                 </div>
               </div>)

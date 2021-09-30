@@ -46,7 +46,7 @@ export default class ChecklistDetail extends React.PureComponent {
   }
 
   prepareData() {
-    let dataPoints = this.props.dataPoints && this.props.dataPoints
+    let dataPoints = this.props.dataPoints
 
     // let topItems = dataPoints.filter(point => point.subTitle)
     //   .slice(0, 5)
@@ -84,11 +84,11 @@ export default class ChecklistDetail extends React.PureComponent {
 
   renderData() {
     // let dataPoints = this.props.dataPoints.sort((a, b) => { return ('' + a.title).localeCompare(b.title) || b.valueX - a.valueX });
-    return this.state.dataPoints && this.state.dataPoints.map((dataGroup, i) => {
+    return this.state.dataPoints?.map((dataGroup, i) => {
       return (
         <Grid item xs key={i} className={"checklist-list"}>
           {dataGroup.group.map((point, j) => {
-            let value = parseInt(point.valueX && point.valueX.replace('%', ''));
+            let value = parseInt(point?.valueX?.replace('%', ''));
             let isTopItem = this.state.topItems.includes(point.title + point.subTitle + point.valueX);
             return (
               <Grid container spacing={0} key={`${i}-${j}`}
@@ -125,7 +125,7 @@ export default class ChecklistDetail extends React.PureComponent {
 
   render() {
     return (
-      <Grid container spacing={3} justify='space-between' className={`checklistdetail max-width-${this.state.dataPoints && this.state.dataPoints.length || 1}`} >
+      <Grid container spacing={3} justify='space-between' className={`checklistdetail max-width-${this.state.dataPoints?.length || 1}`} >
         <Grid item xs={12} className="chart-title header-2">
           {this.props.title}
         </Grid>

@@ -88,9 +88,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   getVideoID() {
     const { selectedSurgicalTab } = this.state;
     const { phaseData } = this.props;
-    if (phaseData.enhancedMMVideo && phaseData.enhancedMMVideo.length && selectedSurgicalTab == 0)
+    if (phaseData.enhancedMMVideo?.length && selectedSurgicalTab == 0)
       return phaseData.enhancedMMVideo[0].assets[0];
-    else if (phaseData.enhancedMMOpenData && phaseData.enhancedMMOpenData.length)
+    else if (phaseData.enhancedMMOpenData?.length)
       return phaseData.enhancedMMOpenData[0].assets[0];
     else if (phaseData.enhancedMMData.length > 0)
       return phaseData.enhancedMMData[0].assets[0];
@@ -99,9 +99,9 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
   getVideoStartEndTime() {
     const { selectedSurgicalTab } = this.state;
     const { phaseData } = this.props;
-    if (phaseData.enhancedMMVideo && phaseData.enhancedMMVideo.length && selectedSurgicalTab == 0)
+    if (phaseData?.enhancedMMVideo.length && selectedSurgicalTab == 0)
       return { endTime: phaseData.enhancedMMVideo[0].endTime, startTime: phaseData.enhancedMMVideo[0].startTime };
-    else if (phaseData.enhancedMMOpenData && phaseData.enhancedMMOpenData.length)
+    else if (phaseData.enhancedMMOpenData?.length)
       return { endTime: phaseData.enhancedMMOpenData[0].endTime, startTime: phaseData.enhancedMMOpenData[0].startTime };
     else if (phaseData.enhancedMMData.length > 0)
       return { endTime: phaseData.enhancedMMData[0].endTime, startTime: phaseData.enhancedMMData[0].startTime };
@@ -248,7 +248,7 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
     } else {
       //otherwise, can just turn off presentation mode
       setEMMPresenterMode(false)
-      logger && logger.manualAddLog('click', `toggle-presenter-mode`, {checked:false});
+      logger?.manualAddLog('click', `toggle-presenter-mode`, {checked:false});
     }
   }
 

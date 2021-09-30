@@ -82,11 +82,11 @@ export default class Login extends React.PureComponent {
           this.redirect()
         }).catch(error => {
           console.error(error);
-          logger && logger.manualAddLog('session', `error_login_auth`, { 'verifier': verifier, 'error': error });
+          logger?.manualAddLog('session', `error_login_auth`, { 'verifier': verifier, 'error': error });
         });
     }
     if (!success) {
-      logger && logger.sendLogs();
+      logger?.sendLogs();
       localStorage.setItem('verifier_list', null);
       window.location.replace(redirectLogin(logger));
     }
@@ -106,14 +106,14 @@ export default class Login extends React.PureComponent {
       window.location.replace(redirectLogin(logger))
       return;
     }
-    logger && logger.manualAddLog('session', `refresh_token`, { 'refresh_token': refreshToken });
+    logger?.manualAddLog('session', `refresh_token`, { 'refresh_token': refreshToken });
     globalFunctions.authFetch(`${process.env.AUTH_API}token`, 'POST', body)
       .then(result => {
         this.processAuthentication(result.data);
       }).catch(error => {
         console.error(error)
-        logger && logger.manualAddLog('session', `error_refresh_token`, { 'refresh_token': refreshToken, 'error': error });
-        logger && logger.sendLogs();
+        logger?.manualAddLog('session', `error_refresh_token`, { 'refresh_token': refreshToken, 'error': error });
+        logger?.sendLogs();
         localStorage.setItem('refreshToken', null);
         window.location.replace(redirectLogin(logger))
       });
@@ -151,7 +151,7 @@ export default class Login extends React.PureComponent {
 
 
   getComplications(token) {
-    if (this.props.complications && this.props.complications.length > 0) {
+    if (this.props.complications?.length > 0) {
       return;
     }
 

@@ -16,9 +16,8 @@ export default class TimeSeriesChart extends React.PureComponent {
 
     this.chartRef = React.createRef();
     const { dataPoints, startDate } = this.props;
-    const valueYs = dataPoints && dataPoints.map((point) => point.valueY).filter((y) => y) || [] || [];
+    const valueYs = dataPoints?.map((point) => point.valueY).filter((y) => y) || [] || [];
 
-    const firstPointWithY = dataPoints && dataPoints.find(point => point.valueY != null);
     this.state = {
       chartID: 'TimeSeriesChart',
       chartData: {
@@ -140,7 +139,7 @@ export default class TimeSeriesChart extends React.PureComponent {
 
     const {title, logger} = this.props;
     if (d){
-      logger && logger.manualAddLog('onchange', `time-series-domain-${title}`, {domain:d});
+      logger?.manualAddLog('onchange', `time-series-domain-${title}`, {domain:d});
     }
     
     return true
@@ -181,16 +180,16 @@ export default class TimeSeriesChart extends React.PureComponent {
     });
     let chartData = this.state.chartData;
     chartData.data.columns = [formattedData.x, ['y', ...new Array(formattedData.y.length).fill(0)]];
-    let chart = this.chartRef.current && this.chartRef.current.chart;
+    let chart = this.chartRef.current?.chart;
 
-    chart && chart.load(chartData);
+    chart?.load(chartData);
     let domain = [this.props.startDate.format("YYYY-MM-DD"), this.props.endDate.format("YYYY-MM-DD")];
     if (this.props.startDate.format("YYYY-MM-DD") == this.props.endDate.format("YYYY-MM-DD")){
       domain = [this.props.startDate.clone().add(-1,'day').format("YYYY-MM-DD"), this.props.endDate.clone().add(1,'day').format("YYYY-MM-DD")]
     }
     setTimeout(() => {
       chartData.data.columns = [formattedData.x, formattedData.y, na];
-      chart && chart.load(chartData.data);
+      chart?.load(chartData.data);
       setTimeout(() => {
         chart.zoom(domain)
         setTimeout(() => {
@@ -210,14 +209,14 @@ export default class TimeSeriesChart extends React.PureComponent {
     const {title, logger} = this.props;
 
     if (tooltipData.length == 0) {
-      logger && logger.manualAddLog('mouseover', `time-series-tooltip-${title}`, {toolTip: this.props.nullMessage, xValue:xValue, yValue:d[0].value});
+      logger?.manualAddLog('mouseover', `time-series-tooltip-${title}`, {toolTip: this.props.nullMessage, xValue:xValue, yValue:d[0].value});
       return ReactDOMServer.renderToString(
         <div className="tooltip subtle-subtext" >
           <div>{xValue.format('MMM DD')}</div>
           <div>{this.props.nullMessage}</div>
         </div>);
     }
-    logger && logger.manualAddLog('mouseover', `time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d[0].value});
+    logger?.manualAddLog('mouseover', `time-series-tooltip-${title}`, {toolTip: tooltipData, xValue:xValue, yValue:d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip subtle-subtext">
         {tooltipData.map((line) => {
@@ -236,8 +235,8 @@ export default class TimeSeriesChart extends React.PureComponent {
 
     const startDate = moment(domain[0]).startOf('day');
     const endDate = moment(domain[1]).endOf('day');
-    const firstPoint = changeCache && changeCache.find(point => point.valueX.isBetween(startDate, endDate) && !isNaN(point.valueY)) || {};
-    const lastPoint = reverseChangeCache && reverseChangeCache.find(point => point.valueX.isBetween(startDate, endDate) && !isNaN(point.valueY)) || {};
+    const firstPoint = changeCache?.find(point => point.valueX.isBetween(startDate, endDate) && !isNaN(point.valueY)) || {};
+    const lastPoint = reverseChangeCache?.find(point => point.valueX.isBetween(startDate, endDate) && !isNaN(point.valueY)) || {};
     let diff = Math.round(((lastPoint.valueY - firstPoint.valueY) / firstPoint.valueY) * 100)
     let tag = '';
     let className = ''

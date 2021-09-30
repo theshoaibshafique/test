@@ -78,7 +78,7 @@ export default class MainLayout extends React.PureComponent {
   };
 
   containsAny(arr1, arr2) {
-    return arr1 && arr1.some(r => arr2.includes(r.toUpperCase()));
+    return arr1?.some(r => arr2.includes(r.toUpperCase()));
   }
 
   clearFilters() {
@@ -107,9 +107,9 @@ export default class MainLayout extends React.PureComponent {
     const {logger} = this.props;
     if (this.state.userLoggedIn) {
       if (this.props.emmReportID){
-        logger && logger.manualAddLog('session', `open-emm-report`, this.props.emmReportID);
+        logger?.manualAddLog('session', `open-emm-report`, this.props.emmReportID);
       } else {
-        logger && logger.manualAddLog('session', `open-${window.location.pathname.substring(1)}`);
+        logger?.manualAddLog('session', `open-${window.location.pathname.substring(1)}`);
       }
       
       return <Switch>

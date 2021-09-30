@@ -243,10 +243,10 @@ export default class RequestEMM extends React.PureComponent {
       const errorEl = document.querySelector(
         Object.keys(errors).map(fieldName => `[name="${fieldName}"]`).join(',')
       );
-      if (errorEl && errorEl.scrollIntoView) {
+      if (errorEl?.scrollIntoView) {
         // if (errorEl && (errorEl.hidden || errorEl.type == "hidden") && errorEl.scrollIntoView){
         errorEl.parentNode.scrollIntoView()
-      } else if (errorEl && errorEl.focus) { // npe
+      } else if (errorEl?.focus) { // npe
         errorEl.focus(); // this scrolls without visible scroll
       }
     }

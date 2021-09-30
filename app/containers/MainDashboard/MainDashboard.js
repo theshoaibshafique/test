@@ -183,7 +183,7 @@ export default class MainDashboard extends React.Component {
       return tile && moment(tile.startDate).isSame(this.state.month, 'month');
     });
     let isDataEmpty = (flatList).every((tile) => {
-      return tile && tile.dataPoints.length == 0;
+      return tile?.dataPoints?.length == 0;
     });
 
     return (

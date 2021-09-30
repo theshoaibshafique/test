@@ -28,14 +28,14 @@ export default class EfficiencySettings extends React.PureComponent {
   }
   updateState(key, e) {
     const {logger} = this.props;
-    logger && logger.manualAddLog('onchange', `eff-settings-${key}`, e.target.value);
+    logger?.manualAddLog('onchange', `eff-settings-${key}`, e.target.value);
     this.setState({ [key]: e.target.value })
   }
   reset() {
     const fcotsThreshold = this.props.fcotsThreshold || 0;
     const turnoverThreshold = this.props.turnoverThreshold || 0;
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', `eff-settings-reset`);
+    logger?.manualAddLog('click', `eff-settings-reset`);
 
     this.setState({
       gracePeriodMinute: Math.floor((fcotsThreshold % 3600) / 60).toString().padStart(2, 0) || "00",
@@ -56,7 +56,7 @@ export default class EfficiencySettings extends React.PureComponent {
       "updates": updates
     }
     const {logger} = this.props;
-    logger && logger.manualAddLog('click', `eff-settings-submit`);
+    logger?.manualAddLog('click', `eff-settings-submit`);
     this.setState({ isLoading: true }, () => {
       this.props.submit(jsonBody).then(() => {
         this.setState({ isLoading: false })

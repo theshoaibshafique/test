@@ -35,7 +35,7 @@ export function Overview(props) {
                 <CarouselCases
                     cases={recentFlags}
                     title="Most Recently Flagged Cases"
-                    message={flagReport && (recentFlags && recentFlags.length) ?
+                    message={flagReport && (recentFlags?.length) ?
                         "Most Recently Flagged Cases" : "No Flagged Cases"}
                     {...commonProps}
                 />
@@ -43,7 +43,7 @@ export function Overview(props) {
                 <CarouselCases
                     cases={recentClips}
                     title="Most Recent Flag Clips"
-                    message={(flagReport && flagReport.clipsDefault)
+                    message={(flagReport?.clipsDefault)
                         ? "No Flag Clips" : "Flag Clips Disabled"}
                     {...commonProps}
                     isThumbnail />
@@ -155,9 +155,9 @@ function CarouselCases(props) {
     const { handleChangeCaseId, handleSaveCase } = props;
 
     const [CASES, setCases] = useState(cases);
-    const caseLength = CASES && CASES.length || 0;
+    const caseLength = CASES?.length || 0;
     const CAROUSEL_SIZE = 3;
-    const hasMinCases = CASES && CASES.length > CAROUSEL_SIZE;
+    const hasMinCases = CASES?.length > CAROUSEL_SIZE;
     useEffect(() => {
         if (cases) {
             setCases(cases)

@@ -105,7 +105,7 @@ export default class EMMPublish extends React.PureComponent {
     }
     const { logger } = this.props;
     setTimeout(() => {
-      logger && logger.connectListeners();
+      logger?.connectListeners();
     }, 300)
   }
 
@@ -126,7 +126,7 @@ export default class EMMPublish extends React.PureComponent {
   }
   handleCheckFilterPublished(e) {
     const { logger } = this.props;
-    logger && logger.manualAddLog('click', `show-only-unpublished`, { checked: e.target.checked });
+    logger?.manualAddLog('click', `show-only-unpublished`, { checked: e.target.checked });
     this.setState({ filterPublished: e.target.checked });
   }
 
@@ -218,7 +218,7 @@ export default class EMMPublish extends React.PureComponent {
   }
   logClick(key) {
     const { logger } = this.props;
-    logger && logger.manualAddLog('click', `${key}`);
+    logger?.manualAddLog('click', `${key}`);
   }
 
   sortClick(key) {
@@ -228,7 +228,7 @@ export default class EMMPublish extends React.PureComponent {
     //Check if its the same title
     let isSameTitle = titleElement.length && key == titleElement[0].textContent;
     const { logger } = this.props;
-    logger && logger.manualAddLog('click', `sort-user-list-${key}`, !titleElement.length ? 'none' : (element.length && isSameTitle ? 'desc' : 'asc'));
+    logger?.manualAddLog('click', `sort-user-list-${key}`, !titleElement.length ? 'none' : (element.length && isSameTitle ? 'desc' : 'asc'));
 
   }
   generateTitle(title) {

@@ -44,7 +44,7 @@ class UserModalStep1 extends React.Component {
     let fieldErrors = this.props.isFormValid();
     this.setState({ fieldErrors });
     if (Object.keys(fieldErrors).length !== 0) {
-      logger && logger.manualAddLog('click', `add-user-errors`, fieldErrors);
+      logger?.manualAddLog('click', `add-user-errors`, fieldErrors);
       return;
     }
 
@@ -59,7 +59,7 @@ class UserModalStep1 extends React.Component {
       "isActive": true,
       "roles": containsAdmin ? this.props.roleNames : this.props.userValue.permissions
     }
-    logger && logger.manualAddLog('click', `add-user`);
+    logger?.manualAddLog('click', `add-user`);
     globalFuncs.genericFetch(`${process.env.USER_API}profile`, 'post', this.props.userToken, jsonBody)
       .then(result => {
 
@@ -69,10 +69,10 @@ class UserModalStep1 extends React.Component {
           let fieldErrors = this.state.fieldErrors;
           fieldErrors.email = 'A user with this email address already exists. Please use a different email address.'
           this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, fieldErrors, isLoading: false });
-        } else if (result && result.conflict) {
+        } else if (result?.conflict) {
           result.conflict.then(message => {
-            message = message && message.detail;
-            if (message && message.toLowerCase().indexOf("email") >= 0) {
+            message = message?.detail;
+            if (message?.toLowerCase().indexOf("email") >= 0) {
               let fieldErrors = this.state.fieldErrors;
               fieldErrors.email = message
               this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, fieldErrors, isLoading: false });
@@ -114,7 +114,7 @@ class UserModalStep1 extends React.Component {
           this.setState({ errorMsgVisible: true, errorMsgEmailVisible: false, isLoading: false });
         } else if (result === 'conflict') {
           this.setState({ errorMsgEmailVisible: true, errorMsgVisible: false, isLoading: false });
-        } else if (result && result.conflict) {
+        } else if (result?.conflict) {
           if (result.conflict.toLowerCase().indexOf("email") >= 0) {
             let fieldErrors = this.state.fieldErrors;
             fieldErrors.email = result.conflict

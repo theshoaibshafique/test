@@ -208,7 +208,7 @@ export function TagsSelect(props) {
         )}
       />
 
-      {includeToggle && (value && value.length > 0) && (
+      {includeToggle && (value?.length > 0) && (
         <div className="include-toggle">
           <RadioGroup aria-label="position" name="position" value={includeAll}>
             <FormControlLabel value={0} control={<StyledRadio checked={includeAll == 0} color="primary" onChange={(e) => handleChangeIncludeAllTags(e.target.value)} />} label={<span className="include-label">Matches any of these tags</span>} />
@@ -217,7 +217,7 @@ export function TagsSelect(props) {
         </div>
       )}
 
-      {value && value.length > 0 && <div className="tags">
+      {value?.length > 0 && <div className="tags">
         {value.map((tag, i) => {
           return (
             <span key={i} className={"tag"} >

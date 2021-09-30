@@ -74,7 +74,7 @@ export default class SSChecklist extends React.PureComponent {
     }
     const {logger} = this.props;
     setTimeout(() => {
-      logger && logger.connectListeners();
+      logger?.connectListeners();
     }, 300)
   }
 
@@ -99,7 +99,7 @@ export default class SSChecklist extends React.PureComponent {
         }
         let endDate = latestEndDate.clone().subtract(12, 'hour');
 
-        const hasItemChecked = result.checklists && result.checklists.some((checklist) => (
+        const hasItemChecked = result?.checklists?.some((checklist) => (
           checklist.phases.some((phase) => (
             phase.isActive && phase.questions.some((question) => (
               question.isActive
@@ -169,22 +169,22 @@ export default class SSChecklist extends React.PureComponent {
   }
 
   getReportLayout() {
-    this.state.source && this.state.source.cancel('Cancel outdated report calls');
+    this.state.source?.cancel('Cancel outdated report calls');
     if (!this.state.endDate || !this.state.startDate) {
       return;
     }
     this.setState({ tileRequest: [], reportData: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
       () => {
 
-        const specialty = this.state.selectedSpecialty && this.state.selectedSpecialty.id;
+        const specialty = this.state.selectedSpecialty?.id;
         const jsonBody = {
           "dashboardName": this.state.reportType,
           "facilityId": this.props.userFacility,
 
-          "startDate": this.state.startDate && this.state.startDate.format('YYYY-MM-DD'),
-          "endDate": this.state.endDate && this.state.endDate.format('YYYY-MM-DD'),
+          "startDate": this.state.startDate?.format('YYYY-MM-DD'),
+          "endDate": this.state.endDate?.format('YYYY-MM-DD'),
 
-          "roomId": this.state.selectedOperatingRoom && this.state.selectedOperatingRoom.id || null,
+          "roomId": this.state.selectedOperatingRoom?.id || null,
           "specialtyName": specialty == "" ? null : specialty,
         }
         globalFunctions.axiosFetch(process.env.SSC_API + "/tile", 'post', this.props.userToken, jsonBody, this.state.source.token)
@@ -195,7 +195,7 @@ export default class SSChecklist extends React.PureComponent {
             } else if (result) {
               // result = COMPLIANCE;
               // result = JSON.parse(result);
-              if (result.tiles && result.tiles.length > 0) {
+              if (result.tiles?.length > 0) {
                 const reportData = this.groupTiles(result.tiles.sort((a, b) => a.groupOrder - b.groupOrder || a.tileOrder - b.tileOrder));
                 this.setState({ reportData, isLoading: false });
 
@@ -239,7 +239,7 @@ export default class SSChecklist extends React.PureComponent {
 
   updateState(key, value, shouldApply = false) {
     const {logger} = this.props;
-    logger && logger.manualAddLog('onchange', `update-${key}`, value);
+    logger?.manualAddLog('onchange', `update-${key}`, value);
     this.setState({
       [key]: value,
       isFilterApplied: false
@@ -302,7 +302,7 @@ export default class SSChecklist extends React.PureComponent {
       result = <GenericInformationPage title="Analysis Unavailable" content={content} />
 
     } else {
-      result = reportData && reportData.map((tileGroup, index) => {
+      result = reportData?.map((tileGroup, index) => {
         return (
           // xs should be max tilesize of group
           <Grid item xs={xs[index]} key={index}>
@@ -359,7 +359,7 @@ export default class SSChecklist extends React.PureComponent {
         return <ScatterPlot {...tile}
           goal={this.state[`${this.state.reportType.toLowerCase()}Goal`]}
           score={this.state[`${this.state.reportType.toLowerCase()}Score`]}
-          highlight={this.state.selectedSpecialty && this.state.selectedSpecialty.display} />
+          highlight={this.state.selectedSpecialty?.display} />
       case 'ITEMLIST':
         return <ItemList {...tile} selectOption={(value) => this.updateState('selectedSpecialty', value, true)} />
       case 'COMPAREINFOGRAPHIC':

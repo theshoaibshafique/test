@@ -15,8 +15,8 @@ export default class ScatterPlot extends React.PureComponent {
     this.id = `scatter-plot-${this.props.id}`;
     let { dataPoints, score } = this.props;
     score = score || null
-    const valueYs = dataPoints && dataPoints.map((point) => parseInt(point.valueY)) || [];
-    const valueXs = dataPoints && dataPoints.map((point) => parseInt(point.valueX)) || [];
+    const valueYs = dataPoints?.map((point) => parseInt(point.valueY)) || [];
+    const valueXs = dataPoints?.map((point) => parseInt(point.valueX)) || [];
     const maxY = dataPoints && Math.min(Math.max(...valueYs, score)+10, 100) || 100;
     const minY = dataPoints && Math.max(Math.min(...valueYs, score)-10, 0) || 0
     const maxX = Math.max(...valueXs);
@@ -134,8 +134,8 @@ export default class ScatterPlot extends React.PureComponent {
     let chartData = this.state.chartData;
     //Set as 0 by default and "load" columns later for animation
     chartData.data.columns = [x, y];
-    let chart = this.chartRef.current && this.chartRef.current.chart;
-    chart && chart.load(chartData);
+    let chart = this.chartRef.current?.chart;
+    chart?.load(chartData);
 
     this.setState({ chartData, tooltipData, highlightedIndex, isLoaded: true })
   }
@@ -145,10 +145,10 @@ export default class ScatterPlot extends React.PureComponent {
     // selected && selected.parentNode.appendChild(selected);
   }
   onrendered(d) {
-    let chart = this.chartRef.current && this.chartRef.current.chart;
+    let chart = this.chartRef.current?.chart;
     //highlight after rendered
     if (this.props.highlight){
-      chart && chart.select(['y'], [this.state.highlightedIndex]);
+      chart?.select(['y'], [this.state.highlightedIndex]);
     }
     
     //Remove manual select listener
@@ -161,7 +161,7 @@ export default class ScatterPlot extends React.PureComponent {
       return;
     }
     const {title, logger} = this.props;
-    logger && logger.manualAddLog('mouseover', `scatter-tooltip-${title}`, {toolTip: tooltipData, xValue:d[0].x, yValue:d[0].value});
+    logger?.manualAddLog('mouseover', `scatter-tooltip-${title}`, {toolTip: tooltipData, xValue:d[0].x, yValue:d[0].value});
     return ReactDOMServer.renderToString(
       <div className="tooltip  subtle-subtext">
         {tooltipData.map((line) => {
