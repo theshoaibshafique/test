@@ -80,9 +80,24 @@ export default class ReportScore extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: false,
+      animatedTotal: 0
     }
   };
+
+   
+  componentDidMount() {
+    this.intervalId = setInterval(() => {
+      this.setState(prevState => {
+        if(this.props.total > prevState.animatedTotal) return {animatedTotal: prevState.animatedTotal + 5}
+      })
+    }, 1);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Clear interval.
+    if(prevState. animatedTotal >= prevProps.total) clearInterval(this.intervalId);
+  }
 
   getColor() {
     const { goal, total } = this.props;
@@ -101,6 +116,7 @@ export default class ReportScore extends React.PureComponent {
   }
 
   render() {
+    const { animatedTotal } = this.state;
     const { title, toolTip, total, dataPoints, goal } = this.props
     let compareValue = dataPoints?.length && dataPoints[0] || false;
     return (
@@ -146,7 +162,7 @@ export default class ReportScore extends React.PureComponent {
 
           <Grid item xs={4} className={`${isNaN(parseInt(goal)) ? '' : 'has-goal'} goal-slider`} onMouseOver={() => this.setState({ isOpen: true })} onMouseLeave={() => this.setState({ isOpen: false })}>
             {!isNaN(parseInt(total)) && <SSTSlider
-              value={total}
+              value={animatedTotal}
               orientation='vertical'
               colour={this.getColor()}
               marks={!isNaN(parseInt(goal)) ? [{
