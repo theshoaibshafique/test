@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import EMMPhaseVideoContainer from './EMMPhaseVideoContainer';
-import { makeSelectIsPresenter, makeSelectLogger, makeSelectToken } from '../../../App/selectors';
+import { makeSelectEMMPresenter, makeSelectLogger, makeSelectToken } from '../../../App/selectors';
 import { setEMMVideoTime, setEMMPresenterDialog, setEMMPresenterMode } from '../../../App/emm-actions';
 import { selectEMMPresenterMode, selectEMMReportData, selectEMMVidoeTime } from '../../../App/emm-selectors';
 
@@ -9,7 +9,7 @@ const mapStateToProps = (state, ownProps) => createStructuredSelector({
   userToken: makeSelectToken(),
   emmVideoTime: selectEMMVidoeTime(),
   emmPresenterMode: selectEMMPresenterMode(),
-  hasPresenterRole: makeSelectIsPresenter(),
+  hasPresenterRole: makeSelectEMMPresenter(),
   emmReportData: selectEMMReportData(),
   logger: makeSelectLogger()
 });

@@ -93,6 +93,7 @@ export default class EMMCases extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.props.setCurrentProduct();
     let { surgeryMap, complicationsMap, operatingRoomMap } = this.state;
     let localSearchCache = JSON.parse(localStorage.getItem('recentSearch-'+this.props.userEmail));
     if (localSearchCache?.length > 0) {

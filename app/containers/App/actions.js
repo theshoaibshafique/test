@@ -25,7 +25,8 @@ import {
   USER_ROLES,
   LOGGER,
   AUTH_LOGIN,
-  PROFILE
+  PROFILE,
+  CURRENT_PRODUCT
 } from './constants';
 
 /**
@@ -137,6 +138,20 @@ export function setLogger(logger) {
   return {
     type: LOGGER,
     logger
+  };
+}
+
+/**
+ * Set the current CURRENT_PRODUCT
+ *
+ * @param  {ProductRoles} CURRENT_PRODUCT that holds the roles for that prodct
+ *
+ * @return {object}    object of admin/presenter/reader values
+ */
+ export function setCurrentProduct(currentProduct) {
+  return {
+    type: CURRENT_PRODUCT,
+    currentProduct
   };
 }
 

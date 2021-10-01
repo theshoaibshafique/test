@@ -44,11 +44,6 @@ export default class MainLayout extends React.PureComponent {
   }
 
   componentDidMount() {
-    // const {refreshToken,expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
-    // if (!refreshToken){
-    //   this.props.pushUrl('/');
-    //   return;
-    // }
     this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
   }
   componentDidUpdate(prevProps) {
@@ -61,24 +56,25 @@ export default class MainLayout extends React.PureComponent {
     if (!userFacility) {
       return;
     }
+    const { productRoles: { cdRoles, effRoles, sscRoles, emmRoles, umRoles} } = this.props;
     this.setState({
       userLoggedIn: true,
-      adminPanelAccess: this.containsAny(roles, ["ADMIN"]),
-      emmAccess: this.containsAny(roles, ["ENHANCED M&M VIEW"]),
-      emmRequestAccess: this.containsAny(roles, ["ENHANCED M&M EDIT"]),
-      sscAccess: this.containsAny(roles, ["SURGICAL CHECKLIST"]),
-      efficiencyAccess: this.containsAny(roles, ["EFFICIENCY"]),
-      caseDiscoveryAccess: this.containsAny(roles, ["CASE DISCOVERY"]),
-      emmPublishAccess: this.containsAny(roles, ["SSTADMIN"]),
+      adminPanelAccess: umRoles.isAdmin,
+      emmAccess: emmRoles.hasAccess,
+      emmRequestAccess: emmRoles.isAdmin,
+      sscAccess: sscRoles.hasAccess,
+      efficiencyAccess: effRoles.hasAccess,
+      caseDiscoveryAccess: cdRoles.hasAccess,
+      emmPublishAccess: emmRoles.hasPublisher,
       isLoading: false
     });
-    this.props.setEMMPublishAccess(this.containsAny(roles, ["SSTADMIN"]));
+    this.props.setEMMPublishAccess(emmRoles.hasPublisher);
     this.clearFilters();
     // this.getPageAccess();
   };
 
   containsAny(arr1, arr2) {
-    return arr1?.some(r => arr2.includes(r.toUpperCase()));
+    return arr1?.some?.(r => arr2.includes(r.toLowerCase()));
   }
 
   clearFilters() {

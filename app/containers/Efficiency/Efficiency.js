@@ -85,6 +85,7 @@ export default class Efficiency extends React.PureComponent {
   componentDidMount() {
     this.loadFilter(this.getConfig);
     this.openOnboarding()
+    this.props.setCurrentProduct();
   };
 
   openOnboarding() {

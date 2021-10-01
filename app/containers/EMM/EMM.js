@@ -24,6 +24,7 @@ export default class EMM extends React.PureComponent {
 
   componentDidMount() {
     this.getOperatingRooms();
+    this.props.setCurrentProduct();
   };
 
   getOperatingRooms() {
@@ -107,8 +108,8 @@ export default class EMM extends React.PureComponent {
   }
 
   render() {
-    const { enhancedMMReferenceName, enhancedMMPublished, emmAccess, isSafari } = this.state;
-    const isReportReady = (enhancedMMReferenceName && enhancedMMPublished && emmAccess)
+    const { enhancedMMReferenceName, enhancedMMPublished, isSafari } = this.state;
+    const isReportReady = (enhancedMMReferenceName && enhancedMMPublished)
     return (
       <section className="full-height emm">
         <div className="header page-title">

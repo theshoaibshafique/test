@@ -30,6 +30,7 @@ export default class AdminPanel extends React.PureComponent {
     }
     this.getEfficiencyConfig();
     this.getSSCConfig();
+    this.props.setCurrentProduct();
   }
   componentDidUpdate(){
     const {logger} = this.props;

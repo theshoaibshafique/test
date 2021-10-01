@@ -133,7 +133,7 @@ export default class Login extends React.PureComponent {
       this.props.logger.userToken = this.props.userToken;
       return;
     }
-    await globalFunctions.genericFetch(`${process.env.USER_API}profile`, 'get', token, {})
+    await globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', token, {})
       .then(result => {
         this.props.setProfile(result);
         this.getOperatingRooms(token);
@@ -177,32 +177,6 @@ export default class Login extends React.PureComponent {
 
   render() {
     return (
-      // <section className="SST-LOGIN full-height">
-      //   <Helmet>
-      //     <title>SST Insights Login</title>
-      //     <meta name="description" content="SST Insights Dashboard" />
-      //   </Helmet>
-      //   <div className="flex vertical-center flex-column full-height">
-      //     <img src={SSTLogo} style={{width: '650px'}}/>
-      //     {/* <AzureAD
-      //       // reduxStore={store}
-      //       provider={new MsalAuthProviderFactory({
-      //         authority: process.env.REACT_APP_AUTHORITY,
-      //         clientID: process.env.REACT_APP_AAD_APP_CLIENT_ID,
-      //         scopes: process.env.REACT_APP_AAD_SCOPES.split(' '),
-      //         redirectUri: process.env.REACT_APP_AAD_CALLback,
-      //         type: LoginType.Redirect,
-      //         validateAuthority: false,
-      //         persistLoginPastSession: true,
-      //       })}
-      //       unauthenticatedFunction={this.unauthenticatedFunction}
-      //       userInfoCallback={this.userJustLoggedIn}
-      //       authenticatedFunction={this.authenticatedFunction}
-      //       storeAuthStateInCookie={true}
-      //       forceLogin={true}
-      //     /> */}
-      //   </div>
-      // </section>
       <span></span>
     );
   }

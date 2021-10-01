@@ -23,6 +23,7 @@ import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
 import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase } from '../App/cd-actions';
 import { selectCases, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
+import { setCurrentProduct } from '../App/actions';
 
 
 const dataReducer = (state, event) => {
@@ -173,6 +174,9 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
   // Load all the APIs 
   useEffect(() => {
+    // Set Current product (for Role comparisons)
+    dispatch(setCurrentProduct('cdRoles'));
+
     const fetchUsers = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/emm_users', 'get', userToken, {})
         .then(result => {
@@ -294,6 +298,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     return () => {
       dispatch(exitCaseDiscovery());
     }
+    
   }, []);
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import Efficiency from './Efficiency';
 import { makeSelectToken, makeSelectUserFacility, makeSelectEmail, makeSelectIsAdmin, makeSelectLogger } from '../App/selectors';
+import { setCurrentProduct } from '../App/actions';
 
 const mapStateToProps = createStructuredSelector({
   userToken: makeSelectToken(),
@@ -16,7 +17,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     pushUrl: (url) => {
       dispatch(push(url));
-    }
+    },
+    setCurrentProduct: () => {
+      dispatch(setCurrentProduct('effRoles'))
+    },
   };
 };
 

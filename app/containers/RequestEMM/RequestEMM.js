@@ -368,6 +368,7 @@ export default class RequestEMM extends React.PureComponent {
 
   componentDidMount() {
     this.populateSpecialtyList();
+    this.props.setCurrentProduct();
   }
   populateSpecialtyList() {
     globalFunctions.genericFetch(process.env.EMR_API + "procedures", 'get', this.props.userToken, {})

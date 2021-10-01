@@ -35,6 +35,7 @@ export default class EMMPublish extends React.PureComponent {
 
   componentDidMount() {
     this.getEMMCases();
+    this.props.setCurrentProduct();
   };
 
 

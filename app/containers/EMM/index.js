@@ -2,8 +2,9 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import EMM from './EMM';
-import { makeSelectToken, makeSelectUserFacility, makeSelectSpecialties, makeSelectComplications, makeSelectEMMAccess, makeSelectOperatingRoom } from '../App/selectors';
+import { makeSelectToken, makeSelectUserFacility, makeSelectSpecialties, makeSelectComplications, makeSelectOperatingRoom } from '../App/selectors';
 import { showEMMReport } from '../App/emm-actions';
+import { setCurrentProduct } from '../App/actions';
 
 const mapStateToProps = (state, ownProps) => createStructuredSelector({
   userToken: makeSelectToken(),
@@ -11,14 +12,16 @@ const mapStateToProps = (state, ownProps) => createStructuredSelector({
   userFacility: makeSelectUserFacility(),
   specialties: makeSelectSpecialties(),
   complications: makeSelectComplications(),
-  emmAccess: makeSelectEMMAccess(),
   operatingRooms: makeSelectOperatingRoom(),
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     showEMMReport: (reportID) => { dispatch(showEMMReport(reportID)) },
-    pushUrl: (url) => { dispatch(push(url)) }
+    pushUrl: (url) => { dispatch(push(url)) },
+    setCurrentProduct: () => {
+      dispatch(setCurrentProduct('emmRoles'))
+    },
   };
 };
 

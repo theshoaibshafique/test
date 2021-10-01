@@ -19,6 +19,7 @@ export const USER_ROLES = 'insight/App/USER_ROLES';
 export const LOGGER = 'insight/App/LOGGER';
 export const AUTH_LOGIN = 'insight/App/AUTH_LOGIN';
 export const PROFILE = 'insight/App/PROFILE';
+export const CURRENT_PRODUCT = 'insight/App/PRODUCT';
 export const SHOWEMMREPORT = 'insights - showing emm reports';
 export const HIDEEMMREPORT = 'insights - hiding emm reports';
 export const SETEMMREPORT = 'insights - set emm reports';

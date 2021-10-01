@@ -78,23 +78,14 @@ const makeSelectJobTitle = () => createSelector(
   (globalState) => globalState.get('jobTitle')
 );
 
-const makeSelectIsPresenter = () => createSelector(
+const makeSelectEMMPresenter = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('userRoles').filter(role => role === 'Enhanced M&M Presenter').length === 1
+  (globalState) => globalState.get('emmRoles')?.isAdmin
 );
 
 const makeSelectIsAdmin = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.get('userRoles').filter(role => role === 'Admin').length === 1
-);
-
-const makeSelectEMMAccess = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('userRoles').filter(role => role.toUpperCase() === 'ENHANCED M&M VIEW').length === 1
-);
-const makeSelectEMMRequestAccess = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('userRoles').filter(role => role.toUpperCase() === 'ENHANCED M&M EDIT').length === 1
+  (globalState) => globalState.get('currentProduct')?.isAdmin
 );
 
 const makeSelectRoles = () => createSelector(
@@ -106,6 +97,19 @@ const makeSelectLogger = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('logger')
 );
+
+const makeSelectProductRoles = () => createSelector(
+  selectGlobal,
+  (globalState) => {
+    return {
+      cdRoles: globalState.get('cdRoles'),
+      effRoles: globalState.get('effRoles'),
+      sscRoles: globalState.get('sscRoles'),
+      emmRoles: globalState.get('emmRoles'),
+      umRoles: globalState.get('umRoles')
+    }
+  }
+)
 
 
 export {
@@ -124,10 +128,9 @@ export {
   makeSelectLastName,
   makeSelectEmail,
   makeSelectJobTitle,
-  makeSelectIsPresenter,
+  makeSelectEMMPresenter,
   makeSelectIsAdmin,
-  makeSelectEMMAccess,
-  makeSelectEMMRequestAccess,
   makeSelectRoles,
-  makeSelectLogger
+  makeSelectLogger,
+  makeSelectProductRoles
 };

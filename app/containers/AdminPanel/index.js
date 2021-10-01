@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import AdminPanel from './AdminPanel';
 import { makeSelectToken, makeSelectUserFacility, makeSelectID, makeSelectLogger } from '../App/selectors';
+import { setCurrentProduct } from '../App/actions';
 
 const mapStateToProps = createStructuredSelector({
   userToken: makeSelectToken(),
@@ -10,4 +11,12 @@ const mapStateToProps = createStructuredSelector({
   logger: makeSelectLogger()
 });
 
-export default connect(mapStateToProps, null)(AdminPanel);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCurrentProduct: () => {
+      dispatch(setCurrentProduct('umRoles'))
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminPanel);

@@ -27,7 +27,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { CSSTransition } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, getQuestionByLocation, getQuestionCount, getPresetDates } from './misc/Utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectEMMRequestAccess, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -50,7 +50,6 @@ export function DetailedCase(props) {
   const logger = useSelector(makeSelectLogger());
   const isAdmin = useSelector(makeSelectIsAdmin());
   const flagReport = useSelector(selectFlagReport());
-  const hasRequestEMMAccess = useSelector(makeSelectEMMRequestAccess());
 
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsInUtc, wheelsOut, scheduledStart, startTime, endTime,
     duration, departmentId, intubationPlacement, intubationRemoval, intubationType, isLeftSided, isRightSided,
@@ -126,7 +125,7 @@ export function DetailedCase(props) {
       return <LightTooltip title={"eM&M request submitted successfully"} arrow>
         <div><Button variant="outlined" className="primary disabled" onClick={() => null} disabled>Request eM&M</Button></div>
       </LightTooltip>
-    } else if (dayDiff <= 21 && hasRequestEMMAccess) {
+    } else if (dayDiff <= 21 && isAdmin) {
       return <Button variant="outlined" className="primary" onClick={() => handleOpenRequestEMM(true)}>Request eM&M</Button>
     } else {
       return <div></div>

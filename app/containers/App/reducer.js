@@ -22,7 +22,8 @@ import {
   USER_ROLES,
   LOGGER,
   AUTH_LOGIN,
-  PROFILE
+  PROFILE,
+  CURRENT_PRODUCT
 } from './constants';
 
 // The initial state of the App
@@ -42,6 +43,8 @@ const initialState = fromJS({
   userRoles: []
 });
 
+
+
 function emmReducer(state = initialState, action) {
   switch (action.type) {
     case USER_TOKEN:
@@ -59,14 +62,15 @@ function emmReducer(state = initialState, action) {
         .set('userToken', action.accessToken)
         .set('userLoggedIn', true);
     case PROFILE:
-      return state
+      const userRoles = Object.keys(action.profile.roles);
+      return setProductRoles(state, userRoles)
         .set('userID', action.profile.userId)
         .set('email', action.profile.email)
         .set('userFacility', action.profile.facilityId)
         .set('firstName', action.profile.firstName)
         .set('lastName', action.profile.lastName)
         .set('jobTitle', action.profile.title)
-        .set('userRoles', action.profile.roles);
+        .set('userRoles', userRoles)
     case USER_FACILITY:
       return state
         .set('userFacility', action.facility)
@@ -88,9 +92,57 @@ function emmReducer(state = initialState, action) {
     case LOGGER:
       return state
         .set('logger', action.logger)
+    case CURRENT_PRODUCT:
+      return state
+        .set('currentProduct', state.get(action.currentProduct));
     default:
       return state;
   }
+}
+
+function setProductRoles(state, userRoles) {
+
+  const createProduct = (permissions) => {
+    return {
+      ...permissions,
+      get all() {
+        return Object.values(permissions);
+      },
+      get isAdmin() {
+        return userRoles.includes(this.admin);
+      },
+      get hasPublisher() {
+        return userRoles.includes(this.publisher)
+      },
+      get hasAccess() {
+        return userRoles.includes(this.reader);
+      }
+    }
+  };
+  return state
+    .set('cdRoles', createProduct({
+      admin: "b398657c-ee31-4ce6-8dda-941a600ea01a",
+      publisher: "24d372e8-715a-47a7-ae64-dbacd377d0a6",
+      reader: "d813f651-af9c-49e9-ad80-83246873d6f3"
+    }))
+    .set('effRoles', createProduct({
+      admin: "c365cf5f-4993-4c1c-b4bb-cd5596fee06b",
+      reader: "48ba6489-5d9b-4a19-8ea4-8ac624175f85"
+    }))
+    .set('sscRoles', createProduct({
+      admin: "aaa17cff-b469-4989-baa0-283ebd82fc7b",
+      reader: "df561f9b-b8fe-47a8-aa0a-bdc5db29a77f"
+    }))
+    .set('emmRoles', createProduct({
+      admin: "04cf63ff-4274-4271-b74d-bc71d0a210db",
+      publisher: "eb1460d7-4b6d-4ce3-8bc4-b6d0eb1864f1",
+      reader: "9467994d-4ad6-4ad9-9b4e-8ab2125c974f"
+    }))
+    .set('umRoles', createProduct({
+      sstAdmin: "5ec12e15-5ddc-4395-b0bf-1d5ae83fe0fa",
+      admin: "d5e22d93-2cb3-49a5-b710-956b098ff28e",
+      member: "333ee932-1f6a-4577-8266-a58b4e62b72e"
+    }))
 }
 
 export default emmReducer;
