@@ -43,7 +43,7 @@ export default class MainLayout extends React.PureComponent {
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     // const {refreshToken,expiresAt } = JSON.parse(localStorage.getItem('refreshToken')) || {};
     // if (!refreshToken){
     //   this.props.pushUrl('/');
@@ -51,14 +51,14 @@ export default class MainLayout extends React.PureComponent {
     // }
     this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
   }
-  componentDidUpdate(prevProps){
-    if (prevProps.userRoles != this.props.userRoles || prevProps.userFacility != this.props.userFacility){
+  componentDidUpdate(prevProps) {
+    if (prevProps.userRoles != this.props.userRoles || prevProps.userFacility != this.props.userFacility) {
       this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
     }
   }
 
   resourcesGathered(roles, userFacility) {
-    if (!userFacility){
+    if (!userFacility) {
       return;
     }
     this.setState({
@@ -70,7 +70,7 @@ export default class MainLayout extends React.PureComponent {
       efficiencyAccess: this.containsAny(roles, ["EFFICIENCY"]),
       caseDiscoveryAccess: this.containsAny(roles, ["CASE DISCOVERY"]),
       emmPublishAccess: this.containsAny(roles, ["SSTADMIN"]),
-      isLoading:false
+      isLoading: false
     });
     this.props.setEMMPublishAccess(this.containsAny(roles, ["SSTADMIN"]));
     this.clearFilters();
@@ -104,14 +104,14 @@ export default class MainLayout extends React.PureComponent {
         <NoAccess />
       </Switch>
     }
-    const {logger} = this.props;
+    const { logger } = this.props;
     if (this.state.userLoggedIn) {
-      if (this.props.emmReportID){
+      if (this.props.emmReportID) {
         logger?.manualAddLog('session', `open-emm-report`, this.props.emmReportID);
       } else {
         logger?.manualAddLog('session', `open-${window.location.pathname.substring(1)}`);
       }
-      
+
       return <Switch>
         <Route path="/dashboard" component={Welcome} />
         {(this.state.emmAccess) &&
@@ -170,7 +170,7 @@ export default class MainLayout extends React.PureComponent {
   render() {
     return (
       <div className="app-wrapper">
-        <Login/>
+        <Login />
         <CssBaseline />
         <Helmet
           titleTemplate="%s - SST Insights"
@@ -179,38 +179,45 @@ export default class MainLayout extends React.PureComponent {
           <meta name="description" content="SST Insights web portal" />
         </Helmet>
 
-        <div className="APP-MAIN-WRAPPER">
-          {(this.props.emmReportID) &&
-            <div className="EMM-Report-Overlay">
-              <EMMReports />
+        {this.state.userLoggedIn ?
+          <React.Fragment>
+            <div className="APP-MAIN-WRAPPER">
+              {(this.props.emmReportID) &&
+                <div className="EMM-Report-Overlay">
+                  <EMMReports />
+                </div>
+              }
+              <nav className={`MAIN-NAVIGATION ${this.props.emmReportID && 'hidden'}`}>
+                <Hidden xsDown implementation="css">
+                  <Drawer
+                    variant="permanent"
+                    open
+                  >
+                    <SSTNav
+                      adminPanelAccess={this.state.adminPanelAccess}
+                      emmRequestAccess={this.state.emmRequestAccess}
+                      emmAccess={this.state.emmAccess}
+                      emmPublishAccess={this.state.emmPublishAccess}
+                      sscAccess={this.state.sscAccess}
+                      efficiencyAccess={this.state.efficiencyAccess}
+                      caseDiscoveryAccess={this.state.caseDiscoveryAccess}
+                      pathname={this.props.location.pathname}
+                      isLoading={this.state.isLoading}
+                      logger={this.props.logger}
+                    />
+                  </Drawer>
+                </Hidden>
+              </nav>
+              <div className={`Content-Wrapper ${this.props.emmReportID && 'hidden'}`}>
+                {this.getContainer()}
+              </div>
             </div>
-          }
-          <nav className={`MAIN-NAVIGATION ${this.props.emmReportID && 'hidden'}`}>
-            <Hidden xsDown implementation="css">
-              <Drawer
-                variant="permanent"
-                open
-              >
-                <SSTNav
-                  adminPanelAccess={this.state.adminPanelAccess}
-                  emmRequestAccess={this.state.emmRequestAccess}
-                  emmAccess={this.state.emmAccess}
-                  emmPublishAccess={this.state.emmPublishAccess}
-                  sscAccess={this.state.sscAccess}
-                  efficiencyAccess={this.state.efficiencyAccess}
-                  caseDiscoveryAccess={this.state.caseDiscoveryAccess}
-                  pathname={this.props.location.pathname}
-                  isLoading={this.state.isLoading}
-                  logger={this.props.logger}
-                />
-              </Drawer>
-            </Hidden>
-          </nav>
-          <div className={`Content-Wrapper ${this.props.emmReportID && 'hidden'}`}>
-            {this.getContainer()}
-          </div>
-        </div>
-        <UserFeedback/>
+            <UserFeedback />
+          </React.Fragment>
+          :
+          <LoadingIndicator />
+        }
+
       </div>
     );
   }
