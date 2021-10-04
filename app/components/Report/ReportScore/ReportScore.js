@@ -88,15 +88,13 @@ export default class ReportScore extends React.PureComponent {
    
   componentDidMount() {
     this.intervalId = setInterval(() => {
+      // Clear interval.
+      if(this.state.animatedTotal >= this.props.total) clearInterval(this.intervalId);
       this.setState(prevState => {
-        if(this.props.total > prevState.animatedTotal) return {animatedTotal: prevState.animatedTotal + 5}
+        const remainingTotal = this.props.total - prevState.animatedTotal;
+        if(this.props.total > prevState.animatedTotal) return {animatedTotal: remainingTotal < 5 ?  prevState.animatedTotal + remainingTotal : prevState.animatedTotal + 5}
       })
     }, 1);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // Clear interval.
-    if(prevState. animatedTotal >= prevProps.total) clearInterval(this.intervalId);
   }
 
   getColor() {
@@ -168,7 +166,7 @@ export default class ReportScore extends React.PureComponent {
               marks={!isNaN(parseInt(goal)) ? [{
                 value: goal, label: <SliderTooltip interactive arrow
                   title={`Goal: ${goal}`}
-                  open={this.state.isOpen}
+                  open={this.state.isOpen && this.state.animatedTotal >= this.props.total}
                   placement="right" fontSize="small"
                 >
                   <div>Goal</div>
