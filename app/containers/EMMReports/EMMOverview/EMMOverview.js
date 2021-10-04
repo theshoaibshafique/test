@@ -90,7 +90,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
           </Grid>
           <Grid item xs={8}>
             <Grid container spacing={3}>
-              <Grid item xs={4}>
+              {distractionScore.dataPoints[0].valueX && <Grid item xs>
                 <Paper className="Emm-Paper Score">
                   <div className="Section-Title">
                     {distractionScore.title}
@@ -103,8 +103,8 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
                     <span className="EMM-Score-Icon" style={{ backgroundColor: 'rgba(167, 229, 253,.6)' }}><Icon color="#50CBFB" style={{ marginTop: 4 }} path={mdiVolumeVibrate} size={'40px'} /></span>
                   </div>
                 </Paper>
-              </Grid>
-              <Grid item xs={4}>
+              </Grid>}
+              <Grid item xs>
                 <Paper className="Emm-Paper Score">
                   <div className="Section-Title">
                     {technicalPerformanceScore.title}
@@ -123,7 +123,7 @@ export default class EMMOverview extends React.PureComponent { // eslint-disable
 
                 </Paper>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs>
                 <Paper className="Emm-Paper Score">
                   <div className="Section-Title">
                     {adverseEventRate.title}
