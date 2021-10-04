@@ -66,10 +66,13 @@ export function DetailedCase(props) {
   const bStartTime = globalFunctions.getDiffFromMidnight(blockStartTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
   const bEndTime = globalFunctions.getDiffFromMidnight(blockEndTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
 
-  const earliestStartTime = roomCases.reduce((min, c) => globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 < min ? globalFunctions.getDiffFromMidnight(c.wheelsIn, 'minutes') / 60 : min, bStartTime);
-  const latestEndTime = roomCases.reduce((max, c) => globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 > max ? globalFunctions.getDiffFromMidnight(c.wheelsOut, 'minutes') / 60 : max, bEndTime) + 1;
-  const scheduleDuration = Math.ceil(latestEndTime) - (earliestStartTime);
-
+  const earliestStartDate = moment.min(roomCases.map(d => moment(d.wheelsIn)));
+  //We convert from mins to hours manually to get decimals
+  const earliestStartTime = globalFunctions.getDiffFromMidnight(earliestStartDate, 'minutes') / 60;
+  const latestEndTime = moment.max(roomCases.map(d => moment(d.wheelsOut)));
+  const scheduleDuration = latestEndTime.diff(earliestStartDate, 'hours') + 2;
+  //Get # of days the schedule spans
+  const totalDays = latestEndTime.clone().startOf('day').diff(earliestStartDate.clone().startOf('day'), 'days');
   const description = (
     <div style={{ lineBreak: 'anywhere' }}>
       <span>Case ID: {emrCaseId}</span>
@@ -110,7 +113,7 @@ export function DetailedCase(props) {
   }, []);
   // Hour block size in pixels
   const HEADER_SIZE = 90;
-  const HOUR_SIZE = Math.max((windowDimensions.height - HEADER_SIZE) / (scheduleDuration), 34);
+  const HOUR_SIZE = Math.max((windowDimensions.height - HEADER_SIZE) / (scheduleDuration), 54);
   const [openRequestEMM, setOpenRequestEMM] = React.useState(false);
   const [isRequestSubmitted, setIsRequestSubmitted] = React.useState(false);
 
@@ -364,6 +367,7 @@ export function DetailedCase(props) {
             now.setHours(cTime);
             now.setMinutes(0);
             const formattedTime = moment(now).format("HH:mm");
+            const isMidnight = formattedTime == "00:00";
             return (
               <div className="hour-marker log-click"
                 id={`hour-block-${formattedTime}`}
@@ -371,8 +375,9 @@ export function DetailedCase(props) {
                   // top: `${i * HOUR_SIZE}px`,
                   height: `${HOUR_SIZE}px`,
                 }}>
+                {isMidnight && <Divider style={{ position: 'absolute', width: '100%', border: '1px dashed rgb(200, 200, 200)', backgroundColor: 'unset' }} />}
                 <div
-                  className={`log-click${moment(blockStartTime).format('HH:mm') === formattedTime ? ' start-boundary' : ''}${moment(blockEndTime).format('HH:mm') === formattedTime ? ' end-boundary' : ''}`}
+                  className={`log-click${moment(blockStartTime).format('HH:mm') === formattedTime ? ' start-boundary' : ''}${moment(blockEndTime).format('HH:mm') === formattedTime ? ' end-boundary' : ''}${isMidnight && ' midnight'}`}
                   id={`hour-marker-${formattedTime}`}>
                   {formattedTime}
                 </div>
@@ -393,16 +398,33 @@ export function DetailedCase(props) {
             >
             </div>
           </LightTooltip>}
+          {totalDays > 0 && <LightTooltip
+            title={earliestStartDate.clone().add(1, 'days').format('dddd, MMMM DD, YYYY')}
+            placement='left'
+          >
+            <div className="absolute log-mouseover"
+              id="block-hours-tooltip"
+              style={{
+                top: `${(scheduleDuration - globalFunctions.getDiffFromMidnight(latestEndTime, 'minutes') / 60 - 1) * HOUR_SIZE}px`,
+                height: `${(globalFunctions.getDiffFromMidnight(latestEndTime, 'minutes') / 60) * HOUR_SIZE}px`,
+                width: `100%`
+              }}
+            >
+            </div>
+          </LightTooltip>}
           {/* Display all cases given  */}
           {roomCases.map((c) => {
             const { procedureName, wheelsIn, wheelsOut } = c;
             // We offset by "Earliest start time" (could be 6:22 am) + the straggling minutes (22mins) since the labels display only 6am
             const offset = ((earliestStartTime + (1 - earliestStartTime % 1) - 1) * 60);
             let startMins = globalFunctions.getDiffFromMidnight(wheelsIn, 'minutes') - offset;
-            let endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - offset;
+            // let endMins = globalFunctions.getDiffFromMidnight(wheelsOut, 'minutes') - offset;
+            let endMins = startMins + moment(wheelsOut).diff(moment(wheelsIn), 'minutes');
             const caseHeight = (endMins - startMins) / 60;
+            const isShort = (caseHeight * HOUR_SIZE) <= 49;
+            const isMedium = (caseHeight * HOUR_SIZE) <= 83;
             return (
-              <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${caseHeight * HOUR_SIZE <= 49 && 'short'} ${caseHeight * HOUR_SIZE <= 83 && 'medium'}`}
+              <div className={`absolute case-block ${c.caseId == caseId && 'is-current-case'} ${isShort && 'short'} ${isMedium && 'medium'}`}
                 onClick={() => updateCaseId(c.caseId)}
                 style={{
                   top: `${(startMins / 60) * HOUR_SIZE}px`,
@@ -410,7 +432,7 @@ export function DetailedCase(props) {
                   minHeight: HOUR_SIZE
                 }}>
                 <div className="case-title" title={procedureName}>{procedureName}</div>
-                {caseHeight > 1 && <div className="case-time">{moment(wheelsIn).format("HH:mm")} - {moment(wheelsOut).format("HH:mm")}</div>}
+                {!isMedium && <div className="case-time">{moment(wheelsIn).format("HH:mm")} - {moment(wheelsOut).format("HH:mm")}</div>}
               </div>
             )
           })}

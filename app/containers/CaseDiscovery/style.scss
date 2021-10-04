@@ -673,6 +673,10 @@
                     &.end-boundary {
                         background: linear-gradient(to bottom, rgba(245, 248, 250, 1), 80%, rgba(245, 248, 250, 0));
                     }
+                    &.midnight{
+                        border: 1px solid rgb(200, 200, 200);
+                        background: rgba(239, 242, 253, 1);
+                    }
                 }
             }
             .case-block {
