@@ -87,12 +87,13 @@ export default class ReportScore extends React.PureComponent {
 
    
   componentDidMount() {
+    const ANIMATION_SETPS = 10;
+    const incrementBy = this.props.total / ANIMATION_SETPS;
     this.intervalId = setInterval(() => {
       // Clear interval.
       if(this.state.animatedTotal >= this.props.total) clearInterval(this.intervalId);
       this.setState(prevState => {
-        const remainingTotal = this.props.total - prevState.animatedTotal;
-        if(this.props.total > prevState.animatedTotal) return {animatedTotal: remainingTotal < 5 ?  prevState.animatedTotal + remainingTotal : prevState.animatedTotal + 5}
+        if(this.props.total > prevState.animatedTotal) return {animatedTotal: prevState.animatedTotal + incrementBy}
       })
     }, 1);
   }
