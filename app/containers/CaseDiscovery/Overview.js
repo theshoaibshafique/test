@@ -207,7 +207,7 @@ function CarouselCases(props) {
                 onClick={() => handleChangeCaseId(c.caseId)}
                 {...c}
                 isSaved={savedCases.includes(c.caseId)}
-                handleSaveCase={() => handleSaveCase(c.caseId, c)}
+                handleSaveCase={() => handleSaveCase(c.caseId)}
             />
         } else {
             return <Case
