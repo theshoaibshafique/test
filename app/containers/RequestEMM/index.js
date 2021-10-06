@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import RequestEMM from './RequestEMM';
-import { makeSelectToken, makeSelectUserFacility, makeSelectSpecialties, makeSelectComplications, makeSelectOperatingRoom } from '../App/selectors';
+import { makeSelectToken, makeSelectUserFacility, makeSelectSpecialties, makeSelectComplications, makeSelectOperatingRoom, makeSelectProductRoles } from '../App/selectors';
 import { setCurrentProduct } from '../App/actions';
 
 const mapStateToProps = createStructuredSelector({
@@ -9,7 +9,8 @@ const mapStateToProps = createStructuredSelector({
   userFacility: makeSelectUserFacility(),
   specialties: makeSelectSpecialties(),
   complications: makeSelectComplications(),
-  operatingRooms: makeSelectOperatingRoom()
+  operatingRooms: makeSelectOperatingRoom(),
+  productRoles: makeSelectProductRoles()
 });
 
 const mapDispatchToProps = (dispatch) => {

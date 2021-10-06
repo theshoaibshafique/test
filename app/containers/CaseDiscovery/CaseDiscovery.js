@@ -15,7 +15,7 @@ import globalFunctions from '../../utils/global-functions';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 import { formatCaseForLogs, getCasesInView, getPresetDates } from './misc/Utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 import 'react-multi-carousel/lib/styles.css';
 import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
@@ -108,6 +108,8 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const logger = useSelector(makeSelectLogger());
   const DETAILED_CASE = useSelector(selectDetailedCase());
   const CASES = useSelector(selectCases());
+  const productRoles = useSelector(makeSelectProductRoles());
+
 
   const urlParams = new URLSearchParams(window.location.search)
   //Open the caseId through URL
@@ -178,7 +180,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     dispatch(setCurrentProduct('cdRoles'));
 
     const fetchUsers = async () => {
-      const result = await globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/emm_users', 'get', userToken, {})
+      const result = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}list?product_id=${productRoles?.emmRoles?.productId}`, 'get', userToken, {})
         .then(result => {
           result = result.data
           setUsers(result);

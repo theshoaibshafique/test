@@ -269,7 +269,7 @@ export default class RequestEMM extends React.PureComponent {
       });
       return;
     }
-    
+
     let jsonBody = {
       "roomName": this.state.selectedOperatingRoom.label,
       // "specialty": ["58ABBA4B-BEFC-4663-8373-6535EA6F1E5C"],
@@ -330,7 +330,8 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   async populateUserEmail(e, callback) {
-    return await globalFuncs.genericFetch(process.env.EMMREPORT_API + '/emm_users', 'get', this.props.userToken, {})
+    const { productRoles } = this.props;
+    return await globalFuncs.genericFetch(`${process.env.USER_V2_API}list?product_id=${productRoles?.emmRoles?.productId}`, 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
           let users = [];
@@ -355,10 +356,10 @@ export default class RequestEMM extends React.PureComponent {
 
   async populateOperatingRooms(e, callback) {
 
-    return await globalFuncs.genericFetch(process.env.EMR_API + "rooms" , 'get', this.props.userToken, {})
+    return await globalFuncs.genericFetch(process.env.EMR_API + "rooms", 'get', this.props.userToken, {})
       .then(result => {
-        let operatingRooms = result.map(r => ({value:r.id, label:r.display}));
-        
+        let operatingRooms = result.map(r => ({ value: r.id, label: r.display }));
+
         callback(operatingRooms)
         this.setState({ operatingRooms });
         return operatingRooms
@@ -367,14 +368,14 @@ export default class RequestEMM extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.populateSpecialtyList();
     this.props.setCurrentProduct();
+    this.populateSpecialtyList();
   }
   populateSpecialtyList() {
     globalFunctions.genericFetch(process.env.EMR_API + "procedures", 'get', this.props.userToken, {})
       .then(result => {
         if (result) {
-          let procedureList = result.map(r => ({name:r, value:r}))
+          let procedureList = result.map(r => ({ name: r, value: r }))
 
           procedureList.sort((a, b) => { return ('' + a.name).localeCompare(b.name) });
           this.setState({ procedureList });
@@ -401,10 +402,10 @@ export default class RequestEMM extends React.PureComponent {
             </Grid>
             <Grid item xs={8}>
               Please note the Enhanced M&M ID for the report to be generated: {this.state.emmID}.
-          </Grid>
+            </Grid>
             <Grid item xs={8}>
               We will notify you when the report is ready on Insights for viewing.
-          </Grid>
+            </Grid>
             <Grid item xs={5}>
               <Button variant="outlined" className="primary" style={{ marginTop: 26 }} onClick={() => this.reset()}>Go Back</Button>
             </Grid>
@@ -525,7 +526,7 @@ export default class RequestEMM extends React.PureComponent {
                 name="operatingRoom"
                 id="or-input"
                 error={Boolean(this.state.errors.operatingRoom)}
-                filterOption={(candidate, input) => `${candidate.label}`.toLowerCase().includes(input.toLowerCase()) }
+                filterOption={(candidate, input) => `${candidate.label}`.toLowerCase().includes(input.toLowerCase())}
               />
               {(this.state.errors.operatingRoom) &&
                 <FormHelperText className="Mui-error" >{this.state.errors.operatingRoom}</FormHelperText>
@@ -690,7 +691,7 @@ export default class RequestEMM extends React.PureComponent {
                 loadOptions={(e, callback) => this.populateUserEmail(e, callback)}
                 value={this.state.inputValue}
                 onChange={(e) => this.handleUserEmailChange(e)}
-                filterOption={(candidate, input) => `${candidate.label}`.toLowerCase().includes(input.toLowerCase()) }
+                filterOption={(candidate, input) => `${candidate.label}`.toLowerCase().includes(input.toLowerCase())}
               />
             </Grid>
 
