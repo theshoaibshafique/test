@@ -519,7 +519,7 @@ export function DetailedCase(props) {
                 <TagsSelect
                   title="Additional users to receive updates on request status (Optional)"
                   placeholder="Select users"
-                  options={USERS.map((u) => { return { "display": `${u.firstName} ${u.lastName}`, "id": u.userName } })}
+                  options={USERS.map((u) => { return { "display": `${u.firstName} ${u.lastName}`, "id": u.userId } })}
                   id="users"
                   handleChange={handleChange}
                   searchData={requestData}
