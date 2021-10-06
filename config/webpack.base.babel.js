@@ -15,6 +15,9 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 }, {});
 
 module.exports = (options) => ({
+  node: {
+    fs: 'empty',
+  },
   mode: options.mode,
   entry: options.entry,
   output: Object.assign({ // Compile into js/build.js

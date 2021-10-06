@@ -188,7 +188,11 @@ export default class EMMPublish extends React.PureComponent {
                   searchFieldStyle: { marginLeft: -24 },
                   actionsColumnIndex: -1,
                   thirdSortClick: false,
-                  draggable: false
+                  draggable: false,
+                  rowStyle: {
+                    fontFamily: "Noto Sans",
+                    fontSize: 14
+                  }
                 }}
 
                 data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => !emmCase.enhancedMMPublished) : this.state.emmCases}

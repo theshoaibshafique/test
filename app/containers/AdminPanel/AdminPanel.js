@@ -2,7 +2,7 @@ import React from 'react';
 import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import EfficiencySettings from './EfficiencySettings/Loadable';
-import UserManagement from './UserManagement/Loadable';
+import UserManagement from './UserManagement/UserManagement';
 import SSCSettings from './SSCSettings/Loadable';
 import { StyledTab, StyledTabs, TabPanel } from '../../components/SharedComponents/SharedComponents';
 
@@ -14,11 +14,11 @@ export default class AdminPanel extends React.PureComponent {
       tabIndex: 0
     }
   }
-  
-  
+
+
   handleChange(obj, tabIndex) {
-    const {logger} = this.props;
-    
+    const { logger } = this.props;
+
     logger?.manualAddLog('click', 'swap-tab', TABS[tabIndex]);
     this.setState({ tabIndex });
   }
@@ -30,13 +30,44 @@ export default class AdminPanel extends React.PureComponent {
     }
     this.getEfficiencyConfig();
     this.getSSCConfig();
+    this.getUserManagementData();
     this.props.setCurrentProduct();
   }
-  componentDidUpdate(){
-    const {logger} = this.props;
+  componentDidUpdate() {
+    const { logger } = this.props;
     setTimeout(() => {
       logger?.connectListeners();
     }, 300)
+  }
+  async getUserManagementData() {
+    this.getProfiles();
+    this.getAssignableRoles();
+    this.getLocation();
+  }
+
+  async getProfiles() {
+    return await globalFunctions.genericFetch(`${process.env.USER_V2_API}profiles`, 'get', this.props.userToken, {})
+      .then(result => {
+        this.setState({ USERS: result });
+      }).catch((results) => {
+        console.error("oh no", results)
+      });
+  }
+  async getLocation() {
+    return await globalFunctions.genericFetch(`${process.env.USER_V2_API}location?facility_id=${this.props.facilityName}`, 'get', this.props.userToken, {})
+      .then(result => {
+        this.setState({ accessLevel: result });
+      }).catch((results) => {
+        console.error("oh no", results)
+      });
+  }
+  async getAssignableRoles() {
+    return await globalFunctions.genericFetch(`${process.env.USER_V2_API}assignable_roles`, 'get', this.props.userToken, {})
+      .then(result => {
+        this.setState({ assignableRoles: result });
+      }).catch((results) => {
+        console.error("oh no", results)
+      });
   }
 
   async getEfficiencyConfig() {
@@ -88,25 +119,26 @@ export default class AdminPanel extends React.PureComponent {
 
   render() {
     const hasSSC = (this.state.sscConfig?.checklists?.length > 0);
+    const { tabIndex, USERS, accessLevel, assignableRoles } = this.state;
     return (
       <div className="admin-panel">
         <div className="header">
           Admin Panel
         </div>
         <StyledTabs
-          value={this.state.tabIndex}
+          value={tabIndex}
           onChange={(obj, value) => this.handleChange(obj, value)}
           indicatorColor="primary"
           textColor="primary"
         >
           <StyledTab label="User Management" />
           <StyledTab label="Efficiency" />
-          {hasSSC && <StyledTab label="Surgical Safety Checklist" /> || <span/>}
+          {hasSSC && <StyledTab label="Surgical Safety Checklist" /> || <span />}
         </StyledTabs>
-        <TabPanel value={this.state.tabIndex} index={0}>
-          <UserManagement />
+        <TabPanel value={tabIndex} index={0}>
+          <UserManagement users={USERS} accessLevel={accessLevel} assignableRoles={assignableRoles} />
         </TabPanel>
-        <TabPanel value={this.state.tabIndex} index={1}>
+        <TabPanel value={tabIndex} index={1}>
           <EfficiencySettings
             fcotsThreshold={this.state.fcotsThreshold}
             turnoverThreshold={this.state.turnoverThreshold}
@@ -114,7 +146,7 @@ export default class AdminPanel extends React.PureComponent {
             submit={(updates) => this.submitEfficiencyConfig(updates)}
           />
         </TabPanel>
-        {hasSSC && <TabPanel value={this.state.tabIndex} index={2}>
+        {hasSSC && <TabPanel value={tabIndex} index={2}>
           <SSCSettings
             sscConfig={this.state.sscConfig}
             submit={(updates) => this.submitSSCConfig(updates)}

@@ -14,6 +14,7 @@ export const LightTooltip = withStyles((theme) => ({
 export const StyledTabs = withStyles({
   root: {
     boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
+    padding: "0 16px" 
   },
   indicator: {
     display: 'flex',
@@ -36,13 +37,18 @@ export const StyledTab = withStyles((theme) => ({
     fontWeight: 'bold',
     color: '#000 !important',
     minWidth: 'unset',
-    paddingLeft: 16,
-    paddingRight: 16,
+    // paddingLeft: 40,
+    // paddingRight: 40,
+    margin: "0 24px",
+    padding: 0,
     // marginRight: theme.spacing(1),
     '&:focus': {
       opacity: 1,
     },
   },
+  selected: {
+    // margin: "0 40px"
+  }
 }))((props) => <Tab disableRipple {...props} />);
 
 export function TabPanel(props) {
