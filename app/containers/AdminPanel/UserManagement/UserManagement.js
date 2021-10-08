@@ -11,23 +11,66 @@ import MaterialTable, { MTableBody, MTableHeader } from 'material-table';
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
 import { Paper, TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
+import { makeSelectProductRoles } from '../../App/selectors';
+import { useSelector } from 'react-redux';
+
+const tableIcons = {
+    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
+};
+function getRoleMapping(roles, productRoles) {
+    let result = {};
+    for (var product of productRoles) {
+        if (roles.hasOwnProperty(product.admin)){
+            result = { ...result, [product.name]: `Owner` };
+        } else if (roles.hasOwnProperty(product.reader)){
+            result = { ...result, [product.name]: `Viewer` };
+        } else {
+            result = { ...result, [product.name]: "No Access" }
+        }
+    }
+    return result;
+
+}
 
 export default function UserManagement(props) {
     const { users, accessLevel, assignableRoles } = props;
-    const USERS = users?.map((u) => { return { ...u, name: `${u.firstName} ${u.lastName}` } })
+    const productRoles = useSelector(makeSelectProductRoles());
+    const USERS = users?.map((u) => {
+        const { roles, firstName, lastName } = u;
+
+        return { ...u, ...getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
+    })
+    
     if (!USERS) {
         return <LoadingIndicator />
     }
-    console.log(accessLevel, assignableRoles)
+    const generateRoleColumn = (title) => {
+        return {
+            title, field: title, render: rowData => RenderRoleIcon(rowData, title), sorting:false
+        }
+    };
     return (
         <div className="user-management">
             <MaterialTable
                 title=""
                 columns={[
                     { title: "User Name", field: 'userName', hidden: true },
+                    { title: "Facility ID", field: 'facilityId', hidden: true },
+                    { title: "User ID", field: 'userId', hidden: true },
+                    { title: "Email", field: 'email' },
                     { title: "Name", field: 'name', defaultSort: 'asc' },
-                    { title: "Email", field: 'email', hidden: true },
-                    { title: "Title", field: 'title' }
+                    { title: "Title", field: 'title' },
+                    generateRoleColumn("Efficiency"),
+                    generateRoleColumn("eM&M"),
+                    generateRoleColumn("Case Discovery"),
+                    generateRoleColumn("Surgical Safety Checklist"),
                 ]}
                 options={{
                     search: true,
@@ -48,50 +91,51 @@ export default function UserManagement(props) {
                     // },
                 }}
                 data={USERS}
-                icons={getTableIcons()}
+                icons={tableIcons}
                 //   onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
                 components={{
-                    Container: props => <Paper {...props} elevation={0} />,
-                    Body: props => <MTableBody {...props} style={{ background: 'black' }} />,
+                    Container: props => <Paper {...props} elevation={0} className="table-container" />,
+                    Body: props => <MTableBody {...props}  />,
                     Header: props => <TableHeader {...props} />
                 }}
             />
         </div>
     )
 }
-function getTableIcons() {
-    const tableIcons = {
-        Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} onClick={() => this.logClick('first-page')} />),
-        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} onClick={() => this.logClick('last-page')} />),
-        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} onClick={() => this.logClick('next-page')} />),
-        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} onClick={() => this.logClick('previous-page')} />),
-        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => this.logClick('clear-search')} />),
-        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-        SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
-    };
-    return tableIcons
+
+function RenderRoleIcon(rowData, field) {
+    return (
+        <span className={`role-cell ${rowData[field]}`}>{rowData[field]}</span>
+    )
 }
 
 function TableHeader(props) {
     const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange } = props;
+
+    console.log()
     const headers = columns.filter((c) => !c.hidden);
+    console.log(props)
     return (
         <TableHead className="table-header">
             <TableRow >
                 {headers?.map((c) => {
                     const index = columns?.findIndex((col) => col.title == c.title);
+                    const isSortable = c?.sorting ?? true;
                     return (
                         <TableCell
-                            style={{ ...headerStyle, backgroundColor: '#fff', width: scrollWidth / headers?.length }}
+                            style={{ ...headerStyle, backgroundColor: '#EEFAFF', width: scrollWidth / headers?.length }}
                         >
-                            <TableSortLabel
+                            {isSortable ? (
+                                <TableSortLabel
                                 active={index == orderBy}
                                 direction={index == orderBy ? orderDirection : 'asc'}
                                 onClick={() => onOrderChange(index, orderBy == index && orderDirection == 'asc' ? 'desc' : 'asc')}
                             >
                                 {c.title}
                             </TableSortLabel>
+                            ) : (
+                                <span>{c.title}</span>
+                            )}
                         </TableCell>
                     )
                 })}
