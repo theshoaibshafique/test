@@ -1839,6 +1839,12 @@ function ClipTimeline(props) {
       <Button variant="outlined" className="primary" onClick={() => publishClip()}>Publish</Button>
     </div>
   ) || ''
+console.log('prod roles', productRoles?.cdRoles)
+  const hideButton = productRoles?.cdRoles?.hasPublisher === true && 
+    <Button variant="outlined" className="primary" onClick={() => {console.log('hide clip')}}>
+      Hide
+    </Button> || ''
+  
   const { startTime, index } = selectedMarker;
   const endTime = startTime + selectedMarker.duration;
   const displayStart = (startTime < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(startTime));
