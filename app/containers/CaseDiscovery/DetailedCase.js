@@ -27,7 +27,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { CSSTransition } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, getQuestionByLocation, getQuestionCount, getPresetDates } from './misc/Utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectRoles, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -1741,6 +1741,7 @@ function ClipTimeline(props) {
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
   const isAdmin = useSelector(makeSelectIsAdmin());
+  const productRoles = useSelector(makeSelectProductRoles());
   const [presenterMode, setPresenterMode] = React.useState(false);
   const [presenterDialog, setPresenterDialog] = React.useState(false);
   const dispatch = useDispatch();
@@ -1845,6 +1846,7 @@ function ClipTimeline(props) {
 
   const leftArrow = index > 0 ? <div className="left-arrow" onClick={() => handleSelect(timeline[index - 1], index - 1)}></div> : <div className="left-arrow disabled" ></div>
   const rightArrow = index < timeline.length - 1 ? <div className="right-arrow" onClick={() => handleSelect(timeline[index + 1], index + 1)}></div> : <div className="right-arrow disabled" ></div>
+
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>
