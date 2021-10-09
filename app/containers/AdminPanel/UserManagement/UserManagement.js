@@ -10,9 +10,13 @@ import Search from '@material-ui/icons/Search';
 import MaterialTable, { MTableBody, MTableHeader } from 'material-table';
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
-import { Paper, TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
+import { Button, MenuItem, Paper, TableCell, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox } from '@material-ui/core';
 import { makeSelectProductRoles } from '../../App/selectors';
 import { useSelector } from 'react-redux';
+import { ArrowDropDown } from '@material-ui/icons';
+import Icon from '@mdi/react'
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+
 
 const tableIcons = {
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
@@ -24,38 +28,34 @@ const tableIcons = {
     Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
     SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
 };
-function getRoleMapping(roles, productRoles) {
-    let result = {};
-    for (var product of productRoles) {
-        if (roles.hasOwnProperty(product.admin)){
-            result = { ...result, [product.name]: `Owner` };
-        } else if (roles.hasOwnProperty(product.reader)){
-            result = { ...result, [product.name]: `Viewer` };
-        } else {
-            result = { ...result, [product.name]: "No Access" }
-        }
-    }
-    return result;
 
+const filterReducer = (state, event) => {
+    return {
+        ...state,
+        ...event
+    }
 }
 
 export default function UserManagement(props) {
     const { users, accessLevel, assignableRoles } = props;
     const productRoles = useSelector(makeSelectProductRoles());
+    const [filters, setFilters] = useReducer(filterReducer, {
+
+    })
     const USERS = users?.map((u) => {
         const { roles, firstName, lastName } = u;
 
-        return { ...u, ...getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
-    })
-    
+        return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
+    }).filter((u) => Object.entries(u?.displayRoles)?.every((k, v) => filters[k + v] ?? true))
+    console.log(USERS?.slice(0, 10));
+    console.log(filters);
     if (!USERS) {
         return <LoadingIndicator />
     }
-    const generateRoleColumn = (title) => {
-        return {
-            title, field: title, render: rowData => RenderRoleIcon(rowData, title), sorting:false
-        }
-    };
+    const handleFilter = (e, v) => {
+        setFilters({ [e + v]: !filters[e + v] })
+    }
+
     return (
         <div className="user-management">
             <MaterialTable
@@ -85,36 +85,47 @@ export default function UserManagement(props) {
                         fontSize: 14
                     },
                     maxBodyHeight: "calc(100vh - 300px)",
-                    // headerStyle: {
-                    //     position: "sticky",
-                    //     top: "0"
-                    // },
                 }}
                 data={USERS}
                 icons={tableIcons}
                 //   onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
                 components={{
                     Container: props => <Paper {...props} elevation={0} className="table-container" />,
-                    Body: props => <MTableBody {...props}  />,
-                    Header: props => <TableHeader {...props} />
+                    Body: props => <MTableBody {...props} />,
+                    Header: props => <TableHeader {...props} filters={filters} handleFilter={handleFilter} />
                 }}
             />
         </div>
     )
 }
-
+function getRoleMapping(roles, productRoles) {
+    let result = {};
+    for (var product of productRoles) {
+        if (roles.hasOwnProperty(product.admin)) {
+            result[product.name] = `Owner`;
+        } else if (roles.hasOwnProperty(product.reader)) {
+            result[product.name] = `Viewer`;
+        } else {
+            result[product.name] = "No Access";
+        }
+    }
+    return result;
+}
+function generateRoleColumn(title) {
+    return {
+        title, field: title, render: rowData => RenderRoleIcon(rowData, title), sorting: false
+    }
+};
 function RenderRoleIcon(rowData, field) {
     return (
-        <span className={`role-cell ${rowData[field]}`}>{rowData[field]}</span>
+        <span className={`role-cell ${rowData?.displayRoles[field]}`}>{rowData?.displayRoles[field]}</span>
     )
 }
 
 function TableHeader(props) {
-    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange } = props;
+    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, filters, handleFilter } = props;
 
-    console.log()
     const headers = columns.filter((c) => !c.hidden);
-    console.log(props)
     return (
         <TableHead className="table-header">
             <TableRow >
@@ -127,19 +138,81 @@ function TableHeader(props) {
                         >
                             {isSortable ? (
                                 <TableSortLabel
-                                active={index == orderBy}
-                                direction={index == orderBy ? orderDirection : 'asc'}
-                                onClick={() => onOrderChange(index, orderBy == index && orderDirection == 'asc' ? 'desc' : 'asc')}
-                            >
-                                {c.title}
-                            </TableSortLabel>
+                                    active={index == orderBy}
+                                    direction={index == orderBy ? orderDirection : 'asc'}
+                                    onClick={() => onOrderChange(index, orderBy == index && orderDirection == 'asc' ? 'desc' : 'asc')}
+                                >
+                                    {c.title}
+                                </TableSortLabel>
                             ) : (
-                                <span>{c.title}</span>
+                                <FilterRole title={c.title} handleFilter={handleFilter} filters={filters} />
                             )}
                         </TableCell>
                     )
                 })}
             </TableRow>
         </TableHead>
+    )
+}
+
+function FilterRole(props) {
+    const { title, handleFilter, filters } = props;
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    return (
+        <React.Fragment>
+            <span
+                className="pointer"
+                onClick={handleClick}
+            >
+                {title}<ArrowDropDown />
+            </span>
+            <Menu
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                <RoleOption label="Owner" parent={title} filters={filters} onClick={handleClose} handleFilter={handleFilter} />
+                <RoleOption label="Viewer" parent={title} filters={filters} onClick={handleClose} handleFilter={handleFilter} />
+                <RoleOption label="No Access" parent={title} filters={filters} onClick={handleClose} handleFilter={handleFilter} />
+            </Menu>
+        </React.Fragment>
+    )
+}
+function RoleOption(props) {
+    const { label, handleFilter, filters, onClick, parent } = props;
+    console.log("wow", parent, label, filters, filters[parent + label])
+    return (
+        <MenuItem onClick={() => { handleFilter(parent, label) }} style={{ padding: "0px 14px 0 0 " }}>
+            <ListItemIcon style={{ minWidth: 30 }}>
+                <Checkbox
+                    disableRipple
+                    disabled
+                    icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                    checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
+                    className="SST-Checkbox"
+                    checked={filters[parent + label]}
+                />
+            </ListItemIcon>
+            <ListItemText>
+                {label}
+            </ListItemText>
+        </MenuItem>
     )
 }

@@ -1,3 +1,4 @@
+@import 'styles/global-styles';
 .user-management {
     padding: 25px 40px;
     .table-container {
@@ -47,5 +48,15 @@
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
         background: rgba(85, 85, 85, 0.8);
+    }
+}
+.SST-Checkbox {
+    &:not([class*="disabled"]) {
+        svg {
+            color: $dark-grey;
+        }
+    }
+    :checked ~ svg{
+        color: #004F6E
     }
 }
