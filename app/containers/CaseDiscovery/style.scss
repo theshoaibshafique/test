@@ -1042,12 +1042,22 @@
         .button {
             margin-top: 4px;
             margin-bottom: 0 !important;
-            width: 100%;
+            width: 91.5%;
             position: absolute;
             bottom: 0;
             display: flex;
+            justify-content: space-between;
             button {
-                margin: auto;
+                margin-right: 10px;
+                width: 95px;
+                &:disabled {
+                    opacity: 0.2;
+                    color: #fff;
+                }
+            }
+            :nth-child(2) {
+                margin-left: 10px;
+                margin-right: 0;
             }
         }
 
