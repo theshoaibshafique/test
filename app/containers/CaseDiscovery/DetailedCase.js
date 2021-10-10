@@ -1834,13 +1834,26 @@ function ClipTimeline(props) {
       })
   }
 
+  const hideClip = () => {
+    globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'delete', userToken, {})
+      .then(result => {
+        const tLine = [...timeline];
+        tLine[selectedMarker.index].isActive = false;
+        logger?.manualAddLog('click', `hide-clip-${selectedMarker.clipId}`, selectedMarker)
+        setTimeline(tLine)
+      })
+      .catch((results) => {
+        console.error("oh no", results)
+      })
+  };
+
   const publishButton = productRoles?.cdRoles?.hasPublisher === true && 
     <Button variant="outlined" className="primary" onClick={() => publishClip()}>
       Publish
     </Button> || ''
 
   const hideButton = productRoles?.cdRoles?.hasPublisher === true && 
-    <Button variant="outlined" className="primary" onClick={() => {console.log('hide clip')}}>
+    <Button variant="outlined" className="primary" onClick={hideClip}>
       Hide
     </Button> || ''
   
@@ -1926,7 +1939,10 @@ function ClipTimeline(props) {
                     </div>
                   )
                 })}
-                {publishButton}
+                <div className="button">
+                  {publishButton}
+                  {hideButton}
+                </div>
               </Grid>
 
             </Grid>
