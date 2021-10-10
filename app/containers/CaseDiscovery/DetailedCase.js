@@ -1848,12 +1848,12 @@ function ClipTimeline(props) {
   };
 
   const publishButton = productRoles?.cdRoles?.hasPublisher === true && 
-    <Button variant="outlined" className="primary" onClick={() => publishClip()}>
+    <Button variant="outlined" className="primary" onClick={() => publishClip()} disabled={selectedMarker?.isActive === true}>
       Publish
     </Button> || ''
 
   const hideButton = productRoles?.cdRoles?.hasPublisher === true && 
-    <Button variant="outlined" className="primary" onClick={hideClip}>
+    <Button variant="outlined" className="primary" onClick={hideClip} disabled={selectedMarker?.isActive === false}>
       Hide
     </Button> || ''
   
