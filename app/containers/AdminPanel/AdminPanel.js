@@ -2,9 +2,9 @@ import React from 'react';
 import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import EfficiencySettings from './EfficiencySettings/Loadable';
-import UserManagement from './UserManagement/UserManagement';
 import SSCSettings from './SSCSettings/Loadable';
 import { StyledTab, StyledTabs, TabPanel } from '../../components/SharedComponents/SharedComponents';
+import { UserManagement } from './UserManagement/UserManagement';
 
 const TABS = ['user management', 'eff', 'ssc']
 export default class AdminPanel extends React.PureComponent {

@@ -8,6 +8,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import globalReducer from 'containers/App/reducer';
 import emmReducer from 'containers/App/emm-reducer';
 import cdReducer from 'containers/App/cd-reducer';
+import umReducer from './containers/App/store/UserManagement/um-reducer';
 
 /*
  * routeReducer
@@ -46,6 +47,7 @@ export default function createReducer(injectedReducers) {
     global: globalReducer,
     emm: emmReducer,
     cd: cdReducer,
+    um: umReducer,
     ...injectedReducers,
   });
 }
