@@ -2,8 +2,9 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel, Modal, Slide, TextField, Tooltip, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel, Modal, Slide, TextField, Tooltip, withStyles, Snackbar } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -167,8 +168,12 @@ export function DetailedCase(props) {
   // Flag submission state.
   const [showAddFlag, setShowAddFlag] = React.useState(true);
   const [isMayo, setIsMayo] = React.useState(() => userFacility === 'e47585ea-a19f-4800-ac53-90f1777a7c96');
-  /*** NEW - Flag Submission state ***/
-  const [openAddFlag, setOpenAddFlag] = useState(false);
+  const [openAddFlag, setOpenAddFlag] = React.useState(false);
+
+  // Flag clip publish/hide snack bar state.
+  const [snackBarOpen, setSnackBackOpen] = React.useState(false);
+  const [snackBarMsg, setSnackBackMsg] = React.useState('');
+
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => {
     logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
@@ -336,7 +341,7 @@ export function DetailedCase(props) {
 
 
           </div>
-
+          
         </Grid>
       }
       <Grid item xs className="schedule">
