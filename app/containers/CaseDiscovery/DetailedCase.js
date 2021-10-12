@@ -1858,9 +1858,11 @@ function ClipTimeline(props) {
         tLine[selectedMarker.index].isActive = true;
         logger?.manualAddLog('click', `publish-clip-${selectedMarker.clipId}`, selectedMarker)
         setTimeline(tLine);
-        // Display snack bar with confirmation.
+        // Display success msg snack bar with confirmation.
         toggleSnackBar(true, 'Clip published successfully.');
       }).catch((results) => {
+        // Display error msg snack bar on fail.
+        toggleSnackBar(true, 'A problem has occurred while completing your action. Please try again or contact the administrator.');
         console.error("oh no", results)
       })
   }
@@ -1871,9 +1873,13 @@ function ClipTimeline(props) {
         const tLine = [...timeline];
         tLine[selectedMarker.index].isActive = false;
         logger?.manualAddLog('click', `hide-clip-${selectedMarker.clipId}`, selectedMarker)
-        setTimeline(tLine)
+        setTimeline(tLine);
+        // Display success msg snack bar with confirmation.
+        toggleSnackBar(true, 'Clip hidden successfully.');
       })
       .catch((results) => {
+        // Display error msg snack bar on fail.
+        toggleSnackBar(true, 'A problem has occurred while completing your action. Please try again or contact the administrator.');
         console.error("oh no", results)
       })
   };
