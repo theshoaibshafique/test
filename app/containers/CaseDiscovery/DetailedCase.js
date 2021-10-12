@@ -341,7 +341,23 @@ export function DetailedCase(props) {
 
 
           </div>
-          
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            open={snackBarOpen}
+            autoHideDuration={4000}
+            onClose={() => {}}
+            message={snackBarMsg}
+            action={
+              <React.Fragment>
+                <IconButton size="small" aria-label="close" color="inherit" onClick={() => {}}>
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </React.Fragment>
+            }
+          />
         </Grid>
       }
       <Grid item xs className="schedule">
