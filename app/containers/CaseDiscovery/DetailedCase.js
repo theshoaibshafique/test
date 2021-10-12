@@ -1838,7 +1838,8 @@ function ClipTimeline(props) {
       dispatch(setFlaggedClip(null));
     }
     setSelect(t);
-
+    // Close confirmation snack bar when modal is closed.
+    toggleSnackBar(false);
   }
   // Open Selected Flagged Clip from Overview page;
   const flaggedClip = useSelector(selectFlaggedClip());
