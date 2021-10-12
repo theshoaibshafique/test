@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel, Modal, Slide, TextField, Tooltip, withStyles, Snackbar } from '@material-ui/core';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel, Modal, Slide, TextField, Tooltip, withStyles, Snackbar, Portal } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
@@ -174,6 +174,12 @@ export function DetailedCase(props) {
   const [snackBarOpen, setSnackBackOpen] = React.useState(false);
   const [snackBarMsg, setSnackBackMsg] = React.useState('');
 
+  // Flag clip snackbar open/close-toggle click handler.
+  const toggleSnackBar = (state, msg = '') => {
+    setSnackBackOpen(state);
+    if(state === true) setSnackBackMsg(msg);
+  };
+
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => {
     logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
@@ -337,27 +343,29 @@ export function DetailedCase(props) {
                 <ProcedureDistribution {...procedureDistribution} duration={duration} />
               </Grid>
             </Grid>
-            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} flags={flags} />
+            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} flags={flags} toggleSnackBar={toggleSnackBar} />
 
 
           </div>
-          <Snackbar
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
-            }}
-            open={snackBarOpen}
-            autoHideDuration={4000}
-            onClose={() => {}}
-            message={snackBarMsg}
-            action={
-              <React.Fragment>
-                <IconButton size="small" aria-label="close" color="inherit" onClick={() => {}}>
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </React.Fragment>
-            }
-          />
+          <Portal>
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              open={snackBarOpen}
+              autoHideDuration={4000}
+              onClose={() => toggleSnackBar(false)}
+              message={snackBarMsg}
+              action={
+                <React.Fragment>
+                  <IconButton size="small" aria-label="close" color="inherit" onClick={() => toggleSnackBar(false)}>
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </React.Fragment>
+              }
+            />
+          </Portal>
         </Grid>
       }
       <Grid item xs className="schedule">
@@ -1480,7 +1488,7 @@ function ProcedureDistribution(props) {
 
 
 function HL7Chart(props) {
-  const { hl7Data, timeline, flags } = props;
+  const { hl7Data, timeline, flags, toggleSnackBar } = props;
   const logger = useSelector(makeSelectLogger());
   const chartRef = useRef(null);
   if (!hl7Data) {
@@ -1733,7 +1741,7 @@ function HL7Chart(props) {
         <div style={{ width: '100%' }}>
           <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
           <C3Chart ref={chartRef} {...data} />
-          {hasClips && <ClipTimeline flags={flags} max={max} min={min} />}
+          {hasClips && <ClipTimeline flags={flags} max={max} min={min} toggleSnackBar={toggleSnackBar} />}
         </div>
       </div>
 
@@ -1756,7 +1764,7 @@ export const Thumbnail = withStyles((theme) => ({
 }))(Tooltip);
 
 function ClipTimeline(props) {
-  const { flags, max, min } = props;
+  const { flags, max, min, toggleSnackBar } = props;
   const duration = max + (min < 0 ? Math.abs(min) : 0) + max * .025
   const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
@@ -1849,7 +1857,9 @@ function ClipTimeline(props) {
         const tLine = [...timeline];
         tLine[selectedMarker.index].isActive = true;
         logger?.manualAddLog('click', `publish-clip-${selectedMarker.clipId}`, selectedMarker)
-        setTimeline(tLine)
+        setTimeline(tLine);
+        // Display snack bar with confirmation.
+        toggleSnackBar(true, 'Clip published successfully.');
       }).catch((results) => {
         console.error("oh no", results)
       })
