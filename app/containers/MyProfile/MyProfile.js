@@ -102,6 +102,8 @@ export default class MyProfile extends React.PureComponent {
         if (result == 'error') {
 
         } else {
+          //Temporarily remove userRoles from consideration
+          result.roles = null;
           this.props.setProfile(result);
           this.setState({ isEdit: false });
         }

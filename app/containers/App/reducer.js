@@ -62,7 +62,7 @@ function emmReducer(state = initialState, action) {
         .set('userToken', action.accessToken)
         .set('userLoggedIn', true);
     case PROFILE:
-      const userRoles = Object.keys(action.profile.roles);
+      const userRoles = action.profile.roles ? Object.keys(action.profile.roles) : null;
       return setProductRoles(state, userRoles)
         .set('userID', action.profile.userId)
         .set('email', action.profile.email)
@@ -70,7 +70,6 @@ function emmReducer(state = initialState, action) {
         .set('firstName', action.profile.firstName)
         .set('lastName', action.profile.lastName)
         .set('jobTitle', action.profile.title)
-        .set('userRoles', userRoles)
     case USER_FACILITY:
       return state
         .set('userFacility', action.facility)
@@ -101,7 +100,9 @@ function emmReducer(state = initialState, action) {
 }
 
 function setProductRoles(state, userRoles) {
-
+  if (!userRoles){
+    return state;
+  }
   const createProduct = (permissions) => {
     return {
       ...permissions,
@@ -120,6 +121,7 @@ function setProductRoles(state, userRoles) {
     }
   };
   return state
+    .set('userRoles', userRoles)
     .set('cdRoles', createProduct({
       name: "Case Discovery",
       productId: "cd7bb831-c7c6-4a34-8cc6-e6d89be49d4b",
