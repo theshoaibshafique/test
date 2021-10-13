@@ -2,8 +2,9 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel, Modal, Slide, TextField, Tooltip, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel, Modal, Slide, TextField, Tooltip, withStyles, Snackbar, Portal } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -27,7 +28,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { CSSTransition } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, getQuestionByLocation, getQuestionCount, getPresetDates } from './misc/Utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectRoles, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -167,8 +168,18 @@ export function DetailedCase(props) {
   // Flag submission state.
   const [showAddFlag, setShowAddFlag] = React.useState(true);
   const [isMayo, setIsMayo] = React.useState(() => userFacility === 'e47585ea-a19f-4800-ac53-90f1777a7c96');
-  /*** NEW - Flag Submission state ***/
-  const [openAddFlag, setOpenAddFlag] = useState(false);
+  const [openAddFlag, setOpenAddFlag] = React.useState(false);
+
+  // Flag clip publish/hide snack bar state.
+  const [snackBarOpen, setSnackBackOpen] = React.useState(false);
+  const [snackBarMsg, setSnackBackMsg] = React.useState('');
+
+  // Flag clip snackbar open/close-toggle click handler.
+  const toggleSnackBar = (state, msg = '') => {
+    setSnackBackOpen(state);
+    if(state === true) setSnackBackMsg(msg);
+  };
+
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => {
     logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
@@ -332,11 +343,29 @@ export function DetailedCase(props) {
                 <ProcedureDistribution {...procedureDistribution} duration={duration} />
               </Grid>
             </Grid>
-            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} flags={flags} />
+            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} flags={flags} toggleSnackBar={toggleSnackBar} />
 
 
           </div>
-
+          <Portal>
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              open={snackBarOpen}
+              autoHideDuration={4000}
+              onClose={() => toggleSnackBar(false)}
+              message={snackBarMsg}
+              action={
+                <React.Fragment>
+                  <IconButton size="small" aria-label="close" color="inherit" onClick={() => toggleSnackBar(false)}>
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </React.Fragment>
+              }
+            />
+          </Portal>
         </Grid>
       }
       <Grid item xs className="schedule">
@@ -1459,7 +1488,7 @@ function ProcedureDistribution(props) {
 
 
 function HL7Chart(props) {
-  const { hl7Data, timeline, flags } = props;
+  const { hl7Data, timeline, flags, toggleSnackBar } = props;
   const logger = useSelector(makeSelectLogger());
   const chartRef = useRef(null);
   if (!hl7Data) {
@@ -1712,7 +1741,7 @@ function HL7Chart(props) {
         <div style={{ width: '100%' }}>
           <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
           <C3Chart ref={chartRef} {...data} />
-          {hasClips && <ClipTimeline flags={flags} max={max} min={min} />}
+          {hasClips && <ClipTimeline flags={flags} max={max} min={min} toggleSnackBar={toggleSnackBar} />}
         </div>
       </div>
 
@@ -1735,12 +1764,13 @@ export const Thumbnail = withStyles((theme) => ({
 }))(Tooltip);
 
 function ClipTimeline(props) {
-  const { flags, max, min } = props;
+  const { flags, max, min, toggleSnackBar } = props;
   const duration = max + (min < 0 ? Math.abs(min) : 0) + max * .025
   const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
   const isAdmin = useSelector(makeSelectIsAdmin());
+  const productRoles = useSelector(makeSelectProductRoles());
   const [presenterMode, setPresenterMode] = React.useState(false);
   const [presenterDialog, setPresenterDialog] = React.useState(false);
   const dispatch = useDispatch();
@@ -1808,7 +1838,8 @@ function ClipTimeline(props) {
       dispatch(setFlaggedClip(null));
     }
     setSelect(t);
-
+    // Close confirmation snack bar when modal is closed.
+    toggleSnackBar(false);
   }
   // Open Selected Flagged Clip from Overview page;
   const flaggedClip = useSelector(selectFlaggedClip());
@@ -1827,17 +1858,43 @@ function ClipTimeline(props) {
         const tLine = [...timeline];
         tLine[selectedMarker.index].isActive = true;
         logger?.manualAddLog('click', `publish-clip-${selectedMarker.clipId}`, selectedMarker)
-        setTimeline(tLine)
+        setTimeline(tLine);
+        // Display success msg snack bar with confirmation.
+        toggleSnackBar(true, 'Clip published successfully.');
       }).catch((results) => {
+        // Display error msg snack bar on fail.
+        toggleSnackBar(true, 'A problem has occurred while completing your action. Please try again or contact the administrator.');
         console.error("oh no", results)
       })
   }
 
-  const publishButton = selectedMarker?.isActive == null && (
-    <div className="button">
-      <Button variant="outlined" className="primary" onClick={() => publishClip()}>Publish</Button>
-    </div>
-  ) || ''
+  const hideClip = () => {
+    globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'delete', userToken, {})
+      .then(result => {
+        const tLine = [...timeline];
+        tLine[selectedMarker.index].isActive = false;
+        logger?.manualAddLog('click', `hide-clip-${selectedMarker.clipId}`, selectedMarker)
+        setTimeline(tLine);
+        // Display success msg snack bar with confirmation.
+        toggleSnackBar(true, 'Clip hidden successfully.');
+      })
+      .catch((results) => {
+        // Display error msg snack bar on fail.
+        toggleSnackBar(true, 'A problem has occurred while completing your action. Please try again or contact the administrator.');
+        console.error("oh no", results)
+      })
+  };
+
+  const publishButton = productRoles?.cdRoles?.hasPublisher === true && 
+    <Button variant="outlined" className="primary" onClick={() => publishClip()} disabled={selectedMarker?.isActive === true}>
+      Publish
+    </Button> || ''
+
+  const hideButton = productRoles?.cdRoles?.hasPublisher === true && 
+    <Button variant="outlined" className="primary" onClick={hideClip} disabled={selectedMarker?.isActive === false}>
+      Hide
+    </Button> || ''
+  
   const { startTime, index } = selectedMarker;
   const endTime = startTime + selectedMarker.duration;
   const displayStart = (startTime < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(startTime));
@@ -1845,6 +1902,7 @@ function ClipTimeline(props) {
 
   const leftArrow = index > 0 ? <div className="left-arrow" onClick={() => handleSelect(timeline[index - 1], index - 1)}></div> : <div className="left-arrow disabled" ></div>
   const rightArrow = index < timeline.length - 1 ? <div className="right-arrow" onClick={() => handleSelect(timeline[index + 1], index + 1)}></div> : <div className="right-arrow disabled" ></div>
+
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>
@@ -1919,7 +1977,10 @@ function ClipTimeline(props) {
                     </div>
                   )
                 })}
-                {publishButton}
+                <div className="button">
+                  {publishButton}
+                  {hideButton}
+                </div>
               </Grid>
 
             </Grid>
