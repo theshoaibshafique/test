@@ -27,7 +27,7 @@ export function checkDrmType() {
       // Edge
       browser = 'Edge';
     }
-    drmType = 'PlayReady';
+    drmType = 'Widevine';
   } else if (agent.indexOf('safari') > -1) {
     // Chrome or Safari
     if (agent.indexOf('opr') > -1) {
