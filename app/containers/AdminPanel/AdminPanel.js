@@ -48,7 +48,7 @@ export default class AdminPanel extends React.PureComponent {
   async getProfiles() {
     return await globalFunctions.genericFetch(`${process.env.USER_V2_API}profiles`, 'get', this.props.userToken, {})
       .then(result => {
-        this.setState({ USERS: result });
+        this.setState({ USERS: result == "error" ? [] : result });
       }).catch((results) => {
         console.error("oh no", results)
       });

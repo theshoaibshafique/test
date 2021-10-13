@@ -11,7 +11,9 @@ export const selectFilters = (filter) => createSelector(
   (umState) => umState.get('filters')
 );
 
+
 export const selectUsers = () => createSelector(
   selectUM,
   (umState) => umState.get('users')
 )
+

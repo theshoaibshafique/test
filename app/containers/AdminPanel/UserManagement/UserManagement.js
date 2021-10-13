@@ -7,10 +7,10 @@ import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
-import MaterialTable, { MTableBody, MTableHeader } from 'material-table';
+import MaterialTable, { MTableBody, MTableFilterRow, MTableHeader } from 'material-table';
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
-import { Button, MenuItem, Paper, TableCell, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox } from '@material-ui/core';
+import { Button, MenuItem, Paper, TableCell, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, FormControlLabel } from '@material-ui/core';
 import { makeSelectProductRoles } from '../../App/selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
@@ -32,25 +32,32 @@ const tableIcons = {
 };
 
 
-export const UserManagement = React.memo(props=> {
+export const UserManagement = props => {
     const dispatch = useDispatch();
     const { users, accessLevel, assignableRoles } = props;
-    // const filters = useSelector(selectFilters());
-    const productRoles = useSelector(makeSelectProductRoles());
     
+    // const [USERS, setTable] = useState(users)
+    const productRoles = useSelector(makeSelectProductRoles());
     const USERS = users?.map((u) => {
         const { roles, firstName, lastName } = u;
 
         return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
     })
-    // .filter((u) => Object.entries(u?.displayRoles)?.every(([k, v]) => {
-    //     const t  = filters[k + v] ?? true;
-    //     return t;
-    // }))
+    // useEffect(() => {
+        
+    //     const u = users?.map((u) => {
+    //         const { roles, firstName, lastName } = u;
 
-    if (!USERS) {
+    //         return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
+    //     })
+    //     setTable(u);
+    // }, [users])
+    
+
+    if (!users) {
         return <LoadingIndicator />
     }
+    
 
     return (
         <div className="user-management">
@@ -75,6 +82,7 @@ export const UserManagement = React.memo(props=> {
                     searchFieldStyle: { marginLeft: -40, height: 40, width: 307 },
                     thirdSortClick: false,
                     draggable: false,
+                    // filtering: true,
                     searchFieldVariant: 'outlined',
                     rowStyle: {
                         fontFamily: "Noto Sans",
@@ -87,13 +95,15 @@ export const UserManagement = React.memo(props=> {
                 //   onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
                 components={{
                     Container: props => <Paper {...props} elevation={0} className="table-container" />,
-                    Body: props => <MTableBody {...props} />,
-                    Header: props => <TableHeader {...props}  />
+                    Body: props => <TableBody {...props} />,
+                    Header: props => <TableHeader {...props} />,
+                    // FilterRow: props => console.log(props) || dispatch(setFilterFunc({ func: props.onFilterChanged, data: props.columns })) && ""
+
                 }}
             />
         </div>
     )
-})
+}
 function getRoleMapping(roles, productRoles) {
     let result = {};
     for (var product of productRoles) {
@@ -108,6 +118,7 @@ function getRoleMapping(roles, productRoles) {
     return result;
 }
 function generateRoleColumn(title) {
+
     return {
         title, field: title, render: rowData => RenderRoleIcon(rowData, title), sorting: false
     }
@@ -117,10 +128,31 @@ function RenderRoleIcon(rowData, field) {
         <span className={`role-cell ${rowData?.displayRoles[field]}`}>{rowData?.displayRoles[field]}</span>
     )
 }
-
+const TableBody = (props) => {
+    const filters = useSelector(selectFilters());
+    const {renderData} = props;
+    const [USERS, setUsers] = useState(renderData);
+    
+    useEffect(() => {
+        if (filters && renderData){
+            setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles)?.every(([k, v]) => {
+                return filters[k]?.size> 0 ?  filters[k]?.has(v) : true;;
+            })))
+        }
+    }, [filters])
+    useEffect(() => {
+        if (renderData)
+            setUsers(renderData)
+    }, [renderData]);
+    return (
+        <>
+            <MTableBody {...props} renderData={USERS} />
+        </>
+    )
+}
 function TableHeader(props) {
-    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, } = props;
-    console.log(props)
+    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange } = props;
+    // console.log(props)
     const headers = columns.filter((c) => !c.hidden);
     return (
         <TableHead className="table-header">
@@ -130,7 +162,7 @@ function TableHeader(props) {
                     const isSortable = c?.sorting ?? true;
                     return (
                         <TableCell
-                            style={{ ...headerStyle, backgroundColor: '#EEFAFF', width: scrollWidth / headers?.length }}
+                            style={{ ...headerStyle, backgroundColor: '#EEFAFF', width: scrollWidth / headers?.length, whiteSpace:'nowrap' }}
                         >
                             {isSortable ? (
                                 <TableSortLabel
@@ -185,13 +217,23 @@ function FilterRole(props) {
 function RoleOption(props) {
     const dispatch = useDispatch();
     const { label, onClick, parent } = props;
-    const filters = useSelector(selectFilters());
-    // console.log("wow", parent, label, filters, filters)
+    const filters = useSelector(selectFilters(parent)) || {};
+    //We maintain an internal check state to help with rendering 
+    const [check, setCheck] = useState(filters[parent]?.has(label) || false);
     const handleFilter = (e, v) => {
-        dispatch(setFilters({...filters, [e + v]:!filters[e + v]}))
+        const productFilter = filters[e] ?? new Set();
+        if (productFilter.has(v)) {
+            productFilter.delete(v);
+        } else {
+            productFilter.add(v);
+        }
+        filters[e] = productFilter;
+        dispatch(setFilters(filters));
+        setCheck(filters[parent]?.has(label));
+
     }
     return (
-        <MenuItem onClick={() => { handleFilter(parent, label) }} style={{ padding: "0px 14px 0 0 " }}>
+        <MenuItem key={parent + label} onClick={() => { handleFilter(parent, label) }} style={{ padding: "0px 14px 0 0 " }}>
             <ListItemIcon style={{ minWidth: 30 }}>
                 <Checkbox
                     disableRipple
@@ -199,8 +241,7 @@ function RoleOption(props) {
                     icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
                     checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
                     className="SST-Checkbox"
-                    //This looks silly but is necessary to rerender correctly 
-                    checked={filters[parent+label] ? filters[parent+label] : false}
+                    checked={check}
                 />
             </ListItemIcon>
             <ListItemText>

@@ -16,7 +16,7 @@
  */
 
 import {
-  UM_FILTERS, UM_USERS
+  UM_FILTERS, UM_FILTERS_FUNC, UM_USERS
 } from '../../constants';
 
 export function setFilters(filters) {
