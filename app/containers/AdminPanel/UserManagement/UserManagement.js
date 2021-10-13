@@ -120,7 +120,7 @@ function getRoleMapping(roles, productRoles) {
 function generateRoleColumn(title) {
 
     return {
-        title, field: title, render: rowData => RenderRoleIcon(rowData, title), sorting: false
+        title, field: title, render: rowData => RenderRoleIcon(rowData, title), sorting: false, filtering: false
     }
 };
 function RenderRoleIcon(rowData, field) {
@@ -139,11 +139,8 @@ const TableBody = (props) => {
                 return filters[k]?.size> 0 ?  filters[k]?.has(v) : true;;
             })))
         }
-    }, [filters])
-    useEffect(() => {
-        if (renderData)
-            setUsers(renderData)
-    }, [renderData]);
+    }, [renderData, filters])
+    
     return (
         <>
             <MTableBody {...props} renderData={USERS} />
