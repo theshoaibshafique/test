@@ -1885,15 +1885,23 @@ function ClipTimeline(props) {
       })
   };
 
-  const publishButton = productRoles?.cdRoles?.hasPublisher === true && 
-    <Button variant="outlined" className="primary" onClick={() => publishClip()} disabled={selectedMarker?.isActive === true}>
-      Publish
-    </Button> || ''
+  const publishButton = productRoles?.cdRoles?.hasPublisher && 
+    <LightTooltip title={selectedMarker?.isActive ? 'Clip Published' : ''} arrow>
+      <div>
+        <Button variant="outlined" className="primary" onClick={() => publishClip()} disabled={selectedMarker?.isActive}>
+          Publish
+        </Button> 
+      </div>
+    </LightTooltip> || ''
 
-  const hideButton = productRoles?.cdRoles?.hasPublisher === true && 
-    <Button variant="outlined" className="primary" onClick={hideClip} disabled={selectedMarker?.isActive === false}>
-      Hide
-    </Button> || ''
+  const hideButton = productRoles?.cdRoles?.hasPublisher && 
+    <LightTooltip title={!selectedMarker?.isActive ? 'Clip Hidden' : ''} arrow>
+      <div>
+        <Button variant="outlined" className="primary" onClick={hideClip} disabled={!selectedMarker?.isActive}>
+          Hide
+        </Button> 
+      </div>
+    </LightTooltip> || ''
   
   const { startTime, index } = selectedMarker;
   const endTime = startTime + selectedMarker.duration;
