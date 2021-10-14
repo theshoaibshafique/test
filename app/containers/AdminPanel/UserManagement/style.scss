@@ -6,6 +6,22 @@
             border-radius: 4px;
             border: 1px solid #E0E0E0;
         }
+        .action-icon{
+            padding: 0 8px;
+            .edit:hover path{
+                fill: #004F6E !important
+            }
+            .delete:hover path{
+                fill: #EC2027 !important
+            }
+        }
+        td {
+            padding: 8px 16px;
+            &:last-child{
+                border-left: 1px solid #E0E0E0;
+            }
+        }
+        
     }
     .table-header {
         position: sticky;
@@ -14,17 +30,17 @@
     }
     .role-cell {
         border-radius: 8px;
-        padding: 4px 0;
+        padding: 6px 8px;
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        width: 85px;
+        width: 96px;
         background: #e0e0e0;
-        &.Owner {
+        &.Full {
             background: rgba(0, 79, 110, 0.15);
         }
-        &.Viewer {
+        &.View {
             background: rgba(242, 186, 14, 0.2);
         }
     }

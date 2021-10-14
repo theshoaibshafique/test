@@ -18,6 +18,7 @@ import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
+import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
 
 
 const tableIcons = {
@@ -33,31 +34,19 @@ const tableIcons = {
 
 
 export const UserManagement = props => {
-    const dispatch = useDispatch();
     const { users, accessLevel, assignableRoles } = props;
-    
-    // const [USERS, setTable] = useState(users)
     const productRoles = useSelector(makeSelectProductRoles());
     const USERS = users?.map((u) => {
         const { roles, firstName, lastName } = u;
 
         return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
     })
-    // useEffect(() => {
-        
-    //     const u = users?.map((u) => {
-    //         const { roles, firstName, lastName } = u;
 
-    //         return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
-    //     })
-    //     setTable(u);
-    // }, [users])
-    
 
     if (!users) {
         return <LoadingIndicator />
     }
-    
+
 
     return (
         <div className="user-management">
@@ -67,13 +56,25 @@ export const UserManagement = props => {
                     { title: "User Name", field: 'userName', hidden: true },
                     { title: "Facility ID", field: 'facilityId', hidden: true },
                     { title: "User ID", field: 'userId', hidden: true },
-                    { title: "Email", field: 'email' },
+                    // { title: "Email", field: 'email' },
                     { title: "Name", field: 'name', defaultSort: 'asc' },
                     { title: "Title", field: 'title' },
                     generateRoleColumn("Efficiency"),
                     generateRoleColumn("eM&M"),
                     generateRoleColumn("Case Discovery"),
                     generateRoleColumn("Surgical Safety Checklist"),
+                ]}
+                actions={[
+                    {
+                        icon: 'edit',
+                        tooltip: 'Edit User',
+                        onClick: () => alert('edit')
+                    },
+                    {
+                        icon: 'delete',
+                        tooltop: 'Delete User',
+                        onClick: () => alert('delete')
+                    },
                 ]}
                 options={{
                     search: true,
@@ -82,13 +83,13 @@ export const UserManagement = props => {
                     searchFieldStyle: { marginLeft: -40, height: 40, width: 307 },
                     thirdSortClick: false,
                     draggable: false,
-                    // filtering: true,
                     searchFieldVariant: 'outlined',
                     rowStyle: {
                         fontFamily: "Noto Sans",
                         fontSize: 14
                     },
                     maxBodyHeight: "calc(100vh - 300px)",
+                    actionsColumnIndex: -1
                 }}
                 data={USERS}
                 icons={tableIcons}
@@ -97,7 +98,7 @@ export const UserManagement = props => {
                     Container: props => <Paper {...props} elevation={0} className="table-container" />,
                     Body: props => <TableBody {...props} />,
                     Header: props => <TableHeader {...props} />,
-                    // FilterRow: props => console.log(props) || dispatch(setFilterFunc({ func: props.onFilterChanged, data: props.columns })) && ""
+                    Action: props => <TableActions {...props} />
 
                 }}
             />
@@ -108,9 +109,9 @@ function getRoleMapping(roles, productRoles) {
     let result = {};
     for (var product of productRoles) {
         if (roles.hasOwnProperty(product.admin)) {
-            result[product.name] = `Owner`;
+            result[product.name] = `Full Access`;
         } else if (roles.hasOwnProperty(product.reader)) {
-            result[product.name] = `Viewer`;
+            result[product.name] = `View Only`;
         } else {
             result[product.name] = "No Access";
         }
@@ -128,19 +129,33 @@ function RenderRoleIcon(rowData, field) {
         <span className={`role-cell ${rowData?.displayRoles[field]}`}>{rowData?.displayRoles[field]}</span>
     )
 }
+const TableActions = (props) => {
+    const { action } = props;
+    let icon = null;
+    switch (action?.icon) {
+        case 'edit':
+            icon = mdiPlaylistEdit;
+            break;
+        case 'delete':
+            icon = mdiDeleteOutline;
+    }
+    return <span className={`action-icon pointer`}>
+        <Icon className={`${action?.icon}`} color="#828282" path={icon} size={'24px'} />
+    </span>
+}
 const TableBody = (props) => {
     const filters = useSelector(selectFilters());
-    const {renderData} = props;
+    const { renderData } = props;
     const [USERS, setUsers] = useState(renderData);
-    
+
     useEffect(() => {
-        if (filters && renderData){
+        if (filters && renderData) {
             setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles)?.every(([k, v]) => {
-                return filters[k]?.size> 0 ?  filters[k]?.has(v) : true;;
+                return filters[k]?.size > 0 ? filters[k]?.has(v) : true;;
             })))
         }
     }, [renderData, filters])
-    
+
     return (
         <>
             <MTableBody {...props} renderData={USERS} />
@@ -148,30 +163,37 @@ const TableBody = (props) => {
     )
 }
 function TableHeader(props) {
-    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange } = props;
-    // console.log(props)
-    const headers = columns.filter((c) => !c.hidden);
+    const { headerStyle, actions, scrollWidth, columns, orderBy, orderDirection, onOrderChange } = props;
+    const headers = [...columns, { title: 'Actions', action: true }].filter((c) => !c?.hidden);
     return (
         <TableHead className="table-header">
             <TableRow >
                 {headers?.map((c) => {
-                    const index = columns?.findIndex((col) => col.title == c.title);
+
+                    const index = columns?.findIndex((col) => col.title == c?.title);
                     const isSortable = c?.sorting ?? true;
+                    const isAction = c?.action ?? false;
+                    var width = scrollWidth / headers?.length;
+                    var content = ''
+                    if (isAction) {
+                        content = c?.title;
+                        width = 80
+                    } else if (isSortable) {
+                        content = <TableSortLabel
+                            active={index == orderBy}
+                            direction={index == orderBy ? orderDirection : 'asc'}
+                            onClick={() => onOrderChange(index, orderBy == index && orderDirection == 'asc' ? 'desc' : 'asc')}
+                        >
+                            {c.title}
+                        </TableSortLabel>
+                    } else {
+                        content = <FilterRole title={c.title} />
+                    }
                     return (
                         <TableCell
-                            style={{ ...headerStyle, backgroundColor: '#EEFAFF', width: scrollWidth / headers?.length, whiteSpace:'nowrap' }}
+                            style={{ ...headerStyle, backgroundColor: '#EEFAFF', width: width, whiteSpace: 'nowrap' }}
                         >
-                            {isSortable ? (
-                                <TableSortLabel
-                                    active={index == orderBy}
-                                    direction={index == orderBy ? orderDirection : 'asc'}
-                                    onClick={() => onOrderChange(index, orderBy == index && orderDirection == 'asc' ? 'desc' : 'asc')}
-                                >
-                                    {c.title}
-                                </TableSortLabel>
-                            ) : (
-                                <FilterRole title={c.title} />
-                            )}
+                            {content}
                         </TableCell>
                     )
                 })}
@@ -204,8 +226,8 @@ function FilterRole(props) {
                 keepMounted
                 onClose={handleClose}
             >
-                <RoleOption label="Owner" parent={title} />
-                <RoleOption label="Viewer" parent={title} />
+                <RoleOption label="Full Access" parent={title} />
+                <RoleOption label="View Only" parent={title} />
                 <RoleOption label="No Access" parent={title} />
             </Menu>
         </React.Fragment>
