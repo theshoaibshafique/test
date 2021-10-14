@@ -70,7 +70,8 @@ export function DetailedCase(props) {
   const startDates = roomCases.map(d => moment(d.wheelsIn));
   const endDates = roomCases.map(d => moment(d.wheelsOut));
 
-  const earliestStartDate = moment.min(roomCases.map(d => moment(d.wheelsIn)));
+  const blockStartDate = moment.min(startDates).clone().set({hour: blockStartTime.hour(), minute: blockStartTime.minute()});
+  const earliestStartDate = moment.min([blockStartDate, ...startDates]);
   //We convert from mins to hours manually to get decimals
   const earliestStartTime = globalFunctions.getDiffFromMidnight(earliestStartDate, 'minutes') / 60;
   const blockEndDate = earliestStartDate.clone().set({hour: blockEndTime.hour(), minute: blockEndTime.minute()});
