@@ -1895,9 +1895,9 @@ function ClipTimeline(props) {
     </LightTooltip> || ''
 
   const hideButton = productRoles?.cdRoles?.hasPublisher && 
-    <LightTooltip title={!selectedMarker?.isActive ? 'Clip Hidden' : ''} arrow>
+    <LightTooltip title={selectedMarker?.isActive  === false ? 'Clip Hidden' : ''} arrow>
       <div>
-        <Button variant="outlined" className="primary" onClick={hideClip} disabled={!selectedMarker?.isActive}>
+        <Button variant="outlined" className="primary" onClick={hideClip} disabled={selectedMarker?.isActive === false}>
           Hide
         </Button> 
       </div>
