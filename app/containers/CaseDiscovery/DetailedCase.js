@@ -69,7 +69,8 @@ export function DetailedCase(props) {
   const earliestStartDate = moment.min(roomCases.map(d => moment(d.wheelsIn)));
   //We convert from mins to hours manually to get decimals
   const earliestStartTime = globalFunctions.getDiffFromMidnight(earliestStartDate, 'minutes') / 60;
-  const latestEndTime = moment.max(roomCases.map(d => moment(d.wheelsOut)));
+  const blockEndDate = earliestStartDate.clone().set({hour: blockEndTime.hour(), minute: blockEndTime.minute()});
+  const latestEndTime = moment.max([blockEndDate, ...roomCases.map(d => moment(d.wheelsOut))]);
   const scheduleDuration = latestEndTime.diff(earliestStartDate, 'hours') + 2;
   //Get # of days the schedule spans
   const totalDays = latestEndTime.clone().startOf('day').diff(earliestStartDate.clone().startOf('day'), 'days');
