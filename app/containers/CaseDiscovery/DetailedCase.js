@@ -66,6 +66,10 @@ export function DetailedCase(props) {
   const bStartTime = globalFunctions.getDiffFromMidnight(blockStartTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsIn, 'minutes') / 60;
   const bEndTime = globalFunctions.getDiffFromMidnight(blockEndTime, 'minutes') / 60 || globalFunctions.getDiffFromMidnight(roomCases[0].wheelsOut, 'minutes') / 60;
 
+  // Array of all roomCases start and end dates as moment objects.
+  const startDates = roomCases.map(d => moment(d.wheelsIn));
+  const endDates = roomCases.map(d => moment(d.wheelsOut));
+
   const earliestStartDate = moment.min(roomCases.map(d => moment(d.wheelsIn)));
   //We convert from mins to hours manually to get decimals
   const earliestStartTime = globalFunctions.getDiffFromMidnight(earliestStartDate, 'minutes') / 60;
