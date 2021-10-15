@@ -134,7 +134,7 @@ export function BrowseCases(props) {
   const renderTagInfo = () => {
     const result = []
     const tag_info = TAG_INFO;
-    const isAdmin = makeSelectIsAdmin();
+    const isAdmin = useSelector(makeSelectIsAdmin());
     const updateInAdmin = isAdmin && (
       <span>
         (<NavLink to={"/adminPanel/1"} className='link admin-link'>
