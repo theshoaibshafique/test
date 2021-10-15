@@ -31,19 +31,19 @@ const MenuProps = {
 
 
 export function BrowseCases(props) {
-  const {handleChangeCaseId, handleSaveCase, handleFilterChange, searchData} = props;
-  const {SPECIALTIES, PROCEDURES, ORS, isLoading } = props;
+  const { handleChangeCaseId, handleSaveCase, handleFilterChange, searchData } = props;
+  const { SPECIALTIES, PROCEDURES, ORS, isLoading } = props;
   const { facilityName, gracePeriod, outlierThreshold } = props;
-  
+
   const [numShownCases, setNumShownCases] = React.useState(10);
   const logger = useSelector(makeSelectLogger());
   const CASES = useSelector(selectCases());
   const savedCases = useSelector(selectSavedCases());
-  
+  const isAdmin = useSelector(makeSelectIsAdmin());
   const classes = useStyles();
   const minDate = moment().subtract(100, 'years');
   const maxDate = moment();
-  
+
 
   // for Sorting the cases
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -132,9 +132,7 @@ export function BrowseCases(props) {
   }
 
   const renderTagInfo = () => {
-    const result = []
-    const tag_info = TAG_INFO;
-    const isAdmin = makeSelectIsAdmin();
+    const tag_info = { ...TAG_INFO };
     const updateInAdmin = isAdmin && (
       <span>
         (<NavLink to={"/adminPanel/1"} className='link admin-link'>
@@ -152,26 +150,23 @@ export function BrowseCases(props) {
         {updateInAdmin}
       </span>
     );
-    for (const [tag, value] of Object.entries(tag_info)) {
-      result.push(
-        <Grid item xs={3} className="tag-column" key={`${tag}-${value}`}>
-          <div className="info-tag">
-            <span className={`case-tag ${tag}`} key={tag}>
-              <span>
-                {getTag(tag)}
-              </span>
-              <div className="display">{tag}</div>
-            </span>
-          </div>
-        </Grid>
-      );
-      result.push(<Grid item xs={9} className="info-column" key='info-col'>{value}</Grid>);
-    }
 
     return (
 
       <Grid container spacing={0} className="subtle-subtext">
-        {result}
+        {Object.entries(tag_info).map(([tag, value]) => <>
+          <Grid item xs={3} className="tag-column" key={`${tag}-${value}`}>
+            <div className="info-tag">
+              <span className={`case-tag ${tag}`} key={tag}>
+                <span>
+                  {getTag(tag)}
+                </span>
+                <div className="display">{tag}</div>
+              </span>
+            </div>
+          </Grid>
+          <Grid item xs={9} className="info-column" key='info-col'>{value}</Grid>
+        </>)}
       </Grid>
 
     )
@@ -195,12 +190,12 @@ export function BrowseCases(props) {
       logger?.manualAddLog('scroll', 'cases-in-view', getCasesInView());
     }, 1000)
   }
-  const handleChange = (e,v) => {
+  const handleChange = (e, v) => {
     scrollToTop();
-    handleFilterChange(e,v)
+    handleFilterChange(e, v)
   }
 
-  
+
   return (
     <Grid container spacing={0} className="case-discovery-search">
       <Grid item xs={3} className="filters">
