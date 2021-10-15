@@ -21,7 +21,7 @@ import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
-import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase } from '../App/cd-actions';
+import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase, setClipNotificationStatus } from '../App/cd-actions';
 import { selectCases, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
 import { setCurrentProduct } from '../App/actions';
 
@@ -263,12 +263,25 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         });
     }
 
+    // Whether user has clip notifications enabled.
+    const fetchClipNotificationStatus = async () => {
+      await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'clip_notification', 'get', userToken, {})
+        .then(result => {
+          result = result.data;
+          dispatch(setClipNotificationStatus(result));
+        })
+        .catch(error => {
+          console.log("oh no", error);
+        });
+    }
+
     //To be called after overfiew is loaded
     const fetchAll = async () => {
       await fetchCases();
 
       await fetchFacilityConfig();
       await fetchUsers();
+      await fetchClipNotificationStatus();
       // Fetch flag submission schema.
       await  fetchFlagReport();
     }

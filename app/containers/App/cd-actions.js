@@ -106,7 +106,7 @@ export function setFlagReport(flagReport){
   }
 }
 
-export default function setClipNotificationStatus(notificationStatus){
+export function setClipNotificationStatus(notificationStatus){
   return {
     type: CD_CLIP_NOTIFICATION_STATUS,
     notificationStatus
