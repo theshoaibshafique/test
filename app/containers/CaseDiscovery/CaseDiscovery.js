@@ -355,19 +355,15 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   }
 
   const handleToggleClipNotification = (currNotificationStatus) => {
-    console.log('click', currNotificationStatus)
-    if(currNotificationStatus || currNotificationStatus === false) {
-      console.log('in here');
-      const newNotificationStatus = !currNotificationStatus;
-      globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}clip_notification?is_notified=${newNotificationStatus}`, 'put', userToken, {})
-      .then(result => {
-        // TODO: Add logger.
-        dispatch(setClipNotificationStatus(newNotificationStatus));
-      })
-      .catch(error => {
-        console.log("oh no", error);
+    const newNotificationStatus = !currNotificationStatus;
+    globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}clip_notification?is_notified=${newNotificationStatus}`, 'put', userToken, {})
+    .then(result => {
+      // TODO: Add logger.
+      dispatch(setClipNotificationStatus(newNotificationStatus));
+    })
+    .catch(error => {
+      console.log("oh no", error);
       });
-    }
   }
 
   useEffect(() => {

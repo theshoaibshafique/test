@@ -3,18 +3,38 @@ import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
-import { selectFlagReport, selectSavedCases } from '../App/cd-selectors';
+import { selectFlagReport, selectSavedCases, selectClipNotificationStatus } from '../App/cd-selectors';
 import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
+import BellDisabled from './icons/NotificationBellOutline.svg';
+import BellActive from './icons/NotificationBellFilled.svg';
 import { DATE_OPTIONS } from './misc/constants';
 import { getTag } from './misc/helper-components';
 import { formatCaseForLogs, getPresetDates } from './misc/Utils';
 import { makeSelectLogger } from '../App/selectors';
+import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
     const flagReport = useSelector(selectFlagReport());
-    const { handleChangeCaseId, handleSaveCase, handleFilterChange } = props;
+    const clipNotificationStatus = useSelector(selectClipNotificationStatus());
+    const { handleChangeCaseId, handleSaveCase, handleFilterChange, handleToggleClipNotification } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase };
+
+    const renderNotificationBell = () => clipNotificationStatus ? (
+        <LightTooltip title="enable notif" placement="top">
+            <div onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
+                <img src={BellDisabled} />
+            </div>
+        </LightTooltip>
+    ) : 
+    (
+        <LightTooltip title="disable notif">
+            <div onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
+                <img src={BellActive} />
+            </div>
+        </LightTooltip>
+    );
+
     return (
         <div className="case-discovery-overview">
             <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
@@ -39,7 +59,7 @@ export function Overview(props) {
                         "Most Recently Flagged Cases" : "No Flagged Cases"}
                     {...commonProps}
                 />
-
+                {clipNotificationStatus !== null  && renderNotificationBell()}
                 <CarouselCases
                     cases={recentClips}
                     title="Most Recent Flag Clips"
