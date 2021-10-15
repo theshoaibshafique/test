@@ -1218,6 +1218,14 @@
 
         .title.normal-text {
             margin-left: 8px;
+            
+            .bell-notification{
+                margin-left: 20px;
+                display: inline-block;
+                position: relative;
+                bottom: 1px;
+                cursor: pointer;
+            }
         }
         .thumbnail-case {
             min-height: 160px;

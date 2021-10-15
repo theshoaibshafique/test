@@ -16,24 +16,8 @@ import { LightTooltip } from '../../components/SharedComponents/SharedComponents
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
     const flagReport = useSelector(selectFlagReport());
-    const clipNotificationStatus = useSelector(selectClipNotificationStatus());
     const { handleChangeCaseId, handleSaveCase, handleFilterChange, handleToggleClipNotification } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase };
-
-    const renderNotificationBell = () => clipNotificationStatus ? (
-        <LightTooltip title="enable notif" placement="top">
-            <div onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
-                <img src={BellDisabled} />
-            </div>
-        </LightTooltip>
-    ) : 
-    (
-        <LightTooltip title="disable notif">
-            <div onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
-                <img src={BellActive} />
-            </div>
-        </LightTooltip>
-    );
 
     return (
         <div className="case-discovery-overview">
@@ -59,14 +43,16 @@ export function Overview(props) {
                         "Most Recently Flagged Cases" : "No Flagged Cases"}
                     {...commonProps}
                 />
-                {clipNotificationStatus !== null  && renderNotificationBell()}
                 <CarouselCases
                     cases={recentClips}
                     title="Most Recent Flag Clips"
                     message={(flagReport?.clipsDefault)
                         ? "No Flag Clips" : "Flag Clips Disabled"}
                     {...commonProps}
-                    isThumbnail />
+                    isThumbnail
+                    isRecentClips
+                    handleToggleClipNotification={handleToggleClipNotification} 
+                />
             </div>
         </div>
     )
@@ -169,10 +155,11 @@ const responsive = {
 };
 
 function CarouselCases(props) {
-    const { cases, isThumbnail, isInfinite, title, message } = props;
+    const { cases, isThumbnail, isInfinite, title, message, isRecentClips } = props;
     const savedCases = useSelector(selectSavedCases());
+    const clipNotificationStatus = useSelector(selectClipNotificationStatus());
     const logger = useSelector(makeSelectLogger());
-    const { handleChangeCaseId, handleSaveCase } = props;
+    const { handleChangeCaseId, handleSaveCase, handleToggleClipNotification } = props;
 
     const [CASES, setCases] = useState(cases);
     const caseLength = CASES?.length || 0;
@@ -242,9 +229,28 @@ function CarouselCases(props) {
 
     }
 
+
+    const bellNotificationIcon = clipNotificationStatus ? (
+        <LightTooltip title="You will not be notified when new clips are available">
+            <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
+                <img src={BellDisabled} />
+            </div>
+        </LightTooltip>
+    ) : 
+    (
+        <LightTooltip title="You will receive an email notification when new clips are available">
+            <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
+                <img src={BellActive} />
+            </div>
+        </LightTooltip>
+    );
+
     return (
         <React.Fragment>
-            <div className="title normal-text">{title}</div>
+            <div className="title normal-text">
+                {title}
+                {isRecentClips && bellNotificationIcon}
+            </div>
             <div className="carousel-cases">
                 <Carousel
                     className={'carousel'}
