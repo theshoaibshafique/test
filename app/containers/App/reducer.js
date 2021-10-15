@@ -93,7 +93,7 @@ function emmReducer(state = initialState, action) {
         .set('logger', action.logger)
     case CURRENT_PRODUCT:
       return state
-        .set('currentProduct', state.get(action.currentProduct));
+        .set('currentProduct', {...state.get(action.currentProduct)});
     default:
       return state;
   }

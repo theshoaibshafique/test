@@ -39,7 +39,7 @@ export function BrowseCases(props) {
   const logger = useSelector(makeSelectLogger());
   const CASES = useSelector(selectCases());
   const savedCases = useSelector(selectSavedCases());
-
+  const isAdmin = useSelector(makeSelectIsAdmin());
   const classes = useStyles();
   const minDate = moment().subtract(100, 'years');
   const maxDate = moment();
@@ -133,7 +133,6 @@ export function BrowseCases(props) {
 
   const renderTagInfo = () => {
     const tag_info = { ...TAG_INFO };
-    const isAdmin = useSelector(makeSelectIsAdmin());
     const updateInAdmin = isAdmin && (
       <span>
         (<NavLink to={"/adminPanel/1"} className='link admin-link'>
