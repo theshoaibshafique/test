@@ -237,7 +237,9 @@ function CarouselCases(props) {
                     {line}
                 </div> :
                 <span key={i}>{line}</span>
-        })}>
+            })}
+            arrow
+        >
             <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
                 <img src={BellDisabled} />
             </div>
@@ -246,11 +248,13 @@ function CarouselCases(props) {
     (
         <LightTooltip title={['Notification On', 'You will receive an email notification when new clips are available'].map((line, i) => {
             return i === 0 ?
-            <div key={i} style={{marginBottom:4, fontWeight:'bold'}}>
-                {line}
-            </div> :
-            <span key={i}>{line}</span>
-        })}>
+                <div key={i} style={{marginBottom:4, fontWeight:'bold'}}>
+                    {line}
+                </div> :
+                <span key={i}>{line}</span>
+            })}
+            arrow
+        >
             <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
                 <img src={BellActive} />
             </div>
@@ -261,7 +265,7 @@ function CarouselCases(props) {
         <React.Fragment>
             <div className="title normal-text">
                 {title}
-                {isRecentClips && bellNotificationIcon}
+                {(isRecentClips && clipNotificationStatus !== null) && bellNotificationIcon}
             </div>
             <div className="carousel-cases">
                 <Carousel
