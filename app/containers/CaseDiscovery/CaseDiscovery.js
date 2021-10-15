@@ -268,6 +268,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
       await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'clip_notification', 'get', userToken, {})
         .then(result => {
           result = result.data;
+          // Dispatch setClipNotificationStatus action.
           dispatch(setClipNotificationStatus(result));
         })
         .catch(error => {
@@ -354,8 +355,17 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     dispatch(setSavedCases(result));
   }
 
-
-  // const [isLoading, setIsLoading] = useState(true);
+  const handleToggleClipNotification = (currNotificationStatus) => {
+    const newNotificationStatus = !currNotificationStatus;
+    globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}clip_notification?is_notified=${newNotificationStatus}`, 'put', userToken, {})
+    .then(result => {
+      // TODO: Add logger.
+      dispatch(setClipNotificationStatus(newNotificationStatus));
+    })
+    .catch(error => {
+      console.log("oh no", error);
+    });
+  }
 
   useEffect(() => {
     if (caseId == null) {
@@ -423,6 +433,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
             handleSaveCase={handleSaveCase}
             handleFilterChange={(e, v) => { handleFilterChange(e, v); setTabIndex(2) }}
+            handleToggleClipNotification={handleToggleClipNotification}
             {...OVERVIEW_DATA}
           /> || <LoadingIndicator />}
         </TabPanel>
