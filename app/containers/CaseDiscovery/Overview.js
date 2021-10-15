@@ -231,14 +231,26 @@ function CarouselCases(props) {
 
 
     const bellNotificationIcon = clipNotificationStatus ? (
-        <LightTooltip title="You will not be notified when new clips are available">
+        <LightTooltip title={['Notification Off', 'You will not be notified when new clips are available'].map((line, i) => {
+            return i === 0  ? 
+                <div key={i} style={{marginBottom:4, fontWeight:'bold'}}>
+                    {line}
+                </div> :
+                <span key={i}>{line}</span>
+        })}>
             <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
                 <img src={BellDisabled} />
             </div>
         </LightTooltip>
     ) : 
     (
-        <LightTooltip title="You will receive an email notification when new clips are available">
+        <LightTooltip title={['Notification On', 'You will receive an email notification when new clips are available'].map((line, i) => {
+            return i === 0 ?
+            <div key={i} style={{marginBottom:4, fontWeight:'bold'}}>
+                {line}
+            </div> :
+            <span key={i}>{line}</span>
+        })}>
             <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
                 <img src={BellActive} />
             </div>
