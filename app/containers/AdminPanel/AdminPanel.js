@@ -48,7 +48,12 @@ export default class AdminPanel extends React.PureComponent {
   async getProfiles() {
     return await globalFunctions.genericFetch(`${process.env.USER_V2_API}profiles`, 'get', this.props.userToken, {})
       .then(result => {
-        this.setState({ USERS: result == "error" ? [] : result });
+        const {productRoles} = this.props;
+        this.props.setUsers(result?.map((u) => {
+          const { roles, firstName, lastName } = u;
+
+          return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
+        }))
       }).catch((results) => {
         console.error("oh no", results)
       });
@@ -136,7 +141,7 @@ export default class AdminPanel extends React.PureComponent {
           {hasSSC && <StyledTab label="Surgical Safety Checklist" /> || <span />}
         </StyledTabs>
         <TabPanel value={tabIndex} index={0}>
-          <UserManagement users={USERS} accessLevel={accessLevel} assignableRoles={assignableRoles} />
+          <UserManagement accessLevel={accessLevel} assignableRoles={assignableRoles} />
         </TabPanel>
         <TabPanel value={tabIndex} index={1}>
           <EfficiencySettings
@@ -156,4 +161,18 @@ export default class AdminPanel extends React.PureComponent {
       </div>
     );
   }
+}
+
+function getRoleMapping(userRoles, productRoles) {
+  let result = {};
+  for (var product of productRoles) {
+    if (userRoles.hasOwnProperty(product.admin)) {
+      result[product.name] = `Full Access`;
+    } else if (userRoles.hasOwnProperty(product.reader)) {
+      result[product.name] = `View Only`;
+    } else {
+      result[product.name] = "No Access";
+    }
+  }
+  return result;
 }

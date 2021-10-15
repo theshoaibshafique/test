@@ -19,6 +19,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
+import { UserAddedModal } from './Modals';
 
 
 const tableIcons = {
@@ -34,19 +35,20 @@ const tableIcons = {
 
 
 export const UserManagement = props => {
-    const { users, accessLevel, assignableRoles } = props;
-    const productRoles = useSelector(makeSelectProductRoles());
-    const USERS = users?.map((u) => {
-        const { roles, firstName, lastName } = u;
+    const { accessLevel, assignableRoles } = props;
+    const users = useSelector(selectUsers());
+    const [USERS, setUsers] = useState(users);
+    useEffect(() => {
+        if (users){
+            setUsers(users);
+        }
+    }, [users]) 
 
-        return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
-    })
+    const [userAdded, setUserAdded] = useState(false);
 
-
-    if (!users) {
+    if (!USERS) {
         return <LoadingIndicator />
     }
-
 
     return (
         <div className="user-management">
@@ -68,7 +70,7 @@ export const UserManagement = props => {
                     {
                         icon: 'edit',
                         tooltip: 'Edit User',
-                        onClick: () => alert('edit')
+                        onClick: () => setUserAdded(!userAdded)
                     },
                     {
                         icon: 'delete',
@@ -102,22 +104,11 @@ export const UserManagement = props => {
 
                 }}
             />
+            <UserAddedModal open={userAdded} toggleModal={setUserAdded}/>
         </div>
     )
 }
-function getRoleMapping(roles, productRoles) {
-    let result = {};
-    for (var product of productRoles) {
-        if (roles.hasOwnProperty(product.admin)) {
-            result[product.name] = `Full Access`;
-        } else if (roles.hasOwnProperty(product.reader)) {
-            result[product.name] = `View Only`;
-        } else {
-            result[product.name] = "No Access";
-        }
-    }
-    return result;
-}
+
 function generateRoleColumn(title) {
 
     return {
@@ -139,7 +130,7 @@ const TableActions = (props) => {
         case 'delete':
             icon = mdiDeleteOutline;
     }
-    return <span className={`action-icon pointer`}>
+    return <span className={`action-icon pointer`} onClick={() => action?.onClick?.()}>
         <Icon className={`${action?.icon}`} color="#828282" path={icon} size={'24px'} />
     </span>
 }
@@ -163,7 +154,7 @@ const TableBody = (props) => {
     )
 }
 function TableHeader(props) {
-    const { headerStyle, actions, scrollWidth, columns, orderBy, orderDirection, onOrderChange } = props;
+    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange } = props;
     const headers = [...columns, { title: 'Actions', action: true }].filter((c) => !c?.hidden);
     return (
         <TableHead className="table-header">

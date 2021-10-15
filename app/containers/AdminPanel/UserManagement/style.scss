@@ -1,27 +1,28 @@
-@import 'styles/global-styles';
+@import "styles/global-styles";
 .user-management {
     padding: 25px 40px;
     .table-container {
         > :last-child {
             border-radius: 4px;
-            border: 1px solid #E0E0E0;
+            border: 1px solid #e0e0e0;
         }
-        .action-icon{
+        .action-icon {
             padding: 0 8px;
-            .edit:hover path{
-                fill: #004F6E !important
-            }
-            .delete:hover path{
-                fill: #EC2027 !important
+            &:hover {
+                .edit path {
+                    fill: #004f6e !important;
+                }
+                .delete path {
+                    fill: #ec2027 !important;
+                }
             }
         }
         td {
             padding: 8px 16px;
-            &:last-child{
-                border-left: 1px solid #E0E0E0;
+            &:last-child {
+                border-left: 1px solid #e0e0e0;
             }
         }
-        
     }
     .table-header {
         position: sticky;
@@ -72,7 +73,44 @@
             color: $dark-grey;
         }
     }
-    :checked ~ svg{
-        color: #004F6E
+    :checked ~ svg {
+        color: #004f6e;
+    }
+}
+
+.Modal.generic-modal {
+    padding: 26px;
+    .close-button {
+        width: 100%;
+        cursor: pointer;
+        svg {
+            float: right;
+        }
+    }
+}
+
+.user-added {
+    width: 620px;
+    height: 360px;
+    min-width: unset;
+
+    .header {
+        color: #004f6e;
+        margin-bottom: 12px;
+    }
+    .close {
+        bottom: 20px;
+        right: 20px;
+        position: absolute;
+        width: 100%;
+        button {
+            float: right;
+        }
+    }
+    .divider {
+        background-color: rgb(242, 242, 242);
+        width: 620px;
+        margin-left: -26px;
+        margin-bottom: 40px;
     }
 }
