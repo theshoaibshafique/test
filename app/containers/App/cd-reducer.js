@@ -89,7 +89,7 @@ function cdReducer(state = initialState, action) {
         //   clipNotificationStatus: action.clipNotificationStatus
         // }
         return state
-          .set('clipNotificationStatus', action.clipNotificationStatus)
+          .set('clipNotificationStatus', action.notificationStatus)
     case CD_EXIT:
       console.log('EXIT')
       return state
