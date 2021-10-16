@@ -230,7 +230,7 @@ function CarouselCases(props) {
     }
 
 
-    const bellNotificationIcon = clipNotificationStatus ? (
+    const bellNotificationIcon = clipNotificationStatus === false ? (
         <LightTooltip title={['Notification Off', 'You will not be notified when new clips are available'].map((line, i) => {
             return i === 0  ? 
                 <div key={i} style={{marginBottom:4, fontWeight:'bold'}}>
