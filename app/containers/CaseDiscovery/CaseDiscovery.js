@@ -22,7 +22,7 @@ import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
 import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase, setClipNotificationStatus } from '../App/cd-actions';
-import { selectCases, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
+import { selectCases, selectClipNotificationStatus, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
 import { setCurrentProduct } from '../App/actions';
 
 
@@ -99,6 +99,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const OVERVIEW_DATA = useSelector(selectOverviewData());
   const savedCases = useSelector(selectSavedCases());
   const [USERS, setUsers] = useState([]);
+  const clipNotificationStatus = useSelector(selectClipNotificationStatus());
 
   const [roomIds, setRoomIds] = useState(null);
 
@@ -265,7 +266,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     // Whether user has clip notifications enabled.
     const fetchClipNotificationStatus = async () => {
-      await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'clip_notification', 'get', userToken, {})
+      return await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'clip_notification', 'get', userToken, {})
         .then(result => {
           result = result.data;
           dispatch(setClipNotificationStatus(result));
@@ -428,7 +429,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         </StyledTabs>
 
         <TabPanel value={tabIndex} index={0}>
-          {OVERVIEW_DATA && <Overview
+          {(OVERVIEW_DATA && clipNotificationStatus !== null) && <Overview
             handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
             handleSaveCase={handleSaveCase}
             handleFilterChange={(e, v) => { handleFilterChange(e, v); setTabIndex(2) }}
