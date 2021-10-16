@@ -23,6 +23,13 @@
                 border-left: 1px solid #e0e0e0;
             }
         }
+        //Hide the spacer between search bar
+        [class^="MTableToolbar-spacer"] {
+            display: none;
+        }
+        .add-user-button {
+            margin: 0 86px;
+        }
     }
     .table-header {
         position: sticky;
@@ -79,20 +86,20 @@
 }
 
 .Modal.generic-modal {
-    padding: 26px;
+    padding: 32px;
+    min-width: unset;
     .close-button {
-        width: 100%;
         cursor: pointer;
-        svg {
-            float: right;
-        }
+        position: absolute;
+        right: 26px;
+        top: 26px;
+        z-index: 3;
     }
 }
 
 .user-added {
     width: 620px;
     height: 360px;
-    min-width: unset;
 
     .header {
         color: #004f6e;
@@ -112,5 +119,44 @@
         width: 620px;
         margin-left: -26px;
         margin-bottom: 40px;
+    }
+}
+
+.add-user {
+    width: 680px;
+    .edit-profile {
+        .profile-row {
+            display: flex;
+            margin-bottom: 16px;
+            > div {
+                width: 100%;
+                &:first-child {
+                    margin-right: 16px;
+                }
+                &:last-child {
+                    margin-left: 16px;
+                }
+            }
+        }
+    }
+
+    .view-profile {
+        display: flex;
+        .profile-info{
+            margin: 0 32px;
+            > div{
+                margin: 4px 0;
+            }
+        }
+        .profile-icon {
+            width: 96px;
+            height: 96px;
+            border-radius: 48px;
+            color: #fff;
+            line-height: 96px;
+            text-align: center;
+            background: #004F6E;;
+            user-select: none;
+        }
     }
 }

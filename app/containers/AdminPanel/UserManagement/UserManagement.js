@@ -7,7 +7,7 @@ import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
-import MaterialTable, { MTableBody, MTableFilterRow, MTableHeader } from 'material-table';
+import MaterialTable, { MTableBody, MTableFilterRow, MTableHeader, MTableToolbar } from 'material-table';
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
 import { Button, MenuItem, Paper, TableCell, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, FormControlLabel } from '@material-ui/core';
@@ -19,7 +19,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
-import { UserAddedModal } from './Modals';
+import { AddUserModal, UserAddedModal } from './Modals';
 
 
 const tableIcons = {
@@ -39,12 +39,12 @@ export const UserManagement = props => {
     const users = useSelector(selectUsers());
     const [USERS, setUsers] = useState(users);
     useEffect(() => {
-        if (users){
+        if (users) {
             setUsers(users);
         }
-    }, [users]) 
+    }, [users])
 
-    const [userAdded, setUserAdded] = useState(false);
+    const [isAddUserOpen, setOpenAddUser] = useState(false);
 
     if (!USERS) {
         return <LoadingIndicator />
@@ -70,13 +70,19 @@ export const UserManagement = props => {
                     {
                         icon: 'edit',
                         tooltip: 'Edit User',
-                        onClick: () => setUserAdded(!userAdded)
+                        onClick: () => setOpenAddUser(!isAddUserOpen)
                     },
                     {
                         icon: 'delete',
                         tooltop: 'Delete User',
                         onClick: () => alert('delete')
                     },
+                    {
+                        icon: 'add',
+                        tooltip: 'Add User',
+                        isFreeAction: true,
+                        onClick: (e) => setOpenAddUser(!isAddUserOpen)
+                    }
                 ]}
                 options={{
                     search: true,
@@ -100,11 +106,12 @@ export const UserManagement = props => {
                     Container: props => <Paper {...props} elevation={0} className="table-container" />,
                     Body: props => <TableBody {...props} />,
                     Header: props => <TableHeader {...props} />,
-                    Action: props => <TableActions {...props} />
+                    Action: props => <TableActions {...props} />,
+                    Toolbar: props => <MTableToolbar {...props} />
 
                 }}
             />
-            <UserAddedModal open={userAdded} toggleModal={setUserAdded}/>
+            <AddUserModal open={isAddUserOpen} toggleModal={setOpenAddUser} />
         </div>
     )
 }
@@ -122,6 +129,7 @@ function RenderRoleIcon(rowData, field) {
 }
 const TableActions = (props) => {
     const { action } = props;
+    
     let icon = null;
     switch (action?.icon) {
         case 'edit':
@@ -129,10 +137,21 @@ const TableActions = (props) => {
             break;
         case 'delete':
             icon = mdiDeleteOutline;
+            break;
+        case 'add':
+            return (
+                <Button disableElevation disableRipple
+                    variant="contained" className="primary add-user-button"
+                    onClick={() => action?.onClick?.()}>
+                    Add User
+                </Button>
+            )
     }
-    return <span className={`action-icon pointer`} onClick={() => action?.onClick?.()}>
-        <Icon className={`${action?.icon}`} color="#828282" path={icon} size={'24px'} />
-    </span>
+    return (
+        <span className={`action-icon pointer`} onClick={() => action?.onClick?.()}>
+            <Icon className={`${action?.icon}`} color="#828282" path={icon} size={'24px'} />
+        </span>
+    )
 }
 const TableBody = (props) => {
     const filters = useSelector(selectFilters());
