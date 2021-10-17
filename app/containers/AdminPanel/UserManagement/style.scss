@@ -117,13 +117,15 @@
     .divider {
         background-color: rgb(242, 242, 242);
         width: 620px;
-        margin-left: -26px;
+        margin-left: -32px;
         margin-bottom: 40px;
     }
 }
 
 .add-user {
     width: 680px;
+
+    // Profile section
     .edit-profile {
         .profile-row {
             display: flex;
@@ -158,5 +160,21 @@
             background: #004F6E;;
             user-select: none;
         }
+    }
+
+    //Admin panel section
+    .admin-panel-setting {
+        .title{
+            margin-bottom: 4px;
+            color: #BDBDBD;
+        }
+        .admin-select{
+            margin: 12px 0;
+        }
+    }
+    .divider {
+        background-color: rgb(242, 242, 242);
+        width: 680px;
+        margin-left: -32px;
     }
 }

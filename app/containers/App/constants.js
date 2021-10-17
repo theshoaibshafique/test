@@ -45,3 +45,5 @@ export const CD_FLAG_REPORT = 'insight/App/CD/FLAGREPORT'
 
 export const UM_FILTERS = 'insight/App/UM/Filters'
 export const UM_USERS = 'insight/App/UM/Users'
+export const UM_ASSIGNABLE_ROLES = 'insight/App/UM/Assignable/roles'
+export const UM_LOCATION = 'insight/App/UM/Location'

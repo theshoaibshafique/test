@@ -1,8 +1,15 @@
-import { Button, Divider, Grid, InputLabel, makeStyles, Modal, TextField } from '@material-ui/core';
+
 import React, { useEffect, useReducer, useState } from 'react';
+import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl } from '@material-ui/core';
 import { mdiClose } from '@mdi/js';
 import Icon from '@mdi/react'
 import moment from 'moment/moment';
+import { useSelector } from 'react-redux';
+import { selectAssignableRoles } from '../../App/store/UserManagement/um-selectors';
+import { UM_PRODUCT_ID } from '../../../constants';
+/* 
+    Generic Modal thats empty with an X in the corner
+*/
 const GenericModal = props => {
     const { children, toggleModal, className, open } = props;
     return (
@@ -63,6 +70,17 @@ const userReducer = (state, event) => {
         [event.name]: event.value
     }
 }
+// Used for Text fields
+const useStyles = makeStyles((theme) => ({
+    inputLabel: {
+        fontFamily: 'Noto Sans',
+        fontSize: '14px',
+        lineHeight: '19px',
+        marginBottom: 4,
+        color: '#323232',
+        opacity: .8
+    }
+}));
 
 export const AddUserModal = props => {
     const { isEdit } = props;
@@ -79,21 +97,44 @@ export const AddUserModal = props => {
         >
             <>
                 <ProfileSection isEdit={isEdit} handleChange={handleChange} />
+                <AdminPanelAccess isEdit={isEdit} handleChange={handleChange} />
             </>
         </GenericModal>
     )
 }
 
-const useStyles = makeStyles((theme) => ({
-    inputLabel: {
-        fontFamily: 'Noto Sans',
-        fontSize: '14px',
-        lineHeight: '19px',
-        marginBottom: 4,
-        color: '#323232',
-        opacity: .8
-    }
-}));
+const AdminPanelAccess = props => {
+    const { user, handleChange, isEdit } = props;
+    const umRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
+    return (
+        <div className="admin-panel-setting">
+            <div className="subtle-subtext title">Admin Panel Access</div>
+            <Divider className="divider" />
+            {!isEdit ? (
+                <FormControl
+                    className="admin-select"
+                    variant='outlined' size='small' style={{ width: 200 }}>
+                    <Select
+                        displayEmpty
+                        id="admin-setting"
+                        onChange={(e, v) => handleChange('userRole', e.target.value)}
+                    >
+                        {Object.entries(umRoles).map(([roleId, role]) => (
+                            <MenuItem key={roleId} value={roleId}>{role?.roleName}</MenuItem>
+                        ))}
+                        <MenuItem>No Access</MenuItem>
+                    </Select>
+                </FormControl>
+            ) : (
+                // TODO: update how t oread
+                <div>{user?.roleName}</div>
+            )}
+
+            <Divider className="divider" />
+        </div>
+    )
+}
+
 
 const ProfileSection = props => {
     const { handleChange, isEdit } = props;
@@ -101,7 +142,7 @@ const ProfileSection = props => {
     const { firstName, lastName, title, email, startDate } = { firstName: "Adam", lastName: "Lee", email: "a.lee@surgicalsafety.com", title: "Mr", startDate: "October 6, 2021" };
 
     const classes = useStyles();
-    if (!isEdit) {
+    if (isEdit) {
         return (
             <div className="view-profile">
                 <ProfileIcon />

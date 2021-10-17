@@ -61,7 +61,7 @@ export default class AdminPanel extends React.PureComponent {
   async getLocation() {
     return await globalFunctions.genericFetch(`${process.env.USER_V2_API}location?facility_id=${this.props.facilityName}`, 'get', this.props.userToken, {})
       .then(result => {
-        this.setState({ accessLevel: result });
+        this.props.setLocations(result);
       }).catch((results) => {
         console.error("oh no", results)
       });
@@ -69,7 +69,7 @@ export default class AdminPanel extends React.PureComponent {
   async getAssignableRoles() {
     return await globalFunctions.genericFetch(`${process.env.USER_V2_API}assignable_roles`, 'get', this.props.userToken, {})
       .then(result => {
-        this.setState({ assignableRoles: result });
+        this.props.setAssignableRoles(result);
       }).catch((results) => {
         console.error("oh no", results)
       });
@@ -141,7 +141,7 @@ export default class AdminPanel extends React.PureComponent {
           {hasSSC && <StyledTab label="Surgical Safety Checklist" /> || <span />}
         </StyledTabs>
         <TabPanel value={tabIndex} index={0}>
-          <UserManagement accessLevel={accessLevel} assignableRoles={assignableRoles} />
+          <UserManagement />
         </TabPanel>
         <TabPanel value={tabIndex} index={1}>
           <EfficiencySettings

@@ -16,7 +16,8 @@
  */
 
 import {
-  UM_FILTERS, UM_FILTERS_FUNC, UM_USERS
+  UM_ASSIGNABLE_ROLES,
+  UM_FILTERS, UM_FILTERS_FUNC, UM_LOCATION, UM_USERS
 } from '../../constants';
 
 export function setFilters(filters) {
@@ -30,6 +31,20 @@ export function setUsers(users) {
   return {
     type: UM_USERS,
     users
+  };
+}
+
+export function setAssignableRoles(roles) {
+  return {
+    type: UM_ASSIGNABLE_ROLES,
+    roles
+  };
+}
+
+export function setLocationList(locations) {
+  return {
+    type: UM_LOCATION,
+    locations
   };
 }
 

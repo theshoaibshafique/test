@@ -35,7 +35,6 @@ const tableIcons = {
 
 
 export const UserManagement = props => {
-    const { accessLevel, assignableRoles } = props;
     const users = useSelector(selectUsers());
     const [USERS, setUsers] = useState(users);
     useEffect(() => {

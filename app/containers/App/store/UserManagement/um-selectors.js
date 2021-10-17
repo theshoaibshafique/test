@@ -17,3 +17,12 @@ export const selectUsers = () => createSelector(
   (umState) => umState.get('users')
 )
 
+export const selectAssignableRoles = () => createSelector(
+  selectUM,
+  (umState) => umState.get('assignableRoles')
+)
+
+export const selectLocations = () => createSelector(
+  selectUM,
+  (umState) => umState.get('locations')
+)
