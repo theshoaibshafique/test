@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux';
 import { selectFlagReport, selectSavedCases, selectClipNotificationStatus } from '../App/cd-selectors';
 import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
-import BellDisabled from './icons/NotificationBellOutline.svg';
-import BellActive from './icons/NotificationBellFilled.svg';
-import { DATE_OPTIONS } from './misc/constants';
+import Icon from '@mdi/react'
+import { mdiBellOffOutline, mdiBellRing } from '@mdi/js';
+import { DATE_OPTIONS, CLIP_NOTIFICATION_STATUS_TOOLTIPS } from './misc/constants';
 import { getTag } from './misc/helper-components';
 import { formatCaseForLogs, getPresetDates } from './misc/Utils';
 import { makeSelectLogger } from '../App/selectors';
@@ -229,34 +229,20 @@ function CarouselCases(props) {
 
     }
 
-
-    const bellNotificationIcon = clipNotificationStatus === false ? (
-        <LightTooltip title={['Notification Off', 'You will not be notified when new clips are available'].map((line, i) => {
-            return i === 0  ? 
-                <div key={i} style={{marginBottom:4, fontWeight:'bold'}}>
-                    {line}
-                </div> :
-                <span key={i}>{line}</span>
-            })}
+    const bellNotificationIcon = (
+        <LightTooltip 
+            title={
+                <React.Fragment>
+                    <div style={{marginBottom:4, fontWeight:'bold'}}>
+                        {clipNotificationStatus === false ? Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS).find(el => el?.toLowerCase() === 'notification off') : Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS).find(el => el?.toLowerCase() === 'notification on') }
+                    </div>
+                    <span>{clipNotificationStatus === false ? CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification Off'] : CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification On']}</span> 
+                </React.Fragment>
+            } 
             arrow
         >
             <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
-                <img src={BellDisabled} />
-            </div>
-        </LightTooltip>
-    ) : 
-    (
-        <LightTooltip title={['Notification On', 'You will receive an email notification when new clips are available'].map((line, i) => {
-            return i === 0 ?
-                <div key={i} style={{marginBottom:4, fontWeight:'bold'}}>
-                    {line}
-                </div> :
-                <span key={i}>{line}</span>
-            })}
-            arrow
-        >
-            <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
-                <img src={BellActive} />
+                <Icon color={clipNotificationStatus === false ? '#828282' : '#004f6e'} path={clipNotificationStatus === false ? mdiBellOffOutline : mdiBellRing} size={'24px'} />
             </div>
         </LightTooltip>
     );
