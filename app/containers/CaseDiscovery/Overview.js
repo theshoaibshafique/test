@@ -16,8 +16,32 @@ import { LightTooltip } from '../../components/SharedComponents/SharedComponents
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
     const flagReport = useSelector(selectFlagReport());
+    const clipNotificationStatus = useSelector(selectClipNotificationStatus());
     const { handleChangeCaseId, handleSaveCase, handleFilterChange, handleToggleClipNotification } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase };
+
+    const bellNotificationIcon = (
+        <LightTooltip 
+            title={
+                <React.Fragment>
+                    <div style={{marginBottom:4, fontWeight:'bold'}}>
+                        {clipNotificationStatus === false ? Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS).find(el => el?.toLowerCase() === 'notification off') : Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS).find(el => el?.toLowerCase() === 'notification on') }
+                    </div>
+                    <span>{clipNotificationStatus === false ? CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification Off'] : CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification On']}</span> 
+                </React.Fragment>
+            } 
+            arrow
+        >
+            {clipNotificationStatus === false ? 
+                <animated.div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
+                    <Icon color="#828282" path={mdiBellOffOutline} size={'24px'} />
+                </animated.div> :
+                <animated.div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
+                    <Icon color="#004f6e" path={mdiBellRing} size={'24px'} />
+                </animated.div>
+            }
+        </LightTooltip>
+    );
 
     return (
         <div className="case-discovery-overview">
@@ -45,13 +69,14 @@ export function Overview(props) {
                 />
                 <CarouselCases
                     cases={recentClips}
-                    title="Most Recent Flag Clips"
+                    title={<>Most Recent Flag Clips
+                             {bellNotificationIcon}
+                           </>
+                           }
                     message={(flagReport?.clipsDefault)
                         ? "No Flag Clips" : "Flag Clips Disabled"}
                     {...commonProps}
                     isThumbnail
-                    isRecentClips
-                    handleToggleClipNotification={handleToggleClipNotification} 
                 />
             </div>
         </div>
@@ -155,11 +180,10 @@ const responsive = {
 };
 
 function CarouselCases(props) {
-    const { cases, isThumbnail, isInfinite, title, message, isRecentClips } = props;
+    const { cases, isThumbnail, isInfinite, title, message } = props;
     const savedCases = useSelector(selectSavedCases());
-    const clipNotificationStatus = useSelector(selectClipNotificationStatus());
     const logger = useSelector(makeSelectLogger());
-    const { handleChangeCaseId, handleSaveCase, handleToggleClipNotification } = props;
+    const { handleChangeCaseId, handleSaveCase } = props;
 
     const [CASES, setCases] = useState(cases);
     const caseLength = CASES?.length || 0;
@@ -229,29 +253,10 @@ function CarouselCases(props) {
 
     }
 
-    const bellNotificationIcon = (
-        <LightTooltip 
-            title={
-                <React.Fragment>
-                    <div style={{marginBottom:4, fontWeight:'bold'}}>
-                        {clipNotificationStatus === false ? Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS).find(el => el?.toLowerCase() === 'notification off') : Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS).find(el => el?.toLowerCase() === 'notification on') }
-                    </div>
-                    <span>{clipNotificationStatus === false ? CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification Off'] : CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification On']}</span> 
-                </React.Fragment>
-            } 
-            arrow
-        >
-            <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
-                <Icon color={clipNotificationStatus === false ? '#828282' : '#004f6e'} path={clipNotificationStatus === false ? mdiBellOffOutline : mdiBellRing} size={'24px'} />
-            </div>
-        </LightTooltip>
-    );
-
     return (
         <React.Fragment>
             <div className="title normal-text">
                 {title}
-                {(isRecentClips && clipNotificationStatus !== null) && bellNotificationIcon}
             </div>
             <div className="carousel-cases">
                 <Carousel
