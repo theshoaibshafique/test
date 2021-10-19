@@ -7,7 +7,7 @@ import moment from 'moment/moment';
 import { useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocations } from '../../App/store/UserManagement/um-selectors';
 import { UM_PRODUCT_ID } from '../../../constants';
-import { getRoleMapping, getSelectedRoles } from './helpers';
+import { getLocationDisplay, getRoleMapping, getSelectedRoles } from './helpers';
 import { makeSelectProductRoles } from '../../App/selectors';
 import { mdiPlaylistEdit } from '@mdi/js';
 /* 
@@ -68,7 +68,18 @@ const userReducer = (state, event) => {
     } else if (event.name == 'save-settings') {
         return {
             ...state,
-            viewProfile: true, viewAdminAccess: true, viewPermissions: true
+            viewState: { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
+        }
+    }
+
+    if (event.name == 'view') {
+        const { id, value } = event.value;
+        return {
+            ...state,
+            viewState: {
+                ...state.viewState,
+                [id]: value
+            }
         }
     }
 
@@ -109,14 +120,14 @@ export const AddEditUserModal = props => {
     const isAddUser = !Boolean(user?.userId);
     //if we're adding a new user we edit all sections at once
     const viewObject = isAddUser ? {} : { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
-    const isView = Object.values(viewObject).some((v) => v);
-    const [userData, setUserData] = useReducer(userReducer, { ...user, ...viewObject });
-    const { viewProfile, viewAdminAccess, viewPermissions } = userData;
 
+    const [userData, setUserData] = useReducer(userReducer, { ...user, viewState: viewObject });
+    const { viewProfile, viewAdminAccess, viewPermissions } = userData?.viewState;
+    const isView = Object.values(userData?.viewState || {}).some((v) => v);
     const [isLoading, setIsLoading] = useState(false);
     //Reload the state every time user changes
     useEffect(() => {
-        handleChange('new-user', { ...user, ...viewObject });
+        handleChange('new-user', { ...user, viewState: viewObject });
     }, [user])
 
     const handleChange = (name, value) => {
@@ -157,7 +168,6 @@ export const AddEditUserModal = props => {
 const PermissionSection = props => {
     const { isView, handleChange } = props;
     const assignableRoles = useSelector(selectAssignableRoles());
-
     return (
         <div className="permissions-section">
             <div className="subtle-subtext title">Permissions</div>
@@ -169,22 +179,32 @@ const PermissionSection = props => {
                 <span></span>
             </div>
             <Divider className="divider" />
-            {Object.keys(assignableRoles).map((product) => {
-                <ProductPermissions {...product} isView={isView} handleChange={handleChange} />
-            })}
+            {Object.entries(assignableRoles).map(([productId, product]) => (
+                <ProductPermissions
+                    {...product}
+                    productId={productId}
+                    {...props} />
+            ))}
         </div>
     )
 }
 const ProductPermissions = props => {
-    const { isSubscribed, productName, productRoles, isView } = props;
+    const { productName, productId, isView, roles } = props;
+    const productRoles = useSelector(makeSelectProductRoles(true));
+    const locations = useSelector(selectLocations());
+    //TODO: check if theyre subscribed
     if (productName == 'User Management') {
         return ''
     }
-    if (!isView) {
+
+    const { roleDisplay, roleId } = getSelectedRoles(roles, productRoles?.[productId], true);
+    const { minScope, maxScope } = props?.productRoles?.[roleId] || {};
+    if (isView) {
         return (
-            <div className='product-permission'>
+            <div className='product-permission subtext'>
                 <span>{productName}</span>
-                <span></span>
+                <span className={`role-cell subtle-subtext ${roleDisplay}`}>{roleDisplay}</span>
+                <span>{getLocationDisplay(roles?.[roleId]?.scope, minScope, maxScope, locations)}</span>
                 <span></span>
             </div>
         )
@@ -203,8 +223,8 @@ const AdminPanelAccess = props => {
     const { handleChange, roles, isView } = props;
     const assignableUMRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
     const { umRoles } = useSelector(makeSelectProductRoles());
-    const value = getSelectedRoles(roles, umRoles);
-    
+    const { roleDisplay, roleId } = getSelectedRoles(roles, umRoles);
+
     return (
         <div className="admin-panel-access">
             <div className="subtle-subtext title">Admin Panel Access</div>
@@ -216,7 +236,7 @@ const AdminPanelAccess = props => {
                     <Select
                         displayEmpty
                         id="admin-setting"
-                        value={value}
+                        value={roleId}
                         onChange={(e, v) => handleChange('roles', { current: value, id: e.target.value, value: assignableUMRoles[e.target.value] })}
                     >
                         {Object.entries(assignableUMRoles).map(([roleId, role]) => (
@@ -226,7 +246,7 @@ const AdminPanelAccess = props => {
                     </Select>
                 </FormControl>
             ) : (
-                <div className="role-display">{getSelectedRoles(roles, umRoles, true)}</div>
+                <div className="role-display">{roleDisplay}</div>
             )}
 
             <Divider className="divider" />
@@ -249,7 +269,7 @@ const ProfileSection = props => {
                     <div className="subtle-subtext">{email}</div>
                     <div className="subtle-text">{moment(startDate).format('MMMM DD, YYYY')}</div>
                 </div>
-                <span className={`action-icon pointer`} title={'Edit Profile'} onClick={() => handleChange('viewProfile', false)}>
+                <span className={`action-icon pointer`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
                     <Icon className={``} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
                 </span>
             </div>
