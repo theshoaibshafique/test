@@ -95,6 +95,10 @@
         top: 26px;
         z-index: 3;
     }
+    .divider {
+        background-color: rgb(242, 242, 242);
+        margin-left: -32px;
+    }
 }
 
 .user-added {
@@ -115,14 +119,12 @@
         }
     }
     .divider {
-        background-color: rgb(242, 242, 242);
         width: 620px;
-        margin-left: -32px;
         margin-bottom: 40px;
     }
 }
 
-.add-user {
+.add-edit-user {
     width: 680px;
 
     // Profile section
@@ -144,9 +146,9 @@
 
     .view-profile {
         display: flex;
-        .profile-info{
+        .profile-info {
             margin: 0 32px;
-            > div{
+            > div {
                 margin: 4px 0;
             }
         }
@@ -157,24 +159,56 @@
             color: #fff;
             line-height: 96px;
             text-align: center;
-            background: #004F6E;;
+            background: #004f6e;
             user-select: none;
         }
     }
+    .view-profile,
+    .edit-profile {
+        margin-bottom: 24px;
+    }
+
+    //Grey section title
+    .title {
+        margin-bottom: 4px;
+        color: #bdbdbd;
+    }
 
     //Admin panel section
-    .admin-panel-setting {
-        .title{
-            margin-bottom: 4px;
-            color: #BDBDBD;
-        }
-        .admin-select{
+    .admin-panel-access {
+        .admin-select {
             margin: 12px 0;
+        }
+        .role-display {
+            margin: 9px 0;
         }
     }
     .divider {
-        background-color: rgb(242, 242, 242);
         width: 680px;
-        margin-left: -32px;
+        //Last divider in each section has a space for the next section
+        &:last-child {
+            margin-bottom: 24px;
+        }
+    }
+    .add-user-buttons {
+        display: flex;
+        justify-content: flex-end;
+        > button {
+            &:first-child{
+                margin-right: 20px;
+            }
+            &:last-child{
+                margin-left: 20px;
+            }
+            
+        }
+    }
+
+    .permissions-section {
+        .permissions-header {
+            display: flex;
+            justify-content: space-between;
+            margin: 9px 0;
+        }
     }
 }

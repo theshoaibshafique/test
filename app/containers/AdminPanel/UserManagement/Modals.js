@@ -5,8 +5,11 @@ import { mdiClose } from '@mdi/js';
 import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useSelector } from 'react-redux';
-import { selectAssignableRoles } from '../../App/store/UserManagement/um-selectors';
+import { selectAssignableRoles, selectLocations } from '../../App/store/UserManagement/um-selectors';
 import { UM_PRODUCT_ID } from '../../../constants';
+import { getRoleMapping, getSelectedRoles } from './helpers';
+import { makeSelectProductRoles } from '../../App/selectors';
+import { mdiPlaylistEdit } from '@mdi/js';
 /* 
     Generic Modal thats empty with an X in the corner
 */
@@ -60,9 +63,27 @@ export const UserAddedModal = props => {
 }
 
 const userReducer = (state, event) => {
-    console.log(event);
-    if (event.name == 'overview') {
+    if (event.name == 'new-user') {
+        return event.value;
+    } else if (event.name == 'save-settings') {
+        return {
+            ...state,
+            viewProfile: true, viewAdminAccess: true, viewPermissions: true
+        }
+    }
 
+    if (event.name == 'roles') {
+        const roles = state?.roles || {};
+        const { current, id, value } = event.value;
+        //Delete current role in lists
+        if (current) {
+            delete roles[current]
+        }
+        roles[id] = value;
+        return {
+            ...state,
+            roles: roles
+        }
     }
 
     return {
@@ -70,6 +91,7 @@ const userReducer = (state, event) => {
         [event.name]: event.value
     }
 }
+
 // Used for Text fields
 const useStyles = makeStyles((theme) => ({
     inputLabel: {
@@ -82,52 +104,129 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const AddUserModal = props => {
-    const { isEdit } = props;
-    const [userData, setUserData] = useReducer(userReducer, {});
+export const AddEditUserModal = props => {
+    const { user, toggleModal } = props;
+    const isAddUser = !Boolean(user?.userId);
+    //if we're adding a new user we edit all sections at once
+    const viewObject = isAddUser ? {} : { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
+    const isView = Object.values(viewObject).some((v) => v);
+    const [userData, setUserData] = useReducer(userReducer, { ...user, ...viewObject });
+    const { viewProfile, viewAdminAccess, viewPermissions } = userData;
+
+    const [isLoading, setIsLoading] = useState(false);
+    //Reload the state every time user changes
+    useEffect(() => {
+        handleChange('new-user', { ...user, ...viewObject });
+    }, [user])
+
     const handleChange = (name, value) => {
         setUserData({
             name, value
         })
     }
+
+    const handleSubmit = (event) => {
+        if (event == 'save-settings') {
+            handleChange('save-settings');
+        } else if (event == 'add-user') {
+            //Post call to add user
+        }
+    }
     return (
         <GenericModal
             {...props}
-            className="add-user"
+            className="add-edit-user"
         >
             <>
-                <ProfileSection isEdit={isEdit} handleChange={handleChange} />
-                <AdminPanelAccess isEdit={isEdit} handleChange={handleChange} />
+                <ProfileSection {...userData} isView={viewProfile} handleChange={handleChange} />
+                <AdminPanelAccess {...userData} isView={viewAdminAccess} handleChange={handleChange} />
+                <PermissionSection {...userData} isView={viewPermissions} handleChange={handleChange} />
+                {isAddUser && (
+                    <div className="add-user-buttons">
+                        <Button id="save" variant="outlined" className="primary" disabled={isLoading} onClick={() => handleSubmit(isView ? 'add-user' : 'save-settings')}>
+                            {(isLoading) ? <div className="loader"></div> : (isView ? 'Add User' : 'Save')}
+                        </Button>
+                        <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => toggleModal(false)}>Cancel</Button>
+                    </div>
+                )}
             </>
         </GenericModal>
     )
 }
 
-const AdminPanelAccess = props => {
-    const { user, handleChange, isEdit } = props;
-    const umRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
+const PermissionSection = props => {
+    const { isView, handleChange } = props;
+    const assignableRoles = useSelector(selectAssignableRoles());
+
     return (
-        <div className="admin-panel-setting">
+        <div className="permissions-section">
+            <div className="subtle-subtext title">Permissions</div>
+            <Divider className="divider" />
+            <div className="permissions-header subtext">
+                <span>Products</span>
+                <span>Role</span>
+                <span>Access Level</span>
+                <span></span>
+            </div>
+            <Divider className="divider" />
+            {Object.keys(assignableRoles).map((product) => {
+                <ProductPermissions {...product} isView={isView} handleChange={handleChange} />
+            })}
+        </div>
+    )
+}
+const ProductPermissions = props => {
+    const { isSubscribed, productName, productRoles, isView } = props;
+    if (productName == 'User Management') {
+        return ''
+    }
+    if (!isView) {
+        return (
+            <div className='product-permission'>
+                <span>{productName}</span>
+                <span></span>
+                <span></span>
+            </div>
+        )
+    }
+
+    return (
+        <div className='product-permission'>
+            <span>{productName}</span>
+            <span></span>
+            <span></span>
+        </div>
+    )
+}
+
+const AdminPanelAccess = props => {
+    const { handleChange, roles, isView } = props;
+    const assignableUMRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
+    const { umRoles } = useSelector(makeSelectProductRoles());
+    const value = getSelectedRoles(roles, umRoles);
+    
+    return (
+        <div className="admin-panel-access">
             <div className="subtle-subtext title">Admin Panel Access</div>
             <Divider className="divider" />
-            {!isEdit ? (
+            {!isView ? (
                 <FormControl
                     className="admin-select"
                     variant='outlined' size='small' style={{ width: 200 }}>
                     <Select
                         displayEmpty
                         id="admin-setting"
-                        onChange={(e, v) => handleChange('userRole', e.target.value)}
+                        value={value}
+                        onChange={(e, v) => handleChange('roles', { current: value, id: e.target.value, value: assignableUMRoles[e.target.value] })}
                     >
-                        {Object.entries(umRoles).map(([roleId, role]) => (
+                        {Object.entries(assignableUMRoles).map(([roleId, role]) => (
                             <MenuItem key={roleId} value={roleId}>{role?.roleName}</MenuItem>
                         ))}
-                        <MenuItem>No Access</MenuItem>
+                        <MenuItem value={null}>No Access</MenuItem>
                     </Select>
                 </FormControl>
             ) : (
-                // TODO: update how t oread
-                <div>{user?.roleName}</div>
+                <div className="role-display">{getSelectedRoles(roles, umRoles, true)}</div>
             )}
 
             <Divider className="divider" />
@@ -137,12 +236,10 @@ const AdminPanelAccess = props => {
 
 
 const ProfileSection = props => {
-    const { handleChange, isEdit } = props;
-    // const { firstName, lastName, title, email, startDate} = props;
-    const { firstName, lastName, title, email, startDate } = { firstName: "Adam", lastName: "Lee", email: "a.lee@surgicalsafety.com", title: "Mr", startDate: "October 6, 2021" };
-
+    const { handleChange, isView } = props;
+    const { firstName, lastName, title, email, startDate } = props;
     const classes = useStyles();
-    if (isEdit) {
+    if (isView) {
         return (
             <div className="view-profile">
                 <ProfileIcon />
@@ -152,7 +249,9 @@ const ProfileSection = props => {
                     <div className="subtle-subtext">{email}</div>
                     <div className="subtle-text">{moment(startDate).format('MMMM DD, YYYY')}</div>
                 </div>
-
+                <span className={`action-icon pointer`} title={'Edit Profile'} onClick={() => handleChange('viewProfile', false)}>
+                    <Icon className={``} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
+                </span>
             </div>
         )
     }
@@ -163,6 +262,7 @@ const ProfileSection = props => {
                 size="small"
                 fullWidth
                 id={`edit-${id}`}
+                value={props?.[id]}
                 onChange={(e, v) => handleChange(id, e.target.value)}
                 variant="outlined"
             />

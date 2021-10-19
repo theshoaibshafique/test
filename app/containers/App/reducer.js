@@ -153,6 +153,7 @@ function setProductRoles(state, userRoles) {
       name: "User Management",
       productId: UM_PRODUCT_ID,
       sstAdmin: "5ec12e15-5ddc-4395-b0bf-1d5ae83fe0fa",
+      reader: "7007d686-2b1d-461c-a258-e7737eaeae7d",
       admin: "d5e22d93-2cb3-49a5-b710-956b098ff28e",
       member: "333ee932-1f6a-4577-8266-a58b4e62b72e"
     }))

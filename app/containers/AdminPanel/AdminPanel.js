@@ -5,6 +5,7 @@ import EfficiencySettings from './EfficiencySettings/Loadable';
 import SSCSettings from './SSCSettings/Loadable';
 import { StyledTab, StyledTabs, TabPanel } from '../../components/SharedComponents/SharedComponents';
 import { UserManagement } from './UserManagement/UserManagement';
+import { getRoleMapping } from './UserManagement/helpers';
 
 const TABS = ['user management', 'eff', 'ssc']
 export default class AdminPanel extends React.PureComponent {
@@ -163,16 +164,3 @@ export default class AdminPanel extends React.PureComponent {
   }
 }
 
-function getRoleMapping(userRoles, productRoles) {
-  let result = {};
-  for (var product of productRoles) {
-    if (userRoles.hasOwnProperty(product.admin)) {
-      result[product.name] = `Full Access`;
-    } else if (userRoles.hasOwnProperty(product.reader)) {
-      result[product.name] = `View Only`;
-    } else {
-      result[product.name] = "No Access";
-    }
-  }
-  return result;
-}

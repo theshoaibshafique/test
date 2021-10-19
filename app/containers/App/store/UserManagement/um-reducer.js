@@ -16,7 +16,8 @@ import { UM_ASSIGNABLE_ROLES, UM_FILTERS, UM_LOCATION, UM_USERS } from '../../co
 // The initial state of the App
 const initialState = fromJS({
   filters: null,
-  users: null
+  users: null,
+  assignableRoles: {}
 });
 
 function umReducer(state = initialState, action) {

@@ -19,7 +19,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
-import { AddUserModal, UserAddedModal } from './Modals';
+import { AddEditUserModal, UserAddedModal } from './Modals';
 
 
 const tableIcons = {
@@ -43,7 +43,7 @@ export const UserManagement = props => {
         }
     }, [users])
 
-    const [isAddUserOpen, setOpenAddUser] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(false);
 
     if (!USERS) {
         return <LoadingIndicator />
@@ -69,18 +69,18 @@ export const UserManagement = props => {
                     {
                         icon: 'edit',
                         tooltip: 'Edit User',
-                        onClick: () => setOpenAddUser(!isAddUserOpen)
+                        onClick: (user) => setSelectedUser(user)
                     },
                     {
                         icon: 'delete',
-                        tooltop: 'Delete User',
-                        onClick: () => alert('delete')
+                        tooltip: 'Delete User',
+                        onClick: (user) => alert('delete')
                     },
                     {
                         icon: 'add',
                         tooltip: 'Add User',
                         isFreeAction: true,
-                        onClick: (e) => setOpenAddUser(!isAddUserOpen)
+                        onClick: (user) => setSelectedUser(true)
                     }
                 ]}
                 options={{
@@ -110,7 +110,10 @@ export const UserManagement = props => {
 
                 }}
             />
-            <AddUserModal open={isAddUserOpen} toggleModal={setOpenAddUser} />
+            <AddEditUserModal
+                open={Boolean(selectedUser)}
+                user={selectedUser}
+                toggleModal={setSelectedUser} />
         </div>
     )
 }
@@ -127,8 +130,7 @@ function RenderRoleIcon(rowData, field) {
     )
 }
 const TableActions = (props) => {
-    const { action } = props;
-    
+    const { action, data } = props;
     let icon = null;
     switch (action?.icon) {
         case 'edit':
@@ -147,7 +149,7 @@ const TableActions = (props) => {
             )
     }
     return (
-        <span className={`action-icon pointer`} onClick={() => action?.onClick?.()}>
+        <span className={`action-icon pointer`} title={action?.tooltip} onClick={() => action?.onClick?.(data)}>
             <Icon className={`${action?.icon}`} color="#828282" path={icon} size={'24px'} />
         </span>
     )
