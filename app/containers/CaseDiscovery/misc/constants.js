@@ -1113,3 +1113,8 @@ export const TAG_INFO = {
     "Slow Post-Op": "Identifies cases where the period of time between procedure end, and patient exiting operating room, was 95th percentile or above",
     "Case Delay": "Identifies cases where the delay from the scheduled start was 60 minutes or longer"
 }
+
+export const CLIP_NOTIFICATION_STATUS_TOOLTIPS = {
+    "Notification On": "You will receive an email notification when new clips are available",
+    "Notification Off": "You will not be notified when new clips are available"
+}
