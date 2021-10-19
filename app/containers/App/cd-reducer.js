@@ -91,13 +91,13 @@ function cdReducer(state = initialState, action) {
         return state
           .set('clipNotificationStatus', action.notificationStatus)
     case CD_EXIT:
-      console.log('EXIT')
       return state
         .set('detailedCase', null)
         .set('flaggedClip', null)
         .set('cases', [])
         .set('recentFlags', null)
         .set('recentClips', null)
+        .set('clipNotificationStatus', null)
         .set('recommendations', null)
         .set('recentSaved', null)
         .set('overviewTile', null)
