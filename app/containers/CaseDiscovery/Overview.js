@@ -70,7 +70,7 @@ export function Overview(props) {
                 <CarouselCases
                     cases={recentClips}
                     title={<>Most Recent Flag Clips
-                             {bellNotificationIcon}
+                             {clipNotificationStatus !== null && bellNotificationIcon}
                            </>
                            }
                     message={(flagReport?.clipsDefault)
@@ -256,7 +256,7 @@ function CarouselCases(props) {
     return (
         <React.Fragment>
             <div className="title normal-text">
-                {title}
+                <>{title}</>
             </div>
             <div className="carousel-cases">
                 <Carousel

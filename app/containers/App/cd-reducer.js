@@ -84,10 +84,6 @@ function cdReducer(state = initialState, action) {
       return state
         .set('flagReport', action.flagReport)
     case CD_CLIP_NOTIFICATION_STATUS:
-        // return {
-        //   ...state,
-        //   clipNotificationStatus: action.clipNotificationStatus
-        // }
         return state
           .set('clipNotificationStatus', action.notificationStatus)
     case CD_EXIT:
