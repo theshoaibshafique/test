@@ -1,15 +1,15 @@
 
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl } from '@material-ui/core';
+import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl, ListItemIcon, Checkbox, ListItemText } from '@material-ui/core';
 import { mdiClose } from '@mdi/js';
 import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useSelector } from 'react-redux';
-import { selectAssignableRoles, selectLocations } from '../../App/store/UserManagement/um-selectors';
+import { selectAssignableRoles, selectLocationLookups, selectLocations } from '../../App/store/UserManagement/um-selectors';
 import { UM_PRODUCT_ID } from '../../../constants';
-import { getLocationDisplay, getRoleMapping, getSelectedRoles } from './helpers';
+import { getLocationDisplay, getRoleMapping, getSelectedRoles, isWithinScope, userHasLocation } from './helpers';
 import { makeSelectProductRoles } from '../../App/selectors';
-import { mdiPlaylistEdit } from '@mdi/js';
+import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 /* 
     Generic Modal thats empty with an X in the corner
 */
@@ -62,6 +62,7 @@ export const UserAddedModal = props => {
     )
 }
 
+const SCOPE_MAP = ['unrestricted', 'h', 'f', 'd', 'r'];
 const userReducer = (state, event) => {
     if (event.name == 'new-user') {
         return event.value;
@@ -95,6 +96,29 @@ const userReducer = (state, event) => {
             ...state,
             roles: roles
         }
+    } else if (event.name == 'location-roles') {
+        const { location, roleId } = event.value;
+        const { locationId, scopeId, name } = location || {};
+        //We're under the assumption that roles is alredy in the state if you're modifying location
+        state.roles = state.roles || {}
+        state.roles[roleId] = state.roles[roleId] || {}
+        state.roles[roleId].scope = state.roles[roleId].scope || {}
+        state.roles[roleId].scope[SCOPE_MAP[scopeId]] = state.roles[roleId].scope[SCOPE_MAP[scopeId]] || [];
+        const locationList = state.roles[roleId].scope[SCOPE_MAP[scopeId]];
+        const index = locationList.findIndex((l) => l == locationId);
+        if (index >= 0) {
+            locationList.pop(index)
+        } else {
+            locationList.push(locationId)
+        }
+
+        return {
+            ...state
+        }
+    }
+
+    if (event.name == 'permissionRoles') {
+        console.log('this', event);
     }
 
     return {
@@ -169,14 +193,14 @@ const PermissionSection = props => {
     const { isView, handleChange } = props;
     const assignableRoles = useSelector(selectAssignableRoles());
     return (
-        <div className="permissions-section">
+        <div className={`permissions-section ${isView && 'isView'}`}>
             <div className="subtle-subtext title">Permissions</div>
             <Divider className="divider" />
             <div className="permissions-header subtext">
                 <span>Products</span>
                 <span>Role</span>
                 <span>Access Level</span>
-                <span></span>
+                {isView && <span></span>}
             </div>
             <Divider className="divider" />
             {Object.entries(assignableRoles).map(([productId, product]) => (
@@ -189,22 +213,52 @@ const PermissionSection = props => {
     )
 }
 const ProductPermissions = props => {
-    const { productName, productId, isView, roles } = props;
+    const { productName, productId, roles } = props;
+    const { isView, handleChange } = props;
+    const assignableProductRoles = props.productRoles || {};
     const productRoles = useSelector(makeSelectProductRoles(true));
-    const locations = useSelector(selectLocations());
+    const locationLookups = useSelector(selectLocationLookups());
+
+    //TODO: update to allow multiselect (use roleID list instead and allow multiselect)
+    const { roleDisplay, roleId } = getSelectedRoles(roles, productRoles?.[productId], true);
+    const { minScope, maxScope } = props?.productRoles?.[roleId] || {};
+    const userScope = roles?.[roleId]?.scope ?? {};
+    const userLocations = Object.entries(userScope).map(([k, loc]) => loc.map(l => { return { locationId: l, locationShort: k } })).flat();
+
+    const getAccessLevelOptions = (minScope, maxScope) => Object.entries(locationLookups).map(([locationId, location]) => {
+        const { scopeId, name, isOnlyChild } = location;
+        if (isWithinScope(scopeId, minScope, maxScope)) {
+            return {
+                locationId, name, scopeId
+            }
+        }
+
+    }).filter((l) => l);
+    const [accessLevelOptions, setAccessLevelOptions] = useState(getAccessLevelOptions(minScope, maxScope));
+    const getRoleObject = (value) => {
+        const { minScope, maxScope } = props?.productRoles?.[value] || {};
+        setAccessLevelOptions(getAccessLevelOptions(minScope, maxScope));
+        return {
+            current: roleId,
+            id: value,
+            value: { name: assignableProductRoles?.[value]?.roleName, scope: {} }
+        }
+    }
+
+    const handleLocationChange = location => {
+        handleChange('location-roles', { location: location, roleId });
+    }
+
     //TODO: check if theyre subscribed
     if (productName == 'User Management') {
         return ''
     }
-
-    const { roleDisplay, roleId } = getSelectedRoles(roles, productRoles?.[productId], true);
-    const { minScope, maxScope } = props?.productRoles?.[roleId] || {};
     if (isView) {
         return (
             <div className='product-permission subtext'>
                 <span>{productName}</span>
-                <span className={`role-cell subtle-subtext ${roleDisplay}`}>{roleDisplay}</span>
-                <span>{getLocationDisplay(roles?.[roleId]?.scope, minScope, maxScope, locations)}</span>
+                <span className="role"><span className={`role-cell subtle-subtext ${roleDisplay}`}>{roleDisplay}</span></span>
+                <span>{userLocations.map(l => locationLookups?.[l.locationId]?.name).join(", ") || "None"}</span>
                 <span></span>
             </div>
         )
@@ -213,11 +267,79 @@ const ProductPermissions = props => {
     return (
         <div className='product-permission'>
             <span>{productName}</span>
-            <span></span>
-            <span></span>
+            <span>
+                <FormControl
+                    className="product-role-select"
+                    variant='outlined' size='small' fullWidth>
+                    <Select
+                        displayEmpty
+                        id="product-role-select"
+                        value={roleId}
+                        onChange={(e, v) => handleChange('roles', getRoleObject(e.target.value))}
+                    >
+                        {Object.entries(assignableProductRoles).map(([roleId, role]) => (
+                            role?.displayName && <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
+                        ))}
+                        <MenuItem value={null}>No Access</MenuItem>
+                    </Select>
+                </FormControl>
+            </span>
+            <span>
+                <FormControl
+                    className="access-level-select"
+                    variant='outlined' size='small' fullWidth>
+                    <Select
+                        MenuProps={{
+                            getContentAnchorEl: () => null,
+                        }}
+                        displayEmpty
+                        id="access-level-select"
+                        value={userLocations}
+                        disabled={!accessLevelOptions?.length}
+                        multiple
+                        displayEmpty
+                        renderValue={(userLocations) => userLocations?.map(l => locationLookups?.[l.locationId]?.name).join(", ") || 'None'}
+                    // onChange={handleLocationChange}
+                    >
+                        {accessLevelOptions?.map((location) => (
+                            <AccessLevelOption location={location} userLocations={userLocations} handleLocationChange={handleLocationChange} />
+                        ))}
+                    </Select>
+                </FormControl>
+            </span>
+            {/* <span></span> */}
         </div>
     )
 }
+
+const AccessLevelOption = (props) => {
+    const { location, userLocations, handleLocationChange } = props;
+    const { locationId, scopeId, name } = location || {};
+    console.log(userLocations, locationId);
+    const [checked, setIsChecked] = useState(userHasLocation(userLocations, locationId));
+    const handleCheck = () => {
+        handleLocationChange(location);
+        setIsChecked(!checked);
+    }
+    return (
+        <MenuItem key={locationId} value={locationId} onClick={() => handleCheck()} style={{ padding: "4px 14px 4px 0 " }}>
+            <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId - 1) * 12 }}>
+                <Checkbox
+                    style={{ padding: 0 }}
+                    disableRipple
+                    disabled
+                    icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                    checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
+                    className="SST-Checkbox"
+                    checked={checked}
+                />
+            </ListItemIcon>
+            <ListItemText primary={name} />
+        </MenuItem>
+    )
+}
+
+
 
 const AdminPanelAccess = props => {
     const { handleChange, roles, isView } = props;
@@ -237,10 +359,10 @@ const AdminPanelAccess = props => {
                         displayEmpty
                         id="admin-setting"
                         value={roleId}
-                        onChange={(e, v) => handleChange('roles', { current: value, id: e.target.value, value: assignableUMRoles[e.target.value] })}
+                        onChange={(e, v) => handleChange('roles', { current: roleId, id: e.target.value, value: assignableUMRoles[e.target.value] })}
                     >
                         {Object.entries(assignableUMRoles).map(([roleId, role]) => (
-                            <MenuItem key={roleId} value={roleId}>{role?.roleName}</MenuItem>
+                            role.displayName && <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
                         ))}
                         <MenuItem value={null}>No Access</MenuItem>
                     </Select>

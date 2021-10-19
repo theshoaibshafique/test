@@ -18,6 +18,7 @@ export function getRoleMapping(userRoles, productRolesList) {
     return result;
 }
 //Given a single product return the highest selected product
+//product is the InsightsProduct definition not assignable roles
 export function getSelectedRoles(userRoles, product) {
     for (var role of roleHeirarchy) {
         if (userRoles?.hasOwnProperty(product[role])) {
@@ -53,9 +54,9 @@ function appendLocation(currentScope, minScope, maxScope, userLocations, locatio
         displayList.push(locationName)
     }
 }
-function isWithinScope(currentScope, minScope, maxScope) {
+export function isWithinScope(currentScope, minScope, maxScope) {
     return currentScope >= minScope && currentScope <= maxScope;
 }
-function userHasLocation(userLocations, locationId) {
-    return userLocations?.includes(locationId);
+export function userHasLocation(userLocations, locationId) {
+    return userLocations.map(l => l.locationId)?.includes(locationId);
 }

@@ -26,3 +26,7 @@ export const selectLocations = () => createSelector(
   selectUM,
   (umState) => umState.get('locations')
 )
+export const selectLocationLookups = () => createSelector(
+  selectUM,
+  (umState) => umState.get('locationLookups')
+)
