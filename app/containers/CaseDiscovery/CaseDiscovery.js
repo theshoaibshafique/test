@@ -264,25 +264,12 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         });
     }
 
-    // Whether user has clip notifications enabled.
-    const fetchClipNotificationStatus = async () => {
-      return await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'clip_notification', 'get', userToken, {})
-        .then(result => {
-          result = result.data;
-          dispatch(setClipNotificationStatus(result));
-        })
-        .catch(error => {
-          console.log("oh no", error);
-        });
-    }
-
     //To be called after overfiew is loaded
     const fetchAll = async () => {
       await fetchCases();
 
       await fetchFacilityConfig();
       await fetchUsers();
-      await fetchClipNotificationStatus();
       // Fetch flag submission schema.
       await  fetchFlagReport();
     }
@@ -290,17 +277,19 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const getOverviewData = (endpoint) => globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + endpoint, 'get', userToken, {});
     const fetchSavedCases = getOverviewData("bookmarks");
     const fetchOverview = getOverviewData("overview");
+    const fetchClipNotificationStatus = getOverviewData("clip_notification");
 
-    Promise.all([fetchSavedCases, fetchOverview].map(function (e) {
+    Promise.all([fetchSavedCases, fetchClipNotificationStatus, fetchOverview].map(function (e) {
       return e?.then(function (result) {
         return result?.data;
       })
-    })).then(([savedCases, overview]) => {
+    })).then(([savedCases, clipNotificationStatus, overview]) => {
       const {tagOverview, recommendations, recentBookmarks, recentFlags, recentClips} = overview;
       dispatch(setOverviewData({
         recentFlags, recentClips, recommendations,
         recentSaved:recentBookmarks, overview:tagOverview, savedCases
       }));
+      dispatch(setClipNotificationStatus(clipNotificationStatus));
     }).catch(function (results) {
       console.log("uh oh", results)
     }).finally(() => {
@@ -429,7 +418,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         </StyledTabs>
 
         <TabPanel value={tabIndex} index={0}>
-          {(OVERVIEW_DATA && clipNotificationStatus !== null) && <Overview
+          {OVERVIEW_DATA && <Overview
             handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
             handleSaveCase={handleSaveCase}
             handleFilterChange={(e, v) => { handleFilterChange(e, v); setTabIndex(2) }}
