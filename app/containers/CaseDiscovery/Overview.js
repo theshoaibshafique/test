@@ -90,6 +90,7 @@ export function Overview(props) {
                         ? "No Flag Clips" : "Flag Clips Disabled"}
                     {...commonProps}
                     isThumbnail
+                    titleText="Most Recent Flag Clips"
                 />
             </div>
         </div>
@@ -193,7 +194,7 @@ const responsive = {
 };
 
 function CarouselCases(props) {
-    const { cases, isThumbnail, isInfinite, title, message } = props;
+    const { cases, isThumbnail, isInfinite, title, titleText, message } = props;
     const savedCases = useSelector(selectSavedCases());
     const logger = useSelector(makeSelectLogger());
     const { handleChangeCaseId, handleSaveCase } = props;
@@ -228,12 +229,12 @@ function CarouselCases(props) {
         const prevClick = () => {
             previous();
             const casesToLog = CASES.slice(currentSlide%caseLength-1, (currentSlide%caseLength) + 2).map((c) => formatCaseForLogs(c));
-            logger.manualAddLog('click', `${typeof(title) === "object" ? title?.props?.children[0] : title}-previous-arrow`, casesToLog)
+            logger.manualAddLog('click', `${titleText ? titleText : title}-previous-arrow`, casesToLog)
         }
         const nextClick = () => {
             next();
             const casesToLog = CASES.slice(currentSlide%(caseLength)+1, (currentSlide%caseLength) + 4).map((c) => formatCaseForLogs(c));
-            logger.manualAddLog('click', `${typeof(title) === "object" ? title?.props?.children[0] : title}-next-arrow`, casesToLog)
+            logger.manualAddLog('click', `${titleText ? titleText : title}-next-arrow`, casesToLog)
         }
         return (
             <div className="rec-header">
