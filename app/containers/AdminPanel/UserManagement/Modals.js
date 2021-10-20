@@ -10,6 +10,7 @@ import { UM_PRODUCT_ID } from '../../../constants';
 import { getLocationDisplay, getRoleMapping, getSelectedRoles, isWithinScope, userHasLocation } from './helpers';
 import { makeSelectProductRoles } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import globalFunctions from '../../../utils/global-functions';
 /* 
     Generic Modal thats empty with an X in the corner
 */
@@ -67,21 +68,40 @@ const userReducer = (state, event) => {
     if (event.name == 'new-user') {
         return event.value;
     } else if (event.name == 'save-settings') {
+        event.name = 'viewState';
+        event.value = { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
+
+        state.backup = null;
+    } else if (event.name == 'save-cancel') {
+        //Revert to previous state on cancel
         return {
-            ...state,
-            viewState: { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
+            ...state.backup,
+            backup: null
         }
+    }
+    if (event.name == 'validate') {
+        const id = event.value;
+        const errorState = state?.errorState || {};
+        if (id == 'email') {
+            errorState['email'] = globalFunctions.validEmail(state?.email) ? null : '​Please enter a valid email address';
+        } else if (id == 'firstName') {
+            errorState[id] = state?.firstName ? null : '​Please enter a first name';
+        } else if (id == 'lastName') {
+            errorState[id] = state?.lastName ? null : '​Please enter a lastt name';
+        }
+        event.name = 'errorState'
+        event.value = errorState;
     }
 
     if (event.name == 'view') {
         const { id, value } = event.value;
-        return {
-            ...state,
-            viewState: {
-                ...state.viewState,
-                [id]: value
-            }
+        event.name = 'viewState'
+        event.value = {
+            ...state.viewState,
+            [id]: value
         }
+        //Back up the current state for if the user cancels
+        state.backup = state;
     }
 
     if (event.name == 'roles') {
@@ -92,11 +112,10 @@ const userReducer = (state, event) => {
             delete roles[current]
         }
         roles[id] = value;
-        return {
-            ...state,
-            roles: roles
-        }
-    } else if (event.name == 'location-roles') {
+        event.name = 'roles';
+        event.value = 'roles'
+    }
+    if (event.name == 'location-roles') {
         const { location, roleId } = event.value;
         const { locationId, scopeId, name } = location || {};
         //We're under the assumption that roles is alredy in the state if you're modifying location
@@ -113,10 +132,10 @@ const userReducer = (state, event) => {
             locationList.push(locationId)
         }
 
-        return {
-            ...state
-        }
+        event.name = 'roles'
+        event.value = state.roles;
     }
+
 
     return {
         ...state,
@@ -140,12 +159,17 @@ export const AddEditUserModal = props => {
     const { user, toggleModal } = props;
     const isAddUser = !Boolean(user?.userId);
     //if we're adding a new user we edit all sections at once
-    const viewObject = isAddUser ? {} : { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
+    const viewObject = isAddUser ? null : { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
 
     const [userData, setUserData] = useReducer(userReducer, { ...user, viewState: viewObject });
-    const { viewProfile, viewAdminAccess, viewPermissions } = userData?.viewState;
-    const isView = Object.values(userData?.viewState || {}).some((v) => v);
+    const { viewProfile, viewAdminAccess, viewPermissions } = userData?.viewState || {};
+    const isView = Object.values(userData?.viewState || {}).every((v) => v) && userData?.viewState;
+
     const [isLoading, setIsLoading] = useState(false);
+
+    const isSingleEdit = Object.values(userData?.viewState || {}).filter(t => !t).length == 1;
+    const isSubmitable = !Object.values(userData?.errorState || {}).some((d) => d) && userData?.errorState;
+
     //Reload the state every time user changes
     useEffect(() => {
         handleChange('new-user', { ...user, viewState: viewObject });
@@ -153,7 +177,7 @@ export const AddEditUserModal = props => {
 
     const handleChange = (name, value) => {
         setUserData({
-            name, value
+            name, value, isSingleEdit
         })
     }
 
@@ -164,25 +188,40 @@ export const AddEditUserModal = props => {
             //Post call to add user
         }
     }
+
     return (
         <GenericModal
             {...props}
-            className="add-edit-user"
+            className={`add-edit-user ${isSingleEdit && 'single-edit'}`}
         >
             <>
-                <ProfileSection {...userData} isView={viewProfile} handleChange={handleChange} />
-                <AdminPanelAccess {...userData} isView={viewAdminAccess} handleChange={handleChange} />
-                <PermissionSection {...userData} isView={viewPermissions} handleChange={handleChange} />
+                <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} />
+                <AdminPanelAccess {...userData} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} />
+                <PermissionSection {...userData} isView={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} />
                 {isAddUser && (
-                    <div className="add-user-buttons">
-                        <Button id="save" variant="outlined" className="primary" disabled={isLoading} onClick={() => handleSubmit(isView ? 'add-user' : 'save-settings')}>
-                            {(isLoading) ? <div className="loader"></div> : (isView ? 'Add User' : 'Save')}
-                        </Button>
-                        <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => toggleModal(false)}>Cancel</Button>
-                    </div>
+                    <SaveAndCancel
+                        className={"add-user-buttons"}
+                        disabled={isLoading || !isSubmitable}
+                        handleSubmit={() => handleSubmit(isView ? 'add-user' : 'save-settings')}
+                        submitText={(isView ? 'Add User' : 'Save')}
+                        isLoading={isLoading}
+                        cancelText={"Cancel"}
+                        handleCancel={() => toggleModal(false)}
+                    />
                 )}
             </>
         </GenericModal>
+    )
+}
+const SaveAndCancel = props => {
+    const { className, handleSubmit, handleCancel, isLoading, submitText, cancelText, disabled } = props;
+    return (
+        <div className={`${className} save-and-cancel`}>
+            <Button id="save" variant="outlined" className="primary" disabled={disabled} onClick={() => handleSubmit()}>
+                {(isLoading) ? <div className="loader"></div> : submitText}
+            </Button>
+            <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => handleCancel()}>{cancelText}</Button>
+        </div>
     )
 }
 
@@ -228,7 +267,7 @@ const MenuProps = {
     variant: "menu"
 };
 const ProductPermissions = props => {
-    const { productName, productId, roles } = props;
+    const { productName, productId, roles, isSubscribed } = props;
     const { isView, handleChange } = props;
     const assignableProductRoles = props.productRoles || {};
     const productRoles = useSelector(makeSelectProductRoles(true));
@@ -284,7 +323,7 @@ const ProductPermissions = props => {
         return {
             current: roleId,
             id: value,
-            value: { name: assignableProductRoles?.[value]?.roleName, scope: {} }
+            value: { name: assignableProductRoles?.[value]?.displayName, scope: {} }
         }
     }
 
@@ -296,16 +335,16 @@ const ProductPermissions = props => {
         handleChange('location-roles', { roleId, locations: e.target.value, scopeId, name });
     }
 
-    //TODO: check if theyre subscribed
-    if (productName == 'User Management') {
+    if (!isSubscribed || productName == 'User Management') {
         return ''
     }
+    const accessLevelDisplay = selectedLocations.map(l => locationLookups?.[l]?.name).join(", ") || "None";
     if (isView) {
         return (
             <div className='product-permission subtext'>
                 <span>{productName}</span>
                 <span className="role"><span className={`role-cell subtle-subtext ${roleDisplay}`}>{roleDisplay}</span></span>
-                <span>{selectedLocations.map(l => locationLookups?.[l]?.name).join(", ") || "None"}</span>
+                <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
                 <span></span>
             </div>
         )
@@ -334,6 +373,7 @@ const ProductPermissions = props => {
             <span>
                 <FormControl
                     className="access-level-select"
+                    title={accessLevelDisplay}
                     variant='outlined' size='small' fullWidth>
                     <Select
                         MenuProps={MenuProps}
@@ -412,7 +452,7 @@ const AdminPanelAccess = props => {
 
 
 const ProfileSection = props => {
-    const { handleChange, isView } = props;
+    const { handleChange, isView, errorState, isSingleEdit } = props;
     const { firstName, lastName, title, email, startDate } = props;
     const classes = useStyles();
     if (isView) {
@@ -440,7 +480,10 @@ const ProfileSection = props => {
                 id={`edit-${id}`}
                 value={props?.[id]}
                 onChange={(e, v) => handleChange(id, e.target.value)}
+                onBlur={(e) => handleChange('validate', id)}
                 variant="outlined"
+                error={Boolean(errorState?.[id])}
+                helperText={<span style={{ marginLeft: -14 }}>{errorState?.[id]}</span>}
             />
         </div>
     )
@@ -454,6 +497,15 @@ const ProfileSection = props => {
                 {renderInputField('Title', 'title')}
                 {renderInputField('Email', 'email')}
             </div>
+            {isSingleEdit && <SaveAndCancel
+                className={"save-profile"}
+                disabled={errorState?.['firstName'] || errorState?.['lastName'] || errorState?.['email']}
+                handleSubmit={() => handleChange('save-settings')}
+                submitText={'Save'}
+                isLoading={false}
+                cancelText={"Cancel"}
+                handleCancel={() => handleChange('save-cancel')}
+            />}
         </div>
 
     )

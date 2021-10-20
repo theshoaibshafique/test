@@ -133,7 +133,6 @@
     .edit-profile {
         .profile-row {
             display: flex;
-            margin-bottom: 16px;
             > div {
                 width: 100%;
                 &:first-child {
@@ -192,18 +191,12 @@
             margin-bottom: 24px;
         }
     }
-    .add-user-buttons {
-        display: flex;
-        justify-content: flex-end;
-        > button {
-            &:first-child {
-                margin-right: 20px;
-            }
-            &:last-child {
-                margin-left: 20px;
-            }
-        }
+    &.single-edit{
+        .add-user-buttons{
+            display: none;
+        }    
     }
+    
 
     .permissions-section {
         .product-permission,
@@ -214,19 +207,43 @@
                 width: 34%;
                 padding: 8px 0;
                 align-self: center;
-                &:not(:first-child){
+                &:not(:first-child) {
                     padding: 0 16px;
+                }
+                &.access-level {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3; /* number of lines to show */
+                    -webkit-box-orient: vertical;
                 }
             }
             .role-cell {
-                
                 height: 32px;
                 min-width: 96px;
             }
             margin: 9px 0;
         }
-        .product-permission{
+        .product-permission {
             margin: 31px 0;
+        }
+    }
+}
+
+// TODO: move to own shared file
+.save-and-cancel{
+    display: flex;
+    justify-content: flex-end;
+    > button {
+        &:first-child {
+            &:disabled {
+                opacity: 0.3;
+                color: #fff;
+            }
+            margin-right: 20px;
+        }
+        &:last-child {
+            margin-left: 20px;
         }
     }
 }

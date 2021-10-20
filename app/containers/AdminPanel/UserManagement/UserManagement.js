@@ -11,7 +11,6 @@ import MaterialTable, { MTableBody, MTableFilterRow, MTableHeader, MTableToolbar
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
 import { Button, MenuItem, Paper, TableCell, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, FormControlLabel } from '@material-ui/core';
-import { makeSelectProductRoles } from '../../App/selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
@@ -19,7 +18,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
-import { AddEditUserModal, UserAddedModal } from './Modals';
+import { AddEditUserModal } from './Modals';
 
 
 const tableIcons = {
@@ -159,9 +158,9 @@ const TableBody = (props) => {
     const [USERS, setUsers] = useState(renderData);
 
     useEffect(() => {
-        if (filters && renderData) {
+        if (filters || renderData) {
             setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles)?.every(([k, v]) => {
-                return filters[k]?.size > 0 ? filters[k]?.has(v) : true;;
+                return filters?.[k]?.size > 0 ? filters?.[k]?.has(v) : true;;
             })))
         }
     }, [renderData, filters])
