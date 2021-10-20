@@ -8,7 +8,6 @@ import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
 import Icon from '@mdi/react'
 import { mdiBellOffOutline, mdiBellRing } from '@mdi/js';
-import { CSSTransition } from 'react-transition-group';
 import { DATE_OPTIONS, CLIP_NOTIFICATION_STATUS_TOOLTIPS } from './misc/constants';
 import { getTag } from './misc/helper-components';
 import { formatCaseForLogs, getPresetDates } from './misc/Utils';
@@ -222,12 +221,12 @@ function CarouselCases(props) {
         const prevClick = () => {
             previous();
             const casesToLog = CASES.slice(currentSlide%caseLength-1, (currentSlide%caseLength) + 2).map((c) => formatCaseForLogs(c));
-            logger.manualAddLog('click', `${title}-previous-arrow`, casesToLog)
+            logger.manualAddLog('click', `${typeof(title) === "object" ? title?.props?.children[0] : title}-previous-arrow`, casesToLog)
         }
         const nextClick = () => {
             next();
             const casesToLog = CASES.slice(currentSlide%(caseLength)+1, (currentSlide%caseLength) + 4).map((c) => formatCaseForLogs(c));
-            logger.manualAddLog('click', `${title}-next-arrow`, casesToLog)
+            logger.manualAddLog('click', `${typeof(title) === "object" ? title?.props?.children[0] : title}-next-arrow`, casesToLog)
         }
         return (
             <div className="rec-header">
