@@ -101,7 +101,7 @@ const userReducer = (state, event) => {
             [id]: value
         }
         //Back up the current state for if the user cancels
-        state.backup = state;
+        state.backup = JSON.parse(JSON.stringify(state));
     }
 
     if (event.name == 'roles') {
@@ -464,23 +464,31 @@ const ProductPermissions = props => {
 
 
 const AdminPanelAccess = props => {
-    const { handleChange, roles, isView } = props;
+    const { handleChange, roles, isView, isSingleEdit } = props;
     const assignableUMRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
     const { umRoles } = useSelector(makeSelectProductRoles());
     const { roleDisplay, roleId } = getSelectedRoles(roles, umRoles);
-
-    return (
-        <div className="admin-panel-access">
-            <div className="subtle-subtext title">Admin Panel Access</div>
-            <Divider className="divider" />
-            {!isView ? (
+    let content = null;
+    if (isView) {
+        content = (
+            <div className="role-display">
+                <span>{roleDisplay}</span>
+                <span className={`action-icon pointer`} title={'Edit Admin Panel Access'} onClick={() => handleChange('view', { id: 'viewAdminAccess', value: false })}>
+                    <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
+                </span>
+            </div>
+        )
+    } else {
+        content = (
+            <>
                 <FormControl
                     className="admin-select"
-                    variant='outlined' size='small' style={{ width: 200 }}>
+                    variant='outlined' size='small' >
                     <Select
                         displayEmpty
                         id="admin-setting"
                         value={roleId}
+                        style={{ width: 200 }}
                         onChange={(e, v) => handleChange('roles', { current: roleId, id: e.target.value, value: assignableUMRoles[e.target.value] })}
                     >
                         {Object.entries(assignableUMRoles).map(([roleId, role]) => (
@@ -488,11 +496,26 @@ const AdminPanelAccess = props => {
                         ))}
                         <MenuItem value={null}>No Access</MenuItem>
                     </Select>
+                    {isSingleEdit && <SaveAndCancel
+                        className={"save-admin-panel-access"}
+                        // disabled={errorState?.['firstName'] || errorState?.['lastName'] || errorState?.['email']}
+                        handleSubmit={() => handleChange('save-settings')}
+                        submitText={'Save'}
+                        isLoading={false}
+                        cancelText={"Cancel"}
+                        handleCancel={() => handleChange('save-cancel')}
+                    />}
                 </FormControl>
-            ) : (
-                <div className="role-display">{roleDisplay}</div>
-            )}
 
+            </>
+        )
+    }
+
+    return (
+        <div className="admin-panel-access">
+            <div className="subtle-subtext title">Admin Panel Access</div>
+            <Divider className="divider" />
+            {content}
             <Divider className="divider" />
         </div>
     )
