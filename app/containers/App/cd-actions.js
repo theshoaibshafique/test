@@ -26,7 +26,8 @@ import {
   CD_OVERVIEW_DATA,
   CD_OVERVIEW_TILE,
   CD_EXIT,
-  CD_FLAG_REPORT
+  CD_FLAG_REPORT,
+  CD_CLIP_NOTIFICATION_STATUS
 } from './constants';
 
 export function exitCaseDiscovery() {
@@ -102,5 +103,12 @@ export function setFlagReport(flagReport){
   return {
     type: CD_FLAG_REPORT,
     flagReport
+  }
+}
+
+export function setClipNotificationStatus(notificationStatus){
+  return {
+    type: CD_CLIP_NOTIFICATION_STATUS,
+    notificationStatus
   }
 }

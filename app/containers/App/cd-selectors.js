@@ -44,6 +44,10 @@ const selectFlagReport = () => createSelector(
   (cdState) => cdState.get('flagReport')
 );
 
+const selectClipNotificationStatus = () => createSelector(
+  selectCD,
+  (cdState) => cdState.get('clipNotificationStatus')
+);
 
 export {
   selectDetailedCase,
@@ -51,5 +55,6 @@ export {
   selectCases,
   selectOverviewData,
   selectSavedCases,
-  selectFlagReport
+  selectFlagReport,
+  selectClipNotificationStatus
 };

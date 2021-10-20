@@ -42,6 +42,7 @@ export const CD_RECOMMENDATIONS = 'insight/App/CD/RECOMMENDATIONS'
 export const CD_RECENT_SAVED = 'insight/App/CD/RECENTSAVED'
 export const CD_FLAGGED_CLIP = 'insight/App/CD/FLAGGEDCLIP'
 export const CD_FLAG_REPORT = 'insight/App/CD/FLAGREPORT'
+export const CD_CLIP_NOTIFICATION_STATUS = 'insights - set Clip Notification Status';
 
 export const UM_FILTERS = 'insight/App/UM/Filters'
 export const UM_USERS = 'insight/App/UM/Users'
