@@ -359,7 +359,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const newNotificationStatus = !currNotificationStatus;
     globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}clip_notification?is_notified=${newNotificationStatus}`, 'put', userToken, {})
     .then(result => {
-      // TODO: Add logger.
+      logger?.manualAddLog('click', `${newNotificationStatus ? 'enable' : 'disable'}-clip-notification`);
       dispatch(setClipNotificationStatus(newNotificationStatus));
     })
     .catch(error => {
