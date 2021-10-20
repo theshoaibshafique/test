@@ -99,7 +99,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
   const OVERVIEW_DATA = useSelector(selectOverviewData());
   const savedCases = useSelector(selectSavedCases());
   const [USERS, setUsers] = useState([]);
-  const clipNotificationStatus = useSelector(selectClipNotificationStatus());
 
   const [roomIds, setRoomIds] = useState(null);
 
