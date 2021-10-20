@@ -1174,6 +1174,15 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       });
   };
 
+  const getFlagSubmissionTime = (wheelsInTime, caseDuration) => {
+    let updatedTime;
+    if(wheelsInTime && caseDuration) {
+      const durationAvgSeconds = Math.trunc(caseDuration / 2);
+      updatedTime = moment(wheelsInTime).clone().add(durationAvgSeconds, 'seconds').format('YYYY-MM-DDTHH:mm:ss.SSS');
+    }
+    return updatedTime;
+  };
+
   const onFlagSubmit = () => {
     if (reportId, flagState.flagData) {
       const newFlag = {
