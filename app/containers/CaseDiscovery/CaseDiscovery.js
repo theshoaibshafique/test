@@ -21,8 +21,8 @@ import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
-import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase } from '../App/cd-actions';
-import { selectCases, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
+import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase, setClipNotificationStatus } from '../App/cd-actions';
+import { selectCases, selectClipNotificationStatus, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
 import { setCurrentProduct } from '../App/actions';
 
 
@@ -276,17 +276,19 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const getOverviewData = (endpoint) => globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + endpoint, 'get', userToken, {});
     const fetchSavedCases = getOverviewData("bookmarks");
     const fetchOverview = getOverviewData("overview");
+    const fetchClipNotificationStatus = getOverviewData("clip_notification");
 
-    Promise.all([fetchSavedCases, fetchOverview].map(function (e) {
+    Promise.all([fetchSavedCases, fetchClipNotificationStatus, fetchOverview].map(function (e) {
       return e?.then(function (result) {
         return result?.data;
       })
-    })).then(([savedCases, overview]) => {
+    })).then(([savedCases, clipNotificationStatus, overview]) => {
       const {tagOverview, recommendations, recentBookmarks, recentFlags, recentClips} = overview;
       dispatch(setOverviewData({
         recentFlags, recentClips, recommendations,
         recentSaved:recentBookmarks, overview:tagOverview, savedCases
       }));
+      dispatch(setClipNotificationStatus(clipNotificationStatus));
     }).catch(function (results) {
       console.log("uh oh", results)
     }).finally(() => {
@@ -341,8 +343,17 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     dispatch(setSavedCases(result));
   }
 
-
-  // const [isLoading, setIsLoading] = useState(true);
+  const handleToggleClipNotification = (currNotificationStatus) => {
+    const newNotificationStatus = !currNotificationStatus;
+    globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}clip_notification?is_notified=${newNotificationStatus}`, 'put', userToken, {})
+    .then(result => {
+      logger?.manualAddLog('click', `${newNotificationStatus ? 'enable' : 'disable'}-clip-notification`);
+      dispatch(setClipNotificationStatus(newNotificationStatus));
+    })
+    .catch(error => {
+      console.log("oh no", error);
+      });
+  }
 
   useEffect(() => {
     if (caseId == null) {
@@ -410,6 +421,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
             handleSaveCase={handleSaveCase}
             handleFilterChange={(e, v) => { handleFilterChange(e, v); setTabIndex(2) }}
+            handleToggleClipNotification={handleToggleClipNotification}
             {...OVERVIEW_DATA}
           /> || <LoadingIndicator />}
         </TabPanel>

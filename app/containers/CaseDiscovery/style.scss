@@ -1218,6 +1218,57 @@
 
         .title.normal-text {
             margin-left: 8px;
+            
+            .bell-notification{
+                margin-left: 20px;
+                display: inline-block;
+                position: relative;
+                bottom: 2px;
+                cursor: pointer;
+
+                &.shake {
+                    animation: shake 1s ease 0s 1 normal both, fade-in-keyframes 1s ease;
+                }
+                &.fade {
+                    animation: fade-in-keyframes .3s ease .3s 1 normal both
+                }
+
+                @keyframes shake {
+                    0%,
+                    100% {
+                      transform: rotate(0deg);
+                      transform-origin: 50% 0;
+                    }
+                  
+                    10% {
+                      transform: rotate(2deg);
+                    }
+                  
+                    20%,
+                    40%,
+                    60% {
+                      transform: rotate(-4deg);
+                    }
+                  
+                    30%,
+                    50%,
+                    70% {
+                      transform: rotate(4deg);
+                    }
+                  
+                    80% {
+                      transform: rotate(-2deg);
+                    }
+                  
+                    90% {
+                      transform: rotate(2deg);
+                    }
+                }
+                @keyframes fade-in-keyframes {
+                    from {opacity: .2}
+                    to {opacity: 1}
+                }
+            }
         }
         .thumbnail-case {
             min-height: 160px;

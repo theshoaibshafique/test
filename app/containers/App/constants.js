@@ -42,3 +42,4 @@ export const CD_RECOMMENDATIONS = 'insights - set Recommendations'
 export const CD_RECENT_SAVED = 'insights - set Recently saved cases'
 export const CD_FLAGGED_CLIP = 'insights - set Flagged Case data'
 export const CD_FLAG_REPORT = 'insights - set Flag Report'
+export const CD_CLIP_NOTIFICATION_STATUS = 'insights - set Clip Notification Status';
