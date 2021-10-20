@@ -1920,7 +1920,7 @@ function ClipTimeline(props) {
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>
-        {timeline.map((t, i) => {
+        {timeline.sort((a, b) => a.startTime - b.startTime).map((t, i) => {
           const thumbnail = (
             <div style={{ position: 'relative' }}>
               <img src={t.thumbnailSrc}
