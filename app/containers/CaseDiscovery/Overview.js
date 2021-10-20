@@ -8,6 +8,7 @@ import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
 import Icon from '@mdi/react'
 import { mdiBellOffOutline, mdiBellRing } from '@mdi/js';
+import { CSSTransition } from 'react-transition-group';
 import { DATE_OPTIONS, CLIP_NOTIFICATION_STATUS_TOOLTIPS } from './misc/constants';
 import { getTag } from './misc/helper-components';
 import { formatCaseForLogs, getPresetDates } from './misc/Utils';
@@ -32,14 +33,9 @@ export function Overview(props) {
             } 
             arrow
         >
-            {clipNotificationStatus === false ? 
-                <animated.div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
-                    <Icon color="#828282" path={mdiBellOffOutline} size={'24px'} />
-                </animated.div> :
-                <animated.div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
-                    <Icon color="#004f6e" path={mdiBellRing} size={'24px'} />
-                </animated.div>
-            }
+            <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
+                <Icon color={clipNotificationStatus === false ? '#828282' : '#004f6e'} path={clipNotificationStatus === false ? mdiBellOffOutline : mdiBellRing} size={'24px'} />
+            </div>
         </LightTooltip>
     );
 
