@@ -39,16 +39,16 @@ function umReducer(state = initialState, action) {
       //We hide onlyChilds in dropdowns
       const hospitals = Object.entries(locations)
       hospitals?.forEach(([hId, h]) => {
-        locationLookups[hId] = { scopeId: 1, name: h?.name, isOnlyChild: hospitals?.length <= 1 }
+        locationLookups[hId] = { scopeId: 1, name: h?.name }
         const facilities = Object.entries(h?.facilities);
         facilities.forEach(([fId, f]) => {
-          locationLookups[fId] = { scopeId: 2, name: f?.name, isOnlyChild: facilities?.length <= 1 }
+          locationLookups[fId] = { scopeId: 2, name: f?.name }
           const departments = Object.entries(f?.departments);
           departments.forEach(([dId, d]) => {
-            locationLookups[dId] = { scopeId: 3, name: d?.name, isOnlyChild: departments?.length <= 1 }
+            locationLookups[dId] = { scopeId: 3, name: d?.name }
             const rooms = Object.entries(d?.rooms)
             rooms.forEach(([rId, r]) => {
-              locationLookups[rId] = { scopeId: 4, name: r?.name, isOnlyChild: rooms?.length <= 1 }
+              locationLookups[rId] = { scopeId: 4, name: r?.name }
             })
           })
         })

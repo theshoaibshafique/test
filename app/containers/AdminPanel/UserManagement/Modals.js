@@ -117,10 +117,6 @@ const userReducer = (state, event) => {
         }
     }
 
-    if (event.name == 'permissionRoles') {
-        console.log('this', event);
-    }
-
     return {
         ...state,
         [event.name]: event.value
@@ -212,28 +208,72 @@ const PermissionSection = props => {
         </div>
     )
 }
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: 40 * 4.5 + 0,
+            width: 250
+        }
+    },
+    getContentAnchorEl: null,
+    anchorOrigin: {
+        vertical: "bottom",
+        horizontal: "center"
+    },
+    transformOrigin: {
+        vertical: "top",
+        horizontal: "center"
+    },
+    variant: "menu"
+};
 const ProductPermissions = props => {
     const { productName, productId, roles } = props;
     const { isView, handleChange } = props;
     const assignableProductRoles = props.productRoles || {};
     const productRoles = useSelector(makeSelectProductRoles(true));
+    const locations = useSelector(selectLocations());
     const locationLookups = useSelector(selectLocationLookups());
 
     //TODO: update to allow multiselect (use roleID list instead and allow multiselect)
     const { roleDisplay, roleId } = getSelectedRoles(roles, productRoles?.[productId], true);
     const { minScope, maxScope } = props?.productRoles?.[roleId] || {};
     const userScope = roles?.[roleId]?.scope ?? {};
-    const userLocations = Object.entries(userScope).map(([k, loc]) => loc.map(l => { return { locationId: l, locationShort: k } })).flat();
+    //get a flat list of all locations
+    const userLocations = Object.entries(userScope).map(([k, loc]) => loc).flat();
 
-    const getAccessLevelOptions = (minScope, maxScope) => Object.entries(locationLookups).map(([locationId, location]) => {
-        const { scopeId, name, isOnlyChild } = location;
-        if (isWithinScope(scopeId, minScope, maxScope)) {
-            return {
-                locationId, name, scopeId
+    const [selectedLocations, setLocations] = useState(userLocations);
+    const getAccessLevelOptions = (minScope, maxScope, currentLocations) => {
+        const currLoc = currentLocations || selectedLocations;
+        const accessOptions = []
+        const hospitals = Object.entries(locations)
+        for (const [hId, h] of hospitals) {
+
+            isWithinScope(1, minScope, maxScope) && accessOptions.push(hId);
+            if (currLoc.includes(hId)) {
+                continue;
+            }
+            const facilities = Object.entries(h?.facilities);
+            for (const [fId, f] of facilities) {
+                isWithinScope(2, minScope, maxScope) && accessOptions.push(fId);
+                if (currLoc.includes(fId)) {
+                    continue;
+                }
+                const departments = Object.entries(f?.departments);
+                for (const [dId, d] of departments) {
+                    // We dont show departments if theres only 1
+                    isWithinScope(3, minScope, maxScope) && departments.length > 1 && accessOptions.push(dId);
+                    if (currLoc.includes(dId)) {
+                        continue;
+                    }
+                    const rooms = Object.entries(d?.rooms)
+                    for (const [rId, r] of rooms) {
+                        isWithinScope(4, minScope, maxScope) && accessOptions.push(rId);
+                    }
+                }
             }
         }
-
-    }).filter((l) => l);
+        return accessOptions
+    };
     const [accessLevelOptions, setAccessLevelOptions] = useState(getAccessLevelOptions(minScope, maxScope));
     const getRoleObject = (value) => {
         const { minScope, maxScope } = props?.productRoles?.[value] || {};
@@ -245,8 +285,12 @@ const ProductPermissions = props => {
         }
     }
 
-    const handleLocationChange = location => {
-        handleChange('location-roles', { location: location, roleId });
+    const handleLocationChange = e => {
+        setLocations(e.target.value);
+        setAccessLevelOptions(getAccessLevelOptions(minScope, maxScope, e.target.value));
+        //Save in state for BE
+        const { scopeId, name } = locationLookups?.[roleId] || {}
+        handleChange('location-roles', { roleId, locations: e.target.value, scopeId, name });
     }
 
     //TODO: check if theyre subscribed
@@ -258,7 +302,7 @@ const ProductPermissions = props => {
             <div className='product-permission subtext'>
                 <span>{productName}</span>
                 <span className="role"><span className={`role-cell subtle-subtext ${roleDisplay}`}>{roleDisplay}</span></span>
-                <span>{userLocations.map(l => locationLookups?.[l.locationId]?.name).join(", ") || "None"}</span>
+                <span>{selectedLocations.map(l => locationLookups?.[l]?.name).join(", ") || "None"}</span>
                 <span></span>
             </div>
         )
@@ -289,21 +333,36 @@ const ProductPermissions = props => {
                     className="access-level-select"
                     variant='outlined' size='small' fullWidth>
                     <Select
-                        MenuProps={{
-                            getContentAnchorEl: () => null,
-                        }}
+                        MenuProps={MenuProps}
                         displayEmpty
                         id="access-level-select"
-                        value={userLocations}
+                        value={selectedLocations}
                         disabled={!accessLevelOptions?.length}
                         multiple
                         displayEmpty
-                        renderValue={(userLocations) => userLocations?.map(l => locationLookups?.[l.locationId]?.name).join(", ") || 'None'}
-                    // onChange={handleLocationChange}
+                        renderValue={(userLocations) => userLocations?.map(l => locationLookups?.[l]?.name).join(", ") || 'None'}
+                        onChange={handleLocationChange}
                     >
-                        {accessLevelOptions?.map((location) => (
-                            <AccessLevelOption location={location} userLocations={userLocations} handleLocationChange={handleLocationChange} />
-                        ))}
+                        {accessLevelOptions.map((locationId) => {
+                            const location = locationLookups?.[locationId] || {};
+                            const { name, scopeId } = location;
+                            return (
+                                <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0 " }}>
+                                    <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId - 1) * 12 }}>
+                                        <Checkbox
+                                            style={{ padding: 0 }}
+                                            disableRipple
+                                            disabled
+                                            icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                                            checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
+                                            className="SST-Checkbox"
+                                            checked={selectedLocations.includes(locationId)}
+                                        />
+                                    </ListItemIcon>
+                                    <ListItemText primary={name} />
+                                </MenuItem>
+                            )
+                        })}
                     </Select>
                 </FormControl>
             </span>
@@ -311,34 +370,6 @@ const ProductPermissions = props => {
         </div>
     )
 }
-
-const AccessLevelOption = (props) => {
-    const { location, userLocations, handleLocationChange } = props;
-    const { locationId, scopeId, name } = location || {};
-    console.log(userLocations, locationId);
-    const [checked, setIsChecked] = useState(userHasLocation(userLocations, locationId));
-    const handleCheck = () => {
-        handleLocationChange(location);
-        setIsChecked(!checked);
-    }
-    return (
-        <MenuItem key={locationId} value={locationId} onClick={() => handleCheck()} style={{ padding: "4px 14px 4px 0 " }}>
-            <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId - 1) * 12 }}>
-                <Checkbox
-                    style={{ padding: 0 }}
-                    disableRipple
-                    disabled
-                    icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
-                    checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
-                    className="SST-Checkbox"
-                    checked={checked}
-                />
-            </ListItemIcon>
-            <ListItemText primary={name} />
-        </MenuItem>
-    )
-}
-
 
 
 const AdminPanelAccess = props => {

@@ -44,7 +44,6 @@ export const UserManagement = props => {
     }, [users])
 
     const [selectedUser, setSelectedUser] = useState(false);
-
     if (!USERS) {
         return <LoadingIndicator />
     }

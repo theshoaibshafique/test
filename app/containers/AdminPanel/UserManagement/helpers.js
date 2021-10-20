@@ -27,36 +27,9 @@ export function getSelectedRoles(userRoles, product) {
     }
     return { roleDisplay: 'No Access', roleId: null };
 }
-
-export function getLocationDisplay(userScope, minScope, maxScope, locations) {
-    const result = [];
-    if (!userScope) {
-        return 'None'
-    }
-    for (const [hospitalId, hospital] of Object.entries(locations)) {
-        appendLocation(1, minScope, maxScope, userScope?.h, hospitalId, hospital?.name, result);
-        for (const [facilityId, facility] of Object.entries(hospital.facilities)) {
-            appendLocation(2, minScope, maxScope, userScope?.f, facilityId, facility?.name, result);
-            for (const [deptId, dept] of Object.entries(facility.departments)) {
-                appendLocation(3, minScope, maxScope, userScope?.d, deptId, dept?.name, result);
-                for (const [roomId, room] of Object.entries(dept?.rooms)) {
-                    appendLocation(4, minScope, maxScope, userScope?.r, roomId, room?.name, result);
-                }
-            }
-        }
-    }
-    return result.join(",");
-}
-//Helper functions to get location display
-function appendLocation(currentScope, minScope, maxScope, userLocations, locationId, locationName, displayList) {
-    //Only add the role if they're within the scope and the user is assigned the location
-    if (isWithinScope(currentScope, minScope, maxScope) && userHasLocation(userLocations, locationId)) {
-        displayList.push(locationName)
-    }
-}
 export function isWithinScope(currentScope, minScope, maxScope) {
     return currentScope >= minScope && currentScope <= maxScope;
 }
 export function userHasLocation(userLocations, locationId) {
-    return userLocations.map(l => l.locationId)?.includes(locationId);
+    return userLocations?.includes(locationId);
 }
