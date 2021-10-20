@@ -87,7 +87,7 @@ const userReducer = (state, event) => {
     if (event.name == 'roles') {
         const roles = state?.roles || {};
         const { current, id, value } = event.value;
-        //Delete current role in lists
+        //Delete current role in lists - If we select viewer we want to remove Admin
         if (current) {
             delete roles[current]
         }
@@ -106,6 +106,7 @@ const userReducer = (state, event) => {
         state.roles[roleId].scope[SCOPE_MAP[scopeId]] = state.roles[roleId].scope[SCOPE_MAP[scopeId]] || [];
         const locationList = state.roles[roleId].scope[SCOPE_MAP[scopeId]];
         const index = locationList.findIndex((l) => l == locationId);
+        //Add to the existing list or remove it if it exists
         if (index >= 0) {
             locationList.pop(index)
         } else {
@@ -277,7 +278,9 @@ const ProductPermissions = props => {
     const [accessLevelOptions, setAccessLevelOptions] = useState(getAccessLevelOptions(minScope, maxScope));
     const getRoleObject = (value) => {
         const { minScope, maxScope } = props?.productRoles?.[value] || {};
-        setAccessLevelOptions(getAccessLevelOptions(minScope, maxScope));
+        const accessOptions = getAccessLevelOptions(minScope, maxScope, []);
+        setAccessLevelOptions(accessOptions);
+        setLocations(accessOptions?.length == 1 ? accessOptions : []);
         return {
             current: roleId,
             id: value,
@@ -336,8 +339,8 @@ const ProductPermissions = props => {
                         MenuProps={MenuProps}
                         displayEmpty
                         id="access-level-select"
-                        value={selectedLocations}
-                        disabled={!accessLevelOptions?.length}
+                        value={selectedLocations.filter((l) => accessLevelOptions.includes(l))}
+                        disabled={!accessLevelOptions?.length || (accessLevelOptions?.length == 1 && roleDisplay == 'Full Access')}
                         multiple
                         displayEmpty
                         renderValue={(userLocations) => userLocations?.map(l => locationLookups?.[l]?.name).join(", ") || 'None'}
