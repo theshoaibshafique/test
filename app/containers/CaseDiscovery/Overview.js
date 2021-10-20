@@ -16,6 +16,8 @@ import { makeSelectLogger } from '../App/selectors';
 import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
+    const [animateShake, setAnimateShake] = useState(false);
+    const [animateFade, setAnimateFade] = useState(false);
     const flagReport = useSelector(selectFlagReport());
     const clipNotificationStatus = useSelector(selectClipNotificationStatus());
     const { handleChangeCaseId, handleSaveCase, handleFilterChange, handleToggleClipNotification } = props;
@@ -33,7 +35,16 @@ export function Overview(props) {
             } 
             arrow
         >
-            <div className="bell-notification" onClick={() => handleToggleClipNotification(clipNotificationStatus)}>
+            <div className={`bell-notification ${animateShake && clipNotificationStatus ? 'shake' : ''} ${animateFade && clipNotificationStatus === false ? 'fade' : ''}`} 
+                onClick={() => {
+                    handleToggleClipNotification(clipNotificationStatus); 
+                    if(clipNotificationStatus) setAnimateShake(true);
+                    if(clipNotificationStatus === false) setAnimateFade(true);
+                }} 
+                onAnimationEnd={() => {
+                    if(clipNotificationStatus) setAnimateShake(false);
+                    if(clipNotificationStatus === false) setAnimateFade(false);
+                }}>
                 <Icon color={clipNotificationStatus === false ? '#828282' : '#004f6e'} path={clipNotificationStatus === false ? mdiBellOffOutline : mdiBellRing} size={'24px'} />
             </div>
         </LightTooltip>
