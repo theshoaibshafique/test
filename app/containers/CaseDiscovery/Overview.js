@@ -27,9 +27,16 @@ export function Overview(props) {
             title={
                 <React.Fragment>
                     <div style={{marginBottom:4, fontWeight:'bold'}}>
-                        {clipNotificationStatus === false ? Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS).find(el => el?.toLowerCase() === 'notification off') : Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS).find(el => el?.toLowerCase() === 'notification on') }
+                        {clipNotificationStatus ? 
+                            Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS)[0] : 
+                            Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS)[1] 
+                        }
                     </div>
-                    <span>{clipNotificationStatus === false ? CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification Off'] : CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification On']}</span> 
+                    <span>{clipNotificationStatus ? 
+                            CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification On'] : 
+                            CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification Off']
+                          }
+                    </span> 
                 </React.Fragment>
             } 
             arrow
