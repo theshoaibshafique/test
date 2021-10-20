@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations } from '../../App/store/UserManagement/um-selectors';
 import { UM_PRODUCT_ID } from '../../../constants';
 import { getLocationDisplay, getRoleMapping, getSelectedRoles, isWithinScope, userHasLocation } from './helpers';
-import { makeSelectProductRoles } from '../../App/selectors';
+import { makeSelectProductRoles, makeSelectToken } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
 /* 
@@ -113,23 +113,19 @@ const userReducer = (state, event) => {
         }
         roles[id] = value;
         event.name = 'roles';
-        event.value = 'roles'
+        event.value = roles
     }
     if (event.name == 'location-roles') {
-        const { location, roleId } = event.value;
-        const { locationId, scopeId, name } = location || {};
+        const { roleId, locations, locationLookups } = event.value;
         //We're under the assumption that roles is alredy in the state if you're modifying location
         state.roles = state.roles || {}
         state.roles[roleId] = state.roles[roleId] || {}
-        state.roles[roleId].scope = state.roles[roleId].scope || {}
-        state.roles[roleId].scope[SCOPE_MAP[scopeId]] = state.roles[roleId].scope[SCOPE_MAP[scopeId]] || [];
-        const locationList = state.roles[roleId].scope[SCOPE_MAP[scopeId]];
-        const index = locationList.findIndex((l) => l == locationId);
-        //Add to the existing list or remove it if it exists
-        if (index >= 0) {
-            locationList.pop(index)
-        } else {
-            locationList.push(locationId)
+        //Build the new locations object seperating between h,f,d,r
+        state.roles[roleId].scope = {}
+        for (var locationId of locations) {
+            const { scopeId } = locationLookups?.[locationId];
+            state.roles[roleId].scope[SCOPE_MAP[scopeId]] = state.roles[roleId].scope[SCOPE_MAP[scopeId]] || [];
+            state.roles[roleId].scope[SCOPE_MAP[scopeId]].push(locationId)
         }
 
         event.name = 'roles'
@@ -155,6 +151,45 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const postProfile = async (body, userToken) => {
+    return await globalFunctions.axiosFetch(process.env.USER_V2_API + 'profile', 'POST', userToken, body)
+        .then(result => {
+            if (result != 'error') return result;
+        }).catch((error) => {
+            console.log("oh no", error)
+        });
+}
+const patchRoles = async (body, userToken) => {
+    return await globalFunctions.axiosFetch(process.env.USER_V2_API + 'roles', 'patch', userToken, body)
+        .then(result => {
+            if (result != 'error') return result;
+        }).catch((error) => {
+            console.log("oh no", error)
+        });
+}
+async function createUser(userData, callback, userToken, assignableRoles = {}) {
+    const { firstName, lastName, title, email } = userData;
+    // const userId = await postProfile({ firstName, lastName, title, email }, userToken)
+    const userId = "caa9f488-0279-4242-b096-556428c86371";
+    const { roles } = userData;
+    const productUpdates = [];
+    for (var [productId, product] of Object.entries(assignableRoles)) {
+        const { productRoles } = product;
+
+        const roleUpdates = {}
+        for (var [roleId, role] of Object.entries(productRoles)) {
+            if (roles.hasOwnProperty(roleId)) {
+                roleUpdates[roleId] = roles?.[roleId].scope || {}
+            }
+        }
+        if (Object.keys(roleUpdates).length >= 1) {
+            productUpdates.push({ productId, roleUpdates })
+        }
+    }
+    // const profile = await postProfile({ userId, minAssignableScope: 2, productUpdates }, userToken);
+    callback();
+}
+
 export const AddEditUserModal = props => {
     const { user, toggleModal } = props;
     const isAddUser = !Boolean(user?.userId);
@@ -162,10 +197,13 @@ export const AddEditUserModal = props => {
     const viewObject = isAddUser ? null : { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
 
     const [userData, setUserData] = useReducer(userReducer, { ...user, viewState: viewObject });
+    const userToken = useSelector(makeSelectToken());
+    const assignableRoles = useSelector(selectAssignableRoles());
     const { viewProfile, viewAdminAccess, viewPermissions } = userData?.viewState || {};
     const isView = Object.values(userData?.viewState || {}).every((v) => v) && userData?.viewState;
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isUserAdded, setIsAdded] = useState(false);
 
     const isSingleEdit = Object.values(userData?.viewState || {}).filter(t => !t).length == 1;
     const isSubmitable = !Object.values(userData?.errorState || {}).some((d) => d) && userData?.errorState;
@@ -186,13 +224,15 @@ export const AddEditUserModal = props => {
             handleChange('save-settings');
         } else if (event == 'add-user') {
             //Post call to add user
+            setIsLoading(true);
+            createUser(userData, () => { setIsLoading(false); setIsAdded(true) }, userToken, assignableRoles);
         }
     }
 
     return (
         <GenericModal
             {...props}
-            className={`add-edit-user ${isSingleEdit && 'single-edit'}`}
+            className={`add-edit-user ${!isAddUser && 'is-edit-user'} ${isSingleEdit && 'single-edit'} ${isUserAdded && 'user-added'}`}
         >
             <>
                 <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} />
@@ -252,7 +292,7 @@ const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: 40 * 4.5 + 0,
-            width: 250
+            // width: 250
         }
     },
     getContentAnchorEl: null,
@@ -323,16 +363,24 @@ const ProductPermissions = props => {
         return {
             current: roleId,
             id: value,
-            value: { name: assignableProductRoles?.[value]?.displayName, scope: {} }
+            //Default to 1 facility if only 1 option
+            value: {
+                name: assignableProductRoles?.[value]?.displayName,
+                scope: accessOptions?.length == 1 ?
+                    { f: accessOptions } :
+                    {}
+            }
         }
     }
 
     const handleLocationChange = e => {
-        setLocations(e.target.value);
-        setAccessLevelOptions(getAccessLevelOptions(minScope, maxScope, e.target.value));
+        var newLocations = e.target.value;
+        const accessLevelOptions = getAccessLevelOptions(minScope, maxScope, newLocations);
+        newLocations = newLocations.filter((l) => accessLevelOptions.includes(l))
+        setLocations(newLocations);
+        setAccessLevelOptions(accessLevelOptions);
         //Save in state for BE
-        const { scopeId, name } = locationLookups?.[roleId] || {}
-        handleChange('location-roles', { roleId, locations: e.target.value, scopeId, name });
+        handleChange('location-roles', { roleId, locations: newLocations, locationLookups });
     }
 
     if (!isSubscribed || productName == 'User Management') {
@@ -379,7 +427,7 @@ const ProductPermissions = props => {
                         MenuProps={MenuProps}
                         displayEmpty
                         id="access-level-select"
-                        value={selectedLocations.filter((l) => accessLevelOptions.includes(l))}
+                        value={selectedLocations}
                         disabled={!accessLevelOptions?.length || (accessLevelOptions?.length == 1 && roleDisplay == 'Full Access')}
                         multiple
                         displayEmpty
@@ -458,15 +506,15 @@ const ProfileSection = props => {
     if (isView) {
         return (
             <div className="view-profile">
-                <ProfileIcon />
+                <ProfileIcon firstName={firstName} lastName={lastName} />
                 <div className="profile-info">
                     <div className="normal-text">{firstName} {lastName}</div>
                     <div className="subtle-subtext">{title}</div>
                     <div className="subtle-subtext">{email}</div>
                     <div className="subtle-text">{moment(startDate).format('MMMM DD, YYYY')}</div>
                 </div>
-                <span className={`action-icon pointer`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
-                    <Icon className={``} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
+                <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
+                    <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
                 </span>
             </div>
         )

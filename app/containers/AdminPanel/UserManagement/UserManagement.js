@@ -10,7 +10,7 @@ import Search from '@material-ui/icons/Search';
 import MaterialTable, { MTableBody, MTableFilterRow, MTableHeader, MTableToolbar } from 'material-table';
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
-import { Button, MenuItem, Paper, TableCell, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, FormControlLabel } from '@material-ui/core';
+import { Button, MenuItem, Paper, TableCell, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, FormControlLabel, TableFooter } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
@@ -55,7 +55,7 @@ export const UserManagement = props => {
                     { title: "User Name", field: 'userName', hidden: true },
                     { title: "Facility ID", field: 'facilityId', hidden: true },
                     { title: "User ID", field: 'userId', hidden: true },
-                    // { title: "Email", field: 'email' },
+                    { title: "Email", field: 'email', hidden: true },
                     { title: "Name", field: 'name', defaultSort: 'asc' },
                     { title: "Title", field: 'title' },
                     generateRoleColumn("Efficiency"),
@@ -164,7 +164,6 @@ const TableBody = (props) => {
             })))
         }
     }, [renderData, filters])
-
     return (
         <>
             <MTableBody {...props} renderData={USERS} />
@@ -172,42 +171,51 @@ const TableBody = (props) => {
     )
 }
 function TableHeader(props) {
-    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange } = props;
+    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, dataCount } = props;
     const headers = [...columns, { title: 'Actions', action: true }].filter((c) => !c?.hidden);
     return (
-        <TableHead className="table-header">
-            <TableRow >
-                {headers?.map((c) => {
+        <>
+            <TableHead className="table-header">
+                <TableRow >
+                    {headers?.map((c) => {
 
-                    const index = columns?.findIndex((col) => col.title == c?.title);
-                    const isSortable = c?.sorting ?? true;
-                    const isAction = c?.action ?? false;
-                    var width = scrollWidth / headers?.length;
-                    var content = ''
-                    if (isAction) {
-                        content = c?.title;
-                        width = 80
-                    } else if (isSortable) {
-                        content = <TableSortLabel
-                            active={index == orderBy}
-                            direction={index == orderBy ? orderDirection : 'asc'}
-                            onClick={() => onOrderChange(index, orderBy == index && orderDirection == 'asc' ? 'desc' : 'asc')}
-                        >
-                            {c.title}
-                        </TableSortLabel>
-                    } else {
-                        content = <FilterRole title={c.title} />
-                    }
-                    return (
-                        <TableCell
-                            style={{ ...headerStyle, backgroundColor: '#EEFAFF', width: width, whiteSpace: 'nowrap' }}
-                        >
-                            {content}
-                        </TableCell>
-                    )
-                })}
-            </TableRow>
-        </TableHead>
+                        const index = columns?.findIndex((col) => col.title == c?.title);
+                        const isSortable = c?.sorting ?? true;
+                        const isAction = c?.action ?? false;
+                        var width = scrollWidth / headers?.length;
+                        var content = ''
+                        if (isAction) {
+                            content = c?.title;
+                            width = 80
+                        } else if (isSortable) {
+                            content = <TableSortLabel
+                                active={index == orderBy}
+                                direction={index == orderBy ? orderDirection : 'asc'}
+                                onClick={() => onOrderChange(index, orderBy == index && orderDirection == 'asc' ? 'desc' : 'asc')}
+                            >
+                                {c.title}
+                            </TableSortLabel>
+                        } else {
+                            content = <FilterRole title={c.title} />
+                        }
+                        return (
+                            <TableCell
+                                style={{ ...headerStyle, backgroundColor: '#EEFAFF', width: width, whiteSpace: 'nowrap' }}
+                            >
+                                {content}
+                            </TableCell>
+                        )
+                    })}
+                </TableRow>
+            </TableHead>
+            <caption className="table-footer subtle-text">
+                <div>
+                    <span></span>
+                    <span>End of List</span>
+                    <span>{`${dataCount} of ${dataCount}`}</span>
+                </div>
+            </caption>
+        </>
     )
 }
 

@@ -312,7 +312,6 @@ export default class UserManagement extends React.PureComponent {
               onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
               components={{
                 Header: props => {
-                  console.log(props)
                   return (
                     <div style={{ backgroundColor: '#e8eaf5' }}>
                       <MTableHeader {...props} />
