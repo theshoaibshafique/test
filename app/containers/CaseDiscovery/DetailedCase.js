@@ -1189,8 +1189,8 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         reportId,
         caseId,
         roomId,
-        localTime: wheelsInLocal,
-        utcTime: wheelsInUtc,
+        localTime: getFlagSubmissionTime(wheelsInLocal, DETAILED_CASE?.metaData?.duration),
+        utcTime: getFlagSubmissionTime(wheelsInUtc, DETAILED_CASE?.metaData?.duration),
         options: flagState.flagData.map(el => {
           return {
             optionId: el.choices[0].id,
