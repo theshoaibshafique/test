@@ -129,7 +129,7 @@ const userReducer = (state, event) => {
         if (productId && state.errorState?.[productId]) {
             state.errorState[productId] = null;
         }
-        console.log(roles);
+        console.log('roles', roles);
         event.name = 'roles';
         event.value = roles
     }
@@ -170,7 +170,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const postProfile = async (body, userToken) => {
+const createProfile = async (body, userToken) => {
     return await globalFunctions.axiosFetch(process.env.USER_V2_API + 'profile', 'POST', userToken, body)
         .then(result => {
             if (result != 'error') return result?.data;
@@ -186,12 +186,9 @@ const patchRoles = async (body, userToken) => {
             console.log("oh no", error)
         });
 }
-async function createUser(userData, callback, userToken, assignableRoles = {}) {
-    const { firstName, lastName, title, email } = userData;
-    const userId = await postProfile({ firstName, lastName, title, email }, userToken)
-    // const userId = "caa9f488-0279-4242-b096-556428c86371";
-    const { roles } = userData;
+function generateProductUpdateBody(roles, assignableRoles = {}) {
     const productUpdates = [];
+
     for (var [productId, product] of Object.entries(assignableRoles)) {
         const { productRoles } = product;
 
@@ -204,6 +201,14 @@ async function createUser(userData, callback, userToken, assignableRoles = {}) {
             productUpdates.push({ productId, roleUpdates })
         }
     }
+    return productUpdates;
+}
+async function createUser(userData, callback, userToken, assignableRoles = {}) {
+    const { firstName, lastName, title, email } = userData;
+    const userId = await createProfile({ firstName, lastName, title, email }, userToken)
+    // const userId = "caa9f488-0279-4242-b096-556428c86371";
+    const { roles } = userData;
+    const productUpdates = generateProductUpdateBody(roles, assignableRoles);
     const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
     callback(userId);
 }
@@ -250,13 +255,13 @@ export const AddEditUserModal = props => {
         } else if (event == 'add-user') {
             //Post call to add user
             setIsLoading(true);
-            createUser(userData, (userId) => { setIsLoading(false); setIsAdded(true); updateTable(userData, userId); }, userToken, assignableRoles);
+            createUser(userData, (userId) => { setIsLoading(false); setIsAdded(true); updateTable(userId); }, userToken, assignableRoles);
         }
     }
 
     const userTable = useSelector(selectUsers());
     const productRoles = useSelector(makeSelectProductRoles());
-    const updateTable = (userData, userId) => {
+    const updateTable = (userId) => {
         const { tableData, firstName, lastName, title, roles } = userData || {};
         const { id } = tableData || {};
         const modified = [...userTable];
@@ -268,8 +273,10 @@ export const AddEditUserModal = props => {
         };
 
         if (id) {
+            console.log('updated', updatedUser);
             userTable[id] = updatedUser;
         } else {
+            console.log('added', updatedUser);
             modified.push(updatedUser)
         }
         dispatch(setUsers(modified))
@@ -280,7 +287,6 @@ export const AddEditUserModal = props => {
         setIsAdded(false);
         setIsLoading(false);
     }
-    console.log(props);
 
     return (
         <GenericModal
@@ -558,14 +564,39 @@ const ProductPermissions = props => {
 
 
 const AdminPanelAccess = props => {
-    const { handleChange, roles, isView, isSingleEdit } = props;
-    const assignableUMRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
+    const { handleChange, roles, isView, isSingleEdit, userId, updateTable } = props;
+    console.log(props);
+    const assignableRoles = useSelector(selectAssignableRoles())
+    
+    const assignableUMRoles = assignableRoles?.[UM_PRODUCT_ID]?.productRoles || {};
     const { umRoles } = useSelector(makeSelectProductRoles());
     const { roleDisplay, roleId } = getSelectedRoles(roles, umRoles);
+    console.log('roleDisplay',roleDisplay, roleId, assignableUMRoles, roles)
     const locationLookups = useSelector(selectLocationLookups());
+    const userToken = useSelector(makeSelectToken());
     //User management has a default scope of Facility
     const [defaultFacility, other] = Object.entries(locationLookups).find(([lId, l]) => l?.scopeId == 2);
     let content = null;
+    const handleSubmit = async () => {
+        handleChange('save-settings');
+        const productUpdates = generateProductUpdateBody(roles, assignableRoles);
+        const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
+        updateTable(userId);
+
+    }
+    const getLocationObject = (value) => {
+        const temp = {
+            current: roleId,
+            value: {
+                scope: { f: [defaultFacility] }
+            },
+            id: value,
+            productId: UM_PRODUCT_ID
+        }
+        console.log('locObj', temp);
+        
+        return temp
+    }
     if (isView) {
         content = (
             <div className="role-display">
@@ -586,11 +617,7 @@ const AdminPanelAccess = props => {
                         id="admin-setting"
                         value={roleId}
                         style={{ width: 200 }}
-                        onChange={(e, v) => handleChange('roles', {
-                            current: roleId, value: {
-                                scope: { f: [defaultFacility] }
-                            }, id: e.target.value, productId: UM_PRODUCT_ID
-                        })}
+                        onChange={(e, v) => handleChange('roles', getLocationObject(e.target.value))}
                     >
                         {Object.entries(assignableUMRoles).map(([roleId, role]) => (
                             role.displayName && <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
@@ -599,7 +626,7 @@ const AdminPanelAccess = props => {
                     </Select>
                     {isSingleEdit && <SaveAndCancel
                         className={"save-admin-panel-access"}
-                        handleSubmit={() => handleChange('save-settings')}
+                        handleSubmit={() => handleSubmit()}
                         submitText={'Save'}
                         isLoading={false}
                         cancelText={"Cancel"}
