@@ -162,7 +162,7 @@ const TableBody = (props) => {
     const filters = useSelector(selectFilters());
     const { renderData } = props;
     const [USERS, setUsers] = useState(renderData);
-
+    
     useEffect(() => {
         if (filters || renderData) {
             setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles)?.every(([k, v]) => {
@@ -173,6 +173,13 @@ const TableBody = (props) => {
     return (
         <>
             <MTableBody {...props} renderData={USERS} />
+            <caption className="table-footer subtle-text">
+                <div>
+                    <span></span>
+                    <span>End of List</span>
+                    <span>{`${USERS?.length} of ${USERS?.length}`}</span>
+                </div>
+            </caption>
         </>
     )
 }
@@ -214,13 +221,6 @@ function TableHeader(props) {
                     })}
                 </TableRow>
             </TableHead>
-            <caption className="table-footer subtle-text">
-                <div>
-                    <span></span>
-                    <span>End of List</span>
-                    <span>{`${dataCount} of ${dataCount}`}</span>
-                </div>
-            </caption>
         </>
     )
 }

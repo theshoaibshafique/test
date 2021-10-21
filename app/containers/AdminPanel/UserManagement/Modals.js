@@ -52,8 +52,8 @@ export const DeleteUserModal = props => {
 
     const fetchDelete = async () => {
         setIsLoading(true)
-        // const response = await deleteUser({ userId,minAssignableScope:2 }, userToken);
-        
+        const response = await deleteUser({ userId, minAssignableScope: 2 }, userToken);
+
         const { id } = tableData || {};
         const modified = [...userTable];
         if (id) {
@@ -61,7 +61,7 @@ export const DeleteUserModal = props => {
         }
         dispatch(setUsers(modified))
         toggleModal(false);
-        // setIsLoading(false);
+        setIsLoading(false);
     }
     return (
         <GenericModal
@@ -118,22 +118,30 @@ const userReducer = (state, event) => {
         }
     }
     if (event.name == 'validate') {
-        const { id, value } = event.value;
+
         const errorState = state?.errorState || {};
-        if (id == 'email') {
+        const { id, value } = event.value;
+        const isValidateAll = id == 'all';
+        console.log(isValidateAll);
+        if (id == 'email' || isValidateAll) {
             errorState['email'] = globalFunctions.validEmail(state?.email) ? null : '​Please enter a valid email address';
-        } else if (id == 'firstName') {
-            errorState[id] = state?.firstName ? null : '​Please enter a first name';
-        } else if (id == 'lastName') {
-            errorState[id] = state?.lastName ? null : '​Please enter a last name';
-        } else if (id == 'title') {
-            errorState[id] = state?.title ? null : '​Please enter a title';
-        } else if (defaultViewState?.hasOwnProperty(id)) {
+        }
+        if (id == 'firstName' || isValidateAll) {
+            errorState['firstName'] = state?.firstName ? null : '​Please enter a first name';
+        }
+        if (id == 'lastName' || isValidateAll) {
+            errorState['lastName'] = state?.lastName ? null : '​Please enter a last name';
+        }
+        if (id == 'title' || isValidateAll) {
+            errorState['title'] = state?.title ? null : '​Please enter a title';
+        }
+        if (defaultViewState?.hasOwnProperty(id)) {
             errorState[id] = (value?.length > 0) ? null : 'Please select an access level';
         }
         event.name = 'errorState'
         event.value = errorState;
     }
+
 
     if (event.name == 'view') {
         const { id, value } = event.value;
@@ -332,8 +340,8 @@ export const AddEditUserModal = props => {
                 {isAddUser && (
                     <SaveAndCancel
                         className={"add-user-buttons"}
-                        disabled={isLoading || !isSubmitable}
-                        handleSubmit={() => handleSubmit(isView ? 'add-user' : 'save-settings')}
+                        disabled={isLoading}
+                        handleSubmit={() => !isSubmitable ? handleChange('validate', {id:'all'}) : handleSubmit(isView ? 'add-user' : 'save-settings')}
                         submitText={(isView ? 'Add User' : 'Save')}
                         isLoading={isLoading}
                         cancelText={"Cancel"}
