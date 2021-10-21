@@ -83,7 +83,11 @@
     &.edit-profile-icon {
         align-self: center;
         margin-left: auto;
-        margin-right: 18px;
+    }
+    &.edit-permissions-icon{
+        svg{
+            float: right;
+        }
     }
 }
 .is-edit-user {
@@ -214,6 +218,7 @@
     }
     &.user-added,
     &.single-edit {
+        .edit,
         .add-user-buttons {
             display: none;
         }
@@ -223,20 +228,25 @@
         .product-permission,
         .permissions-header {
             display: flex;
-            justify-content: space-between;
-            span {
-                width: 34%;
+            > span {
+                width: 30%;
                 padding: 8px 0;
                 align-self: center;
                 &:not(:first-child) {
                     padding: 0 16px;
                 }
-                &.access-level {
+                &:last-child{
+                    width: 40%;
+                    padding-right: 0;
+                }
+                
+                .access-level {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     display: -webkit-box;
                     -webkit-line-clamp: 3; /* number of lines to show */
                     -webkit-box-orient: vertical;
+                    padding-right: 16px;
                 }
             }
             .role-cell {

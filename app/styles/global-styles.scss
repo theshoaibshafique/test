@@ -156,6 +156,7 @@ label {
     justify-content: flex-end;
   }
   &.flex-column { flex-direction: column }
+  &.space-between { justify-content: space-between }
 }
 
 @mixin flex-center {

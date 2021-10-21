@@ -6,7 +6,7 @@ import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations } from '../../App/store/UserManagement/um-selectors';
-import { UM_PRODUCT_ID } from '../../../constants';
+import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
 import { getLocationDisplay, getRoleMapping, getSelectedRoles, isWithinScope, userHasLocation } from './helpers';
 import { makeSelectProductRoles, makeSelectToken } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
@@ -64,12 +64,20 @@ export const UserAddedModal = props => {
 }
 
 const SCOPE_MAP = ['unrestricted', 'h', 'f', 'd', 'r'];
+const defaultViewState = {
+    viewProfile: true,
+    viewAdminAccess: true,
+    [CD_PRODUCT_ID]: true,
+    [EMM_PRODUCT_ID]: true,
+    [SSC_PRODUCT_ID]: true,
+    [EFF_PRODUCT_ID]: true
+};
 const userReducer = (state, event) => {
     if (event.name == 'new-user') {
         return event.value;
     } else if (event.name == 'save-settings') {
         event.name = 'viewState';
-        event.value = { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
+        event.value = defaultViewState
 
         state.backup = null;
     } else if (event.name == 'save-cancel') {
@@ -178,15 +186,14 @@ async function createUser(userData, callback, userToken, assignableRoles = {}) {
 
         const roleUpdates = {}
         for (var [roleId, role] of Object.entries(productRoles)) {
-            if (roles.hasOwnProperty(roleId)) {
-                roleUpdates[roleId] = roles?.[roleId].scope || {}
-            }
+            roleUpdates[roleId] = roles?.[roleId]?.scope || {}
         }
         if (Object.keys(roleUpdates).length >= 1) {
             productUpdates.push({ productId, roleUpdates })
         }
     }
-    // const profile = await postProfile({ userId, minAssignableScope: 2, productUpdates }, userToken);
+    const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
+    debugger;
     callback();
 }
 
@@ -194,12 +201,13 @@ export const AddEditUserModal = props => {
     const { user, toggleModal } = props;
     const isAddUser = !Boolean(user?.userId);
     //if we're adding a new user we edit all sections at once
-    const viewObject = isAddUser ? null : { viewProfile: true, viewAdminAccess: true, viewPermissions: true }
+    const viewObject = isAddUser ? null : defaultViewState;
 
     const [userData, setUserData] = useReducer(userReducer, { ...user, viewState: viewObject });
     const userToken = useSelector(makeSelectToken());
     const assignableRoles = useSelector(selectAssignableRoles());
-    const { viewProfile, viewAdminAccess, viewPermissions } = userData?.viewState || {};
+    const { viewProfile, viewAdminAccess, ...viewPermissions } = userData?.viewState || {};
+
     const isView = Object.values(userData?.viewState || {}).every((v) => v) && userData?.viewState;
 
     const [isLoading, setIsLoading] = useState(false);
@@ -237,7 +245,7 @@ export const AddEditUserModal = props => {
             <>
                 <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} />
                 <AdminPanelAccess {...userData} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} />
-                <PermissionSection {...userData} isView={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} />
+                <PermissionSection {...userData} viewState={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} />
                 {isAddUser && (
                     <SaveAndCancel
                         className={"add-user-buttons"}
@@ -266,25 +274,38 @@ const SaveAndCancel = props => {
 }
 
 const PermissionSection = props => {
-    const { isView, handleChange } = props;
+    const { viewState, isSingleEdit, handleChange } = props;
+    const isEdit = Object.values(viewState || {}).some((v) => !v) && Object.keys(viewState).length > 0;
     const assignableRoles = useSelector(selectAssignableRoles());
     return (
-        <div className={`permissions-section ${isView && 'isView'}`}>
+        <div className={`permissions-section `}>
             <div className="subtle-subtext title">Permissions</div>
             <Divider className="divider" />
             <div className="permissions-header subtext">
                 <span>Products</span>
                 <span>Role</span>
                 <span>Access Level</span>
-                {isView && <span></span>}
+                {/* {(isViewAll) && <span></span>} */}
             </div>
             <Divider className="divider" />
             {Object.entries(assignableRoles).map(([productId, product]) => (
                 <ProductPermissions
                     {...product}
                     productId={productId}
-                    {...props} />
+                    {...props}
+                    isView={viewState?.[productId]}
+                />
             ))}
+            {isSingleEdit && isEdit && (
+                <SaveAndCancel
+                    className={"add-permissions-buttons"}
+                    handleSubmit={() => handleChange('save-settings')}
+                    submitText={'Save'}
+                    isLoading={false}
+                    cancelText={"Cancel"}
+                    handleCancel={() => handleChange('save-cancel')}
+                />
+            )}
         </div>
     )
 }
@@ -307,7 +328,7 @@ const MenuProps = {
     variant: "menu"
 };
 const ProductPermissions = props => {
-    const { productName, productId, roles, isSubscribed } = props;
+    const { productName, productId, roles, isSubscribed, isSingleEdit } = props;
     const { isView, handleChange } = props;
     const assignableProductRoles = props.productRoles || {};
     const productRoles = useSelector(makeSelectProductRoles(true));
@@ -392,8 +413,13 @@ const ProductPermissions = props => {
             <div className='product-permission subtext'>
                 <span>{productName}</span>
                 <span className="role"><span className={`role-cell subtle-subtext ${roleDisplay}`}>{roleDisplay}</span></span>
-                <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
-                <span></span>
+                <span className="flex space-between" >
+                    <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
+                    <span className={`action-icon pointer edit-permissions-icon`} title={`Edit ${productName}`} >
+                        <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} onClick={() => handleChange('view', { id: productId, value: false })} />
+                    </span>
+                </span>
+
             </div>
         )
     }
