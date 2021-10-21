@@ -296,12 +296,12 @@ export const AddEditUserModal = props => {
     const userTable = useSelector(selectUsers());
     const productRoles = useSelector(makeSelectProductRoles());
     const updateTable = (userId) => {
-        const { tableData, firstName, lastName, title, roles } = userData || {};
+        const { tableData, firstName, lastName, title, roles, email } = userData || {};
         const { id } = tableData || {};
         const modified = [...userTable];
         const updatedUser = {
             userId,
-            firstName, lastName, title,
+            firstName, lastName, title, email,
             displayRoles: getRoleMapping(roles, Object.values(productRoles)),
             name: `${firstName} ${lastName}`,
             roles
