@@ -407,7 +407,7 @@ const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: 40 * 4.5 + 0,
-            // width: 250
+            width: 230
         }
     },
     getContentAnchorEl: null,
