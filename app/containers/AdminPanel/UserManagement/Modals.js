@@ -146,7 +146,6 @@ const userReducer = (state, event) => {
             state.roles[roleId].scope[SCOPE_MAP[scopeId]].push(locationId)
         }
 
-
         event.name = 'roles'
         event.value = state.roles;
     }
@@ -197,9 +196,7 @@ function generateProductUpdateBody(roles, assignableRoles = {}) {
             if (Object.keys(roles?.[roleId]?.scope || {}).length >= 1)
                 roleUpdates[roleId] = roles?.[roleId]?.scope
         }
-        if (Object.keys(roleUpdates).length >= 1) {
-            productUpdates.push({ productId, roleUpdates })
-        }
+        productUpdates.push({ productId, roleUpdates })
     }
     return productUpdates;
 }
@@ -234,7 +231,7 @@ export const AddEditUserModal = props => {
 
     const isSingleEdit = Object.values(userData?.viewState || {}).filter(t => !t).length == 1;
     const { errorState } = userData;
-    const isSubmitable = !Object.values(errorState || {}).some((d) => d) && errorState && (
+    const isSubmitable = !Object.values(errorState || {}).some((d) => d) && (
         userData?.['firstName'] && userData?.['lastName'] && userData?.['email'] && userData?.['title']
     );
 
@@ -273,13 +270,22 @@ export const AddEditUserModal = props => {
         };
 
         if (id) {
+            console.log('before', userTable[id]);
             console.log('updated', updatedUser);
-            userTable[id] = updatedUser;
+            modified[id] = updatedUser;
         } else {
             console.log('added', updatedUser);
             modified.push(updatedUser)
         }
         dispatch(setUsers(modified))
+    }
+
+    const handleRoleSubmit = async () => {
+        const { userId, roles } = userData;
+        handleChange('save-settings');
+        const productUpdates = generateProductUpdateBody(roles, assignableRoles);
+        const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
+        updateTable(userId);
     }
 
     const toggleModal = () => {
@@ -295,9 +301,9 @@ export const AddEditUserModal = props => {
             className={`add-edit-user ${!isAddUser && 'is-edit-user'} ${isSingleEdit && 'single-edit'} ${isUserAdded && 'user-added'}`}
         >
             <>
-                <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} updateTable={updateTable} />
-                <AdminPanelAccess {...userData} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} updateTable={updateTable} />
-                <PermissionSection {...userData} isSubmitable={isSubmitable} viewState={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} updateTable={updateTable} />
+                <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} />
+                <AdminPanelAccess {...userData} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleRoleSubmit} />
+                <PermissionSection {...userData} isSubmitable={isSubmitable} viewState={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleRoleSubmit} />
                 {isAddUser && (
                     <SaveAndCancel
                         className={"add-user-buttons"}
@@ -326,7 +332,7 @@ const SaveAndCancel = props => {
 }
 
 const PermissionSection = props => {
-    const { viewState, isSingleEdit, handleChange, isSubmitable } = props;
+    const { viewState, isSingleEdit, handleChange, isSubmitable, handleSubmit } = props;
     const isEdit = Object.values(viewState || {}).some((v) => !v) && Object.keys(viewState).length > 0;
     const assignableRoles = useSelector(selectAssignableRoles());
     return (
@@ -351,7 +357,7 @@ const PermissionSection = props => {
             {isSingleEdit && isEdit && (
                 <SaveAndCancel
                     className={"add-permissions-buttons"}
-                    handleSubmit={() => handleChange('save-settings')}
+                    handleSubmit={() => handleSubmit()}
                     disabled={!isSubmitable}
                     submitText={'Save'}
                     isLoading={false}
@@ -564,28 +570,16 @@ const ProductPermissions = props => {
 
 
 const AdminPanelAccess = props => {
-    const { handleChange, roles, isView, isSingleEdit, userId, updateTable } = props;
-    console.log(props);
-    const assignableRoles = useSelector(selectAssignableRoles())
-    
-    const assignableUMRoles = assignableRoles?.[UM_PRODUCT_ID]?.productRoles || {};
+    const { handleChange, roles, isView, isSingleEdit, handleSubmit } = props;
+    const assignableUMRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
     const { umRoles } = useSelector(makeSelectProductRoles());
     const { roleDisplay, roleId } = getSelectedRoles(roles, umRoles);
-    console.log('roleDisplay',roleDisplay, roleId, assignableUMRoles, roles)
     const locationLookups = useSelector(selectLocationLookups());
-    const userToken = useSelector(makeSelectToken());
     //User management has a default scope of Facility
     const [defaultFacility, other] = Object.entries(locationLookups).find(([lId, l]) => l?.scopeId == 2);
     let content = null;
-    const handleSubmit = async () => {
-        handleChange('save-settings');
-        const productUpdates = generateProductUpdateBody(roles, assignableRoles);
-        const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
-        updateTable(userId);
-
-    }
     const getLocationObject = (value) => {
-        const temp = {
+        return {
             current: roleId,
             value: {
                 scope: { f: [defaultFacility] }
@@ -593,9 +587,6 @@ const AdminPanelAccess = props => {
             id: value,
             productId: UM_PRODUCT_ID
         }
-        console.log('locObj', temp);
-        
-        return temp
     }
     if (isView) {
         content = (
