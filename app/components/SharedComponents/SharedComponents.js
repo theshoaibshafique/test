@@ -23,7 +23,7 @@ export const StyledTabs = withStyles({
     height: 5,
     '& > span': {
       width: '100%',
-      backgroundColor: '#028CC8',
+      backgroundColor: '#004f6e',
     },
   },
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
