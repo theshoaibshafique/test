@@ -82,6 +82,7 @@ export const DeleteUserModal = props => {
                         className={"delete-user-buttons"}
                         handleSubmit={() => fetchDelete()}
                         submitText={'Delete'}
+                        disabled={isLoading}
                         isLoading={isLoading}
                         cancelText={"Cancel"}
                         handleCancel={() => toggleModal(false)}
@@ -302,7 +303,8 @@ export const AddEditUserModal = props => {
             userId,
             firstName, lastName, title,
             displayRoles: getRoleMapping(roles, Object.values(productRoles)),
-            name: `${firstName} ${lastName}`
+            name: `${firstName} ${lastName}`,
+            roles
         };
 
         if (id) {
