@@ -1,16 +1,17 @@
 
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl, ListItemIcon, Checkbox, ListItemText } from '@material-ui/core';
+import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl, ListItemIcon, Checkbox, ListItemText, FormHelperText } from '@material-ui/core';
 import { mdiClose } from '@mdi/js';
 import Icon from '@mdi/react'
 import moment from 'moment/moment';
-import { useSelector } from 'react-redux';
-import { selectAssignableRoles, selectLocationLookups, selectLocations } from '../../App/store/UserManagement/um-selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
 import { getLocationDisplay, getRoleMapping, getSelectedRoles, isWithinScope, userHasLocation } from './helpers';
 import { makeSelectProductRoles, makeSelectToken } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
+import { setUsers } from '../../App/store/UserManagement/um-actions';
 /* 
     Generic Modal thats empty with an X in the corner
 */
@@ -88,14 +89,18 @@ const userReducer = (state, event) => {
         }
     }
     if (event.name == 'validate') {
-        const id = event.value;
+        const { id, value } = event.value;
         const errorState = state?.errorState || {};
         if (id == 'email') {
             errorState['email'] = globalFunctions.validEmail(state?.email) ? null : '​Please enter a valid email address';
         } else if (id == 'firstName') {
             errorState[id] = state?.firstName ? null : '​Please enter a first name';
         } else if (id == 'lastName') {
-            errorState[id] = state?.lastName ? null : '​Please enter a lastt name';
+            errorState[id] = state?.lastName ? null : '​Please enter a last name';
+        } else if (id == 'title') {
+            errorState[id] = state?.title ? null : '​Please enter a title';
+        } else if (defaultViewState?.hasOwnProperty(id)) {
+            errorState[id] = (value?.length > 0) ? null : 'Please select an access level';
         }
         event.name = 'errorState'
         event.value = errorState;
@@ -114,12 +119,17 @@ const userReducer = (state, event) => {
 
     if (event.name == 'roles') {
         const roles = state?.roles || {};
-        const { current, id, value } = event.value;
+        const { current, id, value, productId } = event.value;
         //Delete current role in lists - If we select viewer we want to remove Admin
         if (current) {
             delete roles[current]
         }
         roles[id] = value;
+        //Clear errors for Access Level
+        if (productId && state.errorState?.[productId]) {
+            state.errorState[productId] = null;
+        }
+        console.log(roles);
         event.name = 'roles';
         event.value = roles
     }
@@ -135,6 +145,7 @@ const userReducer = (state, event) => {
             state.roles[roleId].scope[SCOPE_MAP[scopeId]] = state.roles[roleId].scope[SCOPE_MAP[scopeId]] || [];
             state.roles[roleId].scope[SCOPE_MAP[scopeId]].push(locationId)
         }
+
 
         event.name = 'roles'
         event.value = state.roles;
@@ -162,7 +173,7 @@ const useStyles = makeStyles((theme) => ({
 const postProfile = async (body, userToken) => {
     return await globalFunctions.axiosFetch(process.env.USER_V2_API + 'profile', 'POST', userToken, body)
         .then(result => {
-            if (result != 'error') return result;
+            if (result != 'error') return result?.data;
         }).catch((error) => {
             console.log("oh no", error)
         });
@@ -177,8 +188,8 @@ const patchRoles = async (body, userToken) => {
 }
 async function createUser(userData, callback, userToken, assignableRoles = {}) {
     const { firstName, lastName, title, email } = userData;
-    // const userId = await postProfile({ firstName, lastName, title, email }, userToken)
-    const userId = "caa9f488-0279-4242-b096-556428c86371";
+    const userId = await postProfile({ firstName, lastName, title, email }, userToken)
+    // const userId = "caa9f488-0279-4242-b096-556428c86371";
     const { roles } = userData;
     const productUpdates = [];
     for (var [productId, product] of Object.entries(assignableRoles)) {
@@ -186,26 +197,29 @@ async function createUser(userData, callback, userToken, assignableRoles = {}) {
 
         const roleUpdates = {}
         for (var [roleId, role] of Object.entries(productRoles)) {
-            roleUpdates[roleId] = roles?.[roleId]?.scope || {}
+            if (Object.keys(roles?.[roleId]?.scope || {}).length >= 1)
+                roleUpdates[roleId] = roles?.[roleId]?.scope
         }
         if (Object.keys(roleUpdates).length >= 1) {
             productUpdates.push({ productId, roleUpdates })
         }
     }
     const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
-    debugger;
-    callback();
+    callback(userId);
 }
 
 export const AddEditUserModal = props => {
-    const { user, toggleModal } = props;
+    const dispatch = useDispatch();
+    const { user } = props;
     const isAddUser = !Boolean(user?.userId);
     //if we're adding a new user we edit all sections at once
     const viewObject = isAddUser ? null : defaultViewState;
 
     const [userData, setUserData] = useReducer(userReducer, { ...user, viewState: viewObject });
+
     const userToken = useSelector(makeSelectToken());
     const assignableRoles = useSelector(selectAssignableRoles());
+
     const { viewProfile, viewAdminAccess, ...viewPermissions } = userData?.viewState || {};
 
     const isView = Object.values(userData?.viewState || {}).every((v) => v) && userData?.viewState;
@@ -214,7 +228,10 @@ export const AddEditUserModal = props => {
     const [isUserAdded, setIsAdded] = useState(false);
 
     const isSingleEdit = Object.values(userData?.viewState || {}).filter(t => !t).length == 1;
-    const isSubmitable = !Object.values(userData?.errorState || {}).some((d) => d) && userData?.errorState;
+    const { errorState } = userData;
+    const isSubmitable = !Object.values(errorState || {}).some((d) => d) && errorState && (
+        userData?.['firstName'] && userData?.['lastName'] && userData?.['email'] && userData?.['title']
+    );
 
     //Reload the state every time user changes
     useEffect(() => {
@@ -233,19 +250,48 @@ export const AddEditUserModal = props => {
         } else if (event == 'add-user') {
             //Post call to add user
             setIsLoading(true);
-            createUser(userData, () => { setIsLoading(false); setIsAdded(true) }, userToken, assignableRoles);
+            createUser(userData, (userId) => { setIsLoading(false); setIsAdded(true); updateTable(userData, userId); }, userToken, assignableRoles);
         }
     }
+
+    const userTable = useSelector(selectUsers());
+    const productRoles = useSelector(makeSelectProductRoles());
+    const updateTable = (userData, userId) => {
+        const { tableData, firstName, lastName, title, roles } = userData || {};
+        const { id } = tableData || {};
+        const modified = [...userTable];
+        const updatedUser = {
+            userId,
+            firstName, lastName, title,
+            displayRoles: getRoleMapping(roles, Object.values(productRoles)),
+            name: `${firstName} ${lastName}`
+        };
+
+        if (id) {
+            userTable[id] = updatedUser;
+        } else {
+            modified.push(updatedUser)
+        }
+        dispatch(setUsers(modified))
+    }
+
+    const toggleModal = () => {
+        props?.toggleModal?.();
+        setIsAdded(false);
+        setIsLoading(false);
+    }
+    console.log(props);
 
     return (
         <GenericModal
             {...props}
+            toggleModal={toggleModal}
             className={`add-edit-user ${!isAddUser && 'is-edit-user'} ${isSingleEdit && 'single-edit'} ${isUserAdded && 'user-added'}`}
         >
             <>
-                <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} />
-                <AdminPanelAccess {...userData} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} />
-                <PermissionSection {...userData} viewState={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} />
+                <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} updateTable={updateTable} />
+                <AdminPanelAccess {...userData} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} updateTable={updateTable} />
+                <PermissionSection {...userData} isSubmitable={isSubmitable} viewState={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} updateTable={updateTable} />
                 {isAddUser && (
                     <SaveAndCancel
                         className={"add-user-buttons"}
@@ -274,7 +320,7 @@ const SaveAndCancel = props => {
 }
 
 const PermissionSection = props => {
-    const { viewState, isSingleEdit, handleChange } = props;
+    const { viewState, isSingleEdit, handleChange, isSubmitable } = props;
     const isEdit = Object.values(viewState || {}).some((v) => !v) && Object.keys(viewState).length > 0;
     const assignableRoles = useSelector(selectAssignableRoles());
     return (
@@ -300,6 +346,7 @@ const PermissionSection = props => {
                 <SaveAndCancel
                     className={"add-permissions-buttons"}
                     handleSubmit={() => handleChange('save-settings')}
+                    disabled={!isSubmitable}
                     submitText={'Save'}
                     isLoading={false}
                     cancelText={"Cancel"}
@@ -328,7 +375,7 @@ const MenuProps = {
     variant: "menu"
 };
 const ProductPermissions = props => {
-    const { productName, productId, roles, isSubscribed, isSingleEdit } = props;
+    const { productName, productId, roles, isSubscribed, errorState } = props;
     const { isView, handleChange } = props;
     const assignableProductRoles = props.productRoles || {};
     const productRoles = useSelector(makeSelectProductRoles(true));
@@ -341,7 +388,16 @@ const ProductPermissions = props => {
     const userScope = roles?.[roleId]?.scope ?? {};
     //get a flat list of all locations
     const userLocations = Object.entries(userScope).map(([k, loc]) => loc).flat();
+    //We auto focus Access level when a role is selected
+    const [open, setOpen] = React.useState(false);
+    const handleClose = () => {
+        setOpen(false);
+        handleChange('validate', { id: productId, value: selectedLocations });
+    };
 
+    const handleOpen = () => {
+        setOpen(true);
+    };
     const [selectedLocations, setLocations] = useState(userLocations);
     const getAccessLevelOptions = (minScope, maxScope, currentLocations) => {
         const currLoc = currentLocations || selectedLocations;
@@ -380,14 +436,17 @@ const ProductPermissions = props => {
         const { minScope, maxScope } = props?.productRoles?.[value] || {};
         const accessOptions = getAccessLevelOptions(minScope, maxScope, []);
         setAccessLevelOptions(accessOptions);
-        setLocations(accessOptions?.length == 1 ? accessOptions : []);
+        const onlyOneOption = accessOptions?.length == 1
+        setLocations(onlyOneOption ? accessOptions : []);
+        value && !onlyOneOption && handleOpen();
         return {
             current: roleId,
             id: value,
+            productId,
             //Default to 1 facility if only 1 option
             value: {
                 name: assignableProductRoles?.[value]?.displayName,
-                scope: accessOptions?.length == 1 ?
+                scope: onlyOneOption ?
                     { f: accessOptions } :
                     {}
             }
@@ -452,13 +511,17 @@ const ProductPermissions = props => {
                     <Select
                         MenuProps={MenuProps}
                         displayEmpty
-                        id="access-level-select"
+                        id={productId}
                         value={selectedLocations}
-                        disabled={!accessLevelOptions?.length || (accessLevelOptions?.length == 1 && roleDisplay == 'Full Access')}
+                        disabled={!accessLevelOptions?.length || (roleDisplay == 'Full Access' && productId != EMM_PRODUCT_ID)}
                         multiple
                         displayEmpty
+                        open={open}
+                        onClose={handleClose}
+                        onOpen={handleOpen}
                         renderValue={(userLocations) => userLocations?.map(l => locationLookups?.[l]?.name).join(", ") || 'None'}
                         onChange={handleLocationChange}
+                        error={Boolean(errorState?.[productId])}
                     >
                         {accessLevelOptions.map((locationId) => {
                             const location = locationLookups?.[locationId] || {};
@@ -481,9 +544,14 @@ const ProductPermissions = props => {
                             )
                         })}
                     </Select>
+                    {errorState?.[productId] && <FormHelperText style={{
+                        position: 'absolute',
+                        bottom: -22,
+                        color: '#f44336',
+                        marginLeft: 0
+                    }}>{errorState?.[productId]}</FormHelperText>}
                 </FormControl>
             </span>
-            {/* <span></span> */}
         </div>
     )
 }
@@ -494,6 +562,9 @@ const AdminPanelAccess = props => {
     const assignableUMRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
     const { umRoles } = useSelector(makeSelectProductRoles());
     const { roleDisplay, roleId } = getSelectedRoles(roles, umRoles);
+    const locationLookups = useSelector(selectLocationLookups());
+    //User management has a default scope of Facility
+    const [defaultFacility, other] = Object.entries(locationLookups).find(([lId, l]) => l?.scopeId == 2);
     let content = null;
     if (isView) {
         content = (
@@ -515,7 +586,11 @@ const AdminPanelAccess = props => {
                         id="admin-setting"
                         value={roleId}
                         style={{ width: 200 }}
-                        onChange={(e, v) => handleChange('roles', { current: roleId, id: e.target.value, value: assignableUMRoles[e.target.value] })}
+                        onChange={(e, v) => handleChange('roles', {
+                            current: roleId, value: {
+                                scope: { f: [defaultFacility] }
+                            }, id: e.target.value, productId: UM_PRODUCT_ID
+                        })}
                     >
                         {Object.entries(assignableUMRoles).map(([roleId, role]) => (
                             role.displayName && <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
@@ -524,7 +599,6 @@ const AdminPanelAccess = props => {
                     </Select>
                     {isSingleEdit && <SaveAndCancel
                         className={"save-admin-panel-access"}
-                        // disabled={errorState?.['firstName'] || errorState?.['lastName'] || errorState?.['email']}
                         handleSubmit={() => handleChange('save-settings')}
                         submitText={'Save'}
                         isLoading={false}
@@ -577,7 +651,7 @@ const ProfileSection = props => {
                 id={`edit-${id}`}
                 value={props?.[id]}
                 onChange={(e, v) => handleChange(id, e.target.value)}
-                onBlur={(e) => handleChange('validate', id)}
+                onBlur={(e) => handleChange('validate', { id })}
                 variant="outlined"
                 error={Boolean(errorState?.[id])}
                 helperText={<span style={{ marginLeft: -14 }}>{errorState?.[id]}</span>}
@@ -596,7 +670,7 @@ const ProfileSection = props => {
             </div>
             {isSingleEdit && <SaveAndCancel
                 className={"save-profile"}
-                disabled={errorState?.['firstName'] || errorState?.['lastName'] || errorState?.['email']}
+                disabled={errorState?.['firstName'] || errorState?.['lastName'] || errorState?.['email'] || errorState?.['title']}
                 handleSubmit={() => handleChange('save-settings')}
                 submitText={'Save'}
                 isLoading={false}
