@@ -110,6 +110,7 @@
 .Modal.generic-modal {
     padding: 32px;
     min-width: unset;
+    border-radius: 8px;
     .close-button {
         cursor: pointer;
         position: absolute;
@@ -123,7 +124,7 @@
     }
 }
 
-.user-added-modal {
+.user-delete {
     width: 620px;
     height: 360px;
 
@@ -218,6 +219,7 @@
     }
     &.user-added,
     &.single-edit {
+        .action-icon,
         .edit,
         .add-user-buttons {
             display: none;
@@ -230,7 +232,6 @@
             display: flex;
             > span {
                 width: 30%;
-                padding: 8px 0;
                 align-self: center;
                 &:not(:first-child) {
                     padding: 0 16px;

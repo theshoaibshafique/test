@@ -18,7 +18,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
-import { AddEditUserModal } from './Modals';
+import { AddEditUserModal, DeleteUserModal } from './Modals';
 
 
 const tableIcons = {
@@ -43,6 +43,7 @@ export const UserManagement = props => {
     }, [users])
 
     const [selectedUser, setSelectedUser] = useState(false);
+    const [deleteUser, setDeleteUser] = useState(false);
     if (!USERS) {
         return <LoadingIndicator />
     }
@@ -72,7 +73,7 @@ export const UserManagement = props => {
                     {
                         icon: 'delete',
                         tooltip: 'Delete User',
-                        onClick: (user) => alert('delete')
+                        onClick: (user) => setDeleteUser(user)
                     },
                     {
                         icon: 'add',
@@ -112,6 +113,11 @@ export const UserManagement = props => {
                 open={Boolean(selectedUser)}
                 user={selectedUser}
                 toggleModal={setSelectedUser} />
+            <DeleteUserModal
+                open={Boolean(deleteUser)}
+                user={deleteUser}
+                toggleModal={setDeleteUser}
+            />
         </div>
     )
 }

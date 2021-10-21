@@ -34,29 +34,58 @@ const GenericModal = props => {
     )
 }
 
-export const UserAddedModal = props => {
-    const { firstName, lastName, email } = props;
+const deleteUser = async (body, userToken) => {
+    return await globalFunctions.axiosFetch(process.env.USER_V2_API + 'profile', 'DELETE', userToken, body)
+        .then(result => {
+            if (result != 'error') return result?.data;
+        }).catch((error) => {
+            console.log("oh no", error)
+        });
+}
+export const DeleteUserModal = props => {
+    const { firstName, lastName, userId, tableData } = props?.user || {};
+    const userTable = useSelector(selectUsers());
+    const userToken = useSelector(makeSelectToken());
+    const dispatch = useDispatch();
     const { toggleModal } = props;
+    const [isLoading, setIsLoading] = useState(false);
+
+    const fetchDelete = async () => {
+        setIsLoading(true)
+        // const response = await deleteUser({ userId,minAssignableScope:2 }, userToken);
+        
+        const { id } = tableData || {};
+        const modified = [...userTable];
+        if (id) {
+            modified.splice(id, 1);
+        }
+        dispatch(setUsers(modified))
+        toggleModal(false);
+        // setIsLoading(false);
+    }
     return (
         <GenericModal
             {...props}
-            className="user-added"
+            className="user-delete"
         >
             <>
                 <div className="header header-2">
-                    User Added
+                    Delete User
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
-                    <p>{firstName} {lastName} has been successfully added</p>
-                    <p>A confirmation email link has been sent to {email}</p>
+                    <p>Are you sure you want to delete {firstName} {lastName}</p>
+                    <p>Deleted user will not have any access to Insights</p>
                 </div>
                 <div className="close">
-                    <Button disableElevation disableRipple
-                        variant="contained" className="primary"
-                        onClick={() => toggleModal(false)}>
-                        Close
-                    </Button>
+                    <SaveAndCancel
+                        className={"delete-user-buttons"}
+                        handleSubmit={() => fetchDelete()}
+                        submitText={'Delete'}
+                        isLoading={isLoading}
+                        cancelText={"Cancel"}
+                        handleCancel={() => toggleModal(false)}
+                    />
                 </div>
 
             </>
@@ -129,7 +158,6 @@ const userReducer = (state, event) => {
         if (productId && state.errorState?.[productId]) {
             state.errorState[productId] = null;
         }
-        console.log('roles', roles);
         event.name = 'roles';
         event.value = roles
     }
@@ -270,11 +298,8 @@ export const AddEditUserModal = props => {
         };
 
         if (id) {
-            console.log('before', userTable[id]);
-            console.log('updated', updatedUser);
             modified[id] = updatedUser;
         } else {
-            console.log('added', updatedUser);
             modified.push(updatedUser)
         }
         dispatch(setUsers(modified))
