@@ -76,25 +76,28 @@ export default class EMMPublish extends React.PureComponent {
             "c9f753a0-46fd-472d-b96b-f3c839029697": "The Mount Sinai Hospital",
             "e47585ea-a19f-4800-ac53-90f1777a7c96": "Mayo Clinic Rochester",
           }
-
+          const emmCases = result?.map((emmCase) => {
+            let room = this.props.operatingRooms.find(room => room.id.toUpperCase() == emmCase.roomName) || { 'display': emmCase.roomName };
+            let surgeryList = this.state.specialties?.map((specialty) => specialty.procedures).flatten() || [];
+            const facilityName = facilityMap[emmCase.facilityName.toLowerCase()];
+            const procedures = emmCase.procedure?.map((procedure) => { return globalFuncs.getName(surgeryList, procedure) }).join(', ');
+            const complications = emmCase.complications?.map((complication) => { return globalFuncs.getName(this.props.complications || [], complication) }).join(', ')
+            return {
+              requestID: emmCase.name,
+              facilityName: facilityName,
+              roomName: room.display,
+              procedures: procedures,
+              complications: complications,
+              enhancedMMPublished: emmCase.enhancedMMPublished,
+              enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
+              report: !emmCase.enhancedMMReferenceName
+                ? 'Report not available'
+                : <Button disableElevation variant="contained" className="secondary" onClick={() => this.props.showEMMReport(emmCase.enhancedMMReferenceName)} >Open Report</Button>
+            }
+          })
           this.setState({
-            emmCases: result?.map((emmCase) => {
-              let room = this.props.operatingRooms.find(room => room.id.toUpperCase() == emmCase.roomName) || { 'display': emmCase.roomName };
-              let surgeryList = this.state.specialties?.map((specialty) => specialty.procedures).flatten() || [];
-              return {
-                requestID: emmCase.name,
-                facilityName: facilityMap[emmCase.facilityName.toLowerCase()],
-                roomName: room.display,
-                procedures: emmCase.procedure?.map((procedure) => { return globalFuncs.getName(surgeryList, procedure) }).join(', '),
-                complications: emmCase.complications?.map((complication) => { return globalFuncs.getName(this.props.complications || [], complication) }).join(', '),
-                enhancedMMPublished: emmCase.enhancedMMPublished,
-                enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
-                report: !emmCase.enhancedMMReferenceName
-                  ? 'Report not available'
-                  : <Button disableElevation variant="contained" className="secondary" onClick={() => this.props.showEMMReport(emmCase.enhancedMMReferenceName)} >Open Report</Button>
-              }
-            }),
-          }, this.notLoading())
+            emmCases: emmCases,
+          }, () => this.notLoading())
         }
       });
   }
