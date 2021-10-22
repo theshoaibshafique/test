@@ -348,6 +348,8 @@ const PermissionSection = props => {
     const { viewState, isSingleEdit, handleChange, isSubmitable, handleSubmit } = props;
     const isEdit = Object.values(viewState || {}).some((v) => !v) && Object.keys(viewState).length > 0;
     const assignableRoles = useSelector(selectAssignableRoles());
+    const orderBy = { [EFF_PRODUCT_ID]: 1, [SSC_PRODUCT_ID]: 2, [CD_PRODUCT_ID]: 3, [EMM_PRODUCT_ID]: 4 };
+    const orderedMap = Object.entries(assignableRoles).sort((a, b) => orderBy[a[0]] - orderBy[b[0]]);
     return (
         <div className={`permissions-section `}>
             <div className="subtle-subtext title">Permissions</div>
@@ -359,7 +361,7 @@ const PermissionSection = props => {
                 {/* {(isViewAll) && <span></span>} */}
             </div>
             <Divider className="divider" />
-            {Object.entries(assignableRoles).map(([productId, product]) => (
+            {orderedMap.map(([productId, product]) => (
                 <ProductPermissions
                     {...product}
                     productId={productId}
@@ -565,8 +567,8 @@ const ProductPermissions = props => {
                                             checked={selectedLocations.includes(locationId)}
                                         />
                                     </ListItemIcon>
-                                    <ListItemText disableTypography title={name} primary={name} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}/>
-                                    
+                                    <ListItemText disableTypography title={name} primary={name} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} />
+
                                 </MenuItem>
                             )
                         })}
