@@ -9,16 +9,16 @@
         td {
             padding: 8px 16px;
         }
-        
+
         .MuiToolbar-root {
             min-height: unset;
             margin-bottom: 25px;
             //Hide the spacer between search bar
-            > div:nth-child(2){
+            > div:nth-child(2) {
                 display: none;
             }
         }
-        
+
         .add-user-button {
             margin: 0 86px;
         }
@@ -36,7 +36,20 @@
         }
         font-style: italic;
     }
-
+    .dot {
+        height: 6px;
+        width: 6px;
+        background-color: unset;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+        &.Full {
+            background-color: #004F6E;
+        }
+        &.View {
+            background-color: #FFB71B;
+        }
+    }
     ::-webkit-scrollbar {
         width: 8px;
         border-radius: 6px;
@@ -90,8 +103,8 @@
         align-self: center;
         margin-left: auto;
     }
-    &.edit-permissions-icon{
-        svg{
+    &.edit-permissions-icon {
+        svg {
             float: right;
         }
     }
@@ -242,11 +255,11 @@
                 &:not(:first-child) {
                     padding: 0 16px;
                 }
-                &:last-child{
+                &:last-child {
                     width: 40%;
                     padding-right: 0;
                 }
-                
+
                 .access-level {
                     overflow: hidden;
                     text-overflow: ellipsis;

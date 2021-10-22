@@ -62,7 +62,7 @@ export const UserManagement = props => {
                     { title: "Facility ID", field: 'facilityId', hidden: true },
                     { title: "User ID", field: 'userId', hidden: true },
                     { title: "Email", field: 'email', hidden: true },
-                    { title: "Name", field: 'name', defaultSort: 'asc' },
+                    { title: "Name", field: 'name', defaultSort: 'asc', render: RenderName },
                     { title: "Title", field: 'title' },
                     generateRoleColumn("Efficiency"),
                     generateRoleColumn("eM&M"),
@@ -124,6 +124,15 @@ export const UserManagement = props => {
                 toggleModal={setDeleteUser}
             />
         </div>
+    )
+}
+function RenderName(rowData) {
+    const { name, displayRoles } = rowData
+    return (
+        <span style={{marginLeft:-6}}>
+            <span className={`${displayRoles?.["User Management"]} dot`}></span>
+            <span>{name}</span>
+        </span>
     )
 }
 
