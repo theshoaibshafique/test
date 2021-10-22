@@ -7,7 +7,7 @@ import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
-import { createProfile, deleteUser, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles } from './helpers';
+import { createProfile, createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles, rolesOrderBy } from './helpers';
 import { makeSelectProductRoles, makeSelectToken } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
@@ -195,35 +195,13 @@ const useStyles = makeStyles((theme) => ({
         lineHeight: '19px',
         marginBottom: 4,
         color: '#323232',
-        opacity: .8
+        opacity: .8,
     }
 }));
 
 
-function generateProductUpdateBody(roles, assignableRoles = {}) {
-    const productUpdates = [];
 
-    for (var [productId, product] of Object.entries(assignableRoles)) {
-        const { productRoles } = product;
 
-        const roleUpdates = {}
-        for (var [roleId, role] of Object.entries(productRoles)) {
-            if (Object.keys(roles?.[roleId]?.scope || {}).length >= 1)
-                roleUpdates[roleId] = roles?.[roleId]?.scope
-        }
-        productUpdates.push({ productId, roleUpdates })
-    }
-    return productUpdates;
-}
-async function createUser(userData, callback, userToken, assignableRoles = {}) {
-    const { firstName, lastName, title, email } = userData;
-    const userId = await createProfile({ firstName, lastName, title, email }, userToken)
-    // const userId = "caa9f488-0279-4242-b096-556428c86371";
-    const { roles } = userData;
-    const productUpdates = generateProductUpdateBody(roles, assignableRoles);
-    const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
-    callback(userId);
-}
 
 export const AddEditUserModal = props => {
     const dispatch = useDispatch();
@@ -315,8 +293,8 @@ export const AddEditUserModal = props => {
         >
             <>
                 <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} />
-                <AdminPanelAccess {...userData} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleRoleSubmit} />
-                <PermissionSection {...userData} isSubmitable={isSubmitable} viewState={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleRoleSubmit} />
+                <AdminPanelAccess {...userData} isAddUser={isAddUser} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleRoleSubmit} />
+                <PermissionSection {...userData} isAddUser={isAddUser} isSubmitable={isSubmitable} viewState={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleRoleSubmit} />
                 {isAddUser && (
                     <SaveAndCancel
                         className={"add-user-buttons"}
@@ -345,11 +323,11 @@ const SaveAndCancel = props => {
 }
 
 const PermissionSection = props => {
-    const { viewState, isSingleEdit, handleChange, isSubmitable, handleSubmit } = props;
+    const { viewState, isSingleEdit, handleChange, isSubmitable, handleSubmit, isAddUser } = props;
     const isEdit = Object.values(viewState || {}).some((v) => !v) && Object.keys(viewState).length > 0;
     const assignableRoles = useSelector(selectAssignableRoles());
-    const orderBy = { [EFF_PRODUCT_ID]: 1, [SSC_PRODUCT_ID]: 2, [CD_PRODUCT_ID]: 3, [EMM_PRODUCT_ID]: 4 };
-    const orderedMap = Object.entries(assignableRoles).sort((a, b) => orderBy[a[0]] - orderBy[b[0]]);
+    //Order by preset ordering
+    const orderedMap = Object.entries(assignableRoles).sort((a, b) => rolesOrderBy[a[0]] - rolesOrderBy[b[0]]);
     return (
         <div className={`permissions-section `}>
             <div className="subtle-subtext title">Permissions</div>
@@ -358,7 +336,6 @@ const PermissionSection = props => {
                 <span>Products</span>
                 <span>Role</span>
                 <span>Access Level</span>
-                {/* {(isViewAll) && <span></span>} */}
             </div>
             <Divider className="divider" />
             {orderedMap.map(([productId, product]) => (
@@ -372,7 +349,7 @@ const PermissionSection = props => {
             {isSingleEdit && isEdit && (
                 <SaveAndCancel
                     className={"add-permissions-buttons"}
-                    handleSubmit={() => handleSubmit()}
+                    handleSubmit={() => isAddUser ? handleChange('save-settings') :  handleSubmit()}
                     disabled={!isSubmitable}
                     submitText={'Save'}
                     isLoading={false}
@@ -587,7 +564,7 @@ const ProductPermissions = props => {
 
 
 const AdminPanelAccess = props => {
-    const { handleChange, roles, isView, isSingleEdit, handleSubmit } = props;
+    const { handleChange, roles, isView, isSingleEdit, handleSubmit, isAddUser } = props;
     const assignableUMRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
     const { umRoles } = useSelector(makeSelectProductRoles());
     const { roleDisplay, roleId } = getSelectedRoles(roles, umRoles);
@@ -634,7 +611,7 @@ const AdminPanelAccess = props => {
                     </Select>
                     {isSingleEdit && <SaveAndCancel
                         className={"save-admin-panel-access"}
-                        handleSubmit={() => handleSubmit()}
+                        handleSubmit={() => isAddUser ? handleChange('save-settings') : handleSubmit()}
                         submitText={'Save'}
                         isLoading={false}
                         cancelText={"Cancel"}

@@ -1,8 +1,9 @@
+import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID } from "../../../constants";
 import globalFunctions from "../../../utils/global-functions";
 
 const roleHeirarchy = ['admin', 'reader'];
 const roleNameMap = { admin: 'Full Access', reader: 'View Only' };
-
+export const rolesOrderBy = { [EFF_PRODUCT_ID]: 1, [SSC_PRODUCT_ID]: 2, [CD_PRODUCT_ID]: 3, [EMM_PRODUCT_ID]: 4 };
 //Given a users Roles and a list of all products 
 // - create a mapping of their highest role per product
 //EX. {'Case Discovery': 'Full Access', 'Efficiency': 'No Access', ...}
@@ -32,9 +33,6 @@ export function getSelectedRoles(userRoles, product) {
 export function isWithinScope(currentScope, minScope, maxScope) {
     return currentScope >= minScope && currentScope <= maxScope;
 }
-export function userHasLocation(userLocations, locationId) {
-    return userLocations?.includes(locationId);
-}
 
 const helperFetch = async (url, fetchMethod, userToken, body, errorCallback) => {
     return await globalFunctions.axiosFetch(url, fetchMethod, userToken, body)
@@ -54,4 +52,31 @@ export const createProfile = async (body, userToken) => {
 }
 export const patchRoles = async (body, userToken) => {
     return await helperFetch(process.env.USER_V2_API + 'roles', 'patch', userToken, body);
+}
+
+//Updating roles expects a certain structure - convert the /profiles obj to 
+//the expected /roles object
+export function generateProductUpdateBody(roles, assignableRoles = {}) {
+    const productUpdates = [];
+
+    for (var [productId, product] of Object.entries(assignableRoles)) {
+        const { productRoles } = product;
+
+        const roleUpdates = {}
+        for (var [roleId, role] of Object.entries(productRoles)) {
+            if (Object.keys(roles?.[roleId]?.scope || {}).length >= 1)
+                roleUpdates[roleId] = roles?.[roleId]?.scope
+        }
+        productUpdates.push({ productId, roleUpdates })
+    }
+    return productUpdates;
+}
+
+export const createUser =  async (userData, callback, userToken, assignableRoles = {}) => {
+    const { firstName, lastName, title, email } = userData;
+    const userId = await createProfile({ firstName, lastName, title, email }, userToken)
+    const { roles } = userData;
+    const productUpdates = generateProductUpdateBody(roles, assignableRoles);
+    const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
+    callback(userId);
 }
