@@ -29,9 +29,9 @@ module.exports = require('./webpack.base.babel')({
         removeEmptyAttributes: true,
         removeStyleLinkTypeAttributes: true,
         keepClosingSlash: true,
-        // minifyJS: true,
-        // minifyCSS: true,
-        // minifyURLs: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
       },
       inject: true
     }),
