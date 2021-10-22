@@ -78,15 +78,15 @@ export default class EMMPublish extends React.PureComponent {
           }
 
           this.setState({
-            emmCases: result.map((emmCase) => {
+            emmCases: result?.map((emmCase) => {
               let room = this.props.operatingRooms.find(room => room.id.toUpperCase() == emmCase.roomName) || { 'display': emmCase.roomName };
-              let surgeryList = this.state.specialties.map((specialty) => specialty.procedures).flatten() || [];
+              let surgeryList = this.state.specialties?.map((specialty) => specialty.procedures).flatten() || [];
               return {
                 requestID: emmCase.name,
                 facilityName: facilityMap[emmCase.facilityName.toLowerCase()],
                 roomName: room.display,
-                procedures: emmCase.procedure.map((procedure) => { return globalFuncs.getName(surgeryList, procedure) }).join(', '),
-                complications: emmCase.complications.map((complication) => { return globalFuncs.getName(this.props.complications || [], complication) }).join(', '),
+                procedures: emmCase.procedure?.map((procedure) => { return globalFuncs.getName(surgeryList, procedure) }).join(', '),
+                complications: emmCase.complications?.map((complication) => { return globalFuncs.getName(this.props.complications || [], complication) }).join(', '),
                 enhancedMMPublished: emmCase.enhancedMMPublished,
                 enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
                 report: !emmCase.enhancedMMReferenceName
