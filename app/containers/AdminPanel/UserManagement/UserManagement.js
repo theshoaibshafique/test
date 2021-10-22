@@ -42,23 +42,16 @@ const MemoTable = React.memo(props => {
             setUsers(users);
         }
     }, [users])
+    if (!USERS) {
+        return <LoadingIndicator />
+    }
     return <MaterialTable {...props} data={USERS} />
 }, areEqual)
 
 export const UserManagement = props => {
-    const users = useSelector(selectUsers());
-    const [USERS, setUsers] = useState(users);
-    useEffect(() => {
-        if (users) {
-            setUsers(users);
-        }
-    }, [users])
 
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
-    if (!USERS) {
-        return <LoadingIndicator />
-    }
 
     return (
         <div className="user-management">
@@ -106,10 +99,10 @@ export const UserManagement = props => {
                         fontFamily: "Noto Sans",
                         fontSize: 14
                     },
-                    maxBodyHeight: "calc(100vh - 300px)",
+                    maxBodyHeight: "calc(100vh - 310px)",
                     actionsColumnIndex: -1
                 }}
-                data={USERS}
+                // data={USERS}
                 icons={tableIcons}
                 //   onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
                 components={{

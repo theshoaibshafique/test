@@ -28,7 +28,7 @@ import {
   CD_EXIT,
   CD_FLAG_REPORT,
   CD_CLIP_NOTIFICATION_STATUS
-} from './constants';
+} from '../../constants';
 
 export function exitCaseDiscovery() {
   return {
