@@ -6,7 +6,7 @@ import { fromJS } from 'immutable';
 import { combineReducers } from 'redux-immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import globalReducer from 'containers/App/reducer';
-import emmReducer from 'containers/App/emm-reducer';
+import emmReducer from 'containers/App/store/EMM/emm-reducer';
 import cdReducer from 'containers/App/store/CaseDiscovery/cd-reducer';
 import umReducer from './containers/App/store/UserManagement/um-reducer';
 
