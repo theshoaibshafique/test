@@ -183,7 +183,7 @@ export default class EMMPublish extends React.PureComponent {
                   { title: 'enhancedMMReferenceName', field: 'enhancedMMReferenceName', hidden: true },
                 ]}
                 options={{
-                  pageSize: (emmCases.length < 10) ? 10 : emmCases.length,
+                  pageSize: (emmCases.length < 10 ) ?  emmCases.length : 10,
                   pageSizeOptions: pageSizeOptions,
                   search: true,
                   paging: true,
