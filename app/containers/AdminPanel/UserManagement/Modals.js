@@ -152,7 +152,9 @@ const userReducer = (state, event) => {
         const { current, id, value, productId } = event.value;
         //Delete current role in lists - If we select viewer we want to remove Admin
         if (current) {
-            delete roles[current]
+            for (var r of current){
+                delete roles[r]
+            }
         }
         roles[id] = value;
         //Clear errors for Access Level
@@ -445,16 +447,19 @@ const ProductPermissions = props => {
         }
         return accessOptions
     };
+    
     const [accessLevelOptions, setAccessLevelOptions] = useState(getAccessLevelOptions(minScope, maxScope));
     const getRoleObject = (value) => {
+        
         const { minScope, maxScope } = props?.productRoles?.[value] || {};
         const accessOptions = getAccessLevelOptions(minScope, maxScope, []);
         setAccessLevelOptions(accessOptions);
         const onlyOneOption = accessOptions?.length == 1
         setLocations(onlyOneOption ? accessOptions : []);
         value && !onlyOneOption && handleOpen();
+        const isAdmin = productRoles?.[productId]?.admin == roleId;
         return {
-            current: roleId,
+            current: isAdmin ? productRoles?.[productId]?.all ?? [roleId] : [roleId],
             id: value,
             productId,
             //Default to 1 facility if only 1 option
@@ -592,7 +597,7 @@ const AdminPanelAccess = props => {
     let content = null;
     const getLocationObject = (value) => {
         return {
-            current: roleId,
+            current: [roleId],
             value: {
                 scope: { f: [defaultFacility] }
             },
