@@ -116,7 +116,6 @@ const userReducer = (state, event) => {
         const errorState = state?.errorState || {};
         const { id, value } = event.value;
         const isValidateAll = id == 'all';
-        console.log(isValidateAll);
         if (id == 'email' || isValidateAll) {
             errorState['email'] = globalFunctions.validEmail(state?.email) ? null : '​Please enter a valid email address';
         }
@@ -245,7 +244,17 @@ export const AddEditUserModal = props => {
         } else if (event == 'add-user') {
             //Post call to add user
             setIsLoading(true);
-            createUser(userData, (userId) => { setIsLoading(false); setIsAdded(true); updateTable(userId); }, userToken, assignableRoles);
+            const createUserSuccess = (userId) => {
+                setIsLoading(false); setIsAdded(true); updateTable(userId);
+            }
+            const createUserError = (result) => {
+                setIsLoading(false);
+                handleChange('view', { id: 'viewProfile', value: false });
+                errorState['email'] = result?.detail
+                handleChange('errorState', errorState);
+                
+            }
+            createUser(userData, createUserSuccess, createUserError, userToken, assignableRoles);
         }
     }
 
@@ -349,7 +358,7 @@ const PermissionSection = props => {
             {isSingleEdit && isEdit && (
                 <SaveAndCancel
                     className={"add-permissions-buttons"}
-                    handleSubmit={() => isAddUser ? handleChange('save-settings') :  handleSubmit()}
+                    handleSubmit={() => isAddUser ? handleChange('save-settings') : handleSubmit()}
                     disabled={!isSubmitable}
                     submitText={'Save'}
                     isLoading={false}
@@ -402,6 +411,7 @@ const ProductPermissions = props => {
     const handleOpen = () => {
         setOpen(true);
     };
+    
     const [selectedLocations, setLocations] = useState(userLocations);
     const getAccessLevelOptions = (minScope, maxScope, currentLocations) => {
         const currLoc = currentLocations || selectedLocations;
@@ -470,7 +480,7 @@ const ProductPermissions = props => {
     if (!isSubscribed || productName == 'User Management') {
         return ''
     }
-    const accessLevelDisplay = selectedLocations.map(l => locationLookups?.[l]?.name).join(", ") || "None";
+    const accessLevelDisplay = userLocations.map(l => locationLookups?.[l]?.name).join(", ") || "None";
     if (isView) {
         return (
             <div className='product-permission subtext'>
@@ -479,7 +489,15 @@ const ProductPermissions = props => {
                 <span className="flex space-between" >
                     <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
                     <span className={`action-icon pointer edit-permissions-icon`} title={`Edit ${productName}`} >
-                        <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} onClick={() => handleChange('view', { id: productId, value: false })} />
+                        <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} 
+                        onClick={() => {
+                            handleChange('view', { id: productId, value: false });
+                            //When cancelling and re-editing we have to reset the location state to current user locations and options
+                            setLocations(userLocations);
+                            const accessLevelOptions = getAccessLevelOptions(minScope, maxScope, userLocations)
+                            setAccessLevelOptions(accessLevelOptions)
+                        }} 
+                        />
                     </span>
                 </span>
 
@@ -636,7 +654,7 @@ const AdminPanelAccess = props => {
 
 const ProfileSection = props => {
     const { handleChange, isView, errorState, isSingleEdit } = props;
-    const { firstName, lastName, title, email, startDate } = props;
+    const { firstName, lastName, title, email, datetimeJoined } = props;
     const classes = useStyles();
     if (isView) {
         return (
@@ -646,7 +664,7 @@ const ProfileSection = props => {
                     <div className="normal-text">{firstName} {lastName}</div>
                     <div className="subtle-subtext">{title}</div>
                     <div className="subtle-subtext">{email}</div>
-                    <div className="subtle-text">{moment(startDate).format('MMMM DD, YYYY')}</div>
+                    <div className="subtle-text">{moment(datetimeJoined).format('MMMM DD, YYYY')}</div>
                 </div>
                 <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
                     <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
