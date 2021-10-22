@@ -40,7 +40,8 @@ function genericFetch(api, fetchMethod, token, fetchBodyJSON) {
       mode: 'cors',
       headers: {
         'Authorization': 'Bearer ' + userToken,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-AUTH': roleToken
       },
       body: JSON.stringify(fetchBodyJSON)
     }).then(response => {

@@ -57,7 +57,7 @@ export const createProfile = async (body, userToken, errorCallback) => {
     return await helperFetch(process.env.USER_V2_API + 'profile', 'POST', userToken, body, errorCallback);
 }
 export const patchRoles = async (body, userToken) => {
-    return await helperFetch(process.env.USER_V2_API + 'roles', 'patch', userToken, body);
+    return await helperFetch(process.env.USER_V2_API + 'roles', 'PATCH', userToken, body);
 }
 
 //Updating roles expects a certain structure - convert the /profiles obj to 
@@ -81,6 +81,7 @@ export function generateProductUpdateBody(roles, assignableRoles = {}) {
 export const createUser = async (userData, callback, errorCallback, userToken, assignableRoles = {}) => {
     const { firstName, lastName, title, email } = userData;
     const userId = await createProfile({ firstName, lastName, title, email }, userToken, errorCallback)
+    
     if (!userId) {
         return userId;
     }
