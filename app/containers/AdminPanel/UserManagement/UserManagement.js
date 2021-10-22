@@ -129,7 +129,7 @@ export const UserManagement = props => {
 function RenderName(rowData) {
     const { name, displayRoles } = rowData
     return (
-        <span style={{marginLeft:-6}}>
+        <span style={{marginLeft:-8}}>
             <span className={`${displayRoles?.["User Management"]} dot`}></span>
             <span>{name}</span>
         </span>
