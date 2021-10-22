@@ -286,9 +286,9 @@ export const AddEditUserModal = props => {
         };
 
         if (id) {
-            modified[id] = {...modified[id],...updatedUser};
+            modified[id] = { ...modified[id], ...updatedUser };
         } else {
-            modified.push({...updatedUser, tableData:{id: modified.length}})
+            modified.push({ ...updatedUser, tableData: { id: modified.length } })
         }
         dispatch(setUsers(modified))
     }
@@ -321,7 +321,7 @@ export const AddEditUserModal = props => {
                     <SaveAndCancel
                         className={"add-user-buttons"}
                         disabled={isLoading}
-                        handleSubmit={() => !isSubmitable ? handleChange('validate', {id:'all'}) : handleSubmit(isView ? 'add-user' : 'save-settings')}
+                        handleSubmit={() => !isSubmitable ? handleChange('validate', { id: 'all' }) : handleSubmit(isView ? 'add-user' : 'save-settings')}
                         submitText={(isView ? 'Add User' : 'Save')}
                         isLoading={isLoading}
                         cancelText={"Cancel"}
@@ -553,7 +553,7 @@ const ProductPermissions = props => {
                             const location = locationLookups?.[locationId] || {};
                             const { name, scopeId } = location;
                             return (
-                                <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0", whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis' }}>
+                                <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0" }}>
                                     <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId - 1) * 12 }}>
                                         <Checkbox
                                             style={{ padding: 0 }}
@@ -565,7 +565,8 @@ const ProductPermissions = props => {
                                             checked={selectedLocations.includes(locationId)}
                                         />
                                     </ListItemIcon>
-                                    <ListItemText primary={name} />
+                                    <ListItemText disableTypography title={name} primary={name} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}/>
+                                    
                                 </MenuItem>
                             )
                         })}
