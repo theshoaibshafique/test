@@ -9,14 +9,14 @@
         td {
             padding: 8px 16px;
         }
-        //Hide the spacer between search bar
-        [class^="MTableToolbar-spacer"] {
-            display: none;
-        }
-
+        
         .MuiToolbar-root {
             min-height: unset;
             margin-bottom: 25px;
+            //Hide the spacer between search bar
+            > div:nth-child(2){
+                display: none;
+            }
         }
         
         .add-user-button {

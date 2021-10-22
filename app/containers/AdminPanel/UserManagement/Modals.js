@@ -7,7 +7,7 @@ import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
-import { getLocationDisplay, getRoleMapping, getSelectedRoles, isWithinScope, userHasLocation } from './helpers';
+import { createProfile, deleteUser, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles } from './helpers';
 import { makeSelectProductRoles, makeSelectToken } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
@@ -34,14 +34,7 @@ const GenericModal = props => {
     )
 }
 
-const deleteUser = async (body, userToken) => {
-    return await globalFunctions.axiosFetch(process.env.USER_V2_API + 'profile', 'DELETE', userToken, body)
-        .then(result => {
-            if (result != 'error') return result?.data;
-        }).catch((error) => {
-            console.log("oh no", error)
-        });
-}
+
 export const DeleteUserModal = props => {
     const { firstName, lastName, userId, tableData } = props?.user || {};
     const userTable = useSelector(selectUsers());
@@ -74,8 +67,8 @@ export const DeleteUserModal = props => {
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
-                    <p>Are you sure you want to delete {firstName} {lastName}</p>
-                    <p>Deleted user will not have any access to Insights</p>
+                    <p>Are you sure you want to delete {firstName} {lastName}?</p>
+                    <p>Deleted user will not have any access to Insights.</p>
                 </div>
                 <div className="close">
                     <SaveAndCancel
@@ -206,22 +199,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const createProfile = async (body, userToken) => {
-    return await globalFunctions.axiosFetch(process.env.USER_V2_API + 'profile', 'POST', userToken, body)
-        .then(result => {
-            if (result != 'error') return result?.data;
-        }).catch((error) => {
-            console.log("oh no", error)
-        });
-}
-const patchRoles = async (body, userToken) => {
-    return await globalFunctions.axiosFetch(process.env.USER_V2_API + 'roles', 'patch', userToken, body)
-        .then(result => {
-            if (result != 'error') return result;
-        }).catch((error) => {
-            console.log("oh no", error)
-        });
-}
+
 function generateProductUpdateBody(roles, assignableRoles = {}) {
     const productUpdates = [];
 
@@ -308,9 +286,9 @@ export const AddEditUserModal = props => {
         };
 
         if (id) {
-            modified[id] = updatedUser;
+            modified[id] = {...modified[id],...updatedUser};
         } else {
-            modified.push(updatedUser)
+            modified.push({...updatedUser, tableData:{id: modified.length}})
         }
         dispatch(setUsers(modified))
     }

@@ -1,3 +1,5 @@
+import globalFunctions from "../../../utils/global-functions";
+
 const roleHeirarchy = ['admin', 'reader'];
 const roleNameMap = { admin: 'Full Access', reader: 'View Only' };
 
@@ -7,9 +9,9 @@ const roleNameMap = { admin: 'Full Access', reader: 'View Only' };
 export function getRoleMapping(userRoles, productRolesList) {
     let result = {};
     for (var product of productRolesList) {
-        if (userRoles.hasOwnProperty(product.admin)) {
+        if (userRoles?.hasOwnProperty(product.admin)) {
             result[product.name] = `Full Access`;
-        } else if (userRoles.hasOwnProperty(product.reader)) {
+        } else if (userRoles?.hasOwnProperty(product.reader)) {
             result[product.name] = `View Only`;
         } else {
             result[product.name] = "No Access";
@@ -32,4 +34,24 @@ export function isWithinScope(currentScope, minScope, maxScope) {
 }
 export function userHasLocation(userLocations, locationId) {
     return userLocations?.includes(locationId);
+}
+
+const helperFetch = async (url, fetchMethod, userToken, body, errorCallback) => {
+    return await globalFunctions.axiosFetch(url, fetchMethod, userToken, body)
+        .then(result => {
+            if (result != 'error') return result?.data;
+        }).catch((error) => {
+            errorCallback?.(error);
+            console.log("oh no", error)
+        });
+}
+
+export const deleteUser = async (body, userToken) => {
+    return await helperFetch(process.env.USER_V2_API + 'profile', 'DELETE', userToken, body);
+}
+export const createProfile = async (body, userToken) => {
+    return await helperFetch(process.env.USER_V2_API + 'profile', 'POST', userToken, body);
+}
+export const patchRoles = async (body, userToken) => {
+    return await helperFetch(process.env.USER_V2_API + 'roles', 'patch', userToken, body);
 }

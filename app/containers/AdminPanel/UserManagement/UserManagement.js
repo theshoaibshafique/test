@@ -31,7 +31,19 @@ const tableIcons = {
     Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
     SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
 };
-
+const areEqual = (prevProps, nextProps) => {
+    return true
+};
+const MemoTable = React.memo(props => {
+    const users = useSelector(selectUsers());
+    const [USERS, setUsers] = useState(users);
+    useEffect(() => {
+        if (users) {
+            setUsers(users);
+        }
+    }, [users])
+    return <MaterialTable {...props} data={USERS} />
+}, areEqual)
 
 export const UserManagement = props => {
     const users = useSelector(selectUsers());
@@ -50,7 +62,7 @@ export const UserManagement = props => {
 
     return (
         <div className="user-management">
-            <MaterialTable
+            <MemoTable
                 title=""
                 columns={[
                     { title: "User Name", field: 'userName', hidden: true },
@@ -162,7 +174,6 @@ const TableBody = (props) => {
     const filters = useSelector(selectFilters());
     const { renderData } = props;
     const [USERS, setUsers] = useState(renderData);
-    
     useEffect(() => {
         if (filters || renderData) {
             setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles)?.every(([k, v]) => {
@@ -170,6 +181,7 @@ const TableBody = (props) => {
             })))
         }
     }, [renderData, filters])
+
     return (
         <>
             <MTableBody {...props} renderData={USERS} />
