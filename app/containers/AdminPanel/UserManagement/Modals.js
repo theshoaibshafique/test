@@ -517,7 +517,7 @@ const ProductPermissions = props => {
                     variant='outlined' size='small' fullWidth>
                     <Select
                         displayEmpty
-                        id="product-role-select"
+                        className={`${productName} ${productId}`}
                         value={roleId}
                         onChange={(e, v) => handleChange('roles', getRoleObject(e.target.value))}
                     >
@@ -537,6 +537,7 @@ const ProductPermissions = props => {
                         MenuProps={MenuProps}
                         displayEmpty
                         id={productId}
+                        className={`${productName} ${productId}`}
                         value={selectedLocations}
                         disabled={!accessLevelOptions?.length || (roleDisplay == 'Full Access' && productId != EMM_PRODUCT_ID)}
                         multiple
@@ -552,7 +553,7 @@ const ProductPermissions = props => {
                             const location = locationLookups?.[locationId] || {};
                             const { name, scopeId } = location;
                             return (
-                                <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0 " }}>
+                                <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0", whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis' }}>
                                     <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId - 1) * 12 }}>
                                         <Checkbox
                                             style={{ padding: 0 }}
