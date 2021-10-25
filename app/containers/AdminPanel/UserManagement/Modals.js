@@ -708,20 +708,60 @@ const AdminPanelAccess = props => {
     )
 }
 
+const ConfirmReset = props => {
+    const { toggleModal, firstName, email, userId } = props;
+    const [isLoading, setIsLoading] = useState(false);
+    const userToken = useSelector(makeSelectToken());
+    const minAssignableScope = 2;
+    const handleReset = async () => {
+        setIsLoading(true);
+        await resetUser({ userId, minAssignableScope }, userToken)
+        setIsLoading(false);
+        toggleModal(false);
+    }
+    return (
+        <GenericModal
+            {...props}
+            className="user-delete">
+            <>
+                <div className="header header-2">
+                    Delete User
+                </div>
+                <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
+                <div className="contents subtext">
+                    <p>Are you sure you want to reset account access?</p>
+                    <p>Doing so will remove {firstName}'s access to Insights, and will send a email with an access reset link to {email}.</p>
+                </div>
+                <div className="close">
+                    <SaveAndCancel
+                        className={"delete-user-buttons"}
+                        handleSubmit={() => handleReset()}
+                        submitText={'Confirm'}
+                        disabled={isLoading}
+                        isLoading={isLoading}
+                        cancelText={"Cancel"}
+                        handleCancel={() => toggleModal(false)}
+                    />
+                </div>
+
+            </>
+        </GenericModal>
+    )
+}
 
 const ProfileSection = props => {
     const { handleChange, isView, errorState, isSingleEdit } = props;
     const { firstName, lastName, title, email, datetimeJoined, userId } = props;
-    const userToken = useSelector(makeSelectToken());
     const classes = useStyles();
-    const minAssignableScope = 2;
+    const [showConfirmReset, setShowConfirmReset] = useState(false);
+
     if (isView) {
         return (
             <div className="view-profile">
                 <div>
                     <ProfileIcon firstName={firstName} lastName={lastName} />
                     {userId && (
-                        <a className="link reset-account" onClick={() => resetUser({ userId, minAssignableScope }, userToken)}>
+                        <a className="link reset-account" onClick={() => setShowConfirmReset(true)}>
                             Reset Account Access
                         </a>
                     )}
@@ -735,6 +775,12 @@ const ProfileSection = props => {
                 <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
                     <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
                 </span>
+                <ConfirmReset
+                    open={showConfirmReset}
+                    toggleModal={setShowConfirmReset}
+                    firstName={firstName}
+                    userId={userId}
+                    email={email} />
             </div>
         )
     }
