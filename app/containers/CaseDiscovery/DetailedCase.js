@@ -2000,12 +2000,11 @@ function ClipTimeline(props) {
                     </div>
                   )
                 })}
-                <div className="button">
-                  {publishButton}
-                  {hideButton}
-                </div>
               </Grid>
-
+              <div className="button">
+                {publishButton}
+                {hideButton}
+              </div>
             </Grid>
             {rightArrow}
           </div>
