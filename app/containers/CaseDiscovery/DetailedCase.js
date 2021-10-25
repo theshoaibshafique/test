@@ -1868,7 +1868,7 @@ function ClipTimeline(props) {
   }, [flaggedClip])
 
   const publishClip = () => {
-    globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'post', userToken, {})
+    globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'put', userToken, {})
       .then(result => {
         const tLine = [...timeline];
         tLine[selectedMarker.index].isActive = true;
@@ -2000,12 +2000,11 @@ function ClipTimeline(props) {
                     </div>
                   )
                 })}
-                <div className="button">
-                  {publishButton}
-                  {hideButton}
-                </div>
               </Grid>
-
+              <div className="button">
+                {publishButton}
+                {hideButton}
+              </div>
             </Grid>
             {rightArrow}
           </div>
