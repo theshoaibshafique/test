@@ -59,6 +59,9 @@ export const createProfile = async (body, userToken, errorCallback) => {
 export const patchRoles = async (body, userToken) => {
     return await helperFetch(process.env.USER_V2_API + 'roles', 'PATCH', userToken, body);
 }
+export const resetUser =  async (body, userToken) => {
+    return await helperFetch(process.env.USER_V2_API + 'reset_user', 'POST', userToken, body);
+}
 
 //Updating roles expects a certain structure - convert the /profiles obj to 
 //the expected /roles object

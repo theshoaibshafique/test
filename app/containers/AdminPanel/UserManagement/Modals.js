@@ -7,7 +7,7 @@ import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
-import { createProfile, createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles } from './helpers';
+import { createProfile, createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles, resetUser } from './helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
@@ -711,12 +711,21 @@ const AdminPanelAccess = props => {
 
 const ProfileSection = props => {
     const { handleChange, isView, errorState, isSingleEdit } = props;
-    const { firstName, lastName, title, email, datetimeJoined } = props;
+    const { firstName, lastName, title, email, datetimeJoined, userId } = props;
+    const userToken = useSelector(makeSelectToken());
     const classes = useStyles();
+    const minAssignableScope = 2;
     if (isView) {
         return (
             <div className="view-profile">
-                <ProfileIcon firstName={firstName} lastName={lastName} />
+                <div>
+                    <ProfileIcon firstName={firstName} lastName={lastName} />
+                    {userId && (
+                        <a className="link reset-account" onClick={() => resetUser({ userId, minAssignableScope }, userToken)}>
+                            Reset Account Access
+                        </a>
+                    )}
+                </div>
                 <div className="profile-info">
                     <div className="normal-text">{firstName} {lastName}</div>
                     <div className="subtle-subtext">{title}</div>
