@@ -7,11 +7,12 @@ import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
-import { createProfile, createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles, rolesOrderBy } from './helpers';
+import { createProfile, createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles } from './helpers';
 import { makeSelectProductRoles, makeSelectToken } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
+import { rolesOrderBy } from './constants';
 /* 
     Generic Modal thats empty with an X in the corner
 */
@@ -32,6 +33,19 @@ const GenericModal = props => {
 
         </Modal>
     )
+}
+
+export const LearnMore = props => {
+    <GenericModal
+        {...props}
+        className="user-management-learn-more"
+    >
+        <>
+            <div className="header header-2">How does user management work?</div>
+            <p>This panel is used to control which {'<facility>'} users are able to access the Insights Portal. It is also used to control what type of access each user will have to the various products within Insights.</p>
+        </>
+
+    </GenericModal>
 }
 
 
@@ -152,7 +166,7 @@ const userReducer = (state, event) => {
         const { current, id, value, productId } = event.value;
         //Delete current role in lists - If we select viewer we want to remove Admin
         if (current) {
-            for (var r of current){
+            for (var r of current) {
                 delete roles[r]
             }
         }
@@ -254,7 +268,7 @@ export const AddEditUserModal = props => {
                 handleChange('view', { id: 'viewProfile', value: false });
                 errorState['email'] = result?.detail
                 handleChange('errorState', errorState);
-                
+
             }
             createUser(userData, createUserSuccess, createUserError, userToken, assignableRoles);
         }
@@ -413,7 +427,7 @@ const ProductPermissions = props => {
     const handleOpen = () => {
         setOpen(true);
     };
-    
+
     const [selectedLocations, setLocations] = useState(userLocations);
     const getAccessLevelOptions = (minScope, maxScope, currentLocations) => {
         const currLoc = currentLocations || selectedLocations;
@@ -447,10 +461,10 @@ const ProductPermissions = props => {
         }
         return accessOptions
     };
-    
+
     const [accessLevelOptions, setAccessLevelOptions] = useState(getAccessLevelOptions(minScope, maxScope));
     const getRoleObject = (value) => {
-        
+
         const { minScope, maxScope } = props?.productRoles?.[value] || {};
         const accessOptions = getAccessLevelOptions(minScope, maxScope, []);
         setAccessLevelOptions(accessOptions);
@@ -494,14 +508,14 @@ const ProductPermissions = props => {
                 <span className="flex space-between" >
                     <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
                     <span className={`action-icon pointer edit-permissions-icon`} title={`Edit ${productName}`} >
-                        <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} 
-                        onClick={() => {
-                            handleChange('view', { id: productId, value: false });
-                            //When cancelling and re-editing we have to reset the location state to current user locations and options
-                            setLocations(userLocations);
-                            const accessLevelOptions = getAccessLevelOptions(minScope, maxScope, userLocations)
-                            setAccessLevelOptions(accessLevelOptions)
-                        }} 
+                        <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'}
+                            onClick={() => {
+                                handleChange('view', { id: productId, value: false });
+                                //When cancelling and re-editing we have to reset the location state to current user locations and options
+                                setLocations(userLocations);
+                                const accessLevelOptions = getAccessLevelOptions(minScope, maxScope, userLocations)
+                                setAccessLevelOptions(accessLevelOptions)
+                            }}
                         />
                     </span>
                 </span>

@@ -2,6 +2,12 @@ import React, { useEffect } from 'react';
 import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles } from '@material-ui/core';
 
 export const LightTooltip = withStyles((theme) => ({
+  tooltipPlacementTop: {
+    margin: '8px 0'
+  },
+  tooltipPlacementBottom: {
+    margin: '8px 0'
+  },
   tooltip: {
     boxShadow: theme.shadows[1],
     padding: '16px',

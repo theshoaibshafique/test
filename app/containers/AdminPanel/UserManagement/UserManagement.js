@@ -7,10 +7,10 @@ import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
-import MaterialTable, { MTableBody, MTableFilterRow, MTableHeader, MTableToolbar } from 'material-table';
+import MaterialTable, { MTableBody, MTableCell, MTableFilterRow, MTableHeader, MTableToolbar } from 'material-table';
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
-import { Button, MenuItem, Paper, TableCell, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, FormControlLabel, TableFooter } from '@material-ui/core';
+import { Button, MenuItem, Paper, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, FormControlLabel, TableFooter } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
@@ -19,6 +19,7 @@ import { selectFilters, selectUsers } from '../../App/store/UserManagement/um-se
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
 import { AddEditUserModal, DeleteUserModal } from './Modals';
+import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 
 
 const tableIcons = {
@@ -42,6 +43,7 @@ const MemoTable = React.memo(props => {
             setUsers(users);
         }
     }, [users])
+    console.log('reload');
     if (!USERS) {
         return <LoadingIndicator />
     }
@@ -97,7 +99,8 @@ export const UserManagement = props => {
                     searchFieldVariant: 'outlined',
                     rowStyle: {
                         fontFamily: "Noto Sans",
-                        fontSize: 14
+                        fontSize: 14,
+                        width: 'unset'
                     },
                     maxBodyHeight: "calc(100vh - 310px)",
                     actionsColumnIndex: -1
@@ -110,7 +113,8 @@ export const UserManagement = props => {
                     Body: props => <TableBody {...props} />,
                     Header: props => <TableHeader {...props} />,
                     Action: props => <TableActions {...props} />,
-                    Toolbar: props => <MTableToolbar {...props} />
+                    Toolbar: props => <MTableToolbar {...props} />,
+                    Cell: props => <TableCell {...props} />
 
                 }}
             />
@@ -128,11 +132,25 @@ export const UserManagement = props => {
 }
 function RenderName(rowData) {
     const { name, displayRoles } = rowData
+    const className = displayRoles?.["User Management"];
+    var title = "";
+    if (className == "Full Access") {
+        title = "Admin"
+    } else if (className == "View Only") {
+        title = "Admin (View Only)"
+    }
     return (
-        <span style={{marginLeft:-8}}>
-            <span className={`${displayRoles?.["User Management"]} dot`}></span>
+
+        <span style={{ marginLeft: -8 }}>
+            <LightTooltip
+                title={title}
+                interactive arrow placement="top" fontSize="small">
+                <span className={`${className} dot`}></span>
+            </LightTooltip>
             <span>{name}</span>
+
         </span>
+
     )
 }
 
@@ -172,6 +190,15 @@ const TableActions = (props) => {
         </span>
     )
 }
+const TableCell = (props) => {
+    console.log(props);
+    const { columnDef, scrollWidth } = props;
+    const { tableData } = columnDef || {}
+    //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
+    return (
+        <MTableCell {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${scrollWidth/6}px` } }} />
+    )
+}
 const TableBody = (props) => {
     const filters = useSelector(selectFilters());
     const { renderData } = props;
@@ -202,7 +229,7 @@ function TableHeader(props) {
     const headers = [...columns, { title: 'Actions', action: true }].filter((c) => !c?.hidden);
     return (
         <>
-            <TableHead className="table-header">
+            <TableHead className="table-header subtext">
                 <TableRow >
                     {headers?.map((c) => {
 

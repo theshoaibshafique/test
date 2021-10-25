@@ -1,9 +1,9 @@
-import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID } from "../../../constants";
+
 import globalFunctions from "../../../utils/global-functions";
 
 const roleHeirarchy = ['admin', 'reader'];
 const roleNameMap = { admin: 'Full Access', reader: 'View Only' };
-export const rolesOrderBy = { [EFF_PRODUCT_ID]: 1, [SSC_PRODUCT_ID]: 2, [CD_PRODUCT_ID]: 3, [EMM_PRODUCT_ID]: 4 };
+
 //Given a users Roles and a list of all products 
 // - create a mapping of their highest role per product
 //EX. {'Case Discovery': 'Full Access', 'Efficiency': 'No Access', ...}
