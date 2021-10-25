@@ -8,11 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
 import { createProfile, createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles } from './helpers';
-import { makeSelectProductRoles, makeSelectToken } from '../../App/selectors';
+import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
-import { rolesOrderBy } from './constants';
+import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO, rolesOrderBy } from './constants';
+import { StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 /* 
     Generic Modal thats empty with an X in the corner
 */
@@ -35,17 +36,54 @@ const GenericModal = props => {
     )
 }
 
-export const LearnMore = props => {
-    <GenericModal
-        {...props}
-        className="user-management-learn-more"
-    >
-        <>
-            <div className="header header-2">How does user management work?</div>
-            <p>This panel is used to control which {'<facility>'} users are able to access the Insights Portal. It is also used to control what type of access each user will have to the various products within Insights.</p>
-        </>
+export const UMLearnMore = props => {
+    const [tabIndex, setTabIndex] = useState(0);
+    const logger = useSelector(makeSelectLogger());
+    const locationLookups = useSelector(selectLocationLookups());
+    const facilityId = useSelector(makeSelectUserFacility())
+    const facilityName = locationLookups?.[facilityId]?.name;
+    const orderedInfo = Object.entries(LEARNMORE_INFO).sort((a, b) => a[1].order - b[1].order);
+    const handleTabChange = (obj, tabIndex) => {
+        setTabIndex(tabIndex);
+        logger?.manualAddLog('click', `change-tab-${orderedInfo[tabIndex][0]}`, orderedInfo[tabIndex][0]);
+    }
+    const facilityMark = "<facility>";
+    return (
+        <GenericModal
+            {...props}
+            className="user-management-learn-more"
+        >
+            <>
+                <div className="header header-2">{LEARNMORE_HEADER}</div>
+                <p className="description subtext">{LEARNMORE_DESC?.replaceAll(facilityMark, facilityName)}</p>
+                <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
+                <StyledTabs
+                    value={tabIndex}
+                    onChange={(obj, value) => handleTabChange(obj, value)}
+                    indicatorColor="primary"
+                    textColor="primary"
+                >
+                    {orderedInfo.map(([title, v]) => (
+                        <StyledTab label={title} />
+                    ))}
+                </StyledTabs>
+                <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
+                {orderedInfo.map(([title, values], index) => (
+                    <TabPanel value={tabIndex} index={index}>
+                        <div className="learn-more-content">
+                            {Object.entries(values.content).map(([title, text]) => (
+                                <div>
+                                    <span className={`role-cell subtle-subtext ${title}`}>{title}</span>
+                                    <span className="content">{text?.replaceAll(facilityMark, facilityName)}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </TabPanel>
+                ))}
+            </>
 
-    </GenericModal>
+        </GenericModal>
+    )
 }
 
 

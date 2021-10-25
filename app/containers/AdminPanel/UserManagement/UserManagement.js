@@ -18,7 +18,7 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import { selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
-import { AddEditUserModal, DeleteUserModal } from './Modals';
+import { AddEditUserModal, DeleteUserModal, UMLearnMore } from './Modals';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 
 
@@ -54,6 +54,7 @@ export const UserManagement = props => {
 
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
+    const [showLearnMore, setShowLearnMore] = useState(false);
 
     return (
         <div className="user-management">
@@ -87,6 +88,12 @@ export const UserManagement = props => {
                         tooltip: 'Add User',
                         isFreeAction: true,
                         onClick: (user) => setSelectedUser(true)
+                    },
+                    {
+                        icon: 'learn-more',
+                        tooltip: 'Learn More',
+                        isFreeAction: true,
+                        onClick: (user) => setShowLearnMore(true)
                     }
                 ]}
                 options={{
@@ -102,7 +109,7 @@ export const UserManagement = props => {
                         fontSize: 14,
                         width: 'unset'
                     },
-                    maxBodyHeight: "calc(100vh - 310px)",
+                    maxBodyHeight: "calc(100vh - 300px)",
                     actionsColumnIndex: -1
                 }}
                 // data={USERS}
@@ -117,6 +124,10 @@ export const UserManagement = props => {
                     Cell: props => <TableCell {...props} />
 
                 }}
+            />
+            <UMLearnMore
+                open={showLearnMore}
+                toggleModal={setShowLearnMore}
             />
             <AddEditUserModal
                 open={Boolean(selectedUser)}
@@ -183,6 +194,12 @@ const TableActions = (props) => {
                     Add User
                 </Button>
             )
+        case 'learn-more':
+            return (
+                <span className="link learn-more underline" onClick={() => action?.onClick?.()}>
+                    Learn more about user management
+                </span>
+            )
     }
     return (
         <span className={`action-icon pointer`} title={action?.tooltip} onClick={() => action?.onClick?.(data)}>
@@ -191,7 +208,6 @@ const TableActions = (props) => {
     )
 }
 const TableCell = (props) => {
-    console.log(props);
     const { columnDef, scrollWidth } = props;
     const { tableData } = columnDef || {}
     //We need to manually override the width because theres an inherit bug where width is set on an infinite loop

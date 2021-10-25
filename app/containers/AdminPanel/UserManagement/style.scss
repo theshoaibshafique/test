@@ -23,6 +23,11 @@
             margin: 0 86px;
         }
     }
+    .learn-more {
+        position: absolute;
+        right: 0;
+        top: 12px;
+    }
     .table-header {
         position: sticky;
         top: 0;
@@ -140,6 +145,46 @@
     .divider {
         background-color: rgb(242, 242, 242);
         margin-left: -32px;
+    }
+}
+.Modal.user-management-learn-more{
+    padding: 0;
+    width: 600px;
+    height: 620px;
+    .divider{
+        margin: 0;
+    }
+    .header{ 
+        padding: 32px;
+        padding-bottom: 0;
+        margin-bottom: 24px;
+        color: #004F6E;
+    }
+    .description{
+        margin-bottom: 64px;
+        padding: 0 32px;
+    }
+    .learn-more-content{
+        height: 338px;
+        padding: 0 32px;
+        // display: flex;
+        > div {
+            display: flex;
+            // height: 57px;
+            span:first-child {
+                width: 85px;
+                white-space: nowrap;
+                height: fit-content;
+                margin: 0;
+            }
+            padding: 40px 0 0 0px;
+        }
+        .content {
+            padding-left: 32px;
+        }
+    }
+    .MuiTabs-root{
+        padding: 0 8px;
     }
 }
 
