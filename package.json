@@ -57,7 +57,7 @@
     "invariant": "2.2.4",
     "ip": "1.1.5",
     "lodash": "4.17.10",
-    "material-table": "1.57.1",
+    "material-table": "^1.69.3",
     "minimist": "1.2.0",
     "moment": "2.29.1",
     "moment-timezone": "0.5.32",

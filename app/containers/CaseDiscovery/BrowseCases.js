@@ -17,7 +17,7 @@ import { NavLink } from 'react-router-dom';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import { useSelector } from 'react-redux';
 import { formatCaseForLogs, getCasesInView, getPresetDates } from './misc/Utils';
-import { selectCases, selectSavedCases } from '../App/cd-selectors';
+import { selectCases, selectSavedCases } from '../App/store/CaseDiscovery/cd-selectors';
 import DateFnsUtils from '@date-io/date-fns';
 
 const MenuProps = {

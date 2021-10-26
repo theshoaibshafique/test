@@ -3,8 +3,9 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import EMM from './EMM';
 import { makeSelectToken, makeSelectUserFacility, makeSelectSpecialties, makeSelectComplications, makeSelectOperatingRoom } from '../App/selectors';
-import { showEMMReport } from '../App/emm-actions';
+import { showEMMReport } from '../App/store/EMM/emm-actions';
 import { setCurrentProduct } from '../App/actions';
+
 
 const mapStateToProps = (state, ownProps) => createStructuredSelector({
   userToken: makeSelectToken(),

@@ -98,16 +98,16 @@ const makeSelectLogger = () => createSelector(
   (globalState) => globalState.get('logger')
 );
 
-const makeSelectProductRoles = () => createSelector(
+const makeSelectProductRoles = (useProductId) => createSelector(
   selectGlobal,
   (globalState) => {
-    return {
-      cdRoles: globalState.get('cdRoles'),
-      effRoles: globalState.get('effRoles'),
-      sscRoles: globalState.get('sscRoles'),
-      emmRoles: globalState.get('emmRoles'),
-      umRoles: globalState.get('umRoles')
+    const result = {};
+    const products = ['cdRoles', 'effRoles', 'sscRoles', 'emmRoles', 'umRoles'];
+    for (var product of products) {
+      const roles = globalState.get(product);
+      result[useProductId ? roles?.productId : product] = roles
     }
+    return result
   }
 )
 

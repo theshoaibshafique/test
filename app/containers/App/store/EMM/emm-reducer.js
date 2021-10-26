@@ -22,7 +22,7 @@ import {
   EMM_PUBLISH_ACCESS,
   EMM_PRESENTER_MODE,
   EMM_PRESENTER_DIALOG,
-} from './constants';
+} from '../../constants';
 
 // The initial state of the App
 const initialState = fromJS({

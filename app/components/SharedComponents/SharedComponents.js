@@ -2,6 +2,12 @@ import React, { useEffect } from 'react';
 import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles } from '@material-ui/core';
 
 export const LightTooltip = withStyles((theme) => ({
+  tooltipPlacementTop: {
+    margin: '8px 0'
+  },
+  tooltipPlacementBottom: {
+    margin: '8px 0'
+  },
   tooltip: {
     boxShadow: theme.shadows[1],
     padding: '16px',
@@ -14,6 +20,7 @@ export const LightTooltip = withStyles((theme) => ({
 export const StyledTabs = withStyles({
   root: {
     boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
+    padding: "0 16px",
   },
   indicator: {
     display: 'flex',
@@ -22,7 +29,8 @@ export const StyledTabs = withStyles({
     height: 5,
     '& > span': {
       width: '100%',
-      backgroundColor: '#028CC8',
+      opacity:.8,
+      backgroundColor: '#004f6e',
     },
   },
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
@@ -32,17 +40,23 @@ export const StyledTab = withStyles((theme) => ({
     textTransform: 'none',
     fontSize: 14,
     fontFamily: 'Noto Sans',
-    opacity: .8,
+    // opacity: .8,
     fontWeight: 'bold',
-    color: '#000 !important',
+    color: '#4f4f4f',
     minWidth: 'unset',
-    paddingLeft: 16,
-    paddingRight: 16,
+    // paddingLeft: 40,
+    // paddingRight: 40,
+    margin: "0 24px",
+    padding: 0,
     // marginRight: theme.spacing(1),
     '&:focus': {
       opacity: 1,
     },
   },
+  selected: {
+    // margin: "0 40px"
+    color: '#004f6e !important'
+  }
 }))((props) => <Tab disableRipple {...props} />);
 
 export function TabPanel(props) {

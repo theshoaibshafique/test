@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
-import { selectFlagReport, selectSavedCases, selectClipNotificationStatus } from '../App/cd-selectors';
+import { selectFlagReport, selectSavedCases, selectClipNotificationStatus } from '../App/store/CaseDiscovery/cd-selectors';
 import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
 import Icon from '@mdi/react'

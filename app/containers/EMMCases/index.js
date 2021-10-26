@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import EMMCases from './EMMCases';
 import { makeSelectToken, makeSelectUserFacility, makeSelectEmail, makeSelectSpecialties, makeSelectComplications, makeSelectOperatingRoom, makeSelectLogger } from '../App/selectors';
-import { showEMMReport } from '../App/emm-actions';
+import { showEMMReport } from '../App/store/EMM/emm-actions';
 import { setCurrentProduct } from '../App/actions';
 
 const mapStateToProps = createStructuredSelector({

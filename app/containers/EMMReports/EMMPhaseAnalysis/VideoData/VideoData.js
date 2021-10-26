@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import './style.scss';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { Grid } from '@material-ui/core';
-import { selectEMMVideoData, selectEMMVidoeTime } from '../../../App/emm-selectors';
+import { selectEMMVideoData, selectEMMVidoeTime } from '../../../App/store/EMM/emm-selectors';
 
 
 class VideoData extends React.Component { // eslint-disable-line react/prefer-stateless-function

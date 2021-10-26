@@ -9,7 +9,7 @@ import { formatCaseForLogs } from './misc/Utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectLogger } from '../App/selectors';
 import { displayTags } from './misc/helper-components';
-import { setFlaggedClip } from '../App/cd-actions';
+import { setFlaggedClip } from '../App/store/CaseDiscovery/cd-actions';
 const MAX_SHORT_TAGS = 4;
 export function Case(props) {
   const { procedures, emrCaseId, wheelsIn, wheelsOut, roomName, tags, onClick, isSaved, handleSaveCase, isShort } = props;

@@ -12,6 +12,7 @@
 
 import { fromJS } from 'immutable';
 
+
 import {
   CD_DETAILED_CASE,
   CD_CASES,
@@ -25,7 +26,7 @@ import {
   CD_EXIT,
   CD_FLAG_REPORT,
   CD_CLIP_NOTIFICATION_STATUS
-} from './constants';
+} from '../../constants';
 
 // The initial state of the App
 const initialState = fromJS({

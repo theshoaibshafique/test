@@ -21,8 +21,8 @@ import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
-import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase, setClipNotificationStatus } from '../App/cd-actions';
-import { selectCases, selectClipNotificationStatus, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
+import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase, setClipNotificationStatus } from '../App/store/CaseDiscovery/cd-actions';
+import { selectCases, selectClipNotificationStatus, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/store/CaseDiscovery/cd-selectors';
 import { setCurrentProduct } from '../App/actions';
 
 
