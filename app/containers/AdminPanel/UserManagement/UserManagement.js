@@ -35,7 +35,7 @@ const tableIcons = {
 const areEqual = (prevProps, nextProps) => {
     return true
 };
-const MemoTable = React.memo(props => {
+const MemoTable = props => {
     const users = useSelector(selectUsers());
     const [USERS, setUsers] = useState(users);
     useEffect(() => {
@@ -43,12 +43,11 @@ const MemoTable = React.memo(props => {
             setUsers(users);
         }
     }, [users])
-    console.log('reload');
     if (!USERS) {
         return <LoadingIndicator />
     }
     return <MaterialTable {...props} data={USERS} />
-}, areEqual)
+}
 
 export const UserManagement = props => {
 
