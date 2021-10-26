@@ -24,7 +24,9 @@ import {
   LOGGER,
   AUTH_LOGIN,
   PROFILE,
-  CURRENT_PRODUCT
+  CURRENT_PRODUCT,
+  TOGGLE_SNACKBAR,
+  EXIT_SNACKBAR
 } from './constants';
 
 // The initial state of the App
@@ -41,7 +43,8 @@ const initialState = fromJS({
   specialties: [],
   complications: [],
   operatingRoom: [],
-  userRoles: []
+  userRoles: [],
+  snackbar: []
 });
 
 
@@ -92,6 +95,13 @@ function emmReducer(state = initialState, action) {
     case LOGGER:
       return state
         .set('logger', action.logger)
+    case TOGGLE_SNACKBAR:
+      return state
+        .set('snackbar', [...state.get('snackbar'), action.snackbar])
+    case EXIT_SNACKBAR:
+      console.log('exited')
+      return state
+        .set('snackbar', state.get('snackbar')?.slice?.(1))
     case CURRENT_PRODUCT:
       return state
         .set('currentProduct', {...state.get(action.currentProduct)});

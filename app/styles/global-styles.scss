@@ -317,3 +317,25 @@ tbody tr:hover:not(.MuiTableRow-footer) {
   padding: 16px;
   border-radius: 4px;
 }
+
+.snackbar {
+  padding-left: 16px;
+  color: #FFFFFF;
+  span{
+    height: 100%;
+    min-width: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 4px 0px 0px 4px;
+    &.success{
+      background: #008000;
+    }
+    &.warning{
+      background: #FFB71B;
+    }
+    &.error{
+      background: #EC2027;
+    }
+  }
+}

@@ -26,6 +26,7 @@ import CaseDiscovery from '../CaseDiscovery/CaseDiscovery';
 import moment from 'moment';
 import Login from '../Login';
 import { UserFeedback } from '../../components/UserFeedback/UserFeedback';
+import { SSTSnackbar } from '../../components/SharedComponents/SharedComponents';
 
 export default class MainLayout extends React.PureComponent {
   constructor(props) {
@@ -174,7 +175,7 @@ export default class MainLayout extends React.PureComponent {
         >
           <meta name="description" content="SST Insights web portal" />
         </Helmet>
-
+        <SSTSnackbar/>
         {this.state.userLoggedIn ?
           <React.Fragment>
             <div className="APP-MAIN-WRAPPER">

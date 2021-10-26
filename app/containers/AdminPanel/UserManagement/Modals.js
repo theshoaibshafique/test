@@ -14,6 +14,7 @@ import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
 import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO, rolesOrderBy } from './constants';
 import { StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
+import { setSnackbar } from '../../App/actions';
 /* 
     Generic Modal thats empty with an X in the corner
 */
@@ -103,6 +104,7 @@ export const DeleteUserModal = props => {
         if (id >= 0) {
             modified.splice(id, 1);
         }
+        dispatch(setSnackbar({severity:'success', message:`${firstName} ${lastName} was deleted.`}))
         dispatch(setUsers(modified))
         toggleModal(false);
         setIsLoading(false);

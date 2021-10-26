@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react';
-import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles } from '@material-ui/core';
-
+import React, { useEffect, useState } from 'react';
+import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { makeSelectSnackbar } from '../../containers/App/selectors';
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
     margin: '8px 0'
@@ -29,7 +32,7 @@ export const StyledTabs = withStyles({
     height: 5,
     '& > span': {
       width: '100%',
-      opacity:.8,
+      opacity: .8,
       backgroundColor: '#004f6e',
     },
   },
@@ -40,21 +43,16 @@ export const StyledTab = withStyles((theme) => ({
     textTransform: 'none',
     fontSize: 14,
     fontFamily: 'Noto Sans',
-    // opacity: .8,
     fontWeight: 'bold',
     color: '#4f4f4f',
     minWidth: 'unset',
-    // paddingLeft: 40,
-    // paddingRight: 40,
     margin: "0 24px",
     padding: 0,
-    // marginRight: theme.spacing(1),
     '&:focus': {
       opacity: 1,
     },
   },
   selected: {
-    // margin: "0 40px"
     color: '#004f6e !important'
   }
 }))((props) => <Tab disableRipple {...props} />);
@@ -165,3 +163,69 @@ export const SSTSwitch = withStyles((theme) => ({
     backgroundColor: '#575757'
   }
 }))(Switch);
+
+
+export const StyledSnackbarContent = withStyles((theme) => ({
+  message: {
+    padding: '6px 0'
+  }
+}))(SnackbarContent);
+
+
+export const SSTSnackbar = props => {
+  const dispatch = useDispatch();
+  const [snackPack, setSnackPack] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [messageInfo, setMessageInfo] = React.useState(undefined);
+  const snackList = useSelector(makeSelectSnackbar());
+  const { message, severity } = messageInfo || {};
+  useEffect(() => {
+    setSnackPack(snackList);
+  }, [snackList])
+
+  useEffect(() => {
+    if (snackPack.length && !messageInfo) {
+      // Set a new snack when we don't have an active one
+      setMessageInfo({ ...snackPack[0] });
+      setSnackPack((prev) => prev.slice(1));
+      dispatch(exitSnackbar());
+      setOpen(true);
+    } else if (snackPack.length && messageInfo && open) {
+      // Close an active snack when a new one is added
+      setOpen(false);
+    }
+  }, [snackPack, messageInfo, open]);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  const handleExited = () => {
+    setMessageInfo(undefined);
+  };
+  return (
+    <Snackbar
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      key={message}
+      TransitionProps={{ onExited: handleExited }}
+
+      autoHideDuration={4000}
+      open={open}
+      onClose={handleClose}
+    >
+      <StyledSnackbarContent
+        message={<div className="snackbar subtle-subtext"><span className={severity}></span>{message}</div>}
+        action={
+          <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      />
+    </Snackbar>
+  )
+}

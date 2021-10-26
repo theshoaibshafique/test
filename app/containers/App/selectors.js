@@ -111,6 +111,11 @@ const makeSelectProductRoles = (useProductId) => createSelector(
   }
 )
 
+const makeSelectSnackbar = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('snackbar')
+)
+
 
 export {
   selectGlobal,
@@ -132,5 +137,6 @@ export {
   makeSelectIsAdmin,
   makeSelectRoles,
   makeSelectLogger,
-  makeSelectProductRoles
+  makeSelectProductRoles,
+  makeSelectSnackbar
 };
