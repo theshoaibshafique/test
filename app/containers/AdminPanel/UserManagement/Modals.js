@@ -104,7 +104,7 @@ export const DeleteUserModal = props => {
         if (id >= 0) {
             modified.splice(id, 1);
         }
-        dispatch(setSnackbar({severity:'success', message:`${firstName} ${lastName} was deleted.`}))
+        dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was deleted.` }))
         dispatch(setUsers(modified))
         toggleModal(false);
         setIsLoading(false);
@@ -300,7 +300,14 @@ export const AddEditUserModal = props => {
             //Post call to add user
             setIsLoading(true);
             const createUserSuccess = (userId) => {
-                setIsLoading(false); setIsAdded(true); updateTable(userId);
+                const { firstName, lastName } = userData;
+                dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was added.` }));
+
+                updateTable(userId);
+                toggleModal(false);
+                setIsLoading(false);
+                setIsAdded(true);
+                
             }
             const createUserError = (result) => {
                 setIsLoading(false);
@@ -336,10 +343,11 @@ export const AddEditUserModal = props => {
     }
 
     const handleRoleSubmit = async () => {
-        const { userId, roles } = userData;
+        const { userId, roles, firstName, lastName } = userData;
         handleChange('save-settings');
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
         const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
+        dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was updated.` }))
         updateTable(userId);
     }
 
@@ -710,7 +718,8 @@ const AdminPanelAccess = props => {
 }
 
 const ConfirmReset = props => {
-    const { toggleModal, firstName, email, userId } = props;
+    const dispatch = useDispatch();
+    const { toggleModal, firstName, lastName, email, userId } = props;
     const [isLoading, setIsLoading] = useState(false);
     const userToken = useSelector(makeSelectToken());
     const minAssignableScope = 2;
@@ -719,6 +728,7 @@ const ConfirmReset = props => {
         await resetUser({ userId, minAssignableScope }, userToken)
         setIsLoading(false);
         toggleModal(false);
+        dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName}'s account was reset.` }))
     }
     return (
         <GenericModal
@@ -780,6 +790,7 @@ const ProfileSection = props => {
                     open={showConfirmReset}
                     toggleModal={setShowConfirmReset}
                     firstName={firstName}
+                    lastName={lastName}
                     userId={userId}
                     email={email} />
             </div>
