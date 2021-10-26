@@ -36,17 +36,21 @@ const areEqual = (prevProps, nextProps) => {
     return true
 };
 const MemoTable = props => {
+    const {columns} = props;
     const users = useSelector(selectUsers());
     const [USERS, setUsers] = useState(users);
     useEffect(() => {
         if (users) {
+            
             setUsers(users);
         }
     }, [users])
+    
     if (!USERS) {
         return <LoadingIndicator />
     }
-    return <MaterialTable {...props} data={USERS} />
+    //Force undefined with to prevent infinite loop
+    return <MaterialTable {...props} columns={[...columns.map((c) => {return {...c, tableDef:{width:undefined}}})]} data={USERS} />
 }
 
 export const UserManagement = props => {
@@ -54,7 +58,7 @@ export const UserManagement = props => {
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
     const [showLearnMore, setShowLearnMore] = useState(false);
-
+    
     return (
         <div className="user-management">
             <MemoTable
