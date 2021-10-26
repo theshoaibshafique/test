@@ -35,13 +35,12 @@ const tableIcons = {
 const areEqual = (prevProps, nextProps) => {
     return true
 };
-const MemoTable = props => {
+const MemoTable = React.memo(props => {
     const {columns} = props;
     const users = useSelector(selectUsers());
     const [USERS, setUsers] = useState(users);
     useEffect(() => {
-        if (users) {
-            
+        if (JSON.stringify(users) != JSON.stringify(USERS)) {
             setUsers(users);
         }
     }, [users])
@@ -51,7 +50,7 @@ const MemoTable = props => {
     }
     //Force undefined with to prevent infinite loop
     return <MaterialTable {...props} columns={[...columns.map((c) => {return {...c, tableDef:{width:undefined}}})]} data={USERS} />
-}
+}, areEqual)
 
 export const UserManagement = props => {
 
