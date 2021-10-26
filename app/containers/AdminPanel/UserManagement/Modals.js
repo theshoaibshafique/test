@@ -98,10 +98,9 @@ export const DeleteUserModal = props => {
     const fetchDelete = async () => {
         setIsLoading(true)
         const response = await deleteUser({ userId, minAssignableScope: 2 }, userToken);
-
-        const { id } = tableData || {};
         const modified = [...userTable];
-        if (id) {
+        const id = modified.findIndex((u) => u.userId == userId);
+        if (id >= 0) {
             modified.splice(id, 1);
         }
         dispatch(setUsers(modified))
