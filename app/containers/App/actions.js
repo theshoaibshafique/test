@@ -26,7 +26,9 @@ import {
   LOGGER,
   AUTH_LOGIN,
   PROFILE,
-  CURRENT_PRODUCT
+  CURRENT_PRODUCT,
+  TOGGLE_SNACKBAR,
+  EXIT_SNACKBAR
 } from './constants';
 
 /**
@@ -148,7 +150,7 @@ export function setLogger(logger) {
  *
  * @return {object}    object of admin/presenter/reader values
  */
- export function setCurrentProduct(currentProduct) {
+export function setCurrentProduct(currentProduct) {
   return {
     type: CURRENT_PRODUCT,
     currentProduct
@@ -162,7 +164,7 @@ export function setLogger(logger) {
  *
  * @return {object}    An action object with a type of AUTH_LOGIN
  */
- export function setUserToken(accessToken) {
+export function setUserToken(accessToken) {
   return {
     type: AUTH_LOGIN,
     accessToken
@@ -176,9 +178,33 @@ export function setLogger(logger) {
  *
  * @return {object}    An action object with a type of PROFILE
  */
- export function setProfile(profile) {
+export function setProfile(profile) {
   return {
     type: PROFILE,
     profile
   };
+}
+
+/**
+ * Expects an object of 
+ * {message, severity} 
+ *  message: str
+ *  severity: str (success,error,warning)
+ *
+ * @param  {message, severity} Snackbar
+ *
+ * @return {object}    An action object with a type of TOGGLE_SNACKBAR
+ */
+export function setSnackbar(snackbar) {
+  return {
+    type: TOGGLE_SNACKBAR,
+    snackbar
+  }
+}
+
+//Only used internally by the Snackbar component
+export function exitSnackbar() {
+  return {
+    type: EXIT_SNACKBAR
+  }
 }
