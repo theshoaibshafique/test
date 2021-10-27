@@ -778,9 +778,9 @@ const ProfileSection = props => {
                     )}
                 </div>
                 <div className="profile-info">
-                    <div className="normal-text">{firstName} {lastName}</div>
-                    <div className="subtle-subtext">{title}</div>
-                    <div className="subtle-subtext">{email}</div>
+                    <div className="header-2">{firstName} {lastName}</div>
+                    <div className="subtext">{title}</div>
+                    <div className="subtext">{email}</div>
                     <div className="subtle-text">{moment(datetimeJoined).format('MMMM DD, YYYY')}</div>
                 </div>
                 <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
