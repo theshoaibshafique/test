@@ -204,7 +204,7 @@ const userReducer = (state, event) => {
             state.roles[roleId].scope[SCOPE_MAP[scopeId]].push(locationId)
         }
         //Clear validations on update
-        if (defaultViewState?.hasOwnProperty(productId)) {
+        if (defaultViewState?.hasOwnProperty(productId) && state.errorState) {
             state.errorState[productId] = (locations?.length > 0) ? null : 'Please select an access level';
         }
 

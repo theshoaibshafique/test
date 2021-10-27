@@ -116,7 +116,6 @@ export const UserManagement = props => {
                 }}
                 // data={USERS}
                 icons={tableIcons}
-                //   onRowClick={(e, rowData) => this.openModal(e, 'edit', rowData)}
                 components={{
                     Container: props => <Paper {...props} elevation={0} className="table-container" />,
                     Body: props => <TableBody {...props} />,
