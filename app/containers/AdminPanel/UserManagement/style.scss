@@ -234,6 +234,9 @@
         display: flex;
         .profile-info {
             margin: 0 32px;
+            :first-child{
+                color: #004F6E;
+            }
             > div {
                 margin: 4px 0;
             }
