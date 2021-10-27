@@ -151,8 +151,10 @@ const defaultViewState = {
 };
 const userReducer = (state, event) => {
     if (event.name == 'new-user') {
+        //Reseting the state for Add users
         return event.value;
     } else if (event.name == 'save-settings') {
+        //Saving clears the backup (which existed for 'cancel')
         event.name = 'viewState';
         event.value = defaultViewState
 
@@ -163,33 +165,7 @@ const userReducer = (state, event) => {
             ...state.backup,
             backup: null
         }
-    }
-    if (event.name == 'validate') {
-
-        const errorState = state?.errorState || {};
-        const { id, value } = event.value;
-        const isValidateAll = id == 'all';
-        if (id == 'email' || isValidateAll) {
-            errorState['email'] = globalFunctions.validEmail(state?.email) ? null : '​Please enter a valid email address';
-        }
-        if (id == 'firstName' || isValidateAll) {
-            errorState['firstName'] = state?.firstName ? null : '​Please enter a first name';
-        }
-        if (id == 'lastName' || isValidateAll) {
-            errorState['lastName'] = state?.lastName ? null : '​Please enter a last name';
-        }
-        if (id == 'title' || isValidateAll) {
-            errorState['title'] = state?.title ? null : '​Please enter a title';
-        }
-        if (defaultViewState?.hasOwnProperty(id)) {
-            errorState[id] = (value?.length > 0) ? null : 'Please select an access level';
-        }
-        event.name = 'errorState'
-        event.value = errorState;
-    }
-
-
-    if (event.name == 'view') {
+    } else if (event.name == 'view') {
         const { id, value } = event.value;
         event.name = 'viewState'
         event.value = {
@@ -198,9 +174,7 @@ const userReducer = (state, event) => {
         }
         //Back up the current state for if the user cancels
         state.backup = JSON.parse(JSON.stringify(state));
-    }
-
-    if (event.name == 'roles') {
+    } else if (event.name == 'roles') {
         const roles = state?.roles || {};
         const { current, id, value, productId } = event.value;
         //Delete current role in lists - If we select viewer we want to remove Admin
@@ -214,11 +188,11 @@ const userReducer = (state, event) => {
         if (productId && state.errorState?.[productId]) {
             state.errorState[productId] = null;
         }
+        
         event.name = 'roles';
         event.value = roles
-    }
-    if (event.name == 'location-roles') {
-        const { roleId, locations, locationLookups } = event.value;
+    } else if (event.name == 'location-roles') {
+        const { roleId, locations, locationLookups, productId } = event.value;
         //We're under the assumption that roles is alredy in the state if you're modifying location
         state.roles = state.roles || {}
         state.roles[roleId] = state.roles[roleId] || {}
@@ -229,9 +203,35 @@ const userReducer = (state, event) => {
             state.roles[roleId].scope[SCOPE_MAP[scopeId]] = state.roles[roleId].scope[SCOPE_MAP[scopeId]] || [];
             state.roles[roleId].scope[SCOPE_MAP[scopeId]].push(locationId)
         }
+        //Clear validations on update
+        if (defaultViewState?.hasOwnProperty(productId)) {
+            state.errorState[productId] = (locations?.length > 0) ? null : 'Please select an access level';
+        }
 
         event.name = 'roles'
         event.value = state.roles;
+    } else {
+        //Validate by default 
+        const errorState = state?.errorState || {};
+        //If manual validate (on blur) vs if ttheyre updating the field directly
+        const { id, value } = event.name == 'validate' ? event.value : {id: event.name, value: event.value};
+        const isValidateAll = id == 'all';
+        if (id == 'email' || isValidateAll) {
+            errorState['email'] = globalFunctions.validEmail(value ?? state?.email) ? null : '​Please enter a valid email address';
+        }
+        if (id == 'firstName' || isValidateAll) {
+            errorState['firstName'] = (value ?? state?.firstName) ? null : '​Please enter a first name';
+        }
+        if (id == 'lastName' || isValidateAll) {
+            errorState['lastName'] = (value ?? state?.lastName) ? null : '​Please enter a last name';
+        }
+        if (id == 'title' || isValidateAll) {
+            errorState['title'] = (value ?? state?.title) ? null : '​Please enter a title';
+        }
+        if (defaultViewState?.hasOwnProperty(id)) {
+            errorState[id] = (value?.length > 0) ? null : 'Please select an access level';
+        }
+        state.errorState = errorState;
     }
 
 
@@ -307,7 +307,7 @@ export const AddEditUserModal = props => {
                 toggleModal(false);
                 setIsLoading(false);
                 setIsAdded(true);
-                
+
             }
             const createUserError = (result) => {
                 setIsLoading(false);
@@ -540,7 +540,7 @@ const ProductPermissions = props => {
         setLocations(newLocations);
         setAccessLevelOptions(accessLevelOptions);
         //Save in state for BE
-        handleChange('location-roles', { roleId, locations: newLocations, locationLookups });
+        handleChange('location-roles', { roleId, locations: newLocations, locationLookups, productId });
     }
 
     if (!isSubscribed || productName == 'User Management') {
