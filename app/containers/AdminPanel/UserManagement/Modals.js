@@ -736,7 +736,7 @@ const ConfirmReset = props => {
             className="user-delete">
             <>
                 <div className="header header-2">
-                    Delete User
+                    Reset User
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
