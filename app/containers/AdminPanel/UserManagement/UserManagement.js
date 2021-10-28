@@ -305,10 +305,17 @@ function FilterRole(props) {
     };
     if (disabled) {
         return (
+
             <span className="disabled-header">
                 <span>{title}</span>
-                <Icon path={mdiLockOutline} size={'22px'} />
+                <LightTooltip
+                    title={"Not subscribed"}
+                    interactive arrow placement="top" fontSize="small">
+                    <Icon path={mdiLockOutline} size={'22px'} />
+                </LightTooltip>
             </span>
+
+
         )
     }
     return (

@@ -49,7 +49,7 @@ export default class AdminPanel extends React.PureComponent {
   async getProfiles() {
     return await globalFunctions.genericFetch(`${process.env.USER_V2_API}profiles`, 'get', this.props.userToken, {})
       .then(result => {
-        const {productRoles} = this.props;
+        const { productRoles } = this.props;
         this.props.setUsers(result?.map((u) => {
           const { roles, firstName, lastName } = u;
 
@@ -124,8 +124,11 @@ export default class AdminPanel extends React.PureComponent {
   }
 
   render() {
-    const hasSSC = (this.state.sscConfig?.checklists?.length > 0);
-    const { tabIndex, USERS, accessLevel, assignableRoles } = this.state;
+    const { productRoles } = this.props;
+    const { sscRoles, effRoles } = productRoles || {}
+    const hasSSC = (this.state.sscConfig?.checklists?.length > 0) && sscRoles?.isAdmin;
+    const hasEff = effRoles?.isAdmin
+    const { tabIndex } = this.state;
     return (
       <div className="admin-panel">
         <div className="header">
@@ -138,20 +141,20 @@ export default class AdminPanel extends React.PureComponent {
           textColor="primary"
         >
           <StyledTab label="User Management" />
-          <StyledTab label="Efficiency" />
+          {hasEff && <StyledTab label="Efficiency" /> || <span />}
           {hasSSC && <StyledTab label="Surgical Safety Checklist" /> || <span />}
         </StyledTabs>
         <TabPanel value={tabIndex} index={0}>
           <UserManagement />
         </TabPanel>
-        <TabPanel value={tabIndex} index={1}>
+        {hasEff && <TabPanel value={tabIndex} index={1}>
           <EfficiencySettings
             fcotsThreshold={this.state.fcotsThreshold}
             turnoverThreshold={this.state.turnoverThreshold}
             hasEMR={this.state.hasEMR}
             submit={(updates) => this.submitEfficiencyConfig(updates)}
           />
-        </TabPanel>
+        </TabPanel>}
         {hasSSC && <TabPanel value={tabIndex} index={2}>
           <SSCSettings
             sscConfig={this.state.sscConfig}
