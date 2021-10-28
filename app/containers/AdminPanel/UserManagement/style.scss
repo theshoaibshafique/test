@@ -22,6 +22,14 @@
         .add-user-button {
             margin: 0 86px;
         }
+        .disabled-role {
+            background: #e0e0e0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     }
     .learn-more {
         position: absolute;
@@ -32,6 +40,15 @@
         position: sticky;
         top: 0;
         width: 100%;
+        .header-cell{
+            padding: 12px;
+        }
+        .disabled-header {
+            color: #828282;
+            :first-child{
+                margin-right: 8px;
+            }
+        }
     }
     .table-footer {
         > div {
@@ -49,10 +66,10 @@
         display: inline-block;
         margin-right: 5px;
         &.Full {
-            background-color: #004F6E;
+            background-color: #004f6e;
         }
         &.View {
-            background-color: #FFB71B;
+            background-color: #ffb71b;
         }
     }
     ::-webkit-scrollbar {
@@ -147,24 +164,24 @@
         margin-left: -32px;
     }
 }
-.Modal.user-management-learn-more{
+.Modal.user-management-learn-more {
     padding: 0;
     width: 620px;
     height: 620px;
-    .divider{
+    .divider {
         margin: 0;
     }
-    .header{ 
+    .header {
         padding: 32px;
         padding-bottom: 0;
         margin-bottom: 24px;
-        color: #004F6E;
+        color: #004f6e;
     }
-    .description{
+    .description {
         margin-bottom: 64px;
         padding: 0 32px;
     }
-    .learn-more-content{
+    .learn-more-content {
         height: 338px;
         padding: 0 32px;
         // display: flex;
@@ -183,7 +200,7 @@
             padding-left: 32px;
         }
     }
-    .MuiTabs-root{
+    .MuiTabs-root {
         padding: 0 8px;
     }
 }
@@ -234,8 +251,8 @@
         display: flex;
         .profile-info {
             margin: 0 32px;
-            :first-child{
-                color: #004F6E;
+            :first-child {
+                color: #004f6e;
             }
             > div {
                 margin: 4px 0;

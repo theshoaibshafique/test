@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useReducer, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
@@ -7,19 +7,20 @@ import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
-import MaterialTable, { MTableBody, MTableCell, MTableFilterRow, MTableHeader, MTableToolbar } from 'material-table';
+import MaterialTable, { MTableBody, MTableCell, MTableToolbar } from 'material-table';
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
-import { Button, MenuItem, Paper, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, FormControlLabel, TableFooter } from '@material-ui/core';
+import { Button, MenuItem, Paper, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
-import { selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline, mdiLockOutline } from '@mdi/js';
+import { selectAssignableRoles, selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
 import { AddEditUserModal, DeleteUserModal, UMLearnMore } from './Modals';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
+import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID } from '../../../constants';
 
 
 const tableIcons = {
@@ -36,7 +37,7 @@ const areEqual = (prevProps, nextProps) => {
     return true
 };
 const MemoTable = React.memo(props => {
-    const {columns} = props;
+    const { columns } = props;
     const users = useSelector(selectUsers());
     const [USERS, setUsers] = useState(users);
     useEffect(() => {
@@ -44,12 +45,12 @@ const MemoTable = React.memo(props => {
             setUsers(users);
         }
     }, [users])
-    
+
     if (!USERS) {
         return <LoadingIndicator />
     }
     //Force undefined with to prevent infinite loop
-    return <MaterialTable {...props} columns={[...columns.map((c) => {return {...c, tableDef:{width:undefined}}})]} data={USERS} />
+    return <MaterialTable {...props} columns={[...columns.map((c) => { return { ...c, tableDef: { width: undefined } } })]} data={USERS} />
 }, areEqual)
 
 export const UserManagement = props => {
@@ -57,7 +58,6 @@ export const UserManagement = props => {
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
     const [showLearnMore, setShowLearnMore] = useState(false);
-    
     return (
         <div className="user-management">
             <MemoTable
@@ -69,10 +69,10 @@ export const UserManagement = props => {
                     { title: "Email", field: 'email', hidden: true },
                     { title: "Name", field: 'name', defaultSort: 'asc', render: RenderName },
                     { title: "Title", field: 'title' },
-                    generateRoleColumn("Efficiency"),
-                    generateRoleColumn("eM&M"),
-                    generateRoleColumn("Case Discovery"),
-                    generateRoleColumn("Surgical Safety Checklist"),
+                    generateRoleColumn("Efficiency", EFF_PRODUCT_ID),
+                    generateRoleColumn("eM&M", EMM_PRODUCT_ID),
+                    generateRoleColumn("Case Discovery", CD_PRODUCT_ID),
+                    generateRoleColumn("Surgical Safety Checklist", SSC_PRODUCT_ID),
                 ]}
                 actions={[
                     {
@@ -166,13 +166,21 @@ function RenderName(rowData) {
     )
 }
 
-function generateRoleColumn(title) {
+function generateRoleColumn(title, productId) {
 
     return {
-        title, field: title, render: rowData => RenderRoleIcon(rowData, title), sorting: false, filtering: false
+        title, field: title, render: rowData => <RenderRoleIcon rowData={rowData} field={title} productId={productId} />, sorting: false, filtering: false, productId
     }
 };
-function RenderRoleIcon(rowData, field) {
+const RenderRoleIcon = props => {
+    const { rowData, field, productId } = props;
+    const assignableRoles = useSelector(selectAssignableRoles());
+    const disabled = !assignableRoles?.[productId]?.isSubscribed;
+    if (disabled) {
+        return (
+            <span className="disabled-role"></span>
+        )
+    }
     return (
         <span className={`role-cell ${rowData?.displayRoles[field]}`}>{rowData?.displayRoles[field]}</span>
     )
@@ -213,7 +221,7 @@ const TableCell = (props) => {
     const { tableData } = columnDef || {}
     //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
     return (
-        <MTableCell {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${scrollWidth/6}px` } }} />
+        <MTableCell {...props} style={{ position: 'relative' }} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${scrollWidth / 6}px` } }} />
     )
 }
 const TableBody = (props) => {
@@ -244,6 +252,7 @@ const TableBody = (props) => {
 function TableHeader(props) {
     const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, dataCount } = props;
     const headers = [...columns, { title: 'Actions', action: true }].filter((c) => !c?.hidden);
+    const assignableRoles = useSelector(selectAssignableRoles());
     return (
         <>
             <TableHead className="table-header subtext">
@@ -267,10 +276,11 @@ function TableHeader(props) {
                                 {c.title}
                             </TableSortLabel>
                         } else {
-                            content = <FilterRole title={c.title} />
+                            content = <FilterRole title={c.title} disabled={!assignableRoles?.[c?.productId]?.isSubscribed} />
                         }
                         return (
                             <TableCell
+                                className="header-cell"
                                 style={{ ...headerStyle, backgroundColor: '#EEFAFF', width: width, whiteSpace: 'nowrap' }}
                             >
                                 {content}
@@ -284,7 +294,7 @@ function TableHeader(props) {
 }
 
 function FilterRole(props) {
-    const { title } = props;
+    const { title, disabled } = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -293,6 +303,14 @@ function FilterRole(props) {
     const handleClose = (e) => {
         setAnchorEl(null);
     };
+    if (disabled) {
+        return (
+            <span className="disabled-header">
+                <span>{title}</span>
+                <Icon path={mdiLockOutline} size={'22px'} />
+            </span>
+        )
+    }
     return (
         <React.Fragment>
             <span
