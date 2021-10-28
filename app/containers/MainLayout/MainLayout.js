@@ -60,7 +60,7 @@ export default class MainLayout extends React.PureComponent {
     const { productRoles: { cdRoles, effRoles, sscRoles, emmRoles, umRoles} } = this.props;
     this.setState({
       userLoggedIn: true,
-      adminPanelAccess: umRoles.isAdmin,
+      adminPanelAccess: umRoles.isAdmin || effRoles.isAdmin || sscRoles.isAdmin,
       emmAccess: emmRoles.hasAccess,
       emmRequestAccess: emmRoles.isAdmin,
       sscAccess: sscRoles.hasAccess,

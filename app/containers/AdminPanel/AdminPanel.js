@@ -125,9 +125,10 @@ export default class AdminPanel extends React.PureComponent {
 
   render() {
     const { productRoles } = this.props;
-    const { sscRoles, effRoles } = productRoles || {}
+    const { sscRoles, effRoles, umRoles } = productRoles || {}
     const hasSSC = (this.state.sscConfig?.checklists?.length > 0) && sscRoles?.isAdmin;
-    const hasEff = effRoles?.isAdmin
+    const hasEff = effRoles?.isAdmin;
+    const hasUM = umRoles?.isAdmin;
     const { tabIndex } = this.state;
     return (
       <div className="admin-panel">
@@ -140,13 +141,13 @@ export default class AdminPanel extends React.PureComponent {
           indicatorColor="primary"
           textColor="primary"
         >
-          <StyledTab label="User Management" />
+          {hasUM && <StyledTab label="User Management" /> || <span />}
           {hasEff && <StyledTab label="Efficiency" /> || <span />}
           {hasSSC && <StyledTab label="Surgical Safety Checklist" /> || <span />}
         </StyledTabs>
-        <TabPanel value={tabIndex} index={0}>
+        {hasUM && <TabPanel value={tabIndex} index={0}>
           <UserManagement />
-        </TabPanel>
+        </TabPanel>}
         {hasEff && <TabPanel value={tabIndex} index={1}>
           <EfficiencySettings
             fcotsThreshold={this.state.fcotsThreshold}
