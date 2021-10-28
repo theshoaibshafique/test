@@ -22,7 +22,10 @@
         .add-user-button {
             margin: 0 86px;
         }
-        .MuiTableCell-root{
+        thead {
+            z-index: 1;
+        }
+        tbody .MuiTableCell-root{
             position: relative;
         }
         .disabled-role {
