@@ -22,9 +22,6 @@
         .add-user-button {
             margin: 0 86px;
         }
-        thead {
-            z-index: 1;
-        }
         tbody .MuiTableCell-root{
             position: relative;
         }
@@ -46,6 +43,7 @@
         position: sticky;
         top: 0;
         width: 100%;
+        z-index: 1;
         .header-cell{
             padding: 12px;
         }
