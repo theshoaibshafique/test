@@ -20,7 +20,7 @@ export default class ScatterPlot extends React.PureComponent {
     const maxY = dataPoints && Math.min(Math.max(...valueYs, score)+10, 100) || 100;
     const minY = dataPoints && Math.max(Math.min(...valueYs, score)-10, 0) || 0
     const maxX = Math.max(...valueXs);
-    const minX = Math.max(Math.min(...valueXs) - 10, 0)
+    const minX = Math.max(Math.min(...valueXs) - 50, 0)
     this.state = {
       chartID: 'scatterPlot',
       chartData: {
