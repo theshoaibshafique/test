@@ -781,7 +781,7 @@ const ProfileSection = props => {
                     <div className="header-2">{firstName} {lastName}</div>
                     <div className="subtext">{title}</div>
                     <div className="subtext">{email}</div>
-                    <div className="subtle-text">{moment(datetimeJoined).format('MMMM DD, YYYY')}</div>
+                    <div className="subtle-text">{`Member since ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>
                 </div>
                 <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
                     <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
