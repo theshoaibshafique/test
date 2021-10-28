@@ -334,7 +334,7 @@ export const AddEditUserModal = props => {
             roles
         };
 
-        if (id) {
+        if (id >= 0) {
             modified[id] = { ...modified[id], ...updatedUser };
         } else {
             modified.push({ ...updatedUser, tableData: { id: modified.length } })
