@@ -231,7 +231,7 @@ const TableBody = (props) => {
     useEffect(() => {
         if (filters || renderData) {
             setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles)?.every(([k, v]) => {
-                return filters?.[k]?.size > 0 ? filters?.[k]?.has(v) : true;;
+                return  filters?.[k]?.has(v) ?? true;
             })))
         }
     }, [renderData, filters])
@@ -342,7 +342,13 @@ function FilterRole(props) {
 function RoleOption(props) {
     const dispatch = useDispatch();
     const { label, onClick, parent } = props;
-    const filters = useSelector(selectFilters(parent)) || {};
+    const defaultSet = new Set(['Full Access', 'View Only', 'No Access'])
+    const filters = useSelector(selectFilters()) || {
+        'Efficiency': new Set(defaultSet),
+        'eM&M': new Set(defaultSet),
+        'Case Discovery': new Set(defaultSet),
+        'Surgical Safety Checklist': new Set(defaultSet),
+    };
     //We maintain an internal check state to help with rendering 
     const [check, setCheck] = useState(filters[parent]?.has(label) || false);
     const handleFilter = (e, v) => {
