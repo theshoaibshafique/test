@@ -221,7 +221,7 @@ const TableCell = (props) => {
     const { tableData } = columnDef || {}
     //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
     return (
-        <MTableCell {...props} style={{ position: 'relative' }} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${scrollWidth / 6}px` } }} />
+        <MTableCell {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${scrollWidth / 6}px` } }} />
     )
 }
 const TableBody = (props) => {
