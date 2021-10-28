@@ -128,7 +128,7 @@ export default class AdminPanel extends React.PureComponent {
     const { sscRoles, effRoles, umRoles } = productRoles || {}
     const hasSSC = (this.state.sscConfig?.checklists?.length > 0) && sscRoles?.isAdmin;
     const hasEff = effRoles?.isAdmin;
-    const hasUM = umRoles?.isAdmin;
+    const hasUM = umRoles?.isAdmin || umRoles?.hasAccess;
     const { tabIndex } = this.state;
     return (
       <div className="admin-panel">

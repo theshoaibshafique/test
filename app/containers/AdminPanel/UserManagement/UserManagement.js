@@ -21,6 +21,7 @@ import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
 import { AddEditUserModal, DeleteUserModal, UMLearnMore } from './Modals';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID } from '../../../constants';
+import { makeSelectProductRoles } from '../../App/selectors';
 
 
 const tableIcons = {
@@ -54,6 +55,7 @@ const MemoTable = React.memo(props => {
 }, areEqual)
 
 export const UserManagement = props => {
+    const { umRoles } = useSelector(makeSelectProductRoles());
 
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
@@ -74,7 +76,7 @@ export const UserManagement = props => {
                     generateRoleColumn("Case Discovery", CD_PRODUCT_ID),
                     generateRoleColumn("Surgical Safety Checklist", SSC_PRODUCT_ID),
                 ]}
-                actions={[
+                actions={umRoles?.isAdmin ? [
                     {
                         icon: 'edit',
                         tooltip: 'Edit User',
@@ -97,7 +99,12 @@ export const UserManagement = props => {
                         isFreeAction: true,
                         onClick: (user) => setShowLearnMore(true)
                     }
-                ]}
+                ] : [{
+                    icon: 'learn-more',
+                    tooltip: 'Learn More',
+                    isFreeAction: true,
+                    onClick: (user) => setShowLearnMore(true)
+                }]}
                 options={{
                     search: true,
                     paging: false,
@@ -119,7 +126,7 @@ export const UserManagement = props => {
                 components={{
                     Container: props => <Paper {...props} elevation={0} className="table-container" />,
                     Body: props => <TableBody {...props} />,
-                    Header: props => <TableHeader {...props} />,
+                    Header: props => <TableHeader {...props} isAdmin={umRoles?.isAdmin} />,
                     Action: props => <TableActions {...props} />,
                     Toolbar: props => <MTableToolbar {...props} />,
                     Cell: props => <TableCell {...props} />
@@ -231,7 +238,7 @@ const TableBody = (props) => {
     useEffect(() => {
         if (filters || renderData) {
             setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles)?.every(([k, v]) => {
-                return  filters?.[k]?.has(v) ?? true;
+                return filters?.[k]?.has(v) ?? true;
             })))
         }
     }, [renderData, filters])
@@ -250,8 +257,8 @@ const TableBody = (props) => {
     )
 }
 function TableHeader(props) {
-    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, dataCount } = props;
-    const headers = [...columns, { title: 'Actions', action: true }].filter((c) => !c?.hidden);
+    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, isAdmin } = props;
+    const headers = (isAdmin ? [...columns, { title: 'Actions', action: true }] : columns).filter((c) => !c?.hidden);
     const assignableRoles = useSelector(selectAssignableRoles());
     return (
         <>
