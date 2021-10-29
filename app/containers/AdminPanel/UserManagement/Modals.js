@@ -7,12 +7,12 @@ import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
-import { createProfile, createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles, resetUser } from './helpers';
+import { createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles, resetUser } from './helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
-import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO, rolesOrderBy } from './constants';
+import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO } from './constants';
 import { StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 /* 
@@ -398,8 +398,7 @@ const PermissionSection = props => {
     const { viewState, isSingleEdit, handleChange, isSubmitable, handleSubmit, isAddUser } = props;
     const isEdit = Object.values(viewState || {}).some((v) => !v) && Object.keys(viewState).length > 0;
     const assignableRoles = useSelector(selectAssignableRoles());
-    //Order by preset ordering
-    const orderedMap = Object.entries(assignableRoles).sort((a, b) => rolesOrderBy[a[0]] - rolesOrderBy[b[0]]);
+    const orderedMap = Object.entries(assignableRoles).sort((a, b) => a[1]?.productName?.localeCompare?.(b[1]?.productName));
     return (
         <div className={`permissions-section `}>
             <div className="subtle-subtext title">Permissions</div>
