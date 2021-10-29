@@ -7,7 +7,10 @@
     margin: auto;
 }
 
-.Package-Logo { width: 90%; }
+.Package-Logo { 
+    width: 90%; 
+    cursor: pointer;
+}
 
 .text-link {
     color: inherit;
