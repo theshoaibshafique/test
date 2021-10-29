@@ -11,7 +11,7 @@
  */
 
 import { fromJS } from 'immutable';
-import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../constants';
+import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, SST_ADMIN_ID, UM_PRODUCT_ID } from '../../constants';
 
 import {
   USER_TOKEN,
@@ -66,8 +66,7 @@ function emmReducer(state = initialState, action) {
         .set('userToken', action.accessToken)
         .set('userLoggedIn', true);
     case PROFILE:
-      const userRoles = action.profile.roles ? Object.keys(action.profile.roles) : null;
-      return setProductRoles(state, userRoles)
+      return setProductRoles(state, action.profile.roles)
         .set('userID', action.profile.userId)
         .set('email', action.profile.email)
         .set('userFacility', action.profile.facilityId)
@@ -99,7 +98,6 @@ function emmReducer(state = initialState, action) {
       return state
         .set('snackbar', [...state.get('snackbar'), action.snackbar])
     case EXIT_SNACKBAR:
-      console.log('exited')
       return state
         .set('snackbar', state.get('snackbar')?.slice?.(1))
     case CURRENT_PRODUCT:
@@ -121,18 +119,19 @@ function setProductRoles(state, userRoles) {
         return Object.values(permissions);
       },
       get isAdmin() {
-        return userRoles.includes(this.admin);
+        return userRoles?.[this.admin];
       },
       get hasPublisher() {
-        return userRoles.includes(this.publisher)
+        return userRoles?.[this.publisher]
       },
       get hasAccess() {
-        return userRoles.includes(this.reader);
+        return userRoles?.[this.reader];
       }
     }
   };
   return state
     .set('userRoles', userRoles)
+    .set('isSSTAdmin', Boolean(userRoles?.[SST_ADMIN_ID]))
     .set('cdRoles', createProduct({
       name: "Case Discovery",
       productId: CD_PRODUCT_ID,
@@ -164,7 +163,7 @@ function setProductRoles(state, userRoles) {
       productId: UM_PRODUCT_ID,
       sstAdmin: "5ec12e15-5ddc-4395-b0bf-1d5ae83fe0fa",
       reader: "7007d686-2b1d-461c-a258-e7737eaeae7d",
-      admin: "d5e22d93-2cb3-49a5-b710-956b098ff28e",
+      admin: "d5e22d93-2cb3-49a5-b710-956b098ff28ex",
       member: "333ee932-1f6a-4577-8266-a58b4e62b72e"
     }))
 }

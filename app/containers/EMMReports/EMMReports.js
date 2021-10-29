@@ -148,7 +148,7 @@ export default class EMMReports extends React.PureComponent {
     globalFuncs.axiosFetch(process.env.USERDETAILSMODIFY_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         //Cache onboard report name so we know not to open it again automatically
-        if (result.data) {
+        if (result) {
           localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
         }
       }).catch((error) => {

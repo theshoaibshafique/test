@@ -112,7 +112,7 @@ export default class Efficiency extends React.PureComponent {
     globalFunctions.axiosFetch(process.env.USERDETAILSMODIFY_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         //Cache onboard report name so we know not to open it again automatically
-        if (result.data) {
+        if (result) {
           localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
         }
       }).catch((error) => {
@@ -239,7 +239,6 @@ export default class Efficiency extends React.PureComponent {
 
         globalFunctions.axiosFetch(process.env.EFFICIENCYTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
-            result = result.data;
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {

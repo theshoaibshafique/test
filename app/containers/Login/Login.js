@@ -157,7 +157,6 @@ export default class Login extends React.PureComponent {
 
     globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/complications', 'get', token, {})
       .then(result => {
-        result = result.data
         this.props.setComplicationList(result);
       }).catch((error) => {
         console.error('Could not fetch Complications list')

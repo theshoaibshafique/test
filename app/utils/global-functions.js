@@ -111,7 +111,8 @@ function axiosFetch(url, fetchMethod, token, fetchBodyJSON, cancelToken) {
     mode: 'cors',
     cancelToken: cancelToken || new axios.CancelToken(function (cancel) {
     })
-  });
+  }).then((response) => response?.data
+  );
 }
 
 function authFetch(url, fetchMethod, body) {

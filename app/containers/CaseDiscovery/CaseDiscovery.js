@@ -182,9 +182,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchUsers = async () => {
       const result = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}list?product_id=${productRoles?.emmRoles?.productId}`, 'get', userToken, {})
         .then(result => {
-          result = result.data
           setUsers(result);
-
         }).catch((error) => {
           console.log("oh no", error)
         });
@@ -193,7 +191,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchFacilityConfig = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EFFICIENCY_API + "/config?facility_id=" + userFacility, 'get', userToken, {})
         .then(result => {
-          result = result.data;
           const { facilityName, fcotsThreshold, turnoverThreshold } = result;
 
           // Set roomIds local state for flag submission.
@@ -213,7 +210,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
       return await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
         .then(result => {
-          result = result.data
           let spec = [];
           let proc = [];
           let ors = [];
@@ -256,7 +252,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchFlagReport = async () => {
       await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'flag_report', 'get', userToken, {})
         .then(result => {
-          result = result.data;
           dispatch(setFlagReport(result));
         }).catch((error) => {
           console.log("oh no", error)
@@ -280,7 +275,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
     Promise.all([fetchSavedCases, fetchClipNotificationStatus, fetchOverview].map(function (e) {
       return e?.then(function (result) {
-        return result?.data;
+        return result;
       })
     })).then(([savedCases, clipNotificationStatus, overview]) => {
       const {tagOverview, recommendations, recentBookmarks, recentFlags, recentClips} = overview;
@@ -329,7 +324,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const result = await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
         logger?.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
-        result = result.data;
         return result
       }).catch((error) => {
         console.log("oh no", error)
@@ -337,7 +331,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     // If they're unsaving we wait for savedCases to be updated before getting the next cases
     if (index > -1) {
       const recentSavedData = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'recent_bookmarks', 'get', userToken, {});
-      dispatch(setRecentSaved(recentSavedData.data));
+      dispatch(setRecentSaved(recentSavedData));
     }
 
     dispatch(setSavedCases(result));
@@ -364,7 +358,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchCases = async () => {
       const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
         .then(result => {
-          result = result.data
           if (result.metaData?.emrCaseId && DETAILED_CASE) {
             const newCase = CASES.find((c) => c.emrCaseId == result.metaData.emrCaseId);
             logger?.manualAddLog('click', `swap-case-${result.metaData.emrCaseId}`, formatCaseForLogs(newCase));

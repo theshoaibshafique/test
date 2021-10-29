@@ -93,6 +93,11 @@ const makeSelectRoles = () => createSelector(
   (globalState) => globalState.get('userRoles')
 );
 
+const makeSelectIsSSTAdmin = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('isSSTAdmin')
+);
+
 const makeSelectLogger = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('logger')
@@ -136,6 +141,7 @@ export {
   makeSelectEMMPresenter,
   makeSelectIsAdmin,
   makeSelectRoles,
+  makeSelectIsSSTAdmin,
   makeSelectLogger,
   makeSelectProductRoles,
   makeSelectSnackbar

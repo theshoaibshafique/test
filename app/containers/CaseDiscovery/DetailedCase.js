@@ -1165,7 +1165,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         handleOpenAddFlag(false);
         //Update Overview tile for Flag count
         const overviewData = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'tag_overview', 'get', userToken, {});
-        dispatch(setOverviewTile(overviewData.data))
+        dispatch(setOverviewTile(overviewData))
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
         console.log("oh no", error)

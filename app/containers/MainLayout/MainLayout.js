@@ -27,6 +27,8 @@ import moment from 'moment';
 import Login from '../Login';
 import { UserFeedback } from '../../components/UserFeedback/UserFeedback';
 import { SSTSnackbar } from '../../components/SharedComponents/SharedComponents';
+import { SSTAdmin } from '../SSTAdmin/SSTAdmin';
+import { SST_ADMIN_ID } from '../../constants';
 
 export default class MainLayout extends React.PureComponent {
   constructor(props) {
@@ -67,6 +69,7 @@ export default class MainLayout extends React.PureComponent {
       efficiencyAccess: effRoles.hasAccess,
       caseDiscoveryAccess: cdRoles.hasAccess,
       emmPublishAccess: emmRoles.hasPublisher,
+      sstAdminAccess: Boolean(roles?.[SST_ADMIN_ID]),
       isLoading: false
     });
     this.props.setEMMPublishAccess(emmRoles.hasPublisher);
@@ -126,6 +129,9 @@ export default class MainLayout extends React.PureComponent {
 
         {(this.state.adminPanelAccess) &&
           <Route path="/adminPanel/:index?" component={AdminPanel} />
+        }
+        {(this.state.sstAdminAccess) &&
+          <Route path="/sstAdmin" component={SSTAdmin} />
         }
         {(this.state.sscAccess) &&
           <Route path="/sschecklist" render={(props) => <SSChecklist {...props} reportType={"Overview"} />} />
@@ -192,6 +198,7 @@ export default class MainLayout extends React.PureComponent {
                   >
                     <SSTNav
                       adminPanelAccess={this.state.adminPanelAccess}
+                      sstAdminAccess={this.state.sstAdminAccess}
                       emmRequestAccess={this.state.emmRequestAccess}
                       emmAccess={this.state.emmAccess}
                       emmPublishAccess={this.state.emmPublishAccess}
