@@ -189,7 +189,7 @@ const userReducer = (state, event) => {
         if (productId && state.errorState?.[productId]) {
             state.errorState[productId] = null;
         }
-        
+
         event.name = 'roles';
         event.value = roles
     } else if (event.name == 'location-roles') {
@@ -204,10 +204,6 @@ const userReducer = (state, event) => {
             state.roles[roleId].scope[SCOPE_MAP[scopeId]] = state.roles[roleId].scope[SCOPE_MAP[scopeId]] || [];
             state.roles[roleId].scope[SCOPE_MAP[scopeId]].push(locationId)
         }
-        //Clear validations on update
-        if (defaultViewState?.hasOwnProperty(productId) && state.errorState) {
-            state.errorState[productId] = (locations?.length > 0) ? null : 'Please select an access level';
-        }
 
         event.name = 'roles'
         event.value = state.roles;
@@ -215,7 +211,7 @@ const userReducer = (state, event) => {
         //Validate by default 
         const errorState = state?.errorState || {};
         //If manual validate (on blur) vs if ttheyre updating the field directly
-        const { id, value } = event.name == 'validate' ? event.value : {id: event.name, value: event.value};
+        const { id, value } = event.name == 'validate' ? event.value : { id: event.name, value: event.value };
         const isValidateAll = id == 'all';
         if (id == 'email' || isValidateAll) {
             errorState['email'] = globalFunctions.validEmail(value ?? state?.email) ? null : '​Please enter a valid email address';
@@ -362,7 +358,7 @@ export const AddEditUserModal = props => {
         <GenericModal
             {...props}
             toggleModal={toggleModal}
-            className={`add-edit-user ${!isAddUser && 'is-edit-user'} ${isSingleEdit && 'single-edit'} ${isUserAdded && 'user-added'}`}
+            className={`add-edit-user sstadmin ${!isAddUser && 'is-edit-user'} ${isSingleEdit && 'single-edit'} ${isUserAdded && 'user-added'}`}
         >
             <>
                 <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} />
@@ -449,37 +445,49 @@ const MenuProps = {
     },
     variant: "menu"
 };
+
 const ProductPermissions = props => {
-    const { productName, productId, roles, isSubscribed, errorState } = props;
+    const { productName, isSubscribed} = props;
+    const assignableProductRoles = props.productRoles || {};
+
+    if (!isSubscribed) {
+        return ''
+    }
+
+    return (
+        <>
+            {Object.entries(assignableProductRoles).map(([roleId, role], i) => {
+                return (
+                    <div className='product-permission'>
+                        <span>{i == 0 ? productName : ''}</span>
+                        <RolePermissions {...props} roleId={roleId} role={role} />
+                    </div>
+                )
+            })}
+            <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
+        </>
+    )
+}
+
+const RolePermissions = props => {
+    const { productName, productId, roles, roleId, isSubscribed, errorState, role } = props;
+
     const { isView, handleChange } = props;
     const assignableProductRoles = props.productRoles || {};
     const productRoles = useSelector(makeSelectProductRoles(true));
     const locations = useSelector(selectLocations());
     const locationLookups = useSelector(selectLocationLookups());
-
-    //TODO: update to allow multiselect (use roleID list instead and allow multiselect)
-    const { roleDisplay, roleId } = getSelectedRoles(roles, productRoles?.[productId], true);
     const { minScope, maxScope } = props?.productRoles?.[roleId] || {};
-    const userScope = roles?.[roleId]?.scope ?? {};
+    const isUnrestricted = roles?.[roleId]?.scope && Object.values(roles?.[roleId]?.scope).every((v) => v.length == 0);
+    const userScope = isUnrestricted ? {unrestricted:['unrestricted']} : (roles?.[roleId]?.scope ?? {});
     //get a flat list of all locations
     const userLocations = Object.entries(userScope).map(([k, loc]) => loc).flat();
-    //We auto focus Access level when a role is selected
-    const [open, setOpen] = React.useState(false);
-    const handleClose = () => {
-        setOpen(false);
-        handleChange('validate', { id: productId, value: selectedLocations });
-    };
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
     const [selectedLocations, setLocations] = useState(userLocations);
     const getAccessLevelOptions = (minScope, maxScope, currentLocations) => {
         const currLoc = currentLocations || selectedLocations;
         const accessOptions = minScope == 0 ? ['unrestricted'] : []
         const hospitals = Object.entries(locations)
-        if (currLoc.includes('unrestricted')){
+        if (currLoc.includes('unrestricted')) {
             return accessOptions
         }
         for (const [hId, h] of hospitals) {
@@ -508,33 +516,10 @@ const ProductPermissions = props => {
                 }
             }
         }
-        console.log(accessOptions)
         return accessOptions
     };
 
     const [accessLevelOptions, setAccessLevelOptions] = useState(getAccessLevelOptions(minScope, maxScope));
-    const getRoleObject = (value) => {
-
-        const { minScope, maxScope } = props?.productRoles?.[value] || {};
-        const accessOptions = getAccessLevelOptions(minScope, maxScope, []);
-        setAccessLevelOptions(accessOptions);
-        const onlyOneOption = accessOptions?.length == 1
-        setLocations(onlyOneOption ? accessOptions : []);
-        value && !onlyOneOption && handleOpen();
-        const isAdmin = productRoles?.[productId]?.admin == roleId;
-        return {
-            current: isAdmin ? productRoles?.[productId]?.all ?? [roleId] : [roleId],
-            id: value,
-            productId,
-            //Default to 1 facility if only 1 option
-            value: {
-                name: assignableProductRoles?.[value]?.displayName,
-                scope: onlyOneOption ?
-                    { f: accessOptions } :
-                    {}
-            }
-        }
-    }
 
     const handleLocationChange = e => {
         var newLocations = e.target.value;
@@ -552,9 +537,10 @@ const ProductPermissions = props => {
     const accessLevelDisplay = userLocations.map(l => locationLookups?.[l]?.name).join(", ") || "None";
     if (isView) {
         return (
-            <div className='product-permission subtext'>
-                <span>{productName}</span>
-                <span className="role"><span className={`role-cell subtle-subtext ${roleDisplay}`}>{roleDisplay}</span></span>
+            <>
+                <span>
+                    {role?.roleName}
+                </span>
                 <span className="flex space-between" >
                     <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
                     <span className={`action-icon pointer edit-permissions-icon`} title={`Edit ${productName}`} >
@@ -569,30 +555,14 @@ const ProductPermissions = props => {
                         />
                     </span>
                 </span>
-
-            </div>
+            </>
         )
     }
 
     return (
-        <div className='product-permission'>
-            <span>{productName}</span>
+        <>
             <span>
-                <FormControl
-                    className="product-role-select"
-                    variant='outlined' size='small' fullWidth>
-                    <Select
-                        displayEmpty
-                        className={`${productName} ${productId}`}
-                        value={roleId}
-                        onChange={(e, v) => handleChange('roles', getRoleObject(e.target.value))}
-                    >
-                        {Object.entries(assignableProductRoles).map(([roleId, role]) => (
-                            role?.displayName && <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
-                        ))}
-                        <MenuItem value={null}>No Access</MenuItem>
-                    </Select>
-                </FormControl>
+                {role?.roleName}
             </span>
             <span>
                 <FormControl
@@ -605,22 +575,18 @@ const ProductPermissions = props => {
                         id={productId}
                         className={`${productName} ${productId}`}
                         value={selectedLocations}
-                        disabled={!accessLevelOptions?.length || (roleDisplay == 'Full Access' && productId != EMM_PRODUCT_ID)}
+                        // disabled={!accessLevelOptions?.length || (productId != EMM_PRODUCT_ID)}
                         multiple
                         displayEmpty
-                        open={open}
-                        onClose={handleClose}
-                        onOpen={handleOpen}
                         renderValue={(userLocations) => userLocations?.map(l => locationLookups?.[l]?.name).join(", ") || 'None'}
                         onChange={handleLocationChange}
-                        error={Boolean(errorState?.[productId])}
                     >
                         {accessLevelOptions.map((locationId) => {
                             const location = locationLookups?.[locationId] || {};
                             const { name, scopeId } = location;
                             return (
                                 <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0" }}>
-                                    <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId+1 ) * 12 }}>
+                                    <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId + 1) * 12 }}>
                                         <Checkbox
                                             style={{ padding: 0 }}
                                             disableRipple
@@ -637,88 +603,12 @@ const ProductPermissions = props => {
                             )
                         })}
                     </Select>
-                    {errorState?.[productId] && <FormHelperText style={{
-                        position: 'absolute',
-                        bottom: -22,
-                        color: '#f44336',
-                        marginLeft: 0
-                    }}>{errorState?.[productId]}</FormHelperText>}
                 </FormControl>
             </span>
-        </div>
+        </>
     )
 }
 
-
-const AdminPanelAccess = props => {
-    const { handleChange, roles, isView, isSingleEdit, handleSubmit, isAddUser } = props;
-    const assignableUMRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
-    const { umRoles } = useSelector(makeSelectProductRoles());
-    const { roleDisplay, roleId } = getSelectedRoles(roles, umRoles);
-    const locationLookups = useSelector(selectLocationLookups());
-    //User management has a default scope of Facility
-    const [defaultFacility, other] = Object.entries(locationLookups).find(([lId, l]) => l?.scopeId == 2);
-    let content = null;
-    const getLocationObject = (value) => {
-        return {
-            current: [roleId],
-            value: {
-                scope: { f: [defaultFacility] }
-            },
-            id: value,
-            productId: UM_PRODUCT_ID
-        }
-    }
-    if (isView) {
-        content = (
-            <div className="role-display">
-                <span>{roleDisplay}</span>
-                <span className={`action-icon pointer`} title={'Edit Admin Panel Access'} onClick={() => handleChange('view', { id: 'viewAdminAccess', value: false })}>
-                    <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
-                </span>
-            </div>
-        )
-    } else {
-        content = (
-            <>
-                <FormControl
-                    className="admin-select"
-                    variant='outlined' size='small' >
-                    <Select
-                        displayEmpty
-                        id="admin-setting"
-                        value={roleId}
-                        style={{ width: 200 }}
-                        onChange={(e, v) => handleChange('roles', getLocationObject(e.target.value))}
-                    >
-                        {Object.entries(assignableUMRoles).map(([roleId, role]) => (
-                            role.displayName && <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
-                        ))}
-                        <MenuItem value={null}>No Access</MenuItem>
-                    </Select>
-                    {isSingleEdit && <SaveAndCancel
-                        className={"save-admin-panel-access"}
-                        handleSubmit={() => isAddUser ? handleChange('save-settings') : handleSubmit()}
-                        submitText={'Save'}
-                        isLoading={false}
-                        cancelText={"Cancel"}
-                        handleCancel={() => handleChange('save-cancel')}
-                    />}
-                </FormControl>
-
-            </>
-        )
-    }
-
-    return (
-        <div className="admin-panel-access">
-            <div className="subtle-subtext title">Admin Panel Access</div>
-            <Divider className="divider" />
-            {content}
-            <Divider className="divider" />
-        </div>
-    )
-}
 
 const ConfirmReset = props => {
     const dispatch = useDispatch();

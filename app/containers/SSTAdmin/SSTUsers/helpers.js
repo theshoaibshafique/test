@@ -84,7 +84,6 @@ export function generateProductUpdateBody(roles, assignableRoles = {}) {
 export const createUser = async (userData, callback, errorCallback, userToken, assignableRoles = {}) => {
     const { firstName, lastName, title, email } = userData;
     const userId = await createProfile({ firstName, lastName, title, email }, userToken, errorCallback)
-    
     if (!userId) {
         return userId;
     }

@@ -232,6 +232,14 @@
     }
 }
 
+.add-edit-user.sstadmin{
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    .permissions-section .product-permission {
+        margin: 16px 0;
+    }
+}
 .add-edit-user {
     width: 680px;
 
