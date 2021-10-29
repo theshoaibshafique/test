@@ -65,7 +65,7 @@ export const SSTUsers = props => {
                     { title: "Facility ID", field: 'facilityId', hidden: true },
                     { title: "User ID", field: 'userId', hidden: true },
                     { title: "Email", field: 'email', hidden: true },
-                    { title: "Name", field: 'name', defaultSort: 'asc', render: RenderName },
+                    { title: "Name", field: 'name', defaultSort: 'asc'},
                     { title: "Title", field: 'title' },
                     ...generateProductColumns(assignableRoles)
                 ]}
@@ -127,32 +127,10 @@ export const SSTUsers = props => {
         </div>
     )
 }
-function RenderName(rowData) {
-    const { name, displayRoles } = rowData
-    const className = displayRoles?.["User Management"];
-    var title = "";
-    if (className == "Full Access") {
-        title = "Admin"
-    } else if (className == "View Only") {
-        title = "Admin (View Only)"
-    }
-    return (
 
-        <span style={{ marginLeft: -8 }}>
-            <LightTooltip
-                title={title}
-                interactive arrow placement="top" fontSize="small">
-                <span className={`${className} dot`}></span>
-            </LightTooltip>
-            <span>{name}</span>
-
-        </span>
-
-    )
-}
 const generateProductColumns = (productRoles) => {
     const result = []
-    for (const [productId, product] of Object.entries(productRoles)){
+    for (const [productId, product] of Object.entries(productRoles).sort((a, b) => a[1]?.productName?.localeCompare?.(b[1]?.productName))) {
         result.push(generateRoleColumn(product?.productName, productId))
     }
     return result;
@@ -224,7 +202,7 @@ const TableBody = (props) => {
     useEffect(() => {
         if (filters || renderData) {
             setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles || {})?.every(([k, v]) => {
-                return  filters?.[k]?.has(v) ?? true;
+                return filters?.[k]?.has(v) ?? true;
             })))
         }
     }, [renderData, filters])

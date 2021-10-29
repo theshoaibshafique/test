@@ -12,7 +12,7 @@ import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUs
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
-import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO, rolesOrderBy } from './constants';
+import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO } from './constants';
 import { StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 /* 
@@ -98,7 +98,7 @@ export const DeleteUserModal = props => {
 
     const fetchDelete = async () => {
         setIsLoading(true)
-        const response = await deleteUser({ userId, minAssignableScope: 2 }, userToken);
+        const response = await deleteUser({ userId, minAssignableScope: 0 }, userToken);
         const modified = [...userTable];
         const id = modified.findIndex((u) => u.userId == userId);
         if (id >= 0) {
@@ -147,7 +147,8 @@ const defaultViewState = {
     [CD_PRODUCT_ID]: true,
     [EMM_PRODUCT_ID]: true,
     [SSC_PRODUCT_ID]: true,
-    [EFF_PRODUCT_ID]: true
+    [EFF_PRODUCT_ID]: true,
+    [UM_PRODUCT_ID]: true
 };
 const userReducer = (state, event) => {
     if (event.name == 'new-user') {
@@ -346,7 +347,7 @@ export const AddEditUserModal = props => {
         const { userId, roles, firstName, lastName } = userData;
         handleChange('save-settings');
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
-        const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
+        const profile = await patchRoles({ userId, minAssignableScope: 0, productUpdates }, userToken);
         dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was updated.` }))
         updateTable(userId);
     }
@@ -397,8 +398,7 @@ const PermissionSection = props => {
     const { viewState, isSingleEdit, handleChange, isSubmitable, handleSubmit, isAddUser } = props;
     const isEdit = Object.values(viewState || {}).some((v) => !v) && Object.keys(viewState).length > 0;
     const assignableRoles = useSelector(selectAssignableRoles());
-    //Order by preset ordering
-    const orderedMap = Object.entries(assignableRoles).sort((a, b) => rolesOrderBy[a[0]] - rolesOrderBy[b[0]]);
+    const orderedMap = Object.entries(assignableRoles).sort((a, b) => a[1]?.productName?.localeCompare?.(b[1]?.productName));
     return (
         <div className={`permissions-section `}>
             <div className="subtle-subtext title">Permissions</div>
@@ -477,8 +477,11 @@ const ProductPermissions = props => {
     const [selectedLocations, setLocations] = useState(userLocations);
     const getAccessLevelOptions = (minScope, maxScope, currentLocations) => {
         const currLoc = currentLocations || selectedLocations;
-        const accessOptions = []
+        const accessOptions = minScope == 0 ? ['unrestricted'] : []
         const hospitals = Object.entries(locations)
+        if (currLoc.includes('unrestricted')){
+            return accessOptions
+        }
         for (const [hId, h] of hospitals) {
 
             isWithinScope(1, minScope, maxScope) && accessOptions.push(hId);
@@ -505,6 +508,7 @@ const ProductPermissions = props => {
                 }
             }
         }
+        console.log(accessOptions)
         return accessOptions
     };
 
@@ -616,7 +620,7 @@ const ProductPermissions = props => {
                             const { name, scopeId } = location;
                             return (
                                 <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0" }}>
-                                    <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId - 1) * 12 }}>
+                                    <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId+1 ) * 12 }}>
                                         <Checkbox
                                             style={{ padding: 0 }}
                                             disableRipple
@@ -721,7 +725,7 @@ const ConfirmReset = props => {
     const { toggleModal, firstName, lastName, email, userId } = props;
     const [isLoading, setIsLoading] = useState(false);
     const userToken = useSelector(makeSelectToken());
-    const minAssignableScope = 2;
+    const minAssignableScope = 0;
     const handleReset = async () => {
         setIsLoading(true);
         await resetUser({ userId, minAssignableScope }, userToken)

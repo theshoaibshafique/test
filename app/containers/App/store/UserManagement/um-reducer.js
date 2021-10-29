@@ -34,7 +34,7 @@ function umReducer(state = initialState, action) {
         .set('assignableRoles', action.roles)
     case UM_LOCATION:
       const locations = action.locations || {}
-      const locationLookups = {}
+      const locationLookups = {'unrestricted': {scopeId:0, name: 'Unrestricted'}}
       //Create a lookups list for translation and dropdown generation
       //We hide onlyChilds in dropdowns
       const hospitals = Object.entries(locations)
