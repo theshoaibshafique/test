@@ -110,13 +110,9 @@ class SSTNav extends React.Component {
               </LoadingOverlay>
               </ListItem>
             }
-            {(this.props.emmAccess) &&
-              <ListItem disableGutters><NavLink to="/emmcases" className='text-link' >eM&M Cases</NavLink></ListItem>
+            {(this.props.caseDiscoveryAccess) &&
+              <ListItem disableGutters id="caseDiscovery-nav"><NavLink to="/caseDiscovery" className='text-link' >Case Discovery</NavLink></ListItem>
             }
-            {(this.props.emmPublishAccess) &&
-              <ListItem disableGutters><NavLink to="/emmpublish" className='text-link' >eM&M Publisher</NavLink></ListItem>
-            }
-
             {(this.props.efficiencyAccess) &&
               <ListItem disableGutters>
                 <NavLink to="/efficiency" className='text-link'>
@@ -135,6 +131,16 @@ class SSTNav extends React.Component {
                 <ListItem disableGutters><NavLink to="/orUtilization" className='text-link sub-item' >Block Utilization</NavLink></ListItem>
               </Collapse>
             }
+            
+            {(this.props.emmAccess) &&
+              <ListItem disableGutters><NavLink to="/emmcases" className='text-link' >eM&M</NavLink></ListItem>
+            }
+            {(this.props.emmPublishAccess) &&
+              <ListItem disableGutters><NavLink to="/emmpublish" className='text-link' >eM&M Publisher</NavLink></ListItem>
+            }
+
+            
+            
 
             {(this.props.sscAccess) &&
               <ListItem disableGutters>
@@ -153,9 +159,7 @@ class SSTNav extends React.Component {
                 <ListItem disableGutters><NavLink to="/quality" className='text-link sub-item' >Quality</NavLink></ListItem>
               </Collapse>
             }
-            {(this.props.caseDiscoveryAccess) &&
-              <ListItem disableGutters id="caseDiscovery-nav"><NavLink to="/caseDiscovery" className='text-link' >Case Discovery</NavLink></ListItem>
-            }
+            
           </List>
         </Grid>
         <Grid item xs={12} style={{ display: 'flex', alignItems: 'flex-end' }}>

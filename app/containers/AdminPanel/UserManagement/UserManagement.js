@@ -71,9 +71,9 @@ export const UserManagement = props => {
                     { title: "Email", field: 'email', hidden: true },
                     { title: "Name", field: 'name', defaultSort: 'asc', render: RenderName },
                     { title: "Title", field: 'title' },
+                    generateRoleColumn("Case Discovery", CD_PRODUCT_ID),
                     generateRoleColumn("Efficiency", EFF_PRODUCT_ID),
                     generateRoleColumn("eM&M", EMM_PRODUCT_ID),
-                    generateRoleColumn("Case Discovery", CD_PRODUCT_ID),
                     generateRoleColumn("Surgical Safety Checklist", SSC_PRODUCT_ID),
                 ]}
                 actions={umRoles?.isAdmin ? [
