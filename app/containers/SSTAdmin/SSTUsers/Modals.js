@@ -336,7 +336,6 @@ export const AddEditUserModal = props => {
         } else {
             modified.push({ ...updatedUser, tableData: { id: modified.length } })
         }
-        console.log(modified[id])
         dispatch(setUsers(modified))
     }
 
