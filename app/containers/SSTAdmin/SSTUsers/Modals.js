@@ -543,7 +543,7 @@ const RolePermissions = props => {
                 </span>
                 <span className="flex space-between" >
                     <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
-                    <span className={`action-icon pointer edit-permissions-icon`} title={`Edit ${productName}`} >
+                    <span className={`action-icon pointer edit-permissions-icon`} title={`Edit ${productName?.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`} >
                         <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'}
                             onClick={() => {
                                 handleChange('view', { id: productId, value: false });
@@ -573,7 +573,7 @@ const RolePermissions = props => {
                         MenuProps={MenuProps}
                         displayEmpty
                         id={productId}
-                        className={`${productName} ${productId}`}
+                        className={`${productName?.replace(/^[^a-z]+|[^\w:.-]+/gi, "")} ${productId}`}
                         value={selectedLocations}
                         // disabled={!accessLevelOptions?.length || (productId != EMM_PRODUCT_ID)}
                         multiple
