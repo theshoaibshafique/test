@@ -5,12 +5,11 @@ import { makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from 
 import { exitUserManagement, setAssignableRoles, setLocationList, setUsers } from '../App/store/UserManagement/um-actions';
 import './style.scss';
 import { SSTUsers } from './SSTUsers/SSTUsers';
+import { getRoleMapping } from './SSTUsers/helpers';
 
 const minScope = 0;
 export const SSTAdmin = props => {
   const dispatch = useDispatch();
-  const productRoles = useSelector(makeSelectProductRoles())
-  // console.log(productRoles);
   const userToken = useSelector(makeSelectToken());
   const facilityName = useSelector(makeSelectUserFacility());
   useEffect(() => {
@@ -39,15 +38,3 @@ export const SSTAdmin = props => {
   )
 }
 
-const getRoleMapping = (roles, productRoles) => {
-  const result = {}
-  for (var product of productRoles) {
-    for (const [roleId, role] of Object.entries(product.productRoles)) {
-      if (roles?.hasOwnProperty(roleId)) {
-        result[product.productName] = { ...(result[product.productName] ?? {}), [roleId]: roles[roleId]?.name }
-      }
-    }
-    result[product.productName] = result[product.productName] ?? {'No Access': 'No Access'}
-  }
-  return result;
-}

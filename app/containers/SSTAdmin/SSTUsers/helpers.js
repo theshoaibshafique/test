@@ -1,35 +1,21 @@
 
 import globalFunctions from "../../../utils/global-functions";
 
-const roleHeirarchy = ['admin', 'reader'];
-const roleNameMap = { admin: 'Full Access', reader: 'View Only' };
-
 //Given a users Roles and a list of all products 
-// - create a mapping of their highest role per product
-//EX. {'Case Discovery': 'Full Access', 'Efficiency': 'No Access', ...}
-export function getRoleMapping(userRoles, productRolesList) {
-    let result = {};
-    for (var product of productRolesList) {
-        if (userRoles?.hasOwnProperty(product.admin)) {
-            result[product.name] = `Full Access`;
-        } else if (userRoles?.hasOwnProperty(product.reader)) {
-            result[product.name] = `View Only`;
-        } else {
-            result[product.name] = "No Access";
+// - group all roles under their respective productName
+export const getRoleMapping = (roles, productRoles) => {
+    const result = {}
+    for (var product of productRoles) {
+        for (const [roleId, role] of Object.entries(product.productRoles)) {
+            if (roles?.hasOwnProperty(roleId)) {
+                result[product.productName] = { ...(result[product.productName] ?? {}), [roleId]: roles[roleId]?.name }
+            }
         }
+        result[product.productName] = result[product.productName] ?? { 'No Access': 'No Access' }
     }
     return result;
 }
-//Given a single product return the highest selected product
-//product is the InsightsProduct definition not assignable roles
-export function getSelectedRoles(userRoles, product) {
-    for (var role of roleHeirarchy) {
-        if (userRoles?.hasOwnProperty(product[role])) {
-            return { roleDisplay: roleNameMap[role], roleId: product[role] };
-        }
-    }
-    return { roleDisplay: 'No Access', roleId: null };
-}
+
 export function isWithinScope(currentScope, minScope, maxScope) {
     return currentScope >= minScope && currentScope <= maxScope;
 }
@@ -37,7 +23,7 @@ export function isWithinScope(currentScope, minScope, maxScope) {
 const helperFetch = async (url, fetchMethod, userToken, body, errorCallback) => {
     return await globalFunctions.genericFetch(url, fetchMethod, userToken, body)
         .then(result => {
-            if (result?.conflict){
+            if (result?.conflict) {
                 return result.conflict.then(message => {
                     errorCallback?.(message)
                 })
@@ -59,7 +45,7 @@ export const createProfile = async (body, userToken, errorCallback) => {
 export const patchRoles = async (body, userToken) => {
     return await helperFetch(process.env.USER_V2_API + 'roles', 'PATCH', userToken, body);
 }
-export const resetUser =  async (body, userToken) => {
+export const resetUser = async (body, userToken) => {
     return await helperFetch(process.env.USER_V2_API + 'reset_user', 'POST', userToken, body);
 }
 
@@ -87,7 +73,7 @@ export const createUser = async (userData, callback, errorCallback, userToken, a
     if (!userId) {
         return userId;
     }
-    
+
     const { roles } = userData;
     const productUpdates = generateProductUpdateBody(roles, assignableRoles);
     const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
