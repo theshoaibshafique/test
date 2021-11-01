@@ -151,9 +151,9 @@ const RenderRoleIcon = props => {
             <span className="disabled-role"></span>
         )
     }
-    const roles = Object.values(rowData?.displayRoles?.[field] || {}).join(", ")
+    const roles = Object.values(rowData?.sstDisplayRoles?.[field] || {}).join(", ")
     return (
-        <span className={``}>{roles || "No Access"}</span>
+        <span className={`role-list`} title={roles}>{roles || "No Access"}</span>
     )
 }
 const TableActions = (props) => {
@@ -192,7 +192,7 @@ const TableCell = (props) => {
     const { tableData } = columnDef || {}
     //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
     return (
-        <MTableCell {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${scrollWidth / 6}px` } }} />
+        <MTableCell className="sst-admin-cell" {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${scrollWidth / 6}px` } }} />
     )
 }
 const TableBody = (props) => {
@@ -201,7 +201,7 @@ const TableBody = (props) => {
     const [USERS, setUsers] = useState(renderData);
     useEffect(() => {
         if (filters || renderData) {
-            setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles || {})?.every(([roleName, value]) => {
+            setUsers(renderData?.filter((u) => Object.entries(u?.sstDisplayRoles || {})?.every(([roleName, value]) => {
                 return Object.values(value || {})?.every((v) => filters?.[roleName]?.has(v));
             })))
         }
@@ -231,7 +231,7 @@ function TableHeader(props) {
             const filters = {};
             Object.values(assignableRoles ?? {}).map((product) => {
                 const { productName, productRoles } = product;
-                filters[productName] = new Set([...Object.values(productRoles)?.map((role) => (
+                filters[productName] = new Set([...Object.values(productRoles || {})?.map((role) => (
                     role?.roleName
                 )), "No Access"])
             })

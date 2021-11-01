@@ -34,6 +34,9 @@ export default class AdminPanel extends React.PureComponent {
     this.getUserManagementData();
     this.props.setCurrentProduct();
   }
+  componentWillUnmount(){
+    this.props.exitUserManagement();
+  }
   componentDidUpdate() {
     const { logger } = this.props;
     setTimeout(() => {

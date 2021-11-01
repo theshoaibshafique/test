@@ -3,7 +3,7 @@ import { createStructuredSelector } from 'reselect';
 import AdminPanel from './AdminPanel';
 import { makeSelectToken, makeSelectUserFacility, makeSelectID, makeSelectLogger, makeSelectProductRoles } from '../App/selectors';
 import { setCurrentProduct } from '../App/actions';
-import { setAssignableRoles, setLocationList, setUsers } from '../App/store/UserManagement/um-actions';
+import { exitUserManagement, setAssignableRoles, setLocationList, setUsers } from '../App/store/UserManagement/um-actions';
 
 const mapStateToProps = createStructuredSelector({
   userToken: makeSelectToken(),
@@ -23,6 +23,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setLocations: (locations) => {
       dispatch(setLocationList(locations))
+    },
+    exitUserManagement: () => {
+      dispatch(exitUserManagement())
     },
     setUsers: (users) => {
       dispatch(setUsers(users))

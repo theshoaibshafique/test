@@ -22,7 +22,7 @@
         .add-user-button {
             margin: 0 86px;
         }
-        tbody .MuiTableCell-root{
+        tbody .MuiTableCell-root {
             position: relative;
         }
         .disabled-role {
@@ -32,6 +32,13 @@
             position: absolute;
             top: 0;
             left: 0;
+        }
+        .role-list {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* number of lines to show */
+            -webkit-box-orient: vertical;
         }
     }
     .learn-more {
@@ -44,12 +51,12 @@
         top: 0;
         width: 100%;
         z-index: 1;
-        .header-cell{
+        .header-cell {
             padding: 12px;
         }
         .disabled-header {
             color: #828282;
-            :first-child{
+            :first-child {
                 margin-right: 8px;
             }
         }
@@ -232,16 +239,16 @@
     }
 }
 
-.add-edit-user.sstadmin{
+.add-edit-user.sstadmin {
     max-height: calc(100vh - 80px);
     overflow-y: auto;
     overflow-x: hidden;
     .permissions-section {
-        .product-permission{
+        .product-permission {
             margin: 16px 0;
         }
-        
-        .add-permissions-buttons{
+
+        .add-permissions-buttons {
             margin-top: 20px;
         }
     }
