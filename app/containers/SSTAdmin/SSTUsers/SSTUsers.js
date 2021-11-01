@@ -73,7 +73,7 @@ export const SSTUsers = props => {
                     {
                         icon: 'edit',
                         tooltip: 'Edit User',
-                        onClick: (user) => setSelectedUser(user)
+                        onClick: (user) => setSelectedUser(JSON.parse(JSON.stringify(user)))
                     },
                     {
                         icon: 'delete',

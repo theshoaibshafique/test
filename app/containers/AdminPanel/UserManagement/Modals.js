@@ -279,7 +279,7 @@ export const AddEditUserModal = props => {
     const isSingleEdit = Object.values(userData?.viewState || {}).filter(t => !t).length == 1;
     const { errorState } = userData;
     const isSubmitable = !Object.values(errorState || {}).some((d) => d) && (
-        userData?.['firstName'] && userData?.['lastName'] && userData?.['email'] && userData?.['title']
+        userData?.['firstName'] && userData?.['lastName'] && userData?.['email'] && (userData?.['title'] || !isAddUser)
     );
 
     //Reload the state every time user changes
@@ -780,7 +780,7 @@ const ProfileSection = props => {
                     <div className="header-2">{firstName} {lastName}</div>
                     <div className="subtext">{title}</div>
                     <div className="subtext">{email}</div>
-                    <div className="subtle-text">{`Member since ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>
+                    {userId && <div className="subtle-text">{`Member since ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
                 </div>
                 <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
                     <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />

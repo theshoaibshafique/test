@@ -7,7 +7,7 @@ import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
-import { createProfile, createUser, deleteUser, generateProductUpdateBody, getRoleMapping, isWithinScope, patchRoles, resetUser } from './helpers';
+import { getRoleMapping } from './helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
@@ -15,6 +15,7 @@ import { setUsers } from '../../App/store/UserManagement/um-actions';
 import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO } from './constants';
 import { StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
+import { resetUser, createUser, deleteUser, generateProductUpdateBody, isWithinScope, patchRoles } from '../../AdminPanel/UserManagement/helpers';
 /* 
     Generic Modal thats empty with an X in the corner
 */
@@ -352,6 +353,7 @@ export const AddEditUserModal = props => {
         props?.toggleModal?.();
         setIsAdded(false);
         setIsLoading(false);
+        
     }
 
     return (
