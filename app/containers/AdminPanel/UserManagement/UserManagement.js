@@ -189,7 +189,7 @@ const RenderRoleIcon = props => {
         )
     }
     return (
-        <span className={`role-cell ${rowData?.displayRoles[field]}`}>{rowData?.displayRoles[field]}</span>
+        <span className={`role-cell ${rowData?.displayRoles?.[field]}`}>{rowData?.displayRoles?.[field]}</span>
     )
 }
 const TableActions = (props) => {
@@ -237,7 +237,7 @@ const TableBody = (props) => {
     const [USERS, setUsers] = useState(renderData);
     useEffect(() => {
         if (filters || renderData) {
-            setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles)?.every(([k, v]) => {
+            setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles || {})?.every(([k, v]) => {
                 return filters?.[k]?.has(v) ?? true;
             })))
         }

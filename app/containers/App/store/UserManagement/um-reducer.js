@@ -11,7 +11,7 @@
  */
 
 import { fromJS } from 'immutable';
-import { UM_ASSIGNABLE_ROLES, UM_FILTERS, UM_LOCATION, UM_USERS } from '../../constants';
+import { UM_ASSIGNABLE_ROLES, UM_EXIT, UM_FILTERS, UM_LOCATION, UM_USERS } from '../../constants';
 
 // The initial state of the App
 const initialState = fromJS({
@@ -56,6 +56,10 @@ function umReducer(state = initialState, action) {
       return state
         .set('locations', locations)
         .set('locationLookups', locationLookups)
+    case UM_EXIT:
+      return state
+        .set('users', null)
+        .set('filters', null)
 
     default:
       return state;

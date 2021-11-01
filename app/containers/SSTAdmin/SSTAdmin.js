@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import globalFunctions from '../../utils/global-functions';
 import { makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
-import { setAssignableRoles, setLocationList, setUsers } from '../App/store/UserManagement/um-actions';
+import { exitUserManagement, setAssignableRoles, setLocationList, setUsers } from '../App/store/UserManagement/um-actions';
 import './style.scss';
 import { SSTUsers } from './SSTUsers/SSTUsers';
 
@@ -18,7 +18,6 @@ export const SSTAdmin = props => {
       const users = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}profiles?min_scope=${minScope}`, 'get', userToken, {});
       const locations = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}location?facility_id=${facilityName}`, 'get', userToken, {});
       const assignableRoles = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}assignable_roles?min_scope=${minScope}`, 'get', userToken, {})
-      console.log(users);
 
       dispatch(setUsers(users?.map((u) => {
         const { firstName, lastName, roles } = u;
@@ -28,12 +27,15 @@ export const SSTAdmin = props => {
       dispatch(setAssignableRoles(assignableRoles))
     }
     fetchData();
+    return () => {
+      dispatch(exitUserManagement());
+    }
   }, [])
   return (
-    <section>
-      <div className="title">SST Admin Panel</div>
+    <div className="sst-admin-panel">
+      <div className="title header" >SST Admin Panel</div>
       <SSTUsers />
-    </section>
+    </div>
   )
 }
 

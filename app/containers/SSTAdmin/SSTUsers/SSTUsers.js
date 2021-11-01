@@ -57,7 +57,7 @@ export const SSTUsers = props => {
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
     return (
-        <div className="user-management">
+        <div className="sst-user-management">
             <MemoTable
                 title=""
                 columns={[
@@ -100,7 +100,7 @@ export const SSTUsers = props => {
                         fontSize: 14,
                         width: 'unset'
                     },
-                    maxBodyHeight: "calc(100vh - 300px)",
+                    maxBodyHeight: "calc(100vh - 250px)",
                     actionsColumnIndex: -1
                 }}
                 // data={USERS}

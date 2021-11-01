@@ -17,6 +17,7 @@
 
 import {
   UM_ASSIGNABLE_ROLES,
+  UM_EXIT,
   UM_FILTERS, UM_FILTERS_FUNC, UM_LOCATION, UM_USERS
 } from '../../constants';
 
@@ -48,3 +49,8 @@ export function setLocationList(locations) {
   };
 }
 
+export function exitUserManagement(){
+  return {
+    type: UM_EXIT
+  };
+}
