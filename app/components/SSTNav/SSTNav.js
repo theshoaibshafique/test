@@ -75,17 +75,18 @@ class SSTNav extends React.Component {
   _onIdle(e) {
     this.logout();
   }
-
   render() {
+
     return (
       <Grid container spacing={0} className="sstnav subtle-subtext" style={{ height: "100%" }}>
         <Grid item xs={12}>
           <List disablePadding >
             <ListItem className="Package-Location center-align" disableGutters>
-              <img className="Package-Logo" src={logo} />
+              <NavLink to="/dashboard">
+                <img className="Package-Logo" src={logo} />
+              </NavLink>
             </ListItem>
 
-            <ListItem disableGutters><NavLink to="/dashboard" className='text-link '>Dashboard</NavLink></ListItem>
             {this.props.isLoading &&
               <ListItem disableGutters><LoadingOverlay
                 active={this.props.isLoading}
