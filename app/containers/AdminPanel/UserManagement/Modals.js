@@ -13,7 +13,7 @@ import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@m
 import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
 import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO } from './constants';
-import { StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
+import { ProfileIcon, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 /* 
     Generic Modal thats empty with an X in the corner
@@ -769,7 +769,7 @@ const ProfileSection = props => {
         return (
             <div className="view-profile">
                 <div>
-                    <ProfileIcon firstName={firstName} lastName={lastName} />
+                    <ProfileIcon className="header-1" size={95} firstName={firstName} lastName={lastName} />
                     {userId && (
                         <a className="link reset-account" onClick={() => setShowConfirmReset(true)}>
                             Reset Account Access
@@ -835,11 +835,3 @@ const ProfileSection = props => {
     )
 }
 
-const ProfileIcon = props => {
-    const { firstName, lastName } = props;
-    const initials = `${firstName} ${lastName}`.match(/(\b\S)?/g).join("").match(/(^\S|\S$)?/g).join("").toUpperCase();
-    return (
-        <div className="profile-icon header-1">{initials}</div>
-    )
-
-}

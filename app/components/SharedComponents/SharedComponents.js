@@ -229,3 +229,27 @@ export const SSTSnackbar = props => {
     </Snackbar>
   )
 }
+
+const useProfileIconStyles = makeStyles({
+  root: (props) => ({
+    margin: 'auto',
+    color: '#fff !important',
+    textAlign: 'center',
+    background: '#004f6e',
+    userSelect:'none',
+    width: props?.size ?? 95,
+    height: props?.size ?? 95,
+    lineHeight: `${props?.size ?? 95}px !important`,
+    borderRadius: props?.size ? props?.size/2 : 48
+  })
+});
+
+export const ProfileIcon = props => {
+  const { firstName, lastName, className, size } = props;
+  const classes = useProfileIconStyles({size})
+  const initials = `${firstName} ${lastName}`.match(/(\b\S)?/g).join("").match(/(^\S|\S$)?/g).join("").toUpperCase();
+  return (
+      <div className={`${className} ${classes.root}`}>{initials}</div>
+  )
+
+}

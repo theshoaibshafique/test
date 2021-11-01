@@ -13,7 +13,7 @@ import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@m
 import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
 import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO } from './constants';
-import { StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
+import { ProfileIcon, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 import { resetUser, createUser, deleteUser, generateProductUpdateBody, isWithinScope, patchRoles } from '../../AdminPanel/UserManagement/helpers';
 /* 
@@ -319,24 +319,24 @@ export const AddEditUserModal = props => {
     }
 
     const userTable = useSelector(selectUsers());
-    const productRoles = useSelector(makeSelectProductRoles());
+    
     const updateTable = (userId) => {
         const { tableData, firstName, lastName, title, roles, email } = userData || {};
-        const { id } = tableData || {};
         const modified = [...userTable];
         const updatedUser = {
             userId,
             firstName, lastName, title, email,
-            displayRoles: getRoleMapping(roles, Object.values(productRoles)),
+            sstDisplayRoles: getRoleMapping(roles, Object.values(assignableRoles)),
             name: `${firstName} ${lastName}`,
             roles
         };
-
+        const id = modified.findIndex((u) => u.userId == userId);
         if (id >= 0) {
             modified[id] = { ...modified[id], ...updatedUser };
         } else {
             modified.push({ ...updatedUser, tableData: { id: modified.length } })
         }
+        console.log(modified[id])
         dispatch(setUsers(modified))
     }
 
@@ -475,13 +475,12 @@ const RolePermissions = props => {
     const { productName, productId, roles, roleId, isSubscribed, errorState, role } = props;
 
     const { isView, handleChange } = props;
-    const assignableProductRoles = props.productRoles || {};
-    const productRoles = useSelector(makeSelectProductRoles(true));
     const locations = useSelector(selectLocations());
     const locationLookups = useSelector(selectLocationLookups());
     const { minScope, maxScope } = props?.productRoles?.[roleId] || {};
-    const isUnrestricted = roles?.[roleId]?.scope && Object.values(roles?.[roleId]?.scope).every((v) => v.length == 0);
-    const userScope = isUnrestricted ? {unrestricted:['unrestricted']} : (roles?.[roleId]?.scope ?? {});
+    const scope = roles?.[roleId]?.scope
+    const isUnrestricted = scope && Object.keys(scope).length != 0 && Object.values(scope).every((v) => v.length == 0);
+    const userScope = isUnrestricted ? {unrestricted:['unrestricted']} : (scope ?? {});
     //get a flat list of all locations
     const userLocations = Object.entries(userScope).map(([k, loc]) => loc).flat();
     const [selectedLocations, setLocations] = useState(userLocations);
@@ -665,7 +664,7 @@ const ProfileSection = props => {
         return (
             <div className="view-profile">
                 <div>
-                    <ProfileIcon firstName={firstName} lastName={lastName} />
+                    <ProfileIcon className="header-1" size={95} firstName={firstName} lastName={lastName} />
                     {userId && (
                         <a className="link reset-account" onClick={() => setShowConfirmReset(true)}>
                             Reset Account Access
@@ -729,13 +728,4 @@ const ProfileSection = props => {
         </div>
 
     )
-}
-
-const ProfileIcon = props => {
-    const { firstName, lastName } = props;
-    const initials = `${firstName} ${lastName}`.match(/(\b\S)?/g).join("").match(/(^\S|\S$)?/g).join("").toUpperCase();
-    return (
-        <div className="profile-icon header-1">{initials}</div>
-    )
-
 }

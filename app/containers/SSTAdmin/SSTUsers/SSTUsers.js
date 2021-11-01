@@ -18,9 +18,8 @@ import { mdiCheckboxBlankOutline, mdiCheckBoxOutline, mdiLockOutline } from '@md
 import { selectAssignableRoles, selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
-import { AddEditUserModal, DeleteUserModal, UMLearnMore } from './Modals';
+import { AddEditUserModal, DeleteUserModal } from './Modals';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
-import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID } from '../../../constants';
 
 
 const tableIcons = {
@@ -34,7 +33,7 @@ const tableIcons = {
     SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
 };
 const areEqual = (prevProps, nextProps) => {
-    return JSON.stringify(prevProps.columns) == JSON.stringify(nextProps.columns)
+    return true;
 };
 const MemoTable = React.memo(props => {
     const { columns } = props;
@@ -45,6 +44,7 @@ const MemoTable = React.memo(props => {
             setUsers(users);
         }
     }, [users, columns])
+    
     if (!USERS) {
         return <LoadingIndicator />
     }
@@ -56,6 +56,9 @@ export const SSTUsers = props => {
     const assignableRoles = useSelector(selectAssignableRoles());
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
+    if (assignableRoles.size == 0){
+        return <LoadingIndicator />
+    }
     return (
         <div className="sst-user-management">
             <MemoTable
