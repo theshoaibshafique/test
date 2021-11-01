@@ -553,7 +553,7 @@ const ProductPermissions = props => {
                 <span className="role"><span className={`role-cell subtle-subtext ${roleDisplay}`}>{roleDisplay}</span></span>
                 <span className="flex space-between" >
                     <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
-                    <span className={`action-icon pointer edit-permissions-icon`} title={`Edit ${productName}`} >
+                    <span className={`action-icon pointer edit-permissions-icon`} title={`Edit ${productName?.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`} >
                         <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'}
                             onClick={() => {
                                 handleChange('view', { id: productId, value: false });
@@ -579,7 +579,7 @@ const ProductPermissions = props => {
                     variant='outlined' size='small' fullWidth>
                     <Select
                         displayEmpty
-                        className={`${productName} ${productId}`}
+                        className={`${productName?.replace(/^[^a-z]+|[^\w:.-]+/gi, "")} ${productId}`}
                         value={roleId}
                         onChange={(e, v) => handleChange('roles', getRoleObject(e.target.value))}
                     >
