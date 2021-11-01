@@ -236,8 +236,14 @@
     max-height: calc(100vh - 80px);
     overflow-y: auto;
     overflow-x: hidden;
-    .permissions-section .product-permission {
-        margin: 16px 0;
+    .permissions-section {
+        .product-permission{
+            margin: 16px 0;
+        }
+        
+        .add-permissions-buttons{
+            margin-top: 20px;
+        }
     }
 }
 .add-edit-user {

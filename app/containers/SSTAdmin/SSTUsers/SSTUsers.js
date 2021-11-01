@@ -65,7 +65,7 @@ export const SSTUsers = props => {
                     { title: "Facility ID", field: 'facilityId', hidden: true },
                     { title: "User ID", field: 'userId', hidden: true },
                     { title: "Email", field: 'email', hidden: true },
-                    { title: "Name", field: 'name', defaultSort: 'asc'},
+                    { title: "Name", field: 'name', defaultSort: 'asc' },
                     { title: "Title", field: 'title' },
                     ...generateProductColumns(assignableRoles)
                 ]}
@@ -151,7 +151,7 @@ const RenderRoleIcon = props => {
             <span className="disabled-role"></span>
         )
     }
-    const roles = Object.values(rowData?.[field] || {}).join(", ")
+    const roles = Object.values(rowData?.displayRoles?.[field] || {}).join(", ")
     return (
         <span className={``}>{roles || "No Access"}</span>
     )
@@ -201,8 +201,8 @@ const TableBody = (props) => {
     const [USERS, setUsers] = useState(renderData);
     useEffect(() => {
         if (filters || renderData) {
-            setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles || {})?.every(([k, v]) => {
-                return filters?.[k]?.has(v) ?? true;
+            setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles || {})?.every(([roleName, value]) => {
+                return Object.values(value || {})?.every((v) => filters?.[roleName]?.has(v));
             })))
         }
     }, [renderData, filters])
@@ -220,10 +220,26 @@ const TableBody = (props) => {
         </>
     )
 }
+
 function TableHeader(props) {
     const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, dataCount } = props;
     const headers = [...columns, { title: 'Actions', action: true }].filter((c) => !c?.hidden);
     const assignableRoles = useSelector(selectAssignableRoles());
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (assignableRoles) {
+            const filters = {};
+            Object.values(assignableRoles ?? {}).map((product) => {
+                const { productName, productRoles } = product;
+                filters[productName] = new Set([...Object.values(productRoles)?.map((role) => (
+                    role?.roleName
+                )), "No Access"])
+            })
+            dispatch(setFilters(filters))
+        }
+    }, [assignableRoles])
+
+
     return (
         <>
             <TableHead className="table-header subtext">
@@ -247,7 +263,7 @@ function TableHeader(props) {
                                 {c.title}
                             </TableSortLabel>
                         } else {
-                            content = <FilterRole title={c.title} disabled={!assignableRoles?.[c?.productId]?.isSubscribed} />
+                            content = <FilterRole title={c.title} disabled={!assignableRoles?.[c?.productId]?.isSubscribed} productId={c?.productId} />
                         }
                         return (
                             <TableCell
@@ -265,8 +281,11 @@ function TableHeader(props) {
 }
 
 function FilterRole(props) {
-    const { title, disabled } = props;
+    const { title, disabled, productId } = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const assignableRoles = useSelector(selectAssignableRoles());
+    const productRoles = assignableRoles?.[productId]?.productRoles || {}
+    const filterRoles = Object.values(productRoles)?.map((r) => r?.roleName).sort() || [];
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -303,8 +322,9 @@ function FilterRole(props) {
                 keepMounted
                 onClose={handleClose}
             >
-                <RoleOption label="Full Access" parent={title} />
-                <RoleOption label="View Only" parent={title} />
+                {filterRoles?.map((r) => (
+                    <RoleOption label={r} key={r} parent={title} />
+                ))}
                 <RoleOption label="No Access" parent={title} />
             </Menu>
         </React.Fragment>
@@ -313,13 +333,7 @@ function FilterRole(props) {
 function RoleOption(props) {
     const dispatch = useDispatch();
     const { label, onClick, parent } = props;
-    const defaultSet = new Set(['Full Access', 'View Only', 'No Access'])
-    const filters = useSelector(selectFilters()) || {
-        'Efficiency': new Set(defaultSet),
-        'eM&M': new Set(defaultSet),
-        'Case Discovery': new Set(defaultSet),
-        'Surgical Safety Checklist': new Set(defaultSet),
-    };
+    const filters = useSelector(selectFilters()) || {};
     //We maintain an internal check state to help with rendering 
     const [check, setCheck] = useState(filters[parent]?.has(label) || false);
     const handleFilter = (e, v) => {

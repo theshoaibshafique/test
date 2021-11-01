@@ -21,7 +21,7 @@ export const SSTAdmin = props => {
 
       dispatch(setUsers(users?.map((u) => {
         const { firstName, lastName, roles } = u;
-        return { ...u, ...getRoleMapping(roles, Object.values(assignableRoles)), name: `${firstName} ${lastName}` }
+        return { ...u, displayRoles: getRoleMapping(roles, Object.values(assignableRoles)), name: `${firstName} ${lastName}` }
       })));
       dispatch(setLocationList(locations));
       dispatch(setAssignableRoles(assignableRoles))
@@ -47,6 +47,7 @@ const getRoleMapping = (roles, productRoles) => {
         result[product.productName] = { ...(result[product.productName] ?? {}), [roleId]: roles[roleId]?.name }
       }
     }
+    result[product.productName] = result[product.productName] ?? {'No Access': 'No Access'}
   }
   return result;
 }
