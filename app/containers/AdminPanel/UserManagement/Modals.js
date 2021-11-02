@@ -314,7 +314,7 @@ export const AddEditUserModal = props => {
                 handleChange('view', { id: 'viewProfile', value: false });
                 errorState['email'] = result?.detail
                 handleChange('errorState', errorState);
-
+                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. User could not be created.` }));
             }
             createUser(userData, createUserSuccess, createUserError, userToken, assignableRoles);
         }
@@ -346,9 +346,14 @@ export const AddEditUserModal = props => {
         const { userId, roles, firstName, lastName } = userData;
         handleChange('save-settings');
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
-        const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
-        dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was updated.` }))
-        updateTable(userId);
+        const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken).then((e) => {
+            if (e == 'error'){
+                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update user.` }))
+            } else {
+                dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was updated.` }))
+                updateTable(userId);
+            }
+        })
     }
 
     const toggleModal = () => {
