@@ -187,7 +187,7 @@ class SSTNav extends React.Component {
         <Grid item xs={12} style={{ display: 'flex', alignItems: 'flex-end', marginBottom: 20 }}>
           <List disablePadding style={{ width: '100%' }}>
 
-            {(this.props.sstAdminAccess) &&
+            {(this.props.settingsAccess) &&
               <ListItem disableGutters>
                 <NavLink to="/settings" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiCogOutline} size={'24px'} />Settings</NavLink>
               </ListItem>
