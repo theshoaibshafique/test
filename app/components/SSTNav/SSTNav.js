@@ -19,10 +19,12 @@ class SSTNav extends React.Component {
     super(props);
     this.sscLinks = ["/sschecklist", "/compliance", "/engagement", "/quality"]
     this.efficiencyLinks = ["/efficiency", "/daysStarting", "/turnoverTime", "/orUtilization", "/caseAnalysis"]
+    this.emmLinks = ["/emmpublish", "/requestemm"]
     this.state = {
       pathname: this.props.pathname,
       isSSCOpen: this.isInNav(this.sscLinks, this.props.pathname),
       isEfficiencyOpen: this.isInNav(this.efficiencyLinks, this.props.pathname),
+      isEMMOpen: this.isInNav(this.emmLinks, this.props.pathname),
       menu: null
     }
     this.onIdle = this._onIdle.bind(this)
@@ -33,6 +35,7 @@ class SSTNav extends React.Component {
       this.setState({
         isSSCOpen: this.isInNav(this.sscLinks, this.props.pathname),
         isEfficiencyOpen: this.isInNav(this.efficiencyLinks, this.props.pathname),
+        isEMMOpen: this.isInNav(this.emmLinks, this.props.pathname),
         pathname: this.props.pathname
       });
     }
@@ -47,6 +50,9 @@ class SSTNav extends React.Component {
   }
   toggleEfficiency() {
     this.setState({ isEfficiencyOpen: !this.state.isEfficiencyOpen })
+  }
+  toggleEMM() {
+    this.setState({ isEMMOpen: !this.state.isEMMOpen })
   }
 
   openMenu(e) {
@@ -78,7 +84,7 @@ class SSTNav extends React.Component {
     this.logout();
   }
   render() {
-
+    const hasEMMPages = this.props.emmPublishAccess || this.props.emmRequestAccess;
     return (
       <Grid container spacing={0} className="sstnav subtle-subtext" style={{ height: "100%" }}>
         <Grid item xs={12}>
@@ -136,14 +142,27 @@ class SSTNav extends React.Component {
             }
 
             {(this.props.emmAccess) &&
-              <ListItem disableGutters><NavLink to="/emmcases" className='text-link' >eM&M</NavLink></ListItem>
+              <ListItem disableGutters>
+                <NavLink to="/emmcases" className='text-link' >
+                  <div>eM&M</div>
+                  {hasEMMPages && <div style={{ position: 'absolute', right: 8, top: 14, cursor: 'pointer' }} onClick={() => this.toggleEMM()}>
+                    {this.state.isEMMOpen ? <IconExpandLess /> : <IconExpandMore />}
+                  </div>
+                  }
+                </NavLink>
+              </ListItem>
             }
-            {(this.props.emmPublishAccess) &&
-              <ListItem disableGutters><NavLink to="/emmpublish" className='text-link' >eM&M Publisher</NavLink></ListItem>
-            }
-
-
-
+            {hasEMMPages && (
+              <Collapse in={this.state.isEMMOpen} timeout="auto" unmountOnExit>
+                {(this.props.emmPublishAccess) && <ListItem disableGutters><NavLink to="/emmpublish" className='text-link sub-item' >eM&M Publisher</NavLink></ListItem>}
+                {(this.props.emmRequestAccess) &&
+                  <ListItem disableGutters>
+                    <NavLink to="/requestemm" className='text-link  sub-item' >
+                      Request for eM&M</NavLink>
+                  </ListItem>
+                }
+              </Collapse>
+            )}
 
             {(this.props.sscAccess) &&
               <ListItem disableGutters>
@@ -167,6 +186,22 @@ class SSTNav extends React.Component {
         </Grid>
         <Grid item xs={12} style={{ display: 'flex', alignItems: 'flex-end', marginBottom: 20 }}>
           <List disablePadding style={{ width: '100%' }}>
+
+            {(this.props.sstAdminAccess) &&
+              <ListItem disableGutters>
+                <NavLink to="/settings" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiCogOutline} size={'24px'} />Settings</NavLink>
+              </ListItem>
+            }
+            {(this.props.adminPanelAccess) &&
+              <ListItem disableGutters>
+                <NavLink to="/adminPanel" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariantOutline} size={'24px'} />Admin Panel</NavLink>
+              </ListItem>
+            }
+            {(this.props.sstAdminAccess) &&
+              <ListItem disableGutters>
+                <NavLink to="/sstAdmin" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariant} size={'24px'} />SST Admin</NavLink>
+              </ListItem>
+            }
             <ListItem disableGutters >
 
               <div className='text-link my-account' onClick={(e) => this.openMenu(e)}>
@@ -189,27 +224,6 @@ class SSTNav extends React.Component {
                 <div onClick={() => this.logout()}>Logout</div>
               </MenuItem>
             </Menu>
-            {(this.props.emmRequestAccess) &&
-              <ListItem disableGutters>
-                <NavLink to="/requestemm" className='text-link' >
-                  <Icon color="#000" style={{ marginRight: 16 }} path={mdiClipboardTextOutline} size={'24px'} />Request for eM&M</NavLink>
-              </ListItem>
-            }
-            {(this.props.adminPanelAccess) &&
-              <ListItem disableGutters>
-                <NavLink to="/adminPanel" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariantOutline} size={'24px'} />Admin Panel</NavLink>
-              </ListItem>
-            }
-            {(this.props.sstAdminAccess) &&
-              <ListItem disableGutters>
-                <NavLink to="/sstAdmin" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariant} size={'24px'} />SST Admin</NavLink>
-              </ListItem>
-            }
-            {(this.props.sstAdminAccess) &&
-              <ListItem disableGutters>
-                <NavLink to="/settings" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiCogOutline} size={'24px'} />Settings</NavLink>
-              </ListItem>
-            }
 
           </List>
         </Grid>
