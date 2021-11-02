@@ -9,6 +9,7 @@ import EMM from 'containers/EMM/Loadable';
 import EMMReports from 'containers/EMMReports';
 import RequestEMM from 'containers/RequestEMM/Loadable';
 import AdminPanel from 'containers/AdminPanel/Loadable';
+import Settings from 'containers/Settings/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import LoadingIndicator from 'components/LoadingIndicator';
@@ -62,9 +63,10 @@ export default class MainLayout extends React.PureComponent {
     const { productRoles: { cdRoles, effRoles, sscRoles, emmRoles, umRoles} } = this.props;
     this.setState({
       userLoggedIn: true,
-      adminPanelAccess: (umRoles.isAdmin || umRoles.hasAccess) || effRoles.isAdmin || sscRoles.isAdmin,
+      adminPanelAccess: (umRoles.isAdmin || umRoles.hasAccess),
+      settingsAccess: effRoles.isAdmin || sscRoles.isAdmin,
       emmAccess: emmRoles.hasAccess,
-      emmRequestAccess: emmRoles.isAdmin,
+      emmRequestAccess: emmRoles.isAdmin ,//&& !cdRoles.hasAccess,
       sscAccess: sscRoles.hasAccess,
       efficiencyAccess: effRoles.hasAccess,
       caseDiscoveryAccess: cdRoles.hasAccess,
@@ -132,6 +134,9 @@ export default class MainLayout extends React.PureComponent {
         }
         {(this.state.sstAdminAccess) &&
           <Route path="/sstAdmin" component={SSTAdmin} />
+        }
+        {(this.state.settingsAccess) &&
+          <Route path="/settings/:index?" component={Settings} />
         }
         {(this.state.sscAccess) &&
           <Route path="/sschecklist" render={(props) => <SSChecklist {...props} reportType={"Overview"} />} />
@@ -205,9 +210,12 @@ export default class MainLayout extends React.PureComponent {
                       sscAccess={this.state.sscAccess}
                       efficiencyAccess={this.state.efficiencyAccess}
                       caseDiscoveryAccess={this.state.caseDiscoveryAccess}
+                      settingsAccess={this.state.settingsAccess}
                       pathname={this.props.location.pathname}
                       isLoading={this.state.isLoading}
                       logger={this.props.logger}
+                      firstName={this.props.firstName}
+                      lastName={this.props.lastName}
                     />
                   </Drawer>
                 </Hidden>

@@ -6,11 +6,13 @@ import { List, ListItem, Collapse, Grid, MenuItem, Menu } from '@material-ui/cor
 import IconExpandLess from '@material-ui/icons/ExpandLess'
 import IconExpandMore from '@material-ui/icons/ExpandMore'
 import LoadingOverlay from 'react-loading-overlay';
-import alphaTag from 'images/alpha-tag.svg';
+import { mdiCogOutline, mdiShieldAccountVariantOutline, mdiShieldAccountVariant, mdiClipboardTextOutline } from '@mdi/js';
+import Icon from '@mdi/react'
 import globalFunctions from '../../utils/global-functions';
 import { redirectLogin } from '../../utils/Auth';
 import IdleTimer from 'react-idle-timer';
 import * as CONSTANTS from '../../constants';
+import { ProfileIcon } from '../SharedComponents/SharedComponents';
 
 class SSTNav extends React.Component {
   constructor(props) {
@@ -132,7 +134,7 @@ class SSTNav extends React.Component {
                 <ListItem disableGutters><NavLink to="/orUtilization" className='text-link sub-item' >Block Utilization</NavLink></ListItem>
               </Collapse>
             }
-            
+
             {(this.props.emmAccess) &&
               <ListItem disableGutters><NavLink to="/emmcases" className='text-link' >eM&M</NavLink></ListItem>
             }
@@ -140,8 +142,8 @@ class SSTNav extends React.Component {
               <ListItem disableGutters><NavLink to="/emmpublish" className='text-link' >eM&M Publisher</NavLink></ListItem>
             }
 
-            
-            
+
+
 
             {(this.props.sscAccess) &&
               <ListItem disableGutters>
@@ -160,21 +162,18 @@ class SSTNav extends React.Component {
                 <ListItem disableGutters><NavLink to="/quality" className='text-link sub-item' >Quality</NavLink></ListItem>
               </Collapse>
             }
-            
+
           </List>
         </Grid>
-        <Grid item xs={12} style={{ display: 'flex', alignItems: 'flex-end' }}>
+        <Grid item xs={12} style={{ display: 'flex', alignItems: 'flex-end', marginBottom: 20 }}>
           <List disablePadding style={{ width: '100%' }}>
-            {(this.props.emmRequestAccess) &&
-              <ListItem disableGutters><NavLink to="/requestemm" className='text-link' >Request for eM&M</NavLink></ListItem>
-            }
-            {(this.props.adminPanelAccess) &&
-              <ListItem disableGutters><NavLink to="/adminPanel" className='text-link' >Admin Panel</NavLink></ListItem>
-            }
-            {(this.props.sstAdminAccess) &&
-              <ListItem disableGutters><NavLink to="/sstAdmin" className='text-link' >SST Admin Panel</NavLink></ListItem>
-            }
-            <ListItem disableGutters style={{ marginBottom: 20 }}><div className='text-link' onClick={(e) => this.openMenu(e)}>My Account</div></ListItem>
+            <ListItem disableGutters >
+
+              <div className='text-link my-account' onClick={(e) => this.openMenu(e)}>
+                <span><ProfileIcon size={24} className={"subtle-text"} firstName={this.props.firstName} lastName={this.props.lastName} /></span>
+                My Account
+              </div>
+            </ListItem>
             <Menu
               anchorEl={this.state.menu}
               open={Boolean(this.state.menu)}
@@ -182,13 +181,35 @@ class SSTNav extends React.Component {
               style={{ left: 90 }}
             >
               <MenuItem className="sst-menu-item">
-                <NavLink to="/my-profile" onClick={() => this.closeMenu()} style={{ color: 'unset', textDecoration: 'none' }} >My Profile</NavLink>
+                <NavLink to="/my-profile" onClick={() => this.closeMenu()} style={{ color: 'unset', textDecoration: 'none' }} >
+                  My Profile
+                </NavLink>
               </MenuItem>
               <MenuItem className="sst-menu-item">
                 <div onClick={() => this.logout()}>Logout</div>
               </MenuItem>
             </Menu>
-            {/* <div hidden ><NavLink to="/" className='text-link' isActive={() => false} >{this.props.userLogin}</NavLink></div> */}
+            {(this.props.emmRequestAccess) &&
+              <ListItem disableGutters>
+                <NavLink to="/requestemm" className='text-link' >
+                  <Icon color="#000" style={{ marginRight: 16 }} path={mdiClipboardTextOutline} size={'24px'} />Request for eM&M</NavLink>
+              </ListItem>
+            }
+            {(this.props.adminPanelAccess) &&
+              <ListItem disableGutters>
+                <NavLink to="/adminPanel" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariantOutline} size={'24px'} />Admin Panel</NavLink>
+              </ListItem>
+            }
+            {(this.props.sstAdminAccess) &&
+              <ListItem disableGutters>
+                <NavLink to="/sstAdmin" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariant} size={'24px'} />SST Admin</NavLink>
+              </ListItem>
+            }
+            {(this.props.sstAdminAccess) &&
+              <ListItem disableGutters>
+                <NavLink to="/settings" className='text-link' ><Icon color="#000" style={{ marginRight: 16 }} path={mdiCogOutline} size={'24px'} />Settings</NavLink>
+              </ListItem>
+            }
 
           </List>
         </Grid>

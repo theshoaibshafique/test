@@ -24,7 +24,7 @@ import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator
 import ReactDOMServer from 'react-dom/server';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react';
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import { CSSTransition } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, getQuestionByLocation, getQuestionCount, getPresetDates } from './misc/Utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -50,6 +50,8 @@ export function DetailedCase(props) {
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
   const isAdmin = useSelector(makeSelectIsAdmin());
+  const productRoles = useSelector(makeSelectProductRoles());
+  const { emmRoles } = productRoles || {};
   const flagReport = useSelector(selectFlagReport());
 
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsInUtc, wheelsOut, scheduledStart, startTime, endTime,
@@ -71,11 +73,11 @@ export function DetailedCase(props) {
   const startDates = roomCases.map(d => moment(d.wheelsIn));
   const endDates = roomCases.map(d => moment(d.wheelsOut));
 
-  const blockStartDate = moment.min(startDates).clone().set({hour: blockStartTime.hour(), minute: blockStartTime.minute()});
+  const blockStartDate = moment.min(startDates).clone().set({ hour: blockStartTime.hour(), minute: blockStartTime.minute() });
   const earliestStartDate = moment.min([blockStartDate, ...startDates]);
   //We convert from mins to hours manually to get decimals
   const earliestStartTime = globalFunctions.getDiffFromMidnight(earliestStartDate, 'minutes') / 60;
-  const blockEndDate = earliestStartDate.clone().set({hour: blockEndTime.hour(), minute: blockEndTime.minute()});
+  const blockEndDate = earliestStartDate.clone().set({ hour: blockEndTime.hour(), minute: blockEndTime.minute() });
   const latestEndTime = moment.max([blockEndDate, ...endDates]);
   const scheduleDuration = latestEndTime.diff(earliestStartDate, 'hours') + 2;
   //Get # of days the schedule spans
@@ -135,7 +137,7 @@ export function DetailedCase(props) {
       return <LightTooltip title={"eM&M request submitted successfully"} arrow>
         <div><Button variant="outlined" className="primary disabled" onClick={() => null} disabled>Request eM&M</Button></div>
       </LightTooltip>
-    } else if (dayDiff <= 21 && isAdmin) {
+    } else if (dayDiff <= 21 && emmRoles?.isAdmin) {
       return <Button variant="outlined" className="primary" onClick={() => handleOpenRequestEMM(true)}>Request eM&M</Button>
     } else {
       return <div></div>
@@ -183,7 +185,7 @@ export function DetailedCase(props) {
   // Flag clip snackbar open/close-toggle click handler.
   const toggleSnackBar = (state, msg = '') => {
     setSnackBackOpen(state);
-    if(state === true) setSnackBackMsg(msg);
+    if (state === true) setSnackBackMsg(msg);
   };
 
   /*** FLAG SUBMISSION HANDLERS ***/
@@ -519,7 +521,7 @@ export function DetailedCase(props) {
                     disableRipple
                     id="other-complication-checkbox"
                     icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                    checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                    checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
                     checked={isComplicationOtherChecked} onChange={(e) => setIsComplicationOtherChecked(e.target.checked)} />Other
                 </div>
                 {isComplicationOtherChecked && <TextField
@@ -1176,7 +1178,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 
   const getFlagSubmissionTime = (wheelsInTime, caseDuration) => {
     let updatedTime;
-    if(wheelsInTime && caseDuration) {
+    if (wheelsInTime && caseDuration) {
       const durationAvgSeconds = Math.trunc(caseDuration / 2);
       updatedTime = moment(wheelsInTime).clone().add(durationAvgSeconds, 'seconds').format('YYYY-MM-DDTHH:mm:ss.SSS');
     }
@@ -1900,24 +1902,24 @@ function ClipTimeline(props) {
       })
   };
 
-  const publishButton = productRoles?.cdRoles?.hasPublisher && 
+  const publishButton = productRoles?.cdRoles?.hasPublisher &&
     <LightTooltip title={selectedMarker?.isActive ? 'Clip Published' : ''} arrow>
       <div>
         <Button variant="outlined" className="primary" onClick={() => publishClip()} disabled={selectedMarker?.isActive}>
           Publish
-        </Button> 
+        </Button>
       </div>
     </LightTooltip> || ''
 
-  const hideButton = productRoles?.cdRoles?.hasPublisher && 
-    <LightTooltip title={selectedMarker?.isActive  === false ? 'Clip Hidden' : ''} arrow>
+  const hideButton = productRoles?.cdRoles?.hasPublisher &&
+    <LightTooltip title={selectedMarker?.isActive === false ? 'Clip Hidden' : ''} arrow>
       <div>
         <Button variant="outlined" className="primary" onClick={hideClip} disabled={selectedMarker?.isActive === false}>
           Hide
-        </Button> 
+        </Button>
       </div>
     </LightTooltip> || ''
-  
+
   const { startTime, index } = selectedMarker;
   const endTime = startTime + selectedMarker.duration;
   const displayStart = (startTime < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(startTime));

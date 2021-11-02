@@ -11,7 +11,12 @@
     width: 90%; 
     cursor: pointer;
 }
-
+.text-link.my-account{
+    display: flex;
+    span{
+        margin-right: 16px;
+    }
+}
 .text-link {
     color: inherit;
     text-decoration: inherit;

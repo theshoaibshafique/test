@@ -14,7 +14,7 @@ import { Button, MenuItem, Paper, TableHead, TableRow, TableSortLabel, Menu, Lis
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline, mdiLockOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiLockOutline } from '@mdi/js';
 import { selectAssignableRoles, selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
@@ -377,7 +377,7 @@ function RoleOption(props) {
                     disableRipple
                     disabled
                     icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
-                    checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
+                    checkedIcon={<Icon path={mdiCheckboxOutline} size={'18px'} />}
                     className="SST-Checkbox"
                     checked={check}
                 />

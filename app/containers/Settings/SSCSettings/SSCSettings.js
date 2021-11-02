@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import './style.scss';
 import { Card, Checkbox, Divider, FormControlLabel, Grid, Slider, Switch, withStyles } from '@material-ui/core';
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react'
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
@@ -101,7 +101,7 @@ function PhaseItem(props) {
             id={`phaseitem-${pIndex}-${qIndex}`}
             className="SST-Checkbox"
             icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
-            checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
+            checkedIcon={<Icon path={mdiCheckboxOutline} size={'18px'} />}
             onChange={toggle}
             checked={isActive}
             value={questionId}

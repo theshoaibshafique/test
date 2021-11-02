@@ -17,7 +17,7 @@ import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { Grid, FormHelperText } from '@material-ui/core';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import moment from 'moment/moment';
 import globalFunctions from '../../utils/global-functions';
 
@@ -564,7 +564,7 @@ export default class RequestEMM extends React.PureComponent {
                 disableRipple
                 id="other-procedure-checkbox"
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
                 checked={this.state.specialtyCheck} onChange={(e) => this.handleCheckSpecialty(e)} />Other
             </Grid>
             {(this.state.specialtyCheck) &&
@@ -640,7 +640,7 @@ export default class RequestEMM extends React.PureComponent {
                 disableRipple
                 id="other-complication-checkbox"
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
                 checked={this.state.complicationsCheck} onChange={(e) => this.handleCheckComplications(e)} />Other
             </Grid>
             <Grid item xs={12} >

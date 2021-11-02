@@ -508,7 +508,7 @@ export default class Efficiency extends React.PureComponent {
             What's this dashboard about?
           </div>
           {this.props.isAdmin && <div className="efficiency-settings">
-            <NavLink to={"/adminPanel/1"} className='link'>
+            <NavLink to={"/settings/0"} className='link'>
               <span className="settings-icon"><Icon color="#028CC8" style={{ marginRight: 4 }} path={mdiCogOutline} size={'24px'} /></span>Settings
             </NavLink>
           </div>}

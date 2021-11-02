@@ -9,7 +9,7 @@ import { DATE_OPTIONS, TAGS, TAG_INFO } from './misc/constants';
 import { getTag, TagsSelect, useStyles } from './misc/helper-components';
 import { Case } from './Case';
 import Icon from '@mdi/react';
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 import Close from './icons/Close.svg';
 import { makeSelectIsAdmin, makeSelectLogger } from '../App/selectors';
@@ -219,7 +219,7 @@ export function BrowseCases(props) {
                 disableRipple
                 className="checkbox"
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
                 checked={searchData.onlySavedCases} onChange={(e) => handleChange('onlySavedCases', e.target.checked)} />
             }
             label={<span className="label">Show only saved cases</span>}

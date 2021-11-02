@@ -9,7 +9,7 @@ import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUs
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
 import { createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles, resetUser } from './helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
-import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
 import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO } from './constants';
@@ -622,7 +622,7 @@ const ProductPermissions = props => {
                                             disableRipple
                                             disabled
                                             icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
-                                            checkedIcon={<Icon path={mdiCheckBoxOutline} size={'18px'} />}
+                                            checkedIcon={<Icon path={mdiCheckboxOutline} size={'18px'} />}
                                             className="SST-Checkbox"
                                             checked={selectedLocations.includes(locationId)}
                                         />

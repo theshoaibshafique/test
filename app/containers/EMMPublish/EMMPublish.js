@@ -14,7 +14,7 @@ import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
 import MaterialTable from 'material-table';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 
 
@@ -163,7 +163,7 @@ export default class EMMPublish extends React.PureComponent {
             <Checkbox
               disableRipple
               icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-              checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+              checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
               checked={this.state.filterPublished} onChange={(e) => this.handleCheckFilterPublished(e)} />Show requests with unpublished reports only
           </div>
 
