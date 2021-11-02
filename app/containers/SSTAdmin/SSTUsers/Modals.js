@@ -539,7 +539,7 @@ const RolePermissions = props => {
         return (
             <>
                 <span>
-                    {role?.roleName}
+                    {role?.displayName}
                 </span>
                 <span className="flex space-between" >
                     <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
@@ -562,7 +562,7 @@ const RolePermissions = props => {
     return (
         <>
             <span>
-                {role?.roleName}
+                {role?.displayName}
             </span>
             <span>
                 <FormControl

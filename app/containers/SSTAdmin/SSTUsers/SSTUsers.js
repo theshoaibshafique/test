@@ -235,7 +235,7 @@ function TableHeader(props) {
             Object.values(assignableRoles ?? {}).map((product) => {
                 const { productName, productRoles } = product;
                 filters[productName] = new Set([...Object.values(productRoles || {})?.map((role) => (
-                    role?.roleName
+                    role?.displayName
                 )), "No Access"])
             })
             dispatch(setFilters(filters))
@@ -288,7 +288,7 @@ function FilterRole(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const assignableRoles = useSelector(selectAssignableRoles());
     const productRoles = assignableRoles?.[productId]?.productRoles || {}
-    const filterRoles = Object.values(productRoles)?.map((r) => r?.roleName).sort() || [];
+    const filterRoles = Object.values(productRoles)?.map((r) => r?.displayName).sort() || [];
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);

@@ -15,7 +15,7 @@ export const SSTAdmin = props => {
   useEffect(() => {
     const fetchData = async () => {
       const users = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}profiles?min_scope=${minScope}`, 'get', userToken, {});
-      const locations = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}location?facility_id=${facilityName}`, 'get', userToken, {});
+      const locations = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}location`, 'get', userToken, {});
       const assignableRoles = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}assignable_roles?min_scope=${minScope}`, 'get', userToken, {})
 
       dispatch(setUsers(users?.map((u) => {

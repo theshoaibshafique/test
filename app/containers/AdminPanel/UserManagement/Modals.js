@@ -584,7 +584,7 @@ const ProductPermissions = props => {
                         onChange={(e, v) => handleChange('roles', getRoleObject(e.target.value))}
                     >
                         {Object.entries(assignableProductRoles).map(([roleId, role]) => (
-                            role?.displayName && <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
+                            <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
                         ))}
                         <MenuItem value={null}>No Access</MenuItem>
                     </Select>
@@ -688,7 +688,7 @@ const AdminPanelAccess = props => {
                         onChange={(e, v) => handleChange('roles', getLocationObject(e.target.value))}
                     >
                         {Object.entries(assignableUMRoles).map(([roleId, role]) => (
-                            role.displayName && <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
+                            <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
                         ))}
                         <MenuItem value={null}>No Access</MenuItem>
                     </Select>
