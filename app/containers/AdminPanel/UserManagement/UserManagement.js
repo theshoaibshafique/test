@@ -14,7 +14,7 @@ import { Button, MenuItem, Paper, TableHead, TableRow, TableSortLabel, Menu, Lis
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiLockOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiLockOutline, mdiFilter } from '@mdi/js';
 import { selectAssignableRoles, selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
@@ -310,6 +310,10 @@ function FilterRole(props) {
     const handleClose = (e) => {
         setAnchorEl(null);
     };
+    const filters = useSelector(selectFilters())
+    
+    const isFiltered = filters?.[title] ? filters?.[title].size < 3 : false ; 
+    
     if (disabled) {
         return (
 
@@ -331,7 +335,7 @@ function FilterRole(props) {
                 className="pointer"
                 onClick={handleClick}
             >
-                {title}<ArrowDropDown />
+                {title}{isFiltered ? <Icon path={mdiFilter} color={"#004f6e"} style={{marginLeft:6}} size={'12px'} /> : <ArrowDropDown />}
             </span>
             <Menu
                 anchorEl={anchorEl}
