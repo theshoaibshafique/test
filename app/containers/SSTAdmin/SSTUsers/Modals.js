@@ -462,10 +462,10 @@ const ProductPermissions = props => {
     if (!isSubscribed) {
         return ''
     }
-
+    const orderedMap = Object.entries(assignableProductRoles).sort((a, b) => a[1]?.displayName?.localeCompare?.(b[1]?.displayName));
     return (
         <>
-            {Object.entries(assignableProductRoles).map(([roleId, role], i) => {
+            {orderedMap.map(([roleId, role], i) => {
                 return (
                     <div className='product-permission'>
                         <span>{i == 0 ? productName : ''}</span>

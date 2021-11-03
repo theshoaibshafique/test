@@ -574,7 +574,7 @@ const ProductPermissions = props => {
             </div>
         )
     }
-
+    const orderedMap = Object.entries(assignableProductRoles).sort((a, b) => a[1]?.displayName?.localeCompare?.(b[1]?.displayName));
     return (
         <div className='product-permission'>
             <span>{productName}</span>
@@ -588,7 +588,7 @@ const ProductPermissions = props => {
                         value={roleId}
                         onChange={(e, v) => handleChange('roles', getRoleObject(e.target.value))}
                     >
-                        {Object.entries(assignableProductRoles).map(([roleId, role]) => (
+                        {orderedMap.map(([roleId, role]) => (
                             <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
                         ))}
                         <MenuItem value={null}>No Access</MenuItem>
