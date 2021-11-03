@@ -204,7 +204,7 @@ class SSTNav extends React.Component {
             }
             <ListItem disableGutters >
 
-              <div className='text-link my-account' onClick={(e) => this.openMenu(e)}>
+              <div className='text-link my-account pointer' onClick={(e) => this.openMenu(e)}>
                 <span><ProfileIcon size={24} className={"subtle-text"} firstName={this.props.firstName} lastName={this.props.lastName} /></span>
                 My Account
               </div>
