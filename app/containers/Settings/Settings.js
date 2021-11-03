@@ -93,7 +93,8 @@ export default class Settings extends React.PureComponent {
     const { sscRoles, effRoles } = productRoles || {}
     const hasSSC = (this.state.sscConfig?.checklists?.length > 0) && sscRoles?.isAdmin;
     const hasEff = effRoles?.isAdmin;
-    const { tabIndex } = this.state;
+    //default to SSC if eff doesnt exist
+    const tabIndex = hasEff ? this.state.tabIndex : 1;
     return (
       <div className="admin-panel">
         <div className="header">
