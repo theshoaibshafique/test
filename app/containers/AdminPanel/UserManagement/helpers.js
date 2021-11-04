@@ -81,7 +81,7 @@ export function generateProductUpdateBody(roles, assignableRoles = {}) {
     return productUpdates;
 }
 
-export const createUser = async (userData, callback, errorCallback, userToken, assignableRoles = {}) => {
+export const createUser = async (userData, callback, errorCallback, userToken, assignableRoles = {}, minAssignableScope = 2) => {
     const { firstName, lastName, title, email } = userData;
     const userId = await createProfile({ firstName, lastName, title, email }, userToken, errorCallback)
     
@@ -91,6 +91,6 @@ export const createUser = async (userData, callback, errorCallback, userToken, a
     
     const { roles } = userData;
     const productUpdates = generateProductUpdateBody(roles, assignableRoles);
-    const profile = await patchRoles({ userId, minAssignableScope: 2, productUpdates }, userToken);
+    const profile = await patchRoles({ userId, minAssignableScope, productUpdates }, userToken);
     callback(userId);
 }

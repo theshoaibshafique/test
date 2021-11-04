@@ -315,7 +315,7 @@ export const AddEditUserModal = props => {
                 dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. User could not be created.` }));
 
             }
-            createUser(userData, createUserSuccess, createUserError, userToken, assignableRoles);
+            createUser(userData, createUserSuccess, createUserError, userToken, assignableRoles, 0);
         }
     }
 
