@@ -304,7 +304,6 @@ export const AddEditUserModal = props => {
                 updateTable(userId);
                 toggleModal(false);
                 setIsLoading(false);
-                setIsAdded(true);
 
             }
             const createUserError = (result) => {
