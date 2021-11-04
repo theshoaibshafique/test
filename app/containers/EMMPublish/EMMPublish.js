@@ -115,15 +115,6 @@ export default class EMMPublish extends React.PureComponent {
       });
   }
   componentDidUpdate() {
-    // FOR THE LOGS
-    // const search = document.getElementsByClassName('MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd');
-    // if (search.length) {
-    //   search[0].classList.add("log-input");
-    // }
-    // const { logger } = this.props;
-    // setTimeout(() => {
-    //   logger?.connectListeners();
-    // }, 300)
     console.log('here')
   }
 
@@ -187,13 +178,13 @@ export default class EMMPublish extends React.PureComponent {
               <MaterialTable
                 title=""
                 columns={[
-                  { title: this.generateTitle('Facility'), field: 'facilityName', defaultSort: 'desc' },
-                  { title: this.generateTitle('OR'), field: 'roomName' },
-                  { title: this.generateTitle('Procedure'), field: 'procedures' },
-                  { title: this.generateTitle('Complication'), field: 'complications' },
-                  { title: this.generateTitle('Published'), field: 'enhancedMMPublished', lookup: { 'true': 'Yes', 'false': 'No' }, width: 20 },
+                  { title: 'Facility', field: 'facilityName', defaultSort: 'desc' },
+                  { title: 'OR', field: 'roomName' },
+                  { title: 'Procedure', field: 'procedures' },
+                  { title: 'Complication', field: 'complications' },
+                  { title: 'Published', field: 'enhancedMMPublished', lookup: { 'true': 'Yes', 'false': 'No' }, width: 20 },
                   { title: 'requestID', field: 'requestID', hidden: true, searchable: true },
-                  { title: this.generateTitle('Report'), field: 'report', searchable: false, width: 150 },
+                  { title: 'Report', field: 'report', searchable: false, width: 150 },
                   { title: 'enhancedMMReferenceName', field: 'enhancedMMReferenceName', hidden: true },
                 ]}
                 options={{
@@ -223,40 +214,4 @@ export default class EMMPublish extends React.PureComponent {
     );
   }
 
-  //LOG HELPERS
-
-  getTableIcons() {
-    const tableIcons = {
-      Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-      FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} onClick={() => {this.logClick('first-page')}} />),
-      LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} onClick={() => {this.logClick('last-page')}} />),
-      NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} onClick={() => {this.logClick('next-page')}} />),
-      PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} onClick={() => {this.logClick('previous-page')}} />),
-      ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => {this.logClick('clear-search')}} />),
-      Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-      SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
-    };
-    return tableIcons
-  }
-  logClick(key) {
-    const { logger } = this.props;
-    logger?.manualAddLog('click', `${key}`);
-  }
-
-  sortClick(key) {
-    //if element exists we're descending
-    var element = document.querySelectorAll('.MuiTableSortLabel-active .MuiTableSortLabel-iconDirectionAsc');
-    var titleElement = document.querySelectorAll('.MuiTableSortLabel-active');
-    //Check if its the same title
-    let isSameTitle = titleElement.length && key == titleElement[0].textContent;
-    const { logger } = this.props;
-    logger?.manualAddLog('click', `sort-user-list-${key}`, !titleElement.length ? 'none' : (element.length && isSameTitle ? 'desc' : 'asc'));
-
-  }
-  generateTitle(title) {
-    // Generate a title element for the logs
-    return (
-      <div onClick={() => {this.sortClick(title)}}>{title}</div>
-    )
-  }
 }
