@@ -484,7 +484,7 @@ const RolePermissions = props => {
     const getAccessLevelOptions = (minScope, maxScope, currentLocations) => {
         const currLoc = currentLocations || selectedLocations;
         const accessOptions = minScope == 0 ? ['unrestricted'] : []
-        const hospitals = Object.entries(locations)
+        const hospitals = Object.entries(locations)?.sort((a, b) => a[1]?.name?.localeCompare?.(b[1]?.name))
         if (currLoc.includes('unrestricted')) {
             return accessOptions
         }
@@ -494,7 +494,7 @@ const RolePermissions = props => {
             if (currLoc.includes(hId)) {
                 continue;
             }
-            const facilities = Object.entries(h?.facilities);
+            const facilities = Object.entries(h?.facilities)?.sort((a, b) => a[1]?.name?.localeCompare?.(b[1]?.name));
             for (const [fId, f] of facilities) {
                 isWithinScope(2, minScope, maxScope) && accessOptions.push(fId);
                 if (currLoc.includes(fId)) {
