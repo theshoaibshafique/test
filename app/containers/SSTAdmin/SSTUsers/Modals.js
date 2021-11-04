@@ -99,7 +99,7 @@ export const DeleteUserModal = props => {
 
     const fetchDelete = async () => {
         setIsLoading(true)
-        const response = await deleteUser({ userId, minAssignableScope: 0 }, userToken);
+        const response = await deleteUser({ userId, scope: 0 }, userToken);
         const modified = [...userTable];
         const id = modified.findIndex((u) => u.userId == userId);
         if (id >= 0) {
@@ -344,7 +344,7 @@ export const AddEditUserModal = props => {
         const { userId, roles, firstName, lastName } = userData;
         handleChange('save-settings');
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
-        const profile = await patchRoles({ userId, minAssignableScope: 0, productUpdates }, userToken).then((e) => {
+        const profile = await patchRoles({ userId, scope: 0, productUpdates }, userToken).then((e) => {
             if (e == 'error'){
                 dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update user.` }))
             } else {
@@ -613,10 +613,10 @@ const ConfirmReset = props => {
     const { toggleModal, firstName, lastName, email, userId } = props;
     const [isLoading, setIsLoading] = useState(false);
     const userToken = useSelector(makeSelectToken());
-    const minAssignableScope = 0;
+    const scope = 0;
     const handleReset = async () => {
         setIsLoading(true);
-        await resetUser({ userId, minAssignableScope }, userToken)
+        await resetUser({ userId, scope }, userToken)
         setIsLoading(false);
         toggleModal(false);
         dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName}'s account was reset.` }))

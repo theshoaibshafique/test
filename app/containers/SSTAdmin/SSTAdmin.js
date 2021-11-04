@@ -14,9 +14,9 @@ export const SSTAdmin = props => {
   const facilityName = useSelector(makeSelectUserFacility());
   useEffect(() => {
     const fetchData = async () => {
-      const users = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}profiles?min_scope=${minScope}`, 'get', userToken, {});
+      const users = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}profiles?scope=${minScope}`, 'get', userToken, {});
       const locations = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}location`, 'get', userToken, {});
-      const assignableRoles = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}assignable_roles?min_scope=${minScope}`, 'get', userToken, {})
+      const assignableRoles = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}assignable_roles?scope=${minScope}`, 'get', userToken, {})
 
       dispatch(setUsers(users?.map((u) => {
         const { firstName, lastName, roles } = u;
