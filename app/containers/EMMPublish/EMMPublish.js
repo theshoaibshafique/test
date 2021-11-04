@@ -45,8 +45,10 @@ export default class EMMPublish extends React.PureComponent {
         if (result === 'error' || result === 'conflict') {
           this.setState({
             emmCases: []
+          }, () => {
+            this.notLoading()
           });
-          this.notLoading();
+          
         } else {
           if (result === 'error' || result === 'conflict' || !result || !result.length) {
             this.setState({
@@ -97,7 +99,9 @@ export default class EMMPublish extends React.PureComponent {
           })
           this.setState({
             emmCases: emmCases,
-          }, () => this.notLoading())
+          }, () => {
+            this.notLoading()
+          })
         }
       });
   }
@@ -214,11 +218,11 @@ export default class EMMPublish extends React.PureComponent {
   getTableIcons() {
     const tableIcons = {
       Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-      FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} onClick={() => this.logClick('first-page')} />),
-      LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} onClick={() => this.logClick('last-page')} />),
-      NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} onClick={() => this.logClick('next-page')} />),
-      PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} onClick={() => this.logClick('previous-page')} />),
-      ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => this.logClick('clear-search')} />),
+      FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} onClick={() => {this.logClick('first-page')}} />),
+      LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} onClick={() => {this.logClick('last-page')}} />),
+      NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} onClick={() => {this.logClick('next-page')}} />),
+      PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} onClick={() => {this.logClick('previous-page')}} />),
+      ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => {this.logClick('clear-search')}} />),
       Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
       SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
     };
@@ -242,7 +246,7 @@ export default class EMMPublish extends React.PureComponent {
   generateTitle(title) {
     // Generate a title element for the logs
     return (
-      <div onClick={() => this.sortClick(title)}>{title}</div>
+      <div onClick={() => {this.sortClick(title)}}>{title}</div>
     )
   }
 }
