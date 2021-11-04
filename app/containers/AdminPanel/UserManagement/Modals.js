@@ -274,7 +274,6 @@ export const AddEditUserModal = props => {
     const isView = Object.values(userData?.viewState || {}).every((v) => v) && userData?.viewState;
 
     const [isLoading, setIsLoading] = useState(false);
-    const [isUserAdded, setIsAdded] = useState(false);
 
     const isSingleEdit = Object.values(userData?.viewState || {}).filter(t => !t).length == 1;
     const { errorState } = userData;
@@ -306,7 +305,6 @@ export const AddEditUserModal = props => {
                 updateTable(userId);
                 toggleModal(false);
                 setIsLoading(false);
-                setIsAdded(true);
 
             }
             const createUserError = (result) => {
@@ -358,7 +356,6 @@ export const AddEditUserModal = props => {
 
     const toggleModal = () => {
         props?.toggleModal?.();
-        setIsAdded(false);
         setIsLoading(false);
     }
 
@@ -366,7 +363,7 @@ export const AddEditUserModal = props => {
         <GenericModal
             {...props}
             toggleModal={toggleModal}
-            className={`add-edit-user ${!isAddUser && 'is-edit-user'} ${isSingleEdit && 'single-edit'} ${isUserAdded && 'user-added'}`}
+            className={`add-edit-user ${!isAddUser && 'is-edit-user'} ${isSingleEdit && 'single-edit'} `}
         >
             <>
                 <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} />
