@@ -16,22 +16,7 @@
         margin-bottom: 24px;
     }
     .buttons {
-        display: flex;
-        justify-content: flex-end;
         margin-top: 40px;
-        .reset {
-            color: #028cc8;
-        }
-        button {
-            margin: 16px;
-            &:last-child {
-                margin-right: 0;
-            }
-        }
-        .MuiButton-root.Mui-disabled {
-            color: #ffffff;
-            opacity: 0.3;
-        }
     }
 
     .error {

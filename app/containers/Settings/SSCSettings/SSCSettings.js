@@ -5,7 +5,7 @@ import { Card, Checkbox, Divider, FormControlLabel, Grid, Slider, Switch, withSt
 import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react'
-import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
 
 const SSTSwitch = withStyles((theme) => ({
   root: {
@@ -431,12 +431,20 @@ export default class SSCSettings extends React.PureComponent {
         ))}
         {this.renderNotice(hasCheckedPhase)}
         {this.renderSaveWarning()}
-        <div className="buttons">
+        {/* <div className="buttons">
           <Button disableRipple id="reset" className="reset" onClick={() => this.reset()}>Reset</Button>
           <Button disableRipple id="save" variant="outlined" className="primary" disabled={(this.state.isLoading || !hasCheckedPhase)} onClick={() => this.submit()}>
             {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}</Button>
-        </div>
-
+        </div> */}
+        <SaveAndCancel
+          className="buttons"
+          handleSubmit={() => {this.submit()}}
+          handleCancel={() => {this.reset()}}
+          isLoading={this.state.isLoading}
+          disabled={this.state.isLoading || !hasCheckedPhase}
+          cancelText={'Reset'}
+          submitText={'Save'}
+        />
 
       </section>
     );

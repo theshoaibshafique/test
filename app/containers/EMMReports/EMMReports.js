@@ -57,11 +57,11 @@ const ConfirmPresenterDialog = (props) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => closePresenterDialog(false)} className="cancel-publish" color="primary">
-          Cancel
-        </Button>
         <Button onClick={() => closePresenterDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
           Proceed
+        </Button>
+        <Button onClick={() => closePresenterDialog(false)} className="cancel-publish" color="primary">
+          Cancel
         </Button>
       </DialogActions>
     </Dialog>

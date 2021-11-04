@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent } from '@material-ui/core';
+import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent, Button } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -252,4 +252,16 @@ export const ProfileIcon = props => {
       <div className={`${className} ${classes.root}`}>{initials}</div>
   )
 
+}
+
+export const SaveAndCancel = props => {
+  const { className, handleSubmit, handleCancel, isLoading, submitText, cancelText, disabled } = props;
+  return (
+      <div className={`${className} save-and-cancel`}>
+          <Button id="save" variant="outlined" className="primary" disabled={disabled} onClick={() => handleSubmit()}>
+              {(isLoading) ? <div className="loader"></div> : submitText}
+          </Button>
+          <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => handleCancel()}>{cancelText}</Button>
+      </div>
+  )
 }

@@ -13,7 +13,7 @@ import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@m
 import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
 import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO } from './constants';
-import { ProfileIcon, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
+import { ProfileIcon, SaveAndCancel, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 /* 
     Generic Modal thats empty with an X in the corner
@@ -385,17 +385,6 @@ export const AddEditUserModal = props => {
                 )}
             </>
         </GenericModal>
-    )
-}
-const SaveAndCancel = props => {
-    const { className, handleSubmit, handleCancel, isLoading, submitText, cancelText, disabled } = props;
-    return (
-        <div className={`${className} save-and-cancel`}>
-            <Button id="save" variant="outlined" className="primary" disabled={disabled} onClick={() => handleSubmit()}>
-                {(isLoading) ? <div className="loader"></div> : submitText}
-            </Button>
-            <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => handleCancel()}>{cancelText}</Button>
-        </div>
     )
 }
 

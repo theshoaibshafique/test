@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import globalFuncs from '../../../utils/global-functions';
 import './style.scss';
 import { Divider, FormControl, MenuItem, Select } from '@material-ui/core';
+import { SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
 
 export default class EfficiencySettings extends React.PureComponent {
   constructor(props) {
@@ -172,11 +173,14 @@ export default class EfficiencySettings extends React.PureComponent {
           <span className="unit normal-text">min</span>
         </div>
         {this.renderSaveWarning()}
-        <div className="buttons">
-          <Button disableRipple id="reset" className="reset" onClick={() => this.reset()}>Reset</Button>
-          <Button disableRipple id="save" variant="outlined" className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
-            {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}</Button>
-        </div>
+        <SaveAndCancel
+          handleSubmit={() => {this.submit()}}
+          handleCancel={() => {this.reset()}}
+          isLoading={this.state.isLoading}
+          disabled={this.state.isLoading}
+          cancelText={'Reset'}
+          submitText={'Save'}
+        />
       </section>
     );
   }
