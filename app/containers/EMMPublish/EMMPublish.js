@@ -94,7 +94,7 @@ export default class EMMPublish extends React.PureComponent {
               enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
               report: !emmCase.enhancedMMReferenceName
                 ? 'Report not available'
-                : <Button disableElevation variant="contained" className="secondary" onClick={() => this.props.showEMMReport(emmCase.enhancedMMReferenceName)} >Open Report</Button>
+                : <Button disableElevation variant="contained" className="secondary" onClick={() => {this.props.showEMMReport(emmCase.enhancedMMReferenceName)}} >Open Report</Button>
             }
           })
           this.setState({
@@ -168,7 +168,7 @@ export default class EMMPublish extends React.PureComponent {
               disableRipple
               icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
               checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
-              checked={this.state.filterPublished} onChange={(e) => this.handleCheckFilterPublished(e)} />Show requests with unpublished reports only
+              checked={this.state.filterPublished} onChange={(e) => {this.handleCheckFilterPublished(e)}} />Show requests with unpublished reports only
           </div>
 
           <div>
