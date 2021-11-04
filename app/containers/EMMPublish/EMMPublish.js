@@ -17,7 +17,16 @@ import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 
-
+const tableIcons = {
+  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
+};
 
 export default class EMMPublish extends React.PureComponent {
   constructor(props) {
@@ -107,14 +116,15 @@ export default class EMMPublish extends React.PureComponent {
   }
   componentDidUpdate() {
     // FOR THE LOGS
-    const search = document.getElementsByClassName('MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd');
-    if (search.length) {
-      search[0].classList.add("log-input");
-    }
-    const { logger } = this.props;
-    setTimeout(() => {
-      logger?.connectListeners();
-    }, 300)
+    // const search = document.getElementsByClassName('MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd');
+    // if (search.length) {
+    //   search[0].classList.add("log-input");
+    // }
+    // const { logger } = this.props;
+    // setTimeout(() => {
+    //   logger?.connectListeners();
+    // }, 300)
+    console.log('here')
   }
 
   loading() {
@@ -203,7 +213,7 @@ export default class EMMPublish extends React.PureComponent {
                 }}
 
                 data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => !emmCase.enhancedMMPublished) : this.state.emmCases}
-                icons={this.getTableIcons()}
+                icons={tableIcons}
               />
             }
           </div>
