@@ -115,7 +115,7 @@ export default class EMMPublish extends React.PureComponent {
       });
   }
   componentDidUpdate() {
-    console.log('here')
+    
   }
 
   loading() {
