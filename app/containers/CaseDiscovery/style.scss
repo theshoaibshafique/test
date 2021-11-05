@@ -963,24 +963,15 @@
     height: 30px;
     .clip-timeline {
         position: relative;
-        // background-color: rgba(61, 179, 227,.1);
-        // border-top: 1px solid #cce5ee;
-        // border-left: 1px solid #cce5ee;
         height: 100%;
         width: 100%;
         .clip-marker {
-            // border-radius: 4px;
-
             position: absolute;
-            // min-width: 30px;
             border-bottom: 1px solid #d42828;
             padding-top: 2px;
-            // display: flex;
-            // background-color: #ffcfcf;
             height: 100%;
             svg {
                 cursor: pointer;
-                // margin:auto;
                 margin-bottom: -5px;
             }
             &:before,
@@ -1126,8 +1117,8 @@
     display: flex;
     flex-direction: column-reverse;
     margin-bottom: 24px;
-    width: 80%;
-    max-width: 1180px;
+    // width: 80%;
+    max-width: 900px;
     .react-multi-carousel-item {
         min-width: 250px;
     }
@@ -1374,7 +1365,7 @@
         }
     }
     .carousel-cases {
-        width: 65%;
+        max-width: 800px;
         .react-multi-carousel-item {
             min-width: 220px;
         }
@@ -1386,8 +1377,7 @@
         min-width: 25%;
     }
     .carousel-cases {
-        width: 60%;
-        max-width: 1180px;
+        max-width: 700px;
         .react-multi-carousel-item {
             min-width: 220px;
         }
@@ -1407,7 +1397,6 @@
         }
     }
     .carousel-cases {
-        width: 50%;
-        max-width: 1180px;
+        width: 65%;
     }
 }

@@ -247,7 +247,7 @@ const useProfileIconStyles = makeStyles({
 export const ProfileIcon = props => {
   const { firstName, lastName, className, size } = props;
   const classes = useProfileIconStyles({size})
-  const initials = `${firstName} ${lastName}`.match(/(\b\S)?/g).join("").match(/(^\S|\S$)?/g).join("").toUpperCase();
+  const initials = `${firstName?.substring(0,1)}${lastName?.substring(0,1)}`.toUpperCase();
   return (
       <div className={`${className} ${classes.root}`}>{initials}</div>
   )
