@@ -139,7 +139,7 @@ export default class Login extends React.PureComponent {
     await globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', token, {})
       .then(async result => {
         this.props.setProfile(result);
-        
+        this.setLogger(token);
         if (roleToken?.forbidden){
           const val = await roleToken?.forbidden
           this.props.setUserStatus({status: 'forbidden', message: val?.detail})
@@ -147,7 +147,7 @@ export default class Login extends React.PureComponent {
         }
         this.getOperatingRooms(token);
         this.getComplications(token);
-        this.setLogger(token);
+        
       }).catch((results) => {
         console.error("oh no", results)
       });

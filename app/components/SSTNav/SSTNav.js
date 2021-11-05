@@ -68,8 +68,8 @@ class SSTNav extends React.Component {
       refresh_token: refreshToken || ""
     }
     const { logger } = this.props;
-    logger.manualAddLog('session', 'user-logout');
-    logger.sendLogs()
+    logger?.manualAddLog('session', 'user-logout');
+    logger?.sendLogs()
     localStorage.setItem('refreshToken', null);
     globalFunctions.authFetch(`${process.env.AUTH_API}revoke`, 'POST', body)
       .then(result => {
