@@ -21,7 +21,7 @@ import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
 import { AddEditUserModal, DeleteUserModal, UMLearnMore } from './Modals';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID } from '../../../constants';
-import { makeSelectProductRoles } from '../../App/selectors';
+import { makeSelectLogger, makeSelectProductRoles } from '../../App/selectors';
 
 
 const tableIcons = {
@@ -60,6 +60,19 @@ export const UserManagement = props => {
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
     const [showLearnMore, setShowLearnMore] = useState(false);
+    const logger = useSelector(makeSelectLogger());
+    const handleUserSelect = (user, isEdit) => {
+        setSelectedUser(user);
+        logger?.manualAddLog('click', isEdit ? `edit-user-${user?.userId}` : (user ? 'add-user' : 'close-user-modal'), user);
+    }
+    const handleDeleteSelect = (del) => {
+        setDeleteUser(del);
+        logger?.manualAddLog('click', del ? `delete-user-${del?.userId}` : 'close-delete-user' , del);
+    }
+    const handleLearnMoreSelect = (open) => {
+        setShowLearnMore(open)
+        logger?.manualAddLog('click', open ? `open-learn-more` : 'close-learn-more' );
+    }
     return (
         <div className="user-management">
             <MemoTable
@@ -80,30 +93,30 @@ export const UserManagement = props => {
                     {
                         icon: 'edit',
                         tooltip: 'Edit User',
-                        onClick: (user) => setSelectedUser(JSON.parse(JSON.stringify(user)))
+                        onClick: (user) => handleUserSelect(JSON.parse(JSON.stringify(user)), true) 
                     },
                     {
                         icon: 'delete',
                         tooltip: 'Delete User',
-                        onClick: (user) => setDeleteUser(user)
+                        onClick: (user) => handleDeleteSelect(user)
                     },
                     {
                         icon: 'add',
                         tooltip: 'Add User',
                         isFreeAction: true,
-                        onClick: (user) => setSelectedUser(true)
+                        onClick: (user) => handleUserSelect(true)
                     },
                     {
                         icon: 'learn-more',
                         tooltip: 'Learn More',
                         isFreeAction: true,
-                        onClick: (user) => setShowLearnMore(true)
+                        onClick: (user) => handleLearnMoreSelect(true)
                     }
                 ] : [{
                     icon: 'learn-more',
                     tooltip: 'Learn More',
                     isFreeAction: true,
-                    onClick: (user) => setShowLearnMore(true)
+                    onClick: (user) => handleLearnMoreSelect(true)
                 }]}
                 options={{
                     search: true,
@@ -135,16 +148,16 @@ export const UserManagement = props => {
             />
             <UMLearnMore
                 open={showLearnMore}
-                toggleModal={setShowLearnMore}
+                toggleModal={handleLearnMoreSelect}
             />
             <AddEditUserModal
                 open={Boolean(selectedUser)}
                 user={selectedUser}
-                toggleModal={setSelectedUser} />
+                toggleModal={handleUserSelect} />
             <DeleteUserModal
                 open={Boolean(deleteUser)}
                 user={deleteUser}
-                toggleModal={setDeleteUser}
+                toggleModal={handleDeleteSelect}
             />
         </div>
     )
@@ -304,11 +317,14 @@ function FilterRole(props) {
     const { title, disabled } = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+    const logger = useSelector(makeSelectLogger());
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
+        logger?.manualAddLog('click', `open-filter-${title}` );
     };
     const handleClose = (e) => {
         setAnchorEl(null);
+        logger?.manualAddLog('click', `close-filter-${title}` );
     };
     const filters = useSelector(selectFilters())
     
@@ -362,6 +378,7 @@ function RoleOption(props) {
     };
     //We maintain an internal check state to help with rendering 
     const [check, setCheck] = useState(filters[parent]?.has(label) || false);
+    const logger = useSelector(makeSelectLogger());
     const handleFilter = (e, v) => {
         const productFilter = filters[e] ?? new Set();
         if (productFilter.has(v)) {
@@ -372,7 +389,7 @@ function RoleOption(props) {
         filters[e] = productFilter;
         dispatch(setFilters(filters));
         setCheck(filters[parent]?.has(label));
-
+        logger?.manualAddLog('click', `update-filter-${parent}`, productFilter );
     }
     return (
         <MenuItem key={parent + label} onClick={() => { handleFilter(parent, label) }} style={{ padding: "0px 14px 0 0 " }}>

@@ -46,7 +46,7 @@ export const UMLearnMore = props => {
     const orderedInfo = Object.entries(LEARNMORE_INFO).sort((a, b) => a[1].order - b[1].order);
     const handleTabChange = (obj, tabIndex) => {
         setTabIndex(tabIndex);
-        logger?.manualAddLog('click', `change-tab-${orderedInfo[tabIndex][0]}`, orderedInfo[tabIndex][0]);
+        logger?.manualAddLog('click', `learn-more-change-tab-${orderedInfo[tabIndex][0]}`, orderedInfo[tabIndex][0]);
     }
     const facilityMark = "<facility>";
     return (
@@ -188,11 +188,12 @@ const userReducer = (state, event) => {
         if (productId && state.errorState?.[productId]) {
             state.errorState[productId] = null;
         }
-        
+
         event.name = 'roles';
         event.value = roles
     } else if (event.name == 'location-roles') {
-        const { roleId, locations, locationLookups, productId } = event.value;
+        const { roleId, locations, productId } = event.value;
+        const locationLookups = state?.locationLookups;
         //We're under the assumption that roles is alredy in the state if you're modifying location
         state.roles = state.roles || {}
         state.roles[roleId] = state.roles[roleId] || {}
@@ -214,7 +215,7 @@ const userReducer = (state, event) => {
         //Validate by default 
         const errorState = state?.errorState || {};
         //If manual validate (on blur) vs if ttheyre updating the field directly
-        const { id, value } = event.name == 'validate' ? event.value : {id: event.name, value: event.value};
+        const { id, value } = event.name == 'validate' ? event.value : { id: event.name, value: event.value };
         const isValidateAll = id == 'all';
         if (id == 'email' || isValidateAll) {
             errorState['email'] = globalFunctions.validEmail(value ?? state?.email) ? null : '​Please enter a valid email address';
@@ -254,20 +255,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
-
-
 export const AddEditUserModal = props => {
     const dispatch = useDispatch();
     const { user } = props;
     const isAddUser = !Boolean(user?.userId);
     //if we're adding a new user we edit all sections at once
     const viewObject = isAddUser ? null : defaultViewState;
-
-    const [userData, setUserData] = useReducer(userReducer, { ...user, viewState: viewObject });
+    const locationLookups = useSelector(selectLocationLookups());
+    const [userData, setUserData] = useReducer(userReducer, { ...user, viewState: viewObject, locationLookups });
 
     const userToken = useSelector(makeSelectToken());
     const assignableRoles = useSelector(selectAssignableRoles());
+    const logger = useSelector(makeSelectLogger());
 
     const { viewProfile, viewAdminAccess, ...viewPermissions } = userData?.viewState || {};
 
@@ -283,13 +282,15 @@ export const AddEditUserModal = props => {
 
     //Reload the state every time user changes
     useEffect(() => {
-        handleChange('new-user', { ...user, viewState: viewObject });
+        handleChange('new-user', { ...user, viewState: viewObject, locationLookups });
     }, [user])
 
     const handleChange = (name, value) => {
+
         setUserData({
             name, value, isSingleEdit
         })
+        !['validate', 'new-user', 'errorState'].includes(name) && logger?.manualAddLog('onchange', name, value)
     }
 
     const handleSubmit = (event) => {
@@ -345,7 +346,7 @@ export const AddEditUserModal = props => {
         handleChange('save-settings');
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
         const profile = await patchRoles({ userId, scope: 2, productUpdates }, userToken).then((e) => {
-            if (e == 'error'){
+            if (e == 'error') {
                 dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update user.` }))
             } else {
                 dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was updated.` }))
@@ -530,7 +531,7 @@ const ProductPermissions = props => {
         setLocations(newLocations);
         setAccessLevelOptions(accessLevelOptions);
         //Save in state for BE
-        handleChange('location-roles', { roleId, locations: newLocations, locationLookups, productId });
+        handleChange('location-roles', { roleId, locations: newLocations, productId });
     }
 
     if (!isSubscribed || productName == 'User Management') {
