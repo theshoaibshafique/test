@@ -22,7 +22,7 @@
         .add-user-button {
             margin: 0 86px;
         }
-        tbody .MuiTableCell-root{
+        tbody .MuiTableCell-root {
             position: relative;
         }
         .disabled-role {
@@ -44,12 +44,12 @@
         top: 0;
         width: 100%;
         z-index: 1;
-        .header-cell{
+        .header-cell {
             padding: 12px;
         }
         .disabled-header {
             color: #828282;
-            :first-child{
+            :first-child {
                 margin-right: 8px;
             }
         }
@@ -156,6 +156,10 @@
     padding: 32px;
     min-width: unset;
     border-radius: 8px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    overflow-x: hidden;
+
     .close-button {
         cursor: pointer;
         position: absolute;
