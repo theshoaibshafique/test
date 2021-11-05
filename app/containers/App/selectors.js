@@ -13,6 +13,11 @@ const makeSelectToken = () => createSelector(
   (globalState) => globalState.get('userToken')
 );
 
+const makeSelectUserStatus = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('userStatus')
+);
+
 const makeSelectID = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('userID')
@@ -125,6 +130,7 @@ const makeSelectSnackbar = () => createSelector(
 export {
   selectGlobal,
   makeSelectToken,
+  makeSelectUserStatus,
   makeSelectUserLoggedIn,
   makeSelectID,
   makeSelectRepos,

@@ -28,7 +28,8 @@ import {
   PROFILE,
   CURRENT_PRODUCT,
   TOGGLE_SNACKBAR,
-  EXIT_SNACKBAR
+  EXIT_SNACKBAR,
+  USER_STATUS
 } from './constants';
 
 /**
@@ -42,6 +43,20 @@ export function setUserInfo(token) {
   return {
     type: USER_TOKEN,
     token
+  };
+}
+
+/**
+ * Set user status (mainly used for forbidden)
+ *
+ * @param  {object} 
+ *
+ * @return {object}    An action object with a type of USER_STATUS
+ */
+ export function setUserStatus(status) {
+  return {
+    type: USER_STATUS,
+    status
   };
 }
 

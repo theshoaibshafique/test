@@ -16,15 +16,14 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import SSChecklist from 'containers/SSChecklist/Loadable';
 import Efficiency from 'containers/Efficiency/Loadable';
 import NoAccess from 'containers/NoAccess/Loadable';
+import Forbidden from 'containers/Forbidden/Loadable';
+
 import SSTNav from 'components/SSTNav';
-import AzureLogin from 'components/AzureLogin';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
-import globalFunctions from '../../utils/global-functions';
 import CaseDiscovery from '../CaseDiscovery/CaseDiscovery';
-import moment from 'moment';
 import Login from '../Login';
 import { UserFeedback } from '../../components/UserFeedback/UserFeedback';
 import { SSTSnackbar } from '../../components/SharedComponents/SharedComponents';
@@ -53,20 +52,20 @@ export default class MainLayout extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.userRoles != this.props.userRoles || prevProps.userFacility != this.props.userFacility) {
       this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
-    }
+    } 
   }
 
   resourcesGathered(roles, userFacility) {
     if (!userFacility) {
       return;
     }
-    const { productRoles: { cdRoles, effRoles, sscRoles, emmRoles, umRoles} } = this.props;
+    const { productRoles: { cdRoles, effRoles, sscRoles, emmRoles, umRoles } } = this.props;
     this.setState({
       userLoggedIn: true,
       adminPanelAccess: (umRoles.isAdmin || umRoles.hasAccess),
       settingsAccess: effRoles.isAdmin || sscRoles.isAdmin,
       emmAccess: emmRoles.hasAccess,
-      emmRequestAccess: emmRoles.isAdmin ,//&& !cdRoles.hasAccess,
+      emmRequestAccess: emmRoles.isAdmin,//&& !cdRoles.hasAccess,
       sscAccess: sscRoles.hasAccess,
       efficiencyAccess: effRoles.hasAccess,
       caseDiscoveryAccess: cdRoles.hasAccess,
@@ -100,13 +99,20 @@ export default class MainLayout extends React.PureComponent {
   }
 
   getContainer() {
+    const { logger, userStatus } = this.props;
+    if (userStatus && userStatus?.status == 'forbidden') {
+      return <Switch>
+        <Route path="/my-profile" component={MyProfile} />
+        <Forbidden />
+      </Switch>
+    }
     if (!this.state.authenticated) {
       return <Switch>
         <Route path="/my-profile" component={MyProfile} />
         <NoAccess />
       </Switch>
     }
-    const { logger } = this.props;
+
     if (this.state.userLoggedIn) {
       if (this.props.emmReportID) {
         logger?.manualAddLog('session', `open-emm-report`, this.props.emmReportID);
@@ -176,6 +182,7 @@ export default class MainLayout extends React.PureComponent {
   };
 
   render() {
+    
     return (
       <div className="app-wrapper">
         <Login />
@@ -186,7 +193,7 @@ export default class MainLayout extends React.PureComponent {
         >
           <meta name="description" content="SST Insights web portal" />
         </Helmet>
-        <SSTSnackbar/>
+        <SSTSnackbar />
         {this.state.userLoggedIn ?
           <React.Fragment>
             <div className="APP-MAIN-WRAPPER">

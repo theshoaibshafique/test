@@ -10,6 +10,7 @@
  */
 
 export const USER_TOKEN = 'insight/App/USER_TOKEN';
+export const USER_STATUS = 'insight/App/USER_STATUS';
 export const USER_FACILITY = 'insight/App/USER_FACILITY';
 export const FACILITY_ROOMS = 'insight/App/FACILITY_ROOMS';
 export const SPECIALTIES = 'insight/App/SPECIALTIES';

@@ -2,8 +2,8 @@ import axios from 'axios';
 import moment from 'moment/moment';
 
 function genericFetch(api, fetchMethod, token, fetchBodyJSON) {
-  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
-  
+  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
+
   if (fetchMethod === 'get') {
     return fetch(api, {
       method: fetchMethod,
@@ -26,6 +26,8 @@ function genericFetch(api, fetchMethod, token, fetchBodyJSON) {
           }
         } else if ([409].indexOf(response.status) >= 0) {
           return 'conflict';
+        } else if ([403].indexOf(response.status) >= 0) {
+          return { forbidden: response.json() }
         } else {
           return 'error';
         }
@@ -66,14 +68,14 @@ function genericFetch(api, fetchMethod, token, fetchBodyJSON) {
 }
 
 function genericFetchWithNoReturnMessage(api, fetchMethod, token, fetchBodyJSON) {
-  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
+  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
   return fetch(api, {
     method: fetchMethod,
     mode: 'cors',
     headers: {
       'Authorization': 'Bearer ' + userToken,
       'Content-Type': 'application/json',
-      'X-AUTH':roleToken
+      'X-AUTH': roleToken
     },
     body: JSON.stringify(fetchBodyJSON)
   }).then(response => {
@@ -98,14 +100,14 @@ function axiosFetch(url, fetchMethod, token, fetchBodyJSON, cancelToken) {
   if (!url) {
     return;
   }
-  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
+  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
   return axios({
     method: fetchMethod,
     url: url,
     headers: {
       'Authorization': 'Bearer ' + userToken,
       'Content-Type': 'application/json',
-      'X-AUTH':roleToken
+      'X-AUTH': roleToken
     },
     data: JSON.stringify(fetchBodyJSON),
     mode: 'cors',
@@ -135,28 +137,28 @@ function axiosFetchWithCredentials(url, fetchMethod, token, fetchBodyJSON) {
   if (!url) {
     return;
   }
-  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
+  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
   return axios({
     method: fetchMethod,
     url: url,
     headers: {
       'Authorization': 'Bearer ' + userToken,
       'Content-Type': 'application/json',
-      'X-AUTH':roleToken
+      'X-AUTH': roleToken
     },
     withCredentials: true,
     data: JSON.stringify(fetchBodyJSON),
     mode: 'cors'
   });
 }
-export async function getCdnStreamCookies(url,token) {
-  const {userToken, roleToken} = typeof token == 'object' ? token : {userToken:token, roleToken:''};
+export async function getCdnStreamCookies(url, token) {
+  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
   return axios({
     method: 'get',
     url: `${url}cookie`,
     headers: {
       'Authorization': 'Bearer ' + userToken,
-      'X-AUTH':roleToken
+      'X-AUTH': roleToken
     },
     withCredentials: true
   })

@@ -26,7 +26,8 @@ import {
   PROFILE,
   CURRENT_PRODUCT,
   TOGGLE_SNACKBAR,
-  EXIT_SNACKBAR
+  EXIT_SNACKBAR,
+  USER_STATUS
 } from './constants';
 
 // The initial state of the App
@@ -61,6 +62,9 @@ function emmReducer(state = initialState, action) {
         .set('lastName', action.token.user.idToken.family_name)
         .set('email', action.token.user.idToken.email)
         .set('jobTitle', action.token.user.idToken.job_title);
+    case USER_STATUS:
+      return state
+        .set('userStatus', action.status)
     case AUTH_LOGIN:
       return state
         .set('userToken', action.accessToken)
@@ -102,14 +106,14 @@ function emmReducer(state = initialState, action) {
         .set('snackbar', state.get('snackbar')?.slice?.(1))
     case CURRENT_PRODUCT:
       return state
-        .set('currentProduct', {...state.get(action.currentProduct)});
+        .set('currentProduct', { ...state.get(action.currentProduct) });
     default:
       return state;
   }
 }
 
 function setProductRoles(state, userRoles) {
-  if (!userRoles){
+  if (!userRoles) {
     return state;
   }
   const createProduct = (permissions) => {
