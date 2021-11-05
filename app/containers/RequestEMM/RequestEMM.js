@@ -17,9 +17,10 @@ import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { Grid, FormHelperText } from '@material-ui/core';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import moment from 'moment/moment';
 import globalFunctions from '../../utils/global-functions';
+import { SaveAndCancel } from '../../components/SharedComponents/SharedComponents';
 
 export default class RequestEMM extends React.PureComponent {
   constructor(props) {
@@ -564,7 +565,7 @@ export default class RequestEMM extends React.PureComponent {
                 disableRipple
                 id="other-procedure-checkbox"
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
                 checked={this.state.specialtyCheck} onChange={(e) => this.handleCheckSpecialty(e)} />Other
             </Grid>
             {(this.state.specialtyCheck) &&
@@ -640,7 +641,7 @@ export default class RequestEMM extends React.PureComponent {
                 disableRipple
                 id="other-complication-checkbox"
                 icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
                 checked={this.state.complicationsCheck} onChange={(e) => this.handleCheckComplications(e)} />Other
             </Grid>
             <Grid item xs={12} >
@@ -698,11 +699,14 @@ export default class RequestEMM extends React.PureComponent {
             <Grid item xs={8}>
               <Grid container justify="flex-end" spacing={0}>
                 <Grid item xs={12}>
-                  <Grid container justify="flex-end" spacing={0}>
-                    <Button id="reset" style={{ color: "#3db3e3", height: 40, width: 115, marginRight: 40 }} onClick={() => this.reset()}>Reset Form</Button>
-                    <Button id="submit" variant="outlined" style={{ height: 40, width: 96 }} className="primary" disabled={(this.state.isLoading)} onClick={() => this.submit()}>
-                      {(this.state.isLoading) ? <div className="loader"></div> : 'Submit'}</Button>
-                  </Grid>
+                  <SaveAndCancel
+                    handleSubmit={() => {this.submit()}}
+                    handleCancel={() => {this.reset()}}
+                    isLoading={this.state.isLoading}
+                    disabled={this.state.isLoading }
+                    cancelText={'Reset'}
+                    submitText={'Save'}
+                  />
                 </Grid>
               </Grid>
             </Grid>

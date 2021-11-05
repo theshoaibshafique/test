@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import Icon from '@mdi/react';
-import { mdiChevronUp, mdiChevronDown, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiChevronUp, mdiChevronDown, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import './style.scss';
 import { Button, Checkbox, FormControlLabel, InputLabel, makeStyles, TextField } from '@material-ui/core';
 import globalFunctions from '../../utils/global-functions';
@@ -99,7 +99,7 @@ export function UserFeedback(props) {
               disableRipple
               className="checkbox"
               icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-              checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+              checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
               checked={sendEmail} onChange={(e) => setData({ sendEmail: e.target.checked })} />
           }
           label={<span className="label" className={classes.inputLabel}>Send follow-up email</span>}

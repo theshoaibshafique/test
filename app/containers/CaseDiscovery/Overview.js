@@ -3,18 +3,59 @@ import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useSelector } from 'react-redux';
-import { selectFlagReport, selectSavedCases } from '../App/cd-selectors';
+import { selectFlagReport, selectSavedCases, selectClipNotificationStatus } from '../App/store/CaseDiscovery/cd-selectors';
 import { useTransition, animated } from "react-spring";
 import { Case, EmptyCase, ThumbnailCase } from './Case';
-import { DATE_OPTIONS } from './misc/constants';
+import Icon from '@mdi/react'
+import { mdiBellOffOutline, mdiBellRing } from '@mdi/js';
+import { DATE_OPTIONS, CLIP_NOTIFICATION_STATUS_TOOLTIPS } from './misc/constants';
 import { getTag } from './misc/helper-components';
 import { formatCaseForLogs, getPresetDates } from './misc/Utils';
 import { makeSelectLogger } from '../App/selectors';
+import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
+    const [animateShake, setAnimateShake] = useState(false);
+    const [animateFade, setAnimateFade] = useState(false);
     const flagReport = useSelector(selectFlagReport());
-    const { handleChangeCaseId, handleSaveCase, handleFilterChange } = props;
+    const clipNotificationStatus = useSelector(selectClipNotificationStatus());
+    const { handleChangeCaseId, handleSaveCase, handleFilterChange, handleToggleClipNotification } = props;
     const commonProps = { handleChangeCaseId, handleSaveCase };
+
+    const bellNotificationIcon = (
+        <LightTooltip 
+            title={
+                <React.Fragment>
+                    <div style={{marginBottom:4, fontWeight:'bold'}}>
+                        {clipNotificationStatus ? 
+                            Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS)[0] : 
+                            Object.keys(CLIP_NOTIFICATION_STATUS_TOOLTIPS)[1] 
+                        }
+                    </div>
+                    <span>{clipNotificationStatus ? 
+                            CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification On'] : 
+                            CLIP_NOTIFICATION_STATUS_TOOLTIPS['Notification Off']
+                          }
+                    </span> 
+                </React.Fragment>
+            } 
+            arrow
+        >
+            <div className={`bell-notification ${animateShake && clipNotificationStatus ? 'shake' : ''} ${animateFade && clipNotificationStatus === false ? 'fade' : ''}`} 
+                onClick={() => {
+                    handleToggleClipNotification(clipNotificationStatus); 
+                    if(clipNotificationStatus) setAnimateShake(true);
+                    if(clipNotificationStatus === false) setAnimateFade(true);
+                }} 
+                onAnimationEnd={() => {
+                    if(clipNotificationStatus) setAnimateShake(false);
+                    if(clipNotificationStatus === false) setAnimateFade(false);
+                }}>
+                <Icon color={clipNotificationStatus === false ? '#828282' : '#004f6e'} path={clipNotificationStatus === false ? mdiBellOffOutline : mdiBellRing} size={'24px'} />
+            </div>
+        </LightTooltip>
+    );
+
     return (
         <div className="case-discovery-overview">
             <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
@@ -39,14 +80,18 @@ export function Overview(props) {
                         "Most Recently Flagged Cases" : "No Flagged Cases"}
                     {...commonProps}
                 />
-
                 <CarouselCases
                     cases={recentClips}
-                    title="Most Recent Flag Clips"
+                    title={<>Most Recent Flag Clips
+                             {clipNotificationStatus !== null && bellNotificationIcon}
+                           </>
+                           }
                     message={(flagReport?.clipsDefault)
                         ? "No Flag Clips" : "Flag Clips Disabled"}
                     {...commonProps}
-                    isThumbnail />
+                    isThumbnail
+                    titleText="Most Recent Flag Clips"
+                />
             </div>
         </div>
     )
@@ -149,7 +194,7 @@ const responsive = {
 };
 
 function CarouselCases(props) {
-    const { cases, isThumbnail, isInfinite, title, message } = props;
+    const { cases, isThumbnail, isInfinite, title, titleText, message } = props;
     const savedCases = useSelector(selectSavedCases());
     const logger = useSelector(makeSelectLogger());
     const { handleChangeCaseId, handleSaveCase } = props;
@@ -184,12 +229,12 @@ function CarouselCases(props) {
         const prevClick = () => {
             previous();
             const casesToLog = CASES.slice(currentSlide%caseLength-1, (currentSlide%caseLength) + 2).map((c) => formatCaseForLogs(c));
-            logger.manualAddLog('click', `${title}-previous-arrow`, casesToLog)
+            logger.manualAddLog('click', `${titleText ? titleText : title}-previous-arrow`, casesToLog)
         }
         const nextClick = () => {
             next();
             const casesToLog = CASES.slice(currentSlide%(caseLength)+1, (currentSlide%caseLength) + 4).map((c) => formatCaseForLogs(c));
-            logger.manualAddLog('click', `${title}-next-arrow`, casesToLog)
+            logger.manualAddLog('click', `${titleText ? titleText : title}-next-arrow`, casesToLog)
         }
         return (
             <div className="rec-header">
@@ -224,7 +269,9 @@ function CarouselCases(props) {
 
     return (
         <React.Fragment>
-            <div className="title normal-text">{title}</div>
+            <div className="title normal-text">
+                <>{title}</>
+            </div>
             <div className="carousel-cases">
                 <Carousel
                     className={'carousel'}

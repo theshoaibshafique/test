@@ -80,9 +80,6 @@ label {
   line-height: 19px;
   padding: 0;
   cursor: pointer;
-}
-
-.link:hover{
   text-decoration: underline;
 }
 
@@ -141,7 +138,7 @@ label {
 .full-height { height: 100%; }
 
 .pointer { cursor: pointer;}
-
+.underline { text-decoration: underline; }
 .flex {
   display: flex;
   &.vertical-center {
@@ -156,6 +153,7 @@ label {
     justify-content: flex-end;
   }
   &.flex-column { flex-direction: column }
+  &.space-between { justify-content: space-between }
 }
 
 @mixin flex-center {
@@ -315,4 +313,60 @@ tbody tr:hover:not(.MuiTableRow-footer) {
   color: #000000;
   padding: 16px;
   border-radius: 4px;
+}
+
+.snackbar {
+  padding-left: 16px;
+  color: #FFFFFF;
+  span{
+    height: 100%;
+    min-width: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 4px 0px 0px 4px;
+    &.success{
+      background: #008000;
+    }
+    &.warning{
+      background: #FFB71B;
+    }
+    &.error{
+      background: #EC2027;
+    }
+  }
+}
+
+.save-and-cancel {
+  display: flex;
+  justify-content: flex-end;
+  > button {
+      &:first-child {
+          &:disabled {
+              opacity: 0.3;
+              color: #fff;
+          }
+          margin-right: 20px;
+      }
+      &:last-child {
+          margin-left: 20px;
+      }
+  }
+  .loader {
+      border: 6px solid $light-grey;
+      border-top: 6px solid $light-blue;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+      0% {
+          transform: rotate(0deg);
+      }
+      100% {
+          transform: rotate(360deg);
+      }
+  }
 }

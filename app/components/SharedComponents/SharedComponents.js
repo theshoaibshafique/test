@@ -1,7 +1,16 @@
-import React, { useEffect } from 'react';
-import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles } from '@material-ui/core';
-
+import React, { useEffect, useState } from 'react';
+import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent, Button } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { makeSelectSnackbar } from '../../containers/App/selectors';
 export const LightTooltip = withStyles((theme) => ({
+  tooltipPlacementTop: {
+    margin: '8px 0'
+  },
+  tooltipPlacementBottom: {
+    margin: '8px 0'
+  },
   tooltip: {
     boxShadow: theme.shadows[1],
     padding: '16px',
@@ -14,6 +23,7 @@ export const LightTooltip = withStyles((theme) => ({
 export const StyledTabs = withStyles({
   root: {
     boxShadow: "0 1px 1px 0 rgba(0,0,0,0.2)",
+    padding: "0 16px",
   },
   indicator: {
     display: 'flex',
@@ -22,7 +32,8 @@ export const StyledTabs = withStyles({
     height: 5,
     '& > span': {
       width: '100%',
-      backgroundColor: '#028CC8',
+      opacity: .8,
+      backgroundColor: '#004f6e',
     },
   },
 })((props) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
@@ -32,17 +43,18 @@ export const StyledTab = withStyles((theme) => ({
     textTransform: 'none',
     fontSize: 14,
     fontFamily: 'Noto Sans',
-    opacity: .8,
     fontWeight: 'bold',
-    color: '#000 !important',
+    color: '#4f4f4f',
     minWidth: 'unset',
-    paddingLeft: 16,
-    paddingRight: 16,
-    // marginRight: theme.spacing(1),
+    margin: "0 24px",
+    padding: 0,
     '&:focus': {
       opacity: 1,
     },
   },
+  selected: {
+    color: '#004f6e !important'
+  }
 }))((props) => <Tab disableRipple {...props} />);
 
 export function TabPanel(props) {
@@ -151,3 +163,105 @@ export const SSTSwitch = withStyles((theme) => ({
     backgroundColor: '#575757'
   }
 }))(Switch);
+
+
+export const StyledSnackbarContent = withStyles((theme) => ({
+  message: {
+    padding: '6px 0'
+  }
+}))(SnackbarContent);
+
+
+export const SSTSnackbar = props => {
+  const dispatch = useDispatch();
+  const [snackPack, setSnackPack] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [messageInfo, setMessageInfo] = React.useState(undefined);
+  const snackList = useSelector(makeSelectSnackbar());
+  const { message, severity } = messageInfo || {};
+  useEffect(() => {
+    setSnackPack(snackList);
+  }, [snackList])
+
+  useEffect(() => {
+    if (snackPack.length && !messageInfo) {
+      // Set a new snack when we don't have an active one
+      setMessageInfo({ ...snackPack[0] });
+      setSnackPack((prev) => prev.slice(1));
+      dispatch(exitSnackbar());
+      setOpen(true);
+    } else if (snackPack.length && messageInfo && open) {
+      // Close an active snack when a new one is added
+      setOpen(false);
+    }
+  }, [snackPack, messageInfo, open]);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  const handleExited = () => {
+    setMessageInfo(undefined);
+  };
+  return (
+    <Snackbar
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      key={message}
+      TransitionProps={{ onExited: handleExited }}
+
+      autoHideDuration={4000}
+      open={open}
+      onClose={handleClose}
+    >
+      <StyledSnackbarContent
+        message={<div className="snackbar subtle-subtext"><span className={severity}></span>{message}</div>}
+        action={
+          <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      />
+    </Snackbar>
+  )
+}
+
+const useProfileIconStyles = makeStyles({
+  root: (props) => ({
+    margin: 'auto',
+    color: '#fff !important',
+    textAlign: 'center',
+    background: '#004f6e',
+    userSelect:'none',
+    width: props?.size ?? 95,
+    height: props?.size ?? 95,
+    lineHeight: `${props?.size ?? 95}px !important`,
+    borderRadius: props?.size ? props?.size/2 : 48
+  })
+});
+
+export const ProfileIcon = props => {
+  const { firstName, lastName, className, size } = props;
+  const classes = useProfileIconStyles({size})
+  const initials = `${firstName?.substring(0,1)}${lastName?.substring(0,1)}`.toUpperCase();
+  return (
+      <div className={`${className} ${classes.root}`}>{initials}</div>
+  )
+
+}
+
+export const SaveAndCancel = props => {
+  const { className, handleSubmit, handleCancel, isLoading, submitText, cancelText, disabled } = props;
+  return (
+      <div className={`${className} save-and-cancel`}>
+          <Button id="save" variant="outlined" className="primary" disabled={disabled} onClick={() => handleSubmit()}>
+              {(isLoading) ? <div className="loader"></div> : submitText}
+          </Button>
+          <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => handleCancel()}>{cancelText}</Button>
+      </div>
+  )
+}

@@ -90,7 +90,6 @@ class AzureLogin extends React.Component {
 
     globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/complications', 'get', this.props.userToken, {})
       .then(result => {
-        result = result.data
         this.props.setComplicationList(result);
       }).catch((error) => {
         console.error('Could not fetch Complications list')

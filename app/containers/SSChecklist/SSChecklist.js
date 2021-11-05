@@ -154,7 +154,7 @@ export default class SSChecklist extends React.PureComponent {
     globalFunctions.axiosFetch(process.env.USERDETAILSMODIFY_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         //Cache onboard report name so we know not to open it again automatically
-        if (result.data) {
+        if (result) {
           localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
         }
       }).catch((error) => {
@@ -190,7 +190,6 @@ export default class SSChecklist extends React.PureComponent {
         }
         globalFunctions.axiosFetch(process.env.SSC_API + "/tile", 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
-            result = result.data;
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
@@ -293,7 +292,7 @@ export default class SSChecklist extends React.PureComponent {
       if (this.props.isAdmin) {
         content = (
           <div>
-            The Quality Score analysis has been disabled. To enable this, go to <NavLink to={"/adminPanel/2"} className='link settings normal-text'>
+            The Quality Score analysis has been disabled. To enable this, go to <NavLink to={"/settings/1"} className='link settings normal-text'>
               <span className="settings-icon"><Icon color="#028CC8" style={{ marginRight: 4 }} path={mdiCogOutline} size={'24px'} /></span>Settings
             </NavLink> and ensure at least 1 item is checked for any phase.
 
@@ -437,7 +436,7 @@ export default class SSChecklist extends React.PureComponent {
             What's this dashboard about?
           </div>
           {this.props.isAdmin && <div className="ssc-settings">
-            <NavLink to={"/adminPanel/2"} className='link'>
+            <NavLink to={"/settings/1"} className='link'>
               <span className="settings-icon"><Icon color="#028CC8" style={{ marginRight: 4 }} path={mdiCogOutline} size={'24px'} /></span>Settings
             </NavLink>
           </div>}

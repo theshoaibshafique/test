@@ -14,10 +14,19 @@ import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
 import MaterialTable from 'material-table';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 
-
+const tableIcons = {
+  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
+};
 
 export default class EMMPublish extends React.PureComponent {
   constructor(props) {
@@ -45,8 +54,10 @@ export default class EMMPublish extends React.PureComponent {
         if (result === 'error' || result === 'conflict') {
           this.setState({
             emmCases: []
+          }, () => {
+            this.notLoading()
           });
-          this.notLoading();
+          
         } else {
           if (result === 'error' || result === 'conflict' || !result || !result.length) {
             this.setState({
@@ -76,38 +87,35 @@ export default class EMMPublish extends React.PureComponent {
             "c9f753a0-46fd-472d-b96b-f3c839029697": "The Mount Sinai Hospital",
             "e47585ea-a19f-4800-ac53-90f1777a7c96": "Mayo Clinic Rochester",
           }
-
+          const emmCases = result?.map((emmCase) => {
+            let room = this.props.operatingRooms.find(room => room.id.toUpperCase() == emmCase.roomName) || { 'display': emmCase.roomName };
+            let surgeryList = this.state.specialties?.map((specialty) => specialty.procedures).flatten() || [];
+            const facilityName = facilityMap[emmCase.facilityName.toLowerCase()];
+            const procedures = emmCase.procedure?.map((procedure) => { return globalFuncs.getName(surgeryList, procedure) }).join(', ');
+            const complications = emmCase.complications?.map((complication) => { return globalFuncs.getName(this.props.complications || [], complication) }).join(', ')
+            return {
+              requestID: emmCase.name,
+              facilityName: facilityName,
+              roomName: room.display,
+              procedures: procedures,
+              complications: complications,
+              enhancedMMPublished: emmCase.enhancedMMPublished,
+              enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
+              report: !emmCase.enhancedMMReferenceName
+                ? 'Report not available'
+                : <Button disableElevation variant="contained" className="secondary" onClick={() => {this.props.showEMMReport(emmCase.enhancedMMReferenceName)}} >Open Report</Button>
+            }
+          })
           this.setState({
-            emmCases: result.map((emmCase) => {
-              let room = this.props.operatingRooms.find(room => room.id.toUpperCase() == emmCase.roomName) || { 'display': emmCase.roomName };
-              let surgeryList = this.state.specialties.map((specialty) => specialty.procedures).flatten() || [];
-              return {
-                requestID: emmCase.name,
-                facilityName: facilityMap[emmCase.facilityName.toLowerCase()],
-                roomName: room.display,
-                procedures: emmCase.procedure.map((procedure) => { return globalFuncs.getName(surgeryList, procedure) }).join(', '),
-                complications: emmCase.complications.map((complication) => { return globalFuncs.getName(this.props.complications || [], complication) }).join(', '),
-                enhancedMMPublished: emmCase.enhancedMMPublished,
-                enhancedMMReferenceName: emmCase.enhancedMMReferenceName,
-                report: !emmCase.enhancedMMReferenceName
-                  ? 'Report not available'
-                  : <Button disableElevation variant="contained" className="secondary" onClick={() => this.props.showEMMReport(emmCase.enhancedMMReferenceName)} >Open Report</Button>
-              }
-            }),
-          }, this.notLoading())
+            emmCases: emmCases,
+          }, () => {
+            this.notLoading()
+          })
         }
       });
   }
   componentDidUpdate() {
-    // FOR THE LOGS
-    const search = document.getElementsByClassName('MuiInputBase-input MuiInput-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd');
-    if (search.length) {
-      search[0].classList.add("log-input");
-    }
-    const { logger } = this.props;
-    setTimeout(() => {
-      logger?.connectListeners();
-    }, 300)
+    console.log('here')
   }
 
   loading() {
@@ -160,8 +168,8 @@ export default class EMMPublish extends React.PureComponent {
             <Checkbox
               disableRipple
               icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-              checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
-              checked={this.state.filterPublished} onChange={(e) => this.handleCheckFilterPublished(e)} />Show requests with unpublished reports only
+              checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
+              checked={this.state.filterPublished} onChange={(e) => {this.handleCheckFilterPublished(e)}} />Show requests with unpublished reports only
           </div>
 
           <div>
@@ -170,17 +178,17 @@ export default class EMMPublish extends React.PureComponent {
               <MaterialTable
                 title=""
                 columns={[
-                  { title: this.generateTitle('Facility'), field: 'facilityName', defaultSort: 'desc' },
-                  { title: this.generateTitle('OR'), field: 'roomName' },
-                  { title: this.generateTitle('Procedure'), field: 'procedures' },
-                  { title: this.generateTitle('Complication'), field: 'complications' },
-                  { title: this.generateTitle('Published'), field: 'enhancedMMPublished', lookup: { 'true': 'Yes', 'false': 'No' }, width: 20 },
+                  { title: 'Facility', field: 'facilityName', defaultSort: 'desc' },
+                  { title: 'OR', field: 'roomName' },
+                  { title: 'Procedure', field: 'procedures' },
+                  { title: 'Complication', field: 'complications' },
+                  { title: 'Published', field: 'enhancedMMPublished', lookup: { 'true': 'Yes', 'false': 'No' }, width: 20 },
                   { title: 'requestID', field: 'requestID', hidden: true, searchable: true },
-                  { title: this.generateTitle('Report'), field: 'report', searchable: false, width: 150 },
+                  { title: 'Report', field: 'report', searchable: false, width: 150 },
                   { title: 'enhancedMMReferenceName', field: 'enhancedMMReferenceName', hidden: true },
                 ]}
                 options={{
-                  pageSize: (emmCases.length < 10) ? 10 : emmCases.length,
+                  pageSize: (emmCases.length < 10 ) ?  emmCases.length : 10,
                   pageSizeOptions: pageSizeOptions,
                   search: true,
                   paging: true,
@@ -188,11 +196,15 @@ export default class EMMPublish extends React.PureComponent {
                   searchFieldStyle: { marginLeft: -24 },
                   actionsColumnIndex: -1,
                   thirdSortClick: false,
-                  draggable: false
+                  draggable: false,
+                  rowStyle: {
+                    fontFamily: "Noto Sans",
+                    fontSize: 14
+                  }
                 }}
 
                 data={this.state.filterPublished ? this.state.emmCases.filter((emmCase) => !emmCase.enhancedMMPublished) : this.state.emmCases}
-                icons={this.getTableIcons()}
+                icons={tableIcons}
               />
             }
           </div>
@@ -202,40 +214,4 @@ export default class EMMPublish extends React.PureComponent {
     );
   }
 
-  //LOG HELPERS
-
-  getTableIcons() {
-    const tableIcons = {
-      Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-      FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} onClick={() => this.logClick('first-page')} />),
-      LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} onClick={() => this.logClick('last-page')} />),
-      NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} onClick={() => this.logClick('next-page')} />),
-      PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} onClick={() => this.logClick('previous-page')} />),
-      ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => this.logClick('clear-search')} />),
-      Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-      SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
-    };
-    return tableIcons
-  }
-  logClick(key) {
-    const { logger } = this.props;
-    logger?.manualAddLog('click', `${key}`);
-  }
-
-  sortClick(key) {
-    //if element exists we're descending
-    var element = document.querySelectorAll('.MuiTableSortLabel-active .MuiTableSortLabel-iconDirectionAsc');
-    var titleElement = document.querySelectorAll('.MuiTableSortLabel-active');
-    //Check if its the same title
-    let isSameTitle = titleElement.length && key == titleElement[0].textContent;
-    const { logger } = this.props;
-    logger?.manualAddLog('click', `sort-user-list-${key}`, !titleElement.length ? 'none' : (element.length && isSameTitle ? 'desc' : 'asc'));
-
-  }
-  generateTitle(title) {
-    // Generate a title element for the logs
-    return (
-      <div onClick={() => this.sortClick(title)}>{title}</div>
-    )
-  }
 }

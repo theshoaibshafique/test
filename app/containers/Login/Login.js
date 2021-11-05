@@ -127,18 +127,27 @@ export default class Login extends React.PureComponent {
       .catch((results) => {
         console.error("oh no", results)
       });
-    const token = { userToken: accessToken, roleToken: roleToken }
+    
+    
+        
+    const token = { userToken: accessToken, roleToken: roleToken?.forbidden ? '' : roleToken }
     this.props.setUserToken(token);
     if (this.props.logger) {
       this.props.logger.userToken = this.props.userToken;
       return;
     }
     await globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', token, {})
-      .then(result => {
+      .then(async result => {
         this.props.setProfile(result);
+        this.setLogger(token);
+        if (roleToken?.forbidden){
+          const val = await roleToken?.forbidden
+          this.props.setUserStatus({status: 'forbidden', message: val?.detail})
+          return
+        }
         this.getOperatingRooms(token);
         this.getComplications(token);
-        this.setLogger(token);
+        
       }).catch((results) => {
         console.error("oh no", results)
       });
@@ -157,7 +166,6 @@ export default class Login extends React.PureComponent {
 
     globalFunctions.axiosFetch(process.env.EMMREPORT_API + '/complications', 'get', token, {})
       .then(result => {
-        result = result.data
         this.props.setComplicationList(result);
       }).catch((error) => {
         console.error('Could not fetch Complications list')

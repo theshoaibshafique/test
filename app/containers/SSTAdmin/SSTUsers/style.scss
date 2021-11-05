@@ -1,0 +1,363 @@
+@import "styles/global-styles";
+.sst-user-management {
+    padding: 25px 40px;
+    .table-container {
+        > :last-child {
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        td {
+            padding: 8px 16px;
+        }
+
+        .MuiToolbar-root {
+            min-height: unset;
+            margin-bottom: 25px;
+            //Hide the spacer between search bar
+            > div:nth-child(2) {
+                display: none;
+            }
+        }
+
+        .add-user-button {
+            margin: 0 86px;
+        }
+        tbody .MuiTableCell-root {
+            position: relative;
+        }
+        .disabled-role {
+            background: #e0e0e0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .role-list {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* number of lines to show */
+            -webkit-box-orient: vertical;
+        }
+    }
+    .learn-more {
+        position: absolute;
+        right: 0;
+        top: 12px;
+    }
+    .table-header {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        z-index: 1;
+        .header-cell {
+            padding: 12px;
+        }
+        .disabled-header {
+            color: #828282;
+            :first-child {
+                margin-right: 8px;
+            }
+        }
+    }
+    .table-footer {
+        > div {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        font-style: italic;
+    }
+    .dot {
+        height: 6px;
+        width: 6px;
+        background-color: unset;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+        &.Full {
+            background-color: #004f6e;
+        }
+        &.View {
+            background-color: #ffb71b;
+        }
+    }
+    ::-webkit-scrollbar {
+        width: 8px;
+        border-radius: 6px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #c2c2c2;
+        border-radius: 6px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(85, 85, 85, 0.8);
+    }
+}
+
+.role-cell {
+    border-radius: 8px;
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 96px;
+    background: #e0e0e0;
+    &.Full {
+        background: rgba(0, 79, 110, 0.15);
+    }
+    &.View {
+        background: rgba(242, 186, 14, 0.2);
+    }
+}
+
+.action-icon {
+    padding: 0 8px;
+    &:hover {
+        .edit path {
+            fill: #004f6e !important;
+        }
+        .delete path {
+            fill: #ec2027 !important;
+        }
+    }
+    &.edit-profile-icon {
+        align-self: center;
+        margin-left: auto;
+    }
+    &.edit-permissions-icon {
+        svg {
+            float: right;
+        }
+    }
+}
+.is-edit-user {
+    .edit-profile-icon {
+        display: none;
+    }
+}
+
+.SST-Checkbox {
+    &:not([class*="disabled"]) {
+        svg {
+            color: $dark-grey;
+        }
+    }
+    :checked ~ svg {
+        color: #004f6e;
+    }
+}
+
+.Modal.generic-modal {
+    padding: 32px;
+    min-width: unset;
+    border-radius: 8px;
+    .close-button {
+        cursor: pointer;
+        position: absolute;
+        right: 26px;
+        top: 26px;
+        z-index: 3;
+    }
+    .divider {
+        background-color: rgb(242, 242, 242);
+        margin-left: -32px;
+    }
+}
+.Modal.user-management-learn-more {
+    padding: 0;
+    width: 620px;
+    height: 620px;
+    .divider {
+        margin: 0;
+    }
+    .header {
+        padding: 32px;
+        padding-bottom: 0;
+        margin-bottom: 24px;
+        color: #004f6e;
+    }
+    .description {
+        margin-bottom: 64px;
+        padding: 0 32px;
+    }
+    .learn-more-content {
+        height: 338px;
+        padding: 0 32px;
+        // display: flex;
+        > div {
+            display: flex;
+            // height: 57px;
+            span:first-child {
+                width: 85px;
+                white-space: nowrap;
+                height: fit-content;
+                margin: 0;
+            }
+            padding: 40px 0 0 0px;
+        }
+        .content {
+            padding-left: 32px;
+        }
+    }
+    .MuiTabs-root {
+        padding: 0 8px;
+    }
+}
+
+.user-delete {
+    width: 620px;
+    height: 360px;
+
+    .header {
+        color: #004f6e;
+        margin-bottom: 12px;
+    }
+    .close {
+        bottom: 20px;
+        right: 20px;
+        position: absolute;
+        width: 100%;
+        button {
+            float: right;
+        }
+    }
+    .divider {
+        width: 620px;
+        margin-bottom: 40px;
+    }
+}
+
+.add-edit-user.sstadmin {
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    .permissions-section {
+        .product-permission {
+            margin: 16px 0;
+        }
+
+        .add-permissions-buttons {
+            margin-top: 20px;
+        }
+    }
+}
+.add-edit-user {
+    width: 680px;
+
+    // Profile section
+    .edit-profile {
+        .profile-row {
+            display: flex;
+            > div {
+                width: 100%;
+                &:first-child {
+                    margin-right: 16px;
+                }
+                &:last-child {
+                    margin-left: 16px;
+                }
+            }
+        }
+    }
+
+    .view-profile {
+        display: flex;
+        .profile-info {
+            margin: 0 32px;
+            :first-child {
+                color: #004f6e;
+            }
+            > div {
+                margin: 4px 0;
+            }
+        }
+    }
+    .view-profile,
+    .edit-profile {
+        margin-bottom: 24px;
+    }
+
+    //Grey section title
+    .title {
+        margin-bottom: 4px;
+        color: #bdbdbd;
+    }
+
+    //Admin panel section
+    .admin-panel-access {
+        .admin-select {
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+        }
+        .role-display {
+            margin: 9px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+    .divider {
+        width: 680px;
+        //Last divider in each section has a space for the next section
+        &:last-child {
+            margin-bottom: 24px;
+        }
+    }
+    &.user-added,
+    &.single-edit {
+        .action-icon,
+        .edit,
+        .add-user-buttons {
+            display: none;
+        }
+    }
+
+    .permissions-section {
+        .product-permission,
+        .permissions-header {
+            display: flex;
+            > span {
+                width: 30%;
+                align-self: center;
+                &:not(:first-child) {
+                    padding: 0 16px;
+                }
+                &:last-child {
+                    width: 40%;
+                    padding-right: 0;
+                }
+
+                .access-level {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3; /* number of lines to show */
+                    -webkit-box-orient: vertical;
+                    padding-right: 16px;
+                }
+            }
+            .role-cell {
+                height: 32px;
+                min-width: 96px;
+            }
+            margin: 9px 0;
+        }
+        .product-permission {
+            margin: 31px 0;
+        }
+    }
+}
+

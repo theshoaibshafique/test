@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { selectEMMPresenterMode } from '../../containers/App/emm-selectors';
 import { makeSelectToken } from '../../containers/App/selectors';
 import globalFunctions from '../../utils/global-functions';
 import videojs from 'video.js';

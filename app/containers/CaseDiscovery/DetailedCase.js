@@ -2,8 +2,9 @@ import React, { useEffect, useReducer, useRef, useState } from 'react';
 import 'c3/c3.css';
 import C3Chart from 'react-c3js';
 import './style.scss';
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel, Modal, Slide, TextField, Tooltip, withStyles } from '@material-ui/core';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, FormHelperText, Grid, IconButton, InputLabel, Modal, Slide, TextField, Tooltip, withStyles, Snackbar, Portal } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import CloseIcon from '@material-ui/icons/Close';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -23,11 +24,11 @@ import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator
 import ReactDOMServer from 'react-dom/server';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Icon from '@mdi/react';
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import { CSSTransition } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, getQuestionByLocation, getQuestionCount, getPresetDates } from './misc/Utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectRoles, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
 
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -36,8 +37,8 @@ import 'react-multi-carousel/lib/styles.css';
 import { VideoPlayer } from '../../components/VideoPlayer/VideoPlayer';
 import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { displayTags, TagsSelect, useStyles } from './misc/helper-components';
-import { selectCases, selectDetailedCase, selectFlaggedClip, selectFlagReport, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
-import { setCases, setFlaggedClip, setOverviewTile, setRecentFlags, setRecentSaved, setRecommendations, showDetailedCase } from '../App/cd-actions';
+import { selectCases, selectDetailedCase, selectFlaggedClip, selectFlagReport, selectOverviewData, selectSavedCases } from '../App/store/CaseDiscovery/cd-selectors';
+import { setCases, setFlaggedClip, setOverviewTile, setRecentFlags, setRecentSaved, setRecommendations, showDetailedCase } from '../App/store/CaseDiscovery/cd-actions';
 export function DetailedCase(props) {
   const { hidden, handleChangeCaseId, USERS, isSaved, handleSaveCase, roomIds } = props;
   if (props.metaData == null) {
@@ -49,6 +50,8 @@ export function DetailedCase(props) {
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
   const isAdmin = useSelector(makeSelectIsAdmin());
+  const productRoles = useSelector(makeSelectProductRoles());
+  const { emmRoles } = productRoles || {};
   const flagReport = useSelector(selectFlagReport());
 
   const { metaData: { caseId, emrCaseId, roomName, surgeonId, wheelsIn, wheelsInUtc, wheelsOut, scheduledStart, startTime, endTime,
@@ -70,11 +73,11 @@ export function DetailedCase(props) {
   const startDates = roomCases.map(d => moment(d.wheelsIn));
   const endDates = roomCases.map(d => moment(d.wheelsOut));
 
-  const blockStartDate = moment.min(startDates).clone().set({hour: blockStartTime.hour(), minute: blockStartTime.minute()});
+  const blockStartDate = moment.min(startDates).clone().set({ hour: blockStartTime.hour(), minute: blockStartTime.minute() });
   const earliestStartDate = moment.min([blockStartDate, ...startDates]);
   //We convert from mins to hours manually to get decimals
   const earliestStartTime = globalFunctions.getDiffFromMidnight(earliestStartDate, 'minutes') / 60;
-  const blockEndDate = earliestStartDate.clone().set({hour: blockEndTime.hour(), minute: blockEndTime.minute()});
+  const blockEndDate = earliestStartDate.clone().set({ hour: blockEndTime.hour(), minute: blockEndTime.minute() });
   const latestEndTime = moment.max([blockEndDate, ...endDates]);
   const scheduleDuration = latestEndTime.diff(earliestStartDate, 'hours') + 2;
   //Get # of days the schedule spans
@@ -134,7 +137,7 @@ export function DetailedCase(props) {
       return <LightTooltip title={"eM&M request submitted successfully"} arrow>
         <div><Button variant="outlined" className="primary disabled" onClick={() => null} disabled>Request eM&M</Button></div>
       </LightTooltip>
-    } else if (dayDiff <= 21 && isAdmin) {
+    } else if (dayDiff <= 21 && emmRoles?.isAdmin) {
       return <Button variant="outlined" className="primary" onClick={() => handleOpenRequestEMM(true)}>Request eM&M</Button>
     } else {
       return <div></div>
@@ -173,8 +176,18 @@ export function DetailedCase(props) {
   // Flag submission state.
   const [showAddFlag, setShowAddFlag] = React.useState(true);
   const [isMayo, setIsMayo] = React.useState(() => userFacility === 'e47585ea-a19f-4800-ac53-90f1777a7c96');
-  /*** NEW - Flag Submission state ***/
-  const [openAddFlag, setOpenAddFlag] = useState(false);
+  const [openAddFlag, setOpenAddFlag] = React.useState(false);
+
+  // Flag clip publish/hide snack bar state.
+  const [snackBarOpen, setSnackBackOpen] = React.useState(false);
+  const [snackBarMsg, setSnackBackMsg] = React.useState('');
+
+  // Flag clip snackbar open/close-toggle click handler.
+  const toggleSnackBar = (state, msg = '') => {
+    setSnackBackOpen(state);
+    if (state === true) setSnackBackMsg(msg);
+  };
+
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => {
     logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
@@ -338,11 +351,29 @@ export function DetailedCase(props) {
                 <ProcedureDistribution {...procedureDistribution} duration={duration} />
               </Grid>
             </Grid>
-            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} flags={flags} />
+            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} flags={flags} toggleSnackBar={toggleSnackBar} />
 
 
           </div>
-
+          <Portal>
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              open={snackBarOpen}
+              autoHideDuration={4000}
+              onClose={() => toggleSnackBar(false)}
+              message={snackBarMsg}
+              action={
+                <React.Fragment>
+                  <IconButton size="small" aria-label="close" color="inherit" onClick={() => toggleSnackBar(false)}>
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </React.Fragment>
+              }
+            />
+          </Portal>
         </Grid>
       }
       <Grid item xs className="schedule">
@@ -490,7 +521,7 @@ export function DetailedCase(props) {
                     disableRipple
                     id="other-complication-checkbox"
                     icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                    checkedIcon={<Icon color="#004F6E" path={mdiCheckBoxOutline} size={'18px'} />}
+                    checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
                     checked={isComplicationOtherChecked} onChange={(e) => setIsComplicationOtherChecked(e.target.checked)} />Other
                 </div>
                 {isComplicationOtherChecked && <TextField
@@ -1136,7 +1167,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
         handleOpenAddFlag(false);
         //Update Overview tile for Flag count
         const overviewData = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'tag_overview', 'get', userToken, {});
-        dispatch(setOverviewTile(overviewData.data))
+        dispatch(setOverviewTile(overviewData))
       }).catch((error) => {
         flagDispatch({ type: FLAG_FAIL });
         console.log("oh no", error)
@@ -1145,14 +1176,23 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       });
   };
 
+  const getFlagSubmissionTime = (wheelsInTime, caseDuration) => {
+    let updatedTime;
+    if (wheelsInTime && caseDuration) {
+      const durationAvgSeconds = Math.trunc(caseDuration / 2);
+      updatedTime = moment(wheelsInTime).clone().add(durationAvgSeconds, 'seconds').format('YYYY-MM-DDTHH:mm:ss.SSS');
+    }
+    return updatedTime;
+  };
+
   const onFlagSubmit = () => {
     if (reportId, flagState.flagData) {
       const newFlag = {
         reportId,
         caseId,
         roomId,
-        localTime: wheelsInLocal,
-        utcTime: wheelsInUtc,
+        localTime: getFlagSubmissionTime(wheelsInLocal, DETAILED_CASE?.metaData?.duration),
+        utcTime: getFlagSubmissionTime(wheelsInUtc, DETAILED_CASE?.metaData?.duration),
         options: flagState.flagData.map(el => {
           return {
             optionId: el.choices[0].id,
@@ -1465,7 +1505,7 @@ function ProcedureDistribution(props) {
 
 
 function HL7Chart(props) {
-  const { hl7Data, timeline, flags } = props;
+  const { hl7Data, timeline, flags, toggleSnackBar } = props;
   const logger = useSelector(makeSelectLogger());
   const chartRef = useRef(null);
   if (!hl7Data) {
@@ -1718,7 +1758,7 @@ function HL7Chart(props) {
         <div style={{ width: '100%' }}>
           <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
           <C3Chart ref={chartRef} {...data} />
-          {hasClips && <ClipTimeline flags={flags} max={max} min={min} />}
+          {hasClips && <ClipTimeline flags={flags} max={max} min={min} toggleSnackBar={toggleSnackBar} />}
         </div>
       </div>
 
@@ -1741,12 +1781,13 @@ export const Thumbnail = withStyles((theme) => ({
 }))(Tooltip);
 
 function ClipTimeline(props) {
-  const { flags, max, min } = props;
+  const { flags, max, min, toggleSnackBar } = props;
   const duration = max + (min < 0 ? Math.abs(min) : 0) + max * .025
   const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
   const isAdmin = useSelector(makeSelectIsAdmin());
+  const productRoles = useSelector(makeSelectProductRoles());
   const [presenterMode, setPresenterMode] = React.useState(false);
   const [presenterDialog, setPresenterDialog] = React.useState(false);
   const dispatch = useDispatch();
@@ -1771,11 +1812,11 @@ function ClipTimeline(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => closePresenterDialog(false)} className="cancel-publish" color="primary">
-            Cancel
-          </Button>
           <Button onClick={() => closePresenterDialog(true)} variant="outlined" className="primary publish-button" color="primary" autoFocus>
             Proceed
+          </Button>
+          <Button onClick={() => closePresenterDialog(false)} className="cancel-publish" color="primary">
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>
@@ -1814,7 +1855,8 @@ function ClipTimeline(props) {
       dispatch(setFlaggedClip(null));
     }
     setSelect(t);
-
+    // Close confirmation snack bar when modal is closed.
+    toggleSnackBar(false);
   }
   // Open Selected Flagged Clip from Overview page;
   const flaggedClip = useSelector(selectFlaggedClip());
@@ -1828,22 +1870,56 @@ function ClipTimeline(props) {
   }, [flaggedClip])
 
   const publishClip = () => {
-    globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'post', userToken, {})
+    globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'put', userToken, {})
       .then(result => {
         const tLine = [...timeline];
         tLine[selectedMarker.index].isActive = true;
         logger?.manualAddLog('click', `publish-clip-${selectedMarker.clipId}`, selectedMarker)
-        setTimeline(tLine)
+        setTimeline(tLine);
+        // Display success msg snack bar with confirmation.
+        toggleSnackBar(true, 'Clip published successfully.');
       }).catch((results) => {
+        // Display error msg snack bar on fail.
+        toggleSnackBar(true, 'A problem has occurred while completing your action. Please try again or contact the administrator.');
         console.error("oh no", results)
       })
   }
 
-  const publishButton = selectedMarker?.isActive == null && (
-    <div className="button">
-      <Button variant="outlined" className="primary" onClick={() => publishClip()}>Publish</Button>
-    </div>
-  ) || ''
+  const hideClip = () => {
+    globalFunctions.genericFetch(`${process.env.CASE_DISCOVERY_API}flag_clip?clip_id=${selectedMarker.clipId}`, 'delete', userToken, {})
+      .then(result => {
+        const tLine = [...timeline];
+        tLine[selectedMarker.index].isActive = false;
+        logger?.manualAddLog('click', `hide-clip-${selectedMarker.clipId}`, selectedMarker)
+        setTimeline(tLine);
+        // Display success msg snack bar with confirmation.
+        toggleSnackBar(true, 'Clip hidden successfully.');
+      })
+      .catch((results) => {
+        // Display error msg snack bar on fail.
+        toggleSnackBar(true, 'A problem has occurred while completing your action. Please try again or contact the administrator.');
+        console.error("oh no", results)
+      })
+  };
+
+  const publishButton = productRoles?.cdRoles?.hasPublisher &&
+    <LightTooltip title={selectedMarker?.isActive ? 'Clip Published' : ''} arrow>
+      <div>
+        <Button variant="outlined" className="primary" onClick={() => publishClip()} disabled={selectedMarker?.isActive}>
+          Publish
+        </Button>
+      </div>
+    </LightTooltip> || ''
+
+  const hideButton = productRoles?.cdRoles?.hasPublisher &&
+    <LightTooltip title={selectedMarker?.isActive === false ? 'Clip Hidden' : ''} arrow>
+      <div>
+        <Button variant="outlined" className="primary" onClick={hideClip} disabled={selectedMarker?.isActive === false}>
+          Hide
+        </Button>
+      </div>
+    </LightTooltip> || ''
+
   const { startTime, index } = selectedMarker;
   const endTime = startTime + selectedMarker.duration;
   const displayStart = (startTime < 0 ? "-" : "") + globalFunctions.formatSecsToTime(Math.abs(startTime));
@@ -1851,6 +1927,7 @@ function ClipTimeline(props) {
 
   const leftArrow = index > 0 ? <div className="left-arrow" onClick={() => handleSelect(timeline[index - 1], index - 1)}></div> : <div className="left-arrow disabled" ></div>
   const rightArrow = index < timeline.length - 1 ? <div className="right-arrow" onClick={() => handleSelect(timeline[index + 1], index + 1)}></div> : <div className="right-arrow disabled" ></div>
+
   return (
     <div className="timeline-container">
       <div className='clip-timeline'>
@@ -1925,9 +2002,11 @@ function ClipTimeline(props) {
                     </div>
                   )
                 })}
-                {publishButton}
               </Grid>
-
+              <div className="button">
+                {publishButton}
+                {hideButton}
+              </div>
             </Grid>
             {rightArrow}
           </div>

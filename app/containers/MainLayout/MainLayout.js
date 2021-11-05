@@ -9,23 +9,26 @@ import EMM from 'containers/EMM/Loadable';
 import EMMReports from 'containers/EMMReports';
 import RequestEMM from 'containers/RequestEMM/Loadable';
 import AdminPanel from 'containers/AdminPanel/Loadable';
+import Settings from 'containers/Settings/Loadable';
 import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SSChecklist from 'containers/SSChecklist/Loadable';
 import Efficiency from 'containers/Efficiency/Loadable';
 import NoAccess from 'containers/NoAccess/Loadable';
+import Forbidden from 'containers/Forbidden/Loadable';
+
 import SSTNav from 'components/SSTNav';
-import AzureLogin from 'components/AzureLogin';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
-import globalFunctions from '../../utils/global-functions';
 import CaseDiscovery from '../CaseDiscovery/CaseDiscovery';
-import moment from 'moment';
 import Login from '../Login';
 import { UserFeedback } from '../../components/UserFeedback/UserFeedback';
+import { SSTSnackbar } from '../../components/SharedComponents/SharedComponents';
+import { SSTAdmin } from '../SSTAdmin/SSTAdmin';
+import { SST_ADMIN_ID } from '../../constants';
 
 export default class MainLayout extends React.PureComponent {
   constructor(props) {
@@ -49,23 +52,25 @@ export default class MainLayout extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.userRoles != this.props.userRoles || prevProps.userFacility != this.props.userFacility) {
       this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
-    }
+    } 
   }
 
   resourcesGathered(roles, userFacility) {
     if (!userFacility) {
       return;
     }
-    const { productRoles: { cdRoles, effRoles, sscRoles, emmRoles, umRoles} } = this.props;
+    const { productRoles: { cdRoles, effRoles, sscRoles, emmRoles, umRoles } } = this.props;
     this.setState({
       userLoggedIn: true,
-      adminPanelAccess: umRoles.isAdmin,
+      adminPanelAccess: (umRoles.isAdmin || umRoles.hasAccess),
+      settingsAccess: effRoles.isAdmin || sscRoles.isAdmin,
       emmAccess: emmRoles.hasAccess,
-      emmRequestAccess: emmRoles.isAdmin,
+      emmRequestAccess: emmRoles.isAdmin,//&& !cdRoles.hasAccess,
       sscAccess: sscRoles.hasAccess,
       efficiencyAccess: effRoles.hasAccess,
       caseDiscoveryAccess: cdRoles.hasAccess,
       emmPublishAccess: emmRoles.hasPublisher,
+      sstAdminAccess: Boolean(roles?.[SST_ADMIN_ID]),
       isLoading: false
     });
     this.props.setEMMPublishAccess(emmRoles.hasPublisher);
@@ -94,13 +99,20 @@ export default class MainLayout extends React.PureComponent {
   }
 
   getContainer() {
+    const { logger, userStatus } = this.props;
+    if (userStatus && userStatus?.status == 'forbidden') {
+      return <Switch>
+        <Route path="/my-profile" component={MyProfile} />
+        <Forbidden />
+      </Switch>
+    }
     if (!this.state.authenticated) {
       return <Switch>
         <Route path="/my-profile" component={MyProfile} />
         <NoAccess />
       </Switch>
     }
-    const { logger } = this.props;
+
     if (this.state.userLoggedIn) {
       if (this.props.emmReportID) {
         logger?.manualAddLog('session', `open-emm-report`, this.props.emmReportID);
@@ -125,6 +137,12 @@ export default class MainLayout extends React.PureComponent {
 
         {(this.state.adminPanelAccess) &&
           <Route path="/adminPanel/:index?" component={AdminPanel} />
+        }
+        {(this.state.sstAdminAccess) &&
+          <Route path="/sstAdmin" component={SSTAdmin} />
+        }
+        {(this.state.settingsAccess) &&
+          <Route path="/settings/:index?" component={Settings} />
         }
         {(this.state.sscAccess) &&
           <Route path="/sschecklist" render={(props) => <SSChecklist {...props} reportType={"Overview"} />} />
@@ -164,6 +182,7 @@ export default class MainLayout extends React.PureComponent {
   };
 
   render() {
+    
     return (
       <div className="app-wrapper">
         <Login />
@@ -174,7 +193,7 @@ export default class MainLayout extends React.PureComponent {
         >
           <meta name="description" content="SST Insights web portal" />
         </Helmet>
-
+        <SSTSnackbar />
         {this.state.userLoggedIn ?
           <React.Fragment>
             <div className="APP-MAIN-WRAPPER">
@@ -191,15 +210,19 @@ export default class MainLayout extends React.PureComponent {
                   >
                     <SSTNav
                       adminPanelAccess={this.state.adminPanelAccess}
+                      sstAdminAccess={this.state.sstAdminAccess}
                       emmRequestAccess={this.state.emmRequestAccess}
                       emmAccess={this.state.emmAccess}
                       emmPublishAccess={this.state.emmPublishAccess}
                       sscAccess={this.state.sscAccess}
                       efficiencyAccess={this.state.efficiencyAccess}
                       caseDiscoveryAccess={this.state.caseDiscoveryAccess}
+                      settingsAccess={this.state.settingsAccess}
                       pathname={this.props.location.pathname}
                       isLoading={this.state.isLoading}
                       logger={this.props.logger}
+                      firstName={this.props.firstName}
+                      lastName={this.props.lastName}
                     />
                   </Drawer>
                 </Hidden>

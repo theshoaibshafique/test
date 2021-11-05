@@ -1,0 +1,40 @@
+@import "../../../styles/global-styles";
+.efficiency-settings-page {
+    max-width: 680px;
+    .title {
+        margin-bottom: 24px;
+    }
+    .subtitle {
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .content {
+        margin-bottom: 8px;
+    }
+    .selectors {
+        margin-bottom: 24px;
+    }
+    .unit {
+        margin: 8px;
+        line-height: 40px;
+    }
+    .warning {
+        opacity: 0.8;
+        color: #b47b00;
+    }
+    .no-emr {
+        color: #004f6e;
+        margin-bottom: 24px;
+    }
+    .grace-period{
+        display: none;
+    }
+    &.has-emr{
+        .no-emr{
+            display: none;
+        }
+        .grace-period{
+            display: unset;
+        }
+    }
+}

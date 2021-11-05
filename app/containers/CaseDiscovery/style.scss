@@ -963,24 +963,15 @@
     height: 30px;
     .clip-timeline {
         position: relative;
-        // background-color: rgba(61, 179, 227,.1);
-        // border-top: 1px solid #cce5ee;
-        // border-left: 1px solid #cce5ee;
         height: 100%;
         width: 100%;
         .clip-marker {
-            // border-radius: 4px;
-
             position: absolute;
-            // min-width: 30px;
             border-bottom: 1px solid #d42828;
             padding-top: 2px;
-            // display: flex;
-            // background-color: #ffcfcf;
             height: 100%;
             svg {
                 cursor: pointer;
-                // margin:auto;
                 margin-bottom: -5px;
             }
             &:before,
@@ -1023,7 +1014,7 @@
             padding-right: 0;
             padding-top: 0;
             position: relative;
-            max-height: 410px;
+            max-height: 350px;
             overflow: hidden;
             overflow-y: auto;
             & > div {
@@ -1042,12 +1033,23 @@
         .button {
             margin-top: 4px;
             margin-bottom: 0 !important;
-            width: 100%;
+            width: 235.6px;
             position: absolute;
-            bottom: 0;
+            bottom: 64px;
+            right: 42px;
             display: flex;
+            justify-content: space-between;
             button {
-                margin: auto;
+                margin-right: 10px;
+                width: 95px;
+                &:disabled {
+                    opacity: 0.2;
+                    color: #fff;
+                }
+            }
+            :nth-child(2) {
+                margin-left: 10px;
+                margin-right: 0;
             }
         }
 
@@ -1115,8 +1117,8 @@
     display: flex;
     flex-direction: column-reverse;
     margin-bottom: 24px;
-    width: 80%;
-    max-width: 1180px;
+    // width: 80%;
+    max-width: 900px;
     .react-multi-carousel-item {
         min-width: 250px;
     }
@@ -1208,6 +1210,57 @@
 
         .title.normal-text {
             margin-left: 8px;
+            
+            .bell-notification{
+                margin-left: 20px;
+                display: inline-block;
+                position: relative;
+                bottom: 2px;
+                cursor: pointer;
+
+                &.shake {
+                    animation: shake 1s ease 0s 1 normal both, fade-in-keyframes 1s ease;
+                }
+                &.fade {
+                    animation: fade-in-keyframes .3s ease .3s 1 normal both
+                }
+
+                @keyframes shake {
+                    0%,
+                    100% {
+                      transform: rotate(0deg);
+                      transform-origin: 50% 0;
+                    }
+                  
+                    10% {
+                      transform: rotate(2deg);
+                    }
+                  
+                    20%,
+                    40%,
+                    60% {
+                      transform: rotate(-4deg);
+                    }
+                  
+                    30%,
+                    50%,
+                    70% {
+                      transform: rotate(4deg);
+                    }
+                  
+                    80% {
+                      transform: rotate(-2deg);
+                    }
+                  
+                    90% {
+                      transform: rotate(2deg);
+                    }
+                }
+                @keyframes fade-in-keyframes {
+                    from {opacity: .2}
+                    to {opacity: 1}
+                }
+            }
         }
         .thumbnail-case {
             min-height: 160px;
@@ -1312,7 +1365,7 @@
         }
     }
     .carousel-cases {
-        width: 65%;
+        max-width: 800px;
         .react-multi-carousel-item {
             min-width: 220px;
         }
@@ -1324,8 +1377,7 @@
         min-width: 25%;
     }
     .carousel-cases {
-        width: 60%;
-        max-width: 1180px;
+        max-width: 700px;
         .react-multi-carousel-item {
             min-width: 220px;
         }
@@ -1345,7 +1397,6 @@
         }
     }
     .carousel-cases {
-        width: 50%;
-        max-width: 1180px;
+        width: 65%;
     }
 }

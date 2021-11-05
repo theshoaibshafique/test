@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { setEMMTab, setEMMPhaseIndex } from '../../App/emm-actions';
+import { setEMMTab, setEMMPhaseIndex } from '../../App/store/EMM/emm-actions';
 
 class ChecklistStatus extends React.Component {
   constructor(props) {

@@ -7,6 +7,7 @@ import { mdiAccountEdit } from '@mdi/js';
 import Icon from '@mdi/react'
 import EditIcon from '@material-ui/icons/Edit';
 import globalFunctions from '../../utils/global-functions';
+import { SaveAndCancel } from '../../components/SharedComponents/SharedComponents';
 const styles = theme => ({
   input: {
     '&:before': {
@@ -31,9 +32,9 @@ function EField(props) {
   };
   const labelProps = { className: props.classes.label };
   var errorMessage = null;
-  if (label == 'Email' && !globalFunctions.validEmail(value)){
+  if (label == 'Email' && !globalFunctions.validEmail(value)) {
     errorMessage = 'Please enter a valid email address';
-  } else if (!value){
+  } else if (!value) {
     errorMessage = `Please enter a ${label.toLowerCase()}`
   }
   if (isEdit)
@@ -49,7 +50,7 @@ function EField(props) {
         value={value}
         InputProps={inputProps}
         InputLabelProps={labelProps}
-        disabled={label=='Email' || label=='Title'}
+        disabled={label == 'Email'}
         error={errorMessage}
         helperText={errorMessage}
         variant="outlined"
@@ -80,13 +81,13 @@ export default class MyProfile extends React.PureComponent {
   }
 
   reset() {
-    this.setState({ ...this.props, isEdit:false })
+    this.setState({ ...this.props, isEdit: false })
   }
 
-  isValid(){
-    const { firstName, lastName, email, jobTitle} = this.state;
-    const current = JSON.stringify({firstName, lastName, email, jobTitle })
-    const old = JSON.stringify({firstName:this.props.firstName,lastName:this.props.lastName, email:this.props.email, jobTitle: this.props.jobTitle})
+  isValid() {
+    const { firstName, lastName, email, jobTitle } = this.state;
+    const current = JSON.stringify({ firstName, lastName, email, jobTitle })
+    const old = JSON.stringify({ firstName: this.props.firstName, lastName: this.props.lastName, email: this.props.email, jobTitle: this.props.jobTitle })
 
     return firstName && lastName && email && jobTitle && globalFuncs.validEmail(email) && old != current;
   }
@@ -95,7 +96,7 @@ export default class MyProfile extends React.PureComponent {
     this.setState({ isLoading: true })
     const { firstName, lastName, email, jobTitle } = this.state;
     const jsonBody = {
-      firstName, lastName, email
+      firstName, lastName, email, title: jobTitle
     }
     globalFuncs.genericFetch(`${process.env.USER_API}profile`, 'PATCH', this.props.userToken, jsonBody)
       .then(result => {
@@ -117,7 +118,7 @@ export default class MyProfile extends React.PureComponent {
     return (
       <section className="my-profile">
         <div><p className="profile-title">My Profile {!isEdit && <IconButton onClick={() => this.handleChange('isEdit', !isEdit)}>
-          <Icon path={mdiAccountEdit} size={'31px'} style={{marginBottom:4}} />
+          <Icon path={mdiAccountEdit} size={'31px'} style={{ marginBottom: 4 }} />
         </IconButton>}</p></div>
 
         <div className="profile-box">
@@ -147,10 +148,15 @@ export default class MyProfile extends React.PureComponent {
           />
         </div>
         <div ></div>
-        <div className="buttons" hidden={!isEdit}>
-          <Button disableRipple disableElevation id="reset" className="reset" onClick={() => this.reset()}>Cancel</Button>
-          <Button disableRipple disableElevation id="save" variant="outlined" className="primary" disabled={(this.state.isLoading) || !this.isValid()} onClick={() => this.submit()}>
-            {(this.state.isLoading) ? <div className="loader"></div> : 'Save'}</Button>
+        <div className="buttons" style={!isEdit ? {display:'none'} : {}}>
+          <SaveAndCancel
+            handleSubmit={() => { this.submit() }}
+            handleCancel={() => { this.reset() }}
+            isLoading={this.state.isLoading}
+            disabled={this.state.isLoading || !this.isValid()}
+            cancelText={'Cancel'}
+            submitText={'Save'}
+          />
         </div>
 
         <div className="user-info-buttons" style={{ marginTop: 40 }}><Button disableRipple disableElevation variant="contained" className="secondary" target="_blank" onClick={() => this.redirect()}>Change Password</Button></div>

@@ -21,8 +21,8 @@ import { StyledTabs, StyledTab, TabPanel } from './misc/helper-components';
 import { BrowseCases } from './BrowseCases';
 import { DetailedCase } from './DetailedCase';
 import { Overview } from './Overview';
-import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase } from '../App/cd-actions';
-import { selectCases, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/cd-selectors';
+import { exitCaseDiscovery, setCases, setFlagReport, setOverviewData, setRecentSaved, setSavedCases, showDetailedCase, setClipNotificationStatus } from '../App/store/CaseDiscovery/cd-actions';
+import { selectCases, selectClipNotificationStatus, selectDetailedCase, selectOverviewData, selectSavedCases } from '../App/store/CaseDiscovery/cd-selectors';
 import { setCurrentProduct } from '../App/actions';
 
 
@@ -182,9 +182,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchUsers = async () => {
       const result = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}list?product_id=${productRoles?.emmRoles?.productId}`, 'get', userToken, {})
         .then(result => {
-          result = result.data
           setUsers(result);
-
         }).catch((error) => {
           console.log("oh no", error)
         });
@@ -193,7 +191,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchFacilityConfig = async () => {
       const result = await globalFunctions.axiosFetch(process.env.EFFICIENCY_API + "/config?facility_id=" + userFacility, 'get', userToken, {})
         .then(result => {
-          result = result.data;
           const { facilityName, fcotsThreshold, turnoverThreshold } = result;
 
           // Set roomIds local state for flag submission.
@@ -213,7 +210,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
 
       return await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'cases?facility_id=' + userFacility, 'get', userToken, {})
         .then(result => {
-          result = result.data
           let spec = [];
           let proc = [];
           let ors = [];
@@ -256,7 +252,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchFlagReport = async () => {
       await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'flag_report', 'get', userToken, {})
         .then(result => {
-          result = result.data;
           dispatch(setFlagReport(result));
         }).catch((error) => {
           console.log("oh no", error)
@@ -276,17 +271,19 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const getOverviewData = (endpoint) => globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + endpoint, 'get', userToken, {});
     const fetchSavedCases = getOverviewData("bookmarks");
     const fetchOverview = getOverviewData("overview");
+    const fetchClipNotificationStatus = getOverviewData("clip_notification");
 
-    Promise.all([fetchSavedCases, fetchOverview].map(function (e) {
+    Promise.all([fetchSavedCases, fetchClipNotificationStatus, fetchOverview].map(function (e) {
       return e?.then(function (result) {
-        return result?.data;
+        return result;
       })
-    })).then(([savedCases, overview]) => {
+    })).then(([savedCases, clipNotificationStatus, overview]) => {
       const {tagOverview, recommendations, recentBookmarks, recentFlags, recentClips} = overview;
       dispatch(setOverviewData({
         recentFlags, recentClips, recommendations,
         recentSaved:recentBookmarks, overview:tagOverview, savedCases
       }));
+      dispatch(setClipNotificationStatus(clipNotificationStatus));
     }).catch(function (results) {
       console.log("uh oh", results)
     }).finally(() => {
@@ -327,7 +324,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const result = await globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}bookmarks?case_id=${caseId}&is_bookmarked=${!isSav}`, 'PUT', userToken, {})
       .then(result => {
         logger?.manualAddLog('click', `${isSav ? 'remove' : 'add'}-saved-case`, { caseId: caseId });
-        result = result.data;
         return result
       }).catch((error) => {
         console.log("oh no", error)
@@ -335,14 +331,23 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     // If they're unsaving we wait for savedCases to be updated before getting the next cases
     if (index > -1) {
       const recentSavedData = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + 'recent_bookmarks', 'get', userToken, {});
-      dispatch(setRecentSaved(recentSavedData.data));
+      dispatch(setRecentSaved(recentSavedData));
     }
 
     dispatch(setSavedCases(result));
   }
 
-
-  // const [isLoading, setIsLoading] = useState(true);
+  const handleToggleClipNotification = (currNotificationStatus) => {
+    const newNotificationStatus = !currNotificationStatus;
+    globalFunctions.axiosFetch(`${process.env.CASE_DISCOVERY_API}clip_notification?is_notified=${newNotificationStatus}`, 'put', userToken, {})
+    .then(result => {
+      logger?.manualAddLog('click', `${newNotificationStatus ? 'enable' : 'disable'}-clip-notification`);
+      dispatch(setClipNotificationStatus(newNotificationStatus));
+    })
+    .catch(error => {
+      console.log("oh no", error);
+      });
+  }
 
   useEffect(() => {
     if (caseId == null) {
@@ -353,7 +358,6 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     const fetchCases = async () => {
       const result = await globalFunctions.axiosFetch(process.env.CASE_DISCOVERY_API + `case?facility_id=${userFacility}&case_id=${caseId}`, 'get', userToken, {})
         .then(result => {
-          result = result.data
           if (result.metaData?.emrCaseId && DETAILED_CASE) {
             const newCase = CASES.find((c) => c.emrCaseId == result.metaData.emrCaseId);
             logger?.manualAddLog('click', `swap-case-${result.metaData.emrCaseId}`, formatCaseForLogs(newCase));
@@ -410,6 +414,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
             handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
             handleSaveCase={handleSaveCase}
             handleFilterChange={(e, v) => { handleFilterChange(e, v); setTabIndex(2) }}
+            handleToggleClipNotification={handleToggleClipNotification}
             {...OVERVIEW_DATA}
           /> || <LoadingIndicator />}
         </TabPanel>

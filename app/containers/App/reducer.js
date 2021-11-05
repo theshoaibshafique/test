@@ -11,6 +11,7 @@
  */
 
 import { fromJS } from 'immutable';
+import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, SST_ADMIN_ID, UM_PRODUCT_ID } from '../../constants';
 
 import {
   USER_TOKEN,
@@ -23,7 +24,10 @@ import {
   LOGGER,
   AUTH_LOGIN,
   PROFILE,
-  CURRENT_PRODUCT
+  CURRENT_PRODUCT,
+  TOGGLE_SNACKBAR,
+  EXIT_SNACKBAR,
+  USER_STATUS
 } from './constants';
 
 // The initial state of the App
@@ -40,7 +44,8 @@ const initialState = fromJS({
   specialties: [],
   complications: [],
   operatingRoom: [],
-  userRoles: []
+  userRoles: [],
+  snackbar: []
 });
 
 
@@ -57,13 +62,15 @@ function emmReducer(state = initialState, action) {
         .set('lastName', action.token.user.idToken.family_name)
         .set('email', action.token.user.idToken.email)
         .set('jobTitle', action.token.user.idToken.job_title);
+    case USER_STATUS:
+      return state
+        .set('userStatus', action.status)
     case AUTH_LOGIN:
       return state
         .set('userToken', action.accessToken)
         .set('userLoggedIn', true);
     case PROFILE:
-      const userRoles = action.profile.roles ? Object.keys(action.profile.roles) : null;
-      return setProductRoles(state, userRoles)
+      return setProductRoles(state, action.profile.roles)
         .set('userID', action.profile.userId)
         .set('email', action.profile.email)
         .set('userFacility', action.profile.facilityId)
@@ -91,16 +98,22 @@ function emmReducer(state = initialState, action) {
     case LOGGER:
       return state
         .set('logger', action.logger)
+    case TOGGLE_SNACKBAR:
+      return state
+        .set('snackbar', [...state.get('snackbar'), action.snackbar])
+    case EXIT_SNACKBAR:
+      return state
+        .set('snackbar', state.get('snackbar')?.slice?.(1))
     case CURRENT_PRODUCT:
       return state
-        .set('currentProduct', {...state.get(action.currentProduct)});
+        .set('currentProduct', { ...state.get(action.currentProduct) });
     default:
       return state;
   }
 }
 
 function setProductRoles(state, userRoles) {
-  if (!userRoles){
+  if (!userRoles) {
     return state;
   }
   const createProduct = (permissions) => {
@@ -110,43 +123,50 @@ function setProductRoles(state, userRoles) {
         return Object.values(permissions);
       },
       get isAdmin() {
-        return userRoles.includes(this.admin);
+        return userRoles?.[this.admin];
       },
       get hasPublisher() {
-        return userRoles.includes(this.publisher)
+        return userRoles?.[this.publisher]
       },
       get hasAccess() {
-        return userRoles.includes(this.reader);
+        return userRoles?.[this.reader];
       }
     }
   };
   return state
     .set('userRoles', userRoles)
+    .set('isSSTAdmin', Boolean(userRoles?.[SST_ADMIN_ID]))
     .set('cdRoles', createProduct({
-      productId: "cd7bb831-c7c6-4a34-8cc6-e6d89be49d4b",
+      name: "Case Discovery",
+      productId: CD_PRODUCT_ID,
       admin: "b398657c-ee31-4ce6-8dda-941a600ea01a",
       publisher: "24d372e8-715a-47a7-ae64-dbacd377d0a6",
       reader: "d813f651-af9c-49e9-ad80-83246873d6f3"
     }))
     .set('effRoles', createProduct({
-      productId: "e4435c01-ebc5-4920-ae02-fde2efb3dc96",
+      name: "Efficiency",
+      productId: EFF_PRODUCT_ID,
       admin: "c365cf5f-4993-4c1c-b4bb-cd5596fee06b",
       reader: "48ba6489-5d9b-4a19-8ea4-8ac624175f85"
     }))
     .set('sscRoles', createProduct({
-      productId: "66c3b2d5-26ec-4355-87d5-4d0130bfb426",
+      name: "Surgical Safety Checklist",
+      productId: SSC_PRODUCT_ID,
       admin: "aaa17cff-b469-4989-baa0-283ebd82fc7b",
       reader: "df561f9b-b8fe-47a8-aa0a-bdc5db29a77f"
     }))
     .set('emmRoles', createProduct({
-      productId: "987e11f2-3287-473b-88b7-e4ce94f0c0e1",
+      name: "eM&M",
+      productId: EMM_PRODUCT_ID,
       admin: "04cf63ff-4274-4271-b74d-bc71d0a210db",
       publisher: "eb1460d7-4b6d-4ce3-8bc4-b6d0eb1864f1",
       reader: "9467994d-4ad6-4ad9-9b4e-8ab2125c974f"
     }))
     .set('umRoles', createProduct({
-      productId: "fe742a1f-5757-4273-a625-6dddf45fbb1a",
+      name: "User Management",
+      productId: UM_PRODUCT_ID,
       sstAdmin: "5ec12e15-5ddc-4395-b0bf-1d5ae83fe0fa",
+      reader: "7007d686-2b1d-461c-a258-e7737eaeae7d",
       admin: "d5e22d93-2cb3-49a5-b710-956b098ff28e",
       member: "333ee932-1f6a-4577-8266-a58b4e62b72e"
     }))

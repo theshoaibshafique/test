@@ -13,6 +13,11 @@ const makeSelectToken = () => createSelector(
   (globalState) => globalState.get('userToken')
 );
 
+const makeSelectUserStatus = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('userStatus')
+);
+
 const makeSelectID = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('userID')
@@ -93,28 +98,39 @@ const makeSelectRoles = () => createSelector(
   (globalState) => globalState.get('userRoles')
 );
 
+const makeSelectIsSSTAdmin = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('isSSTAdmin')
+);
+
 const makeSelectLogger = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('logger')
 );
 
-const makeSelectProductRoles = () => createSelector(
+const makeSelectProductRoles = (useProductId) => createSelector(
   selectGlobal,
   (globalState) => {
-    return {
-      cdRoles: globalState.get('cdRoles'),
-      effRoles: globalState.get('effRoles'),
-      sscRoles: globalState.get('sscRoles'),
-      emmRoles: globalState.get('emmRoles'),
-      umRoles: globalState.get('umRoles')
+    const result = {};
+    const products = ['cdRoles', 'effRoles', 'sscRoles', 'emmRoles', 'umRoles'];
+    for (var product of products) {
+      const roles = globalState.get(product);
+      result[useProductId ? roles?.productId : product] = roles
     }
+    return result
   }
+)
+
+const makeSelectSnackbar = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('snackbar')
 )
 
 
 export {
   selectGlobal,
   makeSelectToken,
+  makeSelectUserStatus,
   makeSelectUserLoggedIn,
   makeSelectID,
   makeSelectRepos,
@@ -131,6 +147,8 @@ export {
   makeSelectEMMPresenter,
   makeSelectIsAdmin,
   makeSelectRoles,
+  makeSelectIsSSTAdmin,
   makeSelectLogger,
-  makeSelectProductRoles
+  makeSelectProductRoles,
+  makeSelectSnackbar
 };

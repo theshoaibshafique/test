@@ -112,7 +112,7 @@ export default class Efficiency extends React.PureComponent {
     globalFunctions.axiosFetch(process.env.USERDETAILSMODIFY_API, 'post', this.props.userToken, jsonBody)
       .then(result => {
         //Cache onboard report name so we know not to open it again automatically
-        if (result.data) {
+        if (result) {
           localStorage.setItem(`${this.props.userEmail}-${this.ONBOARD_TYPE}`, true);
         }
       }).catch((error) => {
@@ -239,7 +239,6 @@ export default class Efficiency extends React.PureComponent {
 
         globalFunctions.axiosFetch(process.env.EFFICIENCYTILE_API, 'post', this.props.userToken, jsonBody, this.state.source.token)
           .then(result => {
-            result = result.data;
             if (result === 'error' || result === 'conflict') {
               this.notLoading();
             } else if (result) {
@@ -509,7 +508,7 @@ export default class Efficiency extends React.PureComponent {
             What's this dashboard about?
           </div>
           {this.props.isAdmin && <div className="efficiency-settings">
-            <NavLink to={"/adminPanel/1"} className='link'>
+            <NavLink to={"/settings/0"} className='link'>
               <span className="settings-icon"><Icon color="#028CC8" style={{ marginRight: 4 }} path={mdiCogOutline} size={'24px'} /></span>Settings
             </NavLink>
           </div>}
