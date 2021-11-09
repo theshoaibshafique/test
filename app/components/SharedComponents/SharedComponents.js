@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent, Button } from '@material-ui/core';
+import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent, Button, Modal } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectSnackbar } from '../../containers/App/selectors';
+import { mdiClose } from '@mdi/js';
+import Icon from '@mdi/react'
+
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
     margin: '8px 0'
@@ -263,5 +266,25 @@ export const SaveAndCancel = props => {
           </Button>
           <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => handleCancel()}>{cancelText}</Button>
       </div>
+  )
+}
+
+/* 
+    Generic Modal thats empty with an X in the corner
+*/
+export const GenericModal = props => {
+  const { children, toggleModal, className, open } = props;
+  return (
+      <Modal
+          open={open}
+          onClose={() => toggleModal(false)}
+      >
+          <div className={`Modal generic-modal ${className}`}>
+              <div className="close-button" >
+                  <Icon className={`pointer`} onClick={() => toggleModal(false)} color="#000000" path={mdiClose} size={'19px'} />
+              </div>
+              {children}
+          </div>
+      </Modal>
   )
 }

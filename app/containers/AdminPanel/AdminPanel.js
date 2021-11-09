@@ -3,7 +3,8 @@ import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import { StyledTab, StyledTabs, TabPanel } from '../../components/SharedComponents/SharedComponents';
 import { UserManagement } from './UserManagement/UserManagement';
-import { getRoleMapping } from './UserManagement/helpers';
+import { getRoleMapping } from './helpers';
+import { APIManagement } from './APIManagement/APIManagement';
 
 const TABS = ['user management']
 export default class AdminPanel extends React.PureComponent {
@@ -93,9 +94,13 @@ export default class AdminPanel extends React.PureComponent {
           textColor="primary"
         >
           {hasUM && <StyledTab label="User Management" /> || <span />}
+          {hasUM && <StyledTab label="API Management" /> || <span />}
         </StyledTabs>
         {hasUM && <TabPanel value={tabIndex} index={0}>
           <UserManagement />
+        </TabPanel>}
+        {hasUM && <TabPanel value={tabIndex} index={1}>
+          <APIManagement />
         </TabPanel>}
 
       </div>

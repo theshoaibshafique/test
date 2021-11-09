@@ -1,6 +1,3 @@
-import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID } from "../../../constants";
-
-
 export const LEARNMORE_HEADER = "How does user management work?";
 export const LEARNMORE_DESC = "This panel is used to control which <facility> users are able to access the Insights Portal. It is also used to control what type of access each user will have to the various products within Insights."
 export const LEARNMORE_INFO = {

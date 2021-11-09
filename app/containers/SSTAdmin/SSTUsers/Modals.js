@@ -15,7 +15,7 @@ import { setUsers } from '../../App/store/UserManagement/um-actions';
 import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO } from './constants';
 import { ProfileIcon, SaveAndCancel, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
-import { resetUser, createUser, deleteUser, generateProductUpdateBody, isWithinScope, patchRoles } from '../../AdminPanel/UserManagement/helpers';
+import { resetUser, createUser, deleteUser, generateProductUpdateBody, isWithinScope, patchRoles } from '../../AdminPanel/helpers';
 /* 
     Generic Modal thats empty with an X in the corner
 */

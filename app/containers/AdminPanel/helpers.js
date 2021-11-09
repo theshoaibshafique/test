@@ -1,5 +1,5 @@
 
-import globalFunctions from "../../../utils/global-functions";
+import globalFunctions from "../../utils/global-functions";
 
 const roleHeirarchy = ['admin', 'reader'];
 const roleNameMap = { admin: 'Full Access', reader: 'View Only' };
