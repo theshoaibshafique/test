@@ -4,6 +4,7 @@ import AdminPanel from './AdminPanel';
 import { makeSelectToken, makeSelectUserFacility, makeSelectID, makeSelectLogger, makeSelectProductRoles } from '../App/selectors';
 import { setCurrentProduct } from '../App/actions';
 import { exitUserManagement, setAssignableRoles, setLocationList, setUsers } from '../App/store/UserManagement/um-actions';
+import { exitApiManagement, setApiAssignableRoles, setClients } from '../App/store/ApiManagement/am-actions';
 
 const mapStateToProps = createStructuredSelector({
   userToken: makeSelectToken(),
@@ -30,6 +31,15 @@ const mapDispatchToProps = (dispatch) => {
     setUsers: (users) => {
       dispatch(setUsers(users))
     },
+    setClients: (clients) => {
+      dispatch(setClients(clients))
+    },
+    setApiAssignableRoles: (roles) => {
+      dispatch(setApiAssignableRoles(roles))
+    },
+    exitApiManagement: () => {
+      dispatch(exitApiManagement())
+    }
   };
 };
 

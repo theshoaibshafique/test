@@ -52,3 +52,8 @@ export const UM_USERS = 'insight/App/UM/Users'
 export const UM_ASSIGNABLE_ROLES = 'insight/App/UM/Assignable/roles'
 export const UM_LOCATION = 'insight/App/UM/Location'
 export const UM_EXIT = 'insight/App/UM/exit'
+
+export const AM_FILTERS = 'insight/App/AM/Filters'
+export const AM_CLIENTS = 'insight/App/AM/Clients'
+export const AM_ASSIGNABLE_ROLES = 'insight/App/AM/Assignable/roles'
+export const AM_EXIT = 'insight/App/AM/exit'

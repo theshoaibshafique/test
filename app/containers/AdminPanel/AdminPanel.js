@@ -3,10 +3,10 @@ import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import { StyledTab, StyledTabs, TabPanel } from '../../components/SharedComponents/SharedComponents';
 import { UserManagement } from './UserManagement/UserManagement';
-import { getRoleMapping } from './helpers';
+import { getRoleMapping, helperFetch } from './helpers';
 import { APIManagement } from './APIManagement/APIManagement';
 
-const TABS = ['user management']
+const TABS = ['user management', 'api management']
 export default class AdminPanel extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -26,12 +26,13 @@ export default class AdminPanel extends React.PureComponent {
     const { match: { params } } = this.props;
     const tabIndex = parseInt(params.index);
     if (tabIndex == params.index) {
-      this.setState({ tabIndex: Math.min(Math.max(tabIndex, 0), 0) })
+      this.setState({ tabIndex: Math.min(Math.max(tabIndex, 0), 1) })
     }
     this.getUserManagementData();
+    this.getAPIManagementData();
     this.props.setCurrentProduct();
   }
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.exitUserManagement();
   }
   componentDidUpdate() {
@@ -41,46 +42,43 @@ export default class AdminPanel extends React.PureComponent {
     }, 300)
   }
   async getUserManagementData() {
-    this.getProfiles();
-    this.getAssignableRoles();
-    this.getLocation();
+    const assignableRoles = await helperFetch(`${process.env.USER_V2_API}assignable_roles`, 'get', this.props.userToken, {})
+    this.props.setAssignableRoles(assignableRoles);
+
+    const locations = await helperFetch(`${process.env.USER_V2_API}location?facility_id=${this.props.facilityName}`, 'get', this.props.userToken, {})
+    this.props.setLocations(locations);
+
+    const users = await helperFetch(`${process.env.USER_V2_API}profiles`, 'get', this.props.userToken, {});
+    this.props.setUsers(this.processUsers(users));
   }
 
-  async getProfiles() {
-    return await globalFunctions.genericFetch(`${process.env.USER_V2_API}profiles`, 'get', this.props.userToken, {})
-      .then(result => {
-        const { productRoles } = this.props;
-        this.props.setUsers(result?.map((u) => {
-          const { roles, firstName, lastName } = u;
+  async getAPIManagementData() {
+    const assignableRoles = await helperFetch(`${process.env.USER_V2_API}assignable_roles?is_client=true`, 'get', this.props.userToken, {})
+    this.props.setApiAssignableRoles(assignableRoles);
 
-          return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
-        }))
-      }).catch((results) => {
-        console.error("oh no", results)
-      });
+    const clients = await helperFetch(`${process.env.USER_V2_API}clients`, 'get', this.props.userToken, {});
+    this.props.setClients(this.processClients(clients));
+
   }
-  async getLocation() {
-    return await globalFunctions.genericFetch(`${process.env.USER_V2_API}location?facility_id=${this.props.facilityName}`, 'get', this.props.userToken, {})
-      .then(result => {
-        this.props.setLocations(result);
-      }).catch((results) => {
-        console.error("oh no", results)
-      });
+
+  processUsers(users) {
+    const { productRoles } = this.props;
+    return users?.map((u) => {
+      const { roles, firstName, lastName } = u;
+      return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)), name: `${firstName} ${lastName}` }
+    })
   }
-  async getAssignableRoles() {
-    return await globalFunctions.genericFetch(`${process.env.USER_V2_API}assignable_roles`, 'get', this.props.userToken, {})
-      .then(result => {
-        this.props.setAssignableRoles(result);
-      }).catch((results) => {
-        console.error("oh no", results)
-      });
+
+  processClients(clients) {
+    const { productRoles } = this.props;
+    return clients?.map((u) => {
+      const { roles } = u;
+      return { ...u, displayRoles: getRoleMapping(roles, Object.values(productRoles)) }
+    })
   }
 
 
   render() {
-    const { productRoles } = this.props;
-    const { umRoles } = productRoles || {}
-    const hasUM = umRoles?.isAdmin || umRoles?.hasAccess;
     const { tabIndex } = this.state;
     return (
       <div className="admin-panel">
@@ -93,15 +91,15 @@ export default class AdminPanel extends React.PureComponent {
           indicatorColor="primary"
           textColor="primary"
         >
-          {hasUM && <StyledTab label="User Management" /> || <span />}
-          {hasUM && <StyledTab label="API Management" /> || <span />}
+          <StyledTab label="User Management" />
+          <StyledTab label="API Management" />
         </StyledTabs>
-        {hasUM && <TabPanel value={tabIndex} index={0}>
+        <TabPanel value={tabIndex} index={0}>
           <UserManagement />
-        </TabPanel>}
-        {hasUM && <TabPanel value={tabIndex} index={1}>
+        </TabPanel>
+        <TabPanel value={tabIndex} index={1}>
           <APIManagement />
-        </TabPanel>}
+        </TabPanel>
 
       </div>
     );

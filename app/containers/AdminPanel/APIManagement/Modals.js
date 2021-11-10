@@ -17,7 +17,7 @@ import { setSnackbar } from '../../App/actions';
 
 
 export const APILearnMore = props => {
-    
+
     return (
         <GenericModal
             {...props}
@@ -30,7 +30,7 @@ export const APILearnMore = props => {
 
 
 export const DeleteUserModal = props => {
-    const { firstName, lastName, userId, tableData } = props?.user || {};
+    const { firstName, lastName, clientId, tableData } = props?.user || {};
     const userTable = useSelector(selectUsers());
     const userToken = useSelector(makeSelectToken());
     const dispatch = useDispatch();
@@ -39,9 +39,9 @@ export const DeleteUserModal = props => {
 
     const fetchDelete = async () => {
         setIsLoading(true)
-        const response = await deleteUser({ userId, scope: 2 }, userToken);
+        const response = await deleteUser({ clientId, scope: 2 }, userToken);
         const modified = [...userTable];
-        const id = modified.findIndex((u) => u.userId == userId);
+        const id = modified.findIndex((u) => u.clientId == clientId);
         if (id >= 0) {
             modified.splice(id, 1);
         }
@@ -81,14 +81,9 @@ export const DeleteUserModal = props => {
     )
 }
 
-const SCOPE_MAP = ['unrestricted', 'h', 'f', 'd', 'r'];
 const defaultViewState = {
     viewProfile: true,
-    viewAdminAccess: true,
-    [CD_PRODUCT_ID]: true,
-    [EMM_PRODUCT_ID]: true,
-    [SSC_PRODUCT_ID]: true,
-    [EFF_PRODUCT_ID]: true
+    viewAdminAccess: true
 };
 const userReducer = (state, event) => {
     if (event.name == 'new-user') {
@@ -179,7 +174,7 @@ const useStyles = makeStyles((theme) => ({
 export const AddEditUserModal = props => {
     const dispatch = useDispatch();
     const { user } = props;
-    const isAddUser = !Boolean(user?.userId);
+    const isAddUser = !Boolean(user?.clientId);
     //if we're adding a new user we edit all sections at once
     const viewObject = isAddUser ? null : defaultViewState;
     const locationLookups = useSelector(selectLocationLookups());
@@ -220,11 +215,11 @@ export const AddEditUserModal = props => {
         } else if (event == 'add-user') {
             //Post call to add user
             setIsLoading(true);
-            const createUserSuccess = (userId) => {
+            const createUserSuccess = (clientId) => {
                 const { firstName, lastName } = userData;
                 dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was added.` }));
 
-                updateTable(userId);
+                updateTable(clientId);
                 toggleModal(false);
                 setIsLoading(false);
 
@@ -242,12 +237,12 @@ export const AddEditUserModal = props => {
 
     const userTable = useSelector(selectUsers());
     const productRoles = useSelector(makeSelectProductRoles());
-    const updateTable = (userId) => {
+    const updateTable = (clientId) => {
         const { tableData, firstName, lastName, title, roles, email } = userData || {};
         const { id } = tableData || {};
         const modified = [...userTable];
         const updatedUser = {
-            userId,
+            clientId,
             firstName, lastName, title, email,
             displayRoles: getRoleMapping(roles, Object.values(productRoles)),
             name: `${firstName} ${lastName}`,
@@ -263,15 +258,15 @@ export const AddEditUserModal = props => {
     }
 
     const handleRoleSubmit = async () => {
-        const { userId, roles, firstName, lastName } = userData;
+        const { clientId, roles, firstName, lastName } = userData;
         handleChange('save-settings');
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
-        const profile = await patchRoles({ userId, scope: 2, productUpdates }, userToken).then((e) => {
+        const profile = await patchRoles({ clientId, scope: 2, productUpdates }, userToken).then((e) => {
             if (e == 'error') {
                 dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update user.` }))
             } else {
                 dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was updated.` }))
-                updateTable(userId);
+                updateTable(clientId);
             }
         })
     }
@@ -285,12 +280,22 @@ export const AddEditUserModal = props => {
         <GenericModal
             {...props}
             toggleModal={toggleModal}
-            className={`add-edit-user ${!isAddUser && 'is-edit-user'} ${isSingleEdit && 'single-edit'} `}
+            className={`add-edit-user client ${!isAddUser && 'is-edit-client'} ${isSingleEdit && 'single-edit'} `}
         >
             <>
                 <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} />
                 <AdminPanelAccess {...userData} isAddUser={isAddUser} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleRoleSubmit} />
-                
+                {isAddUser && (
+                    <SaveAndCancel
+                        className={"add-user-buttons"}
+                        disabled={isLoading}
+                        handleSubmit={() => !isSubmitable ? handleChange('validate', { id: 'all' }) : handleSubmit(isView ? 'add-user' : 'save-settings')}
+                        submitText={(isView ? 'Add User' : 'Save')}
+                        isLoading={isLoading}
+                        cancelText={"Cancel"}
+                        handleCancel={() => toggleModal(false)}
+                    />
+                )}
             </>
         </GenericModal>
     )
@@ -320,7 +325,7 @@ const AdminPanelAccess = props => {
         content = (
             <div className="role-display">
                 <span>{roleDisplay}</span>
-                <span className={`action-icon pointer`} title={'Edit Admin Panel Access'} onClick={() => handleChange('view', { id: 'viewAdminAccess', value: false })}>
+                <span className={`action-icon pointer`} title={'Edit User Management Access'} onClick={() => handleChange('view', { id: 'viewAdminAccess', value: false })}>
                     <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
                 </span>
             </div>
@@ -359,7 +364,7 @@ const AdminPanelAccess = props => {
 
     return (
         <div className="admin-panel-access">
-            <div className="subtle-subtext title">Admin Panel Access</div>
+            <div className="subtle-subtext title">User Management Access</div>
             <Divider className="divider" />
             {content}
             <Divider className="divider" />
@@ -369,13 +374,13 @@ const AdminPanelAccess = props => {
 
 const ConfirmReset = props => {
     const dispatch = useDispatch();
-    const { toggleModal, firstName, lastName, email, userId } = props;
+    const { toggleModal, firstName, lastName, email, clientId } = props;
     const [isLoading, setIsLoading] = useState(false);
     const userToken = useSelector(makeSelectToken());
     const scope = 2;
     const handleReset = async () => {
         setIsLoading(true);
-        await resetUser({ userId, scope }, userToken)
+        await resetUser({ clientId, scope }, userToken)
         setIsLoading(false);
         toggleModal(false);
         dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName}'s account was reset.` }))
@@ -412,69 +417,72 @@ const ConfirmReset = props => {
 
 const ProfileSection = props => {
     const { handleChange, isView, errorState, isSingleEdit } = props;
-    const { firstName, lastName, title, email, datetimeJoined, userId } = props;
+    const { clientName, description, datetimeJoined, clientId } = props;
     const classes = useStyles();
     const [showConfirmReset, setShowConfirmReset] = useState(false);
 
     if (isView) {
         return (
-            <div className="view-profile">
-                <div>
-                    <ProfileIcon className="header-1" size={95} firstName={firstName} lastName={lastName} />
-                    {userId && (
-                        <a className="link reset-account" onClick={() => setShowConfirmReset(true)}>
-                            Reset Account Access
-                        </a>
-                    )}
+            <div className="view-profile client">
+                <div className="client-info">
+                    <div>
+                        <ProfileIcon className="header-1 api-icon" size={88} override={"API"} />
+
+                    </div>
+                    <div className="profile-info">
+                        <div className="header-2">{clientName}</div>
+                        {clientId && <div className="subtle-text">{`Member since ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
+                        {clientId && (
+                            <a className="link reset-account" onClick={() => setShowConfirmReset(true)}>
+                                Reset Account Access
+                            </a>
+                        )}
+                    </div>
+                    <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
+                        <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
+                    </span>
                 </div>
-                <div className="profile-info">
-                    <div className="header-2">{firstName} {lastName}</div>
-                    <div className="subtext">{title}</div>
-                    <div className="subtext">{email}</div>
-                    {userId && <div className="subtle-text">{`Member since ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
-                </div>
-                <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
-                    <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
-                </span>
+
+                <div className="subtle-text description">{description}</div>
                 <ConfirmReset
                     open={showConfirmReset}
                     toggleModal={setShowConfirmReset}
-                    firstName={firstName}
-                    lastName={lastName}
-                    userId={userId}
-                    email={email} />
+
+                    clientId={clientId}
+                />
             </div>
         )
     }
-    const renderInputField = (title, id) => (
-        <div>
-            <InputLabel className={classes.inputLabel}>{title}</InputLabel>
+    return (
+        <div className="edit-profile">
+            <InputLabel className={classes.inputLabel}>Client Name</InputLabel>
             <TextField
                 size="small"
                 fullWidth
-                id={`edit-${id}`}
-                value={props?.[id]}
-                onChange={(e, v) => handleChange(id, e.target.value)}
-                onBlur={(e) => handleChange('validate', { id })}
+                id={`edit-clientName`}
+                value={props?.['clientName']}
+                onChange={(e, v) => handleChange('clientName', e.target.value)}
+                onBlur={(e) => handleChange('validate', { id: 'clientName' })}
                 variant="outlined"
-                error={Boolean(errorState?.[id])}
-                helperText={<span style={{ marginLeft: -14 }}>{errorState?.[id]}</span>}
+                error={Boolean(errorState?.['clientName'])}
+                helperText={<span style={{ marginLeft: -14 }}>{errorState?.['clientName']}</span>}
             />
-        </div>
-    )
-    return (
-        <div className="edit-profile">
-            <div className='profile-row'>
-                {renderInputField('First Name', 'firstName')}
-                {renderInputField('Last Name', 'lastName')}
-            </div>
-            <div className='profile-row'>
-                {renderInputField('Title', 'title')}
-                {renderInputField('Email', 'email')}
-            </div>
+            <InputLabel className={classes.inputLabel}>Client Description</InputLabel>
+            <TextField
+                size="small"
+                fullWidth
+                id={`edit-title`}
+                value={props?.['title']}
+                onChange={(e, v) => handleChange('title', e.target.value)}
+                onBlur={(e) => handleChange('validate', { id: 'title' })}
+                variant="outlined"
+                multiline
+                rows={4}
+                helperText={<span style={{ marginRight: -14, float: 'right' }}>{props?.['title']?.length ?? 0}</span>}
+            />
             {isSingleEdit && <SaveAndCancel
                 className={"save-profile"}
-                disabled={errorState?.['firstName'] || errorState?.['lastName'] || errorState?.['email'] || errorState?.['title']}
+                disabled={errorState?.['clientName']}
                 handleSubmit={() => handleChange('save-settings')}
                 submitText={'Save'}
                 isLoading={false}

@@ -1,0 +1,26 @@
+.add-edit-user.client{
+    .view-profile.client{
+        flex-direction: column;
+        .edit-profile-icon{
+            // display: none;
+            align-self: auto;
+            margin-top: 12px;
+        }
+        .description{
+            color: #4F4F4F;
+        }
+    }
+    .action-icon{
+        margin-right: 18px;
+    }
+    .client-info{
+        display: flex;
+        margin-bottom: 20px;
+    }
+    .api-icon{
+        font-size: 36px;
+    }
+}
+
+
+

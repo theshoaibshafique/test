@@ -248,11 +248,11 @@ const useProfileIconStyles = makeStyles({
 });
 
 export const ProfileIcon = props => {
-  const { firstName, lastName, className, size } = props;
+  const { firstName, lastName, className, size, override } = props;
   const classes = useProfileIconStyles({size})
   const initials = `${firstName?.substring(0,1)}${lastName?.substring(0,1)}`.toUpperCase();
   return (
-      <div className={`${className} ${classes.root}`}>{initials}</div>
+      <div className={`${className} ${classes.root}`}>{override ?? initials}</div>
   )
 
 }

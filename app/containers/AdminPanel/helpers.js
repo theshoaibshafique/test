@@ -34,7 +34,7 @@ export function isWithinScope(currentScope, minScope, maxScope) {
     return currentScope >= minScope && currentScope <= maxScope;
 }
 
-const helperFetch = async (url, fetchMethod, userToken, body, errorCallback) => {
+export const helperFetch = async (url, fetchMethod, userToken, body, errorCallback) => {
     return await globalFunctions.genericFetch(url, fetchMethod, userToken, body)
         .then(result => {
             if (result?.conflict){

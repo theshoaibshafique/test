@@ -9,6 +9,7 @@ import globalReducer from 'containers/App/reducer';
 import emmReducer from 'containers/App/store/EMM/emm-reducer';
 import cdReducer from 'containers/App/store/CaseDiscovery/cd-reducer';
 import umReducer from './containers/App/store/UserManagement/um-reducer';
+import amReducer from './containers/App/store/ApiManagement/am-reducer';
 
 /*
  * routeReducer
@@ -48,6 +49,7 @@ export default function createReducer(injectedReducers) {
     emm: emmReducer,
     cd: cdReducer,
     um: umReducer,
+    am: amReducer,
     ...injectedReducers,
   });
 }
