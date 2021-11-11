@@ -499,7 +499,7 @@ const ConfirmReset = props => {
         content = (
             <>
                 <div className="contents subtext">
-                    <p>Are you sure you want to reset Client Secret?</p>
+                    <p>Are you sure you want to reset the Client Secret?</p>
                 </div>
                 <div className="close">
                     <SaveAndCancel
