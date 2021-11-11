@@ -49,11 +49,11 @@ export const APILearnMore = props => {
 
 export const ClipboardField = props => {
     const classes = useStyles();
-    const { value, warning, title, className } = props;
+    const { value, warning, title, className, id } = props;
     const dispatch = useDispatch();
     const copyToClipboard = () => {
         navigator.clipboard.writeText(value);
-        document.getElementById('clipboard-field')?.select?.()
+        document.getElementById(id ?? 'clipboard-field')?.select?.()
         dispatch(setSnackbar({ severity: 'success', message: `Copied to clipboard.` }))
     }
     return (
@@ -63,7 +63,7 @@ export const ClipboardField = props => {
                 <TextField
                     size="small"
                     fullWidth
-                    id={`clipboard-field`}
+                    id={id ?? 'clipboard-field'}
                     value={value}
                     variant="outlined"
                     disabled
@@ -100,10 +100,12 @@ export const ClientSuccessModal = props => {
                 <ClipboardField
                     className="copy-field"
                     title={"Client ID"}
+                    id="clientId-field"
                     value={clientId}
                 />
                 <ClipboardField
                     title={"Client Secret"}
+                    id="clientSecret-field"
                     warning="The Client Secret will only be displayed now."
                     value={clientSecret}
                 />
@@ -559,7 +561,7 @@ const ProfileSection = props => {
                         <div className="header-2">{clientName}</div>
                         {clientId && <div className="subtle-text">{`Client ID: ${clientId}`}</div>}
                         {clientId && <div className="subtle-text">{`Created on ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
-                        
+
                     </div>
                     <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
                         <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
