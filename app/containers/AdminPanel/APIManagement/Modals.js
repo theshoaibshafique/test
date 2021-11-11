@@ -1,6 +1,6 @@
 
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl, ListItemIcon, Checkbox, ListItemText, FormHelperText } from '@material-ui/core';
+import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl, ListItemIcon, Checkbox, ListItemText, FormHelperText, IconButton } from '@material-ui/core';
 import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,13 +8,12 @@ import { selectAssignableRoles, selectLocationLookups } from '../../App/store/Us
 import { UM_PRODUCT_ID } from '../../../constants';
 import { createClient, deleteClient, generateProductUpdateBody, getRoleMapping, getSelectedRoles, patchRoles, resetClient, updateClientProfile } from '../helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
-import { mdiPlaylistEdit } from '@mdi/js';
+import { mdiPlaylistEdit, mdiContentCopy } from '@mdi/js';
 import { MAX_DESCRIPTION, MAX_INPUT } from '../constants';
 import { GenericModal, ProfileIcon, SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 import { setClients } from '../../App/store/ApiManagement/am-actions';
 import { selectClients } from '../../App/store/ApiManagement/am-selectors';
-
 
 export const APILearnMore = props => {
     const HEADER = "How does API management work?"
@@ -49,13 +48,28 @@ export const APILearnMore = props => {
 
 export const ClipboardField = props => {
     const classes = useStyles();
-    const { value, warning, title, className, id } = props;
+    const { value, warning, title, className, id, isView, size } = props;
     const dispatch = useDispatch();
     const copyToClipboard = () => {
         navigator.clipboard.writeText(value);
         document.getElementById(id ?? 'clipboard-field')?.select?.()
         dispatch(setSnackbar({ severity: 'success', message: `Copied to clipboard.` }))
     }
+    if (isView) {
+        return (
+            <div className={className}>
+                {`${title}: ${value}`}
+                <IconButton
+                    onClick={() => copyToClipboard()}
+                    title="copy"
+                >
+                    <Icon
+                        color="#828282" path={mdiContentCopy} size={size ?? '18px'} />
+                </IconButton>
+            </div>
+        )
+    }
+
     return (
         <div className={className}>
             <InputLabel className={classes.inputLabel}>{title}</InputLabel>
@@ -94,14 +108,16 @@ export const ClientSuccessModal = props => {
                     Client Added
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
-                <div className="contents subtext">
+                <div className="contents subtle-subtext">
                     <p>{clientName} has been added.</p>
                 </div>
                 <ClipboardField
-                    className="copy-field"
+                    className="copy-field subtle-subtext contents"
                     title={"Client ID"}
                     id="clientId-field"
                     value={clientId}
+                    isView
+                    size={'20px'}
                 />
                 <ClipboardField
                     title={"Client Secret"}
@@ -240,7 +256,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '14px',
         lineHeight: '19px',
         marginBottom: 4,
-        color: '#323232',
+        color: '#000000',
         opacity: .8,
     }
 }));
@@ -493,12 +509,13 @@ const ConfirmReset = props => {
     if (clientSecret) {
         content = (
             <>
-                <div className="contents subtext">
-                    <p>{clientName} has been added.</p>
+                <div className="contents subtle-subtext">
+                    <p>{clientName} has been reset.</p>
                 </div>
                 <ClipboardField
                     warning="The Client Secret will only be displayed now."
                     title={"Client Secret"}
+                    className="subtle-subtext"
                     value={clientSecret}
                 />
             </>
@@ -550,18 +567,24 @@ const ProfileSection = props => {
             <div className="view-profile client">
                 <div className="client-info">
                     <div>
-                        <ProfileIcon className="header-1 api-icon" size={88} override={"API"} />
+                        <ProfileIcon className="header-1 api-icon" size={95} override={"API"} />
+
+                    </div>
+                    <div className="profile-info">
+                        <div className="header-2">{clientName}</div>
+                        {clientId && <ClipboardField
+                            className="copy-field subtle-text"
+                            title={"Client ID"}
+                            id="clientId-field"
+                            value={clientId}
+                            isView
+                        />}
+                        {clientId && <div className="subtle-text">{`Created on ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
                         {clientId && (
                             <a className="link reset-account" onClick={() => setShowConfirmReset(true)}>
                                 Reset Client Secret
                             </a>
                         )}
-                    </div>
-                    <div className="profile-info">
-                        <div className="header-2">{clientName}</div>
-                        {clientId && <div className="subtle-text">{`Client ID: ${clientId}`}</div>}
-                        {clientId && <div className="subtle-text">{`Created on ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
-
                     </div>
                     <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
                         <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />

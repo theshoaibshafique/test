@@ -228,7 +228,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '14px',
         lineHeight: '19px',
         marginBottom: 4,
-        color: '#323232',
+        color: '#000000',
         opacity: .8,
     }
 }));
