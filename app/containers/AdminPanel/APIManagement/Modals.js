@@ -108,11 +108,11 @@ export const ClientSuccessModal = props => {
                     Client Added
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
-                <div className="contents subtle-subtext">
+                <div className="contents subtext">
                     <p>{clientName} has been added.</p>
                 </div>
                 <ClipboardField
-                    className="copy-field subtle-subtext contents"
+                    className="copy-field subtext contents"
                     title={"Client ID"}
                     id="clientId-field"
                     value={clientId}
@@ -573,7 +573,7 @@ const ProfileSection = props => {
                     <div className="profile-info">
                         <div className="header-2">{clientName}</div>
                         {clientId && <ClipboardField
-                            className="copy-field subtle-text"
+                            className="copy-field subtle-subtext"
                             title={"Client ID"}
                             id="clientId-field"
                             value={clientId}
@@ -581,7 +581,7 @@ const ProfileSection = props => {
                         />}
                         {clientId && <div className="subtle-text">{`Created on ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
                         {clientId && (
-                            <a className="link reset-account" onClick={() => setShowConfirmReset(true)}>
+                            <a className="link reset-account subtle-text" onClick={() => setShowConfirmReset(true)}>
                                 Reset Client Secret
                             </a>
                         )}

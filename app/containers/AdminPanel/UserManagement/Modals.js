@@ -742,7 +742,7 @@ const ProfileSection = props => {
                 <div>
                     <ProfileIcon className="header-1" size={95} firstName={firstName} lastName={lastName} />
                     {userId && (
-                        <a className="link reset-account" onClick={() => setShowConfirmReset(true)}>
+                        <a className="link reset-account subtle-text" onClick={() => setShowConfirmReset(true)}>
                             Reset Account Access
                         </a>
                     )}

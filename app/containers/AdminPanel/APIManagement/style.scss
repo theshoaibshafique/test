@@ -12,7 +12,7 @@
     }
     .copy-field{
         button {
-            margin: -12px 0;
+            margin: -12px -6px;
         }
     }
     .client-info {
@@ -39,11 +39,12 @@
 .secret-reset,
 .client-success {
     width: 620px;
-    height: 420px;
+    height: 340px;
+
     .copy-field {
         margin-bottom: 24px;
         button {
-            margin: -12px 0;
+            margin: -12px -6px;
         }
     }
     .divider {
@@ -58,8 +59,4 @@
         }
         color: #828282;
     }
-}
-
-.secret-reset {
-    height: 340px;
 }

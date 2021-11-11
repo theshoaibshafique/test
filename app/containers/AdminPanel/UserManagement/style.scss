@@ -159,7 +159,6 @@
     max-height: calc(100vh - 40px);
     overflow-y: auto;
     overflow-x: hidden;
-
     .close-button {
         cursor: pointer;
         position: absolute;
@@ -265,6 +264,7 @@
         display: flex;
         .profile-info {
             margin: 0 32px;
+            margin-right: 0px;
             :first-child {
                 color: #004f6e;
             }
