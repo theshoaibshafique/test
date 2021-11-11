@@ -108,8 +108,7 @@ export const createUser = async (userData, callback, errorCallback, userToken, a
 
 export const createClient = async (userData, callback, errorCallback, userToken, assignableRoles = {}, scope = 2) => {
     const { clientName, description } = userData;
-    // const client = await createClientProfile({ clientName, description, scope }, userToken, errorCallback)
-    const client = {"clientId":"b52caf95-7b0d-41ad-a439-9feed4fb5450","clientSecret":"qkwwa5WNhBr4Prl"}
+    const client = await createClientProfile({ clientName, description, scope }, userToken, errorCallback)
     const { clientId, clientSecret } = client || {}
     
     if (!clientId) {
@@ -118,6 +117,6 @@ export const createClient = async (userData, callback, errorCallback, userToken,
 
     const { roles } = userData;
     const productUpdates = generateProductUpdateBody(roles, assignableRoles);
-    // const profile = await patchRoles({ userId: clientId, scope, productUpdates }, userToken);
+    const profile = await patchRoles({ userId: clientId, scope, productUpdates }, userToken);
     callback(client);
 }

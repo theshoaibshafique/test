@@ -5,13 +5,12 @@ import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups } from '../../App/store/UserManagement/um-selectors';
-import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
-import { createClient, createUser, deleteClient, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles, resetClient, resetUser, updateClientProfile } from '../helpers';
+import { UM_PRODUCT_ID } from '../../../constants';
+import { createClient, deleteClient, generateProductUpdateBody, getRoleMapping, getSelectedRoles, patchRoles, resetClient, updateClientProfile } from '../helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
-import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
-import globalFunctions from '../../../utils/global-functions';
-import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO, MAX_DESCRIPTION, MAX_INPUT } from '../constants';
-import { GenericModal, ProfileIcon, SaveAndCancel, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
+import { mdiPlaylistEdit } from '@mdi/js';
+import { MAX_DESCRIPTION, MAX_INPUT } from '../constants';
+import { GenericModal, ProfileIcon, SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 import { setClients } from '../../App/store/ApiManagement/am-actions';
 import { selectClients } from '../../App/store/ApiManagement/am-selectors';
@@ -50,7 +49,7 @@ export const APILearnMore = props => {
 
 export const ClipboardField = props => {
     const classes = useStyles();
-    const { value, warning } = props;
+    const { value, warning, title, className } = props;
     const dispatch = useDispatch();
     const copyToClipboard = () => {
         navigator.clipboard.writeText(value);
@@ -58,8 +57,8 @@ export const ClipboardField = props => {
         dispatch(setSnackbar({ severity: 'success', message: `Copied to clipboard.` }))
     }
     return (
-        <>
-            <InputLabel className={classes.inputLabel}>Client Secret</InputLabel>
+        <div className={className}>
+            <InputLabel className={classes.inputLabel}>{title}</InputLabel>
             <span className='flex'>
                 <TextField
                     size="small"
@@ -69,7 +68,7 @@ export const ClipboardField = props => {
                     variant="outlined"
                     disabled
                     onClick={() => copyToClipboard()}
-                    helperText={<span style={{ marginLeft: -14, color: '#004F6E' }}>{warning}</span>}
+                    helperText={warning && <span style={{ marginLeft: -14, color: '#004F6E' }}>{warning}</span>}
                 />
                 <div >
                     <SaveAndCancel
@@ -79,12 +78,12 @@ export const ClipboardField = props => {
                     />
                 </div>
             </span>
-        </>
+        </div>
     )
 }
 
 export const ClientSuccessModal = props => {
-    const { clientName, clientSecret, tableData } = props || {};
+    const { clientName, clientSecret, clientId, tableData } = props || {};
     return (
         <GenericModal
             {...props}
@@ -99,6 +98,12 @@ export const ClientSuccessModal = props => {
                     <p>{clientName} has been added.</p>
                 </div>
                 <ClipboardField
+                    className="copy-field"
+                    title={"Client ID"}
+                    value={clientId}
+                />
+                <ClipboardField
+                    title={"Client Secret"}
                     warning="The Client Secret will only be displayed now."
                     value={clientSecret}
                 />
@@ -300,7 +305,7 @@ export const AddEditUserModal = props => {
                 toggleModal(false);
                 setIsLoading(false);
 
-                props.setClientSecret?.({ clientName, clientSecret });
+                props.setClientSecret?.({ clientName, clientSecret, clientId });
 
             }
 
@@ -491,6 +496,7 @@ const ConfirmReset = props => {
                 </div>
                 <ClipboardField
                     warning="The Client Secret will only be displayed now."
+                    title={"Client Secret"}
                     value={clientSecret}
                 />
             </>
@@ -543,16 +549,17 @@ const ProfileSection = props => {
                 <div className="client-info">
                     <div>
                         <ProfileIcon className="header-1 api-icon" size={88} override={"API"} />
-
-                    </div>
-                    <div className="profile-info">
-                        <div className="header-2">{clientName}</div>
-                        {clientId && <div className="subtle-text">{`Member since ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
                         {clientId && (
                             <a className="link reset-account" onClick={() => setShowConfirmReset(true)}>
                                 Reset Client Secret
                             </a>
                         )}
+                    </div>
+                    <div className="profile-info">
+                        <div className="header-2">{clientName}</div>
+                        {clientId && <div className="subtle-text">{`Client ID: ${clientId}`}</div>}
+                        {clientId && <div className="subtle-text">{`Member since ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
+                        
                     </div>
                     <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>
                         <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />

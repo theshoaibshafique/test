@@ -15,8 +15,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiLockOutline, mdiFilter } from '@mdi/js';
-// import { selectAssignableRoles, selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
-// import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
 import { AddEditUserModal, DeleteUserModal, APILearnMore, ClientSuccessModal } from './Modals';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
@@ -81,8 +79,8 @@ export const APIManagement = props => {
             <MemoTable
                 title=""
                 columns={[
+                    { title: "Client ID", field: 'clientId' },
                     { title: "Name", field: 'clientName', defaultSort: 'asc' },
-                    { title: "Client ID", field: 'clientId', hidden: true },
                     generateRoleColumn("User Management", UM_PRODUCT_ID),
                     { title: "Description", field: 'description' },
                 ]}
@@ -221,7 +219,7 @@ const TableCell = (props) => {
     const { tableData } = columnDef || {}
     //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
 
-    const width = tableData?.columnOrder <= 2 ? '25%' : '50%'
+    const width = tableData?.columnOrder == 0 ? '20%' : (tableData?.columnOrder == 3 ? '45%' : '15%')
 
     return (
         <MTableCell {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width } }} />

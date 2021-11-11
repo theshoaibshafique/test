@@ -37,7 +37,10 @@
 .secret-reset,
 .client-success{
     width: 620px;
-    height: 324px;
+    height: 420px;
+    .copy-field{
+        margin-bottom: 24px;
+    }
     .divider{
         margin-bottom: 32px;
     }
