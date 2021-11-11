@@ -37,7 +37,7 @@ export function isWithinScope(currentScope, minScope, maxScope) {
 export const helperFetch = async (url, fetchMethod, userToken, body, errorCallback) => {
     return await globalFunctions.genericFetch(url, fetchMethod, userToken, body)
         .then(result => {
-            if (result?.conflict){
+            if (result?.conflict) {
                 return result.conflict.then(message => {
                     errorCallback?.(message)
                 })
@@ -53,16 +53,27 @@ export const helperFetch = async (url, fetchMethod, userToken, body, errorCallba
 export const deleteUser = async (body, userToken) => {
     return await helperFetch(process.env.USER_V2_API + 'profile', 'DELETE', userToken, body);
 }
+export const deleteClient = async (body, userToken) => {
+    return await helperFetch(process.env.USER_V2_API + 'client', 'DELETE', userToken, body);
+}
 export const createProfile = async (body, userToken, errorCallback) => {
     return await helperFetch(process.env.USER_V2_API + 'profile', 'POST', userToken, body, errorCallback);
+}
+export const createClientProfile = async (body, userToken, errorCallback) => {
+    return await helperFetch(process.env.USER_V2_API + 'client', 'POST', userToken, body, errorCallback);
+}
+export const updateClientProfile = async (body, userToken, errorCallback) => {
+    return await helperFetch(process.env.USER_V2_API + 'client', 'PUT', userToken, body, errorCallback);
 }
 export const patchRoles = async (body, userToken) => {
     return await helperFetch(process.env.USER_V2_API + 'roles', 'PATCH', userToken, body);
 }
-export const resetUser =  async (body, userToken) => {
+export const resetUser = async (body, userToken) => {
     return await helperFetch(process.env.USER_V2_API + 'reset', 'POST', userToken, body);
 }
-
+export const resetClient = async (body, userToken) => {
+    return await helperFetch(process.env.USER_V2_API + 'reset_client', 'POST', userToken, body);
+}
 //Updating roles expects a certain structure - convert the /profiles obj to 
 //the expected /roles object
 export function generateProductUpdateBody(roles, assignableRoles = {}) {
@@ -84,13 +95,29 @@ export function generateProductUpdateBody(roles, assignableRoles = {}) {
 export const createUser = async (userData, callback, errorCallback, userToken, assignableRoles = {}, scope = 2) => {
     const { firstName, lastName, title, email } = userData;
     const userId = await createProfile({ firstName, lastName, title, email, scope }, userToken, errorCallback)
-    
+
     if (!userId) {
         return userId;
     }
-    
+
     const { roles } = userData;
     const productUpdates = generateProductUpdateBody(roles, assignableRoles);
     const profile = await patchRoles({ userId, scope, productUpdates }, userToken);
     callback(userId);
+}
+
+export const createClient = async (userData, callback, errorCallback, userToken, assignableRoles = {}, scope = 2) => {
+    const { clientName, description } = userData;
+    // const client = await createClientProfile({ clientName, description, scope }, userToken, errorCallback)
+    const client = {"clientId":"b52caf95-7b0d-41ad-a439-9feed4fb5450","clientSecret":"qkwwa5WNhBr4Prl"}
+    const { clientId, clientSecret } = client || {}
+    
+    if (!clientId) {
+        return clientId;
+    }
+
+    const { roles } = userData;
+    const productUpdates = generateProductUpdateBody(roles, assignableRoles);
+    // const profile = await patchRoles({ userId: clientId, scope, productUpdates }, userToken);
+    callback(client);
 }

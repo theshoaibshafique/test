@@ -18,7 +18,7 @@ import { mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiLockOutline, mdiFilter 
 // import { selectAssignableRoles, selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 // import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
-import { AddEditUserModal, DeleteUserModal, APILearnMore } from './Modals';
+import { AddEditUserModal, DeleteUserModal, APILearnMore, ClientSuccessModal } from './Modals';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 import { UM_PRODUCT_ID } from '../../../constants';
 import { makeSelectLogger, makeSelectProductRoles } from '../../App/selectors';
@@ -62,6 +62,7 @@ export const APIManagement = props => {
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
     const [showLearnMore, setShowLearnMore] = useState(false);
+    const [clientSecret, setClientSecret] = useState(false);
     const logger = useSelector(makeSelectLogger());
     const handleUserSelect = (user, isEdit) => {
         setSelectedUser(user);
@@ -149,11 +150,17 @@ export const APIManagement = props => {
             <AddEditUserModal
                 open={Boolean(selectedUser)}
                 user={selectedUser}
+                setClientSecret={setClientSecret}
                 toggleModal={handleUserSelect} />
             <DeleteUserModal
                 open={Boolean(deleteUser)}
                 user={deleteUser}
                 toggleModal={handleDeleteSelect}
+            />
+            <ClientSuccessModal
+                open={Boolean(clientSecret)}
+                {...clientSecret}
+                toggleModal={setClientSecret}
             />
         </div>
     )

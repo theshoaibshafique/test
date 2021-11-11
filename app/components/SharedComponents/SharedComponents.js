@@ -264,7 +264,7 @@ export const SaveAndCancel = props => {
           <Button id="save" variant="outlined" className="primary" disabled={disabled} onClick={() => handleSubmit()}>
               {(isLoading) ? <div className="loader"></div> : submitText}
           </Button>
-          <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => handleCancel()}>{cancelText}</Button>
+          {cancelText && <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => handleCancel()}>{cancelText}</Button>}
       </div>
   )
 }

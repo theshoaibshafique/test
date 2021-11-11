@@ -3,15 +3,15 @@
         flex-direction: column;
         .edit-profile-icon{
             // display: none;
-            align-self: auto;
-            margin-top: 12px;
+            // align-self: auto;
+            // margin-top: 12px;
         }
         .description{
             color: #4F4F4F;
         }
     }
     .action-icon{
-        margin-right: 18px;
+        // margin-right: 18px;
     }
     .client-info{
         display: flex;
@@ -21,6 +21,26 @@
         font-size: 36px;
     }
 }
-
-
+.Modal.api-management-learn-more{
+    height: 448px;
+    .description{
+        margin-top: 24px;
+        margin-bottom: 16px;
+    }
+    .learn-more-content{
+        height: unset;
+    }
+}
+.secret-reset,
+.client-success{
+    width: 620px;
+    height: 324px;
+    .divider{
+        margin-bottom: 32px;
+    }
+    .contents p{
+        margin-bottom: 24px;
+        color: #828282;
+    }
+}
 

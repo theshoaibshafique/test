@@ -20,7 +20,7 @@
         }
 
         .add-user-button {
-            margin: 0 86px;
+            margin: 2px 86px;
         }
         tbody .MuiTableCell-root {
             position: relative;
@@ -172,6 +172,7 @@
         margin-left: -32px;
     }
 }
+.Modal.api-management-learn-more,
 .Modal.user-management-learn-more {
     padding: 0;
     width: 620px;
@@ -212,7 +213,8 @@
         padding: 0 8px;
     }
 }
-
+.secret-reset,
+.client-success,
 .user-delete {
     width: 620px;
     height: 360px;
@@ -222,7 +224,7 @@
         margin-bottom: 12px;
     }
     .close {
-        bottom: 20px;
+        bottom: 32px;
         right: 40px;
         position: absolute;
         width: 100%;
@@ -234,6 +236,10 @@
         width: 620px;
         margin-bottom: 40px;
     }
+}
+.client-success{
+    width: 480px;
+    height: 305px;
 }
 
 .add-edit-user {
@@ -340,41 +346,6 @@
         }
         .product-permission {
             margin: 31px 0;
-        }
-    }
-}
-
-// TODO: move to own shared file
-.save-and-cancel {
-    display: flex;
-    justify-content: flex-end;
-    > button {
-        &:first-child {
-            &:disabled {
-                opacity: 0.3;
-                color: #fff;
-            }
-            margin-right: 20px;
-        }
-        &:last-child {
-            margin-left: 20px;
-        }
-    }
-    .loader {
-        border: 6px solid $light-grey;
-        border-top: 6px solid $light-blue;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        animation: spin 2s linear infinite;
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
         }
     }
 }

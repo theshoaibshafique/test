@@ -54,7 +54,7 @@ export const UMLearnMore = props => {
                             {Object.entries(values.content).map(([title, text]) => (
                                 <div>
                                     <span className={`role-cell subtle-subtext ${title}`}>{title}</span>
-                                    <span className="content">{text?.replaceAll(facilityMark, facilityName)}</span>
+                                    <span className="content subtle-subtext">{text?.replaceAll(facilityMark, facilityName)}</span>
                                 </div>
                             ))}
                         </div>

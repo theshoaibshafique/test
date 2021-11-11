@@ -136,6 +136,18 @@ label {
 .margin0 { margin: 0px !important; }
 
 .full-height { height: 100%; }
+.ellipses-3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+.ellipses{
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
 
 .pointer { cursor: pointer;}
 .underline { text-decoration: underline; }
@@ -340,6 +352,7 @@ tbody tr:hover:not(.MuiTableRow-footer) {
 .save-and-cancel {
   display: flex;
   justify-content: flex-end;
+  margin-top: 2px;
   > button {
       &:first-child {
           &:disabled {
