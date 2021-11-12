@@ -1,0 +1,62 @@
+.add-edit-user.client {
+    .view-profile.client {
+        flex-direction: column;
+        .edit-profile-icon {
+            // display: none;
+            // align-self: auto;
+            // margin-top: 12px;
+        }
+        .description {
+            color: #4f4f4f;
+        }
+    }
+    .copy-field{
+        button {
+            margin: -12px -6px;
+        }
+    }
+    .client-info {
+        display: flex;
+        margin-bottom: 20px;
+    }
+    .api-icon {
+        font-size: 36px;
+    }
+    .edit-profile {
+        margin-bottom: 0;
+    }
+}
+.Modal.api-management-learn-more {
+    height: 448px;
+    .description {
+        margin-top: 24px;
+        margin-bottom: 16px;
+    }
+    .learn-more-content {
+        height: unset;
+    }
+}
+.secret-reset,
+.client-success {
+    width: 620px;
+    height: 340px;
+
+    .copy-field {
+        margin-bottom: 24px;
+        button {
+            margin: -12px -6px;
+        }
+    }
+    .divider {
+        margin-bottom: 32px;
+    }
+    .contents {
+        p {
+            margin: 0 0 16px 0;
+        }
+        &:last-child{
+            margin-bottom: 24px;
+        }
+        color: #828282;
+    }
+}

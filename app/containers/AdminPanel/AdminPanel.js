@@ -34,6 +34,7 @@ export default class AdminPanel extends React.PureComponent {
   }
   componentWillUnmount() {
     this.props.exitUserManagement();
+    this.props.exitApiManagement();
   }
   componentDidUpdate() {
     const { logger } = this.props;

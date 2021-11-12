@@ -54,9 +54,9 @@ const MemoTable = React.memo(props => {
     return <MaterialTable {...props} columns={[...columns.map((c) => { return { ...c, tableDef: { width: undefined } } })]} data={USERS} />
 }, areEqual)
 
-export const APIManagement = props => {
+export const SSTAPI = props => {
     const { umRoles } = useSelector(makeSelectProductRoles());
-
+    const assignableRoles = useSelector(selectApiAssignableRoles());
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
     const [showLearnMore, setShowLearnMore] = useState(false);
@@ -74,17 +74,20 @@ export const APIManagement = props => {
         setShowLearnMore(open)
         logger?.manualAddLog('click', open ? `open-learn-more` : 'close-learn-more');
     }
+    if (assignableRoles.size == 0){
+        return <LoadingIndicator />
+    }
     return (
-        <div className="user-management">
+        <div className="sst-api-management">
             <MemoTable
                 title=""
                 columns={[
                     { title: "Client ID", field: 'clientId' },
                     { title: "Name", field: 'clientName', defaultSort: 'asc' },
-                    generateRoleColumn("User Management", UM_PRODUCT_ID),
+                    ...generateProductColumns(assignableRoles),
                     { title: "Description", field: 'description' },
                 ]}
-                actions={umRoles?.isAdmin ? [
+                actions={[
                     {
                         icon: 'edit',
                         tooltip: 'Edit Client',
@@ -100,19 +103,8 @@ export const APIManagement = props => {
                         tooltip: 'Add Client',
                         isFreeAction: true,
                         onClick: (user) => handleUserSelect(true)
-                    },
-                    {
-                        icon: 'learn-more',
-                        tooltip: 'Learn More',
-                        isFreeAction: true,
-                        onClick: (user) => handleLearnMoreSelect(true)
                     }
-                ] : [{
-                    icon: 'learn-more',
-                    tooltip: 'Learn More',
-                    isFreeAction: true,
-                    onClick: (user) => handleLearnMoreSelect(true)
-                }]}
+                ]}
                 options={{
                     search: true,
                     paging: false,
@@ -163,6 +155,13 @@ export const APIManagement = props => {
         </div>
     )
 }
+const generateProductColumns = (productRoles) => {
+    const result = []
+    for (const [productId, product] of Object.entries(productRoles).sort((a, b) => a[1]?.productName?.localeCompare?.(b[1]?.productName))) {
+        result.push(generateRoleColumn(product?.productName, productId))
+    }
+    return result;
+}
 
 function generateRoleColumn(title, productId) {
 
@@ -179,8 +178,9 @@ const RenderRoleIcon = props => {
             <span className="disabled-role"></span>
         )
     }
+    const roles = Object.values(rowData?.sstDisplayRoles?.[field] || {}).join(", ")
     return (
-        <span className={`role-cell ${rowData?.displayRoles?.[field]}`}>{rowData?.displayRoles?.[field]}</span>
+        <span className={`role-list`} title={roles}>{roles || "No Access"}</span>
     )
 }
 const TableActions = (props) => {
@@ -198,13 +198,13 @@ const TableActions = (props) => {
                 <Button disableElevation disableRipple
                     variant="contained" className="primary add-user-button"
                     onClick={() => action?.onClick?.()}>
-                    Add Client
+                    Add User
                 </Button>
             )
         case 'learn-more':
             return (
                 <span className="link learn-more underline" onClick={() => action?.onClick?.()}>
-                    Learn more about API management
+                    Learn more about user management
                 </span>
             )
     }
@@ -218,11 +218,8 @@ const TableCell = (props) => {
     const { columnDef, scrollWidth } = props;
     const { tableData } = columnDef || {}
     //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
-
-    const width = tableData?.columnOrder == 0 ? '20%' : (tableData?.columnOrder == 3 ? '45%' : '15%')
-    
     return (
-        <MTableCell {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width } }} />
+        <MTableCell className="sst-admin-cell" {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${scrollWidth / 6}px` } }} />
     )
 }
 const TableBody = (props) => {
@@ -231,8 +228,8 @@ const TableBody = (props) => {
     const [USERS, setUsers] = useState(renderData);
     useEffect(() => {
         if (filters || renderData) {
-            setUsers(renderData?.filter((u) => Object.entries(u?.displayRoles || {})?.every(([k, v]) => {
-                return filters?.[k]?.has(v) ?? true;
+            setUsers(renderData?.filter((u) => Object.entries(u?.sstDisplayRoles || {})?.every(([roleName, value]) => {
+                return Object.values(value || {})?.every((v) => filters?.[roleName]?.has(v));
             })))
         }
     }, [renderData, filters])
@@ -250,10 +247,27 @@ const TableBody = (props) => {
         </>
     )
 }
+
 function TableHeader(props) {
-    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, isAdmin } = props;
-    const headers = (isAdmin ? [...columns, { title: 'Actions', action: true }] : columns).filter((c) => !c?.hidden);
+    const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, dataCount } = props;
+    const headers = [...columns, { title: 'Actions', action: true }].filter((c) => !c?.hidden);
     const assignableRoles = useSelector(selectApiAssignableRoles());
+    
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (assignableRoles) {
+            const filters = {};
+            Object.values(assignableRoles ?? {}).map((product) => {
+                const { productName, productRoles } = product;
+                filters[productName] = new Set([...Object.values(productRoles || {})?.map((role) => (
+                    role?.displayName
+                )), "No Access"])
+            })
+            dispatch(setApiFilters(filters))
+        }
+    }, [assignableRoles])
+    console.log(headers);
+
     return (
         <>
             <TableHead className="table-header subtext">
@@ -277,12 +291,12 @@ function TableHeader(props) {
                                 {c.title}
                             </TableSortLabel>
                         } else {
-                            content = <FilterRole title={c.title} disabled={!assignableRoles?.[c?.productId]?.isSubscribed} />
+                            content = <FilterRole title={c.title} disabled={!assignableRoles?.[c?.productId]?.isSubscribed} productId={c?.productId} />
                         }
                         return (
                             <TableCell
                                 className="header-cell"
-                                style={{ ...headerStyle, backgroundColor: '#EEFAFF', width, whiteSpace: 'nowrap' }}
+                                style={{ ...headerStyle, backgroundColor: '#EEFAFF', width: width, whiteSpace: 'nowrap' }}
                             >
                                 {content}
                             </TableCell>
@@ -295,22 +309,18 @@ function TableHeader(props) {
 }
 
 function FilterRole(props) {
-    const { title, disabled } = props;
+    const { title, disabled, productId } = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const assignableRoles = useSelector(selectApiAssignableRoles());
+    const productRoles = assignableRoles?.[productId]?.productRoles || {}
+    const filterRoles = Object.values(productRoles)?.map((r) => r?.displayName).sort() || [];
     const open = Boolean(anchorEl);
-    const logger = useSelector(makeSelectLogger());
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-        logger?.manualAddLog('click', `open-filter-${title}`);
     };
     const handleClose = (e) => {
         setAnchorEl(null);
-        logger?.manualAddLog('click', `close-filter-${title}`);
     };
-    const filters = useSelector(selectFilters())
-
-    const isFiltered = filters?.[title] ? filters?.[title].size < 3 : false;
-
     if (disabled) {
         return (
 
@@ -332,7 +342,7 @@ function FilterRole(props) {
                 className="pointer"
                 onClick={handleClick}
             >
-                {title}{isFiltered ? <Icon path={mdiFilter} color={"#004f6e"} style={{ marginLeft: 6 }} size={'12px'} /> : <ArrowDropDown />}
+                {title}<ArrowDropDown />
             </span>
             <Menu
                 anchorEl={anchorEl}
@@ -340,8 +350,9 @@ function FilterRole(props) {
                 keepMounted
                 onClose={handleClose}
             >
-                <RoleOption label="Full Access" parent={title} />
-                <RoleOption label="View Only" parent={title} />
+                {filterRoles?.map((r) => (
+                    <RoleOption label={r} key={r} parent={title} />
+                ))}
                 <RoleOption label="No Access" parent={title} />
             </Menu>
         </React.Fragment>
@@ -350,13 +361,9 @@ function FilterRole(props) {
 function RoleOption(props) {
     const dispatch = useDispatch();
     const { label, onClick, parent } = props;
-    const defaultSet = new Set(['Full Access', 'View Only', 'No Access'])
-    const filters = useSelector(selectFilters()) || {
-        'User Management': new Set(defaultSet),
-    };
+    const filters = useSelector(selectFilters()) || {};
     //We maintain an internal check state to help with rendering 
     const [check, setCheck] = useState(filters[parent]?.has(label) || false);
-    const logger = useSelector(makeSelectLogger());
     const handleFilter = (e, v) => {
         const productFilter = filters[e] ?? new Set();
         if (productFilter.has(v)) {
@@ -367,7 +374,7 @@ function RoleOption(props) {
         filters[e] = productFilter;
         dispatch(setApiFilters(filters));
         setCheck(filters[parent]?.has(label));
-        logger?.manualAddLog('click', `update-filter-${parent}`, productFilter);
+
     }
     return (
         <MenuItem key={parent + label} onClick={() => { handleFilter(parent, label) }} style={{ padding: "0px 14px 0 0 " }}>

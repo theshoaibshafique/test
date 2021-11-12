@@ -1,9 +1,9 @@
-@import '../../styles/global-styles';
+@import "../../styles/global-styles";
 
-.admin-panel{
+.admin-panel {
     height: calc(100%);
     overflow-y: auto;
-    .header{
+    .header {
         padding: 46px 40px 6px;
     }
 }
