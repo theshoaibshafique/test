@@ -14,7 +14,7 @@ const minScope = 0;
 export const SSTAdmin = props => {
   const dispatch = useDispatch();
   const userToken = useSelector(makeSelectToken());
-  const [tabIndex, setIndex] = useState(1)
+  const [tabIndex, setIndex] = useState(0)
   const handleChange = (obj, index) => {
     setIndex(index);
   }
