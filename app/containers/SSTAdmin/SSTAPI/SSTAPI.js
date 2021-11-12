@@ -16,7 +16,7 @@ import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiLockOutline, mdiFilter } from '@mdi/js';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
-import { AddEditUserModal, DeleteUserModal, APILearnMore, ClientSuccessModal } from './Modals';
+import { AddEditUserModal, DeleteUserModal, ClientSuccessModal } from './Modals';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 import { UM_PRODUCT_ID } from '../../../constants';
 import { makeSelectLogger, makeSelectProductRoles } from '../../App/selectors';
@@ -45,7 +45,7 @@ const MemoTable = React.memo(props => {
         if (JSON.stringify(users) != JSON.stringify(USERS)) {
             setUsers(users);
         }
-    }, [users])
+    }, [users, columns])
 
     if (!USERS) {
         return <LoadingIndicator />
@@ -59,7 +59,6 @@ export const SSTAPI = props => {
     const assignableRoles = useSelector(selectApiAssignableRoles());
     const [selectedUser, setSelectedUser] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
-    const [showLearnMore, setShowLearnMore] = useState(false);
     const [clientSecret, setClientSecret] = useState(false);
     const logger = useSelector(makeSelectLogger());
     const handleUserSelect = (user, isEdit) => {
@@ -70,11 +69,8 @@ export const SSTAPI = props => {
         setDeleteUser(del);
         logger?.manualAddLog('click', del ? `delete-user-${del?.clientId}` : 'close-delete-user', del);
     }
-    const handleLearnMoreSelect = (open) => {
-        setShowLearnMore(open)
-        logger?.manualAddLog('click', open ? `open-learn-more` : 'close-learn-more');
-    }
-    if (assignableRoles.size == 0){
+
+    if (assignableRoles.size == 0) {
         return <LoadingIndicator />
     }
     return (
@@ -132,10 +128,6 @@ export const SSTAPI = props => {
                     Cell: props => <TableCell {...props} />
 
                 }}
-            />
-            <APILearnMore
-                open={showLearnMore}
-                toggleModal={handleLearnMoreSelect}
             />
             <AddEditUserModal
                 open={Boolean(selectedUser)}
@@ -198,14 +190,8 @@ const TableActions = (props) => {
                 <Button disableElevation disableRipple
                     variant="contained" className="primary add-user-button"
                     onClick={() => action?.onClick?.()}>
-                    Add User
+                    Add Client
                 </Button>
-            )
-        case 'learn-more':
-            return (
-                <span className="link learn-more underline" onClick={() => action?.onClick?.()}>
-                    Learn more about user management
-                </span>
             )
     }
     return (
@@ -252,7 +238,7 @@ function TableHeader(props) {
     const { headerStyle, scrollWidth, columns, orderBy, orderDirection, onOrderChange, dataCount } = props;
     const headers = [...columns, { title: 'Actions', action: true }].filter((c) => !c?.hidden);
     const assignableRoles = useSelector(selectApiAssignableRoles());
-    
+
     const dispatch = useDispatch();
     useEffect(() => {
         if (assignableRoles) {
@@ -266,7 +252,6 @@ function TableHeader(props) {
             dispatch(setApiFilters(filters))
         }
     }, [assignableRoles])
-    console.log(headers);
 
     return (
         <>

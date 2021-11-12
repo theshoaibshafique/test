@@ -34,12 +34,11 @@ export const SSTAdmin = props => {
       const clients = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}clients?scope=${minScope}`, 'get', userToken, {});
       const apiAssignableRoles = await globalFunctions.axiosFetch(`${process.env.USER_V2_API}assignable_roles?scope=${minScope}&is_client=true`, 'get', userToken, {})
       dispatch(setApiAssignableRoles(apiAssignableRoles));
-      const c = clients?.map((u) => {
+      
+      dispatch(setClients(clients?.map((u) => {
         const { roles } = u;
         return { ...u, sstDisplayRoles: getRoleMapping(roles, Object.values(assignableRoles)) }
-      })
-      console.log(c);
-      dispatch(setClients(c));
+      })));
     }
     fetchData();
     return () => {

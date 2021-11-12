@@ -4,46 +4,16 @@ import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextFie
 import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAssignableRoles, selectLocationLookups } from '../../App/store/UserManagement/um-selectors';
-import { MAX_DESCRIPTION, MAX_INPUT, UM_PRODUCT_ID } from '../../../constants';
-import { createClient, deleteClient, generateProductUpdateBody, getRoleMapping, getSelectedRoles, patchRoles, resetClient, updateClientProfile } from '../../AdminPanel/helpers';
+import { selectLocationLookups, selectLocations } from '../../App/store/UserManagement/um-selectors';
+import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, MAX_DESCRIPTION, MAX_INPUT, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
+import { createClient, deleteClient, generateProductUpdateBody, getSelectedRoles, isWithinScope, patchRoles, resetClient, updateClientProfile } from '../../AdminPanel/helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
-import { mdiPlaylistEdit, mdiContentCopy } from '@mdi/js';
+import { mdiPlaylistEdit, mdiContentCopy, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import { GenericModal, ProfileIcon, SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 import { setClients } from '../../App/store/ApiManagement/am-actions';
-import { selectClients } from '../../App/store/ApiManagement/am-selectors';
-
-export const APILearnMore = props => {
-    const HEADER = "How does API management work?"
-    const DESC = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nec mi, justo molestie scelerisque. Placerat ipsum egestas aenean laoreet enim integer. Mi ut et faucibus et feugiat phasellus at porttitor.";
-
-    const locationLookups = useSelector(selectLocationLookups());
-    const facilityId = useSelector(makeSelectUserFacility())
-    const facilityName = locationLookups?.[facilityId]?.name;
-    const facilityMark = "<facility>";
-    return (
-        <GenericModal
-            {...props}
-            className="api-management-learn-more"
-        >
-            <div className="header header-2">{HEADER}</div>
-            <p className="description subtext">{DESC?.replaceAll(facilityMark, facilityName)}</p>
-            <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
-
-            <div className="learn-more-content ">
-                <div>
-                    <span className={`role-cell subtle-subtext Full Access`}>Full Access</span>
-                    <span className="content subtle-subtext">{DESC?.replaceAll(facilityMark, facilityName)}</span>
-                </div>
-                <div>
-                    <span className={`role-cell subtle-subtext View Only`}>View Only</span>
-                    <span className="content subtle-subtext">{DESC?.replaceAll(facilityMark, facilityName)}</span>
-                </div>
-            </div>
-        </GenericModal>
-    )
-}
+import { selectClients, selectApiAssignableRoles } from '../../App/store/ApiManagement/am-selectors';
+import { getRoleMapping } from '../SSTUsers/helpers';
 
 export const ClipboardField = props => {
     const classes = useStyles();
@@ -139,7 +109,7 @@ export const DeleteUserModal = props => {
 
     const fetchDelete = async () => {
         setIsLoading(true)
-        const response = await deleteClient({ clientId, scope: 2 }, userToken);
+        const response = await deleteClient({ clientId, scope: 0 }, userToken);
         const modified = [...userTable];
         const id = modified.findIndex((u) => u.clientId == clientId);
         if (id >= 0) {
@@ -180,10 +150,15 @@ export const DeleteUserModal = props => {
         </GenericModal>
     )
 }
-
+const SCOPE_MAP = ['unrestricted', 'h', 'f', 'd', 'r'];
 const defaultViewState = {
     viewProfile: true,
-    viewAdminAccess: true
+    viewAdminAccess: true,
+    [CD_PRODUCT_ID]: true,
+    [EMM_PRODUCT_ID]: true,
+    [SSC_PRODUCT_ID]: true,
+    [EFF_PRODUCT_ID]: true,
+    [UM_PRODUCT_ID]: true
 };
 const userReducer = (state, event) => {
     if (event.name == 'new-user') {
@@ -227,6 +202,21 @@ const userReducer = (state, event) => {
 
         event.name = 'roles';
         event.value = roles
+    } else if (event.name == 'location-roles') {
+        const { roleId, locations, locationLookups, productId } = event.value;
+        //We're under the assumption that roles is alredy in the state if you're modifying location
+        state.roles = state.roles || {}
+        state.roles[roleId] = state.roles[roleId] || {}
+        //Build the new locations object seperating between h,f,d,r
+        state.roles[roleId].scope = {}
+        for (var locationId of locations) {
+            const { scopeId } = locationLookups?.[locationId];
+            state.roles[roleId].scope[SCOPE_MAP[scopeId]] = state.roles[roleId].scope[SCOPE_MAP[scopeId]] || [];
+            state.roles[roleId].scope[SCOPE_MAP[scopeId]].push(locationId)
+        }
+
+        event.name = 'roles'
+        event.value = state.roles;
     } else {
         //Validate by default 
         const errorState = state?.errorState || {};
@@ -271,10 +261,10 @@ export const AddEditUserModal = props => {
     const [userData, setUserData] = useReducer(userReducer, { ...user, viewState: viewObject, locationLookups });
 
     const userToken = useSelector(makeSelectToken());
-    const assignableRoles = useSelector(selectAssignableRoles());
+    const assignableRoles = useSelector(selectApiAssignableRoles());
     const logger = useSelector(makeSelectLogger());
 
-    const { viewProfile, viewAdminAccess, ...viewPermissions } = userData?.viewState || {};
+    const { viewProfile, ...viewPermissions } = userData?.viewState || {};
 
     const isView = Object.values(userData?.viewState || {}).every((v) => v) && userData?.viewState;
 
@@ -326,19 +316,19 @@ export const AddEditUserModal = props => {
 
             }
 
-            createClient(userData, createUserSuccess, createUserError, userToken, assignableRoles);
+            createClient(userData, createUserSuccess, createUserError, userToken, assignableRoles, 0);
         }
     }
 
     const userTable = useSelector(selectClients());
-    const productRoles = useSelector(makeSelectProductRoles());
+    
     const updateTable = (clientId) => {
         const { tableData, clientName, description, roles } = userData || {};
         const modified = [...userTable];
         const updatedUser = {
             clientId,
             clientName, description,
-            displayRoles: getRoleMapping(roles, Object.values(productRoles)),
+            sstDisplayRoles: getRoleMapping(roles, Object.values(assignableRoles)),
             roles
         };
         const id = modified.findIndex((u) => u.clientId == clientId);
@@ -347,6 +337,7 @@ export const AddEditUserModal = props => {
         } else {
             modified.push({ ...updatedUser, tableData: { id: modified.length } })
         }
+        // console.log(modified);
         dispatch(setClients(modified))
     }
 
@@ -354,7 +345,7 @@ export const AddEditUserModal = props => {
         const { clientId, roles, clientName } = userData;
         handleChange('save-settings');
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
-        const profile = await patchRoles({ userId: clientId, scope: 2, productUpdates }, userToken).then((e) => {
+        const profile = await patchRoles({ userId: clientId, scope: 0, productUpdates }, userToken).then((e) => {
             if (e == 'error') {
                 dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update client.` }))
             } else {
@@ -386,11 +377,11 @@ export const AddEditUserModal = props => {
         <GenericModal
             {...props}
             toggleModal={toggleModal}
-            className={`add-edit-user client ${!isAddUser && 'is-edit-client'} ${isSingleEdit && 'single-edit'} `}
+            className={`add-edit-user sstadmin client ${!isAddUser && 'is-edit-client'} ${isSingleEdit && 'single-edit'} `}
         >
             <>
                 <ProfileSection {...userData} isView={viewProfile} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleProfileSubmit} />
-                <AdminPanelAccess {...userData} isAddUser={isAddUser} isView={viewAdminAccess} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleRoleSubmit} />
+                <PermissionSection {...userData} isAddUser={isAddUser} isSubmitable={isSubmitable} viewState={viewPermissions} isSingleEdit={isSingleEdit} handleChange={handleChange} handleSubmit={handleRoleSubmit} />
                 {isAddUser && (
                     <SaveAndCancel
                         className={"add-user-buttons"}
@@ -407,74 +398,221 @@ export const AddEditUserModal = props => {
     )
 }
 
-
-const AdminPanelAccess = props => {
-    const { handleChange, roles, isView, isSingleEdit, handleSubmit, isAddUser } = props;
-    const assignableUMRoles = useSelector(selectAssignableRoles())?.[UM_PRODUCT_ID]?.productRoles || {};
-    const { umRoles } = useSelector(makeSelectProductRoles());
-    const { roleDisplay, roleId } = getSelectedRoles(roles, umRoles);
-    const locationLookups = useSelector(selectLocationLookups());
-    //User management has a default scope of Facility
-    const [defaultFacility, other] = Object.entries(locationLookups).find(([lId, l]) => l?.scopeId == 2);
-    let content = null;
-    const getLocationObject = (value) => {
-        return {
-            current: [roleId],
-            value: {
-                scope: { f: [defaultFacility] }
-            },
-            id: value,
-            productId: UM_PRODUCT_ID
-        }
-    }
-    if (isView) {
-        content = (
-            <div className="role-display">
-                <span>{roleDisplay}</span>
-                <span className={`action-icon pointer`} title={'Edit User Management Access'} onClick={() => handleChange('view', { id: 'viewAdminAccess', value: false })}>
-                    <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'} />
-                </span>
+const PermissionSection = props => {
+    const { viewState, isSingleEdit, handleChange, isSubmitable, handleSubmit, isAddUser } = props;
+    const isEdit = Object.values(viewState || {}).some((v) => !v) && Object.keys(viewState).length > 0;
+    const assignableRoles = useSelector(selectApiAssignableRoles());
+    const orderedMap = Object.entries(assignableRoles).sort((a, b) => a[1]?.productName?.localeCompare?.(b[1]?.productName));
+    return (
+        <div className={`permissions-section `}>
+            <div className="subtle-subtext title">Permissions</div>
+            <Divider className="divider" />
+            <div className="permissions-header subtext">
+                <span>Products</span>
+                <span>Role</span>
+                <span>Access Level</span>
             </div>
-        )
-    } else {
-        content = (
-            <>
-                <FormControl
-                    className="admin-select"
-                    variant='outlined' size='small' >
-                    <Select
-                        displayEmpty
-                        id="admin-setting"
-                        value={roleId}
-                        style={{ width: 200 }}
-                        onChange={(e, v) => handleChange('roles', getLocationObject(e.target.value))}
-                    >
-                        {Object.entries(assignableUMRoles).map(([roleId, role]) => (
-                            <MenuItem key={roleId} value={roleId}>{role?.displayName}</MenuItem>
-                        ))}
-                        <MenuItem value={null}>No Access</MenuItem>
-                    </Select>
-                    {isSingleEdit && <SaveAndCancel
-                        className={"save-admin-panel-access"}
-                        handleSubmit={() => isAddUser ? handleChange('save-settings') : handleSubmit()}
-                        submitText={'Save'}
-                        isLoading={false}
-                        cancelText={"Cancel"}
-                        handleCancel={() => handleChange('save-cancel')}
-                    />}
-                </FormControl>
+            <Divider className="divider" />
+            {orderedMap.map(([productId, product]) => (
+                <ProductPermissions
+                    {...product}
+                    productId={productId}
+                    {...props}
+                    isView={viewState?.[productId]}
+                />
+            ))}
+            {isSingleEdit && isEdit && (
+                <SaveAndCancel
+                    className={"add-permissions-buttons"}
+                    handleSubmit={() => isAddUser ? handleChange('save-settings') : handleSubmit()}
+                    disabled={!isSubmitable}
+                    submitText={'Save'}
+                    isLoading={false}
+                    cancelText={"Cancel"}
+                    handleCancel={() => handleChange('save-cancel')}
+                />
+            )}
+        </div>
+    )
+}
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: 40 * 4.5 + 0,
+            width: 230
+        }
+    },
+    getContentAnchorEl: null,
+    anchorOrigin: {
+        vertical: "bottom",
+        horizontal: "center"
+    },
+    transformOrigin: {
+        vertical: "top",
+        horizontal: "center"
+    },
+    variant: "menu"
+};
 
+const ProductPermissions = props => {
+    const { productName, isSubscribed} = props;
+    const assignableProductRoles = props.productRoles || {};
+
+    if (!isSubscribed) {
+        return ''
+    }
+    const orderedMap = Object.entries(assignableProductRoles).sort((a, b) => a[1]?.displayName?.localeCompare?.(b[1]?.displayName));
+    return (
+        <>
+            {orderedMap.map(([roleId, role], i) => {
+                return (
+                    <div className='product-permission'>
+                        <span>{i == 0 ? productName : ''}</span>
+                        <RolePermissions {...props} roleId={roleId} role={role} />
+                    </div>
+                )
+            })}
+            <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
+        </>
+    )
+}
+
+const RolePermissions = props => {
+    const { productName, productId, roles, roleId, isSubscribed, errorState, role } = props;
+
+    const { isView, handleChange } = props;
+    const locations = useSelector(selectLocations());
+    const locationLookups = useSelector(selectLocationLookups());
+    const { minScope, maxScope } = props?.productRoles?.[roleId] || {};
+    const scope = roles?.[roleId]?.scope
+    const isUnrestricted = scope && Object.keys(scope).length != 0 && Object.values(scope).every((v) => v.length == 0);
+    const userScope = isUnrestricted ? {unrestricted:['unrestricted']} : (scope ?? {});
+    //get a flat list of all locations
+    const userLocations = Object.entries(userScope).map(([k, loc]) => loc).flat();
+    const [selectedLocations, setLocations] = useState(userLocations);
+    const getAccessLevelOptions = (minScope, maxScope, currentLocations) => {
+        const currLoc = currentLocations || selectedLocations;
+        const accessOptions = minScope == 0 ? ['unrestricted'] : []
+        const hospitals = Object.entries(locations)?.sort((a, b) => a[1]?.name?.localeCompare?.(b[1]?.name))
+        if (currLoc.includes('unrestricted')) {
+            return accessOptions
+        }
+        for (const [hId, h] of hospitals) {
+
+            isWithinScope(1, minScope, maxScope) && accessOptions.push(hId);
+            if (currLoc.includes(hId)) {
+                continue;
+            }
+            const facilities = Object.entries(h?.facilities)?.sort((a, b) => a[1]?.name?.localeCompare?.(b[1]?.name));
+            for (const [fId, f] of facilities) {
+                isWithinScope(2, minScope, maxScope) && accessOptions.push(fId);
+                if (currLoc.includes(fId)) {
+                    continue;
+                }
+                const departments = Object.entries(f?.departments);
+                for (const [dId, d] of departments) {
+                    // We dont show departments if theres only 1
+                    isWithinScope(3, minScope, maxScope) && departments.length > 1 && accessOptions.push(dId);
+                    if (currLoc.includes(dId)) {
+                        continue;
+                    }
+                    const rooms = Object.entries(d?.rooms)
+                    for (const [rId, r] of rooms) {
+                        isWithinScope(4, minScope, maxScope) && accessOptions.push(rId);
+                    }
+                }
+            }
+        }
+        return accessOptions
+    };
+
+    const [accessLevelOptions, setAccessLevelOptions] = useState(getAccessLevelOptions(minScope, maxScope));
+
+    const handleLocationChange = e => {
+        var newLocations = e.target.value;
+        const accessLevelOptions = getAccessLevelOptions(minScope, maxScope, newLocations);
+        newLocations = newLocations.filter((l) => accessLevelOptions.includes(l))
+        setLocations(newLocations);
+        setAccessLevelOptions(accessLevelOptions);
+        //Save in state for BE
+        handleChange('location-roles', { roleId, locations: newLocations, locationLookups, productId });
+    }
+
+    if (!isSubscribed) {
+        return ''
+    }
+    const accessLevelDisplay = userLocations.map(l => locationLookups?.[l]?.name).join(", ") || "None";
+    if (isView) {
+        return (
+            <>
+                <span>
+                    {role?.displayName}
+                </span>
+                <span className="flex space-between" >
+                    <span title={accessLevelDisplay} className='access-level'>{accessLevelDisplay}</span>
+                    <span className={`action-icon pointer edit-permissions-icon`} title={`Edit ${productName?.replace(/^[^a-z]+|[^\w:.-]+/gi, "")}`} >
+                        <Icon className={`edit`} color="#828282" path={mdiPlaylistEdit} size={'24px'}
+                            onClick={() => {
+                                handleChange('view', { id: productId, value: false });
+                                //When cancelling and re-editing we have to reset the location state to current user locations and options
+                                setLocations(userLocations);
+                                const accessLevelOptions = getAccessLevelOptions(minScope, maxScope, userLocations)
+                                setAccessLevelOptions(accessLevelOptions)
+                            }}
+                        />
+                    </span>
+                </span>
             </>
         )
     }
 
     return (
-        <div className="admin-panel-access">
-            <div className="subtle-subtext title">User Management Access</div>
-            <Divider className="divider" />
-            {content}
-            <Divider className="divider" />
-        </div>
+        <>
+            <span>
+                {role?.displayName}
+            </span>
+            <span>
+                <FormControl
+                    className="access-level-select"
+                    title={accessLevelDisplay}
+                    variant='outlined' size='small' fullWidth>
+                    <Select
+                        MenuProps={MenuProps}
+                        displayEmpty
+                        id={productId}
+                        className={`${productName?.replace(/^[^a-z]+|[^\w:.-]+/gi, "")} ${productId}`}
+                        value={selectedLocations}
+                        // disabled={!accessLevelOptions?.length || (productId != EMM_PRODUCT_ID)}
+                        multiple
+                        displayEmpty
+                        renderValue={(userLocations) => userLocations?.map(l => locationLookups?.[l]?.name).join(", ") || 'None'}
+                        onChange={handleLocationChange}
+                    >
+                        {accessLevelOptions.map((locationId) => {
+                            const location = locationLookups?.[locationId] || {};
+                            const { name, scopeId } = location;
+                            return (
+                                <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0" }}>
+                                    <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId + 1) * 12 }}>
+                                        <Checkbox
+                                            style={{ padding: 0 }}
+                                            disableRipple
+                                            disabled
+                                            icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
+                                            checkedIcon={<Icon path={mdiCheckboxOutline} size={'18px'} />}
+                                            className="SST-Checkbox"
+                                            checked={selectedLocations.includes(locationId)}
+                                        />
+                                    </ListItemIcon>
+                                    <ListItemText disableTypography title={name} primary={name} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} />
+
+                                </MenuItem>
+                            )
+                        })}
+                    </Select>
+                </FormControl>
+            </span>
+        </>
     )
 }
 
@@ -484,7 +622,7 @@ const ConfirmReset = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [clientSecret, setClientSecret] = useState(false)
     const userToken = useSelector(makeSelectToken());
-    const scope = 2;
+    const scope = 0;
     const handleReset = async () => {
         setIsLoading(true);
         const secret = await resetClient({ clientId, scope }, userToken)
