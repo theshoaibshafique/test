@@ -32,5 +32,3 @@ export const LEARNMORE_INFO = {
     },
 }
 
-export const MAX_INPUT = 128;
-export const MAX_DESCRIPTION = 200;

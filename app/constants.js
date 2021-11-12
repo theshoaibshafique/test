@@ -11,3 +11,6 @@ export const SSC_PRODUCT_ID = "66c3b2d5-26ec-4355-87d5-4d0130bfb426";
 export const EMM_PRODUCT_ID = "987e11f2-3287-473b-88b7-e4ce94f0c0e1";
 export const UM_PRODUCT_ID = "fe742a1f-5757-4273-a625-6dddf45fbb1a";
 export const SST_ADMIN_ID = "5ec12e15-5ddc-4395-b0bf-1d5ae83fe0fa";
+
+export const MAX_INPUT = 128;
+export const MAX_DESCRIPTION = 200;

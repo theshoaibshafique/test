@@ -6,7 +6,7 @@ import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUsers } from '../../App/store/UserManagement/um-selectors';
-import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
+import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, MAX_INPUT, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
 import { getRoleMapping } from './helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
@@ -697,6 +697,7 @@ const ProfileSection = props => {
                 onChange={(e, v) => handleChange(id, e.target.value)}
                 onBlur={(e) => handleChange('validate', { id })}
                 variant="outlined"
+                inputProps={{ maxLength: MAX_INPUT }}
                 error={Boolean(errorState?.[id])}
                 helperText={<span style={{ marginLeft: -14 }}>{errorState?.[id]}</span>}
             />

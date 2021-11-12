@@ -8,6 +8,7 @@ import Icon from '@mdi/react'
 import EditIcon from '@material-ui/icons/Edit';
 import globalFunctions from '../../utils/global-functions';
 import { SaveAndCancel } from '../../components/SharedComponents/SharedComponents';
+import { MAX_INPUT } from '../../constants';
 const styles = theme => ({
   input: {
     '&:before': {
@@ -54,6 +55,7 @@ function EField(props) {
         error={errorMessage}
         helperText={errorMessage}
         variant="outlined"
+        inputProps={{ maxLength: MAX_INPUT }}
       />
     </div>)
   return (<div>

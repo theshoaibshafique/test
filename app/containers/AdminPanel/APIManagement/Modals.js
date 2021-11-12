@@ -5,11 +5,10 @@ import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups } from '../../App/store/UserManagement/um-selectors';
-import { UM_PRODUCT_ID } from '../../../constants';
+import { MAX_DESCRIPTION, MAX_INPUT, UM_PRODUCT_ID } from '../../../constants';
 import { createClient, deleteClient, generateProductUpdateBody, getRoleMapping, getSelectedRoles, patchRoles, resetClient, updateClientProfile } from '../helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiContentCopy } from '@mdi/js';
-import { MAX_DESCRIPTION, MAX_INPUT } from '../constants';
 import { GenericModal, ProfileIcon, SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 import { setClients } from '../../App/store/ApiManagement/am-actions';
@@ -238,7 +237,7 @@ const userReducer = (state, event) => {
         if (id == 'clientName' || isValidateAll) {
             errorState['clientName'] = (value ?? state?.clientName) ? null : '​Please enter a client name';
         }
-        event.value = value?.substring(0, id == 'description' ? MAX_DESCRIPTION : MAX_INPUT);
+
         state.errorState = errorState;
     }
 
@@ -613,6 +612,7 @@ const ProfileSection = props => {
                 onBlur={(e) => handleChange('validate', { id: 'clientName' })}
                 variant="outlined"
                 error={Boolean(errorState?.['clientName'])}
+                inputProps={{ maxLength: MAX_INPUT }}
                 helperText={<span style={{ marginLeft: -14 }}>{errorState?.['clientName']}</span>}
             />
             <InputLabel className={classes.inputLabel}>Client Description</InputLabel>
@@ -626,6 +626,7 @@ const ProfileSection = props => {
                 variant="outlined"
                 multiline
                 rows={5}
+                inputProps={{ maxLength: MAX_DESCRIPTION }}
                 helperText={<span style={{ marginRight: -14, float: 'right' }}>{props?.['description']?.length ?? 0}</span>}
             />
             {isSingleEdit && <SaveAndCancel
