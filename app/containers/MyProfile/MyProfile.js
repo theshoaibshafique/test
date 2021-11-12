@@ -97,10 +97,12 @@ export default class MyProfile extends React.PureComponent {
   submit() {
     this.setState({ isLoading: true })
     const { firstName, lastName, email, jobTitle } = this.state;
+    const { userId } = this.props;
     const jsonBody = {
+      userId,
       firstName, lastName, email, title: jobTitle
     }
-    globalFuncs.genericFetch(`${process.env.USER_API}profile`, 'PATCH', this.props.userToken, jsonBody)
+    globalFuncs.genericFetch(`${process.env.USER_V2_API}profile`, 'PUT', this.props.userToken, jsonBody)
       .then(result => {
         if (result == 'error') {
 
@@ -150,7 +152,7 @@ export default class MyProfile extends React.PureComponent {
           />
         </div>
         <div ></div>
-        <div className="buttons" style={!isEdit ? {display:'none'} : {}}>
+        <div className="buttons" style={!isEdit ? { display: 'none' } : {}}>
           <SaveAndCancel
             handleSubmit={() => { this.submit() }}
             handleCancel={() => { this.reset() }}

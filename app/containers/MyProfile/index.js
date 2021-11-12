@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import MyProfile from './MyProfile';
-import { makeSelectToken, makeSelectFirstName, makeSelectLastName, makeSelectEmail, makeSelectJobTitle } from '../App/selectors';
+import { makeSelectToken, makeSelectFirstName, makeSelectLastName, makeSelectEmail, makeSelectJobTitle, makeSelectID } from '../App/selectors';
 import { setProfile } from '../App/actions';
 
 const mapStateToProps = createStructuredSelector({
@@ -10,6 +10,7 @@ const mapStateToProps = createStructuredSelector({
   lastName: makeSelectLastName(),
   email: makeSelectEmail(),
   jobTitle: makeSelectJobTitle(),
+  userId: makeSelectID()
 });
 
 const mapDispatchToProps = (dispatch) => {
