@@ -50,7 +50,7 @@ export const ClipboardField = props => {
     const { value, warning, title, className, id, isView, size } = props;
     const dispatch = useDispatch();
     const copyToClipboard = () => {
-        navigator.clipboard.writeText(value);
+        navigator?.clipboard?.writeText?.(value);
         document.getElementById(id ?? 'clipboard-field')?.select?.()
         dispatch(setSnackbar({ severity: 'success', message: `Copied to clipboard.` }))
     }
