@@ -79,25 +79,25 @@ export const APIManagement = props => {
             <MemoTable
                 title=""
                 columns={[
+                    { title: "API User", field: 'clientName', defaultSort: 'asc' },
                     { title: "Client ID", field: 'clientId' },
-                    { title: "Name", field: 'clientName', defaultSort: 'asc' },
                     generateRoleColumn("User Management", UM_PRODUCT_ID),
                     { title: "Description", field: 'description' },
                 ]}
                 actions={umRoles?.isAdmin ? [
                     {
                         icon: 'edit',
-                        tooltip: 'Edit Client',
+                        tooltip: 'Edit API User',
                         onClick: (user) => handleUserSelect(JSON.parse(JSON.stringify(user)), true)
                     },
                     {
                         icon: 'delete',
-                        tooltip: 'Delete Client',
+                        tooltip: 'Delete API User',
                         onClick: (user) => handleDeleteSelect(user)
                     },
                     {
                         icon: 'add',
-                        tooltip: 'Add Client',
+                        tooltip: 'Add API User',
                         isFreeAction: true,
                         onClick: (user) => handleUserSelect(true)
                     },
@@ -198,7 +198,7 @@ const TableActions = (props) => {
                 <Button disableElevation disableRipple
                     variant="contained" className="primary add-user-button"
                     onClick={() => action?.onClick?.()}>
-                    Add Client
+                    Add API User
                 </Button>
             )
         case 'learn-more':
@@ -219,7 +219,7 @@ const TableCell = (props) => {
     const { tableData } = columnDef || {}
     //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
 
-    const width = tableData?.columnOrder == 0 ? '20%' : (tableData?.columnOrder == 3 ? '45%' : '15%')
+    const width = tableData?.columnOrder == 1 ? '20%' : (tableData?.columnOrder == 3 ? '45%' : '15%')
     
     return (
         <MTableCell {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width } }} />

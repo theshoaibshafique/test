@@ -79,24 +79,24 @@ export const SSTAPI = props => {
                 title=""
                 columns={[
                     { title: "Client ID", field: 'clientId' },
-                    { title: "Name", field: 'clientName', defaultSort: 'asc' },
+                    { title: "API User", field: 'clientName', defaultSort: 'asc' },
                     ...generateProductColumns(assignableRoles),
                     { title: "Description", field: 'description' },
                 ]}
                 actions={[
                     {
                         icon: 'edit',
-                        tooltip: 'Edit Client',
+                        tooltip: 'Edit API User',
                         onClick: (user) => handleUserSelect(JSON.parse(JSON.stringify(user)), true)
                     },
                     {
                         icon: 'delete',
-                        tooltip: 'Delete Client',
+                        tooltip: 'Delete API User',
                         onClick: (user) => handleDeleteSelect(user)
                     },
                     {
                         icon: 'add',
-                        tooltip: 'Add Client',
+                        tooltip: 'Add API User',
                         isFreeAction: true,
                         onClick: (user) => handleUserSelect(true)
                     }
@@ -190,7 +190,7 @@ const TableActions = (props) => {
                 <Button disableElevation disableRipple
                     variant="contained" className="primary add-user-button"
                     onClick={() => action?.onClick?.()}>
-                    Add Client
+                    Add API User
                 </Button>
             )
     }

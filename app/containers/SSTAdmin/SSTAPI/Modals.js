@@ -74,7 +74,7 @@ export const ClientSuccessModal = props => {
         >
             <>
                 <div className="header header-2">
-                    Client Added
+                    API User Added
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
@@ -127,12 +127,12 @@ export const DeleteUserModal = props => {
         >
             <>
                 <div className="header header-2">
-                    Delete Client
+                    Delete API User
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
                     <p>Are you sure you want to delete {clientName}?</p>
-                    <p>Deleted client will not have any access to Insights.</p>
+                    <p>Deleted API user will not have any access to Insights.</p>
                 </div>
                 <div className="close">
                     <SaveAndCancel
@@ -225,7 +225,7 @@ const userReducer = (state, event) => {
         const isValidateAll = id == 'all';
 
         if (id == 'clientName' || isValidateAll) {
-            errorState['clientName'] = (value ?? state?.clientName) ? null : '​Please enter a client name';
+            errorState['clientName'] = (value ?? state?.clientName) ? null : '​Please enter a API user';
         }
 
         state.errorState = errorState;
@@ -347,7 +347,7 @@ export const AddEditUserModal = props => {
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
         const profile = await patchRoles({ userId: clientId, scope: 0, productUpdates }, userToken).then((e) => {
             if (e == 'error') {
-                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update client.` }))
+                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API user.` }))
             } else {
                 dispatch(setSnackbar({ severity: 'success', message: `${clientName} was updated.` }))
                 updateTable(clientId);
@@ -360,7 +360,7 @@ export const AddEditUserModal = props => {
         handleChange('save-settings');
         const profile = await updateClientProfile({ clientId, clientName, description }, userToken).then((e) => {
             if (e == 'error') {
-                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update client.` }))
+                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API user.` }))
             } else {
                 dispatch(setSnackbar({ severity: 'success', message: `${clientName} was updated.` }))
                 updateTable(clientId);
@@ -387,7 +387,7 @@ export const AddEditUserModal = props => {
                         className={"add-user-buttons"}
                         disabled={isLoading}
                         handleSubmit={() => !isSubmitable ? handleChange('validate', { id: 'all' }) : handleSubmit(isView ? 'add-user' : 'save-settings')}
-                        submitText={(isView ? 'Add Client' : 'Save')}
+                        submitText={(isView ? 'Add API User' : 'Save')}
                         isLoading={isLoading}
                         cancelText={"Cancel"}
                         handleCancel={() => toggleModal(false)}
@@ -628,7 +628,7 @@ const ConfirmReset = props => {
         const secret = await resetClient({ clientId, scope }, userToken)
 
         if (secret == 'error') {
-            dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update client.` }))
+            dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API user.` }))
             setIsLoading(false);
             return
         }
@@ -661,7 +661,8 @@ const ConfirmReset = props => {
         content = (
             <>
                 <div className="contents subtext">
-                    <p>Are you sure you want to reset the Client Secret?</p>
+                    <p>Are you sure you want to reset the Client Secret of {clientName}?</p>
+                    <p>Resetting the client secret will invalidate the current secret, and leave {clientName} unable to authenticate until its credentials are updated.</p>
                 </div>
                 <div className="close">
                     <SaveAndCancel
@@ -740,7 +741,7 @@ const ProfileSection = props => {
     }
     return (
         <div className="edit-profile">
-            <InputLabel className={classes.inputLabel}>Client Name</InputLabel>
+            <InputLabel className={classes.inputLabel}>API User</InputLabel>
             <TextField
                 size="small"
                 fullWidth
@@ -753,7 +754,7 @@ const ProfileSection = props => {
                 inputProps={{ maxLength: MAX_INPUT }}
                 helperText={<span style={{ marginLeft: -14 }}>{errorState?.['clientName']}</span>}
             />
-            <InputLabel className={classes.inputLabel}>Client Description</InputLabel>
+            <InputLabel className={classes.inputLabel}>Description</InputLabel>
             <TextField
                 size="small"
                 fullWidth
