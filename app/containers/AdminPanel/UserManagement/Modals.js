@@ -72,7 +72,14 @@ export const DeleteUserModal = props => {
     const userTable = useSelector(selectUsers());
     const userToken = useSelector(makeSelectToken());
     const dispatch = useDispatch();
-    const { toggleModal } = props;
+
+    const toggleModal = (d) => {
+        //Leave user data present when closing on fade
+        if (d == false) {
+            d = { ...props?.user, open: false }
+        }
+        props.toggleModal?.(d)
+    }
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchDelete = async () => {
@@ -85,12 +92,13 @@ export const DeleteUserModal = props => {
         }
         dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was deleted.` }))
         dispatch(setUsers(modified))
-        toggleModal(false);
+        toggleModal({ ...props?.user, open: false });
         setIsLoading(false);
     }
     return (
         <GenericModal
             {...props}
+            toggleModal={toggleModal}
             className="user-delete"
         >
             <>
@@ -334,8 +342,11 @@ export const AddEditUserModal = props => {
         })
     }
 
-    const toggleModal = () => {
-        props?.toggleModal?.();
+    const toggleModal = (d) => {
+        if (d == false){
+            d = {...user, open:false}
+        }
+        props?.toggleModal?.(d);
         setIsLoading(false);
     }
 

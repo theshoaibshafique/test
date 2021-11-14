@@ -64,6 +64,7 @@ export const APIManagement = props => {
     const logger = useSelector(makeSelectLogger());
     const handleUserSelect = (user, isEdit) => {
         setSelectedUser(user);
+        console.log(user);
         logger?.manualAddLog('click', isEdit ? `edit-user-${user?.clientId}` : (user ? 'add-user' : 'close-user-modal'), user);
     }
     const handleDeleteSelect = (del) => {
@@ -146,17 +147,17 @@ export const APIManagement = props => {
                 toggleModal={handleLearnMoreSelect}
             />
             <AddEditUserModal
-                open={Boolean(selectedUser)}
+                open={selectedUser?.open ?? Boolean(selectedUser)}
                 user={selectedUser}
                 setClientSecret={setClientSecret}
                 toggleModal={handleUserSelect} />
             <DeleteUserModal
-                open={Boolean(deleteUser)}
+                open={deleteUser?.open ?? Boolean(deleteUser)}
                 user={deleteUser}
                 toggleModal={handleDeleteSelect}
             />
             <ClientSuccessModal
-                open={Boolean(clientSecret)}
+                open={clientSecret?.open ?? Boolean(clientSecret)}
                 {...clientSecret}
                 toggleModal={setClientSecret}
             />

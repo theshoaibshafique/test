@@ -93,12 +93,12 @@ export const UserManagement = props => {
                     {
                         icon: 'edit',
                         tooltip: 'Edit User',
-                        onClick: (user) => handleUserSelect(JSON.parse(JSON.stringify(user)), true) 
+                        onClick: (user) => handleUserSelect(JSON.parse(JSON.stringify({...user, open:true})), true) 
                     },
                     {
                         icon: 'delete',
                         tooltip: 'Delete User',
-                        onClick: (user) => handleDeleteSelect(user)
+                        onClick: (user) => handleDeleteSelect({...user, open:true})
                     },
                     {
                         icon: 'add',
@@ -151,11 +151,11 @@ export const UserManagement = props => {
                 toggleModal={handleLearnMoreSelect}
             />
             <AddEditUserModal
-                open={Boolean(selectedUser)}
+                open={selectedUser?.open ?? Boolean(selectedUser)}
                 user={selectedUser}
                 toggleModal={handleUserSelect} />
             <DeleteUserModal
-                open={Boolean(deleteUser)}
+                open={deleteUser?.open ?? Boolean(deleteUser)}
                 user={deleteUser}
                 toggleModal={handleDeleteSelect}
             />

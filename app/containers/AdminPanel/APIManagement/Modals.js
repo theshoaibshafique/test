@@ -97,9 +97,16 @@ export const ClipboardField = props => {
 
 export const ClientSuccessModal = props => {
     const { clientName, clientSecret, clientId, tableData } = props || {};
+    const toggleModal = (d) => {
+        if (d == false) {
+            d = { ...props, open: false }
+        }
+        props?.toggleModal?.(d);
+    }
     return (
         <GenericModal
             {...props}
+            toggleModal={toggleModal}
             className="client-success"
         >
             <>
@@ -134,7 +141,7 @@ export const DeleteUserModal = props => {
     const userTable = useSelector(selectClients());
     const userToken = useSelector(makeSelectToken());
     const dispatch = useDispatch();
-    const { toggleModal } = props;
+
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchDelete = async () => {
@@ -150,9 +157,16 @@ export const DeleteUserModal = props => {
         toggleModal(false);
         setIsLoading(false);
     }
+    const toggleModal = (d) => {
+        if (d == false) {
+            d = { ...props.user, open: false }
+        }
+        props?.toggleModal?.(d);
+    }
     return (
         <GenericModal
             {...props}
+            toggleModal={toggleModal}
             className="user-delete"
         >
             <>
@@ -377,8 +391,11 @@ export const AddEditUserModal = props => {
         })
     }
 
-    const toggleModal = () => {
-        props?.toggleModal?.();
+    const toggleModal = (d) => {
+        if (d == false) {
+            d = { ...userData, open: false }
+        }
+        props?.toggleModal?.(d);
         setIsLoading(false);
     }
 

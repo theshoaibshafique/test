@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent, Button, Modal } from '@material-ui/core';
+import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent, Button, Modal, Fade, Backdrop } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -239,20 +239,20 @@ const useProfileIconStyles = makeStyles({
     color: '#fff !important',
     textAlign: 'center',
     background: '#004f6e',
-    userSelect:'none',
+    userSelect: 'none',
     width: props?.size ?? 95,
     height: props?.size ?? 95,
     lineHeight: `${props?.size ?? 95}px !important`,
-    borderRadius: props?.size ? props?.size/2 : 48
+    borderRadius: props?.size ? props?.size / 2 : 48
   })
 });
 
 export const ProfileIcon = props => {
   const { firstName, lastName, className, size, override } = props;
-  const classes = useProfileIconStyles({size})
-  const initials = `${firstName?.substring(0,1)}${lastName?.substring(0,1)}`.toUpperCase();
+  const classes = useProfileIconStyles({ size })
+  const initials = `${firstName?.substring(0, 1)}${lastName?.substring(0, 1)}`.toUpperCase();
   return (
-      <div className={`${className} ${classes.root}`}>{override ?? initials}</div>
+    <div className={`${className} ${classes.root}`}>{override ?? initials}</div>
   )
 
 }
@@ -260,12 +260,12 @@ export const ProfileIcon = props => {
 export const SaveAndCancel = props => {
   const { className, handleSubmit, handleCancel, isLoading, submitText, cancelText, disabled } = props;
   return (
-      <div className={`${className} save-and-cancel`}>
-          <Button id="save" variant="outlined" className="primary" disabled={disabled} onClick={() => handleSubmit()}>
-              {(isLoading) ? <div className="loader"></div> : submitText}
-          </Button>
-          {cancelText && <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => handleCancel()}>{cancelText}</Button>}
-      </div>
+    <div className={`${className} save-and-cancel`}>
+      <Button id="save" variant="outlined" className="primary" disabled={disabled} onClick={() => handleSubmit()}>
+        {(isLoading) ? <div className="loader"></div> : submitText}
+      </Button>
+      {cancelText && <Button id="cancel" style={{ color: "#3db3e3" }} onClick={() => handleCancel()}>{cancelText}</Button>}
+    </div>
   )
 }
 
@@ -274,17 +274,26 @@ export const SaveAndCancel = props => {
 */
 export const GenericModal = props => {
   const { children, toggleModal, className, open } = props;
+  const fadeTime = 500;
+  const fade = props.fade ?? { appear: fadeTime, enter: fadeTime, exit: fadeTime };
+  const Wrapper = fade ? Fade : React.Fragment;
   return (
-      <Modal
-          open={open}
-          onClose={() => toggleModal(false)}
-      >
-          <div className={`Modal generic-modal ${className}`}>
-              <div className="close-button" >
-                  <Icon className={`pointer`} onClick={() => toggleModal(false)} color="#000000" path={mdiClose} size={'19px'} />
-              </div>
-              {children}
+    <Modal
+      open={open}
+      onClose={() => toggleModal(false)}
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: fade?.exit
+      }}
+    >
+      <Wrapper in={open} timeout={fade}>
+        <div className={`Modal generic-modal ${className}`}>
+          <div className="close-button" >
+            <Icon className={`pointer`} onClick={() => toggleModal(false)} color="#000000" path={mdiClose} size={'19px'} />
           </div>
-      </Modal>
+          {children}
+        </div>
+      </Wrapper>
+    </Modal>
   )
 }
