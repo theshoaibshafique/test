@@ -95,6 +95,7 @@ export const DeleteUserModal = props => {
         toggleModal({ ...props?.user, open: false });
         setIsLoading(false);
     }
+    const name = `${firstName} ${lastName}`
     return (
         <GenericModal
             {...props}
@@ -107,7 +108,11 @@ export const DeleteUserModal = props => {
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
-                    <p>Are you sure you want to delete {firstName} {lastName}?</p>
+                    <p className="flex">
+                        Are you sure you want to delete
+                        <b className="ellipses" title={name} style={{ marginLeft: 4, maxWidth: 200, width: '100%' }}>{name}</b>
+                        ?
+                    </p>
                     <p>Deleted user will not have any access to Insights.</p>
                 </div>
                 <div className="close">
@@ -343,8 +348,8 @@ export const AddEditUserModal = props => {
     }
 
     const toggleModal = (d) => {
-        if (d == false){
-            d = {...user, open:false}
+        if (d == false) {
+            d = { ...user, open: false }
         }
         props?.toggleModal?.(d);
         setIsLoading(false);
@@ -722,7 +727,12 @@ const ConfirmReset = props => {
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
                     <p>Are you sure you want to reset account access?</p>
-                    <p>Doing so will remove {firstName}'s access to Insights, and will send a email with an access reset link to {email}.</p>
+                    <div className="message">
+                        <span>Doing so will remove </span>
+                        <div ><div className="ellipses bold" title={firstName} style={{ maxWidth: 300}}>{firstName}</div></div>
+                        <span>'s access to Insights, and will send a email with an access reset link to </span>
+                        <div ><div className="ellipses bold" title={email} style={{  maxWidth: 400 }}>{email}</div></div>.
+                    </div>
                 </div>
                 <div className="close">
                     <SaveAndCancel
@@ -759,9 +769,9 @@ const ProfileSection = props => {
                     )}
                 </div>
                 <div className="profile-info">
-                    <div className="header-2">{firstName} {lastName}</div>
-                    <div className="subtext">{title}</div>
-                    <div className="subtext">{email}</div>
+                    <div className="header-2 ellipses" title={`${firstName} ${lastName}`}>{firstName} {lastName}</div>
+                    <div className="subtext ellipses" title={title}>{title}</div>
+                    <div className="subtext ellipses" title={email}>{email}</div>
                     {userId && <div className="subtle-text">{`Member since ${moment(datetimeJoined).format('MMMM DD, YYYY')}`}</div>}
                 </div>
                 <span className={`action-icon pointer edit-profile-icon`} title={'Edit Profile'} onClick={() => handleChange('view', { id: 'viewProfile', value: false })}>

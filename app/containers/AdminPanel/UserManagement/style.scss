@@ -170,6 +170,15 @@
         background-color: rgb(242, 242, 242);
         margin-left: -32px;
     }
+    .message {
+        display: inline-block;
+        > div {
+            display: inline-flex;
+            div {
+                display: block;
+            }
+        }
+    }
 }
 .Modal.api-management-learn-more,
 .Modal.user-management-learn-more {
@@ -263,6 +272,7 @@
     .view-profile {
         display: flex;
         .profile-info {
+            max-width: 375px;
             margin: 0 32px;
             margin-right: 0px;
             :first-child {

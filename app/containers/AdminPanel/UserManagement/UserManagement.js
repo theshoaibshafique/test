@@ -10,7 +10,7 @@ import Search from '@material-ui/icons/Search';
 import MaterialTable, { MTableBody, MTableCell, MTableToolbar } from 'material-table';
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
-import { Button, MenuItem, Paper, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox } from '@material-ui/core';
+import { Button, MenuItem, Paper, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
@@ -19,7 +19,7 @@ import { selectAssignableRoles, selectFilters, selectUsers } from '../../App/sto
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
 import { AddEditUserModal, DeleteUserModal, UMLearnMore } from './Modals';
-import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, TableCell } from '../../../components/SharedComponents/SharedComponents';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID } from '../../../constants';
 import { makeSelectLogger, makeSelectProductRoles } from '../../App/selectors';
 
@@ -67,11 +67,11 @@ export const UserManagement = props => {
     }
     const handleDeleteSelect = (del) => {
         setDeleteUser(del);
-        logger?.manualAddLog('click', del ? `delete-user-${del?.userId}` : 'close-delete-user' , del);
+        logger?.manualAddLog('click', del ? `delete-user-${del?.userId}` : 'close-delete-user', del);
     }
     const handleLearnMoreSelect = (open) => {
         setShowLearnMore(open)
-        logger?.manualAddLog('click', open ? `open-learn-more` : 'close-learn-more' );
+        logger?.manualAddLog('click', open ? `open-learn-more` : 'close-learn-more');
     }
     return (
         <div className="user-management">
@@ -93,12 +93,12 @@ export const UserManagement = props => {
                     {
                         icon: 'edit',
                         tooltip: 'Edit User',
-                        onClick: (user) => handleUserSelect(JSON.parse(JSON.stringify({...user, open:true})), true) 
+                        onClick: (user) => handleUserSelect(JSON.parse(JSON.stringify({ ...user, open: true })), true)
                     },
                     {
                         icon: 'delete',
                         tooltip: 'Delete User',
-                        onClick: (user) => handleDeleteSelect({...user, open:true})
+                        onClick: (user) => handleDeleteSelect({ ...user, open: true })
                     },
                     {
                         icon: 'add',
@@ -142,7 +142,7 @@ export const UserManagement = props => {
                     Header: props => <TableHeader {...props} isAdmin={umRoles?.isAdmin} />,
                     Action: props => <TableActions {...props} />,
                     Toolbar: props => <MTableToolbar {...props} />,
-                    Cell: props => <TableCell {...props} />
+                    Cell: props => <TableCell {...props} width={props.scrollWidth/6} />
 
                 }}
             />
@@ -236,14 +236,7 @@ const TableActions = (props) => {
         </span>
     )
 }
-const TableCell = (props) => {
-    const { columnDef, scrollWidth } = props;
-    const { tableData } = columnDef || {}
-    //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
-    return (
-        <MTableCell {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${scrollWidth / 6}px` } }} />
-    )
-}
+
 const TableBody = (props) => {
     const filters = useSelector(selectFilters());
     const { renderData } = props;
@@ -320,16 +313,16 @@ function FilterRole(props) {
     const logger = useSelector(makeSelectLogger());
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-        logger?.manualAddLog('click', `open-filter-${title}` );
+        logger?.manualAddLog('click', `open-filter-${title}`);
     };
     const handleClose = (e) => {
         setAnchorEl(null);
-        logger?.manualAddLog('click', `close-filter-${title}` );
+        logger?.manualAddLog('click', `close-filter-${title}`);
     };
     const filters = useSelector(selectFilters())
-    
-    const isFiltered = filters?.[title] ? filters?.[title].size < 3 : false ; 
-    
+
+    const isFiltered = filters?.[title] ? filters?.[title].size < 3 : false;
+
     if (disabled) {
         return (
 
@@ -351,7 +344,7 @@ function FilterRole(props) {
                 className="pointer"
                 onClick={handleClick}
             >
-                {title}{isFiltered ? <Icon path={mdiFilter} color={"#004f6e"} style={{marginLeft:6}} size={'12px'} /> : <ArrowDropDown />}
+                {title}{isFiltered ? <Icon path={mdiFilter} color={"#004f6e"} style={{ marginLeft: 6 }} size={'12px'} /> : <ArrowDropDown />}
             </span>
             <Menu
                 anchorEl={anchorEl}
@@ -389,7 +382,7 @@ function RoleOption(props) {
         filters[e] = productFilter;
         dispatch(setFilters(filters));
         setCheck(filters[parent]?.has(label));
-        logger?.manualAddLog('click', `update-filter-${parent}`, productFilter );
+        logger?.manualAddLog('click', `update-filter-${parent}`, productFilter);
     }
     return (
         <MenuItem key={parent + label} onClick={() => { handleFilter(parent, label) }} style={{ padding: "0px 14px 0 0 " }}>

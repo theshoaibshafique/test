@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectSnackbar } from '../../containers/App/selectors';
 import { mdiClose } from '@mdi/js';
 import Icon from '@mdi/react'
+import { MTableCell } from 'material-table';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
@@ -295,5 +296,20 @@ export const GenericModal = props => {
         </div>
       </Wrapper>
     </Modal>
+  )
+}
+
+const useTableCellStyles = makeStyles({
+  root: (props) => ({
+    maxWidth: props?.maxWidth ?? 'unset'
+  })
+});
+export const TableCell = (props) => {
+  const { columnDef, rowData, width } = props;
+  const { tableData } = columnDef || {}
+  const classes = useTableCellStyles({ maxWidth: width })
+  //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
+  return (
+    <MTableCell {...props} title={rowData?.[columnDef?.field]} className={`ellipses ${classes.root}`} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${width}px` } }} />
   )
 }
