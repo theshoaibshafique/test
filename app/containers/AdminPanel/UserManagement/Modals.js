@@ -110,7 +110,7 @@ export const DeleteUserModal = props => {
                 <div className="contents subtext">
                     <p className="flex">
                         Are you sure you want to delete
-                        <b className="ellipses" title={name} style={{ marginLeft: 4, maxWidth: 200, width: '100%' }}>{name}</b>
+                        <b className="ellipses" title={name} style={{ marginLeft: 4, maxWidth: 200 }}>{name}</b>
                         ?
                     </p>
                     <p>Deleted user will not have any access to Insights.</p>
