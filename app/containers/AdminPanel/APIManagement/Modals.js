@@ -175,7 +175,7 @@ export const DeleteUserModal = props => {
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
-                    <p>Are you sure you want to delete {clientName}?</p>
+                    <p>Are you sure you want to delete <b className="breakword">{clientName}</b>?</p>
                     <p>Deleted API user will not have any access to Insights.</p>
                 </div>
                 <div className="close">
@@ -526,7 +526,7 @@ const ConfirmReset = props => {
         content = (
             <>
                 <div className="contents subtle-subtext">
-                    <p>{clientName} has been reset.</p>
+                    <p><b className="breakword">{clientName}</b> has been reset.</p>
                 </div>
                 <ClipboardField
                     warning="The Client Secret will only be displayed now."
@@ -540,8 +540,8 @@ const ConfirmReset = props => {
         content = (
             <>
                 <div className="contents subtext">
-                    <p>Are you sure you want to reset the Client Secret of {clientName}?</p>
-                    <p>Resetting the client secret will invalidate the current secret, and leave {clientName} unable to authenticate until its credentials are updated.</p>
+                    <p>Are you sure you want to reset the Client Secret of <b className="breakword">{clientName}</b>?</p>
+                    <p>Resetting the client secret will invalidate the current secret, and leave <b className="breakword">{clientName}</b> unable to authenticate until its credentials are updated.</p>
                 </div>
                 <div className="close">
                     <SaveAndCancel
@@ -588,7 +588,7 @@ const ProfileSection = props => {
 
                     </div>
                     <div className="profile-info">
-                        <div className="header-2">{clientName}</div>
+                        <div className="header-2 ellipses" title={clientName}>{clientName}</div>
                         {clientId && <ClipboardField
                             className="copy-field subtle-subtext"
                             title={"Client ID"}

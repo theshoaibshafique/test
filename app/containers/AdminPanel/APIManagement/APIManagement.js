@@ -17,7 +17,7 @@ import Icon from '@mdi/react'
 import { mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiLockOutline, mdiFilter } from '@mdi/js';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
 import { AddEditUserModal, DeleteUserModal, APILearnMore, ClientSuccessModal } from './Modals';
-import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, TableCell } from '../../../components/SharedComponents/SharedComponents';
 import { UM_PRODUCT_ID } from '../../../constants';
 import { makeSelectLogger, makeSelectProductRoles } from '../../App/selectors';
 import { selectClients, selectFilters, selectApiAssignableRoles } from '../../App/store/ApiManagement/am-selectors';
@@ -138,7 +138,7 @@ export const APIManagement = props => {
                     Header: props => <TableHeader {...props} isAdmin={umRoles?.isAdmin} />,
                     Action: props => <TableActions {...props} />,
                     Toolbar: props => <MTableToolbar {...props} />,
-                    Cell: props => <TableCell {...props} />
+                    Cell: props => <TableCell {...props} {...calculateWidth(props)} />
 
                 }}
             />
@@ -164,7 +164,22 @@ export const APIManagement = props => {
         </div>
     )
 }
-
+const calculateWidth = (props) => {
+    const { scrollWidth, columnDef: { tableData: { columnOrder }, field } } = props;
+    const result = {};
+    if (field == 'User Management'){
+        result.width = scrollWidth * .1;
+        result.maxWidth = 200;
+    } else if (field == 'description'){
+        result.width = scrollWidth * .50;
+    } else if (field == 'clientId'){
+        result.width = 320;
+    } else {
+        result.width = scrollWidth * .15;
+        result.maxWidth = 200;
+    }
+    return result;
+}
 function generateRoleColumn(title, productId) {
 
     return {
@@ -215,17 +230,7 @@ const TableActions = (props) => {
         </span>
     )
 }
-const TableCell = (props) => {
-    const { columnDef, scrollWidth } = props;
-    const { tableData } = columnDef || {}
-    //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
 
-    const width = tableData?.columnOrder == 1 ? '20%' : (tableData?.columnOrder == 3 ? '45%' : '15%')
-    
-    return (
-        <MTableCell {...props} columnDef={{ ...columnDef, tableData: { ...tableData, width } }} />
-    )
-}
 const TableBody = (props) => {
     const filters = useSelector(selectFilters());
     const { renderData } = props;

@@ -108,9 +108,10 @@ export const DeleteUserModal = props => {
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
-                    <p className="flex">
+                    <p >
                         Are you sure you want to delete
-                        <b className="ellipses" title={name} style={{ marginLeft: 4, maxWidth: 200 }}>{name}</b>
+                        <b className="breakword" style={{marginLeft:4}}>{name}</b>
+                        {/* <b className="ellipses" title={name} style={{ marginLeft: 4, maxWidth: 200 }}>{name}</b> */}
                         ?
                     </p>
                     <p>Deleted user will not have any access to Insights.</p>
@@ -729,9 +730,11 @@ const ConfirmReset = props => {
                     <p>Are you sure you want to reset account access?</p>
                     <div className="message">
                         <span>Doing so will remove </span>
-                        <div ><div className="ellipses bold" title={firstName} style={{ maxWidth: 300}}>{firstName}</div></div>
+                        <b className="breakword">{firstName}</b>
+                        {/* <div ><div className="ellipses bold" title={firstName} style={{ maxWidth: 300}}>{firstName}</div></div> */}
                         <span>'s access to Insights, and will send a email with an access reset link to </span>
-                        <div ><div className="ellipses bold" title={email} style={{  maxWidth: 400 }}>{email}</div></div>.
+                        <b className="breakword">{email}</b>.
+                        {/* <div ><div className="ellipses bold" title={email} style={{  maxWidth: 400 }}>{email}</div></div>. */}
                     </div>
                 </div>
                 <div className="close">

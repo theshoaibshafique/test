@@ -305,9 +305,9 @@ const useTableCellStyles = makeStyles({
   })
 });
 export const TableCell = (props) => {
-  const { columnDef, rowData, width } = props;
+  const { columnDef, rowData, width, maxWidth } = props;
   const { tableData } = columnDef || {}
-  const classes = useTableCellStyles({ maxWidth: width })
+  const classes = useTableCellStyles({ maxWidth: maxWidth ?? width })
   //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
   return (
     <MTableCell {...props} title={rowData?.[columnDef?.field]} className={`ellipses ${classes.root}`} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${width}px` } }} />

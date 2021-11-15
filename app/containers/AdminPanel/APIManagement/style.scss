@@ -8,6 +8,8 @@
         }
         .description {
             color: #4f4f4f;
+            word-break: break-word;
+            hyphens: auto;
         }
     }
     .copy-field{
@@ -57,6 +59,6 @@
         &:last-child{
             margin-bottom: 24px;
         }
-        color: #828282;
+        // color: #828282;
     }
 }

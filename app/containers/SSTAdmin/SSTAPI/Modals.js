@@ -709,7 +709,7 @@ const ProfileSection = props => {
 
                     </div>
                     <div className="profile-info">
-                        <div className="header-2">{clientName}</div>
+                        <div className="header-2" title={clientName}>{clientName}</div>
                         {clientId && <ClipboardField
                             className="copy-field subtle-subtext"
                             title={"Client ID"}
