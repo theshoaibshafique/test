@@ -12,7 +12,7 @@
             hyphens: auto;
         }
     }
-    .copy-field{
+    .copy-field {
         button {
             margin: -12px -6px;
         }
@@ -56,9 +56,33 @@
         p {
             margin: 0 0 16px 0;
         }
-        &:last-child{
+        &:last-child {
             margin-bottom: 24px;
         }
         // color: #828282;
+    }
+}
+.Modal.api-management-learn-more {
+    height: unset;
+    width: unset;
+    a {
+        margin: 0 4px;
+    }
+    .learn-more-content {
+        overflow-y: auto;
+        max-height: 500px;
+        padding: 0px;
+        padding-top: 12px;
+        p {
+            &:first-child{
+                margin: 12px 32px 0 32px ;
+            }
+            &:last-child{
+                margin: 0 32px 32px 32px ;
+            }
+            
+        }
+        background: 0% 0% / auto repeat rgb(171, 184, 195);
+        background-repeat: repeat;
     }
 }

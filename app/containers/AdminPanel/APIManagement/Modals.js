@@ -9,19 +9,38 @@ import { MAX_DESCRIPTION, MAX_INPUT, UM_PRODUCT_ID } from '../../../constants';
 import { createClient, deleteClient, generateProductUpdateBody, getRoleMapping, getSelectedRoles, patchRoles, resetClient, updateClientProfile } from '../helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiContentCopy } from '@mdi/js';
-import { GenericModal, ProfileIcon, SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
+import { GenericModal, ProfileIcon, SaveAndCancel, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 import { setClients } from '../../App/store/ApiManagement/am-actions';
 import { selectClients } from '../../App/store/ApiManagement/am-selectors';
+import { API_INFO } from '../constants';
+
+const CarbonIFrame = props => {
+    const { src, style } = props
+    return (
+        <iframe
+            src={src}
+            style={style}
+            sandbox="allow-scripts allow-same-origin">
+        </iframe>
+    )
+}
 
 export const APILearnMore = props => {
-    const HEADER = "How does API management work?"
-    const DESC = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nec mi, justo molestie scelerisque. Placerat ipsum egestas aenean laoreet enim integer. Mi ut et faucibus et feugiat phasellus at porttitor.";
-
+    const HEADER = "How does API Management work?"
+    const DESC = "To programatically integrate with OR Black Box Insights™ User Management, administrators may create API users that can securely authenticate with SST Accounts \
+    and make requests to User Managements’s RESTful HTTP API. This will allow your organization to create, delete, and update users.";
+    const [tabIndex, setTabIndex] = useState(0);
+    const logger = useSelector(makeSelectLogger());
+    const handleTabChange = (obj, tabIndex) => {
+        setTabIndex(tabIndex);
+        logger?.manualAddLog('click', `learn-more-change-tab-${orderedInfo[tabIndex][0]}`, orderedInfo[tabIndex][0]);
+    }
     const locationLookups = useSelector(selectLocationLookups());
     const facilityId = useSelector(makeSelectUserFacility())
     const facilityName = locationLookups?.[facilityId]?.name;
     const facilityMark = "<facility>";
+    const orderedInfo = Object.entries(API_INFO).sort((a, b) => a[1].order - b[1].order);
     return (
         <GenericModal
             {...props}
@@ -29,18 +48,73 @@ export const APILearnMore = props => {
         >
             <div className="header header-2">{HEADER}</div>
             <p className="description subtext">{DESC?.replaceAll(facilityMark, facilityName)}</p>
+            <p className="description subtext">
+                When creating an API user, a client ID and a client secret will be displayed. The client secret must be saved immediately, as it cannot be retrieved later. Using these credentials, you may retrieve short-lived access tokens from SST Accounts. Please see the
+                <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/docs">OpenAPI</a> or
+                <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/redoc">ReDoc</a>
+                documentation for further details.
+            </p>
             <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
+            <StyledTabs
+                value={tabIndex}
+                onChange={(obj, value) => handleTabChange(obj, value)}
+                indicatorColor="primary"
+                textColor="primary"
+            >
+                <StyledTab label={"Get Token"} />
+                <StyledTab label={"API Request"} />
+                <StyledTab label={"Update Secret"} />
+            </StyledTabs>
+            <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
+            <TabPanel value={tabIndex} index={0}>
+                <div className="learn-more-content">
+                    <CarbonIFrame
+                        src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=python&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=import%2520requests%250A%250ACLIENT_ID%2520%253D%2520%27xxxxxxxx%27%250ACLIENT_SECRET%2520%253D%2520%27xxxxxxxx%27%250A%250Aresponse%2520%253D%2520requests.post%28%250A%2520%2520url%253D%27https%253A%252F%252Fapi.accounts.surgicalsafety.com%252Foauth%252Fv1%252Ftoken%27%252C%250A%2520%2520headers%253D%257B%250A%2520%2520%2520%2520%27Content-Type%27%253A%2520%27application%252Fx-www-form-urlencoded%27%252C%250A%2520%2520%2520%2520%27accept%27%253A%2520%27application%252Fjson%27%250A%2520%2520%257D%252C%250A%2520%2520data%253D%257B%250A%2520%2520%2520%2520%27client_id%27%253A%2520CLIENT_ID%252C%250A%2520%2520%2520%2520%27secret%27%253A%2520CLIENT_SECRET%252C%250A%2520%2520%2520%2520%27grant_type%27%253A%2520%27client_credentials%27%250A%2520%2520%257D%250A%29.json%28%29%250A%250Aaccess_token%2520%253D%2520response.get%28%27accessToken%27%29"}
+                        style={{ width: 1024, height: 458, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
+                    />
+                    <CarbonIFrame
+                        src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=application%2Fx-sh&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=%2523To%2520make%2520an%2520API%2520request%2520to%2520OR%2520Black%2520Box%2520Insights%25E2%2584%25A2%252C%2520you%2520must%2520present%2520the%2520access%2520token%2520in%2520the%2520%2560Authorization%2560%2520header%252C%2520as%2520shown%2520below%2520for%2520the%2520%252Fprofiles%2520endpoint.%2520%250A%250Acurl%2520-X%2520%27POST%27%2520%255C%250A%2520%2520%27https%253A%252F%252Fapi.accounts.surgicalsafety.com%252Foauth%252Fv1%252Ftoken%27%2520%255C%250A%2520%2520-H%2520%27accept%253A%2520application%252Fjson%27%2520%255C%250A%2520%2520-H%2520%27Content-Type%253A%2520application%252Fx-www-form-urlencoded%27%2520%255C%250A%2520%2520-d%2520%27client_id%253DCLIENT_ID%2526grant_type%253Dclient_credentials%2526secret%253DCLIENT_SECRET%27%250A%250A"}
+                        style={{ width: 1024, height: 332, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
+                    />
+                </div>
+            </TabPanel>
 
-            <div className="learn-more-content ">
-                <div>
-                    <span className={`role-cell subtle-subtext Full Access`}>Full Access</span>
-                    <span className="content subtle-subtext">{DESC?.replaceAll(facilityMark, facilityName)}</span>
+            <TabPanel value={tabIndex} index={1}>
+                <div className="learn-more-content">
+                    <CarbonIFrame
+                        src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=python&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=import%2520requests%250A%250AACCESS_TOKEN%2520%253D%2520%27xxxxxxxx%27%2520%2520%2523%2520retrieve%2520from%2520SST%2520Accounts%250A%250Aresponse%2520%253D%2520requests.get%28%250A%2520%2520url%253D%27https%253A%252F%252Fapi.insights.surgicalsafety.com%252Fapi%252Fusers%252Fv2%252Fprofiles%27%252C%250A%2520%2520headers%253D%257B%250A%2520%2520%2520%2520%27accept%27%253A%2520%27application%252Fjson%27%252C%250A%2520%2520%2520%2520%27Authorization%27%253A%2520f%27Bearer%2520%257BACCESS_TOKEN%257D%27%250A%2520%2520%257D%250A%29"}
+                        style={{ width: 1024, height: 314, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
+                    />
+                    <CarbonIFrame
+                        src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=application%2Fx-sh&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=curl%2520-X%2520%27GET%27%2520%255C%250A%2520%2520%27https%253A%252F%252Fapi.insights.surgicalsafety.com%252Fapi%252Fusers%252Fv2%252Fprofiles%27%2520%255C%250A%2520%2520-H%2520%27accept%253A%2520application%252Fjson%27%2520%255C%250A%2520%2520-H%2520%27Authorization%253A%2520Bearer%2520ACCESS_TOKEN%27%2520"}
+                        style={{ width: 1024, height: 188, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
+                    />
+                    <p className=" subtext">
+                        For a full list of available endpoints, please see the
+                        <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/docs">OpenAPI</a> or
+                        <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/redoc">ReDoc</a>
+                        documentation. The Viewer role gives access to all GET endpoints, and the Full Access role gives access to PUT, POST, and DELETE endpoints.
+
+                    </p>
                 </div>
-                <div>
-                    <span className={`role-cell subtle-subtext View Only`}>View Only</span>
-                    <span className="content subtle-subtext">{DESC?.replaceAll(facilityMark, facilityName)}</span>
+            </TabPanel>
+            <TabPanel value={tabIndex} index={2}>
+                <div className="learn-more-content">
+                    <p className=" subtext">
+                        Updating the client secret can be done through the OR Black Box Insights™ user interface, or programmatically through SST Accounts /update endpoint, as shown below.
+                    </p>
+
+                    <CarbonIFrame
+                        src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=python&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=import%2520requests%250A%250ACLIENT_ID%2520%253D%2520%27xxxxxxxx%27%250ACLIENT_SECRET%2520%253D%2520%27xxxxxxxx%27%250A%250Aresponse%2520%253D%2520requests.put%28%250A%2520%2520url%253D%27https%253A%252F%252Fapi.accounts.surgicalsafety.com%252Foauth%252Fv1%252Fupdate%27%252C%250A%2520%2520headers%253D%257B%250A%2520%2520%2520%2520%27Content-Type%27%253A%2520%27application%252Fx-www-form-urlencoded%27%252C%250A%2520%2520%2520%2520%27accept%27%253A%2520%27application%252Fjson%27%250A%2520%2520%257D%252C%250A%2520%2520data%253D%257B%250A%2520%2520%2520%2520%27client_id%27%253A%2520CLIENT_ID%252C%250A%2520%2520%2520%2520%27secret%27%253A%2520CLIENT_SECRET%252C%250A%2520%2520%2520%2520%27phase%27%253A%2520%27secret%27%250A%2520%2520%257D%250A%29.json%28%29%250A%250Anew_secret%2520%253D%2520response.get%28%27secret%27%29"}
+                        style={{ width: 1024, height: 458, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
+                    />
+                    <CarbonIFrame
+                        src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=application%2Fx-sh&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=curl%2520-X%2520%27PUT%27%2520%255C%250A%2520%2520%27https%253A%252F%252Fapi.accounts.surgicalsafety.com%252Foauth%252Fv1%252Fupdate%27%2520%255C%250A%2520%2520-H%2520%27accept%253A%2520application%252Fjson%27%2520%255C%250A%2520%2520-H%2520%27Content-Type%253A%2520application%252Fx-www-form-urlencoded%27%2520%255C%250A%2520%2520-d%2520%27client_id%253DCLIENT_ID%2526phase%253Dsecret%2526secret%253DCLIENT_SECRET%27"}
+                        style={{ width: 1024, height: 228, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
+                    />
+
                 </div>
-            </div>
+            </TabPanel>
         </GenericModal>
     )
 }
@@ -288,7 +362,7 @@ export const AddEditUserModal = props => {
     const assignableRoles = useSelector(selectAssignableRoles());
     const logger = useSelector(makeSelectLogger());
 
-    
+
 
     const isView = Object.values(userData?.viewState || {}).every((v) => v) && userData?.viewState;
 
@@ -398,7 +472,7 @@ export const AddEditUserModal = props => {
         props?.toggleModal?.(d);
         setIsLoading(false);
     }
-    
+
     return (
         <GenericModal
             {...props}

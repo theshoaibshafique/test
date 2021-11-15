@@ -32,3 +32,17 @@ export const LEARNMORE_INFO = {
     },
 }
 
+export const API_INFO = {
+    "Get Token": {
+        order: 0,
+        content:{}
+    },
+    "API Request": {
+        order: 1,
+        content:{}
+    },
+    "Update Secret": {
+        order: 2,
+        content:{}
+    }
+}
