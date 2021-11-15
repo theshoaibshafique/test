@@ -152,7 +152,7 @@ export const DeleteUserModal = props => {
         if (id >= 0) {
             modified.splice(id, 1);
         }
-        dispatch(setSnackbar({ severity: 'success', message: `${clientName} was deleted.` }))
+        dispatch(setSnackbar({ severity: 'success', message: `${clientName} has been deleted.` }))
         dispatch(setClients(modified))
         toggleModal(false);
         setIsLoading(false);
@@ -331,7 +331,7 @@ export const AddEditUserModal = props => {
             const createUserSuccess = (client) => {
                 const { clientId, clientSecret } = client || {};
                 const { clientName } = userData;
-                dispatch(setSnackbar({ severity: 'success', message: `${clientName} was added.` }));
+                dispatch(setSnackbar({ severity: 'success', message: `${clientName} has been added.` }));
                 updateTable(clientId);
                 toggleModal(false);
                 setIsLoading(false);
@@ -370,9 +370,9 @@ export const AddEditUserModal = props => {
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
         const profile = await patchRoles({ userId: clientId, scope: 2, productUpdates }, userToken).then((e) => {
             if (e == 'error') {
-                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update client.` }))
+                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API user.` }))
             } else {
-                dispatch(setSnackbar({ severity: 'success', message: `${clientName} was updated.` }))
+                dispatch(setSnackbar({ severity: 'success', message: `${clientName} has been updated.` }))
                 updateTable(clientId);
             }
         })
@@ -383,9 +383,9 @@ export const AddEditUserModal = props => {
         handleChange('save-settings');
         const profile = await updateClientProfile({ clientId, clientName, description }, userToken).then((e) => {
             if (e == 'error') {
-                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update client.` }))
+                dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API user.` }))
             } else {
-                dispatch(setSnackbar({ severity: 'success', message: `${clientName} was updated.` }))
+                dispatch(setSnackbar({ severity: 'success', message: `${clientName} has been updated.` }))
                 updateTable(clientId);
             }
         })
@@ -507,7 +507,7 @@ const ConfirmReset = props => {
         const secret = await resetClient({ clientId, scope }, userToken)
 
         if (secret == 'error') {
-            dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update client.` }))
+            dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API user.` }))
             setIsLoading(false);
             return
         }
@@ -515,7 +515,7 @@ const ConfirmReset = props => {
         setClientSecret(secret?.clientSecret);
         setIsLoading(false);
         // toggleModal(false);
-        dispatch(setSnackbar({ severity: 'success', message: `${clientName}'s secret was reset.` }))
+        dispatch(setSnackbar({ severity: 'success', message: `${clientName}'s secret has been reset.` }))
     }
     const toggleModal = (open) => {
         props.toggleModal?.(open);

@@ -90,7 +90,7 @@ export const DeleteUserModal = props => {
         if (id >= 0) {
             modified.splice(id, 1);
         }
-        dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was deleted.` }))
+        dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} has been deleted.` }))
         dispatch(setUsers(modified))
         toggleModal({ ...props?.user, open: false });
         setIsLoading(false);
@@ -297,7 +297,7 @@ export const AddEditUserModal = props => {
             setIsLoading(true);
             const createUserSuccess = (userId) => {
                 const { firstName, lastName } = userData;
-                dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was added.` }));
+                dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} has been added.` }));
 
                 updateTable(userId);
                 toggleModal(false);
@@ -345,7 +345,7 @@ export const AddEditUserModal = props => {
             if (e == 'error') {
                 dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update user.` }))
             } else {
-                dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was updated.` }))
+                dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} has been updated.` }))
                 updateTable(userId);
             }
         })
@@ -717,7 +717,7 @@ const ConfirmReset = props => {
         await resetUser({ userId, scope }, userToken)
         setIsLoading(false);
         toggleModal(false);
-        dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName}'s account was reset.` }))
+        dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName}'s account has been reset.` }))
     }
     return (
         <GenericModal
