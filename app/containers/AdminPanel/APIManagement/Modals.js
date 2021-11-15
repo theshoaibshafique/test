@@ -115,7 +115,7 @@ export const ClientSuccessModal = props => {
                 </div>
                 <Divider className="divider" style={{ backgroundColor: '#F2F2F2' }} />
                 <div className="contents subtext">
-                    <p>{clientName} has been added.</p>
+                    <p><b className="breakword">{clientName}</b> has been added.</p>
                 </div>
                 <ClipboardField
                     className="copy-field subtext contents"
@@ -288,7 +288,7 @@ export const AddEditUserModal = props => {
     const assignableRoles = useSelector(selectAssignableRoles());
     const logger = useSelector(makeSelectLogger());
 
-    const { viewProfile, viewAdminAccess, ...viewPermissions } = userData?.viewState || {};
+    
 
     const isView = Object.values(userData?.viewState || {}).every((v) => v) && userData?.viewState;
 
@@ -299,7 +299,7 @@ export const AddEditUserModal = props => {
     const isSubmitable = !Object.values(errorState || {}).some((d) => d) && (
         userData?.['clientName']
     );
-
+    const { viewProfile, viewAdminAccess, ...viewPermissions } = userData?.viewState || (!props.open && isSubmitable ? defaultViewState : {});
     //Reload the state every time user changes
     useEffect(() => {
         handleChange('new-user', { ...user, viewState: viewObject, locationLookups });
@@ -331,7 +331,7 @@ export const AddEditUserModal = props => {
             const createUserSuccess = (client) => {
                 const { clientId, clientSecret } = client || {};
                 const { clientName } = userData;
-
+                dispatch(setSnackbar({ severity: 'success', message: `${clientName} was added.` }));
                 updateTable(clientId);
                 toggleModal(false);
                 setIsLoading(false);
@@ -398,7 +398,7 @@ export const AddEditUserModal = props => {
         props?.toggleModal?.(d);
         setIsLoading(false);
     }
-
+    
     return (
         <GenericModal
             {...props}
@@ -519,7 +519,6 @@ const ConfirmReset = props => {
     }
     const toggleModal = (open) => {
         props.toggleModal?.(open);
-        setClientSecret(false);
     }
     var content = null;
     if (clientSecret) {

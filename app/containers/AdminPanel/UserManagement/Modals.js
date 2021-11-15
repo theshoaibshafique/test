@@ -261,7 +261,7 @@ export const AddEditUserModal = props => {
     const assignableRoles = useSelector(selectAssignableRoles());
     const logger = useSelector(makeSelectLogger());
 
-    const { viewProfile, viewAdminAccess, ...viewPermissions } = userData?.viewState || {};
+    
 
     const isView = Object.values(userData?.viewState || {}).every((v) => v) && userData?.viewState;
 
@@ -272,6 +272,9 @@ export const AddEditUserModal = props => {
     const isSubmitable = !Object.values(errorState || {}).some((d) => d) && (
         userData?.['firstName'] && userData?.['lastName'] && userData?.['email'] && (userData?.['title'] || !isAddUser)
     );
+
+    //Keep view on fade
+    const { viewProfile, viewAdminAccess, ...viewPermissions } = userData?.viewState || (!props.open && isSubmitable ? defaultViewState : {});
 
     //Reload the state every time user changes
     useEffect(() => {
@@ -350,12 +353,11 @@ export const AddEditUserModal = props => {
 
     const toggleModal = (d) => {
         if (d == false) {
-            d = { ...user, open: false }
+            d = { ...userData, viewState: viewObject, open: false }
         }
         props?.toggleModal?.(d);
         setIsLoading(false);
     }
-
     return (
         <GenericModal
             {...props}

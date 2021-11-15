@@ -171,7 +171,7 @@ const calculateWidth = (props) => {
         result.width = scrollWidth * .1;
         result.maxWidth = 200;
     } else if (field == 'description'){
-        result.width = scrollWidth * .50;
+        result.width = scrollWidth * .40;
     } else if (field == 'clientId'){
         result.width = 320;
     } else {
