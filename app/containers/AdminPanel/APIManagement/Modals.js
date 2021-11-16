@@ -28,8 +28,7 @@ const CarbonIFrame = props => {
 
 export const APILearnMore = props => {
     const HEADER = "How does API Management work?"
-    const DESC = "To programatically integrate with OR Black Box Insights™ User Management, administrators may create API users that can securely authenticate with SST Accounts \
-    and make requests to User Managements’s RESTful HTTP API. This will allow your organization to create, delete, and update users.";
+
     const [tabIndex, setTabIndex] = useState(0);
     const logger = useSelector(makeSelectLogger());
     const handleTabChange = (obj, tabIndex) => {
@@ -47,9 +46,19 @@ export const APILearnMore = props => {
             className="api-management-learn-more"
         >
             <div className="header header-2">{HEADER}</div>
-            <p className="description subtext">{DESC?.replaceAll(facilityMark, facilityName)}</p>
             <p className="description subtext">
-                When creating an API user, a client ID and a client secret will be displayed. The client secret must be saved immediately, as it cannot be retrieved later. Using these credentials, you may retrieve short-lived access tokens from SST Accounts. Please see the
+            To programatically integrate with OR Black Box Insights™ User Management, administrators may create API users that can securely retrieve access tokens from SST Accounts and make requests to User Managements's RESTful HTTP API.
+                    For a full list of available endpoints, please see the
+                    <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/docs">OpenAPI</a> or
+                    <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/redoc">ReDoc</a>
+                    documentation. The
+                <span className={`role-cell subtle-subtext View Only`}>View Only</span>
+                role gives access to all GET endpoints, and the
+                <span className={`role-cell subtle-subtext Full Access`}>Full Access</span>
+                role gives access to PUT, POST, and DELETE endpoints.
+            </p>
+            <p className="description subtext">
+                When creating an API user, a client ID and a client secret will be displayed. The client secret must be saved immediately, as it cannot be retrieved later, only reset through the API Management user interface. Using these credentials, you may retrieve short-lived access tokens from SST Accounts. Please see the
                 <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/docs">OpenAPI</a> or
                 <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/redoc">ReDoc</a>
                 documentation for further details.
@@ -72,7 +81,7 @@ export const APILearnMore = props => {
                         src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=python&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=import%2520requests%250A%250ACLIENT_ID%2520%253D%2520%27xxxxxxxx%27%250ACLIENT_SECRET%2520%253D%2520%27xxxxxxxx%27%250A%250Aresponse%2520%253D%2520requests.post%28%250A%2520%2520url%253D%27https%253A%252F%252Fapi.accounts.surgicalsafety.com%252Foauth%252Fv1%252Ftoken%27%252C%250A%2520%2520headers%253D%257B%250A%2520%2520%2520%2520%27Content-Type%27%253A%2520%27application%252Fx-www-form-urlencoded%27%252C%250A%2520%2520%2520%2520%27accept%27%253A%2520%27application%252Fjson%27%250A%2520%2520%257D%252C%250A%2520%2520data%253D%257B%250A%2520%2520%2520%2520%27client_id%27%253A%2520CLIENT_ID%252C%250A%2520%2520%2520%2520%27secret%27%253A%2520CLIENT_SECRET%252C%250A%2520%2520%2520%2520%27grant_type%27%253A%2520%27client_credentials%27%250A%2520%2520%257D%250A%29.json%28%29%250A%250Aaccess_token%2520%253D%2520response.get%28%27accessToken%27%29"}
                         style={{ width: 1024, height: 458, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
                     />
-         
+
                     <CarbonIFrame
                         src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=application%2Fx-sh&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=curl%2520-X%2520%27POST%27%2520%255C%250A%2520%2520%27https%253A%252F%252Fapi.accounts.surgicalsafety.com%252Foauth%252Fv1%252Ftoken%27%2520%255C%250A%2520%2520-H%2520%27accept%253A%2520application%252Fjson%27%2520%255C%250A%2520%2520-H%2520%27Content-Type%253A%2520application%252Fx-www-form-urlencoded%27%2520%255C%250A%2520%2520-d%2520%27client_id%253DCLIENT_ID%2526grant_type%253Dclient_credentials%2526secret%253DCLIENT_SECRET%27"}
                         style={{ width: 1024, height: 224, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
@@ -82,10 +91,7 @@ export const APILearnMore = props => {
 
             <TabPanel value={tabIndex} index={1}>
                 <div className="learn-more-content">
-                    <p className=" subtext">
-                    To make an API request to OR Black Box Insights™, you must present the access token in the `Authorization` header, as shown below for the /profiles endpoint. 
-                    </p>
-                
+
                     <CarbonIFrame
                         src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=python&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=import%2520requests%250A%250AACCESS_TOKEN%2520%253D%2520%27xxxxxxxx%27%2520%2520%2523%2520retrieve%2520from%2520SST%2520Accounts%250A%250Aresponse%2520%253D%2520requests.get%28%250A%2520%2520url%253D%27https%253A%252F%252Fapi.insights.surgicalsafety.com%252Fapi%252Fusers%252Fv2%252Fprofiles%27%252C%250A%2520%2520headers%253D%257B%250A%2520%2520%2520%2520%27accept%27%253A%2520%27application%252Fjson%27%252C%250A%2520%2520%2520%2520%27Authorization%27%253A%2520f%27Bearer%2520%257BACCESS_TOKEN%257D%27%250A%2520%2520%257D%250A%29"}
                         style={{ width: 1024, height: 314, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
@@ -94,20 +100,10 @@ export const APILearnMore = props => {
                         src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=application%2Fx-sh&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=curl%2520-X%2520%27GET%27%2520%255C%250A%2520%2520%27https%253A%252F%252Fapi.insights.surgicalsafety.com%252Fapi%252Fusers%252Fv2%252Fprofiles%27%2520%255C%250A%2520%2520-H%2520%27accept%253A%2520application%252Fjson%27%2520%255C%250A%2520%2520-H%2520%27Authorization%253A%2520Bearer%2520ACCESS_TOKEN%27%2520"}
                         style={{ width: 1024, height: 188, border: 0, transform: 'scale(1)', overflow: 'hidden' }}
                     />
-                    <p className=" subtext">
-                        For a full list of available endpoints, please see the
-                        <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/docs">OpenAPI</a> or
-                        <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/redoc">ReDoc</a>
-                        documentation. The Viewer role gives access to all GET endpoints, and the Full Access role gives access to PUT, POST, and DELETE endpoints.
-
-                    </p>
                 </div>
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>
                 <div className="learn-more-content">
-                    <p className=" subtext">
-                        Updating the client secret can be done through the OR Black Box Insights™ user interface, or programmatically through SST Accounts /update endpoint, as shown below.
-                    </p>
 
                     <CarbonIFrame
                         src={"https://carbon.now.sh/embed?bg=rgba%28171%2C+184%2C+195%2C+1%29&t=one-dark&wt=none&l=python&ds=false&dsyoff=20px&dsblur=68px&wc=true&wa=false&pv=24px&ph=172px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=import%2520requests%250A%250ACLIENT_ID%2520%253D%2520%27xxxxxxxx%27%250ACLIENT_SECRET%2520%253D%2520%27xxxxxxxx%27%250A%250Aresponse%2520%253D%2520requests.put%28%250A%2520%2520url%253D%27https%253A%252F%252Fapi.accounts.surgicalsafety.com%252Foauth%252Fv1%252Fupdate%27%252C%250A%2520%2520headers%253D%257B%250A%2520%2520%2520%2520%27Content-Type%27%253A%2520%27application%252Fx-www-form-urlencoded%27%252C%250A%2520%2520%2520%2520%27accept%27%253A%2520%27application%252Fjson%27%250A%2520%2520%257D%252C%250A%2520%2520data%253D%257B%250A%2520%2520%2520%2520%27client_id%27%253A%2520CLIENT_ID%252C%250A%2520%2520%2520%2520%27secret%27%253A%2520CLIENT_SECRET%252C%250A%2520%2520%2520%2520%27phase%27%253A%2520%27secret%27%250A%2520%2520%257D%250A%29.json%28%29%250A%250Anew_secret%2520%253D%2520response.get%28%27secret%27%29"}

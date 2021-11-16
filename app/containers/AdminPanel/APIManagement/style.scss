@@ -68,11 +68,21 @@
     a {
         margin: 0 4px;
     }
+    .description{
+        span {
+            line-height: 28px;
+        }
+    }
+    .role-cell {
+        display: initial;
+        margin: 0 4px;
+    }
     .learn-more-content {
         overflow-y: auto;
         max-height: 500px;
         padding: 0px;
         padding-top: 12px;
+        
         p {
             &:first-child{
                 margin: 12px 32px 0 32px ;
