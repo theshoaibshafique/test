@@ -83,7 +83,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
   }
 
   render() {
-    const { phaseTitle, phaseData, selectedSurgicalTab, enhancedMMOpenData } = this.props;
+    const { phaseTitle, phaseData, selectedSurgicalTab, enhancedMMOpenData, multiclip } = this.props;
     const { logger } = this.props;
     const { showOnlyAE } = this.state;
     const isLapProcedure = (selectedSurgicalTab == 0);
@@ -99,7 +99,7 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
             if (!showOnlyAE || (showOnlyAE && data.dataPoints.length > 0)) {
               const AEEventTitle = this.getAEEventTitle(data, index, isOpenProcedure);
               const timeSelectClick = () => {
-                this.aeSelected(data.startTime, data.assets[0], index, isLapProcedure);
+                this.aeSelected(data.startTime, data.assets[0], index, isLapProcedure || multiclip);
                 logger?.manualAddLog('click', `time-select-${data.subTitle}`, { time: data.startTime });
               }
               const aeSelect = () => {
