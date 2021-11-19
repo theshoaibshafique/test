@@ -1104,7 +1104,7 @@ export const DETAILED_CASE = {
 }
 
 export const TAG_INFO = {
-    "Flagged": "Identifies cases that have been flagged on operating room touch screen or by insights user within 21 days of the case",
+    "Flagged": "Identifies cases that have been flagged on operating room touch screen or by Insights user within 21 days of the case",
     "Hypoxia": "Identifies cases where the patient experienced sustained hypoxia (blood oxygen saturation below 90%) during the procedure",
     "Hypotension": "Identifies cases where the patient had an elevated risk of postoperative adverse outcomes due to sustained hypotension (mean arterial blood pressure below 65 mmHg) during the procedure",
     "Hypothermia": "Identifies cases where the patient had an elevated risk of surgical site infection due to sustained hypothermia (temperature below 35°C / 95°F) during the procedure",

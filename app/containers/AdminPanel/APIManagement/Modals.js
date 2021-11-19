@@ -43,7 +43,7 @@ export const APILearnMore = props => {
         >
             <div className="header header-2">{HEADER}</div>
             <p className="description subtext">
-            To programatically integrate with OR Black Box Insights™ User Management, administrators may create API users that can securely retrieve access tokens from SST Accounts and make requests to User Managements's RESTful HTTP API.
+            To programatically integrate with Insights User Management, administrators may create API users that can securely retrieve access tokens from SST Accounts and make requests to User Management's RESTful HTTP API.
                     For a full list of available endpoints, please see the
                     <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/docs">OpenAPI</a> or
                     <a className="link subtext" target="_blank" href="https://api.insights.surgicalsafety.com/api/users/redoc">ReDoc</a>
