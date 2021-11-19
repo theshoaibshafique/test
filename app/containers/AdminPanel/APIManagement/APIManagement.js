@@ -65,15 +65,15 @@ export const APIManagement = props => {
     const handleUserSelect = (user, isEdit) => {
         setSelectedUser(user);
         console.log(user);
-        logger?.manualAddLog('click', isEdit ? `edit-user-${user?.clientId}` : (user ? 'add-user' : 'close-user-modal'), user);
+        logger?.manualAddLog('click', isEdit ? `edit-api-user-${user?.clientId}` : (user ? 'add-api-user' : 'close-user-modal'), user);
     }
     const handleDeleteSelect = (del) => {
         setDeleteUser(del);
-        logger?.manualAddLog('click', del ? `delete-user-${del?.clientId}` : 'close-delete-user', del);
+        logger?.manualAddLog('click', del ? `delete-api-user-${del?.clientId}` : 'close-delete-api-user', del);
     }
     const handleLearnMoreSelect = (open) => {
         setShowLearnMore(open)
-        logger?.manualAddLog('click', open ? `open-learn-more` : 'close-learn-more');
+        logger?.manualAddLog('click', open ? `open-api-learn-more` : 'close-api-learn-more');
     }
     return (
         <div className="user-management">

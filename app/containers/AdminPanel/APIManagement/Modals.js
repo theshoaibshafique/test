@@ -35,10 +35,6 @@ export const APILearnMore = props => {
         setTabIndex(tabIndex);
         logger?.manualAddLog('click', `learn-more-change-tab-${orderedInfo[tabIndex][0]}`, orderedInfo[tabIndex][0]);
     }
-    const locationLookups = useSelector(selectLocationLookups());
-    const facilityId = useSelector(makeSelectUserFacility())
-    const facilityName = locationLookups?.[facilityId]?.name;
-    const facilityMark = "<facility>";
     const orderedInfo = Object.entries(API_INFO).sort((a, b) => a[1].order - b[1].order);
     return (
         <GenericModal
