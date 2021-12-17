@@ -39,6 +39,7 @@ import { SafariWarningBanner } from '../EMMReports/SafariWarningBanner';
 import { displayTags, TagsSelect, useStyles } from './misc/helper-components';
 import { selectCases, selectDetailedCase, selectFlaggedClip, selectFlagReport, selectOverviewData, selectSavedCases } from '../App/store/CaseDiscovery/cd-selectors';
 import { setCases, setFlaggedClip, setOverviewTile, setRecentFlags, setRecentSaved, setRecommendations, showDetailedCase } from '../App/store/CaseDiscovery/cd-actions';
+import { setSnackbar } from '../App/actions';
 export function DetailedCase(props) {
   const { hidden, handleChangeCaseId, USERS, isSaved, handleSaveCase, roomIds } = props;
   if (props.metaData == null) {
@@ -181,12 +182,6 @@ export function DetailedCase(props) {
   // Flag clip publish/hide snack bar state.
   const [snackBarOpen, setSnackBackOpen] = React.useState(false);
   const [snackBarMsg, setSnackBackMsg] = React.useState('');
-
-  // Flag clip snackbar open/close-toggle click handler.
-  const toggleSnackBar = (state, msg = '') => {
-    setSnackBackOpen(state);
-    if (state === true) setSnackBackMsg(msg);
-  };
 
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => {
@@ -351,29 +346,10 @@ export function DetailedCase(props) {
                 <ProcedureDistribution {...procedureDistribution} duration={duration} />
               </Grid>
             </Grid>
-            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} flags={flags} toggleSnackBar={toggleSnackBar} />
+            <HL7Chart hl7Data={hl7Parameters} timeline={timeline} flags={flags} />
 
 
           </div>
-          <Portal>
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-              open={snackBarOpen}
-              autoHideDuration={4000}
-              onClose={() => toggleSnackBar(false)}
-              message={snackBarMsg}
-              action={
-                <React.Fragment>
-                  <IconButton size="small" aria-label="close" color="inherit" onClick={() => toggleSnackBar(false)}>
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                </React.Fragment>
-              }
-            />
-          </Portal>
         </Grid>
       }
       <Grid item xs className="schedule">
@@ -1505,7 +1481,7 @@ function ProcedureDistribution(props) {
 
 
 function HL7Chart(props) {
-  const { hl7Data, timeline, flags, toggleSnackBar } = props;
+  const { hl7Data, timeline, flags } = props;
   const logger = useSelector(makeSelectLogger());
   const chartRef = useRef(null);
   if (!hl7Data) {
@@ -1758,7 +1734,7 @@ function HL7Chart(props) {
         <div style={{ width: '100%' }}>
           <div className="sub header center">{hasHL7Data ? `${hl7Data[index].title} (${hl7Data[index].unit})` : ''}</div>
           <C3Chart ref={chartRef} {...data} />
-          {hasClips && <ClipTimeline flags={flags} max={max} min={min} toggleSnackBar={toggleSnackBar} />}
+          {hasClips && <ClipTimeline flags={flags} max={max} min={min} />}
         </div>
       </div>
 
@@ -1781,7 +1757,7 @@ export const Thumbnail = withStyles((theme) => ({
 }))(Tooltip);
 
 function ClipTimeline(props) {
-  const { flags, max, min, toggleSnackBar } = props;
+  const { flags, max, min } = props;
   const duration = max + (min < 0 ? Math.abs(min) : 0) + max * .025
   const isSafari = navigator.vendor.includes('Apple');
   const userToken = useSelector(makeSelectToken());
@@ -1855,8 +1831,6 @@ function ClipTimeline(props) {
       dispatch(setFlaggedClip(null));
     }
     setSelect(t);
-    // Close confirmation snack bar when modal is closed.
-    toggleSnackBar(false);
   }
   // Open Selected Flagged Clip from Overview page;
   const flaggedClip = useSelector(selectFlaggedClip());
@@ -1877,10 +1851,10 @@ function ClipTimeline(props) {
         logger?.manualAddLog('click', `publish-clip-${selectedMarker.clipId}`, selectedMarker)
         setTimeline(tLine);
         // Display success msg snack bar with confirmation.
-        toggleSnackBar(true, 'Clip published successfully.');
+        dispatch(setSnackbar({ severity: 'success', message: 'Clip published successfully.' }));
       }).catch((results) => {
         // Display error msg snack bar on fail.
-        toggleSnackBar(true, 'A problem has occurred while completing your action. Please try again or contact the administrator.');
+        dispatch(setSnackbar({ severity: 'error', message: 'A problem has occurred while completing your action. Please try again or contact the administrator.' }));
         console.error("oh no", results)
       })
   }
@@ -1893,11 +1867,11 @@ function ClipTimeline(props) {
         logger?.manualAddLog('click', `hide-clip-${selectedMarker.clipId}`, selectedMarker)
         setTimeline(tLine);
         // Display success msg snack bar with confirmation.
-        toggleSnackBar(true, 'Clip hidden successfully.');
+        dispatch(setSnackbar({ severity: 'success', message: 'Clip hidden successfully.' }));
       })
       .catch((results) => {
         // Display error msg snack bar on fail.
-        toggleSnackBar(true, 'A problem has occurred while completing your action. Please try again or contact the administrator.');
+        dispatch(setSnackbar({ severity: 'error', message: 'A problem has occurred while completing your action. Please try again or contact the administrator.' }));
         console.error("oh no", results)
       })
   };
