@@ -1,7 +1,7 @@
-import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, Slide, TextField, Tooltip, withStyles } from '@material-ui/core';
+import { Button, Checkbox, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, Slide, TextField, Tooltip, withStyles } from '@material-ui/core';
 import moment from 'moment/moment';
-import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
+import React from 'react';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import MagnifyingGlass from './icons/MagnifyingGlass.svg';
 import ArrowsDownUp from './icons/ArrowsDownUp.svg';
@@ -12,7 +12,7 @@ import Icon from '@mdi/react';
 import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 import Close from './icons/Close.svg';
-import { makeSelectIsAdmin, makeSelectLogger } from '../App/selectors';
+import {  makeSelectLogger, makeSelectProductRoles } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
 import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
 import { useSelector } from 'react-redux';
@@ -39,7 +39,8 @@ export function BrowseCases(props) {
   const logger = useSelector(makeSelectLogger());
   const CASES = useSelector(selectCases());
   const savedCases = useSelector(selectSavedCases());
-  const isAdmin = useSelector(makeSelectIsAdmin());
+  const { effRoles } = useSelector(makeSelectProductRoles());
+  const isEffAdmin = effRoles?.isAdmin;
   const classes = useStyles();
   const minDate = moment().subtract(100, 'years');
   const maxDate = moment();
@@ -133,10 +134,10 @@ export function BrowseCases(props) {
 
   const renderTagInfo = () => {
     const tag_info = { ...TAG_INFO };
-    const updateInAdmin = isAdmin && (
+    const updateInAdmin = isEffAdmin && (
       <span>
-        (<NavLink to={"/adminPanel/1"} className='link admin-link'>
-          update in Admin Panel
+        (<NavLink to={"/settings"} className='link admin-link'>
+          update in Settings
         </NavLink>)
       </span>)
     tag_info['Late First Case'] = (
