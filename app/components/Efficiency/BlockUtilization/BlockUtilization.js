@@ -132,6 +132,8 @@ const BlockUtilization = () => {
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
     const endGapTile = state.tiles.find(({ title }) => title.toLowerCase().includes('end gap'));
     const startGapTile = state.tiles.find(({ title }) => title.toLowerCase().includes('start gap'));
+    const formattedData = formatLineData(trendTile?.data[filteredChartData]);
+    setTrendLineData(formattedData); 
     setTrendStartDate(trendTile?.data?.start_date),
     setTrendEndDate(trendTile?.data?.end_date)
     const startDate = moment(trendTile?.data?.start_date);

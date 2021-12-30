@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 const equalProps = (props, prevProps) => props === prevProps;
 
 const LineGraph = React.memo(({
-  data, xAxisLabel, yAxisLabel, start, end, interval, xTickSize, xTickMargin
+  data, xAxisLabel, yAxisLabel, interval, xTickSize, xTickMargin
 }) => (
   <ResponsiveContainer width="100%" height={200}>
     <LineChart
