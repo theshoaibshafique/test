@@ -3,12 +3,13 @@
 .Package-Location {
     margin: 20px 0px 40px 0;
 }
-.Package-Location img{
-    margin: auto;
+.Package-Location img {
+    display: block;
+    margin: 0 auto;
 }
 
-.Package-Logo { 
-    width: 90%; 
+.Package-Logo {
+    width: 90%;
     cursor: pointer;
 }
 .text-link.my-account{
