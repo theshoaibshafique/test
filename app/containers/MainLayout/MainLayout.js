@@ -15,6 +15,11 @@ import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SSChecklist from 'containers/SSChecklist/Loadable';
 import Efficiency from 'containers/Efficiency/Loadable';
+import EfficiencyV2 from 'components/Efficiency/Efficiency';
+import TurnoverTime from 'components/Efficiency/TurnoverTime/TurnoverTime';
+import BlockUtilization from 'components/Efficiency/BlockUtilization/BlockUtilization';
+import CaseScheduling from 'components/Efficiency/CaseScheduling/CaseScheduling';
+import CaseOnTime from 'components/Efficiency/CaseOnTime/CaseOnTime';
 import NoAccess from 'containers/NoAccess/Loadable';
 import Forbidden from 'containers/Forbidden/Loadable';
 
@@ -42,6 +47,7 @@ export default class MainLayout extends React.PureComponent {
       emmPublishAccess: false,
       sscAccess: false,
       efficiencyAccess: false,
+      efficiencyV2Access: false,
       isLoading: true
     }
   }
@@ -68,6 +74,7 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: emmRoles.isAdmin,//&& !cdRoles.hasAccess,
       sscAccess: sscRoles.hasAccess,
       efficiencyAccess: effRoles.hasAccess,
+      efficiencyV2Access: true,
       caseDiscoveryAccess: cdRoles.hasAccess,
       emmPublishAccess: emmRoles.hasPublisher,
       sstAdminAccess: Boolean(roles?.[SST_ADMIN_ID]),
@@ -114,6 +121,7 @@ export default class MainLayout extends React.PureComponent {
     }
 
     if (this.state.userLoggedIn) {
+      // console.log(this.state.userLoggedIn);
       if (this.props.emmReportID) {
         logger?.manualAddLog('session', `open-emm-report`, this.props.emmReportID);
       } else {
@@ -173,6 +181,23 @@ export default class MainLayout extends React.PureComponent {
           <Route path="/caseDiscovery" render={(props) => <CaseDiscovery {...props} showEMMReport={this.props.showEMMReport} />} />
         }
 
+        {(this.state.efficiencyV2Access) &&
+          <Route exact path="/efficiencyV2" render={(props) => <EfficiencyV2 {...props} />} />
+        }
+        {(this.state.efficiencyV2Access) &&
+          <Route path="/efficiencyV2/case-on-time" render={(props) => <CaseOnTime {...props} />} />
+        }
+        {(this.state.efficiencyV2Access) &&
+          <Route path="/efficiencyV2/turnover-time" render={(props) => <TurnoverTime {...props} />} />
+        }
+        {(this.state.efficiencyV2Access) &&
+          <Route path="/efficiencyV2/or-utilization" render={(props) => <BlockUtilization {...props} />} />
+        }
+
+        {(this.state.efficiencyV2Access) &&
+          <Route path="/efficiencyV2/case-scheduling" render={(props) => <CaseScheduling {...props} />} />
+        }
+
         <Route path="/my-profile" component={MyProfile} />
         <Route path="" component={this.state.isLoading ? LoadingIndicator : NotFoundPage} />
       </Switch>
@@ -216,6 +241,7 @@ export default class MainLayout extends React.PureComponent {
                       emmPublishAccess={this.state.emmPublishAccess}
                       sscAccess={this.state.sscAccess}
                       efficiencyAccess={this.state.efficiencyAccess}
+                      efficiencyV2Access={this.state.efficiencyV2Access}
                       caseDiscoveryAccess={this.state.caseDiscoveryAccess}
                       settingsAccess={this.state.settingsAccess}
                       pathname={this.props.location.pathname}

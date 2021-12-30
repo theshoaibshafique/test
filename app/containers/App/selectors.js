@@ -8,6 +8,10 @@ const selectGlobal = (state) => state.get('global');
 
 const selectRoute = (state) => state.get('route');
 
+const effiencyState = (state) => state.get('efficiency');
+
+const selectFilters = () => createSelector(effiencyState, (state) => state.filters);
+
 const makeSelectToken = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('userToken')
@@ -118,18 +122,18 @@ const makeSelectProductRoles = (useProductId) => createSelector(
   (globalState) => {
     const result = {};
     const products = ['cdRoles', 'effRoles', 'sscRoles', 'emmRoles', 'umRoles'];
-    for (var product of products) {
+    for (const product of products) {
       const roles = globalState.get(product);
-      result[useProductId ? roles?.productId : product] = roles
+      result[useProductId ? roles?.productId : product] = roles;
     }
-    return result
+    return result;
   }
-)
+);
 
 const makeSelectSnackbar = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('snackbar')
-)
+);
 
 
 export {
@@ -157,4 +161,5 @@ export {
   makeSelectProductRoles,
   makeSelectSnackbar,
   makeFacilityDetails,
+  selectFilters
 };

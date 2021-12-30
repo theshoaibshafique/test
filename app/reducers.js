@@ -10,6 +10,7 @@ import emmReducer from 'containers/App/store/EMM/emm-reducer';
 import cdReducer from 'containers/App/store/CaseDiscovery/cd-reducer';
 import umReducer from './containers/App/store/UserManagement/um-reducer';
 import amReducer from './containers/App/store/ApiManagement/am-reducer';
+import efficiencyReducer from './components/Efficiency/reducer';
 
 /*
  * routeReducer
@@ -50,6 +51,7 @@ export default function createReducer(injectedReducers) {
     cd: cdReducer,
     um: umReducer,
     am: amReducer,
+    efficiency: efficiencyReducer,
     ...injectedReducers,
   });
 }

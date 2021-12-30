@@ -16,7 +16,7 @@ class MonthRangePicker extends React.Component {
       endDate: this.props.endDate || moment().endOf('month'),
       maxDate: this.props.maxDate || moment().endOf('month'),
       minDate: this.props.minDate || moment().startOf('month')
-    }
+    };
     this.state.maxRange = this.getMaxRange(this.state.startDate);
   }
 
@@ -27,12 +27,12 @@ class MonthRangePicker extends React.Component {
         endDate: this.props.endDate,
         minDate: this.props.minDate,
         maxDate: this.props.maxDate
-      })
+      });
     }
   }
 
   getMaxRange(startDate) {
-    //TODO: maybe we need to cap date range for performance issues
+    // TODO: maybe we need to cap date range for performance issues
     // if (startDate) {
     //   return moment.min(startDate.clone().add(6, 'months'), this.state.maxDate);
     // }
@@ -40,9 +40,8 @@ class MonthRangePicker extends React.Component {
   }
 
   updateRange(startDate, endDate) {
-
     let maxRange = this.state.maxRange;
-    //Start date changes
+    // Start date changes
     if (startDate != this.state.startDate) {
       endDate = null;
       maxRange = this.getMaxRange(startDate);
@@ -58,13 +57,12 @@ class MonthRangePicker extends React.Component {
   }
 
   onFocusChange(focusedInput) {
-
-    //Clear maxRange when changing startDate
-    if (focusedInput == "startDate") {
+    // Clear maxRange when changing startDate
+    if (focusedInput == 'startDate') {
       this.setState({ maxRange: this.state.maxDate });
     } else if (this.state.startDate) {
-      //if changing endDate and startDate is set - re-enforce maxRange
-      this.setState({ maxRange: this.getMaxRange(this.state.startDate) })
+      // if changing endDate and startDate is set - re-enforce maxRange
+      this.setState({ maxRange: this.getMaxRange(this.state.startDate) });
     }
 
     this.setState({ focusedInput });
@@ -75,8 +73,8 @@ class MonthRangePicker extends React.Component {
       startDate: null,
       endDate: null,
       maxRange: this.state.maxDate,
-      focusedInput: "startDate"
-    })
+      focusedInput: 'startDate'
+    });
     this.props.updateState('startDate', null);
     this.props.updateState('endDate', null);
   }
@@ -85,22 +83,22 @@ class MonthRangePicker extends React.Component {
     return (
       <Grid container spacing={0} direction="column" >
         <Grid item xs style={{ textAlign: 'right', padding: '0 16px 16px' }}>
-          <a className="link" onClick={e => this.resetDates()}>Clear dates</a>
+          <a className="link" onClick={(e) => this.resetDates()}>Clear dates</a>
         </Grid>
         <Divider style={{ backgroundColor: '#C8C8C8' }} />
         <Grid item xs className="display-warning subtle-subtext">
-          {this.props.displayWarning || "Each month’s data will become available on the 15th of the following month."}
+          {this.props.displayWarning || 'Each month’s data will become available on the 15th of the following month.'}
         </Grid>
       </Grid>
-    )
+    );
   }
 
   render() {
     return (
-      <Grid container justify="center" alignItems="center" direction="column" className="month-range-picker">
-        <Grid item xs className="report-date subtle-subtext">
+      <Grid container justify="center" alignItems="center" direction="column" className={!this.props.displayLabel ? 'month-range-picker-v2' : 'month-range-picker'}>
+        {this.props.displayLabel && (<Grid item xs className="report-date subtle-subtext">
           Date Range
-        </Grid>
+        </Grid>)}
         <DateRangePicker
           startDate={this.state.startDate}
           startDateId="startDateID"
@@ -108,17 +106,17 @@ class MonthRangePicker extends React.Component {
           endDateId="endDateID"
           onDatesChange={({ startDate, endDate }) => this.updateRange(startDate, endDate)}
           focusedInput={this.state.focusedInput}
-          onFocusChange={focusedInput => this.onFocusChange(focusedInput)}
+          onFocusChange={(focusedInput) => this.onFocusChange(focusedInput)}
 
-          isOutsideRange={date => date.isAfter(this.state.maxRange) || date.isBefore(this.state.minDate)}
+          isOutsideRange={(date) => date.isAfter(this.state.maxRange) || date.isBefore(this.state.minDate)}
           minDate={this.state.minDate}
-          hideKeyboardShortcutsPanel={true}
+          hideKeyboardShortcutsPanel
           displayFormat="MMM DD YYYY"
           noBorder
           reopenPickerOnClearDates
           readOnly
           minimumNights={0}
-
+          customArrowIcon={this.props.customArrowIcon}
           renderCalendarInfo={() => this.renderInfo()}
         />
       </Grid>

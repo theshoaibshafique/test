@@ -2,18 +2,18 @@ import axios from 'axios';
 import moment from 'moment/moment';
 
 function genericFetch(api, fetchMethod, token, fetchBodyJSON) {
-  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
+  const { userToken, roleToken } = typeof token === 'object' ? token : { userToken: token, roleToken: '' };
 
   if (fetchMethod === 'get') {
     return fetch(api, {
       method: fetchMethod,
       mode: 'cors',
       headers: {
-        'Authorization': 'Bearer ' + userToken,
+        Authorization: `Bearer ${userToken}`,
         'Content-Type': 'application/json',
         'X-AUTH': roleToken
       }
-    }).then(response => {
+    }).then((response) => {
       if (response) {
         if (response.status == 204) {
           return response.text();
@@ -27,92 +27,105 @@ function genericFetch(api, fetchMethod, token, fetchBodyJSON) {
         } else if ([409].indexOf(response.status) >= 0) {
           return 'conflict';
         } else if ([403].indexOf(response.status) >= 0) {
-          return { forbidden: response.json() }
+          return { forbidden: response.json() };
         } else {
           return 'error';
         }
       }
-    }).catch(error => {
-      console.error(error)
+    }).catch((error) => {
+      console.error(error);
       return 'error';
-    })
-  } else {
-    return fetch(api, {
-      method: fetchMethod,
-      mode: 'cors',
-      headers: {
-        'Authorization': 'Bearer ' + userToken,
-        'Content-Type': 'application/json',
-        'X-AUTH': roleToken
-      },
-      body: JSON.stringify(fetchBodyJSON)
-    }).then(response => {
-      if (response) {
-        if (response.status == 204) {
-          return response.text();
-        }
-        if ([200, 201, 202].indexOf(response.status) >= 0) {
-          return response.json();
-        } else if (response.text.length) {
-          if ([200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
-            return response.json();
-          }
-        } else if ([409].indexOf(response.status) >= 0) {
-          return { "conflict": response.json() };
-        } else {
-          return 'error';
-        }
-      }
-    })
+    });
   }
-}
-
-function genericFetchWithNoReturnMessage(api, fetchMethod, token, fetchBodyJSON) {
-  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
   return fetch(api, {
     method: fetchMethod,
     mode: 'cors',
     headers: {
-      'Authorization': 'Bearer ' + userToken,
+      Authorization: `Bearer ${userToken}`,
       'Content-Type': 'application/json',
       'X-AUTH': roleToken
     },
     body: JSON.stringify(fetchBodyJSON)
-  }).then(response => {
-    return response.text()
-  })
-    .then(response => {
+  }).then((response) => {
+    if (response) {
+      if (response.status == 204) {
+        return response.text();
+      }
+      if ([200, 201, 202].indexOf(response.status) >= 0) {
+        return response.json();
+      } else if (response.text.length) {
+        if ([200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
+          return response.json();
+        }
+      } else if ([409].indexOf(response.status) >= 0) {
+        return { conflict: response.json() };
+      } else {
+        return 'error';
+      }
+    }
+  });
+}
+
+function genericFetchWithNoReturnMessage(api, fetchMethod, token, fetchBodyJSON) {
+  const { userToken, roleToken } = typeof token === 'object' ? token : { userToken: token, roleToken: '' };
+  return fetch(api, {
+    method: fetchMethod,
+    mode: 'cors',
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+      'Content-Type': 'application/json',
+      'X-AUTH': roleToken
+    },
+    body: JSON.stringify(fetchBodyJSON)
+  }).then((response) => response.text())
+    .then((response) => {
       if (response) {
         if ([200, 201, 202, 204].indexOf(response.status) >= 0 || [200, 201, 202, 204].indexOf(JSON.parse(response).statusCode) >= 0) {
           return JSON.parse(response);
         } else if ([409].indexOf(response.status) >= 0 || response === '"Email Exists"') {
-          return { "conflict": JSON.parse(response) };
-        } else {
-          return 'error';
+          return { conflict: JSON.parse(response) };
         }
+        return 'error';
       }
-    }).catch(error => {
-      console.log(error)
-    })
+    }).catch((error) => {
+      console.log(error);
+    });
 }
+
+export const request = type => async (url, token, data = {}, cancel) => {
+  const { userToken, roleToken } = typeof token === 'object' ? token : { userToken: token, roleToken: '' };
+  const response = await axios({
+    method: type,
+    url,
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+      'Content-Type': 'application/json',
+      'X-AUTH': roleToken
+    },
+    data: JSON.stringify(data),
+    mode: 'cors',
+    cancelToken: cancel.token || new axios.CancelToken(((cancel) => {}))
+  });
+  return response?.data;
+};
 
 function axiosFetch(url, fetchMethod, token, fetchBodyJSON, cancelToken) {
   if (!url) {
     return;
   }
-  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
+  const { userToken, roleToken } = typeof token === 'object' ? token : { userToken: token, roleToken: '' };
   return axios({
     method: fetchMethod,
-    url: url,
+    url,
     headers: {
-      'Authorization': 'Bearer ' + userToken,
+      Authorization: `Bearer ${userToken}`,
       'Content-Type': 'application/json',
       'X-AUTH': roleToken
     },
     data: JSON.stringify(fetchBodyJSON),
     mode: 'cors',
-    cancelToken: cancelToken || new axios.CancelToken(function (cancel) {
-    })
+    cancelToken: cancelToken || new axios.CancelToken(((cancel) => {
+    }))
   }).then((response) => response?.data
   );
 }
@@ -123,11 +136,11 @@ function authFetch(url, fetchMethod, body) {
   }
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(body)) {
-    params.append(key, value)
+    params.append(key, value);
   }
   return axios({
     method: fetchMethod,
-    url: url,
+    url,
     mode: 'cors',
     data: params
   });
@@ -137,12 +150,12 @@ function axiosFetchWithCredentials(url, fetchMethod, token, fetchBodyJSON) {
   if (!url) {
     return;
   }
-  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
+  const { userToken, roleToken } = typeof token === 'object' ? token : { userToken: token, roleToken: '' };
   return axios({
     method: fetchMethod,
-    url: url,
+    url,
     headers: {
-      'Authorization': 'Bearer ' + userToken,
+      Authorization: `Bearer ${userToken}`,
       'Content-Type': 'application/json',
       'X-AUTH': roleToken
     },
@@ -152,28 +165,28 @@ function axiosFetchWithCredentials(url, fetchMethod, token, fetchBodyJSON) {
   });
 }
 export async function getCdnStreamCookies(url, token) {
-  const { userToken, roleToken } = typeof token == 'object' ? token : { userToken: token, roleToken: '' };
+  const { userToken, roleToken } = typeof token === 'object' ? token : { userToken: token, roleToken: '' };
   return axios({
     method: 'get',
     url: `${url}cookie`,
     headers: {
-      'Authorization': 'Bearer ' + userToken,
+      Authorization: `Bearer ${userToken}`,
       'X-AUTH': roleToken
     },
     withCredentials: true
   })
-    .then(response => {
+    .then((response) => {
       if (response.status !== 200) {
         throw new Error('Cannot stream');
       }
     })
-    .catch(err => {
+    .catch((err) => {
       throw err;
     });
 }
 
 function formatDateTime(date) {
-  let newDate = moment(date);
+  const newDate = moment(date);
   return newDate.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
 }
 
@@ -181,7 +194,7 @@ function getName(searchList, key) {
   if (!key || !searchList) {
     return key;
   }
-  let index = searchList.findIndex(item => {
+  const index = searchList.findIndex((item) => {
     item.value = item.value || item.id;
     return item.value && `${item.value}`.toLowerCase() == `${key}`.toLowerCase();
   });
@@ -192,40 +205,36 @@ function getName(searchList, key) {
 }
 
 function formatSecsToTime(seconds, toWords = false, short = false) {
-  var hh = Math.floor(seconds / 3600);
-  var mm = Math.floor((seconds - (hh * 3600)) / 60);
-  var ss = seconds - (hh * 3600) - (mm * 60);
+  const hh = Math.floor(seconds / 3600);
+  const mm = Math.floor((seconds - (hh * 3600)) / 60);
+  const ss = seconds - (hh * 3600) - (mm * 60);
 
-  if (!toWords)
-    return `${pad(hh)}:${pad(mm)}:${pad(ss)}`;
-  else if (short)
-    return `${formatWords(hh, 'hr', true)} ${formatWords(mm, 'min', true)} ${formatWords(ss, 'sec', true)}`
-  else
-    return `${formatWords(hh, 'hour')} ${formatWords(mm, 'minute')} ${formatWords(ss, 'second')}`;
+  if (!toWords) { return `${pad(hh)}:${pad(mm)}:${pad(ss)}`; } else if (short) { return `${formatWords(hh, 'hr', true)} ${formatWords(mm, 'min', true)} ${formatWords(ss, 'sec', true)}`; }
+  return `${formatWords(hh, 'hour')} ${formatWords(mm, 'minute')} ${formatWords(ss, 'second')}`;
 }
 
 function formatWords(value, word, short = false) {
   if (value == 0 || parseInt(value) != value) {
-    return ""
+    return '';
   } else if (short) {
-    return `${value} ${word}`
+    return `${value} ${word}`;
   }
-  return `${(value > 0) ? `${value} ${word}${(value > 1) ? `s` : ''}` : ''}`
+  return `${(value > 0) ? `${value} ${word}${(value > 1) ? 's' : ''}` : ''}`;
 }
 
 function pad(string) {
-  return ('0' + string).slice(-2)
+  return (`0${string}`).slice(-2);
 }
 
-//n = starting number
-//m = end number (non inclusive)
-//size = total string length
-//d = padding character
+// n = starting number
+// m = end number (non inclusive)
+// size = total string length
+// d = padding character
 function generatePaddedDigits(n, m, size, d) {
-  var result = [];
-  for (var i = n; i < m; i++) {
-    var digit = i.toString().padStart(size, d);
-    result.push(digit)
+  const result = [];
+  for (let i = n; i < m; i++) {
+    const digit = i.toString().padStart(size, d);
+    result.push(digit);
   }
   return result;
 }
@@ -233,9 +242,7 @@ function generatePaddedDigits(n, m, size, d) {
 function toTitleCase(str) {
   return str.replace(
     /\w\S*/g,
-    function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    }
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
   );
 }
 /*
@@ -245,31 +252,31 @@ function range(start, end, step = 1) {
   if (start == end) {
     return [];
   }
-  const len = Math.floor((end - start) / step) + 1
-  return Array(len).fill().map((_, idx) => start + (idx * step))
+  const len = Math.floor((end - start) / step) + 1;
+  return Array(len).fill().map((_, idx) => start + (idx * step));
 }
 /*
   Adds the suffix to an integer (1 to 1st, 2 to 2nd, 3 to 3rd)
 */
 function ordinal_suffix_of(i) {
-  var j = i % 10,
+  let j = i % 10,
     k = i % 100;
   if (j == 1 && k != 11) {
-    return i + "st";
+    return `${i}st`;
   }
   if (j == 2 && k != 12) {
-    return i + "nd";
+    return `${i}nd`;
   }
   if (j == 3 && k != 13) {
-    return i + "rd";
+    return `${i}rd`;
   }
-  return i + "th";
+  return `${i}th`;
 }
 /*
   Returns difference of time since midnight (of that day)
 */
 function getDiffFromMidnight(timeString, unit = 'hours') {
-  return moment(timeString).diff(moment(timeString).startOf('day'), unit)
+  return moment(timeString).diff(moment(timeString).startOf('day'), unit);
 }
 
 function getWindowDimensions() {
@@ -280,7 +287,7 @@ function getWindowDimensions() {
   };
 }
 function validEmail(email) {
-  var EMAIL_REGEX = process.env.ALLOW_PLUS_EMAILS
+  const EMAIL_REGEX = process.env.ALLOW_PLUS_EMAILS
     ? /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     : /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   if (EMAIL_REGEX.test(email)) {
@@ -292,6 +299,7 @@ export default {
   genericFetch,
   genericFetchWithNoReturnMessage,
   axiosFetch,
+  request,
   formatSecsToTime,
   axiosFetchWithCredentials,
   formatDateTime,

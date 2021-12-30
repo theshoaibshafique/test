@@ -7,8 +7,11 @@ function createWebpackMiddleware(compiler, publicPath) {
   return webpackDevMiddleware(compiler, {
     noInfo: true,
     publicPath,
-    silent: true,
-    stats: 'errors-only'
+    silent: false,
+    stats: 'errors-only',
+    devServer: {
+      overlay: true
+    }
   });
 }
 
