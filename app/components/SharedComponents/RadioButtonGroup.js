@@ -8,23 +8,25 @@ import FormControl from '@material-ui/core/FormControl';
 const useStyles = makeStyles({
   radio: {
     '&$checked': {
-      color: '#004F6E'
+      color: (props) => `${props.highlightColour}`
     }
   },
-  checked: {}
+  checked: {
+    color: (props) => `${props.highlightColour}`
+  }
 });
 
 const RadioButtonGroup = ({
-  onChange, value, options, ...rest
+  onChange, value, options, highlightColour, ...rest
 }) => {
-  const styles = useStyles();
+  const styles = useStyles({ highlightColour });
   return (
     <FormControl component="fieldset">
       <RadioGroup value={value} onChange={onChange} {...rest} style={{ flexDirection: 'row' }}>
         {options.map((option) => (
           <FormControlLabel
             style={option.value === value ? {
-              color: '#004F6E',
+              color: highlightColour,
             } : {
               color: 'inherit',
             }}

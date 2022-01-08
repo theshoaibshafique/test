@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recha
 const equalProps = (props, prevProps) => prevProps === props;
 
 const BarGraph = React.memo(({
-  data, xAxisLabel, yAxisLabel, height, interval, ...rest
+  data, xAxisLabel, yAxisLabel, height, interval, colors, ...rest
 }) => (
   <ResponsiveContainer width="100%" height={height}>
     <BarChart
@@ -14,7 +14,7 @@ const BarGraph = React.memo(({
       <XAxis dataKey="bin" label={xAxisLabel} interval={interval} />
       <YAxis dataKey="count" label={yAxisLabel} />
       <Tooltip />
-      <Bar dataKey="count" fill="#3DB3E3" />
+      <Bar dataKey="count" fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'} />
     </BarChart>
   </ResponsiveContainer>
 ), equalProps);

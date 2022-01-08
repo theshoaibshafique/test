@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
@@ -20,6 +20,7 @@ import Header from './Header';
 import InformationModal from './InformationModal';
 import Donut from '../Charts/Donut';
 import { makeSelectToken, makeSelectUserFacility } from '../../containers/App/selectors';
+import useLocalStorage from '../../hooks/useLocalStorage';
 import './styles.scss';
 
 const INITIAL_STATE = {
@@ -55,7 +56,7 @@ const reducer = (state, action) => {
 
 const Efficiency = () => {
   const [state, localDispatch] = React.useReducer(reducer, INITIAL_STATE);
-  const dispatch = useDispatch();
+  const { setItemInStore } = useLocalStorage();
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   React.useEffect(() => {
@@ -76,7 +77,10 @@ const Efficiency = () => {
         // const retrieveTileData = request('post');
         const configData = await retrieveConfiguration(`${process.env.EFFICIENCY_API}/config?facility_id=${userFacility}`, userToken, null, axios.CancelToken.source());
         if (configData) {
-          dispatch({ type: 'SET_FILTERS', payload: { ors: configData.filters.ORs, specialties: configData.filters.Specialties } });
+          setItemInStore('efficiencyV2', {
+            efficiency: configData
+          });
+          // dispatch({ type: 'SET_FILTERS', payload: { ors: configData.filters.ORs, specialties: configData.filters.Specialties } });
         }
 
         // const data = await retrieveTileData(process.env.EFFICIENCYTILE_API, userToken, requestData, axios.CancelToken.source());

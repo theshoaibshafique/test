@@ -122,14 +122,39 @@
 }
 
 .change-percent-badge-increase {
+    width: auto;
+    display: inline-flex;
+    align-items: center;
     background-color: rgba(151,231,179, 0.3);
     padding: 6px;
     border-radius: 4px;
 }
 .change-percent-badge-decrease {
+    width: auto;
+    display: inline-flex;
+    align-items: center;
     border-radius: 4px;
     padding: 6px;
     background-color: rgba(255, 125, 125, 0.3);
+}
+
+.change-percent-badge-neutral {
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+    padding: 6px;
+    background-color: rgb(208, 208, 208);
+    justify-content: center;
+}
+
+.change-percent-text-neutral {
+    color: #858585;
+    opacity: 1;
+    font-size: 14px;
+    line-height: 19px;
+    text-align: center;
+    padding-right: 4px;
 }
 
 .change-percent-text-increase {

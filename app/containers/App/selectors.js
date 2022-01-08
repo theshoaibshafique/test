@@ -8,10 +8,6 @@ const selectGlobal = (state) => state.get('global');
 
 const selectRoute = (state) => state.get('route');
 
-const effiencyState = (state) => state.get('efficiency');
-
-const selectFilters = () => createSelector(effiencyState, (state) => state.filters);
-
 const makeSelectToken = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('userToken')
@@ -161,5 +157,4 @@ export {
   makeSelectProductRoles,
   makeSelectSnackbar,
   makeFacilityDetails,
-  selectFilters
 };
