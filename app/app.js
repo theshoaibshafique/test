@@ -50,10 +50,11 @@ const MOUNT_NODE = document.getElementById('app');
 const apm = initApm({
 
   // Set required service name (allowed characters: a-z, A-Z, 0-9, -, _, and space)
-  serviceName: 'insights-apm',
+  serviceName: 'Insights FE',
 
   // Set custom APM Server URL (default: http://localhost:8200)
-  serverUrl: 'http://52.60.34.46:8200',//process.env.AUTH_CALLBACK,
+  serverUrl: process.env.APM_URL,
+  environment: process.env.NODE_ENV,
 
   // Set service version (required for sourcemap feature)
   serviceVersion: 'v1.3.2'
