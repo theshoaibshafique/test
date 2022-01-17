@@ -330,7 +330,6 @@ export const TableCell = (props) => {
     <MTableCell {...props} title={rowData?.[columnDef?.field]} className={`ellipses ${classes.root}`} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${width}px` } }} />
   )
 }
-
 export const SwitchFacilityModal = props => {
   const userToken = useSelector(makeSelectToken());
   const dispatch = useDispatch();

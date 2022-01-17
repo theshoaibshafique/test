@@ -1,18 +1,28 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { request } from '../../../utils/global-functions';
 import Header from '../Header';
 import FooterText from '../FooterText';
-import InformationModal from '../InformationModal';
-import { makeSelectToken, makeSelectUserFacility, selectFilters } from '../../../containers/App/selectors';
+import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 import MultiSelectFilter from '../../../components/SharedComponents/MultiSelectFilter';
 import CustomDateRangePicker from '../../../components/SharedComponents/CustomDateRangePicker';
+import useSelectData from '../../../hooks/useSelectData';
+import useFilter from '../../../hooks/useFilter';
+import { getItemFromStore } from '../../../hooks/useLocalStorage';
+import RadioButtonGroup from '../../SharedComponents/RadioButtonGroup';
+import TimeCard from '../TimeCard';
+import TrendTile from '../TrendTile';
+import OvertimeCard from '../OvertimeCard';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -22,6 +32,10 @@ const INITIAL_STATE = {
   startDate: moment().subtract(3, 'months').startOf('month'),
   endDate: moment().subtract(3, 'months').endOf('month'),
   loading: false,
+  defaultPayload: {
+    roomNames: [],
+    specialtyNames: [],
+  }
 };
 
 const reducer = (state, action) => {
@@ -52,124 +66,519 @@ const reducer = (state, action) => {
   }
 };
 
+const CustomSwitch = withStyles({
+  checked: {
+    opacity: 1
+  },
+  switchBase: {
+    color: '#4F4F4F',
+    '&$checked': {
+      color: '#004F6E'
+    },
+    '&$checked + $track': {
+      opacity: 1,
+      backgroundColor: '#3DB3E3'
+    }
+  },
+  track: {
+    opacity: 1,
+    backgroundColor: '#BDBDBD'
+  }
+})(Switch);
+
 const CaseOnTime = () => {
+  const options = [
+    {
+      id: 1,
+      value: 'By Specialty',
+    },
+    {
+      id: 2,
+      value: 'By Room'
+    }
+  ];
+
+  const lineOptions = [
+    {
+      id: 1,
+      value: '30-day moving average',
+    },
+    {
+      id: 2,
+      value: '7-day moving average'
+    }
+  ];
+
   const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
-  const [rooms, setRooms] = React.useState([]);
-  const [orFilterVal, setOrFilterVal] = React.useState([]);
+  // const [rooms, setRooms] = React.useState([]);
+  // const [orFilterVal, setOrFilterVal] = React.useState([]);
+  const [label, setLabel] = React.useState('Most recent week');
+  const [chartData, setChartData] = React.useState('30-day moving average');
+  const [trendLineData, setTrendLineData] = React.useState([]);
+  const [trendStartDate, setTrendStartDate] = React.useState('');
+  const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
+  const [maxData, setMaxData] = React.useState(0);
+  const [specialty, setSpecialty] = React.useState('By Specialty');
+  // const [viewFirstCase, setViewFirstCase] = React.useState(false);
+  const [tile, setTile] = React.useState({
+    overtime: null,
+    room: null,
+    specialty: null,
+    percentage: null,
+    first: null,
+    distribution: null,
+    trend: null,
+  });
+
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
-  React.useEffect(() => {
-    const fetchTileData = async () => {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      try {
-        const requestData = {
-          startDate: state.startDate.format('YYYY-MM-DD'),
-          endDate: state.endDate.format('YYYY-MM-DD'),
-          facilityName: userFacility,
-          roomNames: [],
-          specialtyNames: [],
-        };
-        const retrieveTileData = request('post');
-        const data = await retrieveTileData(process.env.ONTIMESTART_API, userToken, requestData, axios.CancelToken.source());
-        if (data?.tiles?.length) {
-          dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles } });
-        }
-        dispatch({ type: 'SET_LOADING', payload: false });
-      } catch (err) {
-        dispatch({ type: 'SET_LOADING', payload: false });
-      }
-    };
-    fetchTileData();
-  }, []);
+  const { data } = useSelectData(process.env.ONTIMESTART_API, userToken, {
+    ...state.defaultPayload, facilityName: userFacility, otsThreshold: 3600, fcotsThreshold: 3600, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
+  }, axios.CancelToken.source());
 
-  const applyGlobalFilter = async () => {
-    dispatch({ type: 'SET_LOADING', payload: true });
-    try {
-      const requestPayload = {
-        startDate: state.startDate.format('YYYY-MM-DD'),
-        endDate: state.endDate.format('YYYY-MM-DD'),
-        facilityName: userFacility,
-        roomNames: rooms,
-        specialtyNames: [],
-      };
-      const retrieveTileData = request('post');
-      const data = await retrieveTileData(process.env.BLOCKUTILIZATION_API, userToken, requestPayload, axios.CancelToken.source());
-      if (data?.tiles?.length) {
-        dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles } });
-      }
-      dispatch({ type: 'SET_LOADING', payload: false });
-    } catch (err) {
-      dispatch({ type: 'SET_LOADING', payload: false });
+  const {
+    defaultFilterConfig,
+    defaultHandlerConfig,
+    toggleFirstCaseOnTime,
+    viewFirstCase,
+    // rooms,
+    // orFilterVal,
+    // clearFilters,
+    // selectOrs
+  } = useFilter();
+
+  React.useEffect(() => {
+    if (!data) return;
+    dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
+  }, [data]);
+
+  const formatLineData = (dataset) => dataset?.map((percentage, idx) => ({
+    date: moment(trendStartDate).add(idx, 'days').format('MMM'),
+    percentage
+  }));
+
+  React.useEffect(() => {
+    const trendTile = tile?.trend;
+    let formattedData;
+    if (!viewFirstCase) {
+      formattedData = formatLineData(trendTile?.data[filteredChartData].ots_cases);
+    } else {
+      formattedData = formatLineData(trendTile?.data[filteredChartData].fcots_cases);
     }
+    setTrendLineData(formattedData);
+    setTrendStartDate(trendTile?.data?.start_date);
+  }, [tile, viewFirstCase]);
+
+  React.useEffect(() => {
+    const trendTile = tile?.trend;
+    let formattedData;
+    if (!viewFirstCase) {
+      formattedData = formatLineData(trendTile?.data[filteredChartData].ots_cases);
+    } else {
+      formattedData = formatLineData(trendTile?.data[filteredChartData].fcots_cases);
+    }
+    setTrendLineData(formattedData);
+  }, [filteredChartData, tile, viewFirstCase]);
+
+  React.useEffect(() => {
+    if (!state.tiles) return;
+    const specialtyTile = state.tiles.find(({ title }) => title.toLowerCase().includes('specialty'));
+    const onTimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('on-time'));
+    // const percentageTile = state.tiles.find(({ title }) => title.toLowerCase().includes('specialty'));
+    const otTile = state.tiles.find(({ title }) => title.toLowerCase().includes('ot'));
+    const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
+    const firstCaseTile = state.tiles.find(({ title }) => title.toLowerCase().includes('first case'));
+    const roomTile = state.tiles.find(({ title }) => title.toLowerCase().includes('room'));
+
+    const max = specialtyTile.data.specialty.length + roomTile.data.room.length;
+    setMaxData(max);
+    setTile({
+      specialty: specialtyTile,
+      room: roomTile,
+      trend: trendTile,
+      firstCase: firstCaseTile,
+      time: onTimeTile,
+      overtime: otTile
+    });
+  }, [state.tiles, specialty]);
+
+  const applyGlobalFilter = () => {
+    console.log('hi');
   };
 
-  const clearFilters = () => {
-    setRooms([]);
-    setOrFilterVal([]);
+  // const toggleFirstCaseOnTime = React.useCallback(() => {
+  //   setViewFirstCase((prev) => !prev);
+  // }, [viewFirstCase]);
+
+  const handleUpdateLabel = (label, start = null, end = null) => () => {
+    switch (label) {
+      case 'Most recent week':
+        dispatch({
+          type: 'SET_FILTER_DATE',
+          payload: {
+            startDate: moment().subtract(1, 'weeks').startOf('week'),
+            endDate: moment().subtract(1, 'weeks').endOf('week')
+          }
+        });
+        break;
+      case 'Most recent month':
+        dispatch({
+          type: 'SET_FILTER_DATE',
+          payload: {
+            startDate: moment().subtract(1, 'months').startOf('month'),
+            endDate: moment().subtract(1, 'months').endOf('month'),
+          }
+        });
+        break;
+      case 'Most recent year':
+        dispatch({
+          type: 'SET_FILTER_DATE',
+          payload: {
+            startDate: moment().subtract(1, 'years').startOf('year'),
+            endDate: moment().subtract(1, 'years').endOf('year'),
+          }
+        });
+        break;
+      case 'All time':
+        const { efficiency: { startDate, endDate } } = getItemFromStore('efficiencyV2');
+        dispatch({
+          type: 'SET_FILTER_DATE',
+          payload: {
+            startDate: moment(startDate),
+            endDate: moment(endDate)
+          }
+        });
+        break;
+      case 'Custom':
+        dispatch({
+          type: 'SET_FILTER_DATE',
+          payload: {
+            startDate: start,
+            endDate: end
+          }
+        });
+      default:
+        break;
+    }
+    setLabel(label);
+  };
+
+  const handleSetDates = ({ startDate, endDate }) => {
+    dispatch({
+      type: 'SET_FILTER_DATE',
+      payload: {
+        startDate,
+        endDate
+      }
+    });
+  };
+
+  const toggleSpecialty = React.useCallback((e) => {
+    setSpecialty(e.target.value);
+  }, [specialty]);
+
+  const transformData = (tileData, category, cb) => {
+    let transformed;
+
+    if (!viewFirstCase && category === 'By Specialty') {
+      transformed = tileData?.ots.map((time, i) => ({
+        start: time,
+        change: tileData?.ots_momentum[i],
+        specialty: tileData?.specialty[i]
+      }));
+    } else if (viewFirstCase && category === 'By Specialty') {
+      transformed = tileData?.fcots.map((time, i) => ({
+        start: time,
+        change: tileData?.fcots_momentum[i],
+        specialty: tileData?.specialty[i]
+      }));
+    }
+
+    if (!viewFirstCase && category === 'By Room') {
+      transformed = tileData?.ots?.map((time, i) => ({
+        start: time,
+        room: tileData?.room[i],
+        change: tileData?.ots_momentum[i]
+      }));
+    } else if (viewFirstCase && category === 'By Room') {
+      transformed = tileData?.fcots?.map((time, i) => ({
+        start: time,
+        room: tileData?.room[i],
+        change: tileData?.fcots_momentum[i]
+      }));
+    }
+
+    return cb(transformed);
+  };
+
+  const toggleChartData = (e) => {
+    setChartData(e.target.value);
+    setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
   };
 
   return (
     <div className="page-container">
-      <Header>
-        <Grid container spacing={3} style={{ margin: '14px 0px 16px 0px' }}>
-          <Grid item xs={2} style={{ paddingLeft: '0px' }}>
-            <CustomDateRangePicker
-              label="Most Recent Week"
-              startDate={state.startDate}
-              endDate={state.endDate}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            {/* <MultiSelectFilter
-              id="OR"
-              onChange={selectOrs}
-              options={filters?.ors}
-              placeholder="All ORs"
-              value={orFilterVal}
-          /> */}
-          </Grid>
-          <Grid item xs={1} style={{ display: 'flex', alignItems: 'flex-end', marginBottom: 1 }}>
-            <button onClick={applyGlobalFilter} className="button primary">Apply</button>
-          </Grid>
-          <Grid item xs={2} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <button onClick={clearFilters} className="button clear-btn">Clear Filters</button>
-          </Grid>
-        </Grid>
-      </Header>
+      <Header
+        config={{
+          ...defaultFilterConfig,
+          specialty: true,
+          grace: true,
+          case: true
+        }}
+        handlers={{
+          ...defaultHandlerConfig,
+          case: {
+            toggleFirstCaseOnTime,
+            viewFirstCase
+          }
+        }}
+      />
       <Grid container spacing={5} className="efficiency-container">
+        <Grid item xs={12} className="efficiency-dashboard-header">
+          <h3 style={{ fontWeight: 'normal', color: '#000' }}>Case On Time</h3>
+        </Grid>
         <Grid item xs={3} style={{ paddingRight: '0px' }}>
           <Grid container item xs={12} spacing={5}>
             <Grid item xs={12} style={{ paddingRight: '0px' }}>
               <Card>
                 <CardContent>
-                                    Case On Time
+                  {!viewFirstCase ?
+                    tile?.time && (
+                    <TimeCard data={tile.time} />
+                  )
+                    :
+                    tile?.firstCase && (
+                    <TimeCard data={tile.firstCase} />
+                  )
+                  }
                 </CardContent>
               </Card>
             </Grid>
             <Grid item xs={12} style={{ paddingRight: '0px' }}>
               <Card>
                 <CardContent>
-                                    Preventable OT Minutes Due to Late First Case
+                  {tile?.overtime && (
+                    <OvertimeCard data={tile.overtime} />
+                  )}
                 </CardContent>
               </Card>
             </Grid>
           </Grid>
         </Grid>
-        <Grid container item xs={3}>
+        <Grid container item xs={4}>
           <Grid item xs={12}>
-            <Card style={{ height: '600px' }}>
-              <CardContent>
-                        Case On Time Percentage
+            <Card>
+              <CardContent style={{ height: '760px', overflowY: 'auto' }}>
+                {maxData > 12 ? (
+                  <React.Fragment>
+                    {specialty === 'By Specialty' && (
+                      <React.Fragment>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <h4>{tile?.specialty?.title}</h4>
+                          <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.specialty?.toolTip) ? tile?.specialty?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.specialty?.toolTip}>
+                            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`} />
+                          </LightTooltip>
+                        </div>
+                        <Grid container>
+                          <Grid item xs={12}>
+                            <RadioButtonGroup style={{ display: 'flex', alignItems: 'flex-end' }} value={specialty} onChange={toggleSpecialty} options={options} highlightColour="#004F6E" />
+                          </Grid>
+                        </Grid>
+                        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+                        <Grid container spacing={5}>
+                          <Grid item xs={4}>
+                            {tile?.specialty?.independentVarTitle}
+                          </Grid>
+                          <Grid item xs={3}>
+                            {tile?.specialty?.dependentVarTitle}
+                          </Grid>
+                          <Grid item xs={2}>
+                        Change
+                          </Grid>
+                        </Grid>
+                        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+                        <div style={{ overflowY: 'auto', height: '100%' }}>
+                          {transformData(tile?.specialty?.data, specialty, (rowData) => rowData?.map((row) => (
+                            <Grid
+                              container
+                              key={row.specialty}
+                              spacing={5}
+                              className="room-data-container"
+                            >
+                              <Grid item xs={4}>
+                                {row.specialty}
+                              </Grid>
+                              <Grid item xs={3}>
+                                {row.start}%
+                              </Grid>
+                              <Grid item xs={3}>
+                                {row.change}
+                              </Grid>
+                            </Grid>
+                          )))}
+                        </div>
+                      </React.Fragment>
+                    )}
+                    {specialty === 'By Room' && (
+                      <React.Fragment>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <h4>{tile?.room?.title}</h4>
+                          <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.room?.toolTip) ? tile?.room?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.room?.toolTip}>
+                            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.room?.toolTip?.toString()}`} />
+                          </LightTooltip>
+                        </div>
+                        <Grid container>
+                          <Grid item xs={12}>
+                            <RadioButtonGroup style={{ display: 'flex', alignItems: 'flex-end' }} value={specialty} onChange={toggleSpecialty} options={options} highlightColour="#004F6E" />
+                          </Grid>
+                        </Grid>
+                        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+                        <Grid container spacing={5}>
+                          <Grid item xs={4}>
+                            {tile?.room?.independentVarTitle}
+                          </Grid>
+                          <Grid item xs={3}>
+                            {tile?.room?.dependentVarTitle}
+                          </Grid>
+                          <Grid item xs={3}>
+                        Change
+                          </Grid>
+                        </Grid>
+                        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+                        <div style={{ overflowY: 'auto', height: '100%' }}>
+                          {transformData(tile?.room?.data, specialty, (rowData) => rowData?.map((row) => (
+                            <Grid
+                              container
+                              key={row.room}
+                              spacing={5}
+                              className="room-data-container"
+                            >
+                              <Grid item xs={5}>
+                                {row.room}
+                              </Grid>
+                              <Grid item xs={3}>
+                                {row.start}%
+                              </Grid>
+                              <Grid item xs={3}>
+                                {row.change}
+                              </Grid>
+                            </Grid>
+                          )))}
+                        </div>
+                      </React.Fragment>
+                    )}
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <React.Fragment>
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <h4>{viewFirstCase ? 'First Case On Time Percentage' : 'Case On Time Percentage'}</h4>
+                      </div>
+                      <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+                      <Grid container spacing={5}>
+                        <Grid item xs={4}>
+                          {tile?.room?.independentVarTitle}
+                        </Grid>
+                        <Grid item xs={3}>
+                          {tile?.room?.dependentVarTitle}
+                        </Grid>
+                        <Grid item xs={3}>
+                        Change
+                        </Grid>
+                      </Grid>
+                      <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+                      <div>
+                        {transformData(tile?.room?.data, 'By Room', (rowData) => rowData?.map((row) => (
+                          <Grid
+                            container
+                            key={row.room}
+                            spacing={5}
+                            className="room-data-container"
+                          >
+                            <Grid item xs={5}>
+                              {row.room}
+                            </Grid>
+                            <Grid item xs={3}>
+                              {row.start}%
+                            </Grid>
+                            <Grid item xs={3}>
+                              {row.change}
+                            </Grid>
+                          </Grid>
+                        )))}
+                      </div>
+                    </React.Fragment>
+                    <React.Fragment>
+                      <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+                      <Grid container spacing={5}>
+                        <Grid item xs={4}>
+                          {tile?.specialty?.independentVarTitle}
+                        </Grid>
+                        <Grid item xs={3}>
+                          {tile?.specialty?.dependentVarTitle}
+                        </Grid>
+                        <Grid item xs={2}>
+                        Change
+                        </Grid>
+                      </Grid>
+                      <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+                      <div>
+                        {transformData(tile?.specialty?.data, 'By Specialty', (rowData) => rowData?.map((row) => (
+                          <Grid
+                            container
+                            key={row.specialty}
+                            spacing={5}
+                            className="room-data-container"
+                          >
+                            <Grid item xs={4}>
+                              {row.specialty}
+                            </Grid>
+                            <Grid item xs={3}>
+                              {row.start}%
+                            </Grid>
+                            <Grid item xs={3}>
+                              {row.change}
+                            </Grid>
+                          </Grid>
+                        )))}
+                      </div>
+                    </React.Fragment>
+                  </React.Fragment>
+                )}
               </CardContent>
             </Card>
           </Grid>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={5}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                                    Case On Time Start Trend
+                  <TrendTile
+                    data={tile?.trend}
+                    trendLineData={trendLineData}
+                    toggleChartData={toggleChartData}
+                    options={lineOptions}
+                    chartData={chartData}
+                  />
                 </CardContent>
               </Card>
             </Grid>

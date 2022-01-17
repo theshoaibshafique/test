@@ -10,9 +10,9 @@ const useSelectData = (endpoint, token, requestData, tokenSource) => {
       setLoading(true);
       try {
         const retrieveTileData = request('post');
-        const data = await retrieveTileData(endpoint, token, requestData, tokenSource);
-        if (data?.tiles?.length) {
-          setData(data.tiles);
+        const retrieved = await retrieveTileData(endpoint, token, requestData, tokenSource);
+        if (retrieved?.tiles?.length) {
+          setData(retrieved.tiles);
         }
         setLoading(false);
       } catch (err) {

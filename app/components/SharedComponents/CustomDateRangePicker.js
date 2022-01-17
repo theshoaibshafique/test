@@ -2,6 +2,7 @@
 import React from 'react';
 import moment from 'moment/moment';
 import Grid from '@material-ui/core/Grid';
+import FormLabel from '@material-ui/core/FormLabel';
 import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Menu';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -28,25 +29,29 @@ const useStyles = makeStyles({
   }
 });
 
-const CustomDateRangePicker = ({ label, startDate: startDateProp, endDate: endDateProp }) => {
-  const { getItemFromStore, setItemInStore } = useLocalStorage();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [dates, setDates] = React.useState({
-    startDate: null,
-    endDate: null
+const CustomDateRangePicker = ({
+  startDate: startDateProp, endDate: endDateProp,
+}) => {
+  const [label, setLabel] = React.useState('');
+  const [date, setDate] = React.useState({
+    start: startDateProp,
+    end: endDateProp
   });
+  const { setItemInStore } = useLocalStorage();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [key, setKey] = React.useState('');
   const [focusedInput, setFocusedInput] = React.useState('startDate');
-  const [inputLabel, setInputLabel] = React.useState('');
   const styles = useStyles();
 
   React.useEffect(() => {
-    setDates({ startDate: startDateProp, endDate: endDateProp });
-    setInputLabel(label);
-  }, []);
+    setItemInStore('globalFilterDates', { startDate: date.start, endDate: date.end });
+  }, [date.start, date.end]);
 
   React.useEffect(() => {
-    setItemInStore('globalFilterDates', { startDate: dates.startDate, endDate: dates.endDate });
-  }, [dates]);
+    if (!!date.start && !!date.end) {
+      setKey(`${date.start}-${date.end}`);
+    }
+  }, [date.start, date.end]);
 
   const handleMenuClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -54,56 +59,62 @@ const CustomDateRangePicker = ({ label, startDate: startDateProp, endDate: endDa
 
   const handleClose = () => setAnchorEl(null);
 
-
-  const onDatesChange = ({ startDate, endDate }) => {
-    setDates({
-      startDate,
-      endDate
-    });
+  const setInputLabel = (label) => () => {
+    switch (label) {
+      case 'Most recent week':
+        setDate({
+          start: moment().subtract(1, 'weeks').startOf('week'),
+          end: moment().subtract(1, 'weeks').endOf('week')
+        });
+        break;
+      case 'Most recent month':
+        setDate({
+          start: moment().subtract(1, 'months').startOf('month'),
+          end: moment().subtract(1, 'months').endOf('month'),
+        });
+        break;
+      case 'Most recent year':
+        setDate({
+          start: moment().subtract(1, 'years').startOf('year'),
+          end: moment().subtract(1, 'years').endOf('year'),
+        });
+        break;
+      case 'All time':
+        const { efficiency: { startDate, endDate } } = getItemFromStore('efficiencyV2');
+        setDate({
+          start: moment(startDate),
+          end: moment(endDate)
+        });
+        break;
+      case 'Custom':
+        setDate({
+          start: '',
+          end: ''
+        });
+      default:
+        break;
+    }
+    setLabel(label);
   };
 
   const onFocusChange = (focusedInput) => {
     setFocusedInput((prev) => (!prev ? 'startDate' : focusedInput));
   };
 
-  const handleUpdateLabel = (label) => () => {
-    switch (label) {
-      case 'Most recent week':
-        setDates({
-          startDate: moment().subtract(1, 'weeks').startOf('week'),
-          endDate: moment().subtract(1, 'weeks').endOf('week')
-        });
-        break;
-      case 'Most recent month':
-        setDates({
-          startDate: moment().subtract(1, 'months').startOf('month'),
-          endDate: moment().subtract(1, 'months').endOf('month'),
-        });
-        break;
-      case 'Most recent year':
-        setDates({
-          startDate: moment().subtract(1, 'years').startOf('year'),
-          endDate: moment().subtract(1, 'years').endOf('year'),
-        });
-        break;
-      case 'All time':
-        const { efficiency: { startDate, endDate } } = getItemFromStore('efficiencyV2');
-        setDates({
-          startDate,
-          endDate
-        });
-        break;
-      default:
-        break;
-    }
-    setInputLabel(label);
+  const onDatesChange = ({ startDate, endDate }) => {
+    setDate({
+      start: startDate,
+      end: endDate
+    });
   };
+
 
   return (
     <React.Fragment>
+      <FormLabel style={{ paddingBottom: '4px' }}>Date</FormLabel>
       <Grid container>
         <Grid item xs={12} onClick={handleMenuClick} classes={{ root: styles.root }}>
-          {inputLabel || 'Most Recent Week'}
+          {label || 'Most Recent Week'}
           <IconButton size="small">{anchorEl ? <ArrowDropUpIcon color="#000" /> : <ArrowDropDownIcon color="#000" />}</IconButton>
         </Grid>
       </Grid>
@@ -130,7 +141,7 @@ const CustomDateRangePicker = ({ label, startDate: startDateProp, endDate: endDa
           <Grid item xs={12}>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0px 8px' }}>
               <div
-                onClick={handleUpdateLabel('Most recent week')}
+                onClick={setInputLabel('Most recent week')}
                 style={{
                   backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
                 }}
@@ -138,7 +149,7 @@ const CustomDateRangePicker = ({ label, startDate: startDateProp, endDate: endDa
                 Most recent week
               </div>
               <div
-                onClick={handleUpdateLabel('Most recent month')}
+                onClick={setInputLabel('Most recent month')}
                 style={{
                   backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
                 }}
@@ -146,7 +157,7 @@ const CustomDateRangePicker = ({ label, startDate: startDateProp, endDate: endDa
                 Most recent month
               </div>
               <div
-                onClick={handleUpdateLabel('Most recent year')}
+                onClick={setInputLabel('Most recent year')}
                 style={{
                   backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
                 }}
@@ -154,7 +165,7 @@ const CustomDateRangePicker = ({ label, startDate: startDateProp, endDate: endDa
                 Most recent year
               </div>
               <div
-                onClick={handleUpdateLabel('All time')}
+                onClick={setInputLabel('All time')}
                 style={{
                   backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
                 }}
@@ -162,7 +173,7 @@ const CustomDateRangePicker = ({ label, startDate: startDateProp, endDate: endDa
                 All time
               </div>
               <div
-                onClick={handleUpdateLabel('Custom')}
+                onClick={setInputLabel('Custom')}
                 style={{
                   backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
                 }}
@@ -183,13 +194,14 @@ const CustomDateRangePicker = ({ label, startDate: startDateProp, endDate: endDa
           </Grid>
           <Grid item xs={12} style={{ marginTop: 8 }}>
             <DayPickerRangeController
-              startDate={dates.startDate}
-              focusedInput={focusedInput || 'startDate'}
-              endDate={dates.endDate}
+              key={key}
+              startDate={date.start}
+              focusedInput={focusedInput}
+              endDate={date.end}
               numberOfMonths={2}
               hideKeyboardShortcutsPanel
-              onDatesChange={onDatesChange}
               onFocusChange={onFocusChange}
+              onDatesChange={onDatesChange}
             />
           </Grid>
         </Grid>

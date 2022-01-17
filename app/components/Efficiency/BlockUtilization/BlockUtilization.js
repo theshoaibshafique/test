@@ -13,39 +13,36 @@ import CardContent from '@material-ui/core/CardContent';
 import { request } from '../../../utils/global-functions';
 import Header from '../Header';
 import FooterText from '../FooterText';
-import InformationModal from '../InformationModal';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 import Donut from '../../Charts/Donut';
-import BarGraph from '../../Charts/Bar';
-import LineGraph from '../../Charts/LineGraph';
 import MultiSelectFilter from '../../../components/SharedComponents/MultiSelectFilter';
-import RangeSlider from '../../../components/SharedComponents/RangeSlider';
-import RadioButtonGroup from '../../../components/SharedComponents/RadioButtonGroup';
 import CustomDateRangePicker from '../../../components/SharedComponents/CustomDateRangePicker';
-import TrendTile from './TrendTile';
+import TrendTile from '../TrendTile';
+import TimeCard from '../TimeCard';
+import OvertimeCard from '../OvertimeCard';
 import DistributionTile from './DistributionTile';
 // import EndGapTile from './EndGapTile';
 import './styles.scss';
 import useLocalStorage from '../../../hooks/useLocalStorage';
+import useSelectData from '../../../hooks/useSelectData';
+import useFilter from '../../../hooks/useFilter';
 
 const INITIAL_STATE = {
   tabIndex: 0,
-  informationModalOpen: false,
   // startDate: moment().subtract(1, 'weeks').startOf('week'),
   // endDate: moment().subtract(1, 'weeks').endOf('week'),
   startDate: moment().subtract(8, 'months').startOf('month'),
   endDate: moment().subtract(1, 'months').endOf('month'),
+  defaultPayload: {
+    roomNames: [],
+    specialtyNames: []
+  },
   loading: false,
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'TOGGLE_INFORMATION_MODAL':
-      return {
-        ...state,
-        informationModalOpen: action.payload
-      };
     case 'SET_LOADING':
       return {
         ...state,
@@ -76,10 +73,8 @@ const BlockUtilization = React.memo(() => {
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore } = useLocalStorage();
-  const filters = getItemFromStore('efficiencyV2').efficiency.filters.ORs;
-
+  const { rooms, defaultFilterConfig, defaultHandlerConfig } = useFilter();
   const [tile, setTile] = React.useState({});
-  
   const [trendStartDate, setTrendStartDate] = React.useState('');
 
   const [sort, setSort] = React.useState({
@@ -102,14 +97,20 @@ const BlockUtilization = React.memo(() => {
     }
   ];
 
+  const { data } = useSelectData(process.env.BLOCKUTILIZATION_API, userToken, {...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')}, axios.CancelToken.source())
+
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
   const [trendLineData, setTrendLineData] = React.useState([]);
-  const [rooms, setRooms] = React.useState([]);
-  const [orFilterVal, setOrFilterVal] = React.useState([]); 
+  // const [orFilterVal, setOrFilterVal] = React.useState([]); 
 
   React.useEffect(() => {
-    if (!!state?.tiles) {
+    if (!data) return;
+    dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
+  }, [data]);
+
+  React.useEffect(() => {
+    if (!!state.tiles) {
       const utilizationTile = state.tiles.find(({ title }) => title.toLowerCase().includes('block utilization'));
       const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
       const otTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
@@ -128,31 +129,7 @@ const BlockUtilization = React.memo(() => {
         room: roomTile
       });
     }
-  }, [state?.tiles]);
-
-  React.useEffect(() => {
-    const fetchTileData = async () => {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      try {
-        const requestData = {
-          startDate: state.startDate.format('YYYY-MM-DD'),
-          endDate: state.endDate.format('YYYY-MM-DD'),
-          facilityName: userFacility,
-          roomNames: [],
-          specialtyNames: [],
-        };
-        const retrieveTileData = request('post');
-        const data = await retrieveTileData(process.env.BLOCKUTILIZATION_API, userToken, requestData, axios.CancelToken.source());
-        if (data?.tiles?.length) {
-          dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles } });
-        }
-        dispatch({ type: 'SET_LOADING', payload: false });
-      } catch (err) {
-        dispatch({ type: 'SET_LOADING', payload: false });
-      }
-    };
-    fetchTileData();
-  }, []);
+  }, [state.tiles]);
 
   React.useEffect(() => {
     const trendTile = tile?.trend;
@@ -166,28 +143,6 @@ const BlockUtilization = React.memo(() => {
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
     setTrendLineData(formattedData); 
   }, [filteredChartData, tile]);
-
-  const handleFilterDates = async (start, end) => {
-    dispatch({ type: 'SET_LOADING', payload: true });
-    try {
-      const requestPayload = {
-        startDate: moment(start).format('YYYY-MM-DD'),
-        endDate: moment(end).format('YYYY-MM-DD'),
-        facilityName: userFacility,
-        roomNames: rooms ?? [],
-        specialtyNames: [],
-      };
-      const retrieveTileData = request('post');
-      const data = await retrieveTileData(process.env.BLOCKUTILIZATION_API, userToken, requestPayload, axios.CancelToken.source());
-      if (data?.tiles?.length) {
-        dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles } });
-      }
-      dispatch({ type: 'SET_LOADING', payload: false });
-    } catch (err) {
-      console.log(err);
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
-  }
 
   const formatDonutData = (data) => Object.entries(data).reduce((acc, [key, val], i) => acc.concat({
     name: key,
@@ -203,10 +158,6 @@ const BlockUtilization = React.memo(() => {
       }
     });
   };
-
-  const toggleInformationModal = React.useCallback(() => {
-    dispatch({ type: 'TOGGLE_INFORMATION_MODAL', payload: !state.informationModalOpen });
-  }, [state.informationModalOpen]);
 
   const toggleChartData = (e) => {
     setChartData(e.target.value);
@@ -237,7 +188,6 @@ const BlockUtilization = React.memo(() => {
     try {
       const startDate = getItemFromStore('globalFilterDates')?.startDate;
       const endDate = getItemFromStore('globalFilterDates')?.endDate;
-      console.log(state.startDate.format('YYYY-MM-DD'), state.endDate.format('YYYY-MM-DD'));
       const requestPayload = {
         startDate: moment(startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
         endDate: moment(endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
@@ -257,15 +207,6 @@ const BlockUtilization = React.memo(() => {
     }
   }
 
-  const selectOrs = React.useCallback((_, value) => {
-    setRooms(value.map(({ id }) => id));
-    setOrFilterVal(value);
-  }, []);
-
-  const clearFilters = () => {
-    setRooms([]);
-    setOrFilterVal([]);
-  }
 
   const setUtilizationByRoomSort = (key) => () => {
     setSort((prev) => ({
@@ -280,62 +221,22 @@ const BlockUtilization = React.memo(() => {
 
   return (
     <div className="page-container">
-      <Header onClick={toggleInformationModal}>
-        <Grid container spacing={3} style={{ margin: '14px 0px 16px 0px' }}>
-          <Grid item xs={2} style={{ paddingLeft: '0px' }}>
-            <CustomDateRangePicker
-              label="Most Recent Week"
-              startDate={state?.startDate}
-              endDate={state?.endDate}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <MultiSelectFilter
-              id="OR"
-              onChange={selectOrs}
-              options={filters}
-              placeholder="All ORs"
-              value={orFilterVal}
-            />
-          </Grid>
-          <Grid item xs={1} style={{ display: 'flex', alignItems: 'flex-end', marginBottom: 1 }}>
-            <button onClick={applyGlobalFilter} className="button primary">Apply</button>
-          </Grid>
-          <Grid item xs={2} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <button onClick={clearFilters} className="button clear-btn">Clear Filters</button>
-          </Grid>
-        </Grid>
-      </Header>
+      <Header
+        config={{...defaultFilterConfig}}
+        applyGlobalFilter={applyGlobalFilter}
+        handlers={{
+          ...defaultHandlerConfig
+        }}
+      />
       <Grid container spacing={5} className="efficiency-container">
-       <Grid item xs={12} className="efficiency-dashboard-header">
+         <Grid item xs={12} className="efficiency-dashboard-header">
            <h3 style={{ fontWeight: 'normal', color: '#000' }}>Block Utilization</h3>
          </Grid>
          <Grid item xs={3}>
            <Card style={{ height: '365px' }}>
              <CardContent>
                {tile?.blockUtilization && (
-                 <React.Fragment>
-                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                     <h4>
-                       {tile?.blockUtilization?.title}
-                       <LightTooltip placement="top" fontSize="small" interactive arrow title={tile?.blockUtilization?.toolTip?.toString()}>
-                         <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.blockUtilization?.toolTip?.toString()}`} />
-                       </LightTooltip>
-                     </h4>
-                   </div>
-                   <span className="display-number">
-                     {tile?.blockUtilization?.previousPeriod}
-                     <sup className="superscript-text">%</sup>
-                   </span>
-                   <div className="additional-scores">
-                     <div className="additional-scores-title">Previous Period </div>
-                     <div className="additional-scores-value">{tile?.blockUtilization?.previousPeriod}%</div>
-                   </div>
-                   <div className="additional-scores">
-                     <div className="additional-scores-title">OR Black Box<sup>&reg;</sup> Network</div>
-                     <div className="additional-scores-value">{tile?.blockUtilization?.network}%</div>
-                   </div>
-                 </React.Fragment>
+                  <TimeCard data={tile.blockUtilization} />
                )}
              </CardContent>
            </Card>
@@ -344,30 +245,7 @@ const BlockUtilization = React.memo(() => {
            <Card style={{ height: '365px' }}>
              <CardContent>
                {tile?.overtime && (
-                 <React.Fragment>
-                   <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                     <h4 style={{ marginBottom: '32px' }}>
-                       { tile?.overtime?.title }
-                       <LightTooltip placement="top" fontSize="small" interactive arrow title={tile?.overtime?.toolTip?.toString()}>
-                         <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.overtime?.toolTip?.toString()}`} />
-                       </LightTooltip>
-                     </h4>
-                   </div>
-                   <div className="overtime-rows">
-                     <div className="overtime-block-number">{tile?.overtime?.value?.sum}
-                       <sub>min</sub>
-                     </div>
-                     <div className="overtime-helper" style={{ flex: '1 0 20%' }}>
-                       in total
-                     </div>
-                     <div className="overtime-block-number">{tile?.overtime?.value?.by_block}
-                       <sub>min</sub>
-                     </div>
-                     <div className="overtime-helper">
-                       Average per Block
-                     </div>
-                   </div>
-                 </React.Fragment>
+                  <OvertimeCard data={tile.overtime} />
                )}
              </CardContent>
            </Card>
@@ -381,7 +259,6 @@ const BlockUtilization = React.memo(() => {
                 trendLineData={trendLineData}
                 options={options}
                 chartData={chartData}
-                handleFilterDates={handleFilterDates}
               />
             </CardContent>
           </Card>
@@ -543,7 +420,6 @@ const BlockUtilization = React.memo(() => {
           </Grid>
         </Grid>
       </Grid>
-      <InformationModal open={state.informationModalOpen} onToggle={toggleInformationModal} />
     </div>
   );
 }, equalProps);

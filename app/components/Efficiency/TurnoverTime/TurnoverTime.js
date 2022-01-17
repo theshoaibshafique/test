@@ -15,12 +15,15 @@ import LineGraph from '../../Charts/LineGraph';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import HorizontalBar from '../../Charts/HorizontalBar';
-import BarGraph from '../../Charts/Bar';
+// import BarGraph from '../../Charts/Bar';
 import useSelectData from '../../../hooks/useSelectData';
+import useFilter from '../../../hooks/useFilter';
+import DistributionTile from './DistributionTile';
+import TimeCard from '../TimeCard';
+import OvertimeCard from '../OvertimeCard';
 
 const INITIAL_STATE = {
   tabIndex: 0,
-  informationModalOpen: false,
   startDate: moment().subtract(8, 'month').startOf('month'),
   endDate: moment().subtract(8, 'month').endOf('month'),
   loading: false,
@@ -33,11 +36,6 @@ const INITIAL_STATE = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'TOGGLE_INFORMATION_MODAL':
-      return {
-        ...state,
-        informationModalOpen: action.payload
-      };
     case 'SET_LOADING':
       return {
         ...state,
@@ -70,33 +68,14 @@ const TurnoverTime = () => {
     }
   ];
 
-  const barGraphToggleOptions = [
-    {
-      id: 1,
-      value: 'Turnover'
-    },
-    {
-      id: 2,
-      value: 'Cleanup'
-    },
-    {
-      id: 3,
-      value: 'Idle'
-    },
-    {
-      id: 4,
-      value: 'Setup'
-    },
-  ];
   const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
   const [chartData, setChartData] = React.useState('30-day moving average');
-  const [graphData, setGraphData] = React.useState('Turnover');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
   const [trendLineData, setTrendLineData] = React.useState([]);
   const [trendSlider, setTrendSlider] = React.useState([0, 100]);
   const [orGraphData, setOrGraphData] = React.useState([]);
   const [dateDiff, setDateDiff] = React.useState(0);
-
+  // const [rooms, setRooms] = React.useState([]);
   const [tile, setTile] = React.useState({});
 
   const [trendEndDate, setTrendEndDate] = React.useState('');
@@ -106,6 +85,13 @@ const TurnoverTime = () => {
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const { data } = useSelectData(process.env.TURNOVER_API, userToken, {...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')}, axios.CancelToken.source()); 
+
+  const {
+    selectGracePeriod,
+    rooms,
+    defaultFilterConfig,
+    defaultHandlerConfig
+  } = useFilter();
 
   React.useEffect(() => {
     if (!!data) {
@@ -127,11 +113,10 @@ const TurnoverTime = () => {
     const startDate = moment(trendTile?.data?.start_date);
     const endDate = moment(trendTile?.data?.end_date);
     const diff = endDate.diff(startDate, 'days'); 
-    setDateDiff({ trend: diff });
+    setDateDiff(diff);
     setTrendSlider([0, diff]);
     const formattedHorizontalBarData = formatBarGraphData(orTile?.data);
     setOrGraphData(formattedHorizontalBarData);
-
     setTile({
       time: timeTile,
       overtime: overtimeTile,
@@ -139,16 +124,6 @@ const TurnoverTime = () => {
       duration: durationTile, 
       or: orTile
     });
-    // setStartDistributionSlider([startGapTile?.data?.values[0].bin, startGapTile?.data?.values[startGapTile?.data?.values.length - 1].bin]);
-    // start gap labels
-    // setStartDistributionStartLabel(startGapTile?.data?.values[0].bin);
-    // setStartDistributionEndLabel(startGapTile?.data?.values[startGapTile?.data?.values.length - 1].bin);
-
-    //end gap labels
-    // setEndDistributionStartLabel(endGapTile?.data?.values[0].bin);
-    // setEndDistributionEndLabel(endGapTile?.data?.values[endGapTile?.data?.values.length - 1].bin);
-
-    // setEndDistributionSlider([endGapTile?.data?.values[0].bin, endGapTile?.data?.values[endGapTile?.data?.values.length - 1].bin]);
   }, [state.tiles]);
 
   React.useEffect(() => {
@@ -156,10 +131,6 @@ const TurnoverTime = () => {
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
     setTrendLineData(formattedData); 
   }, [trendStartDate, trendEndDate, filteredChartData]);
-
-  const toggleInformationModal = React.useCallback(() => {
-    dispatch({ type: 'TOGGLE_INFORMATION_MODAL', payload: !state.informationModalOpen });
-  }, [state.informationModalOpen]);
 
   const filterTrend = React.useCallback((_, val) => {
     const [first, second] = trendSlider;
@@ -185,16 +156,14 @@ const TurnoverTime = () => {
     setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
   };
 
-  const toggleGraphData = (e) => {
-    setGraphData(e.target.value);
-  }
-
   const handleFilterDates = async () => {
-      dispatch({ type: 'SET_LOADING', payload: true });
+    dispatch({ type: 'SET_LOADING', payload: true });
+    console.log('here');
     try {
+      
       const requestPayload = {
-        startDate: trendStartDate.format('YYYY-MM-DD'),
-        endDate: trendEndDate.format('YYYY-MM-DD'),
+        startDate: moment(trendStartDate).format('YYYY-MM-DD'),
+        endDate: moment(trendEndDate).format('YYYY-MM-DD'),
         facilityName: userFacility,
         roomNames: rooms ?? [],
         specialtyNames: [],
@@ -206,6 +175,7 @@ const TurnoverTime = () => {
       }
       dispatch({ type: 'SET_LOADING', payload: false });
     } catch (err) {
+      console.log(err);
       dispatch({ type: 'SET_LOADING', payload: false });
     }
   }
@@ -231,10 +201,25 @@ const TurnoverTime = () => {
     });
   }
 
+  const applyGlobalFilter = () => {
+
+  }
+
   return (
     <div className="page-container">
-      <Header onClick={toggleInformationModal}>
-      </Header>
+      <Header
+        config={{
+          ...defaultFilterConfig,
+          grace: true
+        }}
+        applyGlobalFilter={applyGlobalFilter}
+        handlers={{
+          ...defaultHandlerConfig,
+          grace: {
+            selectGracePeriod
+          }
+        }}
+      />
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header">
           <h3>Turnover Time</h3>
@@ -243,28 +228,7 @@ const TurnoverTime = () => {
           <Card style={{ height: '365px' }}>
             <CardContent>
               {tile?.time && (
-                <React.Fragment>
-                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <h4>
-                      {tile?.time?.title}
-                      <LightTooltip placement="top" fontSize="small" interactive arrow title={tile?.time?.toolTip?.toString()}>
-                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.time?.toolTip?.toString()}`} />
-                      </LightTooltip>
-                    </h4>
-                  </div>
-                  <span className="display-number">
-                    {tile?.time?.previousPeriod}
-                    <sup className="superscript-text">Min</sup>
-                  </span>
-                  <div className="additional-scores">
-                    <div className="additional-scores-title">Previous Period </div>
-                    <div className="additional-scores-value">{tile?.time?.previousPeriod}%</div>
-                  </div>
-                  <div className="additional-scores">
-                    <div className="additional-scores-title">OR Black Box<sup>&reg;</sup> Network</div>
-                    <div className="additional-scores-value">{tile?.time?.network}%</div>
-                  </div>
-                </React.Fragment>
+                <TimeCard data={tile.time} suffix="Min" />
               )}
             </CardContent>
           </Card>
@@ -273,30 +237,7 @@ const TurnoverTime = () => {
           <Card style={{ height: '365px' }}>
             <CardContent>
               {tile?.overtime && (
-                <React.Fragment>
-                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <h4 style={{ marginBottom: '32px' }}>
-                      { tile?.overtime?.title }
-                      <LightTooltip placement="top" fontSize="small" interactive arrow title={tile?.overtime?.toolTip?.toString()}>
-                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.overtime?.toolTip?.toString()}`} />
-                      </LightTooltip>
-                    </h4>
-                  </div>
-                  <div className="overtime-rows">
-                    <div className="overtime-block-number">{tile?.overtime?.value?.sum}
-                      <sub>min</sub>
-                    </div>
-                    <div className="overtime-helper" style={{ flex: '1 0 20%' }}>
-                      in total
-                    </div>
-                    <div className="overtime-block-number">{tile?.overtime?.value?.by_block}
-                      <sub>min</sub>
-                    </div>
-                    <div className="overtime-helper">
-                      Average per Block
-                    </div>
-                  </div>
-                </React.Fragment>
+                <OvertimeCard data={tile.overtime} />
               )}
             </CardContent>
           </Card>
@@ -366,52 +307,7 @@ const TurnoverTime = () => {
           <Card style={{ height: '375px' }}>
             <CardContent>
               {tile?.duration && (
-                <React.Fragment>
-                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <h4>
-                      {tile?.duration?.title}
-                      <LightTooltip placement="top" fontSize="small" interactive arrow title={tile?.duration?.toolTip?.toString()}>
-                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.duration?.toolTip?.toString()}`} />
-                      </LightTooltip>
-                    </h4>
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'flex-end'
-                    }}
-                  >
-                    <RadioButtonGroup value={graphData} onChange={toggleGraphData} options={barGraphToggleOptions} highlightColour="#592D82" />
-                  </div>
-                  <BarGraph
-                    height={200}
-                    data={tile?.duration?.data[graphData.toLowerCase()]}
-                    xAxisLabel={{
-                      value: 'Turnover Duration (min)',
-                      offset: -10,
-                      position: 'insideBottom'
-                    }}
-                    yAxisLabel={{
-                      value: 'Frequency',
-                      angle: -90,
-                      offset: 15,
-                      position: 'insideBottomLeft'
-                    }}
-                    margin={{ bottom: 20 }}
-                    colors={['#A77ECD']}
-                  />
-                  <Grid item xs={12} style={{ marginTop: 10 }}>
-                    <RangeSlider
-                      id="duration"
-                      min={0}
-                      max={dateDiff}
-                      onChange={filterTrend}
-                      value={trendSlider}
-                      startLabel={moment(trendStartDate).format('MMM D YYYY')}
-                      endLabel={moment(trendEndDate).format('MMM D YYYY')}
-                      onChangeCommitted={handleFilterDates}
-                    />
-                  </Grid>
-                </React.Fragment>
+                <DistributionTile data={tile?.duration} />
               )}
             </CardContent>
           </Card>

@@ -1,4 +1,5 @@
 import React from 'react';
+import FormLabel from '@material-ui/core/FormLabel';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -43,25 +44,28 @@ const AutocompleteInput = withStyles((theme) => (dropdownStyles(theme, { width: 
 const MultiSelectFilter = ({
   id, placeholder, onChange, options, ...rest
 }) => (
-  <AutocompleteInput
-    multiple
-    clearOnEscape
-    getOptionLabel={(option) => (option.display ? option.display : '')}
-    onChange={onChange}
-    options={options}
-    id={id}
-    renderInput={(params) => (
-      <TextField
-        {...params}
-        name="multi-select"
-        error={false}
-        variant="outlined"
-        placeholder={placeholder}
-      />
-    )}
-    renderOption={(option) => (<Typography noWrap>{option.display ? option.display : ''}</Typography>)}
-    {...rest}
-  />
+  <React.Fragment>
+    <FormLabel>{rest?.label}</FormLabel>
+    <AutocompleteInput
+      multiple
+      clearOnEscape
+      getOptionLabel={(option) => (option.display ? option.display : '')}
+      onChange={onChange}
+      options={options}
+      id={id}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          name="multi-select"
+          error={false}
+          variant="outlined"
+          placeholder={placeholder}
+        />
+      )}
+      renderOption={(option) => (<Typography noWrap>{option.display ? option.display : ''}</Typography>)}
+      {...rest}
+    />
+  </React.Fragment>
 );
 
 export default MultiSelectFilter;

@@ -2,34 +2,43 @@ import React from 'react';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
-import RangeSlider from '../../../components/SharedComponents/RangeSlider';
-import RadioButtonGroup from '../../../components/SharedComponents/RadioButtonGroup';
-import LineGraph from '../../Charts/LineGraph';
+import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
+import RangeSlider from '../../components/SharedComponents/RangeSlider';
+import RadioButtonGroup from '../../components/SharedComponents/RadioButtonGroup';
+import LineGraph from '../Charts/LineGraph';
 
 const TrendTile = ({
-  data, handleFilterDates, trendLineData, chartData, toggleChartData, options
+  data, trendLineData, chartData, toggleChartData, options
 }) => {
   const [trendEndDate, setTrendEndDate] = React.useState('');
   const [trendSlider, setTrendSlider] = React.useState([0, 100]);
   const [trendStartDate, setTrendStartDate] = React.useState('');
   const [dateDiff, setDateDiff] = React.useState(0);
+  const [range, setRange] = React.useState({
+    min: 0,
+    max: 0
+  });
+  const [filteredTrendData, setFilteredTrendData] = React.useState([]);
 
   React.useEffect(() => {
-    setTrendStartDate(data?.data?.start_date);
-    setTrendEndDate(data?.data?.end_date);
+    setFilteredTrendData(trendLineData);
+  }, [trendLineData]);
+
+  React.useEffect(() => {
+    setTrendStartDate(moment(data?.data?.start_date).milliseconds());
+    setTrendEndDate(moment(data?.data?.end_date).milliseconds());
     const startDate = moment(data?.data?.start_date);
     const endDate = moment(data?.data?.end_date);
     const diff = endDate.diff(startDate, 'days');
-    setDateDiff(diff);
+    setRange((prev) => ({
+      ...prev,
+      max: diff
+    }));
     setTrendSlider([0, diff]);
   }, [data]);
 
   const filterTrend = React.useCallback((_, val) => {
     const [first, second] = trendSlider;
-    // if (val[1] - val[0] <= 5) {
-    //   return;
-    // }
     if (val[0]) {
       if (val[0] > first) {
         setTrendStartDate((prev) => moment(prev).subtract(1, 'days'));
@@ -44,6 +53,7 @@ const TrendTile = ({
         setTrendEndDate((prev) => moment(prev).subtract(1, 'days'));
       }
     }
+    setFilteredTrendData(trendLineData.filter((values) => values.date > trendStartDate.format('MMM') && values.date < trendEndDate.format('MMM')));
     setTrendSlider(val);
   }, [trendSlider]);
 
@@ -69,7 +79,7 @@ const TrendTile = ({
       <LineGraph
         xTickSize={0}
         interval={30}
-        data={trendLineData}
+        data={filteredTrendData}
         xAxisLabel={{ value: 'Date', offset: -5, position: 'insideBottom' }}
         yAxisLabel={{
           value: 'On Time Start (%)', angle: -90, offset: 15, position: 'insideBottomLeft'
@@ -78,15 +88,13 @@ const TrendTile = ({
       />
       <Grid item xs={12} style={{ marginTop: 10 }}>
         <RangeSlider
-          id="trend"
-          min={0}
-          max={dateDiff}
+          min={range.min}
+          max={range.max}
           step={1}
           onChange={filterTrend}
           value={trendSlider}
           startLabel={moment(trendStartDate).format('MMM D YYYY')}
           endLabel={moment(trendEndDate).format('MMM D YYYY')}
-          onChangeCommitted={() => handleFilterDates(trendStartDate, trendEndDate)}
         />
       </Grid>
     </React.Fragment>

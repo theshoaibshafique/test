@@ -21,7 +21,7 @@ const RadioButtonGroup = ({
 }) => {
   const styles = useStyles({ highlightColour });
   return (
-    <FormControl component="fieldset">
+    <FormControl component="fieldset" {...rest}>
       <RadioGroup value={value} onChange={onChange} {...rest} style={{ flexDirection: 'row' }}>
         {options.map((option) => (
           <FormControlLabel
