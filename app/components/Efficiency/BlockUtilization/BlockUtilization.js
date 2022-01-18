@@ -5,24 +5,19 @@ import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
-// import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import CardContent from '@material-ui/core/CardContent';
-// import MonthRangePicker from '../../../components/MonthRangePicker/MonthRangePicker';
 import { request } from '../../../utils/global-functions';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 import Donut from '../../Charts/Donut';
-import MultiSelectFilter from '../../../components/SharedComponents/MultiSelectFilter';
-import CustomDateRangePicker from '../../../components/SharedComponents/CustomDateRangePicker';
 import TrendTile from '../TrendTile';
 import TimeCard from '../TimeCard';
 import OvertimeCard from '../OvertimeCard';
 import DistributionTile from './DistributionTile';
-// import EndGapTile from './EndGapTile';
 import './styles.scss';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import useSelectData from '../../../hooks/useSelectData';
@@ -40,6 +35,8 @@ const INITIAL_STATE = {
   },
   loading: false,
 };
+
+const filteredKeys = ['average_hours', 'average_minutes', 'days'];
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -102,7 +99,6 @@ const BlockUtilization = React.memo(() => {
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
   const [trendLineData, setTrendLineData] = React.useState([]);
-  // const [orFilterVal, setOrFilterVal] = React.useState([]); 
 
   React.useEffect(() => {
     if (!data) return;
@@ -118,7 +114,9 @@ const BlockUtilization = React.memo(() => {
       const roomTile = state.tiles.find(({ title }) => title.toLowerCase().includes('room'));
       const endGapTile = state.tiles.find(({ title }) => title.toLowerCase().includes('end gap'));
       const startGapTile = state.tiles.find(({ title }) => title.toLowerCase().includes('start gap'));
+      const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
 
+      setTrendStartDate(trendTile?.data?.start_date);
       setTile({
         trend: trendTile,
         composition: compositionTile,
@@ -126,16 +124,17 @@ const BlockUtilization = React.memo(() => {
         blockUtilization: utilizationTile,
         endGap: endGapTile,
         startGap: startGapTile,
-        room: roomTile
+        room: roomTile,
+        elective: electiveDaysTile,
       });
     }
   }, [state.tiles]);
 
   React.useEffect(() => {
     const trendTile = tile?.trend;
+    setTrendStartDate(trendTile?.data?.start_date)
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
     setTrendLineData(formattedData); 
-    setTrendStartDate(trendTile?.data?.start_date)
   }, [tile]);
 
   React.useEffect(() => {
@@ -144,7 +143,11 @@ const BlockUtilization = React.memo(() => {
     setTrendLineData(formattedData); 
   }, [filteredChartData, tile]);
 
-  const formatDonutData = (data) => Object.entries(data).reduce((acc, [key, val], i) => acc.concat({
+  const filterKeys = ([key,]) => {
+    return !filteredKeys.includes(key);
+  };
+
+  const formatDonutData = (data) => Object.entries(data).filter(filterKeys).reduce((acc, [key, val], i) => acc.concat({
     name: key,
     value: val,
     color: DONUT_COLOURS[i - 1] 
@@ -153,7 +156,7 @@ const BlockUtilization = React.memo(() => {
   const formatLineData = (dataset) => {
     return dataset?.map((percentage, idx) => {
         return {
-          date: moment(trendStartDate).add(idx, 'days').format('MMM'),
+          date: moment(trendStartDate).add(idx, 'days').valueOf(),
           percentage
       }
     });
@@ -382,14 +385,16 @@ const BlockUtilization = React.memo(() => {
                       </LightTooltip>
                     </h4>
                   </div>
-                  {!!tile?.composition && <Donut data={formatDonutData(tile?.composition?.data)} tooltips={tile?.composition?.toolTip} label={
+                  {!!tile?.composition && <Donut data={formatDonutData(tile.composition.data)} tooltips={tile.composition.toolTip} label={
                       <React.Fragment>
-                        <text x={150} y={95} style={{ fontSize: 14, color: '#333' }}>
-                          Total Block Time
+                        <text x={140} y={95} style={{ fontSize: 14, color: '#333' }}>
+                          Average Block Time
                         </text>
-                        <text x={tile?.composition?.data?.hours > 999 ? 130 : 150} y={160} style={{ fontSize: 64, color: '#004F6E', fontWeight: 'bold' }}>
-                          {tile?.composition?.data?.hours}
+                        <text x={tile.composition.data.average_hours >= 10 ? 110 : 140} y={160} style={{ fontSize: 60, color: '#004F6E', fontWeight: 'bold' }}>
+                          {tile.composition.data.average_hours}
                           <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
+                          {tile.composition.data.average_minutes}
+                          <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
                         </text>
                       </React.Fragment>
                   }/>}
@@ -416,7 +421,7 @@ const BlockUtilization = React.memo(() => {
         </Grid>
         <Grid spacing={5} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
-            <FooterText />
+            <FooterText days={tile?.elective?.days} />
           </Grid>
         </Grid>
       </Grid>

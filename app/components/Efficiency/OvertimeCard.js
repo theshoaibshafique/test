@@ -19,7 +19,7 @@ const OvertimeCard = ({ data }) => (
       <div className="overtime-helper" style={{ flex: '1 0 20%' }}>
           in total
       </div>
-      <div className="overtime-block-number">{data?.value?.by_block}
+      <div className="overtime-block-number">{data?.value?.by_block || data?.value?.block}
         <sub>min</sub>
       </div>
       <div className="overtime-helper">

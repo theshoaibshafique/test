@@ -153,7 +153,7 @@ const CaseOnTime = () => {
   }, [data]);
 
   const formatLineData = (dataset) => dataset?.map((percentage, idx) => ({
-    date: moment(trendStartDate).add(idx, 'days').format('MMM'),
+    date: moment(trendStartDate).add(idx, 'days').valueOf(),
     percentage
   }));
 
@@ -189,16 +189,19 @@ const CaseOnTime = () => {
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
     const firstCaseTile = state.tiles.find(({ title }) => title.toLowerCase().includes('first case'));
     const roomTile = state.tiles.find(({ title }) => title.toLowerCase().includes('room'));
+    const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
 
     const max = specialtyTile.data.specialty.length + roomTile.data.room.length;
     setMaxData(max);
+    setTrendStartDate(trendTile?.data?.start_date);
     setTile({
       specialty: specialtyTile,
       room: roomTile,
       trend: trendTile,
       firstCase: firstCaseTile,
       time: onTimeTile,
-      overtime: otTile
+      overtime: otTile,
+      elective: electiveDaysTile
     });
   }, [state.tiles, specialty]);
 
@@ -593,7 +596,7 @@ const CaseOnTime = () => {
         </Grid>
         <Grid spacing={5} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
-            <FooterText />
+            <FooterText days={tile?.elective?.value} />
           </Grid>
         </Grid>
       </Grid>

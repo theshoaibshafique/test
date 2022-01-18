@@ -1,5 +1,10 @@
 import React from 'react';
 
+const defaultPayload  = {
+  roomNames: [],
+  specialtyNames: []
+};
+
 const useFilter = () => {
   const [rooms, setRooms] = React.useState([]);
   const [orFilterVal, setOrFilterVal] = React.useState([]);

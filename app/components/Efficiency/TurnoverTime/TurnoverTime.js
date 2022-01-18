@@ -6,20 +6,16 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { request } from '../../../utils/global-functions';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
-import RadioButtonGroup from '../../../components/SharedComponents/RadioButtonGroup';
-import RangeSlider from '../../../components/SharedComponents/RangeSlider';
-import LineGraph from '../../Charts/LineGraph';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import HorizontalBar from '../../Charts/HorizontalBar';
-// import BarGraph from '../../Charts/Bar';
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
 import DistributionTile from './DistributionTile';
 import TimeCard from '../TimeCard';
+import TrendTile from '../TrendTile';
 import OvertimeCard from '../OvertimeCard';
 
 const INITIAL_STATE = {
@@ -72,29 +68,28 @@ const TurnoverTime = () => {
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
   const [trendLineData, setTrendLineData] = React.useState([]);
-  const [trendSlider, setTrendSlider] = React.useState([0, 100]);
   const [orGraphData, setOrGraphData] = React.useState([]);
-  const [dateDiff, setDateDiff] = React.useState(0);
-  // const [rooms, setRooms] = React.useState([]);
   const [tile, setTile] = React.useState({});
 
-  const [trendEndDate, setTrendEndDate] = React.useState('');
   const [trendStartDate, setTrendStartDate] = React.useState('');
 
   const colors = ['#97E7B3', '#FFB71B', '#3DB3E3'];
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
-  const { data } = useSelectData(process.env.TURNOVER_API, userToken, {...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')}, axios.CancelToken.source()); 
+  const { data } = useSelectData(process.env.TURNOVER_API, userToken, {
+    ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
+  }, axios.CancelToken.source());
 
   const {
     selectGracePeriod,
     rooms,
     defaultFilterConfig,
-    defaultHandlerConfig
+    defaultHandlerConfig,
+    applyGlobalFilter
   } = useFilter();
 
   React.useEffect(() => {
-    if (!!data) {
+    if (data) {
       dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
     }
   }, [data]);
@@ -106,104 +101,45 @@ const TurnoverTime = () => {
     const overtimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('ot'));
     const timeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('time'));
     const durationTile = state.tiles.find(({ title }) => title.toLowerCase().includes('duration'));
+    const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
-    setTrendLineData(formattedData); 
-    setTrendStartDate(trendTile?.data?.start_date),
-    setTrendEndDate(trendTile?.data?.end_date)
-    const startDate = moment(trendTile?.data?.start_date);
-    const endDate = moment(trendTile?.data?.end_date);
-    const diff = endDate.diff(startDate, 'days'); 
-    setDateDiff(diff);
-    setTrendSlider([0, diff]);
+    setTrendLineData(formattedData);
+    setTrendStartDate(trendTile?.data?.start_date);
     const formattedHorizontalBarData = formatBarGraphData(orTile?.data);
     setOrGraphData(formattedHorizontalBarData);
     setTile({
       time: timeTile,
       overtime: overtimeTile,
       trend: trendTile,
-      duration: durationTile, 
-      or: orTile
+      duration: durationTile,
+      or: orTile,
+      elective: electiveDaysTile
     });
   }, [state.tiles]);
 
   React.useEffect(() => {
     const trendTile = state?.tiles?.find(({ title }) => title.toLowerCase().includes('trend'));
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
-    setTrendLineData(formattedData); 
-  }, [trendStartDate, trendEndDate, filteredChartData]);
-
-  const filterTrend = React.useCallback((_, val) => {
-    const [first, second] = trendSlider;
-    if (val[0]) {
-      if (val[0] > first) {
-        setTrendStartDate((prev) => moment(prev).subtract(1, 'days'));
-      } else if (val[0] < first) {
-        setTrendStartDate((prev) => moment(prev).add(1, 'days'));
-      }
-    }
-    if (val[1]) {
-      if (val[1] > second) {
-        setTrendEndDate((prev) => moment(prev).add(1, 'days'));
-      } else if (val[1] < second) {
-        setTrendEndDate((prev) => moment(prev).subtract(1, 'days'));
-      }
-    }
-    setTrendSlider(val);
-  }, [trendSlider]);
+    setTrendLineData(formattedData);
+  }, [trendStartDate, filteredChartData]);
 
   const toggleChartData = (e) => {
     setChartData(e.target.value);
     setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
   };
 
-  const handleFilterDates = async () => {
-    dispatch({ type: 'SET_LOADING', payload: true });
-    console.log('here');
-    try {
-      
-      const requestPayload = {
-        startDate: moment(trendStartDate).format('YYYY-MM-DD'),
-        endDate: moment(trendEndDate).format('YYYY-MM-DD'),
-        facilityName: userFacility,
-        roomNames: rooms ?? [],
-        specialtyNames: [],
-      };
-      const retrieveTileData = request('post');
-      const data = await retrieveTileData(process.env.BLOCKUTILIZATION_API, userToken, requestPayload, axios.CancelToken.source());
-      if (data?.tiles?.length) {
-        dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles } });
-      }
-      dispatch({ type: 'SET_LOADING', payload: false });
-    } catch (err) {
-      console.log(err);
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
-  }
+  const formatLineData = (dataset) => dataset?.map((percentage, idx) => ({
+    date: moment(trendStartDate).add(idx, 'days').valueOf(),
+    percentage
+  }));
 
-  const formatLineData = (dataset) => {
-    return dataset?.map((percentage, idx) => {
-        return {
-          date: moment(trendStartDate).add(idx, 'days').format('MMM'),
-          percentage
-      }
-    });
-  };
-
-  const formatBarGraphData = (dataset) => {
-    return dataset?.room.map((room, i) => {
-      return {
-        room,
-        cleanup: dataset?.cleanup[i],
-        setup: dataset?.setup[i],
-        turnover: dataset?.turnover[i],
-        idle: dataset?.idle[i]
-      }
-    });
-  }
-
-  const applyGlobalFilter = () => {
-
-  }
+  const formatBarGraphData = (dataset) => dataset?.room.map((room, i) => ({
+    room,
+    cleanup: dataset?.cleanup[i],
+    setup: dataset?.setup[i],
+    turnover: dataset?.turnover[i],
+    idle: dataset?.idle[i]
+  }));
 
   return (
     <div className="page-container">
@@ -246,38 +182,13 @@ const TurnoverTime = () => {
           <Card>
             <CardContent>
               {tile?.trend && (
-                <React.Fragment>
-                  <div
-                    style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
-                  >
-                    <h4>
-                      { tile?.trend?.title }
-                      <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.trend?.toolTip) ? tile?.trend?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.trend?.toolTip}>
-                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.trend?.toolTip?.toString()}`} />
-                      </LightTooltip>
-                    </h4>
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'flex-end'
-                    }}
-                  >
-                    <RadioButtonGroup value={chartData} onChange={toggleChartData} options={options} highlightColour="#004F6E" />
-                  </div>
-                  <LineGraph data={trendLineData} xTickSize={0} interval={30} xAxisLabel={{ value: 'Date', offset: -5, position: 'insideBottom' }} yAxisLabel={{ value: 'Turnover Time (min)', angle: -90, offset: 15, position: 'insideBottomLeft'}} xTickMargin={8} />
-                  <Grid item xs={12}>
-                    <RangeSlider
-                      id="trend"
-                      min={0}
-                      max={dateDiff}
-                      onChange={filterTrend}
-                      value={trendSlider}
-                      startLabel={moment(trendStartDate).format('MMM D YYYY')}
-                      endLabel={moment(trendEndDate).format('MMM D YYYY')}
-                      onChangeCommitted={handleFilterDates}
-                    />
-                  </Grid>
-                </React.Fragment>
+                <TrendTile
+                  data={tile.trend}
+                  trendLineData={trendLineData}
+                  chartData={chartData}
+                  toggleChartData={toggleChartData}
+                  options={options}
+                />
               )}
             </CardContent>
           </Card>
@@ -297,7 +208,19 @@ const TurnoverTime = () => {
                       </LightTooltip>
                     </h4>
                   </div>
-                  <HorizontalBar data={orGraphData} xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }} yAxisLabel={{ value: 'Room', angle: -90, offset: -5, position: 'insideLeft' }} dataKeys={['cleanup', 'idle', 'setup']} colors={colors} height={300} margin={{ top: 20, right: 30, left: 20, bottom: 20 }} />
+                  <HorizontalBar
+                    data={orGraphData}
+                    xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }}
+                    yAxisLabel={{
+                      value: 'Room', angle: -90, offset: -5, position: 'insideLeft'
+                    }}
+                    dataKeys={['cleanup', 'idle', 'setup']}
+                    colors={colors}
+                    height={300}
+                    margin={{
+                      top: 20, right: 30, left: 20, bottom: 20
+                    }}
+                  />
                 </React.Fragment>
               )}
             </CardContent>
@@ -314,7 +237,7 @@ const TurnoverTime = () => {
         </Grid>
         <Grid spacing={5} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
-            <FooterText />
+            <FooterText days={tile?.elective?.value} />
           </Grid>
         </Grid>
       </Grid>
