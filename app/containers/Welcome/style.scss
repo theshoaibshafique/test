@@ -9,6 +9,17 @@
     .welcome-grid{
         animation: fadeIn .75s ease-in both;
     }
+    .facility-graphic-container{
+      height: 90%;
+      width: 100%;
+      text-align: left;
+      position: absolute;
+      bottom: 0;
+      background-image: url("img/Surgeons_Image_Placeholder.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: left;
+    }
     @keyframes fadeIn {
         from {
             opacity: 0;
@@ -21,6 +32,11 @@
     }
     img {
         max-width: 360px;
+    }
+    .welcome-message{
+      position: absolute;
+      top: 20px;
+      right: 64px;
     }
     .message {
         opacity: 0.8;
@@ -37,6 +53,22 @@
         margin: auto;
         margin-top: 8px;
         margin-bottom: 24px;
+    }
+    .welcome {
+      color: #004f6e;
+      font-style: normal;
+      text-align: right;
+      font-size: 42px;
+      line-height: 57px;
+    }
+    .personal-name {
+      color: #004f6e;
+      font-style: normal;
+      font-weight: bold;
+      text-align: right;
+      font-size: 88px;
+      line-height: 120px;
+      margin-top: -25px;
     }
     .footer {
         position: absolute;

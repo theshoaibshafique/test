@@ -7,7 +7,7 @@
 import React from 'react';
 import './style.scss';
 import { Grid } from '@material-ui/core';
-import logo from 'images/SST-Product_Insights_sketch.png';
+import facilityGraphic from './img/Surgeons_Image_Placeholder.png';
 
 export default class Welcome extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -22,14 +22,10 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
   render() {
     return (
       <div className="welcome-page">
-        <Grid container spacing={0} direction="column" justify="center" className="welcome-grid">
-          <Grid item xs className="logo">
-            <img src={logo} />
-          </Grid>
-          <Grid item xs className="message">
-            Welcome {this.props.firstName} {this.props.lastName}
-          </Grid>
-          <div className="title-break"></div>
+        <div className="facility-graphic-container"></div>
+        <Grid item xs className="welcome-message">
+          <div className="welcome">Welcome</div>
+          <div className="personal-name">{this.props.firstName} {this.props.lastName}</div>
         </Grid>
         <div className="footer subtle-subtext">Can’t find what you’re looking for? Contact your administrator for assistance.</div>
       </div>
