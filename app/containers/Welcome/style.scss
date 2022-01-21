@@ -2,40 +2,28 @@
 .welcome-page {
     text-align: center;
     position: relative;
-    display: flex;
+    //display: flex;
     flex-direction: column;
     justify-content: center;
     height: 100%;
     .welcome-grid{
         animation: fadeIn .75s ease-in both;
     }
-    .facility-graphic-container{
-      height: 90%;
+    .facility-graphic-container {
+      position: relative;
       width: 100%;
-      text-align: left;
-      position: absolute;
-      bottom: 0;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: left;
+      height: 100%;
       display: flex;
       align-items: end;
+      > div {
+        height: 80%;
+        overflow: hidden;
+      }
       img{
         max-width: 100%;
         height: auto;
-        object-fit: contain;
-        max-height: 100%;
+        object-fit: cover;
       }
-    }
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translate3d(0, -10%, 0);
-        }
-        to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-        }
     }
     img {
         max-width: 360px;
