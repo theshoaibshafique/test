@@ -24,7 +24,7 @@ import App from 'containers/App';
 /* eslint-disable import/no-webpack-loader-syntax */
 import '!file-loader?name=[name].[ext]!./images/favicon.ico';
 /* eslint-enable import/no-webpack-loader-syntax */
-
+import { init as initApm } from '@elastic/apm-rum'
 // Import CSS reset and Global Styles
 import 'styles/theme.scss';
 
@@ -32,7 +32,7 @@ import configureStore from './configureStore';
 
 // Observe loading of Open Sans (to remove open sans, remove the <link> tag in
 // the index.html file and this observer)
-const openSansObserver = new FontFaceObserver('Noto Sans', {weight: 400});
+const openSansObserver = new FontFaceObserver('Noto Sans', { weight: 400 });
 
 // When Open Sans is loaded, add a font-family using Open Sans to the body
 openSansObserver.load().then(() => {
@@ -47,14 +47,25 @@ const history = createHistory();
 const store = configureStore(initialState, history);
 const MOUNT_NODE = document.getElementById('app');
 
+const apm = initApm({
 
+  // Set required service name (allowed characters: a-z, A-Z, 0-9, -, _, and space)
+  serviceName: 'Insights FE',
+
+  // Set custom APM Server URL (default: http://localhost:8200)
+  serverUrl: process.env.APM_URL,
+  environment: process.env.APM_ENV,
+
+  // Set service version (required for sourcemap feature)
+  serviceVersion: 'v1.3.2'
+})
 
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
-        <ConnectedRouter store={store} history={history}>
-          <App />
-        </ConnectedRouter>
+      <ConnectedRouter store={store} history={history}>
+        <App />
+      </ConnectedRouter>
     </Provider>,
     MOUNT_NODE
   );
