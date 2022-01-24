@@ -1,12 +1,7 @@
 import React from 'react';
 import './style.scss';
-
-import { Helmet } from 'react-helmet';
-import SSTLogo from './img/SST_logo.svg';
-import { AzureAD, LoginType, MsalAuthProviderFactory } from 'react-aad-msal';
 import globalFunctions from '../../utils/global-functions';
 import { redirectLogin } from '../../utils/Auth';
-import moment from 'moment';
 import { Logger } from '../../components/Logger/Logger';
 import { refreshInterval } from '../../constants';
 
@@ -122,35 +117,54 @@ export default class Login extends React.PureComponent {
   async processAuthentication(data) {
     const { accessToken, expiresAt, refreshToken } = data;
     localStorage.setItem('refreshToken', JSON.stringify({ refreshToken: refreshToken, expiresAt: expiresAt * 1000 }));
-    
+
     const roleToken = await globalFunctions.genericFetch(`${process.env.USER_V2_API}roles`, 'get', accessToken, {})
       .catch((results) => {
         console.error("oh no", results)
       });
-    
-    
-        
+
+
+
     const token = { userToken: accessToken, roleToken: roleToken?.forbidden ? '' : roleToken }
     this.props.setUserToken(token);
     if (this.props.logger) {
       this.props.logger.userToken = this.props.userToken;
       return;
     }
-    await globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', token, {})
-      .then(async result => {
-        this.props.setProfile(result);
-        this.setLogger(token);
-        if (roleToken?.forbidden){
-          const val = await roleToken?.forbidden
-          this.props.setUserStatus({status: 'forbidden', message: val?.detail})
-          return
-        }
-        this.getOperatingRooms(token);
-        this.getComplications(token);
-        
-      }).catch((results) => {
-        console.error("oh no", results)
-      });
+    await Promise.all([
+      globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', token, {}),
+      globalFunctions.genericFetch(`${process.env.USER_V2_API}facility`, 'get', token, {})
+    ]).then(async ([result1, result2]) => {
+      this.props.setFacilityDetails(result2);
+      result1.facility = result2[result1.facilityId];
+      result1.facility.isUpdated = false; // control the facility animation in dashboard
+      this.props.setProfile(result1);
+      this.setLogger(token);
+      if (roleToken?.forbidden){
+        const val = await roleToken?.forbidden
+        this.props.setUserStatus({status: 'forbidden', message: val?.detail})
+        return
+      }
+      this.getOperatingRooms(token);
+      this.getComplications(token);
+    }).catch((results) => {
+      console.error("oh no", results)
+    });
+    // await globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', token, {})
+    //   .then(async result => {
+    //     this.props.setProfile(result);
+    //     this.setLogger(token);
+    //     if (roleToken?.forbidden){
+    //       const val = await roleToken?.forbidden
+    //       this.props.setUserStatus({status: 'forbidden', message: val?.detail})
+    //       return
+    //     }
+    //     this.getOperatingRooms(token);
+    //     this.getComplications(token);
+    //
+    //   }).catch((results) => {
+    //     console.error("oh no", results)
+    //   });
 
   }
 
