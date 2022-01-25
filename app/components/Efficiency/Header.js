@@ -48,12 +48,12 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
         </Grid>
         <Grid container spacing={3} style={{ margin: '14px 0px 0px 0px' }}>
           {config?.case && (
-            <Grid item xs={2} style={{ paddingLeft: '0px' }}>
+            <Grid item xs={2} style={{ paddingLeft: '0px', width: '100px' }}>
               <div
                 style={{
                   display: 'flex',
                   height: '100%',
-                  justifyContent: 'flex-end',
+                  justifyContent: 'flex-start',
                   marginTop: '16px',
                   alignItems: 'center',
                   flexDirection: 'row',
@@ -61,7 +61,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
                   color: '#333'
                 }}
               >
-                {handlers?.case?.viewFirstCase ? 'First Case on Time' : 'View First Case on Time'}
+                Only First Cases
                 <CustomSwitch checked={handlers?.case?.viewFirstCase} onChange={handlers?.case?.toggleFirstCaseOnTime} />
               </div>
             </Grid>

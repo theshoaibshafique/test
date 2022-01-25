@@ -37,7 +37,7 @@ const CustomDateRangePicker = ({
     start: startDateProp,
     end: endDateProp
   });
-  const { setItemInStore } = useLocalStorage();
+  const { setItemInStore, getItemFromStore } = useLocalStorage();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [key, setKey] = React.useState('');
   const [focusedInput, setFocusedInput] = React.useState('startDate');

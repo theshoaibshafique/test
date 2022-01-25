@@ -25,6 +25,7 @@ const DistributionTile = ({ data }) => {
       value: 'Setup'
     },
   ];
+  const [color, setColor] = React.useState('#A77ECD');
   const [graphData, setGraphData] = React.useState('Turnover');
   const [filteredDistributionData, setFilteredDistributionData] = React.useState([]);
   const [originalDistributionData, setOriginalDistributionData] = React.useState([]);
@@ -56,6 +57,22 @@ const DistributionTile = ({ data }) => {
   }, [data]);
 
   React.useEffect(() => {
+    switch (graphData.toLowerCase()) {
+      case 'turnover':
+        setColor('#A77ECD');
+        break;
+      case 'cleanup':
+        setColor('#97E7B3');
+        break;
+      case 'idle':
+        setColor('#FFC74D');
+        break;
+      case 'setup':
+        setColor('#3DB3E3');
+        break;
+      default:
+        break;
+    }
     setOriginalDistributionData(data?.data[graphData.toLowerCase()]);
     setFilteredDistributionData(data?.data[graphData.toLowerCase()]);
   }, [graphData]);
@@ -110,8 +127,9 @@ const DistributionTile = ({ data }) => {
           offset: 15,
           position: 'insideBottomLeft'
         }}
+        singleColour
         margin={{ bottom: 20 }}
-        colors={['#A77ECD']}
+        colors={[color]}
       />
       <Grid item xs={12} style={{ marginTop: 10 }}>
         <RangeSlider

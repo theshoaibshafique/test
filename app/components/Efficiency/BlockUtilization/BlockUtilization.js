@@ -408,14 +408,14 @@ const BlockUtilization = React.memo(() => {
         <Grid item xs={6}>
           <Card style={{ height: '365px' }}>
             <CardContent>
-              <DistributionTile data={tile?.startGap} xAxisLabel="Block Start Gap (min)" />
+              <DistributionTile data={tile?.startGap} xAxisLabel={tile?.startGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={6}>
           <Card style={{ height: '365px' }}>
             <CardContent>
-              <DistributionTile data={tile?.endGap} xAxisLabel="Block End Gap (min)"/>
+              <DistributionTile data={tile?.endGap} xAxisLabel={tile?.endGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
             </CardContent>
           </Card>
         </Grid>

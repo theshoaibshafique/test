@@ -15,7 +15,6 @@ const Donut = React.memo(({ data, colours, tooltips, label }) => {
         cy={120}
         innerRadius={95}
         outerRadius={120}
-        paddingAngle={5}
         dataKey="value"
       >
         {data?.slice(1, data?.length).map((entry, index) => (

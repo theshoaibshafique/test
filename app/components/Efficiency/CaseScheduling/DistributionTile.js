@@ -6,7 +6,10 @@ import { LightTooltip } from '../../SharedComponents/SharedComponents';
 import RangeSlider from '../../SharedComponents/RangeSlider';
 
 const DistributionTile = ({
-  data, xAxisLabel, yAxisLabel, ...rest
+  data,
+  xAxisLabel,
+  yAxisLabel,
+  ...rest
 }) => {
   const [startDistributionSlider, setStartDistributionSlider] = React.useState([0, 100]);
   const [startDistributionStartLabel, setStartDistributionStartLabel] = React.useState('');
@@ -78,8 +81,7 @@ const DistributionTile = ({
               offset: 15,
               position: 'insideBottomLeft'
             }}
-            singleColour={rest?.singleColour}
-            dualColour={rest?.dualColour}
+            singleColour
             colors={['#3DB3E3']}
             margin={{ bottom: 20 }}
           />
@@ -102,3 +104,4 @@ const DistributionTile = ({
 };
 
 export default DistributionTile;
+

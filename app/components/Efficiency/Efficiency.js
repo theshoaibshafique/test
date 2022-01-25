@@ -2,25 +2,24 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
 import Grid from '@material-ui/core/Grid';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Modal from '@material-ui/core/Modal';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Divider from '@material-ui/core/Divider';
-import CloseIcon from '@material-ui/icons/Close';
-import DialogContent from '@material-ui/core/DialogContent';
-import LoadingIndicator from '../LoadingIndicator';
-import MonthRangePicker from '../MonthRangePicker/MonthRangePicker';
-import { StyledTab, StyledTabs, TabPanel } from '../SharedComponents/SharedComponents';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import { request } from '../../utils/global-functions';
+// import LoadingIndicator from '../LoadingIndicator';
 import Header from './Header';
-import InformationModal from './InformationModal';
-import Donut from '../Charts/Donut';
+// import Donut from '../Charts/Donut';
 import { makeSelectToken, makeSelectUserFacility } from '../../containers/App/selectors';
+import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import useSelectData from '../../hooks/useSelectData';
+import useFilter from '../../hooks/useFilter';
 import './styles.scss';
 
 const INITIAL_STATE = {
@@ -29,6 +28,10 @@ const INITIAL_STATE = {
   startDate: moment().subtract(1, 'month').startOf('month'),
   endDate: moment().subtract(1, 'month').endOf('month'),
   loading: false,
+  defaultPayload: {
+    roomNames: [],
+    specialtyNames: []
+  }
 };
 
 const reducer = (state, action) => {
@@ -47,7 +50,6 @@ const reducer = (state, action) => {
       return {
         ...state,
         tiles: action.payload.tiles,
-        globalTiles: action.payload.globalTiles
       };
     default:
       return state;
@@ -55,59 +57,61 @@ const reducer = (state, action) => {
 };
 
 const Efficiency = () => {
-  const [state, localDispatch] = React.useReducer(reducer, INITIAL_STATE);
+  const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
   const { setItemInStore } = useLocalStorage();
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
+  const { rooms, defaultFilterConfig, defaultHandlerConfig } = useFilter();
+  const [tile, setTile] = React.useState({});
+  const { data } = useSelectData(process.env.EFFICIENCYV2_API, userToken, {
+    ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
+  }, axios.CancelToken.source());
+
+  React.useEffect(() => {
+    if (!data) return;
+    dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
+  }, [data]);
+
+  React.useEffect(() => {
+    if (!state.tiles) return;
+    const efficiencyTile = state.tiles.find(({ title }) => title.toLowerCase().includes('efficiency index'));
+    const headlineTile = state.tiles.find(({ title }) => title.toLowerCase() === 'efficiency');
+
+    setTile({
+      efficiency: efficiencyTile,
+      headline: headlineTile,
+    });
+  }, [state]);
+
   React.useEffect(() => {
     const fetchTileData = async () => {
-      localDispatch({ type: 'SET_LOADING', payload: true });
+      dispatch({ type: 'SET_LOADING', payload: true });
       try {
-        // const requestData = {
-        //   dashboardName: 'efficiency',
-        //   facilityName: userFacility,
-        //   startDate: state.startDate.format('YYYY-MM-DD'),
-        //   endDate: state.endDate.format('YYYY-MM-DD'),
-        //   roomName: null,
-        //   specialtyName: null,
-        //   procedureName: '',
-        //   threshold: null
-        // };
         const retrieveConfiguration = request('get');
-        // const retrieveTileData = request('post');
         const configData = await retrieveConfiguration(`${process.env.EFFICIENCY_API}/config?facility_id=${userFacility}`, userToken, null, axios.CancelToken.source());
         if (configData) {
           setItemInStore('efficiencyV2', {
             efficiency: configData
           });
-          // dispatch({ type: 'SET_FILTERS', payload: { ors: configData.filters.ORs, specialties: configData.filters.Specialties } });
         }
 
-        // const data = await retrieveTileData(process.env.EFFICIENCYTILE_API, userToken, requestData, axios.CancelToken.source());
-        // if (data?.tiles?.length) {
-        //   localDispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles, globalTiles: data.globalTiles } });
-        // }
-        localDispatch({ type: 'SET_LOADING', payload: false });
+        dispatch({ type: 'SET_LOADING', payload: false });
       } catch (err) {
-        localDispatch({ type: 'SET_LOADING', payload: false });
+        dispatch({ type: 'SET_LOADING', payload: false });
       }
     };
     fetchTileData();
   }, []);
 
-  const toggleInformationModal = React.useCallback(() => {
-    localDispatch({ type: 'TOGGLE_INFORMATION_MODAL', payload: !state.informationModalOpen });
-  }, [state.informationModalOpen]);
-
   return (
     <div className="page-container">
-      <Header onClick={toggleInformationModal}>
-        <MonthRangePicker
-          startDate={state.startDate}
-          endDate={state.endDate}
-          customArrowIcon={<span style={{ color: '#828282' }}>to</span>}
-        />
-      </Header>
+      <Header
+        config={{ ...defaultFilterConfig }}
+        // applyGlobalFilter={applyGlobalFilter}
+        handlers={{
+          ...defaultHandlerConfig
+        }}
+      />
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header" spacing={0}>
           <h3>Efficiency Dashboard</h3>
@@ -122,7 +126,76 @@ const Efficiency = () => {
         <Grid item xs={9}>
           <Card>
             <CardContent>
-            Headlines
+              {tile?.headline && (
+                <React.Fragment>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <h4>{tile.headline.title}</h4>
+                    <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.headline?.toolTip) ? tile?.headline?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.headline?.toolTip}>
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.headline?.toolTip?.toString()}`} />
+                    </LightTooltip>
+                  </div>
+                  <Carousel
+                    responsive={{
+                      desktop: {
+                        breakpoint: { max: 3000, min: 1024 },
+                        items: 1,
+                      },
+                      tablet: {
+                        breakpoint: { max: 1024, min: 464 },
+                        items: 1,
+                      },
+                      mobile: {
+                        breakpoint: { max: 464, min: 0 },
+                        items: 1,
+                      }
+                    }}
+                    showDots
+                    infinite
+                    transitionDuration={500}
+                    customLeftArrow={
+                      <div
+                        style={{
+                          display: 'flex', left: 50, justifyContent: 'flex-start', position: 'absolute', cursor: 'pointer'
+                        }}
+                      >
+                        <ArrowBackIosIcon />
+                      </div>
+                    }
+                    customRightArrow={
+                      <div
+                        style={{
+                          display: 'flex', right: 50, justifyContent: 'flex-end', position: 'absolute', cursor: 'pointer',
+                        }}
+                      >
+                        <ArrowForwardIosIcon />
+                      </div>
+                    }
+                  >
+                    {tile.headline.data.sentences.map((sentence) => (
+                      <div
+                        key={uuidv4()}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: '850px',
+                          marginRight: 'auto',
+                          marginLeft: 'auto',
+                          marginBottom: 36,
+                          flexDirection: 'row'
+                        }}
+                      >{sentence}
+                      </div>
+                    ))}
+                  </Carousel>
+                </React.Fragment>
+              )}
             </CardContent>
           </Card>
         </Grid>
@@ -174,7 +247,6 @@ const Efficiency = () => {
           </Card>
         </Grid>
       </Grid>
-      <InformationModal open={state.informationModalOpen} onToggle={toggleInformationModal} />
     </div>
   );
 };

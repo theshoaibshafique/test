@@ -10,6 +10,8 @@ import FooterText from '../FooterText';
 import TimeCard from '../TimeCard';
 import TrendTile from '../TrendTile';
 import OvertimeCard from '../OvertimeCard';
+import DistributionTile from '../BlockUtilization/DistributionTile';
+import ProcedureList from '../CaseScheduling/ProcedureList';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
@@ -48,6 +50,7 @@ const reducer = (state, action) => {
       return state;
   }
 };
+
 
 const CaseScheduling = () => {
   const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
@@ -93,12 +96,18 @@ const CaseScheduling = () => {
     const scheduleTile = state.tiles.find(({ title }) => title.toLowerCase().includes('schedule'));
     const overtimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('ot'));
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
+    const electiveTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
+    const procedureTile = state.tiles.find(({ title }) => title.toLowerCase().includes('procedure'));
+    const delaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('delays'));
 
     setTrendStartDate(trendTile?.data?.start_date);
     setTile({
       schedule: scheduleTile,
       overtime: overtimeTile,
-      trend: trendTile
+      trend: trendTile,
+      elective: electiveTile,
+      procedure: procedureTile,
+      delays: delaysTile
     });
   }, [state.tiles]);
 
@@ -160,7 +169,7 @@ const CaseScheduling = () => {
       />
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header">
-          <h3 style={{ fontWeight: 'normal', color: '#000' }}>Block Utilization</h3>
+          <h3 style={{ fontWeight: 'normal', color: '#000' }}>Case Scheduling</h3>
         </Grid>
         <Grid item xs={6} style={{ paddingRight: '0px' }}>
           <Grid container item xs={12} spacing={5}>
@@ -174,7 +183,7 @@ const CaseScheduling = () => {
               </Card>
             </Grid>
             <Grid item xs={6}>
-              <Card>
+              <Card style={{ height: '370px' }}>
                 <CardContent>
                   {tile?.overtime && (
                     <OvertimeCard data={tile.overtime} />
@@ -204,7 +213,9 @@ const CaseScheduling = () => {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  Change in Delays
+                  {tile?.delays && (
+                    <DistributionTile data={tile.delays} xAxisLabel={tile.delays.independentVarTitle} yAxisLabel={tile.delays.dependentVarTitle} dualColour/>
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -213,9 +224,11 @@ const CaseScheduling = () => {
         <Grid item xs={6}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
-              <Card style={{ height: '1100px' }}>
+              <Card style={{ height: '1110px', overflowY: 'auto' }}>
                 <CardContent>
-                  Procedure Type List
+                  {tile?.procedure && (
+                    <ProcedureList data={tile.procedure} />
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -223,7 +236,7 @@ const CaseScheduling = () => {
         </Grid>
         <Grid spacing={5} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
-            <FooterText days={tile?.elective?.days} />
+            <FooterText days={tile?.elective?.value} />
           </Grid>
         </Grid>
       </Grid>

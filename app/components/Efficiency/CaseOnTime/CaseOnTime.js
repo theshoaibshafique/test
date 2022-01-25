@@ -1,28 +1,23 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { request } from '../../../utils/global-functions';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
-import MultiSelectFilter from '../../../components/SharedComponents/MultiSelectFilter';
-import CustomDateRangePicker from '../../../components/SharedComponents/CustomDateRangePicker';
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
-import { getItemFromStore } from '../../../hooks/useLocalStorage';
+// import { getItemFromStore } from '../../../hooks/useLocalStorage';
 import RadioButtonGroup from '../../SharedComponents/RadioButtonGroup';
 import TimeCard from '../TimeCard';
 import TrendTile from '../TrendTile';
 import OvertimeCard from '../OvertimeCard';
+import DistributionTile from './DistributionTile';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -66,26 +61,6 @@ const reducer = (state, action) => {
   }
 };
 
-const CustomSwitch = withStyles({
-  checked: {
-    opacity: 1
-  },
-  switchBase: {
-    color: '#4F4F4F',
-    '&$checked': {
-      color: '#004F6E'
-    },
-    '&$checked + $track': {
-      opacity: 1,
-      backgroundColor: '#3DB3E3'
-    }
-  },
-  track: {
-    opacity: 1,
-    backgroundColor: '#BDBDBD'
-  }
-})(Switch);
-
 const CaseOnTime = () => {
   const options = [
     {
@@ -112,7 +87,7 @@ const CaseOnTime = () => {
   const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
   // const [rooms, setRooms] = React.useState([]);
   // const [orFilterVal, setOrFilterVal] = React.useState([]);
-  const [label, setLabel] = React.useState('Most recent week');
+  // const [label, setLabel] = React.useState('Most recent week');
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [trendLineData, setTrendLineData] = React.useState([]);
   const [trendStartDate, setTrendStartDate] = React.useState('');
@@ -141,10 +116,6 @@ const CaseOnTime = () => {
     defaultHandlerConfig,
     toggleFirstCaseOnTime,
     viewFirstCase,
-    // rooms,
-    // orFilterVal,
-    // clearFilters,
-    // selectOrs
   } = useFilter();
 
   React.useEffect(() => {
@@ -190,6 +161,8 @@ const CaseOnTime = () => {
     const firstCaseTile = state.tiles.find(({ title }) => title.toLowerCase().includes('first case'));
     const roomTile = state.tiles.find(({ title }) => title.toLowerCase().includes('room'));
     const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
+    const distributionTile = state.tiles.find(({ title }) => title.toLowerCase().includes('distribution'));
+
 
     const max = specialtyTile.data.specialty.length + roomTile.data.room.length;
     setMaxData(max);
@@ -201,79 +174,13 @@ const CaseOnTime = () => {
       firstCase: firstCaseTile,
       time: onTimeTile,
       overtime: otTile,
-      elective: electiveDaysTile
+      elective: electiveDaysTile,
+      distribution: distributionTile
     });
   }, [state.tiles, specialty]);
 
   const applyGlobalFilter = () => {
     console.log('hi');
-  };
-
-  // const toggleFirstCaseOnTime = React.useCallback(() => {
-  //   setViewFirstCase((prev) => !prev);
-  // }, [viewFirstCase]);
-
-  const handleUpdateLabel = (label, start = null, end = null) => () => {
-    switch (label) {
-      case 'Most recent week':
-        dispatch({
-          type: 'SET_FILTER_DATE',
-          payload: {
-            startDate: moment().subtract(1, 'weeks').startOf('week'),
-            endDate: moment().subtract(1, 'weeks').endOf('week')
-          }
-        });
-        break;
-      case 'Most recent month':
-        dispatch({
-          type: 'SET_FILTER_DATE',
-          payload: {
-            startDate: moment().subtract(1, 'months').startOf('month'),
-            endDate: moment().subtract(1, 'months').endOf('month'),
-          }
-        });
-        break;
-      case 'Most recent year':
-        dispatch({
-          type: 'SET_FILTER_DATE',
-          payload: {
-            startDate: moment().subtract(1, 'years').startOf('year'),
-            endDate: moment().subtract(1, 'years').endOf('year'),
-          }
-        });
-        break;
-      case 'All time':
-        const { efficiency: { startDate, endDate } } = getItemFromStore('efficiencyV2');
-        dispatch({
-          type: 'SET_FILTER_DATE',
-          payload: {
-            startDate: moment(startDate),
-            endDate: moment(endDate)
-          }
-        });
-        break;
-      case 'Custom':
-        dispatch({
-          type: 'SET_FILTER_DATE',
-          payload: {
-            startDate: start,
-            endDate: end
-          }
-        });
-      default:
-        break;
-    }
-    setLabel(label);
-  };
-
-  const handleSetDates = ({ startDate, endDate }) => {
-    dispatch({
-      type: 'SET_FILTER_DATE',
-      payload: {
-        startDate,
-        endDate
-      }
-    });
   };
 
   const toggleSpecialty = React.useCallback((e) => {
@@ -551,7 +458,7 @@ const CaseOnTime = () => {
                             spacing={5}
                             className="room-data-container"
                           >
-                            <Grid item xs={4}>
+                            <Grid item xs={4} style={{ fontSize: 12 }}>
                               {row.specialty}
                             </Grid>
                             <Grid item xs={3}>
@@ -588,7 +495,15 @@ const CaseOnTime = () => {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                                    Case Delay Distribution
+                  {tile?.distribution && (
+                    <DistributionTile
+                      data={tile.distribution}
+                      viewFirstCase={viewFirstCase}
+                      xAxisLabel={tile.distribution.independentVarTitle}
+                      yAxisLabel={tile.distribution.dependentVarTitle}
+                      dualColour
+                    />
+                  )}
                 </CardContent>
               </Card>
             </Grid>
