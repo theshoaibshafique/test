@@ -1,0 +1,62 @@
+.modal-header {
+  font-size: 26px;
+  line-height: 35px;
+  color: #004F6E;
+}
+
+.current-facility {
+  display: inline-flex;
+
+  .current-facility__label {
+    font-size: 14px;
+    line-height: 19px;
+    color: #BDBDBD;
+  }
+
+  .current-facility__name {
+    font-size: 18px;
+    line-height: 25px;
+    color: #333333;
+    padding-top: 10px;
+  }
+
+  img {
+    width: 100px;
+    border-radius: 50%;
+  }
+}
+
+.other-facilities {
+  display: flex;
+  flex-direction: column;
+  background: rgba(196, 196, 196, 0.1);
+
+  img {
+    width: 50px;
+    border-radius: 50%;
+  }
+
+  .other-facilities__list-item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .other-facilities__name {
+    padding-left: 30px;
+    flex: 1;
+  }
+
+  .other-facilities__img {
+    padding-left: 30px;
+  }
+
+  .other-facilities__action {
+    margin-right: 20px;
+  }
+
+  .other-facilities__action img {
+    width: 23px;
+  }
+}
+
+

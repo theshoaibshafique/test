@@ -1,12 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent, Button, Modal, Fade, Backdrop } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeSelectSnackbar } from '../../containers/App/selectors';
+import {
+  makeSelectLogger,
+  makeSelectProductRoles,
+  makeSelectSnackbar,
+  makeSelectToken,
+} from '../../containers/App/selectors';
 import { mdiClose } from '@mdi/js';
 import Icon from '@mdi/react'
 import { MTableCell } from 'material-table';
+import {
+  selectAssignableRoles,
+  selectLocationLookups,
+  selectUsers,
+} from '../../containers/App/store/UserManagement/um-selectors';
+import {
+  createClient,
+  createUser,
+  generateProductUpdateBody,
+  getRoleMapping,
+  patchRoles, updateClientProfile,
+} from '../../containers/AdminPanel/helpers';
+import { setUsers } from '../../containers/App/store/UserManagement/um-actions';
+import { selectClients } from '../../containers/App/store/ApiManagement/am-selectors';
+import { setClients } from '../../containers/App/store/ApiManagement/am-actions';
+import './style.scss';
+import UnionLogo from './img/Union.svg';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
@@ -270,7 +292,7 @@ export const SaveAndCancel = props => {
   )
 }
 
-/* 
+/*
     Generic Modal thats empty with an X in the corner
 */
 export const GenericModal = props => {
@@ -311,5 +333,66 @@ export const TableCell = (props) => {
   //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
   return (
     <MTableCell {...props} title={rowData?.[columnDef?.field]} className={`ellipses ${classes.root}`} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${width}px` } }} />
+  )
+}
+
+export const SwitchFacilityModal = props => {
+  const toggleModal = (d) => {
+    props?.toggleModal?.(d);
+  }
+
+  return (
+    <GenericModal
+      {...props}
+      toggleModal={toggleModal}
+      className={`add-edit-user client`}
+    >
+    {/*  TODO create UI*/}
+      <div className={'modal-header'}>
+        Switch Facility
+      </div>
+      <hr />
+      <div className={'modal-content'}>
+        <div className={'current-facility'}>
+          <div className={'current-facility__img'}>
+            <img src={'https://www.danielshealth.ca/sites/danielshealth.ca/files/styles/380x370/public/Image%20List%20Graphics/Deployment%20icons%201.png?itok=gQ3vAwIA'}/>
+          </div>
+          <div className={'current-facility__desc'}>
+            <div className={'current-facility__label'}>
+              <span>Currently Viewing</span>
+            </div>
+            <div className={'current-facility__name'}>
+              <span>Parkland Hospital</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={'other-facilities'}>
+          <div className={'other-facilities__list-item'}>
+            <div className={'other-facilities__img'}>
+              <img src={'https://www.danielshealth.ca/sites/danielshealth.ca/files/styles/380x370/public/Image%20List%20Graphics/Deployment%20icons%201.png?itok=gQ3vAwIA'}/>
+            </div>
+            <div className={'other-facilities__name'}>
+              <span>UT Southwestern Hospital</span>
+            </div>
+            <div className={'other-facilities__action'}>
+              <img src={UnionLogo}/>
+            </div>
+          </div>
+
+          <div className={'other-facilities__list-item'}>
+            <div className={'other-facilities__img'}>
+              <img src={'https://www.danielshealth.ca/sites/danielshealth.ca/files/styles/380x370/public/Image%20List%20Graphics/Deployment%20icons%201.png?itok=gQ3vAwIA'}/>
+            </div>
+            <div className={'other-facilities__name'}>
+              <span>Humber River Hospital</span>
+            </div>
+            <div className={'other-facilities__action'}>
+              <img src={UnionLogo}/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </GenericModal>
   )
 }
