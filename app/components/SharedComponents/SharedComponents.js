@@ -337,6 +337,9 @@ export const TableCell = (props) => {
 }
 
 export const SwitchFacilityModal = props => {
+  console.log(props);
+  const {} = props;
+
   const toggleModal = (d) => {
     props?.toggleModal?.(d);
   }
@@ -355,42 +358,34 @@ export const SwitchFacilityModal = props => {
       <div className={'modal-content'}>
         <div className={'current-facility'}>
           <div className={'current-facility__img'}>
-            <img src={'https://www.danielshealth.ca/sites/danielshealth.ca/files/styles/380x370/public/Image%20List%20Graphics/Deployment%20icons%201.png?itok=gQ3vAwIA'}/>
+            <img src={props?.profileFacility.imageSource}/>
           </div>
           <div className={'current-facility__desc'}>
             <div className={'current-facility__label'}>
               <span>Currently Viewing</span>
             </div>
             <div className={'current-facility__name'}>
-              <span>Parkland Hospital</span>
+              <span>{props?.profileFacility.facilityName}</span>
             </div>
           </div>
         </div>
-
         <div className={'other-facilities'}>
-          <div className={'other-facilities__list-item'}>
-            <div className={'other-facilities__img'}>
-              <img src={'https://www.danielshealth.ca/sites/danielshealth.ca/files/styles/380x370/public/Image%20List%20Graphics/Deployment%20icons%201.png?itok=gQ3vAwIA'}/>
-            </div>
-            <div className={'other-facilities__name'}>
-              <span>UT Southwestern Hospital</span>
-            </div>
-            <div className={'other-facilities__action'}>
-              <img src={UnionLogo}/>
-            </div>
-          </div>
-
-          <div className={'other-facilities__list-item'}>
-            <div className={'other-facilities__img'}>
-              <img src={'https://www.danielshealth.ca/sites/danielshealth.ca/files/styles/380x370/public/Image%20List%20Graphics/Deployment%20icons%201.png?itok=gQ3vAwIA'}/>
-            </div>
-            <div className={'other-facilities__name'}>
-              <span>Humber River Hospital</span>
-            </div>
-            <div className={'other-facilities__action'}>
-              <img src={UnionLogo}/>
-            </div>
-          </div>
+          {Object.keys(props?.userFacilities).map((key)=>{
+            const value = props?.userFacilities[key];
+            return (
+              <div className={'other-facilities__list-item'} key={key}>
+                <div className={'other-facilities__img'}>
+                  <img src={value.imageSource}/>
+                </div>
+                <div className={'other-facilities__name'}>
+                  <span>{value.facilityName}</span>
+                </div>
+                <div className={'other-facilities__action'}>
+                  <img src={UnionLogo}/>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </GenericModal>
