@@ -31,6 +31,7 @@ import {
   EXIT_SNACKBAR,
   USER_STATUS,
   FACILITY_DETAILS,
+  FACILITY_SWITCH,
 } from './constants';
 
 /**
@@ -212,6 +213,13 @@ export function setFacilityDetails(facilityDetails) {
   return {
     type: FACILITY_DETAILS,
     facilityDetails
+  };
+}
+
+export function setFacilitySwitch(facilitySwitch) {
+  return {
+    type: FACILITY_SWITCH,
+    facilitySwitch
   };
 }
 

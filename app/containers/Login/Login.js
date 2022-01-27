@@ -134,11 +134,15 @@ export default class Login extends React.PureComponent {
     await Promise.all([
       globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', token, {}),
       globalFunctions.genericFetch(`${process.env.USER_V2_API}facility`, 'get', token, {})
-    ]).then(async ([result1, result2]) => {
-      this.props.setFacilityDetails(result2);
-      result1.facility = result2[result1.facilityId];
-      result1.facility.isUpdated = false; // control the facility animation in dashboard
-      this.props.setProfile(result1);
+    ]).then(async ([profileResult, facilityResult]) => {
+      this.props.setFacilityDetails(facilityResult);
+      profileResult.facility = facilityResult[profileResult.facilityId];
+      this.props.setProfile(profileResult);
+      const newFacility = {
+        facility: null,
+        isUpdated: false
+      }
+      this.props.setFacilitySwitch(newFacility);
       this.setLogger(token);
       if (roleToken?.forbidden){
         const val = await roleToken?.forbidden

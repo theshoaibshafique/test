@@ -7,6 +7,7 @@ import {
   makeSelectFirstName,
   makeSelectLastName,
   makeSelectFacility,
+  makeSelectFacilitySwitch,
 } from '../App/selectors';
 
 const mapStateToProps = createStructuredSelector({
@@ -14,6 +15,7 @@ const mapStateToProps = createStructuredSelector({
   firstName: makeSelectFirstName(),
   lastName: makeSelectLastName(),
   facility: makeSelectFacility(),
+  facilitySwitch: makeSelectFacilitySwitch(),
 });
 
 export default connect(mapStateToProps, null)(Welcome);

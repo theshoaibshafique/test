@@ -33,11 +33,11 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
   // }
 
   render() {
-    console.log(this.props.facility);
-    const animate = this.props.facility.isUpdated;
+    console.log(this.props.facilitySwitch);
+    let animate = this.props.facilitySwitch?.isUpdated ?? false;
     let imgSrc;
-    if(this.props.facility != null){
-      imgSrc = this.props.facility.imageSource;
+    if(animate){
+      imgSrc = this.props.facilitySwitch.facility.imageSource;
     } else {
       imgSrc = 'https://api.insights.surgicalsafety.com/media/default.png';
     }

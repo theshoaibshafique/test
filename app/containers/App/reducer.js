@@ -29,6 +29,7 @@ import {
   EXIT_SNACKBAR,
   USER_STATUS,
   FACILITY_DETAILS,
+  FACILITY_SWITCH,
 } from './constants';
 
 // The initial state of the App
@@ -82,6 +83,9 @@ function emmReducer(state = initialState, action) {
     case FACILITY_DETAILS:
       return state
         .set('facilityDetails', action.facilityDetails)
+    case FACILITY_SWITCH:
+      return state
+        .set('facilitySwitch', action.facilitySwitch)
     case USER_FACILITY:
       return state
         .set('userFacility', action.facility)

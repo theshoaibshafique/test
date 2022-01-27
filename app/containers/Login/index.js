@@ -10,6 +10,7 @@ import {
   setProfile,
   setUserStatus,
   setFacilityDetails,
+  setFacilitySwitch,
 } from '../../containers/App/actions';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
@@ -39,6 +40,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setFacilityDetails: (facilityDetails) => {
       dispatch(setFacilityDetails(facilityDetails));
+    },
+    setFacilitySwitch: (facilitySwitch) => {
+      dispatch(setFacilitySwitch(facilitySwitch));
     },
     // setUserFacility: (facility) => {
     //   dispatch(setUserFacility(facility))
