@@ -6,6 +6,11 @@
 
 .current-facility {
   display: inline-flex;
+  margin-bottom: 20px;
+
+  .current-facility__img {
+    margin-right: 20px;
+  }
 
   .current-facility__label {
     font-size: 14px;
@@ -32,7 +37,6 @@
 .other-facilities {
   display: flex;
   flex-direction: column;
-  background: rgba(196, 196, 196, 0.1);
 
   img {
     border-radius: 50%;
@@ -45,6 +49,10 @@
   .other-facilities__list-item {
     display: inline-flex;
     align-items: center;
+    border-bottom: #F2F2F2 1px solid;
+    padding: 2px 50px;
+    margin: 0 -50px;
+    background: rgba(196, 196, 196, 0.1);
   }
 
   .other-facilities__name {

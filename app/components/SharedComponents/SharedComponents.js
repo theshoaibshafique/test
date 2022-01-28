@@ -379,7 +379,6 @@ export const SwitchFacilityModal = props => {
       toggleModal={toggleModal}
       className={`add-edit-user client`}
     >
-    {/*  TODO create UI*/}
       <div className={'modal-header'}>
         Switch Facility
       </div>
@@ -398,23 +397,25 @@ export const SwitchFacilityModal = props => {
             </div>
           </div>
         </div>
-        <div className={'other-facilities'}>
-          {Object.keys(props?.userFacilities).map((key)=>{
-            const value = props?.userFacilities[key];
-            return (
-              <div className={'other-facilities__list-item'} key={key}>
-                <div className={'other-facilities__img'}>
-                  <img src={value.imageSource}/>
+        <div>
+          <div className={'other-facilities'}>
+            {Object.keys(props?.userFacilities).map((key)=>{
+              const value = props?.userFacilities[key];
+              return (
+                <div className={'other-facilities__list-item'} key={key}>
+                  <div className={'other-facilities__img'}>
+                    <img src={value.imageSource}/>
+                  </div>
+                  <div className={'other-facilities__name'}>
+                    <span>{value.facilityName}</span>
+                  </div>
+                  <div className={'other-facilities__action'} onClick={()=>switchFacility(key, value.facilityName, value.imageSource)}>
+                    <img src={UnionLogo}/>
+                  </div>
                 </div>
-                <div className={'other-facilities__name'}>
-                  <span>{value.facilityName}</span>
-                </div>
-                <div className={'other-facilities__action'} onClick={()=>switchFacility(key, value.facilityName, value.imageSource)}>
-                  <img src={UnionLogo}/>
-                </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
       </div>
     </GenericModal>
