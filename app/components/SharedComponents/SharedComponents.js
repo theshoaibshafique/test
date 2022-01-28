@@ -346,10 +346,6 @@ export const SwitchFacilityModal = props => {
   const switchFacility = async (facilityId, facilityName, imageSource) => {
     // call put facility api
     const currentFacility = props.userFacility;
-    props.setFacilitySwitch({
-      currentFacility,
-      isUpdated: false
-    });
     await updateUserFacility(`?facility_id=${facilityId}`, userToken).then(async (e) => {
       if (e == 'error') {
         dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API facility.` }));

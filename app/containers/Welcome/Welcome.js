@@ -14,6 +14,9 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
   constructor(props) {
     super(props);
     this.ref = React.createRef();
+    this.state = {
+      isAnimated: false
+    }
   }
 
   componentDidMount() {
@@ -23,11 +26,22 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
      * get facility graphic image
      */
     console.log(this.props);
+    this.props.setFacilitySwitch({
+      currentFacility: this.props.facilitySwitch.newFacility,
+      newFacility: this.props.facilitySwitch.newFacility,
+    });
+  }
+
+  checkIfFacilityChanged(facilites){
+    console.log(facilites);
+    if(!facilites.newFacility){
+      return false;
+    }
+    return facilites.currentFacility.facilityId !== facilites.newFacility.facilityId;
   }
 
   render() {
-    console.log(this.props.facilitySwitch);
-    let animate = this.props.facilitySwitch?.isUpdated ?? false;
+    let animate = this.checkIfFacilityChanged(this.props.facilitySwitch) ?? false;
     const defaultImgSrc = 'https://api.insights.surgicalsafety.com/media/default.png';
     let currentFacilityImgSrc = this.props.facilitySwitch?.currentFacility.imageSource ?? defaultImgSrc;
     let container = '';
@@ -101,6 +115,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
           </motion.div>
         </div>
       );
+      this.setState({isAnimated: true});
     } else {
       container = (
       <div className="container">

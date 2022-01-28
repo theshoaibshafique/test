@@ -3,12 +3,13 @@ import Welcome from './Welcome';
 
 import { createStructuredSelector } from 'reselect';
 import {
-  makeSelectToken,
-  makeSelectFirstName,
-  makeSelectLastName,
   makeSelectFacility,
   makeSelectFacilitySwitch,
+  makeSelectFirstName,
+  makeSelectLastName,
+  makeSelectToken,
 } from '../App/selectors';
+import { setFacilitySwitch } from '../App/actions';
 
 const mapStateToProps = createStructuredSelector({
   userToken: makeSelectToken(),
@@ -18,4 +19,12 @@ const mapStateToProps = createStructuredSelector({
   facilitySwitch: makeSelectFacilitySwitch(),
 });
 
-export default connect(mapStateToProps, null)(Welcome);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setFacilitySwitch: (facilitySwitch) => {
+      dispatch(setFacilitySwitch(facilitySwitch));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Welcome);
