@@ -75,18 +75,32 @@ const GracePeriod = () => {
     hours: '05',
     minutes: '00'
   });
-  const { getItemFromStore } = useLocalStorage();
+
+  const { getItemFromStore, setItemInStore } = useLocalStorage();
   const handleTimeChange = (e) => {
     setTime((prev) => ({
       ...prev,
-      [e.target.id]: e.target.value
+      [e.target.name]: e.target.value
     }));
   };
 
   React.useEffect(() => {
+    const { hours, minutes } = time;
+
+    const globalFilter = getItemFromStore('globalFilter');
+    // const { turnoverThreshold: otsThreshold, fcotsThreshold } = getItemFromStore('efficiencyV2')?.efficiency;
+    setItemInStore('globalFilter', {
+      ...globalFilter,
+      otsThreshold: parseInt(hours) * 3600,
+      fcotsThreshold: parseInt(minutes) * 60
+    });
+  }, [time]);
+
+  React.useEffect(() => {
     setTime((prev) => ({
       ...prev,
-      hours: moment.duration(getItemFromStore('efficiencyV2')?.efficiency?.turnoverThreshold, 'seconds').hours().toString()
+      hours: moment.duration(getItemFromStore('efficiencyV2')?.efficiency?.turnoverThreshold, 'seconds').hours().toString(),
+      minutes: '00'
     }));
   }, []);
 
@@ -96,21 +110,21 @@ const GracePeriod = () => {
       <Grid item xs={6} style={{ display: 'flex', alignItems: 'flex-end', flexDirection: 'row' }}>
         <FormControl variant="outlined" style={{ backgroundColor: '#fff', width: '90%' }}>
           <Select
-            id="hours"
+            name="hours"
             onChange={handleTimeChange}
             value={time.hours}
           >
             {hours.map(({ id, value }) => (
-              <MenuItem key={id} value={value}>{value}</MenuItem>
+              <MenuItem name={id} key={id} value={value}>{value}</MenuItem>
             ))}
           </Select>
         </FormControl>
       </Grid>
       <Grid item xs={6}>
         <FormControl variant="outlined" style={{ backgroundColor: '#fff', borderRadius: 0, width: '90%' }}>
-          <Select id="minutes" onChange={handleTimeChange} value={time.minutes}>
+          <Select name="minutes" onChange={handleTimeChange} value={time.minutes}>
             {minutes.map(({ id, value }) => (
-              <MenuItem key={id} value={value}>{value}</MenuItem>
+              <MenuItem name={id} key={id} value={value}>{value}</MenuItem>
             ))}
           </Select>
         </FormControl>

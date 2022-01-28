@@ -59,8 +59,8 @@ const searchReducer = (state, event) => {
     event.value = defaultDate;
   } else if (event.name == 'date') {
     event.value = {
-      selected: event.value.key,
-      ...getPresetDates(event.value.key)
+      selected: event.value,
+      ...getPresetDates(event.value)
     }
   } else if (event.name == 'custom-to') {
     event.name = 'date'

@@ -103,10 +103,12 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
               <GracePeriod />
             </Grid>
           )}
-          <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', marginTop: '15px' }}>
-            <button onClick={applyGlobalFilter} className="button primary">Apply</button>
-            <button onClick={handlers?.clearFilters} className="button clear-btn">Clear Filters</button>
-          </Grid>
+          {Object.keys(config).length > 0 && (
+            <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', marginTop: '15px' }}>
+              <button onClick={applyGlobalFilter} className="button primary">Apply</button>
+              <button onClick={handlers?.clearFilters} className="button clear-btn">Clear Filters</button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
       <InformationModal open={informationModalOpen} onToggle={onClick} />

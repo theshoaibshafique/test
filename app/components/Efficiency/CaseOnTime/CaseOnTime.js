@@ -12,7 +12,7 @@ import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App
 import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
-// import { getItemFromStore } from '../../../hooks/useLocalStorage';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 import RadioButtonGroup from '../../SharedComponents/RadioButtonGroup';
 import TimeCard from '../TimeCard';
 import TrendTile from '../TrendTile';
@@ -107,6 +107,7 @@ const CaseOnTime = () => {
 
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
+  const { getItemFromStore, setItemInStore } = useLocalStorage();
   const { data } = useSelectData(process.env.ONTIMESTART_API, userToken, {
     ...state.defaultPayload, facilityName: userFacility, otsThreshold: 3600, fcotsThreshold: 3600, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
   }, axios.CancelToken.source());
@@ -163,7 +164,6 @@ const CaseOnTime = () => {
     const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
     const distributionTile = state.tiles.find(({ title }) => title.toLowerCase().includes('distribution'));
 
-
     const max = specialtyTile.data.specialty.length + roomTile.data.room.length;
     setMaxData(max);
     setTrendStartDate(trendTile?.data?.start_date);
@@ -179,9 +179,41 @@ const CaseOnTime = () => {
     });
   }, [state.tiles, specialty]);
 
-  const applyGlobalFilter = () => {
-    console.log('hi');
-  };
+  React.useEffect(() => {
+    const globalFilter = getItemFromStore('globalFilter');
+    if (!!globalFilter) {
+      setItemInStore('globalFilter', {
+        ...globalFilter,
+        viewFirstCase 
+      });
+    }
+  }, [viewFirstCase]);
+
+  const applyGlobalFilter = async () => {
+    dispatch({ type: 'SET_LOADING', payload: true });
+    try {
+      const startDate = getItemFromStore('globalFilter')?.startDate;
+      const endDate = getItemFromStore('globalFilter')?.endDate;
+      const requestPayload = {
+        startDate: moment(startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+        endDate: moment(endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+        facilityName: userFacility,
+        roomNames: rooms,
+        specialtyNames: [],
+        otsThreshold: 0,
+        fcotsThreshold: 0
+      };
+      const retrieveTileData = request('post');
+      const data = await retrieveTileData(process.env.ONTIMESTART_API, userToken, requestPayload, axios.CancelToken.source());
+      if (data?.tiles?.length) {
+        dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles } });
+      }
+      dispatch({ type: 'SET_LOADING', payload: false });
+    } catch (err) {
+      console.error(err);
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
+  }
 
   const toggleSpecialty = React.useCallback((e) => {
     setSpecialty(e.target.value);
@@ -237,6 +269,7 @@ const CaseOnTime = () => {
         }}
         handlers={{
           ...defaultHandlerConfig,
+          applyGlobalFilter,
           case: {
             toggleFirstCaseOnTime,
             viewFirstCase
@@ -494,7 +527,7 @@ const CaseOnTime = () => {
             </Grid>
             <Grid item xs={12}>
               <Card>
-                <CardContent>
+                <CardContent style={{ height: 345 }}>
                   {tile?.distribution && (
                     <DistributionTile
                       data={tile.distribution}

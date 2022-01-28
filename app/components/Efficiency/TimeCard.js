@@ -1,6 +1,7 @@
 import React from 'react';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
+import Goal from './Goal';
 
 const TimeCard = ({ data, suffix }) => (
   <React.Fragment>
@@ -12,10 +13,17 @@ const TimeCard = ({ data, suffix }) => (
         </LightTooltip>
       </h4>
     </div>
-    <span className="display-number">
-      {data?.previousPeriod}
-      <sup className="superscript-text">{suffix || '%'}</sup>
-    </span>
+    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <span className="display-number">
+          {data?.previousPeriod}
+          <sup className="superscript-text">{suffix || '%'}</sup>
+        </span>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', marginRight: 24 }}>
+        <Goal target={data.goal} goal={data.value} />
+      </div>
+    </div>
     <div className="additional-scores">
       <div className="additional-scores-title">Previous Period </div>
       <div className="additional-scores-value">{data?.previousPeriod}%</div>

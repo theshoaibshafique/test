@@ -23,6 +23,13 @@ const Donut = React.memo(({ data, colours, tooltips, label }) => {
         <Label position="insideTop" style={{ fontSize: 14, color: '#004F6E' }} content={label} />
       </Pie>
       <Legend width={250} height={250} layout="vertical" align="right" payload={data?.slice(1, data?.length)} formatter={(value, entry, index) => {
+      if (tooltips.length < 2) {
+        return (
+          <span style={{ color: '#333', fontSize: 12, lineHeight: '16px' }}>
+            {entry.name.replace(/^\w{1}/, ($1) => $1.toUpperCase())}
+          </span>
+        )
+      }
       return (
       <React.Fragment>
         <span style={{ color: '#333', fontSize: 12, lineHeight: '16px' }}>{entry.name.replace(/^\w{1}/, ($1) => $1.toUpperCase())}</span>

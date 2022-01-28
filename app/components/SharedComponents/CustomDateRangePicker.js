@@ -44,7 +44,8 @@ const CustomDateRangePicker = ({
   const styles = useStyles();
 
   React.useEffect(() => {
-    setItemInStore('globalFilterDates', { startDate: date.start, endDate: date.end });
+    const globalFilter = getItemFromStore('globalFilter');
+    setItemInStore('globalFilter', { ...globalFilter, startDate: date.start, endDate: date.end });
   }, [date.start, date.end]);
 
   React.useEffect(() => {

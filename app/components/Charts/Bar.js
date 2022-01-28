@@ -12,7 +12,7 @@ const BarGraph = React.memo(({
       data={data}
       {...rest}
     >
-      <XAxis dataKey="bin" label={xAxisLabel} interval={interval} />
+      <XAxis type="number" dataKey="bin" label={xAxisLabel} interval={interval} domain={[0, 'auto']} />
       <YAxis dataKey="count" label={yAxisLabel} />
       <Tooltip />
       {rest?.tripleColour && (

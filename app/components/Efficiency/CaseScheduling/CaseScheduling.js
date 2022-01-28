@@ -137,8 +137,8 @@ const CaseScheduling = () => {
   const applyGlobalFilter = async () => {
     dispatch({ type: 'SET_LOADING', payload: true });
     try {
-      const startDate = getItemFromStore('globalFilterDates')?.startDate;
-      const endDate = getItemFromStore('globalFilterDates')?.endDate;
+      const startDate = getItemFromStore('globalFilter')?.startDate;
+      const endDate = getItemFromStore('globalFilter')?.endDate;
       const requestPayload = {
         startDate: moment(startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
         endDate: moment(endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),

@@ -14,12 +14,14 @@ import 'react-multi-carousel/lib/styles.css';
 import { request } from '../../utils/global-functions';
 // import LoadingIndicator from '../LoadingIndicator';
 import Header from './Header';
-// import Donut from '../Charts/Donut';
+import Donut from '../Charts/Donut';
+import HorizontalBar from '../Charts/HorizontalBar';
 import { makeSelectToken, makeSelectUserFacility } from '../../containers/App/selectors';
 import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import useSelectData from '../../hooks/useSelectData';
-import useFilter from '../../hooks/useFilter';
+// import useFilter from '../../hooks/useFilter';
+import TimeCard from './TimeCard';
 import './styles.scss';
 
 const INITIAL_STATE = {
@@ -56,12 +58,16 @@ const reducer = (state, action) => {
   }
 };
 
+const DONUT_COLOURS = ['#A7E5FD', '#FF7D7D', '#FF4D4D', '#CFB9E4', '#97E7B3', '#FFDB8C', '#A77ECD', '#97E7B3', '#A77ECD'];
+const colors = ['#FF7D7D'];
+
 const Efficiency = () => {
   const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
   const { setItemInStore } = useLocalStorage();
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
-  const { rooms, defaultFilterConfig, defaultHandlerConfig } = useFilter();
+  const [orGraphData, setOrGraphData] = React.useState([]);
+  // const { rooms, defaultFilterConfig, defaultHandlerConfig } = useFilter();
   const [tile, setTile] = React.useState({});
   const { data } = useSelectData(process.env.EFFICIENCYV2_API, userToken, {
     ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
@@ -76,10 +82,26 @@ const Efficiency = () => {
     if (!state.tiles) return;
     const efficiencyTile = state.tiles.find(({ title }) => title.toLowerCase().includes('efficiency index'));
     const headlineTile = state.tiles.find(({ title }) => title.toLowerCase() === 'efficiency');
+    const onTimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('on-time'));
+    const otTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
+    const utilizationTile = state.tiles.find(({ title }) => title.toLowerCase().includes('block'));
+    const turnoverTile = state.tiles.find(({ title }) => title.toLowerCase().includes('turnover'));
+    const scheduleTile = state.tiles.find(({ title }) => title.toLowerCase().includes('under-schedule'));
+    const specialtyTile = state.tiles.find(({ title }) => title.toLowerCase().includes('specialty'));
+    const roomTile = state.tiles.find(({ title }) => title.toLowerCase().includes('room'));
+
+    const formattedHorizontalBarData = formatBarGraphData(roomTile?.data);
+    setOrGraphData(formattedHorizontalBarData);
 
     setTile({
       efficiency: efficiencyTile,
       headline: headlineTile,
+      onTime: onTimeTile,
+      overtime: otTile,
+      utilization: utilizationTile,
+      turnover: turnoverTile,
+      schedule: scheduleTile,
+      specialty: specialtyTile,
     });
   }, [state]);
 
@@ -93,6 +115,12 @@ const Efficiency = () => {
           setItemInStore('efficiencyV2', {
             efficiency: configData
           });
+          setItemInStore('globalFilter', {
+            startDate: configData.startDate,
+            endDate: configData.endDate,
+            fcotsThreshold: configData.fcotsThreshold,
+            otsThreshold: configData.turnoverThreshold
+          });
         }
 
         dispatch({ type: 'SET_LOADING', payload: false });
@@ -103,15 +131,20 @@ const Efficiency = () => {
     fetchTileData();
   }, []);
 
+  const formatDonutData = (dataset) => dataset.specialties.map((specialty, i) => ({
+    name: specialty,
+    value: dataset.counts[i],
+    color: DONUT_COLOURS[i]
+  }));
+
+  const formatBarGraphData = (dataset) => dataset?.rooms.map((room, i) => ({
+    room,
+    time: dataset.counts[i]
+  }));
+
   return (
     <div className="page-container">
-      <Header
-        config={{ ...defaultFilterConfig }}
-        // applyGlobalFilter={applyGlobalFilter}
-        handlers={{
-          ...defaultHandlerConfig
-        }}
-      />
+      <Header />
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header" spacing={0}>
           <h3>Efficiency Dashboard</h3>
@@ -204,28 +237,36 @@ const Efficiency = () => {
         <Grid item xs={3}>
           <Card>
             <CardContent>
-              Case on Time
+              {tile?.onTime && (
+                <TimeCard data={tile.onTime} />
+              )}
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={3}>
           <Card>
             <CardContent>
-              <div>Block Utilization</div>
+              {tile?.utilization && (
+                <TimeCard data={tile.utilization} />
+              )}
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={3}>
           <Card>
             <CardContent>
-              Case Scheduling
+              {tile?.schedule && (
+                <TimeCard data={tile.schedule} />
+              )}
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={3}>
           <Card>
             <CardContent>
-              Turnover Time
+              {tile?.turnover && (
+                <TimeCard data={tile.turnover} />
+              )}
             </CardContent>
           </Card>
         </Grid>
@@ -234,15 +275,81 @@ const Efficiency = () => {
         <Grid item xs={6}>
           <Card>
             <CardContent>
-            Total Overtime Minutes
+              {tile?.overtime && (
+                <React.Fragment>
+                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <h4>
+                      {tile?.overtime?.title}
+                      <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.overtime?.toolTip) ? tile?.overtime?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.overtime?.toolTip}>
+                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.overtime?.toolTip?.toString()}`} />
+                      </LightTooltip>
+                    </h4>
+                  </div>
+                  <HorizontalBar
+                    data={orGraphData}
+                    xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }}
+                    yAxisLabel={{
+                      value: 'Room', angle: -90, offset: -5, position: 'insideLeft'
+                    }}
+                    dataKeys={['time']}
+                    colors={colors}
+                    height={300}
+                    margin={{
+                      top: 20, right: 30, left: 20, bottom: 20
+                    }}
+                  />
+                </React.Fragment>
+              )}
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={6}>
           <Card>
-            <CardContent>
-            Case Count By Specialty
-
+            <CardContent style={{ height: 390 }}>
+              {tile?.specialty && (
+                <React.Fragment>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <h4>
+                      {tile?.specialty?.title}
+                      <LightTooltip
+                        placement="top"
+                        fontSize="small"
+                        interactive
+                        arrow
+                        title={tile?.specialty?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
+                      >
+                        <InfoOutlinedIcon
+                          style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }}
+                          className="log-mouseover"
+                          id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`}
+                        />
+                      </LightTooltip>
+                    </h4>
+                  </div>
+                  {!!tile?.specialty && (
+                    <Donut
+                      data={formatDonutData(tile.specialty.data)}
+                      tooltips={tile.specialty.toolTip}
+                      label={
+                        <React.Fragment>
+                          <text x={160} y={95} style={{ fontSize: 14, color: '#333' }}>
+                            Total Cases
+                          </text>
+                          <text x={150} y={160} style={{ fontSize: 60, color: '#004F6E', fontWeight: 'bold' }}>
+                            {tile.specialty.data.total}
+                          </text>
+                        </React.Fragment>
+                      }
+                    />
+                  )}
+                </React.Fragment>
+              )}
             </CardContent>
           </Card>
         </Grid>
