@@ -19,13 +19,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectSnackbar, makeSelectToken } from '../../containers/App/selectors';
-import { mdiClose } from '@mdi/js';
+import { mdiClose, mdiPlaylistEdit } from '@mdi/js';
 import Icon from '@mdi/react';
 import { MTableCell } from 'material-table';
 import './style.scss';
 import UnionLogo from './img/Union.svg';
 import { updateUserFacility } from './helpers';
 import globalFunctions from '../../utils/global-functions';
+import { mdiSwapHorizontal } from '@mdi/js';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
@@ -407,7 +408,7 @@ export const SwitchFacilityModal = props => {
                     <span>{value.facilityName}</span>
                   </div>
                   <div className={'other-facilities__action'} onClick={()=>switchFacility(key, value.facilityName, value.imageSource)}>
-                    <img src={UnionLogo}/>
+                    <Icon color="#828282" path={mdiSwapHorizontal} size={'24px'} />
                   </div>
                 </div>
               )
