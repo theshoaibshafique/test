@@ -94,6 +94,23 @@ class SSTNav extends React.Component {
 
   render() {
     const hasEMMPages = this.props.emmPublishAccess || this.props.emmRequestAccess;
+    let facilityMenuItem = '';
+    if(this.props.sstAdminAccess){
+      facilityMenuItem = (
+        <MenuItem className="sst-menu-item">
+          <div onClick={() => this.handleSwitchFacility(true)}>Switch Facility</div>
+          {/*TODO put profile faciliy and user facilies into the component*/}
+          <SwitchFacilityModal
+            userFacility={this.props.userFacility}
+            setProfile={this.props.setProfile}
+            setFacilitySwitch={this.props.setFacilitySwitch}
+            profileFacility={this.props.facility}
+            userFacilities={this.props.facilityDetails}
+            open={Boolean(this.state.switchFacility)}
+            toggleModal={this.handleSwitchFacility.bind(this)} />
+        </MenuItem>
+      );
+    }
     return (
       <Grid container spacing={0} className="sstnav subtle-subtext" style={{ height: "100%" }}>
         <Grid item xs={12}>
@@ -229,18 +246,7 @@ class SSTNav extends React.Component {
                   My Profile
                 </NavLink>
               </MenuItem>
-              <MenuItem className="sst-menu-item">
-                <div onClick={() => this.handleSwitchFacility(true)}>Switch Facility</div>
-                {/*TODO put profile faciliy and user facilies into the component*/}
-                <SwitchFacilityModal
-                  userFacility={this.props.userFacility}
-                  setProfile={this.props.setProfile}
-                  setFacilitySwitch={this.props.setFacilitySwitch}
-                  profileFacility={this.props.facility}
-                  userFacilities={this.props.facilityDetails}
-                  open={Boolean(this.state.switchFacility)}
-                  toggleModal={this.handleSwitchFacility.bind(this)} />
-              </MenuItem>
+              {facilityMenuItem}
               <MenuItem className="sst-menu-item">
                 <div onClick={() => this.logout()}>Logout</div>
               </MenuItem>
