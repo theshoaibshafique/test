@@ -71,6 +71,14 @@
   .other-facilities__action img {
     width: 23px;
   }
+
+  .other-facilities__action img:hover {
+    cursor: pointer;
+  }
+
+  .other-facilities__action img:active {
+    cursor: default;
+  }
 }
 
 
