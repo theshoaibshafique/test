@@ -68,15 +68,11 @@
     margin-right: 20px;
   }
 
-  .other-facilities__action img {
-    width: 23px;
-  }
-
-  .other-facilities__action img:hover {
+  .other-facilities__action:hover {
     cursor: pointer;
   }
 
-  .other-facilities__action img:active {
+  .other-facilities__action:active {
     cursor: default;
   }
 }

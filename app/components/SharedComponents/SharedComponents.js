@@ -397,7 +397,9 @@ export const SwitchFacilityModal = props => {
         </div>
         <div>
           <div className={'other-facilities'}>
-            {Object.keys(props?.userFacilities).map((key)=>{
+            {Object.keys(props?.userFacilities)
+              .filter((facilityId)=>facilityId!==props?.profileFacility.facilityId)
+              .map((key)=>{
               const value = props?.userFacilities[key];
               return (
                 <div className={'other-facilities__list-item'} key={key}>
