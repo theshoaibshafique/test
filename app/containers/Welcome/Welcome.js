@@ -40,14 +40,10 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
     return facilites.currentFacility.facilityId !== facilites.newFacility.facilityId;
   }
 
-  render() {
-    let animate = this.checkIfFacilityChanged(this.props.facilitySwitch) ?? false;
-    const defaultImgSrc = 'https://api.insights.surgicalsafety.com/media/default.png';
-    let currentFacilityImgSrc = this.props.facilitySwitch?.currentFacility.imageSource ?? defaultImgSrc;
-    let container = '';
+  renderAnimatedContainer(animate, defaultImgSrc, currentFacilityImgSrc) {
     if(animate){
       const newFacilityImgSrc = this.props.facilitySwitch.newFacility.imageSource;
-      container = (
+      return (
         <div className="container" id={Math.random()}>
           {/*with animation*/}
           {/*current facility graphic*/}
@@ -117,20 +113,27 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
       );
       this.setState({isAnimated: true});
     } else {
-      container = (
-      <div className="container">
-        <div className="facility-graphic-container" style={{display: !animate ? 'flex' : 'none' }}>
-          <div className="facility-graphic-container__img-container">
-            <img src={currentFacilityImgSrc} ref={this.ref}/>
+      return (
+        <div className="container">
+          <div className="facility-graphic-container" style={{display: !animate ? 'flex' : 'none' }}>
+            <div className="facility-graphic-container__img-container">
+              <img src={currentFacilityImgSrc} ref={this.ref}/>
+            </div>
+          </div>
+          <div className="welcome-message" style={{visibility: !animate ? 'visible' : 'hidden' }}>
+            <div className="welcome">Welcome</div>
+            <div className="personal-name">{this.props.firstName} {this.props.lastName}</div>
           </div>
         </div>
-        <div className="welcome-message" style={{visibility: !animate ? 'visible' : 'hidden' }}>
-          <div className="welcome">Welcome</div>
-          <div className="personal-name">{this.props.firstName} {this.props.lastName}</div>
-        </div>
-      </div>
       );
     }
+  }
+
+  render() {
+    let animate = this.checkIfFacilityChanged(this.props.facilitySwitch) ?? false;
+    const defaultImgSrc = 'https://api.insights.surgicalsafety.com/media/default.png';
+    let currentFacilityImgSrc = this.props.facilitySwitch?.currentFacility.imageSource ?? defaultImgSrc;
+    const container = this.renderAnimatedContainer(animate, defaultImgSrc, currentFacilityImgSrc)
 
     return (
       <div className="welcome-page">
