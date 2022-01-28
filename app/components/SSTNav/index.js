@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import SSTNav from './SSTNav';
-import { setFacilityDetails, setFacilitySwitch, setProfile } from '../../containers/App/actions';
-import { makeSelectFacility } from '../../containers/App/selectors';
+import { setFacilityDetails, setProfile } from '../../containers/App/actions';
+import { makeFacilityDetails, makeSelectUserFacility } from '../../containers/App/selectors';
 
 const mapStateToProps = createStructuredSelector({
-  userFacility: makeSelectFacility(),
+  userFacility: makeSelectUserFacility(),
+  facilityDetails: makeFacilityDetails(),
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -15,9 +16,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     setFacilityDetails: (facilityDetails) => {
       dispatch(setFacilityDetails(facilityDetails));
-    },
-    setFacilitySwitch: (facilitySwitch) => {
-      dispatch(setFacilitySwitch(facilitySwitch));
     },
   };
 };

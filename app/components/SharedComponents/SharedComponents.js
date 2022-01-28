@@ -27,6 +27,8 @@ import UnionLogo from './img/Union.svg';
 import { updateUserFacility } from './helpers';
 import globalFunctions from '../../utils/global-functions';
 import { mdiSwapHorizontal } from '@mdi/js';
+import { browserHistory } from 'react-router';
+import { redirectLogin } from '../../utils/Auth';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
@@ -338,16 +340,15 @@ export const SwitchFacilityModal = props => {
   const userToken = useSelector(makeSelectToken());
   const dispatch = useDispatch();
 
+  const currentFacilityId = props?.userFacility;
+  const currentFacility = props?.facilityDetails[currentFacilityId];
+
   const toggleModal = (d) => {
     props?.toggleModal?.(d);
   }
 
-  const switchFacility = async (facilityId, facilityName, imageSource) => {
+  const switchFacility = async (facilityId, facilityName) => {
     // call put facility api
-    const currentFacility = props.userFacility;
-    props.setFacilitySwitch({
-      currentFacility,
-    });
     await updateUserFacility(`?facility_id=${facilityId}`, userToken).then(async (e) => {
       if (e == 'error') {
         dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API facility.` }));
@@ -361,11 +362,7 @@ export const SwitchFacilityModal = props => {
           toggleModal(false);
           profileResult.facility = facilityResult[profileResult.facilityId];
           props.setProfile(profileResult);
-          props.setFacilitySwitch({
-            currentFacility,
-            newFacility: facilityResult[facilityId],
-            isUpdated: true
-          });
+          window.location.replace(`/dashboard?currentFacilityId=${currentFacilityId}&newFacilityId=${profileResult.facilityId}`);
         })
       }
     })
@@ -384,23 +381,23 @@ export const SwitchFacilityModal = props => {
       <div className={'modal-content'}>
         <div className={'current-facility'}>
           <div className={'current-facility__img'}>
-            <img src={props?.profileFacility.imageSource}/>
+            <img src={currentFacility.imageSource}/>
           </div>
           <div className={'current-facility__desc'}>
             <div className={'current-facility__label'}>
               <span>Currently Viewing</span>
             </div>
             <div className={'current-facility__name'}>
-              <span>{props?.profileFacility.facilityName}</span>
+              <span>{currentFacility.facilityName}</span>
             </div>
           </div>
         </div>
         <div>
           <div className={'other-facilities'}>
-            {Object.keys(props?.userFacilities)
-              .filter((facilityId)=>facilityId!==props?.profileFacility.facilityId)
+            {Object.keys(props?.facilityDetails)
+              .filter((facilityId)=>facilityId!==currentFacilityId)
               .map((key)=>{
-              const value = props?.userFacilities[key];
+              const value = props?.facilityDetails[key];
               return (
                 <div className={'other-facilities__list-item'} key={key}>
                   <div className={'other-facilities__img'}>

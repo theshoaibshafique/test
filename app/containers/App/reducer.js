@@ -76,16 +76,12 @@ function emmReducer(state = initialState, action) {
         .set('userID', action.profile.userId)
         .set('email', action.profile.email)
         .set('userFacility', action.profile.facilityId)
-        .set('facility', action.profile.facility)
         .set('firstName', action.profile.firstName)
         .set('lastName', action.profile.lastName)
         .set('jobTitle', action.profile.title)
     case FACILITY_DETAILS:
       return state
         .set('facilityDetails', action.facilityDetails)
-    case FACILITY_SWITCH:
-      return state
-        .set('facilitySwitch', action.facilitySwitch)
     case USER_FACILITY:
       return state
         .set('userFacility', action.facility)

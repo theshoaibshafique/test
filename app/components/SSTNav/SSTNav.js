@@ -100,11 +100,10 @@ class SSTNav extends React.Component {
           <div onClick={() => this.handleSwitchFacility(true)}>Switch Facility</div>
           {/*TODO put profile faciliy and user facilies into the component*/}
           <SwitchFacilityModal
-            userFacility={this.props.userFacility}
+            history={this.props.history}
             setProfile={this.props.setProfile}
-            setFacilitySwitch={this.props.setFacilitySwitch}
-            profileFacility={this.props.facility}
-            userFacilities={this.props.facilityDetails}
+            userFacility={this.props.userFacility}
+            facilityDetails={this.props.facilityDetails}
             open={Boolean(this.state.switchFacility)}
             toggleModal={this.handleSwitchFacility.bind(this)} />
         </MenuItem>

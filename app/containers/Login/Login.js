@@ -136,13 +136,7 @@ export default class Login extends React.PureComponent {
       globalFunctions.genericFetch(`${process.env.USER_V2_API}facility`, 'get', token, {})
     ]).then(async ([profileResult, facilityResult]) => {
       this.props.setFacilityDetails(facilityResult);
-      profileResult.facility = facilityResult[profileResult.facilityId];
       this.props.setProfile(profileResult);
-      const facility = {
-        currentFacility: facilityResult[profileResult.facilityId],
-        newFacility: facilityResult[profileResult.facilityId],
-      }
-      this.props.setFacilitySwitch(facility);
       this.setLogger(token);
       if (roleToken?.forbidden){
         const val = await roleToken?.forbidden
@@ -154,21 +148,6 @@ export default class Login extends React.PureComponent {
     }).catch((results) => {
       console.error("oh no", results)
     });
-    // await globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', token, {})
-    //   .then(async result => {
-    //     this.props.setProfile(result);
-    //     this.setLogger(token);
-    //     if (roleToken?.forbidden){
-    //       const val = await roleToken?.forbidden
-    //       this.props.setUserStatus({status: 'forbidden', message: val?.detail})
-    //       return
-    //     }
-    //     this.getOperatingRooms(token);
-    //     this.getComplications(token);
-    //
-    //   }).catch((results) => {
-    //     console.error("oh no", results)
-    //   });
 
   }
 

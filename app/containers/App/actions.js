@@ -16,22 +16,21 @@
  */
 
 import {
-  USER_TOKEN,
-  USER_FACILITY,
-  FACILITY_ROOMS,
-  SPECIALTIES,
-  COMPLICATIONS,
-  OPERATING_ROOM,
-  USER_ROLES,
-  LOGGER,
   AUTH_LOGIN,
-  PROFILE,
+  COMPLICATIONS,
   CURRENT_PRODUCT,
-  TOGGLE_SNACKBAR,
   EXIT_SNACKBAR,
-  USER_STATUS,
   FACILITY_DETAILS,
-  FACILITY_SWITCH,
+  FACILITY_ROOMS,
+  LOGGER,
+  OPERATING_ROOM,
+  PROFILE,
+  SPECIALTIES,
+  TOGGLE_SNACKBAR,
+  USER_FACILITY,
+  USER_ROLES,
+  USER_STATUS,
+  USER_TOKEN,
 } from './constants';
 
 /**
@@ -213,13 +212,6 @@ export function setFacilityDetails(facilityDetails) {
   return {
     type: FACILITY_DETAILS,
     facilityDetails
-  };
-}
-
-export function setFacilitySwitch(facilitySwitch) {
-  return {
-    type: FACILITY_SWITCH,
-    facilitySwitch
   };
 }
 

@@ -11,38 +11,30 @@ import { helperFetch } from '../AdminPanel/helpers';
 
 export default class Welcome extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
+
   constructor(props) {
     super(props);
     this.ref = React.createRef();
+    const currentFacilityId = new URLSearchParams(this.props.location.search).get('currentFacilityId') ?? props.userFacility;
+    const newFacilityId = new URLSearchParams(this.props.location.search).get('newFacilityId') ?? null;
     this.state = {
-      isAnimated: false
-    }
+      isAnimated: false,
+      currentFacilityId,
+      newFacilityId
+    };
   }
 
   componentDidMount() {
-    /**
-     * get profile facility
-     * get facility data
-     * get facility graphic image
-     */
-    console.log(this.props);
-    this.props.setFacilitySwitch({
-      currentFacility: this.props.facilitySwitch.newFacility,
-      newFacility: this.props.facilitySwitch.newFacility,
-    });
   }
 
-  checkIfFacilityChanged(facilites){
-    console.log(facilites);
-    if(!facilites.newFacility){
-      return false;
-    }
-    return facilites.currentFacility.facilityId !== facilites.newFacility.facilityId;
+  checkIfFacilityChanged(){
+    return this.state.newFacilityId != null && this.state.currentFacilityId !== this.state.newFacilityId;
   }
 
-  renderAnimatedContainer(animate, defaultImgSrc, currentFacilityImgSrc) {
+  renderAnimatedContainer(animate) {
+    const currentFacility = this.props.facilityDetails[this.state.currentFacilityId];
+    const newFacility = this.props.facilityDetails[this.state.newFacilityId];
     if(animate){
-      const newFacilityImgSrc = this.props.facilitySwitch.newFacility.imageSource;
       return (
         <div className="container" id={Math.random()}>
           {/*with animation*/}
@@ -59,7 +51,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
             }}
           >
             <div className="facility-graphic-container__img-container">
-              <img src={currentFacilityImgSrc} ref={this.ref}/>
+              <img src={currentFacility.imageSource} ref={this.ref}/>
             </div>
           </motion.div>
           {/*new facility graphic*/}
@@ -75,7 +67,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
             }}
           >
             <div className="facility-graphic-container__img-container">
-              <img src={newFacilityImgSrc} ref={this.ref}/>
+              <img src={newFacility.imageSource} ref={this.ref}/>
             </div>
           </motion.div>
 
@@ -111,13 +103,12 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
           </motion.div>
         </div>
       );
-      this.setState({isAnimated: true});
     } else {
       return (
         <div className="container">
           <div className="facility-graphic-container" style={{display: !animate ? 'flex' : 'none' }}>
             <div className="facility-graphic-container__img-container">
-              <img src={currentFacilityImgSrc} ref={this.ref}/>
+              <img src={currentFacility.imageSource} ref={this.ref}/>
             </div>
           </div>
           <div className="welcome-message" style={{visibility: !animate ? 'visible' : 'hidden' }}>
@@ -130,10 +121,12 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
   }
 
   render() {
+    // return <div />;
     let animate = this.checkIfFacilityChanged(this.props.facilitySwitch) ?? false;
-    const defaultImgSrc = 'https://api.insights.surgicalsafety.com/media/default.png';
-    let currentFacilityImgSrc = this.props.facilitySwitch?.currentFacility.imageSource ?? defaultImgSrc;
-    const container = this.renderAnimatedContainer(animate, defaultImgSrc, currentFacilityImgSrc)
+    // const defaultImgSrc = 'https://api.insights.surgicalsafety.com/media/default.png';
+    // let currentFacilityImgSrc = this.props.facilitySwitch?.currentFacility.imageSource ?? defaultImgSrc;
+    // const container = this.renderAnimatedContainer(animate, defaultImgSrc, currentFacilityImgSrc)
+    const container = this.renderAnimatedContainer(animate);
 
     return (
       <div className="welcome-page">
