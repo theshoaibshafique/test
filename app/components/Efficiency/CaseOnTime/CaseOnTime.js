@@ -264,12 +264,32 @@ const CaseOnTime = () => {
         config={{
           ...defaultFilterConfig,
           specialty: true,
-          grace: true,
+          grace: {
+            threshold: false,
+            period: true
+          },
           case: true
         }}
+        applyGlobalFilter={() => applyGlobalFilter({
+          endpoint: process.env.ONTIMESTART_API,
+          userToken,
+          cancelToken: axios.CancelToken.source()
+          }, {
+            startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+            endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+            facilityName: userFacility,
+            roomNames: rooms,
+            otsThreshold: !viewFirstCase ? getItemFromStore('globalFilter')?.otsThreshold : 0,
+            fcotsThreshold: viewFirstCase ? getItemFromStore('globalFilter')?.fcotsThreshold: 0,
+          },
+          (tileData) => {
+            if (tileData?.tiles?.length) {
+              dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
+            }
+          }
+        )}
         handlers={{
           ...defaultHandlerConfig,
-          applyGlobalFilter,
           case: {
             toggleFirstCaseOnTime,
             viewFirstCase

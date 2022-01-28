@@ -111,7 +111,7 @@ const DistributionTile = ({ data }) => {
           display: 'flex', flexDirection: 'row', flex: 1, justifyContent: 'flex-end'
         }}
       >
-        <RadioButtonGroup value={graphData} onChange={toggleGraphData} options={barGraphToggleOptions} highlightColour="#592D82" />
+        <RadioButtonGroup value={graphData} onChange={toggleGraphData} options={barGraphToggleOptions} highlightColour="#004F6E" />
       </div>
       <BarGraph
         height={200}

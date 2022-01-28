@@ -70,7 +70,7 @@ const BlockUtilization = React.memo(() => {
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore } = useLocalStorage();
-  const { rooms, defaultFilterConfig, defaultHandlerConfig } = useFilter();
+  const { rooms, defaultFilterConfig, defaultHandlerConfig, applyGlobalFilter } = useFilter();
   const [tile, setTile] = React.useState({});
   const [trendStartDate, setTrendStartDate] = React.useState('');
 
@@ -186,31 +186,6 @@ const BlockUtilization = React.memo(() => {
     return cb(transformed);
   };
 
-  const applyGlobalFilter = async () => {
-    dispatch({ type: 'SET_LOADING', payload: true });
-    try {
-      const startDate = getItemFromStore('globalFilter')?.startDate;
-      const endDate = getItemFromStore('globalFilter')?.endDate;
-      const requestPayload = {
-        startDate: moment(startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
-        endDate: moment(endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
-        facilityName: userFacility,
-        roomNames: rooms,
-        specialtyNames: [],
-      };
-      const retrieveTileData = request('post');
-      const data = await retrieveTileData(process.env.BLOCKUTILIZATION_API, userToken, requestPayload, axios.CancelToken.source());
-      if (data?.tiles?.length) {
-        dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles } });
-      }
-      dispatch({ type: 'SET_LOADING', payload: false });
-    } catch (err) {
-      console.error(err);
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
-  }
-
-
   const setUtilizationByRoomSort = (key) => () => {
     setSort((prev) => ({
       ...prev,
@@ -226,7 +201,22 @@ const BlockUtilization = React.memo(() => {
     <div className="page-container">
       <Header
         config={{...defaultFilterConfig}}
-        applyGlobalFilter={applyGlobalFilter}
+        applyGlobalFilter={() => applyGlobalFilter({
+          endpoint: process.env.BLOCKUTILIZATION_API,
+          userToken,
+          cancelToken: axios.CancelToken.source()
+          }, {
+            startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+            endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+            facilityName: userFacility,
+            roomNames: rooms
+          },
+          (tileData) => {
+            if (tileData?.tiles?.length) {
+              dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
+            }
+          }
+        )}
         handlers={{
           ...defaultHandlerConfig
         }}

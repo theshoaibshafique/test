@@ -70,7 +70,7 @@ const minutes = [
   }
 ];
 
-const GracePeriod = () => {
+const GracePeriod = ({ config }) => {
   const [time, setTime] = React.useState({
     hours: '05',
     minutes: '00'
@@ -83,6 +83,7 @@ const GracePeriod = () => {
       [e.target.name]: e.target.value
     }));
   };
+
 
   React.useEffect(() => {
     const { hours, minutes } = time;
@@ -104,31 +105,44 @@ const GracePeriod = () => {
     }));
   }, []);
 
+  const renderLabelText = () => {
+    if (config?.gracePeriod && !config?.threshold) {
+      return <span>Grace Period</span>;
+    }
+    return <span>Outlier Threshold <b>(hh:mm)</b></span>;
+  };
+
   return (
     <Grid container>
-      <FormLabel style={{ paddingTop: '2px', paddingBottom: '4px' }}>Outlier Threshold (<strong>hh:mm</strong>)</FormLabel>
-      <Grid item xs={6} style={{ display: 'flex', alignItems: 'flex-end', flexDirection: 'row' }}>
-        <FormControl variant="outlined" style={{ backgroundColor: '#fff', width: '90%' }}>
-          <Select
-            name="hours"
-            onChange={handleTimeChange}
-            value={time.hours}
-          >
-            {hours.map(({ id, value }) => (
-              <MenuItem name={id} key={id} value={value}>{value}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item xs={6}>
-        <FormControl variant="outlined" style={{ backgroundColor: '#fff', borderRadius: 0, width: '90%' }}>
-          <Select name="minutes" onChange={handleTimeChange} value={time.minutes}>
-            {minutes.map(({ id, value }) => (
-              <MenuItem name={id} key={id} value={value}>{value}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
+      <FormLabel style={{ paddingTop: '2px', paddingBottom: '4px' }}>
+        {renderLabelText()}
+      </FormLabel>
+      {config?.threshold && (
+        <Grid item xs={6} style={{ display: 'flex', alignItems: 'flex-end', flexDirection: 'row' }}>
+          <FormControl variant="outlined" style={{ backgroundColor: '#fff', width: '90%' }}>
+            <Select
+              name="hours"
+              onChange={handleTimeChange}
+              value={time.hours}
+            >
+              {hours.map(({ id, value }) => (
+                <MenuItem name={id} key={id} value={value}>{value}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+      )}
+      {config?.gracePeriod && (
+        <Grid item xs={config.gracePeriod && !config.threshold ? 12 : 6}>
+          <FormControl variant="outlined" style={{ backgroundColor: '#fff', borderRadius: 0, width: '90%' }}>
+            <Select name="minutes" onChange={handleTimeChange} value={time.minutes}>
+              {minutes.map(({ id, value }) => (
+                <MenuItem name={id} key={id} value={value}>{value}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+      )}
       <Grid item xs={12}>
         <FormHelperText>UCI standard: 5 hr</FormHelperText>
       </Grid>

@@ -1,11 +1,14 @@
 import React from 'react';
+import { request } from '../utils/global-functions';
 
-const defaultPayload  = {
+const defaultPayload = {
   roomNames: [],
   specialtyNames: []
 };
 
 const useFilter = () => {
+  // const { getItemFromStore } = useLocalStorage();
+  const [loading, setLoading] = React.useState(false);
   const [rooms, setRooms] = React.useState([]);
   const [orFilterVal, setOrFilterVal] = React.useState([]);
   const [viewFirstCase, setViewFirstCase] = React.useState(false);
@@ -13,10 +16,6 @@ const useFilter = () => {
   const selectOrs = React.useCallback((_, value) => {
     setRooms(value.map(({ id }) => id));
     setOrFilterVal(value);
-  }, []);
-
-  const selectGracePeriod = React.useCallback((_, value) => {
-
   }, []);
 
   React.useEffect(() => () => {
@@ -27,6 +26,26 @@ const useFilter = () => {
   const clearFilters = () => {
     setRooms([]);
     setOrFilterVal([]);
+  };
+
+  const applyGlobalFilter = async ({ endpoint, userToken, cancelToken }, payload, cb) => {
+    setLoading(true);
+    let data = null;
+    try {
+      const requestPayload = {
+        ...defaultPayload,
+        ...payload
+      };
+      const retrieveTileData = request('post');
+      data = await retrieveTileData(endpoint, userToken, requestPayload, cancelToken);
+      if (data?.tiles?.length) {
+        return cb(data);
+      }
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+    return cb(data);
   };
 
   const toggleFirstCaseOnTime = React.useCallback(() => {
@@ -47,11 +66,12 @@ const useFilter = () => {
   };
 
   return {
+    loading,
     rooms,
     selectOrs,
     clearFilters,
     orFilterVal,
-    selectGracePeriod,
+    applyGlobalFilter,
     toggleFirstCaseOnTime,
     viewFirstCase,
     defaultFilterConfig,

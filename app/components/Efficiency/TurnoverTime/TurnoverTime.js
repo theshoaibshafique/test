@@ -13,6 +13,7 @@ import FooterText from '../FooterText';
 import HorizontalBar from '../../Charts/HorizontalBar';
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 import DistributionTile from './DistributionTile';
 import TimeCard from '../TimeCard';
 import TrendTile from '../TrendTile';
@@ -76,6 +77,7 @@ const TurnoverTime = () => {
   const colors = ['#97E7B3', '#FFB71B', '#3DB3E3'];
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
+  const { getItemFromStore } = useLocalStorage();
   const { data } = useSelectData(process.env.TURNOVER_API, userToken, {
     ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
   }, axios.CancelToken.source());
@@ -146,9 +148,28 @@ const TurnoverTime = () => {
       <Header
         config={{
           ...defaultFilterConfig,
-          grace: true
+          grace: {
+            threshold: true,
+            period: true
+          }
         }}
-        applyGlobalFilter={applyGlobalFilter}
+        applyGlobalFilter={() => applyGlobalFilter({
+          endpoint: process.env.TURNOVER_API,
+          userToken,
+          cancelToken: axios.CancelToken.source()
+          }, {
+            startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+            endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+            facilityName: userFacility,
+            roomNames: rooms,
+            threshold: getItemFromStore('globalFilter')?.otsThreshold + getItemFromStore('globalFilter').fcotsThreshold
+          },
+          (tileData) => {
+            if (tileData?.tiles?.length) {
+              dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
+            }
+          }
+        )}
         handlers={{
           ...defaultHandlerConfig,
           grace: {
@@ -209,6 +230,7 @@ const TurnoverTime = () => {
                     </h4>
                   </div>
                   <HorizontalBar
+                    legend
                     data={orGraphData}
                     xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }}
                     yAxisLabel={{

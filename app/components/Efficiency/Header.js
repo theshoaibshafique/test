@@ -33,7 +33,6 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
   const { getItemFromStore } = useLocalStorage();
   const filters = getItemFromStore('efficiencyV2')?.efficiency?.filters?.ORs;
   const specialties = getItemFromStore('efficiencyV2')?.efficiency?.filters?.Specialties;
-
   const [informationModalOpen, setInformationModalOpen] = React.useState(false);
 
   const onClick = React.useCallback(() => {
@@ -98,9 +97,9 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
               />
             </Grid>
           )}
-          {config?.grace && (
+          {!!config?.grace && (
             <Grid item xs={2}>
-              <GracePeriod />
+              <GracePeriod config={{ threshold: config.grace.threshold, gracePeriod: config.grace.period }} />
             </Grid>
           )}
           {Object.keys(config).length > 0 && (

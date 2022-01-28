@@ -15,6 +15,7 @@ import ProcedureList from '../CaseScheduling/ProcedureList';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -80,6 +81,8 @@ const CaseScheduling = () => {
     endDate: state.endDate.format('YYYY-MM-DD')
   }, axios.CancelToken.source());
 
+  const { getItemFromStore } = useLocalStorage();
+
   const {
     defaultHandlerConfig,
     defaultFilterConfig
@@ -134,35 +137,26 @@ const CaseScheduling = () => {
     setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
   };
 
-  const applyGlobalFilter = async () => {
-    dispatch({ type: 'SET_LOADING', payload: true });
-    try {
-      const startDate = getItemFromStore('globalFilter')?.startDate;
-      const endDate = getItemFromStore('globalFilter')?.endDate;
-      const requestPayload = {
-        startDate: moment(startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
-        endDate: moment(endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
-        facilityName: userFacility,
-        roomNames: rooms,
-        specialtyNames: [],
-      };
-      const retrieveTileData = request('post');
-      const data = await retrieveTileData(process.env.SCHEDULING_API, userToken, requestPayload, axios.CancelToken.source());
-      if (data?.tiles?.length) {
-        dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles } });
-      }
-      dispatch({ type: 'SET_LOADING', payload: false });
-    } catch (err) {
-      console.error(err);
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
-  }
-
   return (
     <div className="page-container">
       <Header
         config={{ ...defaultFilterConfig }}
-        applyGlobalFilter={applyGlobalFilter}
+        applyGlobalFilter={() => applyGlobalFilter({
+          endpoint: process.env.TURNOVER_API,
+          userToken,
+          cancelToken: axios.CancelToken.source()
+          }, {
+            startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+            endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+            facilityName: userFacility,
+            roomNames: rooms,
+          },
+          (tileData) => {
+            if (tileData?.tiles?.length) {
+              dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
+            }
+          }
+        )}
         handlers={{
           ...defaultHandlerConfig
         }}
