@@ -138,11 +138,12 @@ export default class Login extends React.PureComponent {
       this.props.setFacilityDetails(facilityResult);
       profileResult.facility = facilityResult[profileResult.facilityId];
       this.props.setProfile(profileResult);
-      const newFacility = {
-        facility: null,
+      const facility = {
+        currentFacility: facilityResult[profileResult.facilityId],
+        newFacility: facilityResult[profileResult.facilityId],
         isUpdated: false
       }
-      this.props.setFacilitySwitch(newFacility);
+      this.props.setFacilitySwitch(facility);
       this.setLogger(token);
       if (roleToken?.forbidden){
         const val = await roleToken?.forbidden

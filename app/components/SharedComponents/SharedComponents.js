@@ -1,34 +1,31 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent, Button, Modal, Fade, Backdrop } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import {
+  Backdrop,
+  Button,
+  Fade,
+  IconButton,
+  makeStyles,
+  Modal,
+  Radio,
+  Snackbar,
+  SnackbarContent,
+  Switch,
+  Tab,
+  Tabs,
+  Tooltip,
+  withStyles,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  makeSelectLogger,
-  makeSelectProductRoles,
-  makeSelectSnackbar,
-  makeSelectToken,
-} from '../../containers/App/selectors';
+import { makeSelectSnackbar, makeSelectToken } from '../../containers/App/selectors';
 import { mdiClose } from '@mdi/js';
-import Icon from '@mdi/react'
+import Icon from '@mdi/react';
 import { MTableCell } from 'material-table';
-import {
-  selectAssignableRoles,
-  selectLocationLookups,
-  selectUsers,
-} from '../../containers/App/store/UserManagement/um-selectors';
-import {
-  createClient,
-  createUser,
-  generateProductUpdateBody,
-  getRoleMapping,
-  patchRoles, updateClientProfile,
-} from '../../containers/AdminPanel/helpers';
-import { setUsers } from '../../containers/App/store/UserManagement/um-actions';
-import { selectClients } from '../../containers/App/store/ApiManagement/am-selectors';
-import { setClients } from '../../containers/App/store/ApiManagement/am-actions';
 import './style.scss';
 import UnionLogo from './img/Union.svg';
+import { updateUserFacility } from './helpers';
+import globalFunctions from '../../utils/global-functions';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
@@ -339,9 +336,41 @@ export const TableCell = (props) => {
 export const SwitchFacilityModal = props => {
   console.log(props);
   const {} = props;
+  const userToken = useSelector(makeSelectToken());
+  const dispatch = useDispatch();
 
   const toggleModal = (d) => {
     props?.toggleModal?.(d);
+  }
+
+  const switchFacility = async (facilityId, facilityName, imageSource) => {
+    // call put facility api
+    const currentFacility = props.userFacility;
+    props.setFacilitySwitch({
+      currentFacility,
+      isUpdated: false
+    });
+    await updateUserFacility(`?facility_id=${facilityId}`, userToken).then(async (e) => {
+      if (e == 'error') {
+        dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API facility.` }));
+      } else {
+        dispatch(setSnackbar({ severity: 'success', message: `${facilityName} was selected.` }));
+
+        await Promise.all([
+          globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', userToken, {}),
+          globalFunctions.genericFetch(`${process.env.USER_V2_API}facility`, 'get', userToken, {})
+        ]).then(async ([profileResult, facilityResult]) => {
+          toggleModal(false);
+          profileResult.facility = facilityResult[profileResult.facilityId];
+          props.setProfile(profileResult);
+          props.setFacilitySwitch({
+            currentFacility,
+            newFacility: facilityResult[facilityId],
+            isUpdated: true
+          });
+        })
+      }
+    })
   }
 
   return (
@@ -380,7 +409,7 @@ export const SwitchFacilityModal = props => {
                 <div className={'other-facilities__name'}>
                   <span>{value.facilityName}</span>
                 </div>
-                <div className={'other-facilities__action'}>
+                <div className={'other-facilities__action'} onClick={()=>switchFacility(key, value.facilityName, value.imageSource)}>
                   <img src={UnionLogo}/>
                 </div>
               </div>
