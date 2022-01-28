@@ -381,7 +381,7 @@ export const SwitchFacilityModal = props => {
       <div className={'modal-content'}>
         <div className={'current-facility'}>
           <div className={'current-facility__img'}>
-            <img src={currentFacility.imageSource}/>
+            <img src={currentFacility.thumbnailSource}/>
           </div>
           <div className={'current-facility__desc'}>
             <div className={'current-facility__label'}>
@@ -401,12 +401,12 @@ export const SwitchFacilityModal = props => {
               return (
                 <div className={'other-facilities__list-item'} key={key}>
                   <div className={'other-facilities__img'}>
-                    <img src={value.imageSource}/>
+                    <img src={value.thumbnailSource}/>
                   </div>
                   <div className={'other-facilities__name'}>
                     <span>{value.facilityName}</span>
                   </div>
-                  <div className={'other-facilities__action'} onClick={()=>switchFacility(key, value.facilityName, value.imageSource)}>
+                  <div className={'other-facilities__action'} onClick={()=>switchFacility(key, value.facilityName)}>
                     <Icon color="#828282" path={mdiSwapHorizontal} size={'24px'} />
                   </div>
                 </div>
