@@ -141,7 +141,6 @@ export default class Login extends React.PureComponent {
       const facility = {
         currentFacility: facilityResult[profileResult.facilityId],
         newFacility: facilityResult[profileResult.facilityId],
-        isUpdated: false
       }
       this.props.setFacilitySwitch(facility);
       this.setLogger(token);

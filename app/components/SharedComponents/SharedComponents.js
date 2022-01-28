@@ -348,7 +348,6 @@ export const SwitchFacilityModal = props => {
     const currentFacility = props.userFacility;
     props.setFacilitySwitch({
       currentFacility,
-      isUpdated: false
     });
     await updateUserFacility(`?facility_id=${facilityId}`, userToken).then(async (e) => {
       if (e == 'error') {
