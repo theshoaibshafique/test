@@ -334,8 +334,6 @@ export const TableCell = (props) => {
 }
 
 export const SwitchFacilityModal = props => {
-  console.log(props);
-  const {} = props;
   const userToken = useSelector(makeSelectToken());
   const dispatch = useDispatch();
 

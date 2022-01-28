@@ -86,7 +86,6 @@ class SSTNav extends React.Component {
   }
 
   handleSwitchFacility(isSwitching) {
-    console.log(this);
     this.setState({
       switchFacility: isSwitching
     });
