@@ -19,16 +19,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectSnackbar, makeSelectToken } from '../../containers/App/selectors';
-import { mdiClose, mdiPlaylistEdit } from '@mdi/js';
+import { mdiClose, mdiSwapHorizontal } from '@mdi/js';
 import Icon from '@mdi/react';
 import { MTableCell } from 'material-table';
 import './style.scss';
-import UnionLogo from './img/Union.svg';
 import { updateUserFacility } from './helpers';
-import globalFunctions from '../../utils/global-functions';
-import { mdiSwapHorizontal } from '@mdi/js';
-import { browserHistory } from 'react-router';
-import { redirectLogin } from '../../utils/Auth';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
