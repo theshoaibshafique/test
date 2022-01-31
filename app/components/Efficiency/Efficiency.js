@@ -20,7 +20,6 @@ import { makeSelectToken, makeSelectUserFacility } from '../../containers/App/se
 import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import useSelectData from '../../hooks/useSelectData';
-// import useFilter from '../../hooks/useFilter';
 import TimeCard from './TimeCard';
 import './styles.scss';
 
@@ -67,7 +66,6 @@ const Efficiency = () => {
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const [orGraphData, setOrGraphData] = React.useState([]);
-  // const { rooms, defaultFilterConfig, defaultHandlerConfig } = useFilter();
   const [tile, setTile] = React.useState({});
   const { data } = useSelectData(process.env.EFFICIENCYV2_API, userToken, {
     ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')

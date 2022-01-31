@@ -158,16 +158,21 @@ export function BrowseCases(props) {
     return (
 
       <Grid container spacing={0} className="subtle-subtext">
-        {Object.entries(tag_info).map(([tag, value]) => <>'         '<Grid item xs={3} className="tag-column" key={`${tag}-${value}`}>
-          <div className="info-tag">
-            <span className={`case-tag ${tag}`} key={tag}>
-              <span>
-                {getTag(tag)}
-              </span>
-              <div className="display">{tag}</div>
-            </span>
-          </div>
-        </Grid>'         '<Grid item xs={9} className="info-column" key="info-col">{value}</Grid>'       '</>)}
+        {Object.entries(tag_info).map(([tag, value]) => (
+          <React.Fragment key={tag}>
+            <Grid item xs={3} className="tag-column" key={`${tag}-${value}`}>
+              <div className="info-tag">
+                <span className={`case-tag ${tag}`} key={tag}>
+                  <span>
+                    {getTag(tag)}
+                  </span>
+                  <div className="display">{tag}</div>
+                </span>
+              </div>
+            </Grid>
+            <Grid item xs={9} className="info-column" key="info-col">{value}</Grid>
+          </React.Fragment>
+        ))}
       </Grid>
 
     );

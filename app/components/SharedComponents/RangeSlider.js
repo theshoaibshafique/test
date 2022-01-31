@@ -10,17 +10,17 @@ const RangeSlider = React.memo(({
 }) => (
   <React.Fragment>
     <Grid container>
-      <Grid item xs={2} style={{ textAlign: 'center' }}>
+      <Grid item xs={2} style={{ textAlign: 'center', marginRight: 12 }}>
         <Typography>{startLabel}</Typography>
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={7}>
         <Slider
           value={value}
           onChange={onChange}
           {...rest}
         />
       </Grid>
-      <Grid item xs={2} style={{ textAlign: 'center' }}>
+      <Grid item xs={2} style={{ textAlign: 'center', marginLeft: 12 }}>
         <Typography>{endLabel}</Typography>
       </Grid>
     </Grid>

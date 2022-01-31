@@ -12,7 +12,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import SearchIcon from '@material-ui/icons/Search';
 import Icon from '@mdi/react';
 import { mdiSort } from '@mdi/js';
-// import AreaGraph from '../../Charts/AreaGraph';
+import AreaGraph from '../../Charts/AreaGraph';
 import BarGraph from '../../Charts/Bar';
 
 const useStyles = makeStyles({
@@ -46,35 +46,27 @@ const ProcedureList = React.memo(({ data }) => {
     underscheduled: dataset?.underscheduled_percentage[idx]
   }));
 
-  // const formatAreaChartData = (mean, sd) => {
-  //   const chartData = [];
-  //   const lowerBound = mean - sd * 3;
-  //   const upperBound = mean + sd * 3;
+  const formatAreaChartData = (mean, sd) => {
+    const chartData = [];
+    const lowerBound = mean - sd * 3;
+    const upperBound = mean + sd * 3;
 
-  //   for (let x = lowerBound; x < upperBound; x++) {
-  //     chartData.push({ x, y: Math.exp(-0.5 * Math.pow((x - mean) / sd, 2)) });
-  //   }
-  //   return chartData;
-  // };
+    for (let x = lowerBound; x < upperBound; x++) {
+      chartData.push({ x, y: Math.exp(-0.5 * Math.pow((x - mean) / sd, 2)) });
+    }
+    return chartData;
+  };
 
   React.useEffect(() => {
+    console.log('data change');
     const filterableData = formatProcedureListData(data.data);
     setProcedureList(filterableData);
+    setFilteredProcedures(filterableData);
   }, [data]);
 
-  React.useEffect(() => {
-    setFilteredProcedures(procedureList);
-  }, [procedureList]);
-
-  React.useEffect(() => {
-    setFilteredProcedures(procedureList.filter((value) => value.procedure.toLowerCase().includes(procedureType.toLowerCase())));
-  }, [procedureType]);
-
-  const updateShownProcedureTypes = React.useCallback((e) => {
-    console.log({ e });
-    setProcedureType(e.target.value);
-    // setFilteredProcedures(procedureList.filter((value) => value.procedure.toLowerCase().includes(procedureType.toLowerCase())));
-  }, [procedureList]);
+  const updateShownProcedureTypes = React.useCallback(async (e) => {
+    await Promise.all([setProcedureType(e.target.value), setFilteredProcedures(procedureList.filter((value) => value.procedure.toLowerCase().includes(e.target.value.toLowerCase())))]);
+  }, [procedureList, procedureType]);
 
   const handlePanelChange = (panel) => (_, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -152,7 +144,7 @@ const ProcedureList = React.memo(({ data }) => {
               tripleColour
               colors={['#009483', '#FFB718', '#FF7D7D']}
             />
-            {/* <AreaGraph data={formatAreaChartData(dataPoint.allTimeMean, dataPoint.allTimeSd)} reference={dataPoint.mean} /> */}
+            <AreaGraph data={formatAreaChartData(dataPoint.allTimeMean, dataPoint.allTimeSd)} reference={dataPoint.mean} />
           </AccordionDetails>
         </Accordion>
       ))}
