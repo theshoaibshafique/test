@@ -92,10 +92,15 @@ class SSTNav extends React.Component {
     });
   }
 
+  canSwitchFacility() {
+    return Object.keys(this.props.facilityDetails).length >= 2;
+  }
+
   render() {
     const hasEMMPages = this.props.emmPublishAccess || this.props.emmRequestAccess;
+
     let facilityMenuItem = '';
-    if(this.props.sstAdminAccess){
+    if(this.canSwitchFacility()){
       facilityMenuItem = (
         <MenuItem className="sst-menu-item">
           <div onClick={() => this.handleSwitchFacility(true)}>Switch Facility</div>
@@ -243,7 +248,7 @@ class SSTNav extends React.Component {
               </MenuItem>
             </Menu>
           </List>
-          {(this.props.sstAdminAccess) &&
+          {(this.canSwitchFacility()) &&
             <SwitchFacilityModal
               history={this.props.history}
               setProfile={this.props.setProfile}
