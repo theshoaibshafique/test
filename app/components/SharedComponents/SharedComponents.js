@@ -354,16 +354,7 @@ export const SwitchFacilityModal = props => {
         dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API facility.` }));
       } else {
         dispatch(setSnackbar({ severity: 'success', message: `${facilityName} was selected.` }));
-
-        await Promise.all([
-          globalFunctions.genericFetch(`${process.env.USER_V2_API}profile`, 'get', userToken, {}),
-          globalFunctions.genericFetch(`${process.env.USER_V2_API}facility`, 'get', userToken, {})
-        ]).then(async ([profileResult, facilityResult]) => {
-          toggleModal(false);
-          profileResult.facility = facilityResult[profileResult.facilityId];
-          props.setProfile(profileResult);
-          window.location.replace(`/dashboard?currentFacilityId=${currentFacilityId}&newFacilityId=${profileResult.facilityId}`);
-        })
+        window.location.replace(`/dashboard?currentFacilityId=${currentFacilityId}&newFacilityId=${facilityId}`);
       }
     })
   }
