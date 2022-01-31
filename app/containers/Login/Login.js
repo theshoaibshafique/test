@@ -47,9 +47,9 @@ export default class Login extends React.PureComponent {
   }
 
   redirect() {
-    const redirect = localStorage.getItem('redirect') || '/dashboard'
+    const redirect = localStorage.getItem('redirect') || '/dashboard?animate=true'
     localStorage.removeItem('redirect')
-    this.props.pushUrl(redirect.includes("state") ? '/dashboard' : redirect);
+    this.props.pushUrl(redirect.includes("state") ? '/dashboard?animate=true' : redirect);
   }
 
   async login(auth_code) {

@@ -10,25 +10,39 @@ import { motion } from 'framer-motion';
 import { helperFetch } from '../AdminPanel/helpers';
 
 export default class Welcome extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-
+  graphicSlideInDelay = 2;
+  graphicSlideInDuration = 2;
+  welcomeMessageSlideOutDelay = 2;
+  welcomeMessageFadeInDelay = 4;
+  welcomeMessageFadeInDuration = 2;
 
   constructor(props) {
     super(props);
     this.ref = React.createRef();
-    const currentFacilityId = new URLSearchParams(this.props.location.search).get('currentFacilityId') ?? props.userFacility;
-    const newFacilityId = new URLSearchParams(this.props.location.search).get('newFacilityId') ?? null;
+    const animate = (new URLSearchParams(this.props.location.search).get('animate') === 'true') ?? false;
+    const currentFacilityId = new URLSearchParams(this.props.location.search).get('currentFacilityId') ?? null;
+    const newFacilityId = new URLSearchParams(this.props.location.search).get('newFacilityId') ?? props.userFacility;
     this.state = {
-      isAnimated: false,
+      animate,
       currentFacilityId,
       newFacilityId
     };
   }
 
   componentDidMount() {
+    setTimeout(()=>{
+      this.setState({
+        animate: false
+      })
+    }, this.totalAnimationDuration());
+  }
+
+  totalAnimationDuration() {
+    return (this.welcomeMessageFadeInDelay + this.welcomeMessageFadeInDuration) * 1000;
   }
 
   checkIfFacilityChanged(){
-    return this.state.newFacilityId != null && this.state.currentFacilityId !== this.state.newFacilityId;
+    return this.state.animate && this.state.currentFacilityId !== this.state.newFacilityId;
   }
 
   renderAnimatedContainer(animate) {
@@ -46,12 +60,12 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
               y: '-100%',
             }}
             transition={{
-              delay: 2,
-              duration: 2,
+              delay: this.graphicSlideInDelay,
+              duration: this.graphicSlideInDuration,
             }}
           >
             <div className="facility-graphic-container__img-container">
-              <img src={currentFacility.imageSource} ref={this.ref}/>
+              <img src={currentFacility?.imageSource} ref={this.ref}/>
             </div>
           </motion.div>
           {/*new facility graphic*/}
@@ -62,8 +76,8 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
               y: '-100%',
             }}
             transition={{
-              delay: 2,
-              duration: 2,
+              delay: this.graphicSlideInDelay,
+              duration: this.graphicSlideInDuration,
             }}
           >
             <div className="facility-graphic-container__img-container">
@@ -80,7 +94,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
               opacity: 0
             }}
             transition={{
-              duration: 2,
+              duration: this.welcomeMessageSlideOutDelay,
             }}
           >
             <div className="welcome">Welcome</div>
@@ -94,8 +108,8 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
               opacity: 1
             }}
             transition={{
-              delay: 4,
-              duration: 2,
+              delay: this.welcomeMessageFadeInDelay,
+              duration: this.welcomeMessageFadeInDuration,
             }}
           >
             <div className="welcome">Welcome</div>
@@ -108,7 +122,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
         <div className="container">
           <div className="facility-graphic-container" style={{display: !animate ? 'flex' : 'none' }}>
             <div className="facility-graphic-container__img-container">
-              <img src={currentFacility.imageSource} ref={this.ref}/>
+              <img src={newFacility.imageSource} ref={this.ref}/>
             </div>
           </div>
           <div className="welcome-message" style={{visibility: !animate ? 'visible' : 'hidden' }}>
