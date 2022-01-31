@@ -20,6 +20,7 @@ export const USER_ROLES = 'insight/App/USER_ROLES';
 export const LOGGER = 'insight/App/LOGGER';
 export const AUTH_LOGIN = 'insight/App/AUTH_LOGIN';
 export const PROFILE = 'insight/App/PROFILE';
+export const FACILITY_DETAILS = 'insight/App/FACILITY_DETAILS';
 export const CURRENT_PRODUCT = 'insight/App/PRODUCT';
 export const TOGGLE_SNACKBAR = 'insight/App/SNACKBAR';
 export const EXIT_SNACKBAR = 'insight/App/EXIT_SNACKBAR';
