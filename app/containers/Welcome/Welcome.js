@@ -123,9 +123,6 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
   render() {
     // return <div />;
     let animate = this.checkIfFacilityChanged(this.props.facilitySwitch) ?? false;
-    // const defaultImgSrc = 'https://api.insights.surgicalsafety.com/media/default.png';
-    // let currentFacilityImgSrc = this.props.facilitySwitch?.currentFacility.imageSource ?? defaultImgSrc;
-    // const container = this.renderAnimatedContainer(animate, defaultImgSrc, currentFacilityImgSrc)
     const container = this.renderAnimatedContainer(animate);
 
     return (
