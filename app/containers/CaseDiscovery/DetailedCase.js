@@ -28,7 +28,7 @@ import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import { CSSTransition } from "react-transition-group";
 import { log_norm_cdf, log_norm_pdf, getQuestionByLocation, getQuestionCount, getPresetDates } from './misc/Utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectRoles, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../App/selectors';
+import { makeSelectComplications, makeSelectFirstName, makeSelectIsAdmin, makeSelectLastName, makeSelectLogger, makeSelectRoles, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility, makeSelectIsSSTAdmin } from '../App/selectors';
 
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -50,7 +50,9 @@ export function DetailedCase(props) {
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
-  const isAdmin = useSelector(makeSelectIsAdmin());
+  const isAdmin = useSelector(makeSelectIsSSTAdmin());
+  const isSSTAdmin = useSelector(makeSelectIsSSTAdmin());
+  const EARLIEST_EMM_DAY = isSSTAdmin ? 30 : 21; // MAX 21 days back for EMM
   const productRoles = useSelector(makeSelectProductRoles());
   const { emmRoles } = productRoles || {};
   const flagReport = useSelector(selectFlagReport());
@@ -138,7 +140,7 @@ export function DetailedCase(props) {
       return <LightTooltip title={"eM&M request submitted successfully"} arrow>
         <div><Button variant="outlined" className="primary disabled" onClick={() => null} disabled>Request eM&M</Button></div>
       </LightTooltip>
-    } else if (dayDiff <= 21 && emmRoles?.isAdmin) {
+    } else if (dayDiff <= EARLIEST_EMM_DAY && emmRoles?.isAdmin) {
       return <Button variant="outlined" className="primary" onClick={() => handleOpenRequestEMM(true)}>Request eM&M</Button>
     } else {
       return <div></div>
@@ -304,7 +306,7 @@ export function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId, false, true)}
-            {((isAdmin || isMayo) && showAddFlag && flagReport && flags.length <= 0 && dayDiff <= 21) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => { if (flagReport) handleOpenAddFlag(true) }} >
+            {((isAdmin || isMayo) && showAddFlag && flagReport && flags.length <= 0 && dayDiff <= EARLIEST_EMM_DAY) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => { if (flagReport) handleOpenAddFlag(true) }} >
               <span><img src={Plus} /></span>
               <div className="display">Add Flag</div>
             </span>}

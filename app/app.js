@@ -54,7 +54,7 @@ const apm = initApm({
 
   // Set custom APM Server URL (default: http://localhost:8200)
   serverUrl: process.env.APM_URL,
-  environment: process.env.NODE_ENV,
+  environment: process.env.APM_ENV,
 
   // Set service version (required for sourcemap feature)
   serviceVersion: 'v1.3.2'
