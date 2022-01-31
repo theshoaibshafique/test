@@ -27,6 +27,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
       currentFacilityId,
       newFacilityId
     };
+    window.history.pushState({}, document.title, window.location.pathname);
   }
 
   componentDidMount() {
