@@ -87,7 +87,8 @@ class SSTNav extends React.Component {
 
   handleSwitchFacility(isSwitching) {
     this.setState({
-      switchFacility: isSwitching
+      switchFacility: isSwitching,
+      menu: null
     });
   }
 
@@ -98,14 +99,6 @@ class SSTNav extends React.Component {
       facilityMenuItem = (
         <MenuItem className="sst-menu-item">
           <div onClick={() => this.handleSwitchFacility(true)}>Switch Facility</div>
-          {/*TODO put profile faciliy and user facilies into the component*/}
-          <SwitchFacilityModal
-            history={this.props.history}
-            setProfile={this.props.setProfile}
-            userFacility={this.props.userFacility}
-            facilityDetails={this.props.facilityDetails}
-            open={Boolean(this.state.switchFacility)}
-            toggleModal={this.handleSwitchFacility.bind(this)} />
         </MenuItem>
       );
     }
@@ -249,8 +242,16 @@ class SSTNav extends React.Component {
                 <div onClick={() => this.logout()}>Logout</div>
               </MenuItem>
             </Menu>
-
           </List>
+          {(this.props.sstAdminAccess) &&
+            <SwitchFacilityModal
+              history={this.props.history}
+              setProfile={this.props.setProfile}
+              userFacility={this.props.userFacility}
+              facilityDetails={this.props.facilityDetails}
+              open={Boolean(this.state.switchFacility)}
+              toggleModal={this.handleSwitchFacility.bind(this)}/>
+          }
         </Grid>
         <IdleTimer
           element={document}

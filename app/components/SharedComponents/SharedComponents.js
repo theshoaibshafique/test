@@ -349,7 +349,7 @@ export const SwitchFacilityModal = props => {
         dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API facility.` }));
       } else {
         dispatch(setSnackbar({ severity: 'success', message: `${facilityName} was selected.` }));
-        window.location.replace(`/dashboard?currentFacilityId=${currentFacilityId}&newFacilityId=${facilityId}`);
+        window.location.replace(`/dashboard?animate=true&currentFacilityId=${currentFacilityId}&newFacilityId=${facilityId}`);
       }
     })
   }
