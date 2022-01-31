@@ -49,10 +49,8 @@ export default class Login extends React.PureComponent {
   redirect() {
     const animateQuery = 'animate=true';
     let redirect = localStorage.getItem('redirect') || '/dashboard';
-    if(redirect.includes('/dashboard?')){
-      redirect += animateQuery;
-    } else if(redirect.includes('/dashboard')){
-      redirect += `?${animateQuery}`;
+    if(redirect.includes('/dashboard')){
+      redirect = `/dashboard?${animateQuery}`;
     }
     localStorage.removeItem('redirect')
     this.props.pushUrl(redirect.includes("state") ? `/dashboard?${animateQuery}` : redirect);
