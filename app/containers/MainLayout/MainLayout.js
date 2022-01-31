@@ -52,7 +52,7 @@ export default class MainLayout extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.userRoles != this.props.userRoles || prevProps.userFacility != this.props.userFacility) {
       this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
-    } 
+    }
   }
 
   resourcesGathered(roles, userFacility) {
@@ -182,7 +182,7 @@ export default class MainLayout extends React.PureComponent {
   };
 
   render() {
-    
+
     return (
       <div className="app-wrapper">
         <Login />
@@ -223,6 +223,8 @@ export default class MainLayout extends React.PureComponent {
                       logger={this.props.logger}
                       firstName={this.props.firstName}
                       lastName={this.props.lastName}
+                      facility={this.props.facility}
+                      facilityDetails={this.props.facilityDetails}
                     />
                   </Drawer>
                 </Hidden>

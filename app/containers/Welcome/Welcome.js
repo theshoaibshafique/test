@@ -6,32 +6,131 @@
 
 import React from 'react';
 import './style.scss';
-import { Grid } from '@material-ui/core';
-import logo from 'images/SST-Product_Insights_sketch.png';
+import { motion } from 'framer-motion';
+import { helperFetch } from '../AdminPanel/helpers';
 
 export default class Welcome extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+
+
   constructor(props) {
     super(props);
-
+    this.ref = React.createRef();
+    const currentFacilityId = new URLSearchParams(this.props.location.search).get('currentFacilityId') ?? props.userFacility;
+    const newFacilityId = new URLSearchParams(this.props.location.search).get('newFacilityId') ?? null;
+    this.state = {
+      isAnimated: false,
+      currentFacilityId,
+      newFacilityId
+    };
   }
 
   componentDidMount() {
+  }
 
-  };
+  checkIfFacilityChanged(){
+    return this.state.newFacilityId != null && this.state.currentFacilityId !== this.state.newFacilityId;
+  }
+
+  renderAnimatedContainer(animate) {
+    const currentFacility = this.props.facilityDetails[this.state.currentFacilityId];
+    const newFacility = this.props.facilityDetails[this.state.newFacilityId];
+    if(animate){
+      return (
+        <div className="container" id={Math.random()}>
+          {/*with animation*/}
+          {/*current facility graphic*/}
+          <motion.div
+            className="facility-graphic-container animate"
+            style={{display: animate ? 'flex' : 'none' }}
+            animate={{
+              y: '-100%',
+            }}
+            transition={{
+              delay: 2,
+              duration: 2,
+            }}
+          >
+            <div className="facility-graphic-container__img-container">
+              <img src={currentFacility.imageSource} ref={this.ref}/>
+            </div>
+          </motion.div>
+          {/*new facility graphic*/}
+          <motion.div
+            className="facility-graphic-container animate"
+            style={{display: animate ? 'flex' : 'none' }}
+            animate={{
+              y: '-100%',
+            }}
+            transition={{
+              delay: 2,
+              duration: 2,
+            }}
+          >
+            <div className="facility-graphic-container__img-container">
+              <img src={newFacility.imageSource} ref={this.ref}/>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="welcome-message"
+            style={{visibility: animate ? 'visible' : 'hidden' }}
+            initial={{ opacity: 1 }}
+            animate={{
+              y: '-100%',
+              opacity: 0
+            }}
+            transition={{
+              duration: 2,
+            }}
+          >
+            <div className="welcome">Welcome</div>
+            <div className="personal-name">{this.props.firstName} {this.props.lastName}</div>
+          </motion.div>
+          <motion.div
+            className="welcome-message"
+            style={{visibility: animate ? 'visible' : 'hidden' }}
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1
+            }}
+            transition={{
+              delay: 4,
+              duration: 2,
+            }}
+          >
+            <div className="welcome">Welcome</div>
+            <div className="personal-name">{this.props.firstName} {this.props.lastName}</div>
+          </motion.div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="container">
+          <div className="facility-graphic-container" style={{display: !animate ? 'flex' : 'none' }}>
+            <div className="facility-graphic-container__img-container">
+              <img src={currentFacility.imageSource} ref={this.ref}/>
+            </div>
+          </div>
+          <div className="welcome-message" style={{visibility: !animate ? 'visible' : 'hidden' }}>
+            <div className="welcome">Welcome</div>
+            <div className="personal-name">{this.props.firstName} {this.props.lastName}</div>
+          </div>
+        </div>
+      );
+    }
+  }
 
   render() {
+    // return <div />;
+    let animate = this.checkIfFacilityChanged(this.props.facilitySwitch) ?? false;
+    const container = this.renderAnimatedContainer(animate);
+
     return (
       <div className="welcome-page">
-        <Grid container spacing={0} direction="column" justify="center" className="welcome-grid">
-          <Grid item xs className="logo">
-            <img src={logo} />
-          </Grid>
-          <Grid item xs className="message">
-            Welcome {this.props.firstName} {this.props.lastName}
-          </Grid>
-          <div className="title-break"></div>
-        </Grid>
-        <div className="footer subtle-subtext">Can’t find what you’re looking for? Contact your administrator for assistance.</div>
+        {container}
+        <div className="footer subtle-subtext">Can’t find what you’re looking for? Contact your administrator for
+          assistance.
+        </div>
       </div>
     );
   }

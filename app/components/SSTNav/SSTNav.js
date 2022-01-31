@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './style.scss';
 import logo from 'images/SST-Product_Insights_sketch.png';
@@ -12,7 +12,7 @@ import globalFunctions from '../../utils/global-functions';
 import { redirectLogin } from '../../utils/Auth';
 import IdleTimer from 'react-idle-timer';
 import * as CONSTANTS from '../../constants';
-import { ProfileIcon } from '../SharedComponents/SharedComponents';
+import { ProfileIcon, SwitchFacilityModal } from '../SharedComponents/SharedComponents';
 
 class SSTNav extends React.Component {
   constructor(props) {
@@ -25,7 +25,8 @@ class SSTNav extends React.Component {
       isSSCOpen: this.isInNav(this.sscLinks, this.props.pathname),
       isEfficiencyOpen: this.isInNav(this.efficiencyLinks, this.props.pathname),
       isEMMOpen: this.isInNav(this.emmLinks, this.props.pathname),
-      menu: null
+      menu: null,
+      switchFacility: false
     }
     this.onIdle = this._onIdle.bind(this)
   }
@@ -83,8 +84,31 @@ class SSTNav extends React.Component {
   _onIdle(e) {
     this.logout();
   }
+
+  handleSwitchFacility(isSwitching) {
+    this.setState({
+      switchFacility: isSwitching
+    });
+  }
+
   render() {
     const hasEMMPages = this.props.emmPublishAccess || this.props.emmRequestAccess;
+    let facilityMenuItem = '';
+    if(this.props.sstAdminAccess){
+      facilityMenuItem = (
+        <MenuItem className="sst-menu-item">
+          <div onClick={() => this.handleSwitchFacility(true)}>Switch Facility</div>
+          {/*TODO put profile faciliy and user facilies into the component*/}
+          <SwitchFacilityModal
+            history={this.props.history}
+            setProfile={this.props.setProfile}
+            userFacility={this.props.userFacility}
+            facilityDetails={this.props.facilityDetails}
+            open={Boolean(this.state.switchFacility)}
+            toggleModal={this.handleSwitchFacility.bind(this)} />
+        </MenuItem>
+      );
+    }
     return (
       <Grid container spacing={0} className="sstnav subtle-subtext" style={{ height: "100%" }}>
         <Grid item xs={12}>
@@ -220,6 +244,7 @@ class SSTNav extends React.Component {
                   My Profile
                 </NavLink>
               </MenuItem>
+              {facilityMenuItem}
               <MenuItem className="sst-menu-item">
                 <div onClick={() => this.logout()}>Logout</div>
               </MenuItem>
