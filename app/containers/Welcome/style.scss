@@ -16,22 +16,26 @@
       height: 80%;
       overflow: hidden;
     }
-    .facility-graphic-container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      align-items: end;
+    @media only screen and (max-width: 1195px) {
+      img{
+        height: 100%;
+      }
+    }
+    @media only screen and (min-width: 1195px) {
       img{
         max-width: 100%;
         height: auto;
         object-fit: cover;
       }
     }
+    .facility-graphic-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      align-items: end;
+    }
     .facility-graphic-container.animate {
       position: relative;
-    }
-    img {
-        max-width: 360px;
     }
     .welcome-message{
       position: absolute;
