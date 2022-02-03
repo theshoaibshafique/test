@@ -1,12 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles, Radio, Switch, Tab, Tabs, Tooltip, withStyles, Snackbar, IconButton, SnackbarContent, Button, Modal, Fade, Backdrop } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import {
+  Backdrop,
+  Button,
+  Fade,
+  IconButton,
+  makeStyles,
+  Modal,
+  Radio,
+  Snackbar,
+  SnackbarContent,
+  Switch,
+  Tab,
+  Tabs,
+  Tooltip,
+  withStyles,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { makeSelectSnackbar } from '../../containers/App/selectors';
-import { mdiClose } from '@mdi/js';
-import Icon from '@mdi/react'
+import { makeSelectSnackbar, makeSelectToken } from '../../containers/App/selectors';
+import { mdiClose, mdiSwapHorizontal } from '@mdi/js';
+import Icon from '@mdi/react';
 import { MTableCell } from 'material-table';
+import './style.scss';
+import { updateUserFacility } from './helpers';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
@@ -270,7 +287,7 @@ export const SaveAndCancel = props => {
   )
 }
 
-/* 
+/*
     Generic Modal thats empty with an X in the corner
 */
 export const GenericModal = props => {
@@ -311,5 +328,79 @@ export const TableCell = (props) => {
   //We need to manually override the width because theres an inherit bug where width is set on an infinite loop
   return (
     <MTableCell {...props} title={rowData?.[columnDef?.field]} className={`ellipses ${classes.root}`} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${width}px` } }} />
+  )
+}
+
+export const SwitchFacilityModal = props => {
+  const userToken = useSelector(makeSelectToken());
+  const dispatch = useDispatch();
+
+  const currentFacilityId = props?.userFacility;
+  const currentFacility = props?.facilityDetails[currentFacilityId];
+
+  const toggleModal = (d) => {
+    props?.toggleModal?.(d);
+  }
+
+  const switchFacility = async (facilityId, facilityName) => {
+    // call put facility api
+    await updateUserFacility(`?facility_id=${facilityId}`, userToken).then(async (e) => {
+      if (e == 'error') {
+        dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update API facility.` }));
+      } else {
+        dispatch(setSnackbar({ severity: 'success', message: `${facilityName} was selected.` }));
+        window.location.replace(`/dashboard?animate=true&currentFacilityId=${currentFacilityId}&newFacilityId=${facilityId}`);
+      }
+    })
+  }
+
+  return (
+    <GenericModal
+      {...props}
+      toggleModal={toggleModal}
+      className={`add-edit-user client`}
+    >
+      <div className={'modal-header'}>
+        Switch Facility
+      </div>
+      <hr />
+      <div className={'modal-content'}>
+        <div className={'current-facility'}>
+          <div className={'current-facility__img'}>
+            <img src={currentFacility.thumbnailSource}/>
+          </div>
+          <div className={'current-facility__desc'}>
+            <div className={'current-facility__label'}>
+              <span>Currently Viewing</span>
+            </div>
+            <div className={'current-facility__name'}>
+              <span>{currentFacility.facilityName}</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className={'other-facilities'}>
+            {Object.keys(props?.facilityDetails)
+              .filter((facilityId)=>facilityId!==currentFacilityId)
+              .map((key)=>{
+              const value = props?.facilityDetails[key];
+              return (
+                <div className={'other-facilities__list-item'} key={key}>
+                  <div className={'other-facilities__img'}>
+                    <img src={value.thumbnailSource}/>
+                  </div>
+                  <div className={'other-facilities__name'}>
+                    <span>{value.facilityName}</span>
+                  </div>
+                  <div className={'other-facilities__action'} onClick={()=>switchFacility(key, value.facilityName)}>
+                    <Icon color="#828282" path={mdiSwapHorizontal} size={'24px'} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </GenericModal>
   )
 }

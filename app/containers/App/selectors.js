@@ -63,6 +63,11 @@ const makeSelectUserFacility = () => createSelector(
   (globalState) => globalState.get('userFacility')
 );
 
+const makeFacilityDetails = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('facilityDetails')
+);
+
 const makeSelectFirstName = () => createSelector(
   selectGlobal,
   (globalState) => globalState.get('firstName')
@@ -150,5 +155,6 @@ export {
   makeSelectIsSSTAdmin,
   makeSelectLogger,
   makeSelectProductRoles,
-  makeSelectSnackbar
+  makeSelectSnackbar,
+  makeFacilityDetails,
 };

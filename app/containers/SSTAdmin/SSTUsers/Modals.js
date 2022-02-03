@@ -100,6 +100,12 @@ export const DeleteUserModal = props => {
     const fetchDelete = async () => {
         setIsLoading(true)
         const response = await deleteUser({ userId, scope: 0 }, userToken);
+
+        setIsLoading(false);
+        if (response == 'error') {
+            dispatch(setSnackbar({ severity: 'error', message: `${firstName} ${lastName} failed to deleted.` }))
+            return
+        }
         const modified = [...userTable];
         const id = modified.findIndex((u) => u.userId == userId);
         if (id >= 0) {
@@ -108,7 +114,6 @@ export const DeleteUserModal = props => {
         dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was deleted.` }))
         dispatch(setUsers(modified))
         toggleModal(false);
-        setIsLoading(false);
     }
     return (
         <GenericModal
@@ -319,7 +324,7 @@ export const AddEditUserModal = props => {
     }
 
     const userTable = useSelector(selectUsers());
-    
+
     const updateTable = (userId) => {
         const { tableData, firstName, lastName, title, roles, email } = userData || {};
         const modified = [...userTable];
@@ -344,22 +349,22 @@ export const AddEditUserModal = props => {
         handleChange('save-settings');
         const productUpdates = generateProductUpdateBody(roles, assignableRoles);
         const profile = await patchRoles({ userId, scope: 0, productUpdates }, userToken).then((e) => {
-            if (e == 'error'){
+            if (e == 'error') {
                 dispatch(setSnackbar({ severity: 'error', message: `Something went wrong. Could not update user.` }))
             } else {
                 dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} was updated.` }))
                 updateTable(userId);
             }
         });
-        
-        
+
+
     }
 
     const toggleModal = () => {
         props?.toggleModal?.();
         setIsAdded(false);
         setIsLoading(false);
-        
+
     }
 
     return (
@@ -445,7 +450,7 @@ const MenuProps = {
 };
 
 const ProductPermissions = props => {
-    const { productName, isSubscribed} = props;
+    const { productName, isSubscribed } = props;
     const assignableProductRoles = props.productRoles || {};
 
     if (!isSubscribed) {
@@ -476,7 +481,7 @@ const RolePermissions = props => {
     const { minScope, maxScope } = props?.productRoles?.[roleId] || {};
     const scope = roles?.[roleId]?.scope
     const isUnrestricted = scope && Object.keys(scope).length != 0 && Object.values(scope).every((v) => v.length == 0);
-    const userScope = isUnrestricted ? {unrestricted:['unrestricted']} : (scope ?? {});
+    const userScope = isUnrestricted ? { unrestricted: ['unrestricted'] } : (scope ?? {});
     //get a flat list of all locations
     const userLocations = Object.entries(userScope).map(([k, loc]) => loc).flat();
     const [selectedLocations, setLocations] = useState(userLocations);

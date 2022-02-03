@@ -85,6 +85,11 @@ export const DeleteUserModal = props => {
     const fetchDelete = async () => {
         setIsLoading(true)
         const response = await deleteUser({ userId, scope: 2 }, userToken);
+        setIsLoading(false);
+        if (response == 'error'){
+            dispatch(setSnackbar({ severity: 'error', message: `${firstName} ${lastName} failed to deleted.` }))
+            return 
+        }
         const modified = [...userTable];
         const id = modified.findIndex((u) => u.userId == userId);
         if (id >= 0) {
@@ -93,7 +98,6 @@ export const DeleteUserModal = props => {
         dispatch(setSnackbar({ severity: 'success', message: `${firstName} ${lastName} has been deleted.` }))
         dispatch(setUsers(modified))
         toggleModal({ ...props?.user, open: false });
-        setIsLoading(false);
     }
     const name = `${firstName} ${lastName}`
     return (

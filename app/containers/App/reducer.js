@@ -11,23 +11,31 @@
  */
 
 import { fromJS } from 'immutable';
-import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID, SST_ADMIN_ID, UM_PRODUCT_ID } from '../../constants';
+import {
+  CD_PRODUCT_ID,
+  EFF_PRODUCT_ID,
+  EMM_PRODUCT_ID,
+  SSC_PRODUCT_ID,
+  SST_ADMIN_ID,
+  UM_PRODUCT_ID,
+} from '../../constants';
 
 import {
-  USER_TOKEN,
-  USER_FACILITY,
-  FACILITY_ROOMS,
-  SPECIALTIES,
-  COMPLICATIONS,
-  OPERATING_ROOM,
-  USER_ROLES,
-  LOGGER,
   AUTH_LOGIN,
-  PROFILE,
+  COMPLICATIONS,
   CURRENT_PRODUCT,
-  TOGGLE_SNACKBAR,
   EXIT_SNACKBAR,
-  USER_STATUS
+  FACILITY_DETAILS,
+  FACILITY_ROOMS,
+  LOGGER,
+  OPERATING_ROOM,
+  PROFILE,
+  SPECIALTIES,
+  TOGGLE_SNACKBAR,
+  USER_FACILITY,
+  USER_ROLES,
+  USER_STATUS,
+  USER_TOKEN,
 } from './constants';
 
 // The initial state of the App
@@ -77,6 +85,9 @@ function emmReducer(state = initialState, action) {
         .set('firstName', action.profile.firstName)
         .set('lastName', action.profile.lastName)
         .set('jobTitle', action.profile.title)
+    case FACILITY_DETAILS:
+      return state
+        .set('facilityDetails', action.facilityDetails)
     case USER_FACILITY:
       return state
         .set('userFacility', action.facility)

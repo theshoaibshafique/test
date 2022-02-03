@@ -47,6 +47,7 @@ export const helperFetch = async (url, fetchMethod, userToken, body, errorCallba
         }).catch((error) => {
             errorCallback?.(error);
             console.log("oh no", error)
+            return 'error'
         });
 }
 

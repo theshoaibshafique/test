@@ -1,7 +1,18 @@
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import MainLayout from './MainLayout';
-import { makeSelectEmail, makeSelectLogger, makeSelectToken, makeSelectUserFacility, makeSelectRoles, makeSelectProductRoles, makeSelectFirstName, makeSelectLastName, makeSelectUserStatus } from '../App/selectors';
+import {
+  makeFacilityDetails,
+  makeSelectEmail,
+  makeSelectFirstName,
+  makeSelectLastName,
+  makeSelectLogger,
+  makeSelectProductRoles,
+  makeSelectRoles,
+  makeSelectToken,
+  makeSelectUserFacility,
+  makeSelectUserStatus,
+} from '../App/selectors';
 import { selectEMMReportID } from '../App/store/EMM/emm-selectors';
 import { setEMMPublishAccess, showEMMReport } from '../App/store/EMM/emm-actions';
 import { push } from 'react-router-redux';
@@ -16,7 +27,8 @@ const mapStateToProps = createStructuredSelector({
   logger: makeSelectLogger(),
   firstName: makeSelectFirstName(),
   lastName: makeSelectLastName(),
-  userStatus: makeSelectUserStatus()
+  userStatus: makeSelectUserStatus(),
+  facilityDetails: makeFacilityDetails(),
 });
 
 const mapDispatchToProps = (dispatch) => {

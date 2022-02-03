@@ -16,20 +16,21 @@
  */
 
 import {
-  USER_TOKEN,
-  USER_FACILITY,
-  FACILITY_ROOMS,
-  SPECIALTIES,
-  COMPLICATIONS,
-  OPERATING_ROOM,
-  USER_ROLES,
-  LOGGER,
   AUTH_LOGIN,
-  PROFILE,
+  COMPLICATIONS,
   CURRENT_PRODUCT,
-  TOGGLE_SNACKBAR,
   EXIT_SNACKBAR,
-  USER_STATUS
+  FACILITY_DETAILS,
+  FACILITY_ROOMS,
+  LOGGER,
+  OPERATING_ROOM,
+  PROFILE,
+  SPECIALTIES,
+  TOGGLE_SNACKBAR,
+  USER_FACILITY,
+  USER_ROLES,
+  USER_STATUS,
+  USER_TOKEN,
 } from './constants';
 
 /**
@@ -49,7 +50,7 @@ export function setUserInfo(token) {
 /**
  * Set user status (mainly used for forbidden)
  *
- * @param  {object} 
+ * @param  {object}
  *
  * @return {object}    An action object with a type of USER_STATUS
  */
@@ -201,8 +202,22 @@ export function setProfile(profile) {
 }
 
 /**
- * Expects an object of 
- * {message, severity} 
+ * Save Facility Details
+ *
+ * @param  {object} facilityDetails Facility Details
+ *
+ * @return {object}    An action object with a type of FACILITY_DETAILS
+ */
+export function setFacilityDetails(facilityDetails) {
+  return {
+    type: FACILITY_DETAILS,
+    facilityDetails
+  };
+}
+
+/**
+ * Expects an object of
+ * {message, severity}
  *  message: str
  *  severity: str (success,error,warning)
  *
