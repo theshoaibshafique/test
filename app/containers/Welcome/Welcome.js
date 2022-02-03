@@ -99,7 +99,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
             }}
           >
             <div className="welcome">Welcome</div>
-            <div className="personal-name">{this.props.firstName} {this.props.lastName}</div>
+            <div className="personal-name">{this.props.firstName}</div>
           </motion.div>
           <motion.div
             className="welcome-message"
@@ -114,7 +114,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
             }}
           >
             <div className="welcome">Welcome</div>
-            <div className="personal-name">{this.props.firstName} {this.props.lastName}</div>
+            <div className="personal-name">{this.props.firstName}</div>
           </motion.div>
         </div>
       );
@@ -128,7 +128,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
           </div>
           <div className="welcome-message" style={{visibility: !animate ? 'visible' : 'hidden' }}>
             <div className="welcome">Welcome</div>
-            <div className="personal-name">{this.props.firstName} {this.props.lastName}</div>
+            <div className="personal-name">{this.props.firstName}</div>
           </div>
         </div>
       );
