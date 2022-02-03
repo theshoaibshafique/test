@@ -10,10 +10,10 @@ import { motion } from 'framer-motion';
 import { helperFetch } from '../AdminPanel/helpers';
 
 export default class Welcome extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
-  graphicSlideInDelay = 2;
+  graphicSlideInDelay = 0;
   graphicSlideInDuration = 2;
   welcomeMessageSlideOutDelay = 2;
-  welcomeMessageFadeInDelay = 4;
+  welcomeMessageFadeInDelay = 2;
   welcomeMessageFadeInDuration = 2;
 
   constructor(props) {
@@ -89,7 +89,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
           <motion.div
             className="welcome-message"
             style={{visibility: animate ? 'visible' : 'hidden' }}
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
             animate={{
               y: '-100%',
               opacity: 0
