@@ -15,6 +15,7 @@
     .facility-graphic-container__img-container {
       height: 80%;
       overflow: hidden;
+      width: 100%;
     }
     @media only screen and (max-width: 1397px) {
       img{
@@ -23,7 +24,7 @@
     }
     @media only screen and (min-width: 1397px) {
       img{
-        max-width: 100%;
+        width: 100%;
         height: auto;
         object-fit: cover;
       }
