@@ -17,19 +17,6 @@
       overflow: hidden;
       width: 100%;
     }
-    @media only screen and (max-aspect-ratio: 1920 / 1161) {
-      img{
-        height: 100%;
-        min-width: 100%;
-      }
-    }
-    @media only screen and (min-aspect-ratio: 1920 / 1161) {
-      img{
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-      }
-    }
     .facility-graphic-container {
       position: absolute;
       width: 100%;
@@ -81,4 +68,17 @@
         bottom: 32px;
         width: 100%;
     }
+}
+
+.small-size-class {
+  img{
+    height: 100%;
+  }
+}
+.large-size-class {
+  img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
 }
