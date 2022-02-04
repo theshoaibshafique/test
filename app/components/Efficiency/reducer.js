@@ -1,3 +1,6 @@
+/*
+* @TODO: Possibly remove, unless redux seems necessary to accomplish tasks
+*/
 const INITIAL_STATE = {
   filters: {
     ors: [],

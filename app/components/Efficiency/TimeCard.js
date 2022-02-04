@@ -16,7 +16,7 @@ const TimeCard = ({ data, suffix }) => (
     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <span className="display-number">
-          {data?.previousPeriod}
+          {data?.value}
           <sup className="superscript-text">{suffix || '%'}</sup>
         </span>
       </div>
@@ -26,11 +26,11 @@ const TimeCard = ({ data, suffix }) => (
     </div>
     <div className="additional-scores">
       <div className="additional-scores-title">Previous Period </div>
-      <div className="additional-scores-value">{data?.previousPeriod}%</div>
+      <div className="additional-scores-value">{data?.previousPeriod}{suffix || '%'}</div>
     </div>
     <div className="additional-scores">
       <div className="additional-scores-title">OR Black Box<sup>&reg;</sup> Network</div>
-      <div className="additional-scores-value">{data?.network}%</div>
+      <div className="additional-scores-value">{data?.network}{suffix || '%'}</div>
     </div>
   </React.Fragment>
 );

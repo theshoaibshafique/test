@@ -53,6 +53,7 @@ export default class MainLayout extends React.PureComponent {
   }
 
   componentDidMount() {
+    console.log(this.props.userRoles);
     this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
   }
   componentDidUpdate(prevProps) {
@@ -74,6 +75,7 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: emmRoles.isAdmin,//&& !cdRoles.hasAccess,
       sscAccess: sscRoles.hasAccess,
       efficiencyAccess: effRoles.hasAccess,
+      //@TODO: Access role and update boolean below to use it
       efficiencyV2Access: true,
       caseDiscoveryAccess: cdRoles.hasAccess,
       emmPublishAccess: emmRoles.hasPublisher,

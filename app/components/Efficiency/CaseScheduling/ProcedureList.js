@@ -1,5 +1,4 @@
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import Accordion from '@material-ui/core/Accordion';
 import Grid from '@material-ui/core/Grid';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -25,27 +24,24 @@ const useStyles = makeStyles({
   }
 });
 
+// Even though this function appears duplicated across various pages / components, I promise this is necessary because trying to extract it will give you errors
 const equalProps = (props, prevProps) => props === prevProps;
 
-const ProcedureList = React.memo(({ data }) => {
+const ProcedureList = React.memo(({ title, procedureData }) => {
   const styles = useStyles();
   const [filteredProcedures, setFilteredProcedures] = React.useState([]);
   const [expanded, setExpanded] = React.useState(false);
   const [procedureType, setProcedureType] = React.useState('');
   const [procedureList, setProcedureList] = React.useState([]);
 
-  const formatProcedureListData = (dataset) => dataset?.procedure?.map((procedure, idx) => ({
-    id: uuidv4(),
-    procedure,
-    case: dataset?.cases[idx],
-    percentage: dataset?.percentage_change[idx],
-    mean: dataset?.mean[idx],
-    allTimeMean: dataset?.all_time_mean[idx],
-    allTimeMedian: dataset?.all_time_median[idx],
-    allTimeSd: dataset?.all_time_sd[idx],
-    underscheduled: dataset?.underscheduled_percentage[idx]
-  }));
+  React.useEffect(() => {
+    setProcedureList(procedureData);
+    setFilteredProcedures(procedureData);
+  }, [procedureData]);
 
+  /*
+* @TODO: To be determined: Whether or not the text input to filter the data is too slow. Removing the area chart will fix the sluggish feeling of the input, but also... remove the area chart. This can likely be fixed by optimizing this function, or by changing how we want to render this data.
+*/
   const formatAreaChartData = (mean, sd) => {
     const chartData = [];
     const lowerBound = mean - sd * 3;
@@ -57,16 +53,9 @@ const ProcedureList = React.memo(({ data }) => {
     return chartData;
   };
 
-  React.useEffect(() => {
-    console.log('data change');
-    const filterableData = formatProcedureListData(data.data);
-    setProcedureList(filterableData);
-    setFilteredProcedures(filterableData);
-  }, [data]);
-
   const updateShownProcedureTypes = React.useCallback(async (e) => {
     await Promise.all([setProcedureType(e.target.value), setFilteredProcedures(procedureList.filter((value) => value.procedure.toLowerCase().includes(e.target.value.toLowerCase())))]);
-  }, [procedureList, procedureType]);
+  }, [procedureType]);
 
   const handlePanelChange = (panel) => (_, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -76,7 +65,7 @@ const ProcedureList = React.memo(({ data }) => {
     <React.Fragment>
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
         <h4 style={{ marginBottom: 0 }}>
-          {data.title}
+          {title}
         </h4>
       </div>
       <hr style={{ marginTop: 16, marginBottom: 16 }} />

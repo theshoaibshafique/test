@@ -21,6 +21,8 @@ const DistributionTile = ({
   React.useEffect(() => {
     setStartGapFilterableData(data?.data?.values);
     setStartGapOriginalData(data?.data?.values);
+    // @TODO: Determine what range of values to use to start with
+    // @TODO: Merge current and next value to determine range that should be shown on bar graph
     setStartDistributionSlider([data?.data?.values[0].bin, data?.data?.values[data?.data?.values.length - 1].bin]);
     setRange({
       min: data?.data?.values[0].bin,
@@ -41,7 +43,6 @@ const DistributionTile = ({
     setStartGapFilterableData(startGapOriginalData.filter((values) => values.bin > first && values.bin < second));
     setStartDistributionSlider(val);
   }, [startDistributionSlider]);
-
   return (
     <React.Fragment>
       {data && (
@@ -67,6 +68,7 @@ const DistributionTile = ({
           <BarGraph
             height={200}
             data={startGapFilterableData}
+            primaryKey="count"
             xAxisLabel={{
               value: xAxisLabel,
               offset: -10,

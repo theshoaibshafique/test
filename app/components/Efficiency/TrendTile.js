@@ -79,9 +79,9 @@ const TrendTile = ({
         xTickSize={0}
         interval={30}
         data={filteredTrendData}
-        xAxisLabel={{ value: 'Date', offset: -5, position: 'insideBottom' }}
+        xAxisLabel={{ value: data.independentVarTitle, offset: -5, position: 'insideBottom' }}
         yAxisLabel={{
-          value: 'On Time Start (%)', angle: -90, offset: 15, position: 'insideBottomLeft'
+          value: data.dependentVarTitle, angle: -90, offset: 15, position: 'insideBottomLeft'
         }}
         xTickMargin={8}
       />

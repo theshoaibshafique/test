@@ -13,17 +13,17 @@ const OvertimeCard = ({ data }) => (
       </h4>
     </div>
     <div className="overtime-rows">
-      <div className="overtime-block-number">{data?.value?.sum}
+      <div className="overtime-block-number">{data?.value?.sum || 0}
         <sub>min</sub>
       </div>
       <div className="overtime-helper" style={{ flex: '1 0 20%' }}>
           in total
       </div>
-      <div className="overtime-block-number">{data?.value?.by_block || data?.value?.block}
+      <div className="overtime-block-number">{data?.value?.annualized || 0}
         <sub>min</sub>
       </div>
       <div className="overtime-helper">
-          Average per Block
+          Annualized Average Per Room
       </div>
     </div>
   </React.Fragment>

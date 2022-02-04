@@ -1,4 +1,5 @@
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
@@ -62,6 +63,7 @@ const CaseScheduling = () => {
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
   const [trendLineData, setTrendLineData] = React.useState([]);
+  const [procedureListData, setProcedureListData] = React.useState([]);
 
   const options = [
     {
@@ -74,7 +76,7 @@ const CaseScheduling = () => {
     }
   ];
 
-  const { data } = useSelectData(process.env.SCHEDULING_API, userToken, {
+  const { data } = useSelectData(process.env.SCHEDULING_API, 'post', userToken, {
     ...state.defaultPayload,
     facilityName: userFacility,
     startDate: state.startDate.format('YYYY-MM-DD'),
@@ -116,6 +118,10 @@ const CaseScheduling = () => {
 
   React.useEffect(() => {
     const trendTile = tile?.trend;
+    const procedureTile = tile?.procedure;
+    
+    const formattedProcedureListData = formatProcedureListData(procedureTile?.data);
+    setProcedureListData(formattedProcedureListData);
     setTrendStartDate(trendTile?.data?.start_date);
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
     setTrendLineData(formattedData);
@@ -131,6 +137,21 @@ const CaseScheduling = () => {
     date: moment(trendStartDate).add(idx, 'days').valueOf(),
     percentage
   }));
+
+
+  const formatProcedureListData = (dataset) => dataset?.procedure?.map((procedure, idx) => {
+    return {
+      id: uuidv4(),
+      procedure,
+      case: dataset?.cases[idx],
+      percentage: dataset?.percentage_change[idx],
+      mean: dataset?.mean[idx],
+      allTimeMean: dataset?.all_time_mean[idx],
+      allTimeMedian: dataset?.all_time_median[idx],
+      allTimeSd: dataset?.all_time_sd[idx],
+      underscheduled: dataset?.underscheduled_percentage[idx]
+    }
+  });
 
   const toggleChartData = (e) => {
     setChartData(e.target.value);
@@ -221,7 +242,10 @@ const CaseScheduling = () => {
               <Card style={{ height: '1110px', overflowY: 'auto' }}>
                 <CardContent>
                   {tile?.procedure && (
-                    <ProcedureList data={tile.procedure} />
+                    <ProcedureList 
+                      title={tile.procedure.title}
+                      procedureData={procedureListData}
+                    />
                   )}
                 </CardContent>
               </Card>

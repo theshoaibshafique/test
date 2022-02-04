@@ -1,11 +1,32 @@
 import React from 'react';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { PieChart, Pie, Label, Cell, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Label, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
 
 const equalProps = (props, prevProps) => prevProps === props;
 
-const Donut = React.memo(({ data, colours, tooltips, label }) => {
+/*
+* @TODO: Customize tool tip latr according to spacing, colours / no colours, etc.
+*/
+const CustomTooltip = ({ active, payload }) => {
+    if (active && payload?.length) {
+      const [{ name, value, payload: { payload: { color } } }] = payload;
+      return (
+        <div style={{ color: '#333', fontSize: 12, lineHeight: '16px', display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }}>
+          <span style={{ display: 'flex', backgroundColor: color, width: 10, height: 10, position: 'absolute', top: 8, left: -10, paddingLeft: 15 }} /> 
+          <span style={{ display: 'flex', marginLeft: 5 }}>{name.toUpperCase()}: {value}</span>
+        </div>
+      )
+    }
+    return null;
+}
+
+/*
+ * @param {object} data - The data to be used by the chart
+ * @param {(Array<objects>|Array<string>)} tooltips - The tooltips we want to use for each category in the legend
+ * @param {string} label - The inner label of the chart
+ */
+const Donut = React.memo(({ data, tooltips, label }) => {
   return (
     <ResponsiveContainer width="100%" height={250}>
     <PieChart>
@@ -22,7 +43,8 @@ const Donut = React.memo(({ data, colours, tooltips, label }) => {
         ))}
         <Label position="insideTop" style={{ fontSize: 14, color: '#004F6E' }} content={label} />
       </Pie>
-      <Legend width={250} height={250} layout="vertical" align="right" payload={data?.slice(1, data?.length)} formatter={(value, entry, index) => {
+      <Tooltip content={<CustomTooltip />} />
+      <Legend width={250} height={250} layout="vertical" align="right" payload={data?.slice(1, data?.length)} formatter={(_, entry, index) => {
       if (tooltips.length < 2) {
         return (
           <span style={{ color: '#333', fontSize: 12, lineHeight: '16px' }}>

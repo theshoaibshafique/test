@@ -92,6 +92,18 @@ function genericFetchWithNoReturnMessage(api, fetchMethod, token, fetchBodyJSON)
     });
 }
 
+/*
+* @TODO: Add response error handling should messages need to be displayed to the user
+*
+* Multi use request function
+* @param {string} type - The type of request (i.e GET, POST, PUT, PATCH, DELETE, etc.)
+* @returns async {function} - A function which handles the request
+* @param {string} url - The endpoint we want to use
+* @param {(object | string)} token - The token we want to use
+* @param {object} data - The payload we want to send to the server (optionally left blank)
+* @param {?} - cancel - The cancel source for axios to know to cancel to the request (I presume?)
+* @returns {object} - The response from the server
+*/
 export const request = type => async (url, token, data = {}, cancel) => {
   const { userToken, roleToken } = typeof token === 'object' ? token : { userToken: token, roleToken: '' };
   const response = await axios({

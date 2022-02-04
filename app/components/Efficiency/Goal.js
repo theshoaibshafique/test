@@ -56,6 +56,10 @@ const AnimatedGoal = styled.div`
   }
 `;
 
+/*
+* @param {number} target - The target goal expected to be hit
+* @param {number} goal - The value reached
+*/
 const Goal = ({ target, goal }) => (
   <AnimatedGoal target={target} goal={goal}>
     <span>Goal</span>

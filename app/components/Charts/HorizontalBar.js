@@ -2,7 +2,17 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend } from 'recharts';
 
 const equalProps = (props, prevProps) => prevProps === props;
+// @TODO: Could colocate this / update the traditional bar graph to pass in the required props to be used for rendering this horizontal
 
+/*
+* @param {Array<object>} data - The data to be passed into the chart
+* @param {object} xAxisLabel - The x axis label we want to display
+* @param {object} yAxisLabel - The y axis label we want to display
+* @param {(number|string)} height - The height of the chart
+* @param {Array<string>} colors - The colors we want to use for the bars of the chart
+* @param {Array<string>} dataKeys - The keys to use for rendering the data, in a stack
+* @param {object} rest - The rest of the props we want to include on the chart
+*/
 const HorizontalBar = React.memo(({
   data, xAxisLabel, yAxisLabel, height, colors, dataKeys, ...rest
 }) => (

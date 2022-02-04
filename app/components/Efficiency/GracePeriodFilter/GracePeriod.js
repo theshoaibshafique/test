@@ -1,4 +1,6 @@
+/* eslint radix: 0 */
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
@@ -7,57 +9,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import useLocalStorage from '../../../hooks/useLocalStorage';
-
-const hours = [
-  {
-    id: 1,
-    value: '00'
-  },
-  {
-    id: 2,
-    value: '01'
-  },
-  {
-    id: 3,
-    value: '02'
-  },
-  {
-    id: 4,
-    value: '03'
-  },
-  {
-    id: 5,
-    value: '04'
-  },
-  {
-    id: 6,
-    value: '05'
-  },
-  {
-    id: 7,
-    value: '06'
-  },
-  {
-    id: 8,
-    value: '07'
-  },
-  {
-    id: 9,
-    value: '08'
-  },
-  {
-    id: 10,
-    value: '09'
-  },
-  {
-    id: 11,
-    value: '10'
-  },
-  {
-    id: 12,
-    value: '11'
-  },
-];
 
 const minutes = [
   {
@@ -73,6 +24,7 @@ const minutes = [
 const GracePeriod = ({ config }) => {
   const [time, setTime] = React.useState({
     hours: '05',
+    onTimeMinutes: '00',
     minutes: '00'
   });
 
@@ -83,7 +35,6 @@ const GracePeriod = ({ config }) => {
       [e.target.name]: e.target.value
     }));
   };
-
 
   React.useEffect(() => {
     const { hours, minutes } = time;
@@ -101,15 +52,24 @@ const GracePeriod = ({ config }) => {
     setTime((prev) => ({
       ...prev,
       hours: moment.duration(getItemFromStore('efficiencyV2')?.efficiency?.turnoverThreshold, 'seconds').hours().toString(),
+      onTimeMinutes: '00',
       minutes: '00'
     }));
   }, []);
 
   const renderLabelText = () => {
-    if (config?.gracePeriod && !config?.threshold) {
+    if (config.ontime) {
       return <span>Grace Period</span>;
     }
     return <span>Outlier Threshold <b>(hh:mm)</b></span>;
+  };
+
+  const renderValue = (value) => {
+    const id = uuidv4();
+    const val = value.toString().padStart(2, 0);
+    return (
+      <MenuItem name={id} key={id} value={val}>{val}</MenuItem>
+    );
   };
 
   return (
@@ -125,15 +85,22 @@ const GracePeriod = ({ config }) => {
               onChange={handleTimeChange}
               value={time.hours}
             >
-              {hours.map(({ id, value }) => (
-                <MenuItem name={id} key={id} value={value}>{value}</MenuItem>
-              ))}
+              {[...Array(12).keys()].map(renderValue)}
+            </Select>
+          </FormControl>
+        </Grid>
+      )}
+      {config.ontime && (
+        <Grid item xs={8}>
+          <FormControl variant="outlined" style={{ backgroundColor: '#fff', borderRadius: 0, width: '90%' }}>
+            <Select name="onTimeMinutes" onChange={handleTimeChange} value={time.onTimeMinutes}>
+              {[...Array(60).keys()].map(renderValue)}
             </Select>
           </FormControl>
         </Grid>
       )}
       {config?.gracePeriod && (
-        <Grid item xs={config.gracePeriod && !config.threshold ? 12 : 6}>
+        <Grid item xs={6}>
           <FormControl variant="outlined" style={{ backgroundColor: '#fff', borderRadius: 0, width: '90%' }}>
             <Select name="minutes" onChange={handleTimeChange} value={time.minutes}>
               {minutes.map(({ id, value }) => (
@@ -144,7 +111,7 @@ const GracePeriod = ({ config }) => {
         </Grid>
       )}
       <Grid item xs={12}>
-        <FormHelperText>UCI standard: 5 hr</FormHelperText>
+        <FormHelperText>UCI standard: 5 {config?.ontime ? 'min' : 'hr'}</FormHelperText>
       </Grid>
     </Grid>
   );

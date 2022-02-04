@@ -8,7 +8,6 @@ import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import Card from '@material-ui/core/Card';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import CardContent from '@material-ui/core/CardContent';
-import { request } from '../../../utils/global-functions';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
@@ -36,6 +35,7 @@ const INITIAL_STATE = {
   loading: false,
 };
 
+// filter out these keys from the payload so that they don't appear in the legend
 const filteredKeys = ['average_hours', 'average_minutes', 'days'];
 
 const reducer = (state, action) => {
@@ -63,6 +63,7 @@ const reducer = (state, action) => {
 
 const DONUT_COLOURS = ['#A77ECD', '#50CBFB', '#FFDB8C', '#97E7B3'];
 
+// Note: only change the below if you know what you're doing / need to change this based on passing new props in or performing some logic to change how this is memoized, this function helps to memoize the component so it'll only re-render upon updates to its props changing
 const equalProps = (props, prevProps) => props === prevProps;
 
 const BlockUtilization = React.memo(() => {
@@ -70,6 +71,7 @@ const BlockUtilization = React.memo(() => {
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore } = useLocalStorage();
+  // grab the rooms object, default filters, default handlers, and apply global filter function from the useFilter hook for use on the page - note: not all pages will need all of this
   const { rooms, defaultFilterConfig, defaultHandlerConfig, applyGlobalFilter } = useFilter();
   const [tile, setTile] = React.useState({});
   const [trendStartDate, setTrendStartDate] = React.useState('');
@@ -94,7 +96,7 @@ const BlockUtilization = React.memo(() => {
     }
   ];
 
-  const { data } = useSelectData(process.env.BLOCKUTILIZATION_API, userToken, {...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')}, axios.CancelToken.source())
+  const { data } = useSelectData(process.env.BLOCKUTILIZATION_API, 'post', userToken, {...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')}, axios.CancelToken.source())
 
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
@@ -107,14 +109,14 @@ const BlockUtilization = React.memo(() => {
 
   React.useEffect(() => {
     if (!!state.tiles) {
-      const utilizationTile = state.tiles.find(({ title }) => title.toLowerCase().includes('block utilization'));
-      const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
-      const otTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
-      const compositionTile = state.tiles.find(({ title }) => title.toLowerCase().includes('composition'));
-      const roomTile = state.tiles.find(({ title }) => title.toLowerCase().includes('room'));
-      const endGapTile = state.tiles.find(({ title }) => title.toLowerCase().includes('end gap'));
-      const startGapTile = state.tiles.find(({ title }) => title.toLowerCase().includes('start gap'));
-      const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
+      const utilizationTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('main'));
+      const trendTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('trend'));
+      const otTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('overtime'));
+      const compositionTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('composition'));
+      const roomTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('room'));
+      const endGapTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('end distribution'));
+      const startGapTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('start distribution'));
+      const electiveDaysTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('days'));
 
       setTrendStartDate(trendTile?.data?.start_date);
       setTile({
@@ -130,6 +132,7 @@ const BlockUtilization = React.memo(() => {
     }
   }, [state.tiles]);
 
+  // format the line data and set the start date when we have tile information
   React.useEffect(() => {
     const trendTile = tile?.trend;
     setTrendStartDate(trendTile?.data?.start_date)
@@ -137,22 +140,39 @@ const BlockUtilization = React.memo(() => {
     setTrendLineData(formattedData); 
   }, [tile]);
 
+  // format the data on toggle / update of which chart we're displaying
   React.useEffect(() => {
     const trendTile = tile?.trend;
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
     setTrendLineData(formattedData); 
-  }, [filteredChartData, tile]);
+  }, [filteredChartData]);
 
+  // tiny helper function to remove useless keys from the donut chart that we don't want to have present in the legend
   const filterKeys = ([key,]) => {
     return !filteredKeys.includes(key);
   };
 
+
+  /*
+  * @TODO: Remove this code if the backend returns data formatted as an array of objects
+  *
+  * Returns formatted data for a donut chart, taken from malformed backend data
+  * @param {Array<object>} dataset - Data object retrieved from the API, specific to the "tile" utilizing the donut chart 
+  * @returns {Array<object>} dataset (modified) - The data modified to suit a structure the charting library can use
+  */
   const formatDonutData = (data) => Object.entries(data).filter(filterKeys).reduce((acc, [key, val], i) => acc.concat({
     name: key,
     value: val,
     color: DONUT_COLOURS[i - 1] 
   }), []);
 
+  /*
+  * @TODO: Remove this code if the backend returns data formatted as an array of objects
+  *
+  * Returns formatted data for a line chart, taken from malformed backend data
+  * @param {Array<object>} dataset - Data object retrieved from the API, specific to the trend "tile"
+  * @returns {Array<object>} dataset (modified) - The data modified to suit a structure the charting library can use
+  */
   const formatLineData = (dataset) => {
     return dataset?.map((percentage, idx) => {
         return {
@@ -167,6 +187,13 @@ const BlockUtilization = React.memo(() => {
     setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
   };
 
+  /*
+  * @TODO: Remove the map function but keep the sorting / move the sorting logic somewhere else if the data being returned is an array of objects
+  *
+  * Returns formatted data for data presented in a table-esque format, taken from malformed backend data
+  * @param {Array<object>} dataset - Data object retrieved from the API, specific to the donut "tile"
+  * @returns {Array<object>} dataset (modified) - The data modified to suit a structure the charting library can use
+  */
   const transformRoomData = (room, momentum, percentage, cb) => {
     const transformed = room?.map((or, i) => ({
       id: Math.floor(Math.random() * 25000),
@@ -186,6 +213,7 @@ const BlockUtilization = React.memo(() => {
     return cb(transformed);
   };
 
+  // set current sort key to be reflected in sort arrows
   const setUtilizationByRoomSort = (key) => () => {
     setSort((prev) => ({
       ...prev,
@@ -196,6 +224,13 @@ const BlockUtilization = React.memo(() => {
       key
     }));
   }
+
+  /*
+   * Note: This Header component might be a little intimidating, so I'm leaving this comment here to hopefully help explain how everything is hooked up. Feel free to delete if you don't feel it's helpful / after understanding
+   *
+   * The Header component takes a config object, an applyGlobalFilter function as well as a handlers object which will allow it to render and re-use certain functions as necessary for the filtering options in the header. Each page will have a different configuration and the various configurations will determine which sections to render. The applyGlobalFilter function is a function that comes from the useFilter hook, which allows for passing in the data that's necessary for the filter to work properly. It returns a callback function with the data that it gets from making the request so that we can have access to it on this page (and the other pages that are using applyGlobalFilter).
+   *
+   */
 
   return (
     <div className="page-container">
@@ -266,8 +301,7 @@ const BlockUtilization = React.memo(() => {
                   <div
                     style={{
                       flexDirection: 'row',
-                      alignItems: 'center',
-                      overflowY: 'scroll'
+                      alignItems: 'center'
                     }}
                   >
                     <h4>
@@ -380,7 +414,7 @@ const BlockUtilization = React.memo(() => {
                         <text x={140} y={95} style={{ fontSize: 14, color: '#333' }}>
                           Average Block Time
                         </text>
-                        <text x={tile.composition.data.average_hours >= 10 ? 110 : 140} y={160} style={{ fontSize: 60, color: '#004F6E', fontWeight: 'bold' }}>
+                        <text x={tile.composition.data.average_hours >= 10 && tile.composition.data.average_minutes >= 10 ? 110 : 130} y={160} style={{ fontSize: 60, color: '#004F6E', fontWeight: 'bold' }}>
                           {tile.composition.data.average_hours}
                           <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
                           {tile.composition.data.average_minutes}
@@ -411,7 +445,7 @@ const BlockUtilization = React.memo(() => {
         </Grid>
         <Grid spacing={5} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
-            <FooterText days={tile?.elective?.days} />
+            <FooterText days={tile?.elective?.value} />
           </Grid>
         </Grid>
       </Grid>

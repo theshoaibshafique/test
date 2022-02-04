@@ -1,3 +1,4 @@
+/* eslint react/no-danger: 0 */
 import React from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -18,11 +19,13 @@ import Donut from '../Charts/Donut';
 import HorizontalBar from '../Charts/HorizontalBar';
 import { makeSelectToken, makeSelectUserFacility } from '../../containers/App/selectors';
 import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
+import TimeCard from './TimeCard';
+import AreaGraph from '../Charts/AreaGraph';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import useSelectData from '../../hooks/useSelectData';
-import TimeCard from './TimeCard';
 import './styles.scss';
 
+// @TODO: Possibly remove state as some of this is handled through a hook instead
 const INITIAL_STATE = {
   tabIndex: 0,
   informationModalOpen: false,
@@ -56,8 +59,9 @@ const reducer = (state, action) => {
       return state;
   }
 };
-
+// @TODO: Add more colours depending on what the decision is for rendering data for the donut chart (unless expectation is repeated colours for multiple additional categories)
 const DONUT_COLOURS = ['#A7E5FD', '#FF7D7D', '#FF4D4D', '#CFB9E4', '#97E7B3', '#FFDB8C', '#A77ECD', '#97E7B3', '#A77ECD'];
+// Horizontal bar chart colours
 const colors = ['#FF7D7D'];
 
 const Efficiency = () => {
@@ -67,7 +71,9 @@ const Efficiency = () => {
   const userFacility = useSelector(makeSelectUserFacility());
   const [orGraphData, setOrGraphData] = React.useState([]);
   const [tile, setTile] = React.useState({});
-  const { data } = useSelectData(process.env.EFFICIENCYV2_API, userToken, {
+
+  // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page
+  const { data } = useSelectData(process.env.EFFICIENCYV2_API, 'post', userToken, {
     ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
   }, axios.CancelToken.source());
 
@@ -76,6 +82,7 @@ const Efficiency = () => {
     dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
   }, [data]);
 
+  // @TODO: This is somewhat duplicated (though still different) across multiple pages. If the time arises, consolidate to one function that can return this data to the FE with names the FE can use properly. Would be easier to not need to do a find to get each individual tile, but the structure of the payload being returned combined with the design will inhibit the ability to render these within a loop
   React.useEffect(() => {
     if (!state.tiles) return;
     const efficiencyTile = state.tiles.find(({ title }) => title.toLowerCase().includes('efficiency index'));
@@ -105,6 +112,7 @@ const Efficiency = () => {
 
   React.useEffect(() => {
     const fetchTileData = async () => {
+      // @TODO: hook up loading animation if necessary, not currently hooked up in any way
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
         const retrieveConfiguration = request('get');
@@ -129,16 +137,51 @@ const Efficiency = () => {
     fetchTileData();
   }, []);
 
+  /*
+  * @TODO: Remove this code if the backend returns data formatted as an array of objects
+  *
+  * Returns formatted data for a donut chart, taken from malformed backend data
+  * @param {Array<object>} dataset - Data object retrieved from the API, specific to the donut "tile"
+  * @returns {Array<object>} dataset (modified) - The data modified to suit a structure the charting library can use
+  */
   const formatDonutData = (dataset) => dataset.specialties.map((specialty, i) => ({
     name: specialty,
     value: dataset.counts[i],
     color: DONUT_COLOURS[i]
   }));
 
+  /*
+  * @TODO: Remove this code if the backend returns data formatted as an array of objects
+  *
+  * Returns formatted data for a bar chart, taken from malformed backend data
+  * @param {Array<object>} dataset - Data object retrieved from the API, specific to the donut "tile"
+  * @returns {Array<object>} dataset (modified) - The data modified to suit a structure the charting library can use
+  */
   const formatBarGraphData = (dataset) => dataset?.rooms.map((room, i) => ({
     room,
     time: dataset.counts[i]
   }));
+
+  /*
+  * @TODO: Remove this code if the backend returns more than two singular data points for use in creating a graph
+  * @TODO: Possibly exchange this for a function we already have that can do this / other things as necessary. Disclaimer: I didn't write this.
+  *
+  * Returns an array of data points constructed from two singular data points for an area chart
+  * @param {number} mean - The mean value returned from the API for the specific tile
+  * @param {number} sd - The sd value returned from the API for the specific tile
+  * @returns {Array<object>} dataset (modified) - The data modified to suit a structure the charting library can use
+  */
+  const formatAreaChartData = (mean, sd) => {
+    const chartData = [];
+    const lowerBound = mean - sd * 3;
+    const upperBound = mean + sd * 3;
+
+    for (let x = lowerBound; x < upperBound; x++) {
+      chartData.push({ x, y: Math.exp(-0.5 * Math.pow((x - mean) / sd, 2)) });
+    }
+    return chartData;
+  };
+
 
   return (
     <div className="page-container">
@@ -150,12 +193,36 @@ const Efficiency = () => {
         <Grid item xs={3}>
           <Card>
             <CardContent>
-            Efficiency Index
+              {tile?.efficiency && (
+                <React.Fragment>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <h4>{tile.efficiency.title}</h4>
+                    <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.efficiency?.toolTip) ? tile?.efficiency?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.efficiency?.toolTip}>
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.efficiency?.toolTip?.toString()}`} />
+                    </LightTooltip>
+                  </div>
+                  <AreaGraph data={formatAreaChartData(tile.efficiency.network.mean, tile.efficiency.network.sd)} reference={tile.efficiency.network.mean} />
+                  <div className="additional-scores" style={{ display: 'none' }}> {/* TODO: Change styles to avoid needing these empty divs */}
+                    <div className="additional-scores-title"></div>
+                    <div className="additional-scores-value"></div>
+                  </div>
+                  <div className="additional-scores" style={{ marginTop: 24 }}>
+                    <div className="additional-scores-title">OR Black Box<sup>&reg;</sup> Network</div>
+                    <div className="additional-scores-value">{tile.efficiency.value || 0}</div>
+                  </div>
+                </React.Fragment>
+              )}
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={9}>
-          <Card>
+          <Card style={{ height: '375px' }}>
             <CardContent>
               {tile?.headline && (
                 <React.Fragment>
@@ -171,60 +238,69 @@ const Efficiency = () => {
                       <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.headline?.toolTip?.toString()}`} />
                     </LightTooltip>
                   </div>
-                  <Carousel
-                    responsive={{
-                      desktop: {
-                        breakpoint: { max: 3000, min: 1024 },
-                        items: 1,
-                      },
-                      tablet: {
-                        breakpoint: { max: 1024, min: 464 },
-                        items: 1,
-                      },
-                      mobile: {
-                        breakpoint: { max: 464, min: 0 },
-                        items: 1,
-                      }
+                  <div
+                    style={{
+                      display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '300px'
                     }}
-                    showDots
-                    infinite
-                    transitionDuration={500}
-                    customLeftArrow={
-                      <div
-                        style={{
-                          display: 'flex', left: 50, justifyContent: 'flex-start', position: 'absolute', cursor: 'pointer'
-                        }}
-                      >
-                        <ArrowBackIosIcon />
-                      </div>
-                    }
-                    customRightArrow={
-                      <div
-                        style={{
-                          display: 'flex', right: 50, justifyContent: 'flex-end', position: 'absolute', cursor: 'pointer',
-                        }}
-                      >
-                        <ArrowForwardIosIcon />
-                      </div>
-                    }
                   >
-                    {tile.headline.data.sentences.map((sentence) => (
-                      <div
-                        key={uuidv4()}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          width: '850px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: 36,
-                          flexDirection: 'row'
-                        }}
-                      >{sentence}
-                      </div>
-                    ))}
-                  </Carousel>
+                    <Carousel
+                      responsive={{
+                        desktop: {
+                          breakpoint: { max: 3000, min: 1024 },
+                          items: 1,
+                        },
+                        tablet: {
+                          breakpoint: { max: 1024, min: 464 },
+                          items: 1,
+                        },
+                        mobile: {
+                          breakpoint: { max: 464, min: 0 },
+                          items: 1,
+                        }
+                      }}
+                      showDots
+                      infinite
+                      transitionDuration={500}
+                      customLeftArrow={
+                        <div
+                          style={{
+                            display: 'flex', left: 50, top: 0, justifyContent: 'flex-start', position: 'absolute', cursor: 'pointer'
+                          }}
+                        >
+                          <ArrowBackIosIcon />
+                        </div>
+                      }
+                      customRightArrow={
+                        <div
+                          style={{
+                            display: 'flex', right: 50, top: 0, justifyContent: 'flex-end', position: 'absolute', cursor: 'pointer',
+                          }}
+                        >
+                          <ArrowForwardIosIcon />
+                        </div>
+                      }
+                    >
+                      {tile.headline.data.sentences.map((sentence) => (
+                        <div
+                          key={uuidv4()}
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '850px',
+                            marginRight: 'auto',
+                            marginLeft: 'auto',
+                            marginBottom: 36,
+                            flexDirection: 'row',
+                            flexWrap: 'wrap'
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: sentence.replace(/\[([^\]]+)\]/gm, '&nbsp;<strong style="display: inline-flex; color: #004F6E;">$1</strong>&nbsp;')
+                          }}
+                        />
+                      ))}
+                    </Carousel>
+                  </div>
                 </React.Fragment>
               )}
             </CardContent>

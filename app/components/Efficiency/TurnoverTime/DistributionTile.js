@@ -45,6 +45,8 @@ const DistributionTile = ({ data }) => {
       min: data?.data[graphData.toLowerCase()][0].bin,
       max: data?.data[graphData.toLowerCase()][data?.data[graphData.toLowerCase()].length - 1].bin
     });
+    // @TODO: Determine what range of values to use to start with
+    // @TODO: Merge current and next value to determine range that should be shown on bar graph
     setDistributionSlider([
       data?.data[graphData.toLowerCase()][0].bin,
       data?.data[graphData.toLowerCase()][data?.data[graphData.toLowerCase()].length - 1].bin

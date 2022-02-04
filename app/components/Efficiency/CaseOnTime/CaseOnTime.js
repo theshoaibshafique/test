@@ -85,16 +85,12 @@ const CaseOnTime = () => {
   ];
 
   const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
-  // const [rooms, setRooms] = React.useState([]);
-  // const [orFilterVal, setOrFilterVal] = React.useState([]);
-  // const [label, setLabel] = React.useState('Most recent week');
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [trendLineData, setTrendLineData] = React.useState([]);
   const [trendStartDate, setTrendStartDate] = React.useState('');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
   const [maxData, setMaxData] = React.useState(0);
   const [specialty, setSpecialty] = React.useState('By Specialty');
-  // const [viewFirstCase, setViewFirstCase] = React.useState(false);
   const [tile, setTile] = React.useState({
     overtime: null,
     room: null,
@@ -108,7 +104,7 @@ const CaseOnTime = () => {
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore, setItemInStore } = useLocalStorage();
-  const { data } = useSelectData(process.env.ONTIMESTART_API, userToken, {
+  const { data } = useSelectData(process.env.ONTIMESTART_API, 'post', userToken, {
     ...state.defaultPayload, facilityName: userFacility, otsThreshold: 3600, fcotsThreshold: 3600, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
   }, axios.CancelToken.source());
 
@@ -133,9 +129,9 @@ const CaseOnTime = () => {
     const trendTile = tile?.trend;
     let formattedData;
     if (!viewFirstCase) {
-      formattedData = formatLineData(trendTile?.data[filteredChartData].ots_cases);
+      formattedData = formatLineData(trendTile?.data[filteredChartData].ots);
     } else {
-      formattedData = formatLineData(trendTile?.data[filteredChartData].fcots_cases);
+      formattedData = formatLineData(trendTile?.data[filteredChartData].fcots);
     }
     setTrendLineData(formattedData);
     setTrendStartDate(trendTile?.data?.start_date);
@@ -145,33 +141,31 @@ const CaseOnTime = () => {
     const trendTile = tile?.trend;
     let formattedData;
     if (!viewFirstCase) {
-      formattedData = formatLineData(trendTile?.data[filteredChartData].ots_cases);
+      formattedData = formatLineData(trendTile?.data[filteredChartData].ots);
     } else {
-      formattedData = formatLineData(trendTile?.data[filteredChartData].fcots_cases);
+      formattedData = formatLineData(trendTile?.data[filteredChartData].fcots);
     }
     setTrendLineData(formattedData);
   }, [filteredChartData, tile, viewFirstCase]);
 
   React.useEffect(() => {
     if (!state.tiles) return;
-    const specialtyTile = state.tiles.find(({ title }) => title.toLowerCase().includes('specialty'));
+    const specialtyTile = state.tiles.find(({ independentVarTitle }) => independentVarTitle?.toLowerCase().includes('specialty'));
     const onTimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('on-time'));
     // const percentageTile = state.tiles.find(({ title }) => title.toLowerCase().includes('specialty'));
     const otTile = state.tiles.find(({ title }) => title.toLowerCase().includes('ot'));
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
-    const firstCaseTile = state.tiles.find(({ title }) => title.toLowerCase().includes('first case'));
-    const roomTile = state.tiles.find(({ title }) => title.toLowerCase().includes('room'));
+    const roomTile = state.tiles.find(({ independentVarTitle }) => independentVarTitle?.toLowerCase().includes('room'));
     const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
     const distributionTile = state.tiles.find(({ title }) => title.toLowerCase().includes('distribution'));
-
-    const max = specialtyTile.data.specialty.length + roomTile.data.room.length;
+    const max = specialtyTile?.data?.specialty?.length + roomTile?.data?.room?.length;
     setMaxData(max);
     setTrendStartDate(trendTile?.data?.start_date);
+    console.log('foo', onTimeTile);
     setTile({
       specialty: specialtyTile,
       room: roomTile,
       trend: trendTile,
-      firstCase: firstCaseTile,
       time: onTimeTile,
       overtime: otTile,
       elective: electiveDaysTile,
@@ -232,7 +226,8 @@ const CaseOnTime = () => {
       transformed = tileData?.fcots.map((time, i) => ({
         start: time,
         change: tileData?.fcots_momentum[i],
-        specialty: tileData?.specialty[i]
+        specialty: tileData?.specialty[i],
+        ots: tileData?.ots_momentum[i]
       }));
     }
 
@@ -246,7 +241,8 @@ const CaseOnTime = () => {
       transformed = tileData?.fcots?.map((time, i) => ({
         start: time,
         room: tileData?.room[i],
-        change: tileData?.fcots_momentum[i]
+        change: tileData?.fcots_momentum[i],
+        ots: tileData?.ots_momentum[i]
       }));
     }
 
@@ -258,6 +254,63 @@ const CaseOnTime = () => {
     setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
   };
 
+  const renderTileData = (tile) => {
+    return (
+      <React.Fragment>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+        >
+          <h4>{tile?.title}</h4>
+          <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.toolTip) ? tile?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.toolTip}>
+            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.toolTip?.toString()}`} />
+          </LightTooltip>
+        </div>
+        <Grid container>
+          <Grid item xs={12}>
+            <RadioButtonGroup style={{ display: 'flex', alignItems: 'flex-end' }} value={specialty} onChange={toggleSpecialty} options={options} highlightColour="#004F6E" />
+          </Grid>
+        </Grid>
+        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+        <Grid container spacing={5}>
+          <Grid item xs={4}>
+            {tile?.independentVarTitle}
+          </Grid>
+          <Grid item xs={3}>
+            {tile?.dependentVarTitle}
+          </Grid>
+          <Grid item xs={3}>
+        Change
+          </Grid>
+        </Grid>
+        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+        <div style={{ overflowY: 'auto', height: '100%' }}>
+          {transformData(tile?.data, specialty, (rowData) => rowData?.map((row) => (
+            <Grid
+              container
+              key={row.room}
+              spacing={5}
+              className="room-data-container"
+            >
+              <Grid item xs={5}>
+                {row.room}
+              </Grid>
+              <Grid item xs={3}>
+                {row.start}%
+              </Grid>
+              <Grid item xs={3}>
+                {row.change}
+              </Grid>
+            </Grid>
+          )))}
+        </div>
+      </React.Fragment>
+    );
+  }
+
   return (
     <div className="page-container">
       <Header
@@ -266,7 +319,7 @@ const CaseOnTime = () => {
           specialty: true,
           grace: {
             threshold: false,
-            period: true
+            ontime: true
           },
           case: true
         }}
@@ -305,15 +358,9 @@ const CaseOnTime = () => {
             <Grid item xs={12} style={{ paddingRight: '0px' }}>
               <Card>
                 <CardContent>
-                  {!viewFirstCase ?
-                    tile?.time && (
-                    <TimeCard data={tile.time} />
-                  )
-                    :
-                    tile?.firstCase && (
-                    <TimeCard data={tile.firstCase} />
-                  )
-                  }
+                  {tile?.time && (
+                    <TimeCard data={tile?.time} />
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -334,114 +381,8 @@ const CaseOnTime = () => {
               <CardContent style={{ height: '760px', overflowY: 'auto' }}>
                 {maxData > 12 ? (
                   <React.Fragment>
-                    {specialty === 'By Specialty' && (
-                      <React.Fragment>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <h4>{tile?.specialty?.title}</h4>
-                          <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.specialty?.toolTip) ? tile?.specialty?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.specialty?.toolTip}>
-                            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`} />
-                          </LightTooltip>
-                        </div>
-                        <Grid container>
-                          <Grid item xs={12}>
-                            <RadioButtonGroup style={{ display: 'flex', alignItems: 'flex-end' }} value={specialty} onChange={toggleSpecialty} options={options} highlightColour="#004F6E" />
-                          </Grid>
-                        </Grid>
-                        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                        <Grid container spacing={5}>
-                          <Grid item xs={4}>
-                            {tile?.specialty?.independentVarTitle}
-                          </Grid>
-                          <Grid item xs={3}>
-                            {tile?.specialty?.dependentVarTitle}
-                          </Grid>
-                          <Grid item xs={2}>
-                        Change
-                          </Grid>
-                        </Grid>
-                        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                        <div style={{ overflowY: 'auto', height: '100%' }}>
-                          {transformData(tile?.specialty?.data, specialty, (rowData) => rowData?.map((row) => (
-                            <Grid
-                              container
-                              key={row.specialty}
-                              spacing={5}
-                              className="room-data-container"
-                            >
-                              <Grid item xs={4}>
-                                {row.specialty}
-                              </Grid>
-                              <Grid item xs={3}>
-                                {row.start}%
-                              </Grid>
-                              <Grid item xs={3}>
-                                {row.change}
-                              </Grid>
-                            </Grid>
-                          )))}
-                        </div>
-                      </React.Fragment>
-                    )}
-                    {specialty === 'By Room' && (
-                      <React.Fragment>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <h4>{tile?.room?.title}</h4>
-                          <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.room?.toolTip) ? tile?.room?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.room?.toolTip}>
-                            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.room?.toolTip?.toString()}`} />
-                          </LightTooltip>
-                        </div>
-                        <Grid container>
-                          <Grid item xs={12}>
-                            <RadioButtonGroup style={{ display: 'flex', alignItems: 'flex-end' }} value={specialty} onChange={toggleSpecialty} options={options} highlightColour="#004F6E" />
-                          </Grid>
-                        </Grid>
-                        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                        <Grid container spacing={5}>
-                          <Grid item xs={4}>
-                            {tile?.room?.independentVarTitle}
-                          </Grid>
-                          <Grid item xs={3}>
-                            {tile?.room?.dependentVarTitle}
-                          </Grid>
-                          <Grid item xs={3}>
-                        Change
-                          </Grid>
-                        </Grid>
-                        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                        <div style={{ overflowY: 'auto', height: '100%' }}>
-                          {transformData(tile?.room?.data, specialty, (rowData) => rowData?.map((row) => (
-                            <Grid
-                              container
-                              key={row.room}
-                              spacing={5}
-                              className="room-data-container"
-                            >
-                              <Grid item xs={5}>
-                                {row.room}
-                              </Grid>
-                              <Grid item xs={3}>
-                                {row.start}%
-                              </Grid>
-                              <Grid item xs={3}>
-                                {row.change}
-                              </Grid>
-                            </Grid>
-                          )))}
-                        </div>
-                      </React.Fragment>
-                    )}
+                    {specialty === 'By Room' && renderTileData(tile?.room)}
+                    {specialty === 'By Specialty' && renderTileData(tile?.specialty)}
                   </React.Fragment>
                 ) : (
                   <React.Fragment>

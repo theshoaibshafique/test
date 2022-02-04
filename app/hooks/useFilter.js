@@ -7,7 +7,6 @@ const defaultPayload = {
 };
 
 const useFilter = () => {
-  // const { getItemFromStore } = useLocalStorage();
   const [loading, setLoading] = React.useState(false);
   const [rooms, setRooms] = React.useState([]);
   const [orFilterVal, setOrFilterVal] = React.useState([]);

@@ -29,6 +29,11 @@ const CustomSwitch = withStyles({
   }
 })(Switch);
 
+/*
+* @param {object} config - The configuration object to determine what to show in the header
+* @param {Function} applyGlobalFilter - The function called when we're applying filters
+* @param {object} handlers - An object containing all the handlers necessary for various filters on the page
+*/
 const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
   const { getItemFromStore } = useLocalStorage();
   const filters = getItemFromStore('efficiencyV2')?.efficiency?.filters?.ORs;
@@ -65,6 +70,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
               </div>
             </Grid>
           )}
+          {/* @TODO: Update the start and end dates with dates reflecting the expected defaults  */}
           {config?.date && (
             <Grid item xs={2} style={{ paddingLeft: '0px' }}>
               <CustomDateRangePicker
@@ -99,7 +105,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
           )}
           {!!config?.grace && (
             <Grid item xs={2}>
-              <GracePeriod config={{ threshold: config.grace.threshold, gracePeriod: config.grace.period }} />
+              <GracePeriod config={{ threshold: config.grace.threshold, ontime: config.grace.ontime, gracePeriod: config.grace.period }} />
             </Grid>
           )}
           {Object.keys(config).length > 0 && (

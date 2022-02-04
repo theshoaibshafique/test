@@ -20,25 +20,27 @@ const DistributionTile = ({
 
   React.useEffect(() => {
     if (rest?.viewFirstCase) {
-      setDistributionFilterableData(data.data.fcots);
-      setOriginalDistributionData(data.data.fcots);
-      setStartDistributionSlider([data.data.fcots[0].bin, data.data.fcots[data.data.fcots.length - 1].bin]);
+      setDistributionFilterableData(data.data);
+      setOriginalDistributionData(data.data);
+      // @TODO: Determine what range of values to use to start with
+      // @TODO: Merge current and next value to determine range that should be shown on bar graph
+      setStartDistributionSlider([data.data[0].bin, data.data[data.data.length - 1].bin]);
       setRange({
-        min: data.data.fcots[0].bin,
-        max: data.data.fcots[data.data.fcots.length - 1].bin
+        min: data.data[0].bin,
+        max: data.data[data.data.length - 1].bin
       });
-      setStartDistributionStartLabel(data.data.fcots[0].bin);
-      setStartDistributionEndLabel(data.data.fcots[data.data.fcots.length - 1].bin);
+      setStartDistributionStartLabel(data.data[0].bin);
+      setStartDistributionEndLabel(data.data[data.data.length - 1].bin);
     } else {
-      setDistributionFilterableData(data.data.ots);
-      setOriginalDistributionData(data.data.ots);
-      setStartDistributionSlider([data.data.ots[0].bin, data.data.ots[data.data.ots.length - 1].bin]);
+      setDistributionFilterableData(data.data);
+      setOriginalDistributionData(data.data);
+      setStartDistributionSlider([data.data[0].bin, data.data[data.data.length - 1].bin]);
       setRange({
-        min: data.data.ots[0].bin,
-        max: data.data.ots[data.data.ots.length - 1].bin
+        min: data.data[0].bin,
+        max: data.data[data.data.length - 1].bin
       });
-      setStartDistributionStartLabel(data.data.ots[0].bin);
-      setStartDistributionEndLabel(data.data.ots[data.data.ots.length - 1].bin);
+      setStartDistributionStartLabel(data.data[0].bin);
+      setStartDistributionEndLabel(data.data[data.data.length - 1].bin);
     }
   }, [data, rest.viewFirstCase]);
 
@@ -70,6 +72,9 @@ const DistributionTile = ({
       </div>
       <BarGraph
         height={200}
+        stacked={rest?.viewFirstCase}
+        primaryKey={rest?.viewFirstCase ? 'fcots_count' : 'ots_count'}
+        secondaryKey={rest?.viewFirstCase ? 'ots_count' : 'fcots_count'}
         data={distributionFilterableData}
         xAxisLabel={{
           value: xAxisLabel,

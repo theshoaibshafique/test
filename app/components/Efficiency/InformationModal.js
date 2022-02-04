@@ -16,7 +16,10 @@ const closeButtonStyles = makeStyles({
   }
 });
 
-
+/*
+* @param {boolean} open - Flag for determining if the modal is open
+* @param {Function} onToggle - Function used to toggle the dashboard as open / closed
+*/
 const InformationModal = ({ open, onToggle }) => {
   const closeClass = closeButtonStyles();
   const [tab, setTab] = React.useState(0);

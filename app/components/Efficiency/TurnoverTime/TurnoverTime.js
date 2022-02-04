@@ -78,7 +78,7 @@ const TurnoverTime = () => {
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore } = useLocalStorage();
-  const { data } = useSelectData(process.env.TURNOVER_API, userToken, {
+  const { data } = useSelectData(process.env.TURNOVER_API, 'post', userToken, {
     ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
   }, axios.CancelToken.source());
 
