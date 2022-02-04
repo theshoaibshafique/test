@@ -53,7 +53,6 @@ export default class MainLayout extends React.PureComponent {
   }
 
   componentDidMount() {
-    console.log(this.props.userRoles);
     this.resourcesGathered(this.props.userRoles, this.props.userFacility || "")
   }
   componentDidUpdate(prevProps) {

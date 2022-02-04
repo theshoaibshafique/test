@@ -161,7 +161,6 @@ const CaseOnTime = () => {
     const max = specialtyTile?.data?.specialty?.length + roomTile?.data?.room?.length;
     setMaxData(max);
     setTrendStartDate(trendTile?.data?.start_date);
-    console.log('foo', onTimeTile);
     setTile({
       specialty: specialtyTile,
       room: roomTile,
