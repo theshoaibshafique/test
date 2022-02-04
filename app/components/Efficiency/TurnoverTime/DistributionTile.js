@@ -91,10 +91,13 @@ const DistributionTile = ({ data }) => {
     });
   }, [distributionSlider]);
 
+  // keep filtered range from slider upon update of distribution data
+  React.useEffect(() => {
+    const [first, second] = distributionSlider;
+    setFilteredDistributionData(originalDistributionData.filter((values) => values.bin > first && values.bin < second));
+  }, [originalDistributionData, distributionSlider]);
 
   const filterDistribution = React.useCallback((_, val) => {
-    const [first, second] = val;
-    setFilteredDistributionData(originalDistributionData.filter((values) => values.bin > first && values.bin < second));
     setDistributionSlider(val);
   }, [distributionSlider]);
 
