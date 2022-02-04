@@ -17,7 +17,12 @@
       overflow: hidden;
       width: 100%;
     }
-    @media only screen and (min-width: 1397px) {
+    @media only screen and (max-aspect-ratio: 1920 / 1161) {
+      img{
+        height: 100%;
+      }
+    }
+    @media only screen and (min-aspect-ratio: 1920 / 1161) {
       img{
         width: 100%;
         height: auto;
