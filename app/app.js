@@ -48,6 +48,7 @@ const store = configureStore(initialState, history);
 const MOUNT_NODE = document.getElementById('app');
 
 const apm = initApm({
+  // DOCS: https://www.elastic.co/guide/en/apm/agent/rum-js/current/configuration.html
 
   // Set required service name (allowed characters: a-z, A-Z, 0-9, -, _, and space)
   serviceName: 'Insights FE',
@@ -57,7 +58,10 @@ const apm = initApm({
   environment: process.env.APM_ENV,
 
   // Set service version (required for sourcemap feature)
-  serviceVersion: 'v1.3.2'
+  serviceVersion: 'v1.3.2',
+
+  // capture detailed transaction metrics
+  breakdownMetrics: true
 })
 
 const render = () => {
