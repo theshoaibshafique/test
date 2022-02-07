@@ -15,6 +15,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
   welcomeMessageSlideOutDelay = 2;
   welcomeMessageFadeInDelay = 2;
   welcomeMessageFadeInDuration = 2;
+  facilityGraphicRatio = 1920 / 1161;
 
   constructor(props) {
     super(props);
@@ -23,13 +24,19 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
     const animate = (new URLSearchParams(this.props.location.search).get('animate') === 'true') ?? false;
     const currentFacilityId = new URLSearchParams(this.props.location.search).get('currentFacilityId') ?? null;
     const newFacilityId = new URLSearchParams(this.props.location.search).get('newFacilityId') ?? props.userFacility;
+    /**
+     * useLargeSizeClass initialization uses a hack to calculate from window size instead of container size initially
+     * the resize handler fail at the beginning
+     * without this hack, whenever animation occurs without the concern of the container size
+     */
     this.state = {
       animate,
       currentFacilityId,
       newFacilityId,
-      useLargeSizeClass: true
+      useLargeSizeClass: (window.innerWidth / window.innerHeight) >= this.facilityGraphicRatio
     };
     window.history.pushState({}, document.title, window.location.pathname);
+    window.addEventListener('resize', this.resizeHandler.bind(this));
   }
 
   componentDidMount() {
@@ -49,13 +56,23 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
   }
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
+    this.resizeHandler();
+    return true;
+  }
+
+  resizeHandler(){
+    console.log("resizeHandler");
     if(this.container.current){
       const {width, height} =this.container.current.getBoundingClientRect();
-      this.setState({
-        useLargeSizeClass: (width / height >= 1920 / 1161)
-      });
+      const shouldUseClass = (width / height >= this.facilityGraphicRatio);
+      console.log(width, height);
+      console.log(shouldUseClass);
+      if(this.state.useLargeSizeClass !== shouldUseClass){
+        this.setState({
+          useLargeSizeClass: shouldUseClass
+        });
+      }
     }
-    return true;
   }
 
   renderAnimatedContainer(animate) {
@@ -63,7 +80,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
     const newFacility = this.props.facilityDetails[this.state.newFacilityId];
     if(animate){
       return (
-        <div ref={this.container} className={`container ${this.useLargeSizeClass ? "small-size-class": "large-size-class"}`} id={Math.random()}>
+        <div className={`container ${this.state.useLargeSizeClass ? "large-size-class": "small-size-class"}`} id={Math.random()}>
           {/*with animation*/}
           {/*current facility graphic*/}
           <motion.div
@@ -132,9 +149,9 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
       );
     } else {
       return (
-        <div className="container">
+        <div className={`container ${this.state.useLargeSizeClass ? "large-size-class": "small-size-class"}`}>
           <div className="facility-graphic-container" style={{display: !animate ? 'flex' : 'none' }}>
-            <div className="facility-graphic-container__img-container">
+            <div ref={this.container} className="facility-graphic-container__img-container">
               <img src={newFacility.imageSource} ref={this.ref}/>
             </div>
           </div>
