@@ -19,13 +19,15 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
   constructor(props) {
     super(props);
     this.ref = React.createRef();
+    this.container = React.createRef();
     const animate = (new URLSearchParams(this.props.location.search).get('animate') === 'true') ?? false;
     const currentFacilityId = new URLSearchParams(this.props.location.search).get('currentFacilityId') ?? null;
     const newFacilityId = new URLSearchParams(this.props.location.search).get('newFacilityId') ?? props.userFacility;
     this.state = {
       animate,
       currentFacilityId,
-      newFacilityId
+      newFacilityId,
+      useLargeSizeClass: true
     };
     window.history.pushState({}, document.title, window.location.pathname);
   }
@@ -46,12 +48,22 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
     return this.state.animate && this.state.currentFacilityId !== this.state.newFacilityId;
   }
 
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    if(this.container.current){
+      const {width, height} =this.container.current.getBoundingClientRect();
+      this.setState({
+        useLargeSizeClass: (width / height >= 1920 / 1161)
+      });
+    }
+    return true;
+  }
+
   renderAnimatedContainer(animate) {
     const currentFacility = this.props.facilityDetails[this.state.currentFacilityId];
     const newFacility = this.props.facilityDetails[this.state.newFacilityId];
     if(animate){
       return (
-        <div className="container" id={Math.random()}>
+        <div ref={this.container} className={`container ${this.useLargeSizeClass ? "small-size-class": "large-size-class"}`} id={Math.random()}>
           {/*with animation*/}
           {/*current facility graphic*/}
           <motion.div
