@@ -30,6 +30,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
       useLargeSizeClass: true
     };
     window.history.pushState({}, document.title, window.location.pathname);
+    window.addEventListener('resize', this.resizeListener.bind(this));
   }
 
   componentDidMount() {
@@ -49,13 +50,21 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
   }
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
+    this.resizeListener();
+    return true;
+  }
+
+  resizeListener(){
     if(this.container.current){
       const {width, height} =this.container.current.getBoundingClientRect();
-      this.setState({
-        useLargeSizeClass: (width / height >= 1920 / 1161)
-      });
+      const shouldUse = (width / height >= 1920 / 1161);
+      if(this.state.useLargeSizeClass !== shouldUse){
+        console.log(shouldUse);
+        this.setState({
+          useLargeSizeClass: shouldUse
+        });
+      }
     }
-    return true;
   }
 
   renderAnimatedContainer(animate) {
@@ -63,7 +72,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
     const newFacility = this.props.facilityDetails[this.state.newFacilityId];
     if(animate){
       return (
-        <div ref={this.container} className={`container ${this.useLargeSizeClass ? "small-size-class": "large-size-class"}`} id={Math.random()}>
+        <div className={`container ${this.state.useLargeSizeClass ? "large-size-class": "small-size-class"}`} id={Math.random()}>
           {/*with animation*/}
           {/*current facility graphic*/}
           <motion.div
@@ -132,7 +141,7 @@ export default class Welcome extends React.PureComponent { // eslint-disable-lin
       );
     } else {
       return (
-        <div className="container">
+        <div ref={this.container} className={`container ${this.state.useLargeSizeClass ? "large-size-class": "small-size-class"}`}>
           <div className="facility-graphic-container" style={{display: !animate ? 'flex' : 'none' }}>
             <div className="facility-graphic-container__img-container">
               <img src={newFacility.imageSource} ref={this.ref}/>
