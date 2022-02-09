@@ -333,7 +333,8 @@ export default class EMMPhaseVideoContainer extends React.Component { // eslint-
                   changeVideo={(videoID, videoIndex) => this.changeVideo(videoID, videoIndex)}
                   currentVideoTime={emmVideoTime}
                   selectedVideoClipID={selectedVideoClipID}
-                  multiclip={phaseData.enhancedMMData?.length > 0}
+                  //Its a multi clip when main video isnt populated but emmData is.
+                  multiclip={phaseData.enhancedMMData?.length > 0 && phaseData.enhancedMMVideo?.length === 0}
                 />
               </div>
             </div>
