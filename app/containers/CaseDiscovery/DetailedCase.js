@@ -50,7 +50,7 @@ export function DetailedCase(props) {
   const userFacility = useSelector(makeSelectUserFacility());
   const userToken = useSelector(makeSelectToken());
   const logger = useSelector(makeSelectLogger());
-  const isAdmin = useSelector(makeSelectIsSSTAdmin());
+  const isAdmin = useSelector(makeSelectIsAdmin());
   const isSSTAdmin = useSelector(makeSelectIsSSTAdmin());
   const EARLIEST_EMM_DAY = isSSTAdmin ? 30 : 21; // MAX 21 days back for EMM
   const productRoles = useSelector(makeSelectProductRoles());
@@ -181,10 +181,6 @@ export function DetailedCase(props) {
   const [isMayo, setIsMayo] = React.useState(() => userFacility === 'e47585ea-a19f-4800-ac53-90f1777a7c96');
   const [openAddFlag, setOpenAddFlag] = React.useState(false);
 
-  // Flag clip publish/hide snack bar state.
-  const [snackBarOpen, setSnackBackOpen] = React.useState(false);
-  const [snackBarMsg, setSnackBackMsg] = React.useState('');
-
   /*** FLAG SUBMISSION HANDLERS ***/
   const handleOpenAddFlag = open => {
     logger.manualAddLog('click', open ? 'open-add-flag' : 'close-add-flag')
@@ -306,7 +302,7 @@ export function DetailedCase(props) {
           </div>
           <div className="tags">
             {displayTags(tags, emrCaseId, false, true)}
-            {((isAdmin || isMayo) && showAddFlag && flagReport && flags.length <= 0 && dayDiff <= EARLIEST_EMM_DAY) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => { if (flagReport) handleOpenAddFlag(true) }} >
+            {(isAdmin && showAddFlag && flagReport && flags.length <= 0 && dayDiff <= EARLIEST_EMM_DAY) && <span className={`case-tag add-flag ${!flagReport ? 'disabled' : ''} `} onClick={(e) => { if (flagReport) handleOpenAddFlag(true) }} >
               <span><img src={Plus} /></span>
               <div className="display">Add Flag</div>
             </span>}
