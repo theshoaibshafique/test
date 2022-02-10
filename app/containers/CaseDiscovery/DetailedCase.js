@@ -1177,6 +1177,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       handleFlagSubmit(newFlag);
     }
   };
+  
   return (
     <React.Fragment>
       <div className="close-button">
@@ -1219,7 +1220,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 };
 
 const FlagSelect = ({ title, questionType, options, isRequired, questionId, handleOptionSelect, handleMultiOptionSelect, flagData, handleClearInputError, key }) => {
-  const [value, setValue] = useState({});
+  const [value, setValue] = useState(null);
   const [animate, setAnimate] = useState(false);
   const [flagOptions, setflagOptions] = useState([options]);
   const logger = useSelector(makeSelectLogger());
@@ -1258,7 +1259,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
     logger.manualAddLog('onchange', title, newValue)
     setValue(newValue);
   };
-  // console.log('value', value);
+  
   return (
     <CSSTransition
       in={flagData.includes(ques => ques.id === questionId)}
@@ -1274,16 +1275,16 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
         <Autocomplete
           id="combo-box-demo"
           size="small"
-          value={value}
+          // Multichoice needs list
+          value={value ?? (questionType === 'multiple-choice' ? [] : {})}
           onChange={onOptionChange}
           options={options}
           getOptionLabel={(option) => option.title || ''}
           style={{ width: '100%' }}
           multiple={questionType === 'multiple-choice'}
           disableCloseOnSelect={false}
-          renderInput={(params) => <TextField {...params} /*label={questionType === 'multiple-choice' ? 'Select 1 or more' : ''}*/ variant="outlined" />}
+          renderInput={params => <TextField {...params} /*label={questionType === 'multiple-choice' ? 'Select 1 or more' : ''}*/ variant="outlined" />}
           disableClearable
-          defaultValue={null}
         />
       </div>
     </CSSTransition>
