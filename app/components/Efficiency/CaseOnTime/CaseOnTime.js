@@ -177,7 +177,7 @@ const CaseOnTime = () => {
     if (!!globalFilter) {
       setItemInStore('globalFilter', {
         ...globalFilter,
-        viewFirstCase 
+        viewFirstCase
       });
     }
   }, [viewFirstCase]);
@@ -257,15 +257,16 @@ const CaseOnTime = () => {
     return (
       <React.Fragment>
         <div
+          className='tile-title'
           style={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center'
           }}
         >
-          <h4>{tile?.title}</h4>
+          {tile?.title}
           <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.toolTip) ? tile?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.toolTip}>
-            <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.toolTip?.toString()}`} />
+            <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.toolTip?.toString()}`} />
           </LightTooltip>
         </div>
         <Grid container>
@@ -282,7 +283,7 @@ const CaseOnTime = () => {
             {tile?.dependentVarTitle}
           </Grid>
           <Grid item xs={3}>
-        Change
+            Change
           </Grid>
         </Grid>
         <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
@@ -326,14 +327,14 @@ const CaseOnTime = () => {
           endpoint: process.env.ONTIMESTART_API,
           userToken,
           cancelToken: axios.CancelToken.source()
-          }, {
-            startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
-            endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
-            facilityName: userFacility,
-            roomNames: rooms,
-            otsThreshold: !viewFirstCase ? getItemFromStore('globalFilter')?.otsThreshold : 0,
-            fcotsThreshold: viewFirstCase ? getItemFromStore('globalFilter')?.fcotsThreshold: 0,
-          },
+        }, {
+          startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+          endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+          facilityName: userFacility,
+          roomNames: rooms,
+          otsThreshold: !viewFirstCase ? getItemFromStore('globalFilter')?.otsThreshold : 0,
+          fcotsThreshold: viewFirstCase ? getItemFromStore('globalFilter')?.fcotsThreshold : 0,
+        },
           (tileData) => {
             if (tileData?.tiles?.length) {
               dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
@@ -349,13 +350,13 @@ const CaseOnTime = () => {
         }}
       />
       <Grid container spacing={5} className="efficiency-container">
-        <Grid item xs={12} className="efficiency-dashboard-header">
-          <h3 style={{ fontWeight: 'normal', color: '#000' }}>Case On Time</h3>
+        <Grid item xs={12} className="efficiency-dashboard-header header-2">
+          Case On Time
         </Grid>
         <Grid item xs={3} style={{ paddingRight: '0px' }}>
           <Grid container item xs={12} spacing={5}>
             <Grid item xs={12} style={{ paddingRight: '0px' }}>
-              <Card>
+              <Card className='tile-card'>
                 <CardContent>
                   {tile?.time && (
                     <TimeCard data={tile?.time} />
@@ -364,7 +365,7 @@ const CaseOnTime = () => {
               </Card>
             </Grid>
             <Grid item xs={12} style={{ paddingRight: '0px' }}>
-              <Card>
+              <Card className='tile-card'>
                 <CardContent>
                   {tile?.overtime && (
                     <OvertimeCard data={tile.overtime} />
@@ -376,7 +377,7 @@ const CaseOnTime = () => {
         </Grid>
         <Grid container item xs={4}>
           <Grid item xs={12}>
-            <Card>
+            <Card className='tile-card'>
               <CardContent style={{ height: '760px', overflowY: 'auto' }}>
                 {maxData > 12 ? (
                   <React.Fragment>
@@ -387,13 +388,14 @@ const CaseOnTime = () => {
                   <React.Fragment>
                     <React.Fragment>
                       <div
+                        className='tile-title'
                         style={{
                           display: 'flex',
                           flexDirection: 'row',
                           alignItems: 'center'
                         }}
                       >
-                        <h4>{viewFirstCase ? 'First Case On Time Percentage' : 'Case On Time Percentage'}</h4>
+                        {viewFirstCase ? 'First Case On Time Percentage' : 'Case On Time Percentage'}
                       </div>
                       <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
                       <Grid container spacing={5}>
@@ -404,7 +406,7 @@ const CaseOnTime = () => {
                           {tile?.room?.dependentVarTitle}
                         </Grid>
                         <Grid item xs={3}>
-                        Change
+                          Change
                         </Grid>
                       </Grid>
                       <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
@@ -439,7 +441,7 @@ const CaseOnTime = () => {
                           {tile?.specialty?.dependentVarTitle}
                         </Grid>
                         <Grid item xs={2}>
-                        Change
+                          Change
                         </Grid>
                       </Grid>
                       <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
@@ -473,7 +475,7 @@ const CaseOnTime = () => {
         <Grid item xs={5}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
-              <Card>
+              <Card className='tile-card'>
                 <CardContent>
                   <TrendTile
                     data={tile?.trend}
@@ -486,7 +488,7 @@ const CaseOnTime = () => {
               </Card>
             </Grid>
             <Grid item xs={12}>
-              <Card>
+              <Card className='tile-card'>
                 <CardContent style={{ height: 345 }}>
                   {tile?.distribution && (
                     <DistributionTile

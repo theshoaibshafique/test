@@ -59,15 +59,16 @@ const DistributionTile = ({
   return (
     <React.Fragment>
       <div
+        className='tile-title'
         style={{
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center'
         }}
       >
-        <h4>{data.title}</h4>
+        {data.title}
         <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(data.toolTip) ? data.toolTip.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : data.toolTip}>
-          <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${data.toolTip.toString()}`} />
+          <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${data.toolTip.toString()}`} />
         </LightTooltip>
       </div>
       <BarGraph

@@ -63,10 +63,8 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
 
   return (
     <React.Fragment>
-      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-        <h4 style={{ marginBottom: 0 }}>
-          {title}
-        </h4>
+      <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+        {title}
       </div>
       <hr style={{ marginTop: 16, marginBottom: 16 }} />
       <Grid item xs={12}>

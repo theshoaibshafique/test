@@ -187,24 +187,25 @@ const Efficiency = () => {
     <div className="page-container">
       <Header />
       <Grid container spacing={5} className="efficiency-container">
-        <Grid item xs={12} className="efficiency-dashboard-header" spacing={0}>
-          <h3>Efficiency Dashboard</h3>
+        <Grid item xs={12} className="efficiency-dashboard-header header-2" spacing={0}>
+          Efficiency Dashboard
         </Grid>
         <Grid item xs={3}>
-          <Card>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.efficiency && (
                 <React.Fragment>
                   <div
+                    className='tile-title'
                     style={{
                       display: 'flex',
                       flexDirection: 'row',
                       alignItems: 'center'
                     }}
                   >
-                    <h4>{tile.efficiency.title}</h4>
+                    {tile.efficiency.title}
                     <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.efficiency?.toolTip) ? tile?.efficiency?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.efficiency?.toolTip}>
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.efficiency?.toolTip?.toString()}`} />
+                      <InfoOutlinedIcon style={{ fontSize: 16, marginLeft: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.efficiency?.toolTip?.toString()}`} />
                     </LightTooltip>
                   </div>
                   <AreaGraph data={formatAreaChartData(tile.efficiency.network.mean, tile.efficiency.network.sd)} reference={tile.efficiency.network.mean} />
@@ -222,20 +223,21 @@ const Efficiency = () => {
           </Card>
         </Grid>
         <Grid item xs={9}>
-          <Card style={{ height: '375px' }}>
+          <Card className='tile-card' >
             <CardContent>
               {tile?.headline && (
                 <React.Fragment>
                   <div
+                    className='tile-title'
                     style={{
                       display: 'flex',
                       flexDirection: 'row',
                       alignItems: 'center'
                     }}
                   >
-                    <h4>{tile.headline.title}</h4>
+                    {tile.headline.title}
                     <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.headline?.toolTip) ? tile?.headline?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.headline?.toolTip}>
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.headline?.toolTip?.toString()}`} />
+                      <InfoOutlinedIcon style={{ fontSize: 16, marginLeft: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.headline?.toolTip?.toString()}`} />
                     </LightTooltip>
                   </div>
                   <div
@@ -309,7 +311,7 @@ const Efficiency = () => {
       </Grid>
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={3}>
-          <Card>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.onTime && (
                 <TimeCard data={tile.onTime} />
@@ -318,7 +320,7 @@ const Efficiency = () => {
           </Card>
         </Grid>
         <Grid item xs={3}>
-          <Card>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.utilization && (
                 <TimeCard data={tile.utilization} />
@@ -327,7 +329,7 @@ const Efficiency = () => {
           </Card>
         </Grid>
         <Grid item xs={3}>
-          <Card>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.schedule && (
                 <TimeCard data={tile.schedule} />
@@ -336,7 +338,7 @@ const Efficiency = () => {
           </Card>
         </Grid>
         <Grid item xs={3}>
-          <Card>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.turnover && (
                 <TimeCard data={tile.turnover} />
@@ -347,17 +349,15 @@ const Efficiency = () => {
       </Grid>
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={6}>
-          <Card>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.overtime && (
                 <React.Fragment>
-                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <h4>
-                      {tile?.overtime?.title}
-                      <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.overtime?.toolTip) ? tile?.overtime?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.overtime?.toolTip}>
-                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.overtime?.toolTip?.toString()}`} />
-                      </LightTooltip>
-                    </h4>
+                  <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    {tile?.overtime?.title}
+                    <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.overtime?.toolTip) ? tile?.overtime?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.overtime?.toolTip}>
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.overtime?.toolTip?.toString()}`} />
+                    </LightTooltip>
                   </div>
                   <HorizontalBar
                     data={orGraphData}
@@ -378,33 +378,32 @@ const Efficiency = () => {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card>
+          <Card className='tile-card'>
             <CardContent style={{ height: 390 }}>
               {tile?.specialty && (
                 <React.Fragment>
                   <div
+                    className='tile-title'
                     style={{
                       display: 'flex',
                       flexDirection: 'row',
                       alignItems: 'center'
                     }}
                   >
-                    <h4>
-                      {tile?.specialty?.title}
-                      <LightTooltip
-                        placement="top"
-                        fontSize="small"
-                        interactive
-                        arrow
-                        title={tile?.specialty?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
-                      >
-                        <InfoOutlinedIcon
-                          style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }}
-                          className="log-mouseover"
-                          id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`}
-                        />
-                      </LightTooltip>
-                    </h4>
+                    {tile?.specialty?.title}
+                    <LightTooltip
+                      placement="top"
+                      fontSize="small"
+                      interactive
+                      arrow
+                      title={tile?.specialty?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
+                    >
+                      <InfoOutlinedIcon
+                        style={{ fontSize: 16, margin: '4px', color: '#8282828' }}
+                        className="log-mouseover"
+                        id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`}
+                      />
+                    </LightTooltip>
                   </div>
                   {!!tile?.specialty && (
                     <Donut

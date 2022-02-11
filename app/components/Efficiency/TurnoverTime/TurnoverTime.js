@@ -157,13 +157,13 @@ const TurnoverTime = () => {
           endpoint: process.env.TURNOVER_API,
           userToken,
           cancelToken: axios.CancelToken.source()
-          }, {
-            startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
-            endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
-            facilityName: userFacility,
-            roomNames: rooms,
-            threshold: getItemFromStore('globalFilter')?.otsThreshold + getItemFromStore('globalFilter').fcotsThreshold
-          },
+        }, {
+          startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+          endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+          facilityName: userFacility,
+          roomNames: rooms,
+          threshold: getItemFromStore('globalFilter')?.otsThreshold + getItemFromStore('globalFilter').fcotsThreshold
+        },
           (tileData) => {
             if (tileData?.tiles?.length) {
               dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
@@ -178,11 +178,11 @@ const TurnoverTime = () => {
         }}
       />
       <Grid container spacing={5} className="efficiency-container">
-        <Grid item xs={12} className="efficiency-dashboard-header">
-          <h3>Turnover Time</h3>
+        <Grid item xs={12} className="efficiency-dashboard-header header-2">
+          Turnover Time
         </Grid>
         <Grid item xs={3}>
-          <Card style={{ height: '365px' }}>
+          <Card className='tile-card' style={{ height: '365px' }}>
             <CardContent>
               {tile?.time && (
                 <TimeCard data={tile.time} suffix="Min" />
@@ -191,7 +191,7 @@ const TurnoverTime = () => {
           </Card>
         </Grid>
         <Grid item xs={3}>
-          <Card style={{ height: '365px' }}>
+          <Card className='tile-card' style={{ height: '365px' }}>
             <CardContent>
               {tile?.overtime && (
                 <OvertimeCard data={tile.overtime} />
@@ -200,7 +200,7 @@ const TurnoverTime = () => {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.trend && (
                 <TrendTile
@@ -217,17 +217,15 @@ const TurnoverTime = () => {
       </Grid>
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={6}>
-          <Card style={{ height: '375px' }}>
+          <Card className='tile-card' style={{ height: '375px' }}>
             <CardContent>
               {tile?.or && (
                 <React.Fragment>
-                  <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <h4>
-                      {tile?.or?.title}
-                      <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.or?.toolTip) ? tile?.or?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.or?.toolTip}>
-                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.or?.toolTip?.toString()}`} />
-                      </LightTooltip>
-                    </h4>
+                  <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom:24 }}>
+                    {tile?.or?.title}
+                    <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.or?.toolTip) ? tile?.or?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.or?.toolTip}>
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.or?.toolTip?.toString()}`} />
+                    </LightTooltip>
                   </div>
                   <HorizontalBar
                     legend
@@ -249,7 +247,7 @@ const TurnoverTime = () => {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card style={{ height: '375px' }}>
+          <Card className='tile-card' style={{ height: '375px' }}>
             <CardContent>
               {tile?.duration && (
                 <DistributionTile data={tile?.duration} />

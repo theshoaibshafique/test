@@ -96,7 +96,7 @@ const BlockUtilization = React.memo(() => {
     }
   ];
 
-  const { data } = useSelectData(process.env.BLOCKUTILIZATION_API, 'post', userToken, {...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')}, axios.CancelToken.source())
+  const { data } = useSelectData(process.env.BLOCKUTILIZATION_API, 'post', userToken, { ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD') }, axios.CancelToken.source())
 
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
@@ -137,14 +137,14 @@ const BlockUtilization = React.memo(() => {
     const trendTile = tile?.trend;
     setTrendStartDate(trendTile?.data?.start_date)
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
-    setTrendLineData(formattedData); 
+    setTrendLineData(formattedData);
   }, [tile]);
 
   // format the data on toggle / update of which chart we're displaying
   React.useEffect(() => {
     const trendTile = tile?.trend;
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
-    setTrendLineData(formattedData); 
+    setTrendLineData(formattedData);
   }, [filteredChartData]);
 
   // tiny helper function to remove useless keys from the donut chart that we don't want to have present in the legend
@@ -163,7 +163,7 @@ const BlockUtilization = React.memo(() => {
   const formatDonutData = (data) => Object.entries(data).filter(filterKeys).reduce((acc, [key, val], i) => acc.concat({
     name: key,
     value: val,
-    color: DONUT_COLOURS[i - 1] 
+    color: DONUT_COLOURS[i - 1]
   }), []);
 
   /*
@@ -175,9 +175,9 @@ const BlockUtilization = React.memo(() => {
   */
   const formatLineData = (dataset) => {
     return dataset?.map((percentage, idx) => {
-        return {
-          date: moment(trendStartDate).add(idx, 'days').valueOf(),
-          percentage
+      return {
+        date: moment(trendStartDate).add(idx, 'days').valueOf(),
+        percentage
       }
     });
   };
@@ -235,17 +235,17 @@ const BlockUtilization = React.memo(() => {
   return (
     <div className="page-container">
       <Header
-        config={{...defaultFilterConfig}}
+        config={{ ...defaultFilterConfig }}
         applyGlobalFilter={() => applyGlobalFilter({
           endpoint: process.env.BLOCKUTILIZATION_API,
           userToken,
           cancelToken: axios.CancelToken.source()
-          }, {
-            startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
-            endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
-            facilityName: userFacility,
-            roomNames: rooms
-          },
+        }, {
+          startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+          endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+          facilityName: userFacility,
+          roomNames: rooms
+        },
           (tileData) => {
             if (tileData?.tiles?.length) {
               dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
@@ -257,29 +257,29 @@ const BlockUtilization = React.memo(() => {
         }}
       />
       <Grid container spacing={5} className="efficiency-container">
-         <Grid item xs={12} className="efficiency-dashboard-header">
-           <h3 style={{ fontWeight: 'normal', color: '#000' }}>Block Utilization</h3>
-         </Grid>
-         <Grid item xs={3}>
-           <Card style={{ height: '365px' }}>
-             <CardContent>
-               {tile?.blockUtilization && (
-                  <TimeCard data={tile.blockUtilization} />
-               )}
-             </CardContent>
-           </Card>
-         </Grid>
-         <Grid item xs={3}>
-           <Card style={{ height: '365px' }}>
-             <CardContent>
-               {tile?.overtime && (
-                  <OvertimeCard data={tile.overtime} />
-               )}
-             </CardContent>
-           </Card>
-         </Grid>
+        <Grid item xs={12} className="efficiency-dashboard-header header-2">
+          Block Utilization
+        </Grid>
+        <Grid item xs={3}>
+          <Card className='tile-card' style={{ height: '365px' }}>
+            <CardContent>
+              {tile?.blockUtilization && (
+                <TimeCard data={tile.blockUtilization} />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={3}>
+          <Card className='tile-card' style={{ height: '365px' }}>
+            <CardContent>
+              {tile?.overtime && (
+                <OvertimeCard data={tile.overtime} />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
         <Grid item xs={6}>
-          <Card style={{ height: '365px' }}>
+          <Card className='tile-card' style={{ height: '365px' }}>
             <CardContent>
               <TrendTile
                 data={tile?.trend}
@@ -294,7 +294,7 @@ const BlockUtilization = React.memo(() => {
       </Grid>
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={6}>
-          <Card style={{ height: '365px' }}>
+          <Card className='tile-card' style={{ height: '365px' }}>
             <CardContent>
               {tile?.room && (
                 <React.Fragment>
@@ -304,7 +304,7 @@ const BlockUtilization = React.memo(() => {
                       alignItems: 'center'
                     }}
                   >
-                    <h4>
+                    <div className='tile-title'>
                       {tile?.room?.title}
                       <LightTooltip
                         placement="top"
@@ -313,9 +313,9 @@ const BlockUtilization = React.memo(() => {
                         arrow
                         title={tile?.room?.toolTip?.toString()}
                       >
-                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.room?.toolTip?.toString()}`} />
+                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.room?.toolTip?.toString()}`} />
                       </LightTooltip>
-                    </h4>
+                    </div>
                     <Grid container spacing={5}>
                       <Grid item xs={3} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('room')}>
                         Room
@@ -335,42 +335,42 @@ const BlockUtilization = React.memo(() => {
                     <div style={{ overflowY: 'scroll' }}>
                       {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage, (data) => data?.map((row) => {
                         return (
-                            <Grid
-                              container
-                              key={row.id}
-                              spacing={5}
-                              className="room-data-container"
-                            >
-                              <Grid item xs={3}>
-                                {row.or}
-                              </Grid>
-                              <Grid item xs={4}>
-                                {row.percent}%
-                              </Grid>
-                              <Grid item xs={3}>
-                                {row.change === null && (
-                                  <span className="change-percent-badge-neutral">
-                                    <span className="change-percent-text-neutral">
-                                      --%
-                                    </span>
-                                  </span>
-                                )}
-                                {!!row.change && (
-                                  <span className={`change-percent-badge-${row.change >= 0 ? 'increase' : 'decrease'}`}>
-                                    <span className={`change-percent-text-${row.change >= 0 ? 'increase' : 'decrease'}`}>{row.change >= 0 ? '+' : ''}{row.change}%</span>
-                                    {row.change >= 0 ? 
-            <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 0L16.29 2.29L11.41 7.17L7.41 3.17L0 10.59L1.41 12L7.41 6L11.41 10L17.71 3.71L20 6V0H14Z" fill="#009483"/>
-            </svg>
-            : 
-            <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 12L16.29 9.71L11.41 4.83L7.41 8.83L0 1.41L1.41 0L7.41 6L11.41 2L17.71 8.29L20 6V12H14Z" fill="#EC2027"/>
-            </svg>
-            }
-                                  </span>
-                                )}
-                              </Grid>
+                          <Grid
+                            container
+                            key={row.id}
+                            spacing={5}
+                            className="room-data-container"
+                          >
+                            <Grid item xs={3}>
+                              {row.or}
                             </Grid>
+                            <Grid item xs={4}>
+                              {row.percent}%
+                            </Grid>
+                            <Grid item xs={3}>
+                              {row.change === null && (
+                                <span className="change-percent-badge-neutral">
+                                  <span className="change-percent-text-neutral">
+                                    --%
+                                  </span>
+                                </span>
+                              )}
+                              {!!row.change && (
+                                <span className={`change-percent-badge-${row.change >= 0 ? 'increase' : 'decrease'}`}>
+                                  <span className={`change-percent-text-${row.change >= 0 ? 'increase' : 'decrease'}`}>{row.change >= 0 ? '+' : ''}{row.change}%</span>
+                                  {row.change >= 0 ?
+                                    <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M14 0L16.29 2.29L11.41 7.17L7.41 3.17L0 10.59L1.41 12L7.41 6L11.41 10L17.71 3.71L20 6V0H14Z" fill="#009483" />
+                                    </svg>
+                                    :
+                                    <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M14 12L16.29 9.71L11.41 4.83L7.41 8.83L0 1.41L1.41 0L7.41 6L11.41 2L17.71 8.29L20 6V12H14Z" fill="#EC2027" />
+                                    </svg>
+                                  }
+                                </span>
+                              )}
+                            </Grid>
+                          </Grid>
                         );
                       }))}
                     </div>
@@ -381,47 +381,46 @@ const BlockUtilization = React.memo(() => {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card style={{ height: '365px' }}>
+          <Card className='tile-card' style={{ height: '365px' }}>
             <CardContent>
               {tile?.composition && (
                 <React.Fragment>
                   <div
+                    className='tile-title'
                     style={{
                       display: 'flex',
                       flexDirection: 'row',
                       alignItems: 'center'
                     }}
                   >
-                    <h4>
-                      {tile?.composition?.title}
-                      <LightTooltip
-                        placement="top"
-                        fontSize="small"
-                        interactive
-                        arrow
-                        title={tile?.composition?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
-                      >
-                        <InfoOutlinedIcon
-                          style={{ fontSize: 16, margin: '0 0 8px 4px', color: '#8282828' }}
-                          className="log-mouseover"
-                          id={`info-tooltip-${tile?.composition?.toolTip?.toString()}`}
-                        />
-                      </LightTooltip>
-                    </h4>
+                    {tile?.composition?.title}
+                    <LightTooltip
+                      placement="top"
+                      fontSize="small"
+                      interactive
+                      arrow
+                      title={tile?.composition?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
+                    >
+                      <InfoOutlinedIcon
+                        style={{ fontSize: 16, margin: '4px', color: '#8282828' }}
+                        className="log-mouseover"
+                        id={`info-tooltip-${tile?.composition?.toolTip?.toString()}`}
+                      />
+                    </LightTooltip>
                   </div>
                   {!!tile?.composition && <Donut data={formatDonutData(tile.composition.data)} tooltips={tile.composition.toolTip} label={
-                      <React.Fragment>
-                        <text x={140} y={95} style={{ fontSize: 14, color: '#333' }}>
-                          Average Block Time
-                        </text>
-                        <text x={tile.composition.data.average_hours >= 10 && tile.composition.data.average_minutes >= 10 ? 110 : 130} y={160} style={{ fontSize: 60, color: '#004F6E', fontWeight: 'bold' }}>
-                          {tile.composition.data.average_hours}
-                          <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
-                          {tile.composition.data.average_minutes}
-                          <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
-                        </text>
-                      </React.Fragment>
-                  }/>}
+                    <React.Fragment>
+                      <text x={140} y={95} style={{ fontSize: 14, color: '#333' }}>
+                        Average Block Time
+                      </text>
+                      <text x={tile.composition.data.average_hours >= 10 && tile.composition.data.average_minutes >= 10 ? 110 : 130} y={160} style={{ fontSize: 60, color: '#004F6E', fontWeight: 'bold' }}>
+                        {tile.composition.data.average_hours}
+                        <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
+                        {tile.composition.data.average_minutes}
+                        <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
+                      </text>
+                    </React.Fragment>
+                  } />}
                 </React.Fragment>
               )}
             </CardContent>
@@ -430,14 +429,14 @@ const BlockUtilization = React.memo(() => {
       </Grid>
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={6}>
-          <Card style={{ height: '365px' }}>
+          <Card className='tile-card' style={{ height: '365px' }}>
             <CardContent>
               <DistributionTile data={tile?.startGap} xAxisLabel={tile?.startGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card style={{ height: '365px' }}>
+          <Card className='tile-card' style={{ height: '365px' }}>
             <CardContent>
               <DistributionTile data={tile?.endGap} xAxisLabel={tile?.endGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
             </CardContent>

@@ -183,13 +183,13 @@ const CaseScheduling = () => {
         }}
       />
       <Grid container spacing={5} className="efficiency-container">
-        <Grid item xs={12} className="efficiency-dashboard-header">
-          <h3 style={{ fontWeight: 'normal', color: '#000' }}>Case Scheduling</h3>
+        <Grid item xs={12} className="efficiency-dashboard-header header-2">
+          Case Scheduling
         </Grid>
         <Grid item xs={6} style={{ paddingRight: '0px' }}>
           <Grid container item xs={12} spacing={5}>
             <Grid item xs={6}>
-              <Card>
+              <Card className='tile-card'>
                 <CardContent>
                   {tile?.schedule && (
                     <TimeCard data={tile.schedule} />
@@ -198,7 +198,7 @@ const CaseScheduling = () => {
               </Card>
             </Grid>
             <Grid item xs={6}>
-              <Card style={{ height: '370px' }}>
+              <Card className='tile-card' style={{ height: '370px' }}>
                 <CardContent>
                   {tile?.overtime && (
                     <OvertimeCard data={tile.overtime} />
@@ -209,7 +209,7 @@ const CaseScheduling = () => {
           </Grid>
           <Grid container item xs={12} spacing={5}>
             <Grid item xs={12}>
-              <Card>
+              <Card className='tile-card'>
                 <CardContent>
                   {tile?.trend && (
                     <TrendTile
@@ -226,7 +226,7 @@ const CaseScheduling = () => {
           </Grid>
           <Grid container item xs={12} spacing={5}>
             <Grid item xs={12}>
-              <Card>
+              <Card className='tile-card'>
                 <CardContent>
                   {tile?.delays && (
                     <DistributionTile data={tile.delays} xAxisLabel={tile.delays.independentVarTitle} yAxisLabel={tile.delays.dependentVarTitle} dualColour/>
@@ -239,7 +239,7 @@ const CaseScheduling = () => {
         <Grid item xs={6}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
-              <Card style={{ height: '1110px', overflowY: 'auto' }}>
+              <Card className='tile-card' style={{ height: '1110px', overflowY: 'auto' }}>
                 <CardContent>
                   {tile?.procedure && (
                     <ProcedureList 
