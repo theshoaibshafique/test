@@ -7,6 +7,7 @@ import {
   makeStyles,
   Modal,
   Radio,
+  Select,
   Snackbar,
   SnackbarContent,
   Switch,
@@ -403,3 +404,36 @@ export const SwitchFacilityModal = props => {
     </GenericModal>
   )
 }
+
+
+
+const dropdownStyles = (theme, props) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 4,
+  }
+})
+const DefaultSelect = (props) => (
+  <Select MenuProps={{
+    anchorOrigin: {
+      vertical: "bottom",
+      horizontal: "left"
+    },
+    transformOrigin: {
+      vertical: "top",
+      horizontal: "left"
+    },
+    getContentAnchorEl: null,
+    PaperProps: {
+      style: {
+        maxHeight:400,
+        maxWidth:240
+      }
+    }
+  }} {...props}/>
+)
+
+export const StyledSelect = withStyles((theme) => dropdownStyles(theme, { width: 400 }))(DefaultSelect)
+export const Placeholder = ({ value }) => (
+  <span  style={{color:'rgba(133, 133, 133, 0.8)'}}>{value ?? 'Select an Option'}</span>
+)

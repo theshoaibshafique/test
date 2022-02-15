@@ -1,5 +1,6 @@
 import React from 'react';
 import { request } from '../utils/global-functions';
+import useLocalStorage from './useLocalStorage';
 
 const defaultPayload = {
   roomNames: [],
@@ -8,23 +9,23 @@ const defaultPayload = {
 
 const useFilter = () => {
   const [loading, setLoading] = React.useState(false);
+  //rooms are Room IDs - they're translated to displays values on using an orMap
   const [rooms, setRooms] = React.useState([]);
-  const [orFilterVal, setOrFilterVal] = React.useState([]);
   const [viewFirstCase, setViewFirstCase] = React.useState(false);
 
-  const selectOrs = React.useCallback((_, value) => {
-    setRooms(value.map(({ id }) => id));
-    setOrFilterVal(value);
+  const selectOrs = React.useCallback(( event) => {
+    const {
+      target: { value },
+    } = event;
+    setRooms(value);
   }, []);
 
   React.useEffect(() => () => {
     setRooms([]);
-    setOrFilterVal([]);
   }, []);
 
   const clearFilters = () => {
     setRooms([]);
-    setOrFilterVal([]);
   };
 
   const applyGlobalFilter = async ({ endpoint, userToken, cancelToken }, payload, cb) => {
@@ -60,7 +61,7 @@ const useFilter = () => {
     clearFilters,
     room: {
       selectOrs,
-      orFilterVal
+      orFilterVal: rooms
     }
   };
 
@@ -69,7 +70,6 @@ const useFilter = () => {
     rooms,
     selectOrs,
     clearFilters,
-    orFilterVal,
     applyGlobalFilter,
     toggleFirstCaseOnTime,
     viewFirstCase,

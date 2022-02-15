@@ -12,12 +12,13 @@ import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DayPickerRangeController } from 'react-dates';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { FormControl } from '@material-ui/core';
 
 
 const useStyles = makeStyles({
   root: {
     backgroundColor: '#fff',
-    height: 56,
+    height: 40,
     borderRadius: 4,
     display: 'flex',
     justifyContent: 'space-between',
@@ -112,13 +113,15 @@ const CustomDateRangePicker = ({
 
   return (
     <React.Fragment>
-      <FormLabel style={{ paddingBottom: '4px' }}>Date</FormLabel>
-      <Grid container>
-        <Grid item xs={12} onClick={handleMenuClick} classes={{ root: styles.root }}>
-          {label || 'Most Recent Week'}
-          <IconButton size="small">{anchorEl ? <ArrowDropUpIcon color="#000" /> : <ArrowDropDownIcon color="#000" />}</IconButton>
+      <FormControl size='small' fullWidth>
+        <FormLabel >Date</FormLabel>
+        <Grid container>
+          <Grid item xs={12} onClick={handleMenuClick} classes={{ root: styles.root }}>
+            {label || 'Most Recent Week'}
+            <IconButton size="small">{anchorEl ? <ArrowDropUpIcon color="#000" /> : <ArrowDropDownIcon color="#000" />}</IconButton>
+          </Grid>
         </Grid>
-      </Grid>
+      </FormControl>
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}

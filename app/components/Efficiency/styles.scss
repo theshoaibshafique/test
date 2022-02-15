@@ -32,6 +32,16 @@
         font-size: 18px;
         line-height: 25px;
     }
+    .apply-cancel-buttons{
+        > button {
+            &:first-child {
+                margin-right: 10px;
+            }
+            &:last-child {
+                margin-left: 10px;
+            }
+        }
+    }
     .efficiency-head-container {
         display: flex;
         justify-content: center;
@@ -54,15 +64,14 @@
         align-items: flex-start;
         text-align: left;
         color: #004f6e;
-        font-family: "Noto Sans";
-        font-size: 74px;
+        font-family: 'Noto Sans';
+        font-style: normal;
         font-weight: bold;
-        letter-spacing: 0;
-        line-height: 74px;
-        margin-bottom: 80px;
+        font-size: 88px;
+        line-height: 120px;
     }
     .superscript-text {
-        margin-top: 8px;
+        margin-top: 34px;
         font-family: "Noto Sans";
         font-style: normal;
         font-weight: normal;

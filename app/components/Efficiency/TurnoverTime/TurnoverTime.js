@@ -148,9 +148,8 @@ const TurnoverTime = () => {
       <Header
         config={{
           ...defaultFilterConfig,
-          grace: {
-            threshold: true,
-            period: true
+          time: {
+            threshold: true
           }
         }}
         applyGlobalFilter={() => applyGlobalFilter({

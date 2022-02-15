@@ -26,7 +26,7 @@ const INITIAL_STATE = {
   endDate: moment().subtract(1, 'months').endOf('month'),
   loading: false,
   defaultPayload: {
-    roomNames: ['2E8291AE-26A8-47FC-AA05-9F4424EDD03F'],
+    roomNames: [],
   },
 };
 

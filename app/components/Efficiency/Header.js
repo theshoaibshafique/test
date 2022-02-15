@@ -8,6 +8,7 @@ import GracePeriod from './GracePeriodFilter/GracePeriod';
 import CustomDateRangePicker from '../SharedComponents/CustomDateRangePicker';
 import MultiSelectFilter from '../../components/SharedComponents/MultiSelectFilter';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { SaveAndCancel } from '../SharedComponents/SharedComponents';
 
 const CustomSwitch = withStyles({
   checked: {
@@ -36,27 +37,29 @@ const CustomSwitch = withStyles({
 */
 const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
   const { getItemFromStore } = useLocalStorage();
-  const filters = getItemFromStore('efficiencyV2')?.efficiency?.filters?.ORs;
+  //ORs and Specialties have different formats
+  const orMap = getItemFromStore('efficiencyV2')?.efficiency?.filters?.ORs;
+  const ors = Object.keys(orMap ?? {})
   const specialties = getItemFromStore('efficiencyV2')?.efficiency?.filters?.Specialties;
   const [informationModalOpen, setInformationModalOpen] = React.useState(false);
 
   const onClick = React.useCallback(() => {
     setInformationModalOpen((prev) => !prev);
   }, [informationModalOpen]);
-
+  const hasHelperText = !!config?.time;
   return (
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
         <Grid item xs={12}>
           <div onClick={onClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
         </Grid>
-        <Grid container spacing={3} style={{ margin: '14px 0px 0px 0px' }}>
+        <Grid container spacing={3} style={{ margin: hasHelperText ? '14px 0px -14px' : '14px 0 0 0' }}>
           {config?.case && (
-            <Grid item xs={2} style={{ paddingLeft: '0px', width: '100px' }}>
+            <Grid item xs={2} style={{ paddingLeft: '0px', maxWidth: 200 }}>
               <div
                 style={{
                   display: 'flex',
-                  height: '100%',
+                  // height: '100%',
                   justifyContent: 'flex-start',
                   marginTop: '16px',
                   alignItems: 'center',
@@ -85,7 +88,8 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
                 id="ORFilter"
                 label="Room"
                 onChange={handlers?.room?.selectOrs}
-                options={filters}
+                options={ors}
+                optionMap={orMap}
                 placeholder="All ORs"
                 value={handlers?.room?.orFilterVal}
               />
@@ -99,19 +103,28 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
                 onChange={handlers?.specialty?.selectSpecialty}
                 options={specialties}
                 placeholder="All Specialties"
-                value={handlers?.specialty?.specialtyFilter}
+                value={handlers?.specialty?.specialtyNames}
               />
             </Grid>
           )}
-          {!!config?.grace && (
-            <Grid item xs={2}>
-              <GracePeriod config={{ threshold: config.grace.threshold, ontime: config.grace.ontime, gracePeriod: config.grace.period }} />
+          {!!config?.time && (
+            <Grid item xs={2} style={{ maxWidth: config.time.gracePeriod ? 140 : 250 }}>
+              <GracePeriod
+                config={{ threshold: config.time.threshold, gracePeriod: config.time.gracePeriod }}
+              />
             </Grid>
           )}
           {Object.keys(config).length > 0 && (
-            <Grid item xs={2} style={{ display: 'flex', alignItems: 'center', marginTop: '15px' }}>
-              <button onClick={applyGlobalFilter} className="button primary">Apply</button>
-              <button onClick={handlers?.clearFilters} className="button clear-btn">Clear Filters</button>
+            <Grid item xs style={{ display: 'flex', alignItems: 'center', paddingTop: hasHelperText ? 4 : 20 }} >
+              <SaveAndCancel
+                className={'apply-cancel-buttons'}
+                // disabled={isLoading}
+                handleSubmit={applyGlobalFilter}
+                submitText={'Apply'}
+                // isLoading={isLoading}
+                cancelText={'Clear Filters'}
+                handleCancel={handlers?.clearFilters}
+              />
             </Grid>
           )}
         </Grid>

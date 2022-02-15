@@ -18,6 +18,7 @@ import TimeCard from '../TimeCard';
 import TrendTile from '../TrendTile';
 import OvertimeCard from '../OvertimeCard';
 import DistributionTile from './DistributionTile';
+import { request } from '../../../utils/global-functions';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -90,7 +91,7 @@ const CaseOnTime = () => {
   const [trendStartDate, setTrendStartDate] = React.useState('');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
   const [maxData, setMaxData] = React.useState(0);
-  const [specialty, setSpecialty] = React.useState('By Specialty');
+  const [bySpecialty, setBySpecialty] = React.useState('By Specialty');
   const [tile, setTile] = React.useState({
     overtime: null,
     room: null,
@@ -109,11 +110,19 @@ const CaseOnTime = () => {
   }, axios.CancelToken.source());
 
   const {
+    rooms,
     defaultFilterConfig,
     defaultHandlerConfig,
     toggleFirstCaseOnTime,
     viewFirstCase,
   } = useFilter();
+  const [specialtyNames, setSpecialtyNames] = React.useState([]);
+  const selectSpecialty = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setSpecialtyNames(value);
+  }
 
   React.useEffect(() => {
     if (!data) return;
@@ -170,7 +179,7 @@ const CaseOnTime = () => {
       elective: electiveDaysTile,
       distribution: distributionTile
     });
-  }, [state.tiles, specialty]);
+  }, [state.tiles, bySpecialty]);
 
   React.useEffect(() => {
     const globalFilter = getItemFromStore('globalFilter');
@@ -184,6 +193,7 @@ const CaseOnTime = () => {
 
   const applyGlobalFilter = async () => {
     dispatch({ type: 'SET_LOADING', payload: true });
+    
     try {
       const startDate = getItemFromStore('globalFilter')?.startDate;
       const endDate = getItemFromStore('globalFilter')?.endDate;
@@ -192,7 +202,7 @@ const CaseOnTime = () => {
         endDate: moment(endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
         facilityName: userFacility,
         roomNames: rooms,
-        specialtyNames: [],
+        specialtyNames,
         otsThreshold: 0,
         fcotsThreshold: 0
       };
@@ -209,8 +219,8 @@ const CaseOnTime = () => {
   }
 
   const toggleSpecialty = React.useCallback((e) => {
-    setSpecialty(e.target.value);
-  }, [specialty]);
+    setBySpecialty(e.target.value);
+  }, [bySpecialty]);
 
   const transformData = (tileData, category, cb) => {
     let transformed;
@@ -271,7 +281,7 @@ const CaseOnTime = () => {
         </div>
         <Grid container>
           <Grid item xs={12}>
-            <RadioButtonGroup style={{ display: 'flex', alignItems: 'flex-end' }} value={specialty} onChange={toggleSpecialty} options={options} highlightColour="#004F6E" />
+            <RadioButtonGroup style={{ display: 'flex', alignItems: 'flex-end' }} value={bySpecialty} onChange={toggleSpecialty} options={options} highlightColour="#004F6E" />
           </Grid>
         </Grid>
         <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
@@ -288,7 +298,7 @@ const CaseOnTime = () => {
         </Grid>
         <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
         <div style={{ overflowY: 'auto', height: '100%' }}>
-          {transformData(tile?.data, specialty, (rowData) => rowData?.map((row) => (
+          {transformData(tile?.data, bySpecialty, (rowData) => rowData?.map((row) => (
             <Grid
               container
               key={row.room}
@@ -317,9 +327,8 @@ const CaseOnTime = () => {
         config={{
           ...defaultFilterConfig,
           specialty: true,
-          grace: {
-            threshold: false,
-            ontime: true
+          time: {
+            gracePeriod:true
           },
           case: true
         }}
@@ -343,9 +352,18 @@ const CaseOnTime = () => {
         )}
         handlers={{
           ...defaultHandlerConfig,
+          //Add custom handlers for Header that useFilter doesnt handle
           case: {
             toggleFirstCaseOnTime,
             viewFirstCase
+          },
+          specialty: {
+            specialtyNames,
+            selectSpecialty
+          },
+          clearFilters: () => {
+            defaultHandlerConfig?.clearFilters?.();
+            setSpecialtyNames([]);
           }
         }}
       />
@@ -381,8 +399,8 @@ const CaseOnTime = () => {
               <CardContent style={{ height: '760px', overflowY: 'auto' }}>
                 {maxData > 12 ? (
                   <React.Fragment>
-                    {specialty === 'By Room' && renderTileData(tile?.room)}
-                    {specialty === 'By Specialty' && renderTileData(tile?.specialty)}
+                    {bySpecialty === 'By Room' && renderTileData(tile?.room)}
+                    {bySpecialty === 'By Specialty' && renderTileData(tile?.specialty)}
                   </React.Fragment>
                 ) : (
                   <React.Fragment>

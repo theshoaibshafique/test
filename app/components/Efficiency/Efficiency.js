@@ -116,7 +116,7 @@ const Efficiency = () => {
       dispatch({ type: 'SET_LOADING', payload: true });
       try {
         const retrieveConfiguration = request('get');
-        const configData = await retrieveConfiguration(`${process.env.EFFICIENCY_API}/config?facility_id=${userFacility}`, userToken, null, axios.CancelToken.source());
+        const configData = await retrieveConfiguration(`${process.env.CONFIGURATION_API}?facility_id=${userFacility}`, userToken, null, axios.CancelToken.source());
         if (configData) {
           setItemInStore('efficiencyV2', {
             efficiency: configData
