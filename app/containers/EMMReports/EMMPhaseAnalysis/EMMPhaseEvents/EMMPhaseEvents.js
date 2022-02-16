@@ -1,9 +1,8 @@
 import React from 'react';
 import './style.scss';
 import globalFuncs from '../../../../utils/global-functions';
-import { FormControlLabel, Checkbox } from '@material-ui/core';
-import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
+import { FormControlLabel } from '@material-ui/core';
+import { StyledCheckbox } from '../../../../components/SharedComponents/SharedComponents';
 
 export default class EMMPhaseEvents extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -34,12 +33,9 @@ export default class EMMPhaseEvents extends React.PureComponent { // eslint-disa
       return <div>
         <div className="main-text bold">Procedure Steps</div>
         <FormControlLabel
-          control={<Checkbox
-            disableRipple
+          control={<StyledCheckbox
             checked={showOnlyAE}
             onChange={() => { this.toggleShowOnlyAE(showOnlyAE) }}
-            icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-            checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
           />}
           label={<div className="show-only-ae subtle-subtext">Only show steps with AE</div>}
         />

@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, makeStyles, Menu, MenuItem, Modal, Radio, RadioGroup, Select, Slide, TextField, Tooltip, withStyles } from '@material-ui/core';
+import { Button, FormControl, FormControlLabel, Grid, InputAdornment, InputLabel, Menu, MenuItem, Modal, Select, TextField } from '@material-ui/core';
 import moment from 'moment/moment';
 import React from 'react';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
@@ -8,17 +8,16 @@ import ArrowsDownUp from './icons/ArrowsDownUp.svg';
 import { DATE_OPTIONS, TAGS, TAG_INFO } from './misc/constants';
 import { getTag, TagsSelect, useStyles } from './misc/helper-components';
 import { Case } from './Case';
-import Icon from '@mdi/react';
-import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 import Close from './icons/Close.svg';
 import { makeSelectLogger, makeSelectProductRoles } from '../App/selectors';
 import { NavLink } from 'react-router-dom';
-import globalFunctions, { getCdnStreamCookies } from '../../utils/global-functions';
+import globalFunctions from '../../utils/global-functions';
 import { useSelector } from 'react-redux';
-import { formatCaseForLogs, getCasesInView, getPresetDates } from './misc/Utils';
+import { formatCaseForLogs, getCasesInView } from './misc/Utils';
 import { selectCases, selectSavedCases } from '../App/store/CaseDiscovery/cd-selectors';
 import DateFnsUtils from '@date-io/date-fns';
+import { StyledCheckbox } from '../../components/SharedComponents/SharedComponents';
 
 const MenuProps = {
   PaperProps: {
@@ -221,11 +220,7 @@ export function BrowseCases(props) {
         <div className="show-only-saved">
           <FormControlLabel
             control={
-              <Checkbox
-                disableRipple
-                className="checkbox"
-                icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
+              <StyledCheckbox
                 checked={searchData.onlySavedCases}
                 onChange={(e) => handleChange('onlySavedCases', e.target.checked)}
               />

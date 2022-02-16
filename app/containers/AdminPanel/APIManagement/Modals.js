@@ -1,13 +1,13 @@
 
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl, ListItemIcon, Checkbox, ListItemText, FormHelperText, IconButton } from '@material-ui/core';
+import { Divider, InputLabel, makeStyles, MenuItem, TextField, Select, FormControl } from '@material-ui/core';
 import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAssignableRoles, selectLocationLookups } from '../../App/store/UserManagement/um-selectors';
 import { MAX_DESCRIPTION, MAX_INPUT, UM_PRODUCT_ID } from '../../../constants';
 import { createClient, deleteClient, generateProductUpdateBody, getRoleMapping, getSelectedRoles, patchRoles, resetClient, updateClientProfile } from '../helpers';
-import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
+import { makeSelectLogger, makeSelectProductRoles, makeSelectToken } from '../../App/selectors';
 import { mdiPlaylistEdit, mdiContentCopy } from '@mdi/js';
 import { GenericModal, ProfileIcon, SaveAndCancel, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';

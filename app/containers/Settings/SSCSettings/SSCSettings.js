@@ -1,11 +1,8 @@
 import React, { useEffect } from 'react';
-import Button from '@material-ui/core/Button';
 import './style.scss';
-import { Card, Checkbox, Divider, FormControlLabel, Grid, Slider, Switch, withStyles } from '@material-ui/core';
-import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
+import { Card, Divider, FormControlLabel, Grid, Slider, Switch, withStyles } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Icon from '@mdi/react'
-import { LightTooltip, SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, SaveAndCancel, StyledCheckbox } from '../../../components/SharedComponents/SharedComponents';
 
 const SSTSwitch = withStyles((theme) => ({
   root: {
@@ -96,12 +93,9 @@ function PhaseItem(props) {
       style={{ display: 'table' }}
       control={
         <div style={{ display: 'table-cell' }}>
-          <Checkbox
-            disableRipple
+          <StyledCheckbox
             id={`phaseitem-${pIndex}-${qIndex}`}
             className="SST-Checkbox"
-            icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
-            checkedIcon={<Icon path={mdiCheckboxOutline} size={'18px'} />}
             onChange={toggle}
             checked={isActive}
             value={questionId}

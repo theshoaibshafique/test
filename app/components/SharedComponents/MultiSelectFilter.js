@@ -2,8 +2,9 @@ import React from 'react';
 import FormLabel from '@material-ui/core/FormLabel';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Checkbox, FormControl, FormHelperText, ListItemText, MenuItem, OutlinedInput, Select } from '@material-ui/core';
-import { Placeholder, StyledSelect } from './SharedComponents';
-
+import { Placeholder, StyledCheckbox, StyledSelect } from './SharedComponents';
+import Icon from '@mdi/react';
+import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 
 /*
   Multi-select Filter recieves a flat list of Strings/options
@@ -30,7 +31,9 @@ const MultiSelectFilter = ({
       >
         {options?.map((o) => (
           <MenuItem key={o} value={o}>
-            <Checkbox checked={value?.includes(o)} />
+            <StyledCheckbox
+              checked={value?.includes(o)} />
+
             <ListItemText primary={optionMap?.[o] ?? o} />
           </MenuItem>
         ))}

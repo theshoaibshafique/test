@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   Backdrop,
   Button,
+  Checkbox,
   Fade,
   IconButton,
   makeStyles,
@@ -20,8 +21,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectSnackbar, makeSelectToken } from '../../containers/App/selectors';
-import { mdiClose, mdiSwapHorizontal } from '@mdi/js';
+import { mdiClose, mdiSwapHorizontal, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
 import Icon from '@mdi/react';
+
 import { MTableCell } from 'material-table';
 import './style.scss';
 import { updateUserFacility } from './helpers';
@@ -367,7 +369,7 @@ export const SwitchFacilityModal = props => {
       <div className={'modal-content'}>
         <div className={'current-facility'}>
           <div className={'current-facility__img'}>
-            <img src={currentFacility.thumbnailSource}/>
+            <img src={currentFacility.thumbnailSource} />
           </div>
           <div className={'current-facility__desc'}>
             <div className={'current-facility__label'}>
@@ -381,23 +383,23 @@ export const SwitchFacilityModal = props => {
         <div>
           <div className={'other-facilities'}>
             {Object.keys(props?.facilityDetails)
-              .filter((facilityId)=>facilityId!==currentFacilityId)
-              .map((key)=>{
-              const value = props?.facilityDetails[key];
-              return (
-                <div className={'other-facilities__list-item'} key={key}>
-                  <div className={'other-facilities__img'}>
-                    <img src={value.thumbnailSource}/>
+              .filter((facilityId) => facilityId !== currentFacilityId)
+              .map((key) => {
+                const value = props?.facilityDetails[key];
+                return (
+                  <div className={'other-facilities__list-item'} key={key}>
+                    <div className={'other-facilities__img'}>
+                      <img src={value.thumbnailSource} />
+                    </div>
+                    <div className={'other-facilities__name'}>
+                      <span>{value.facilityName}</span>
+                    </div>
+                    <div className={'other-facilities__action'} onClick={() => switchFacility(key, value.facilityName)}>
+                      <Icon color="#828282" path={mdiSwapHorizontal} size={'24px'} />
+                    </div>
                   </div>
-                  <div className={'other-facilities__name'}>
-                    <span>{value.facilityName}</span>
-                  </div>
-                  <div className={'other-facilities__action'} onClick={()=>switchFacility(key, value.facilityName)}>
-                    <Icon color="#828282" path={mdiSwapHorizontal} size={'24px'} />
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
           </div>
         </div>
       </div>
@@ -426,14 +428,24 @@ const DefaultSelect = (props) => (
     getContentAnchorEl: null,
     PaperProps: {
       style: {
-        maxHeight:400,
-        maxWidth:240
+        maxHeight: 400,
+        maxWidth: 240
       }
     }
-  }} {...props}/>
+  }} {...props} />
 )
 
 export const StyledSelect = withStyles((theme) => dropdownStyles(theme, { width: 400 }))(DefaultSelect)
 export const Placeholder = ({ value }) => (
-  <span  style={{color:'rgba(133, 133, 133, 0.8)'}}>{value ?? 'Select an Option'}</span>
+  <span style={{ color: 'rgba(133, 133, 133, 0.8)' }}>{value ?? 'Select an Option'}</span>
+)
+
+
+export const StyledCheckbox = (props) => (
+  <Checkbox
+    disableRipple
+    className="checkbox"
+    icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+    checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
+    {...props} />
 )

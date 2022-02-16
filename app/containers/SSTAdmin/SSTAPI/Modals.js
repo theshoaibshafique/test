@@ -1,15 +1,15 @@
 
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl, ListItemIcon, Checkbox, ListItemText, FormHelperText, IconButton } from '@material-ui/core';
+import {  Divider, InputLabel, makeStyles, MenuItem, TextField, Select, FormControl, ListItemIcon,  ListItemText, IconButton } from '@material-ui/core';
 import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLocationLookups, selectLocations } from '../../App/store/UserManagement/um-selectors';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, MAX_DESCRIPTION, MAX_INPUT, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
-import { createClient, deleteClient, generateProductUpdateBody, getSelectedRoles, isWithinScope, patchRoles, resetClient, updateClientProfile } from '../../AdminPanel/helpers';
-import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
-import { mdiPlaylistEdit, mdiContentCopy, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
-import { GenericModal, ProfileIcon, SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
+import { createClient, deleteClient, generateProductUpdateBody,  isWithinScope, patchRoles, resetClient, updateClientProfile } from '../../AdminPanel/helpers';
+import { makeSelectLogger, makeSelectToken } from '../../App/selectors';
+import { mdiPlaylistEdit, mdiContentCopy } from '@mdi/js';
+import { GenericModal, ProfileIcon, SaveAndCancel, StyledCheckbox } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 import { setClients } from '../../App/store/ApiManagement/am-actions';
 import { selectClients, selectApiAssignableRoles } from '../../App/store/ApiManagement/am-selectors';
@@ -599,12 +599,9 @@ const RolePermissions = props => {
                             return (
                                 <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0" }}>
                                     <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId + 1) * 12 }}>
-                                        <Checkbox
+                                        <StyledCheckbox
                                             style={{ padding: 0 }}
-                                            disableRipple
                                             disabled
-                                            icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
-                                            checkedIcon={<Icon path={mdiCheckboxOutline} size={'18px'} />}
                                             className="SST-Checkbox"
                                             checked={selectedLocations.includes(locationId)}
                                         />

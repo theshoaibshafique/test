@@ -7,19 +7,19 @@ import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
-import MaterialTable, { MTableBody, MTableCell, MTableToolbar } from 'material-table';
+import MaterialTable, { MTableBody, MTableToolbar } from 'material-table';
 import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import './style.scss';
-import { Button, MenuItem, Paper, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon, Checkbox, makeStyles } from '@material-ui/core';
+import { Button, MenuItem, Paper, TableHead, TableRow, TableSortLabel, Menu, ListItemText, ListItemIcon } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDropDown } from '@material-ui/icons';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiLockOutline, mdiFilter } from '@mdi/js';
+import {  mdiLockOutline, mdiFilter } from '@mdi/js';
 import { selectAssignableRoles, selectFilters, selectUsers } from '../../App/store/UserManagement/um-selectors';
 import { setFilters } from '../../App/store/UserManagement/um-actions';
 import { mdiDeleteOutline, mdiPlaylistEdit } from '@mdi/js';
 import { AddEditUserModal, DeleteUserModal, UMLearnMore } from './Modals';
-import { LightTooltip, TableCell } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, StyledCheckbox, TableCell } from '../../../components/SharedComponents/SharedComponents';
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, SSC_PRODUCT_ID } from '../../../constants';
 import { makeSelectLogger, makeSelectProductRoles } from '../../App/selectors';
 
@@ -387,11 +387,8 @@ function RoleOption(props) {
     return (
         <MenuItem key={parent + label} onClick={() => { handleFilter(parent, label) }} style={{ padding: "0px 14px 0 0 " }}>
             <ListItemIcon style={{ minWidth: 30 }}>
-                <Checkbox
-                    disableRipple
+                <StyledCheckbox
                     disabled
-                    icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
-                    checkedIcon={<Icon path={mdiCheckboxOutline} size={'18px'} />}
                     className="SST-Checkbox"
                     checked={check}
                 />
