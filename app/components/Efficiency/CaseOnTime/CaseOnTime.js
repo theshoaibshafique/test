@@ -114,6 +114,7 @@ const CaseOnTime = () => {
     defaultFilterConfig,
     defaultHandlerConfig,
     toggleFirstCaseOnTime,
+    applyGlobalFilter,
     viewFirstCase,
   } = useFilter();
   const [specialtyNames, setSpecialtyNames] = React.useState([]);
@@ -190,33 +191,6 @@ const CaseOnTime = () => {
       });
     }
   }, [viewFirstCase]);
-
-  const applyGlobalFilter = async () => {
-    dispatch({ type: 'SET_LOADING', payload: true });
-    
-    try {
-      const startDate = getItemFromStore('globalFilter')?.startDate;
-      const endDate = getItemFromStore('globalFilter')?.endDate;
-      const requestPayload = {
-        startDate: moment(startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
-        endDate: moment(endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
-        facilityName: userFacility,
-        roomNames: rooms,
-        specialtyNames,
-        otsThreshold: 0,
-        fcotsThreshold: 0
-      };
-      const retrieveTileData = request('post');
-      const data = await retrieveTileData(process.env.ONTIMESTART_API, userToken, requestPayload, axios.CancelToken.source());
-      if (data?.tiles?.length) {
-        dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data.tiles } });
-      }
-      dispatch({ type: 'SET_LOADING', payload: false });
-    } catch (err) {
-      console.error(err);
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
-  }
 
   const toggleSpecialty = React.useCallback((e) => {
     setBySpecialty(e.target.value);
@@ -320,7 +294,6 @@ const CaseOnTime = () => {
       </React.Fragment>
     );
   }
-
   return (
     <div className="page-container">
       <Header

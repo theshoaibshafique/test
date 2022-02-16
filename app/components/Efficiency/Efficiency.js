@@ -125,7 +125,8 @@ const Efficiency = () => {
             startDate: configData.startDate,
             endDate: configData.endDate,
             fcotsThreshold: configData.fcotsThreshold,
-            otsThreshold: configData.turnoverThreshold
+            otsThreshold: configData.otsThreshold,
+            turnoverThreshold: configData.turnoverThreshold
           });
         }
 
