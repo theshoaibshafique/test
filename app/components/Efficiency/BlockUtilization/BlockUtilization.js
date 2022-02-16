@@ -21,6 +21,9 @@ import './styles.scss';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
+import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
+import Icon from '@mdi/react'
+import { Divider } from '@material-ui/core';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -224,6 +227,37 @@ const BlockUtilization = React.memo(() => {
       key
     }));
   }
+  const UpArrow = <ArrowUpward style={{ color: 'rgba(0, 0, 0, 0.54)', fontSize: 18 }} size="18px" />;
+  const DownArrow = <ArrowDownward style={{ color: 'rgba(0, 0, 0, 0.54)', fontSize: 18 }} size="18px" />;
+  const renderChangeIcon = (diff) => {
+    let tag = '';
+    let className = ''
+    let tooltip = '';
+    if (diff === null || isNaN(diff) || diff == 0) {
+      diff = `—`;
+      tooltip = "No Change";
+    } else if (diff < 0) {
+      className = "trending-down";
+      tooltip = "Negative Trend";
+      tag = <Icon color="#FF0000" path={mdiTrendingDown} size={'32px'} />
+    } else {
+      tooltip = "Positive Trend";
+      className = "trending-up";
+      tag = <Icon color="#009483" path={mdiTrendingUp} size={'32px'} />
+    }
+    return (
+      <LightTooltip interactive arrow
+        title={tooltip}
+        placement="top" fontSize="small"
+      >
+        <div className={`change-value ${className} log-mouseover`} >
+          <span>{`${diff}%`}</span>
+          <span>{tag}</span>
+        </div>
+      </LightTooltip>
+
+    )
+  }
 
   /*
    * Note: This Header component might be a little intimidating, so I'm leaving this comment here to hopefully help explain how everything is hooked up. Feel free to delete if you don't feel it's helpful / after understanding
@@ -297,85 +331,53 @@ const BlockUtilization = React.memo(() => {
           <Card className='tile-card' style={{ height: '365px' }}>
             <CardContent>
               {tile?.room && (
-                <React.Fragment>
-                  <div
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <div className='tile-title'>
-                      {tile?.room?.title}
-                      <LightTooltip
-                        placement="top"
-                        fontSize="small"
-                        interactive
-                        arrow
-                        title={tile?.room?.toolTip?.toString()}
-                      >
-                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.room?.toolTip?.toString()}`} />
-                      </LightTooltip>
-                    </div>
-                    <Grid container spacing={5}>
-                      <Grid item xs={3} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('room')}>
-                        Room
+                <Grid container spacing={0}>
+                  <Grid item xs={12} className='tile-title'>
+                    {tile?.room?.title}
+                    <LightTooltip
+                      placement="top"
+                      fontSize="small"
+                      interactive
+                      arrow
+                      title={tile?.room?.toolTip?.toString()}
+                    >
+                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.room?.toolTip?.toString()}`} />
+                    </LightTooltip>
+                  </Grid>
+                  <Grid item xs={3} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('room')}>
+                    Room
+                    {sort.key === 'room' && sort.order.room ? UpArrow : DownArrow}
+                  </Grid>
+                  <Grid item xs={4} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('block')}>
+                    Block Utilization
+                    {sort.key === 'block' && sort.order.block ? UpArrow : DownArrow}
+                  </Grid>
+                  <Grid item xs={3} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('change')}>
+                    % Change
+                    {sort.key === 'change' && sort.order.change ? UpArrow : DownArrow}
+                  </Grid>
+                  <Grid item xs={12} style={{ marginTop:8, marginBottom: 12 }}>
+                    <Divider style={{ color: '#e0e0e0' }} />
+                  </Grid>
 
-                        {sort.key === 'room' && sort.order.room ? <ArrowUpward size="small" /> : <ArrowDownward size="small" />}
-                      </Grid>
-                      <Grid item xs={4} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('block')}>
-                        Block Utilization
-                        {sort.key === 'block' && sort.order.block ? <ArrowUpward size="small" /> : <ArrowDownward size="small" />}
-                      </Grid>
-                      <Grid item xs={3} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('change')}>
-                        % Change
-                        {sort.key === 'change' && sort.order.change ? <ArrowUpward size="small" /> : <ArrowDownward size="small" />}
-                      </Grid>
-                    </Grid>
-                    <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                    <div style={{ overflowY: 'scroll' }}>
-                      {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage, (data) => data?.map((row) => {
-                        return (
-                          <Grid
-                            container
-                            key={row.id}
-                            spacing={5}
-                            className="room-data-container"
-                          >
-                            <Grid item xs={3}>
-                              {row.or}
-                            </Grid>
-                            <Grid item xs={4}>
-                              {row.percent}%
-                            </Grid>
-                            <Grid item xs={3}>
-                              {row.change === null && (
-                                <span className="change-percent-badge-neutral">
-                                  <span className="change-percent-text-neutral">
-                                    --%
-                                  </span>
-                                </span>
-                              )}
-                              {!!row.change && (
-                                <span className={`change-percent-badge-${row.change >= 0 ? 'increase' : 'decrease'}`}>
-                                  <span className={`change-percent-text-${row.change >= 0 ? 'increase' : 'decrease'}`}>{row.change >= 0 ? '+' : ''}{row.change}%</span>
-                                  {row.change >= 0 ?
-                                    <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M14 0L16.29 2.29L11.41 7.17L7.41 3.17L0 10.59L1.41 12L7.41 6L11.41 10L17.71 3.71L20 6V0H14Z" fill="#009483" />
-                                    </svg>
-                                    :
-                                    <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M14 12L16.29 9.71L11.41 4.83L7.41 8.83L0 1.41L1.41 0L7.41 6L11.41 2L17.71 8.29L20 6V12H14Z" fill="#EC2027" />
-                                    </svg>
-                                  }
-                                </span>
-                              )}
-                            </Grid>
+                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight:292, paddingBottom:16 }}>
+                    {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage, (data) => [...data, ...data]?.map((row) => {
+                      return (
+                        <>
+                          <Grid item xs={3}>
+                            {row.or}
                           </Grid>
-                        );
-                      }))}
-                    </div>
-                  </div>
-                </React.Fragment>
+                          <Grid item xs={4}>
+                            {row.percent}%
+                          </Grid>
+                          <Grid item xs={3} >
+                            {renderChangeIcon(row.change)}
+                          </Grid>
+                        </>
+                      );
+                    }))}
+                  </Grid>
+                </Grid>
               )}
             </CardContent>
           </Card>

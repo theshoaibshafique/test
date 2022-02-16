@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   }
 });
 
-const CustomDateRangePicker = ({
+const CustomDateRangePicker = React.memo(({
   startDate: startDateProp, endDate: endDateProp,
 }) => {
   const [label, setLabel] = React.useState('');
@@ -41,7 +41,7 @@ const CustomDateRangePicker = ({
   const { setItemInStore, getItemFromStore } = useLocalStorage();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [key, setKey] = React.useState('');
-  const [focusedInput, setFocusedInput] = React.useState('startDate');
+  const [focusedInput, setFocusedInput] = React.useState('endDate');
   const styles = useStyles();
 
   React.useEffect(() => {
@@ -196,8 +196,9 @@ const CustomDateRangePicker = ({
               </div>
             </div>
           </Grid>
-          <Grid item xs={12} style={{ marginTop: 8 }}>
+          <Grid item xs={12} style={{ marginTop: 8 }} className='date-range-picker'>
             <DayPickerRangeController
+              
               key={key}
               startDate={date.start}
               focusedInput={focusedInput}
@@ -212,6 +213,6 @@ const CustomDateRangePicker = ({
       </Popover>
     </React.Fragment>
   );
-};
+});
 
 export default CustomDateRangePicker;
