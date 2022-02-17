@@ -76,8 +76,6 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
           {config?.date && (
             <Grid item xs={2} style={{ paddingLeft: '0px' }}>
               <CustomDateRangePicker
-                startDate={moment().subtract(8, 'months').startOf('month')}
-                endDate={moment().subtract(1, 'months').endOf('month')}
               />
             </Grid>
           )}

@@ -1,5 +1,5 @@
 /* eslint no-case-declarations: 0 */
-import React from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment/moment';
 import Grid from '@material-ui/core/Grid';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -10,9 +10,10 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-import { DayPickerRangeController } from 'react-dates';
+import { DateRangePicker, DayPickerRangeController } from 'react-dates';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { FormControl } from '@material-ui/core';
+import { v4 as uuidv4 } from 'uuid';
 
 
 const useStyles = makeStyles({
@@ -33,27 +34,24 @@ const useStyles = makeStyles({
 const CustomDateRangePicker = React.memo(({
   startDate: startDateProp, endDate: endDateProp,
 }) => {
-  const [label, setLabel] = React.useState('');
+  const [label, setLabel] = React.useState('Most recent month');
+  //Key is only used to control rerender - (kinda hacky) - change key (force rerender) on preset click to focus selected date
+  const [key, setKey] = React.useState(uuidv4())
   const [date, setDate] = React.useState({
-    start: startDateProp,
-    end: endDateProp
+    start: moment().subtract(1, 'months').startOf('month'),
+    end: moment().subtract(1, 'months').endOf('month'),
   });
   const { setItemInStore, getItemFromStore } = useLocalStorage();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [key, setKey] = React.useState('');
   const [focusedInput, setFocusedInput] = React.useState('endDate');
   const styles = useStyles();
+
 
   React.useEffect(() => {
     const globalFilter = getItemFromStore('globalFilter');
     setItemInStore('globalFilter', { ...globalFilter, startDate: date.start, endDate: date.end });
   }, [date.start, date.end]);
 
-  React.useEffect(() => {
-    if (!!date.start && !!date.end) {
-      setKey(`${date.start}-${date.end}`);
-    }
-  }, [date.start, date.end]);
 
   const handleMenuClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -88,7 +86,7 @@ const CustomDateRangePicker = React.memo(({
           end: moment(endDate)
         });
         break;
-      case 'Custom':
+      case 'clear':
         setDate({
           start: '',
           end: ''
@@ -96,21 +94,65 @@ const CustomDateRangePicker = React.memo(({
       default:
         break;
     }
+    //We change the key to trigger a rerender to navigate back to relevant/focused/selected dates
+    //Rerender isnt triggered on regular date change (custom)
+    setKey(uuidv4())
+    setFocusedInput('endDate')
     setLabel(label);
   };
 
-  const onFocusChange = (focusedInput) => {
-    setFocusedInput((prev) => (!prev ? 'startDate' : focusedInput));
+  const onFocusChange = (fi) => {
+    // Set back to start date after completion (null)
+    setFocusedInput(fi ?? 'startDate')
   };
 
   const onDatesChange = ({ startDate, endDate }) => {
+    let label = startDate?.format('YYYY-MM-DD');
+    if (endDate) {
+      label = `${label} to ${endDate?.format('YYYY-MM-DD')}`
+    }
+    setLabel(label);
     setDate({
       start: startDate,
       end: endDate
     });
   };
 
-
+  const renderPresetTags = () => (
+    <div className='subtle-subtext' style={{ display: 'flex', padding: '8px 24px' }}>
+      <div
+        onClick={setInputLabel('Most recent week')}
+        className='preset-tag'
+      >
+        Most recent week
+      </div>
+      <div
+        onClick={setInputLabel('Most recent month')}
+        className='preset-tag'
+      >
+        Most recent month
+      </div>
+      <div
+        onClick={setInputLabel('Most recent year')}
+        className='preset-tag'
+      >
+        Most recent year
+      </div>
+      <div
+        onClick={setInputLabel('All time')}
+        className='preset-tag'
+      >
+        All time
+      </div>
+      {/* <div
+        onClick={setInputLabel('Custom')}
+        className='preset-tag'
+      >
+        Custom
+      </div> */}
+    </div>
+  )
+  // console.log(date)
   return (
     <React.Fragment>
       <FormControl size='small' fullWidth>
@@ -137,79 +179,27 @@ const CustomDateRangePicker = React.memo(({
         }}
         style={{
           position: 'absolute',
-          left: 70
-
+          left: 0
+        }}
+        PaperProps={{
+          style: { width: 'fit-content', minHeight: 380, minWidth: 620 },
         }}
       >
-        <Grid container style={{ width: '600px' }}>
-          <Grid item xs={12}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0px 8px' }}>
-              <div
-                onClick={setInputLabel('Most recent week')}
-                style={{
-                  backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
-                }}
-              >
-                Most recent week
-              </div>
-              <div
-                onClick={setInputLabel('Most recent month')}
-                style={{
-                  backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
-                }}
-              >
-                Most recent month
-              </div>
-              <div
-                onClick={setInputLabel('Most recent year')}
-                style={{
-                  backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
-                }}
-              >
-                Most recent year
-              </div>
-              <div
-                onClick={setInputLabel('All time')}
-                style={{
-                  backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
-                }}
-              >
-                All time
-              </div>
-              <div
-                onClick={setInputLabel('Custom')}
-                style={{
-                  backgroundColor: '#f2f2f2', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer'
-                }}
-              >
-                Custom
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={12} style={{ marginTop: 24 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-around', padding: '0px 8px' }}>
-              <div style={{ color: '#828282', fontSize: '14px', lineHeight: '19px' }}>
-                Start
-              </div>
-              <div style={{ color: '#828282', fontSize: '14px', lineHeight: '19px' }}>
-                End
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={12} style={{ marginTop: 8 }} className='date-range-picker'>
-            <DayPickerRangeController
-              
-              key={key}
-              startDate={date.start}
-              focusedInput={focusedInput}
-              endDate={date.end}
-              numberOfMonths={2}
-              hideKeyboardShortcutsPanel
-              onFocusChange={onFocusChange}
-              onDatesChange={onDatesChange}
-            />
-          </Grid>
-        </Grid>
+        <div className='date-range-picker' >
+          <DayPickerRangeController
+            key={key}
+            startDate={date.start}
+            endDate={date.end}
+            focusedInput={focusedInput}
+            numberOfMonths={2}
+            minimumNights={0}
+            hideKeyboardShortcutsPanel
+            noBorder
+            renderCalendarInfo={renderPresetTags}
+            onFocusChange={onFocusChange}
+            onDatesChange={onDatesChange}
+          />
+        </div>
       </Popover>
     </React.Fragment>
   );
