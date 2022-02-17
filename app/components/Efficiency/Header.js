@@ -46,14 +46,13 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
   const onClick = React.useCallback(() => {
     setInformationModalOpen((prev) => !prev);
   }, [informationModalOpen]);
-  const hasHelperText = !!config?.time;
   return (
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
         <Grid item xs={12}>
           <div onClick={onClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
         </Grid>
-        <Grid container spacing={3} style={{ margin: hasHelperText ? '14px 0px -14px' : '14px 0 0 0' }}>
+        <Grid container spacing={3} style={{ margin: '14px 0 0 0' }}>
           {config?.case && (
             <Grid item xs={2} style={{ paddingLeft: '0px', maxWidth: 200 }}>
               <div
@@ -107,15 +106,8 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
               />
             </Grid>
           )}
-          {!!config?.time && (
-            <Grid item xs={2} style={{ maxWidth: config.time.gracePeriod ? 140 : 250 }}>
-              <GracePeriod
-                config={{ threshold: config.time.threshold, gracePeriod: config.time.gracePeriod }}
-              />
-            </Grid>
-          )}
           {Object.keys(config).length > 0 && (
-            <Grid item xs style={{ display: 'flex', alignItems: 'center', paddingTop: hasHelperText ? 4 : 20 }} >
+            <Grid item xs style={{ display: 'flex', alignItems: 'center', paddingTop: 20 }} >
               <SaveAndCancel
                 className={'apply-cancel-buttons'}
                 // disabled={isLoading}

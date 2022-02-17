@@ -105,8 +105,9 @@ const CaseOnTime = () => {
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore, setItemInStore } = useLocalStorage();
+  const config = getItemFromStore('efficiencyV2')?.efficiency ?? {};
   const { data } = useSelectData(process.env.ONTIMESTART_API, 'post', userToken, {
-    ...state.defaultPayload, facilityName: userFacility, otsThreshold: 3600, fcotsThreshold: 3600, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
+    ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
   }, axios.CancelToken.source());
 
   const {
@@ -300,9 +301,6 @@ const CaseOnTime = () => {
         config={{
           ...defaultFilterConfig,
           specialty: true,
-          time: {
-            gracePeriod:true
-          },
           case: true
         }}
         applyGlobalFilter={() => applyGlobalFilter({
@@ -313,9 +311,7 @@ const CaseOnTime = () => {
           startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
           endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
           facilityName: userFacility,
-          roomNames: rooms,
-          otsThreshold: !viewFirstCase ? getItemFromStore('globalFilter')?.otsThreshold : 0,
-          fcotsThreshold: viewFirstCase ? getItemFromStore('globalFilter')?.fcotsThreshold : 0,
+          roomNames: rooms
         },
           (tileData) => {
             if (tileData?.tiles?.length) {
@@ -497,7 +493,11 @@ const CaseOnTime = () => {
         </Grid>
         <Grid spacing={5} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
-            <FooterText days={tile?.elective?.value} />
+            <FooterText
+              days={tile?.elective?.value}
+              facilityName={config?.facilityName}
+              fcotsThreshold={config?.fcotsThreshold}
+              otsThreshold={config?.otsThreshold} />
           </Grid>
         </Grid>
       </Grid>

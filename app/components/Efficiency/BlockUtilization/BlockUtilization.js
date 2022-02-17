@@ -356,12 +356,12 @@ const BlockUtilization = React.memo(() => {
                     % Change
                     {sort.key === 'change' && sort.order.change ? UpArrow : DownArrow}
                   </Grid>
-                  <Grid item xs={12} style={{ marginTop:8, marginBottom: 12 }}>
+                  <Grid item xs={12} style={{ marginTop: 8, marginBottom: 12 }}>
                     <Divider style={{ color: '#e0e0e0' }} />
                   </Grid>
 
-                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight:292, paddingBottom:16 }}>
-                    {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage, (data) => [...data, ...data]?.map((row) => {
+                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight: 292, paddingBottom: data?.length > 6 ? 4 : 16 }}>
+                    {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage, (data) => data?.map((row) => {
                       return (
                         <>
                           <Grid item xs={3}>

@@ -78,6 +78,7 @@ const TurnoverTime = () => {
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore } = useLocalStorage();
+  const config = getItemFromStore('efficiencyV2')?.efficiency ?? {};
   const { data } = useSelectData(process.env.TURNOVER_API, 'post', userToken, {
     ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
   }, axios.CancelToken.source());
@@ -147,10 +148,7 @@ const TurnoverTime = () => {
     <div className="page-container">
       <Header
         config={{
-          ...defaultFilterConfig,
-          time: {
-            threshold: true
-          }
+          ...defaultFilterConfig
         }}
         applyGlobalFilter={() => applyGlobalFilter({
           endpoint: process.env.TURNOVER_API,
@@ -160,8 +158,7 @@ const TurnoverTime = () => {
           startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
           endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
           facilityName: userFacility,
-          roomNames: rooms,
-          threshold: getItemFromStore('globalFilter')?.otsThreshold + getItemFromStore('globalFilter').fcotsThreshold
+          roomNames: rooms
         },
           (tileData) => {
             if (tileData?.tiles?.length) {
@@ -220,7 +217,7 @@ const TurnoverTime = () => {
             <CardContent>
               {tile?.or && (
                 <React.Fragment>
-                  <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom:24 }}>
+                  <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
                     {tile?.or?.title}
                     <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.or?.toolTip) ? tile?.or?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.or?.toolTip}>
                       <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.or?.toolTip?.toString()}`} />
@@ -256,7 +253,10 @@ const TurnoverTime = () => {
         </Grid>
         <Grid spacing={5} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
-            <FooterText days={tile?.elective?.value} />
+            <FooterText
+              days={tile?.elective?.value}
+              facilityName={config?.facilityName}
+              turnoverThreshold={config?.turnoverThreshold} />
           </Grid>
         </Grid>
       </Grid>

@@ -24,6 +24,7 @@ import AreaGraph from '../Charts/AreaGraph';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import useSelectData from '../../hooks/useSelectData';
 import './styles.scss';
+import useFilter from '../../hooks/useFilter';
 
 // @TODO: Possibly remove state as some of this is handled through a hook instead
 const INITIAL_STATE = {
@@ -66,7 +67,6 @@ const colors = ['#FF7D7D'];
 
 const Efficiency = () => {
   const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
-  const { setItemInStore } = useLocalStorage();
   const userToken = useSelector(makeSelectToken());
   const userFacility = useSelector(makeSelectUserFacility());
   const [orGraphData, setOrGraphData] = React.useState([]);
@@ -110,32 +110,10 @@ const Efficiency = () => {
     });
   }, [state]);
 
-  React.useEffect(() => {
-    const fetchTileData = async () => {
-      // @TODO: hook up loading animation if necessary, not currently hooked up in any way
-      dispatch({ type: 'SET_LOADING', payload: true });
-      try {
-        const retrieveConfiguration = request('get');
-        const configData = await retrieveConfiguration(`${process.env.CONFIGURATION_API}?facility_id=${userFacility}`, userToken, null, axios.CancelToken.source());
-        if (configData) {
-          setItemInStore('efficiencyV2', {
-            efficiency: configData
-          });
-          setItemInStore('globalFilter', {
-            startDate: configData.startDate,
-            endDate: configData.endDate,
-            fcotsThreshold: configData.fcotsThreshold,
-            otsThreshold: configData.otsThreshold,
-            turnoverThreshold: configData.turnoverThreshold
-          });
-        }
+  const { fetchConfigData } = useFilter();
 
-        dispatch({ type: 'SET_LOADING', payload: false });
-      } catch (err) {
-        dispatch({ type: 'SET_LOADING', payload: false });
-      }
-    };
-    fetchTileData();
+  React.useEffect(() => {
+    fetchConfigData({userFacility, userToken, cancelToken: axios.CancelToken.source()});
   }, []);
 
   /*
