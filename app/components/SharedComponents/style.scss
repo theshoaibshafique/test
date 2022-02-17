@@ -82,19 +82,41 @@
 }
 
 .date-range-picker {
+  .date-header {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+    border-bottom: 1px solid #f2f2f2;
+    .arrow {
+      margin: 0 16px;
+    }
+    .clear {
+      position: absolute;
+      top: 0;
+      right: 18px;
+    }
+    .date {
+      cursor: pointer;
+    }
+    .selected{
+      border-bottom: 2px solid #008489;
+    }
+  }
   .preset-tag {
     background-color: #f2f2f2;
     border-radius: 4px;
     padding: 4px 8px;
     cursor: pointer;
-    margin:0 8px;
-    &:first-child{
+    margin: 0 8px;
+    &:first-child {
       margin-left: 0;
     }
-    &:last-child{
+    &:last-child {
       margin-right: 0;
     }
-    width:fit-content;
+    width: fit-content;
   }
   .DateRangePickerInput * {
     font-family: "Noto Sans" !important;
@@ -102,7 +124,6 @@
   .DateInput {
     width: 135px !important;
   }
-
   .DateRangePickerInput_arrow_svg {
     width: 16px;
     height: 16px;

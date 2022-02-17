@@ -13,6 +13,8 @@ import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker, DayPickerRangeController } from 'react-dates';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { FormControl } from '@material-ui/core';
+import { mdiArrowRight } from '@mdi/js';
+import Icon from '@mdi/react';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -41,6 +43,7 @@ const CustomDateRangePicker = React.memo(({
     start: moment().subtract(1, 'months').startOf('month'),
     end: moment().subtract(1, 'months').endOf('month'),
   });
+  const [lastDate, setLastDate] = React.useState({ ...date });
   const { setItemInStore, getItemFromStore } = useLocalStorage();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [focusedInput, setFocusedInput] = React.useState('endDate');
@@ -55,9 +58,18 @@ const CustomDateRangePicker = React.memo(({
 
   const handleMenuClick = (e) => {
     setAnchorEl(e.currentTarget);
+    setLastDate({ ...date, label })
   };
 
-  const handleClose = () => setAnchorEl(null);
+  const handleClose = () => {
+    if (!date.start || !date.end) {
+      const { label, ...old } = lastDate;
+      setDate(old);
+      setLabel(label);
+    }
+    setAnchorEl(null)
+
+  };
 
   const setInputLabel = (label) => () => {
     switch (label) {
@@ -86,11 +98,6 @@ const CustomDateRangePicker = React.memo(({
           end: moment(endDate)
         });
         break;
-      case 'clear':
-        setDate({
-          start: '',
-          end: ''
-        });
       default:
         break;
     }
@@ -103,7 +110,7 @@ const CustomDateRangePicker = React.memo(({
 
   const onFocusChange = (fi) => {
     // Set back to start date after completion (null)
-    setFocusedInput(fi ?? 'startDate')
+    setFocusedInput(fi ?? 'endDate')
   };
 
   const onDatesChange = ({ startDate, endDate }) => {
@@ -119,7 +126,7 @@ const CustomDateRangePicker = React.memo(({
   };
 
   const renderPresetTags = () => (
-    <div className='subtle-subtext' style={{ display: 'flex', padding: '8px 24px' }}>
+    <div className='subtle-subtext' style={{ display: 'flex', padding: '16px 24px 8px', borderTop: '1px solid #f2f2f2' }}>
       <div
         onClick={setInputLabel('Most recent week')}
         className='preset-tag'
@@ -144,12 +151,6 @@ const CustomDateRangePicker = React.memo(({
       >
         All time
       </div>
-      {/* <div
-        onClick={setInputLabel('Custom')}
-        className='preset-tag'
-      >
-        Custom
-      </div> */}
     </div>
   )
   // console.log(date)
@@ -182,10 +183,23 @@ const CustomDateRangePicker = React.memo(({
           left: 0
         }}
         PaperProps={{
-          style: { width: 'fit-content', minHeight: 380, minWidth: 620 },
+          style: { width: 'fit-content', minWidth: 620 },
         }}
       >
         <div className='date-range-picker' >
+          <div className='date-header subtext'>
+            <div className={`${focusedInput === 'startDate' ? 'selected' : ''} date`} onClick={() => setFocusedInput('startDate')}>
+              {date.start?.format('MMM DD YYYY') ?? 'Start Date'}
+            </div>
+            <div className='arrow'><Icon color="#828282" path={mdiArrowRight} size={'24px'} /></div>
+            <div
+              className={`${focusedInput === 'endDate' ? 'selected' : ''} date`}
+              onClick={() => setFocusedInput('endDate')}
+            >
+              {date.end?.format('MMM DD YYYY') ?? 'End Date'}
+            </div>
+            <div className='clear link' onClick={() => setDate({ start: null, end: null })}> Clear</div>
+          </div>
           <DayPickerRangeController
             key={key}
             startDate={date.start}
