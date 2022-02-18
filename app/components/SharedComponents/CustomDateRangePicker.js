@@ -53,12 +53,14 @@ const CustomDateRangePicker = React.memo(({
   React.useEffect(() => {
     const globalFilter = getItemFromStore('globalFilter');
     setItemInStore('globalFilter', { ...globalFilter, startDate: date.start, endDate: date.end });
+    if (date.end){
+      setLastDate({ ...date, label })
+    }
   }, [date.start, date.end]);
 
 
   const handleMenuClick = (e) => {
     setAnchorEl(e.currentTarget);
-    setLastDate({ ...date, label })
   };
 
   const handleClose = () => {
