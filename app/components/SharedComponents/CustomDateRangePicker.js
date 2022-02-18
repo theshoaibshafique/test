@@ -189,18 +189,18 @@ const CustomDateRangePicker = React.memo(({
         }}
       >
         <div className='date-range-picker' >
-          <div className='date-header subtext'>
+          <div className='date-header subtle-subtext'>
             <div className={`${focusedInput === 'startDate' ? 'selected' : ''} date`} onClick={() => setFocusedInput('startDate')}>
               {date.start?.format('MMM DD YYYY') ?? 'Start Date'}
             </div>
-            <div className='arrow'><Icon color="#828282" path={mdiArrowRight} size={'24px'} /></div>
+            <div className='arrow'><Icon color="#828282" path={mdiArrowRight} size={'22px'} /></div>
             <div
               className={`${focusedInput === 'endDate' ? 'selected' : ''} date`}
               onClick={() => setFocusedInput('endDate')}
             >
               {date.end?.format('MMM DD YYYY') ?? 'End Date'}
             </div>
-            <div className='clear link' onClick={() => setDate({ start: null, end: null })}> Clear</div>
+            <div className='clear link' onClick={() => setDate({ start: null, end: null })}> Clear Dates</div>
           </div>
           <DayPickerRangeController
             key={key}

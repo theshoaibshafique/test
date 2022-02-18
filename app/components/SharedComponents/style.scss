@@ -91,6 +91,7 @@
     border-bottom: 1px solid #f2f2f2;
     .arrow {
       margin: 0 16px;
+      margin-bottom: 4px;
     }
     .clear {
       position: absolute;
@@ -117,6 +118,9 @@
       margin-right: 0;
     }
     width: fit-content;
+  }
+  .DayPicker_weekHeader{
+    font-size: 12px;
   }
   .DateRangePickerInput * {
     font-family: "Noto Sans" !important;
