@@ -17,7 +17,9 @@
     overflow-y: auto;
     overflow-x: hidden;
     font-family: "Noto Sans";
-
+    .efficiencyOnboard-link {
+        width: fit-content;
+    }
     .tile-card {
         background: #ffffff;
         /* card shadow */

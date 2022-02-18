@@ -45,12 +45,15 @@ const useFilter = () => {
           otsThreshold: configData.otsThreshold,
           turnoverThreshold: configData.turnoverThreshold
         });
+        
       }
 
       setLoading(false);
+      return configData;
     } catch (err) {
       setLoading(false);
     }
+    
   };
 
   const applyGlobalFilter = async ({ endpoint, userToken, cancelToken }, payload, cb) => {

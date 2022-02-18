@@ -71,16 +71,36 @@ const Efficiency = () => {
   const userFacility = useSelector(makeSelectUserFacility());
   const [orGraphData, setOrGraphData] = React.useState([]);
   const [tile, setTile] = React.useState({});
+  const [date, setDate] = React.useState({});
 
-  // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page
-  const { data } = useSelectData(process.env.EFFICIENCYV2_API, 'post', userToken, {
-    ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
-  }, axios.CancelToken.source());
+  const { fetchConfigData, applyGlobalFilter } = useFilter();
 
   React.useEffect(() => {
-    if (!data) return;
-    dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
-  }, [data]);
+    const fetchData = async () => {
+      const config = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
+      //Dashboard page starts as 7 days
+      const { endDate } = config ?? {};
+      const startDate = moment(endDate)?.subtract(700, 'days')?.format('YYYY-MM-DD');
+      setDate({startDate,endDate});
+      // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
+      await applyGlobalFilter({
+        endpoint: process.env.EFFICIENCYV2_API,
+        userToken,
+        cancelToken: axios.CancelToken.source()
+      }, {
+        ...state.defaultPayload, facilityName: userFacility, startDate, endDate
+      },
+        (data) => {
+          if (data?.tiles) {
+            dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
+          }
+        }
+      )
+    }
+    fetchData();
+  }, []);
+
+
 
   // @TODO: This is somewhat duplicated (though still different) across multiple pages. If the time arises, consolidate to one function that can return this data to the FE with names the FE can use properly. Would be easier to not need to do a find to get each individual tile, but the structure of the payload being returned combined with the design will inhibit the ability to render these within a loop
   React.useEffect(() => {
@@ -110,12 +130,6 @@ const Efficiency = () => {
     });
   }, [state]);
 
-  const { fetchConfigData } = useFilter();
-
-  React.useEffect(() => {
-    fetchConfigData({userFacility, userToken, cancelToken: axios.CancelToken.source()});
-  }, []);
-
   /*
   * @TODO: Remove this code if the backend returns data formatted as an array of objects
   *
@@ -138,7 +152,7 @@ const Efficiency = () => {
   */
   const formatBarGraphData = (dataset) => dataset?.rooms.map((room, i) => ({
     room,
-    time: dataset.counts[i]
+    Time: dataset.counts[i]
   }));
 
   /*
@@ -164,7 +178,7 @@ const Efficiency = () => {
 
   return (
     <div className="page-container">
-      <Header />
+      <Header displayDate={date}/>
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header header-2" spacing={0}>
           Efficiency Dashboard
@@ -344,12 +358,14 @@ const Efficiency = () => {
                     yAxisLabel={{
                       value: 'Room', angle: -90, offset: -5, position: 'insideLeft'
                     }}
-                    dataKeys={['time']}
+                    dataKeys={['Time']}
                     colors={colors}
                     height={300}
                     margin={{
                       top: 20, right: 30, left: 20, bottom: 20
                     }}
+                    
+                    barCategoryGap={'10%'}
                   />
                 </React.Fragment>
               )}

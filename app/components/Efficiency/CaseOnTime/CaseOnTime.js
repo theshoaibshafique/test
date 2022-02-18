@@ -18,7 +18,6 @@ import TimeCard from '../TimeCard';
 import TrendTile from '../TrendTile';
 import OvertimeCard from '../OvertimeCard';
 import DistributionTile from './DistributionTile';
-import { request } from '../../../utils/global-functions';
 
 const INITIAL_STATE = {
   tabIndex: 0,

@@ -1,5 +1,6 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { axisStyles, axisLabelStyle } from './styles';
 
 const equalProps = (props, prevProps) => prevProps === props;
 // @TODO: Could colocate this / update the traditional bar graph to pass in the required props to be used for rendering this horizontal
@@ -20,10 +21,13 @@ const HorizontalBar = React.memo(({
     <BarChart
       layout="vertical"
       data={data}
+      barGap='10'
       {...rest}
     >
-      <YAxis type="category" dataKey="room" label={yAxisLabel} />
-      <XAxis type="number" label={xAxisLabel} ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]} />
+      {/* Currently only used by Eff dashboard and Turnover which both use ROOM and Mins */}
+      <YAxis tickFormatter={tickFormatter} interval={0} type="category" dataKey="room" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
+      <XAxis type="number" label={{ ...xAxisLabel, axisLabelStyle }} style={axisStyles} />
+      <Tooltip formatter={(value, name, props) => [`${value} min`, name]} />
       {rest?.legend && (
         <Legend
           verticalAlign="top"
@@ -33,9 +37,9 @@ const HorizontalBar = React.memo(({
             position: 'absolute'
           }}
           formatter={(value, entry, index) =>
-            (
-              <span style={{ color: '#333', fontSize: 12, lineHeight: '16px' }}>{entry.dataKey.replace(/^\w{1}/, ($1) => $1.toUpperCase())}</span>
-            )
+          (
+            <span style={{ color: '#333', fontSize: 12, lineHeight: '16px' }}>{entry.dataKey.replace(/^\w{1}/, ($1) => $1.toUpperCase())}</span>
+          )
           }
         />
       )}
@@ -47,3 +51,9 @@ const HorizontalBar = React.memo(({
 ), equalProps);
 
 export default HorizontalBar;
+
+const tickFormatter = (value, index) => {
+  const limit = 6; // put your maximum character
+  if (value.length < limit) return value;
+  return `${value.substring(0, limit)}...`;
+};
