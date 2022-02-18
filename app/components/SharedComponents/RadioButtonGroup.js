@@ -7,6 +7,10 @@ import FormControl from '@material-ui/core/FormControl';
 
 const useStyles = makeStyles({
   radio: {
+    "& svg": {
+      width: "16px",
+      height: "16px"
+    },
     '&$checked': {
       color: (props) => `${props.highlightColour}`
     }
@@ -15,16 +19,17 @@ const useStyles = makeStyles({
     color: (props) => `${props.highlightColour}`
   }
 });
-
+const commonStyle = {fontSize:12, fontFamily: 'Noto Sans'}
 const RadioButtonGroup = ({
   onChange, value, options, highlightColour, ...rest
 }) => {
   const styles = useStyles({ highlightColour });
   return (
-    <FormControl component="fieldset" {...rest}>
+    <FormControl component="fieldset"  {...rest}>
       <RadioGroup value={value} onChange={onChange} {...rest} style={{ flexDirection: 'row' }}>
         {options.map((option) => (
           <FormControlLabel
+            
             style={option.value === value ? {
               color: highlightColour,
             } : {
@@ -33,7 +38,7 @@ const RadioButtonGroup = ({
             key={option.id}
             id={option.id}
             value={option.value}
-            label={option.value}
+            label={<span style={commonStyle}>{option.value}</span>}
             control={<Radio classes={{ root: styles.radio, checked: styles.checked }} />}
           />
         ))}

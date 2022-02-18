@@ -122,6 +122,9 @@ const BlockUtilization = React.memo(() => {
       const electiveDaysTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('days'));
 
       setTrendStartDate(trendTile?.data?.start_date);
+      const { toolTip } = compositionTile ?? {}
+      const [CLEANUP, IDLE, SETUP, CASE] = toolTip;
+      compositionTile.toolTip = { CLEANUP, IDLE, SETUP, CASE }
       setTile({
         trend: trendTile,
         composition: compositionTile,
@@ -166,8 +169,8 @@ const BlockUtilization = React.memo(() => {
   const formatDonutData = (data) => Object.entries(data).filter(filterKeys).reduce((acc, [key, val], i) => acc.concat({
     name: key,
     value: val,
-    color: DONUT_COLOURS[i - 1]
-  }), []);
+    color: DONUT_COLOURS[i % DONUT_COLOURS.length]
+  }), []).filter((({ name }) => name !== 'hours'));
 
   /*
   * @TODO: Remove this code if the backend returns data formatted as an array of objects
@@ -295,7 +298,7 @@ const BlockUtilization = React.memo(() => {
           Block Utilization
         </Grid>
         <Grid item xs={3}>
-          <Card className='tile-card' style={{ height: '365px' }}>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.blockUtilization && (
                 <TimeCard data={tile.blockUtilization} />
@@ -304,7 +307,7 @@ const BlockUtilization = React.memo(() => {
           </Card>
         </Grid>
         <Grid item xs={3}>
-          <Card className='tile-card' style={{ height: '365px' }}>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.overtime && (
                 <OvertimeCard data={tile.overtime} />
@@ -313,7 +316,7 @@ const BlockUtilization = React.memo(() => {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card className='tile-card' style={{ height: '365px' }}>
+          <Card className='tile-card'>
             <CardContent>
               <TrendTile
                 data={tile?.trend}
@@ -328,7 +331,7 @@ const BlockUtilization = React.memo(() => {
       </Grid>
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={6}>
-          <Card className='tile-card' style={{ height: '365px' }}>
+          <Card className='tile-card' >
             <CardContent>
               {tile?.room && (
                 <Grid container spacing={0}>
@@ -360,7 +363,7 @@ const BlockUtilization = React.memo(() => {
                     <Divider style={{ color: '#e0e0e0' }} />
                   </Grid>
 
-                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight: 292, paddingBottom: data?.length > 6 ? 4 : 16 }}>
+                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight: 267, paddingBottom: data?.length > 6 ? 4 : 16 }}>
                     {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage, (data) => data?.map((row) => {
                       return (
                         <>
@@ -383,7 +386,7 @@ const BlockUtilization = React.memo(() => {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card className='tile-card' style={{ height: '365px' }}>
+          <Card className='tile-card'>
             <CardContent>
               {tile?.composition && (
                 <React.Fragment>
@@ -431,14 +434,14 @@ const BlockUtilization = React.memo(() => {
       </Grid>
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={6}>
-          <Card className='tile-card' style={{ height: '365px' }}>
+          <Card className='tile-card'>
             <CardContent>
               <DistributionTile data={tile?.startGap} xAxisLabel={tile?.startGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card className='tile-card' style={{ height: '365px' }}>
+          <Card className='tile-card'>
             <CardContent>
               <DistributionTile data={tile?.endGap} xAxisLabel={tile?.endGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
             </CardContent>

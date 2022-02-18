@@ -25,6 +25,7 @@ import useLocalStorage from '../../hooks/useLocalStorage';
 import useSelectData from '../../hooks/useSelectData';
 import './styles.scss';
 import useFilter from '../../hooks/useFilter';
+import RadioButtonGroup from '../SharedComponents/RadioButtonGroup';
 
 // @TODO: Possibly remove state as some of this is handled through a hook instead
 const INITIAL_STATE = {
@@ -61,7 +62,7 @@ const reducer = (state, action) => {
   }
 };
 // @TODO: Add more colours depending on what the decision is for rendering data for the donut chart (unless expectation is repeated colours for multiple additional categories)
-const DONUT_COLOURS = ['#A7E5FD', '#FF7D7D', '#FF4D4D', '#CFB9E4', '#97E7B3', '#FFDB8C', '#A77ECD', '#97E7B3', '#A77ECD'];
+const DONUT_COLOURS = ['#A7E5FD', '#FF7D7D', '#CFB9E4', '#97E7B3', '#FFDB8C', '#A77ECD', '#97E7B3'];
 // Horizontal bar chart colours
 const colors = ['#FF7D7D'];
 
@@ -72,7 +73,20 @@ const Efficiency = () => {
   const [orGraphData, setOrGraphData] = React.useState([]);
   const [tile, setTile] = React.useState({});
   const [date, setDate] = React.useState({});
-
+  const options = [
+    {
+      id: 1,
+      value: 'By Specialty'
+    },
+    {
+      id: 2,
+      value: 'By Room'
+    }
+  ];
+  const [caseCountsBy, setCaseCountsBy] = React.useState('By Specialty');
+  const handleCaseToggle = (e) => {
+    setCaseCountsBy(e.target.value);
+  }
   const { fetchConfigData, applyGlobalFilter } = useFilter();
 
   React.useEffect(() => {
@@ -81,7 +95,7 @@ const Efficiency = () => {
       //Dashboard page starts as 7 days
       const { endDate } = config ?? {};
       const startDate = moment(endDate)?.subtract(700, 'days')?.format('YYYY-MM-DD');
-      setDate({startDate,endDate});
+      setDate({ startDate, endDate });
       // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
       await applyGlobalFilter({
         endpoint: process.env.EFFICIENCYV2_API,
@@ -105,17 +119,17 @@ const Efficiency = () => {
   // @TODO: This is somewhat duplicated (though still different) across multiple pages. If the time arises, consolidate to one function that can return this data to the FE with names the FE can use properly. Would be easier to not need to do a find to get each individual tile, but the structure of the payload being returned combined with the design will inhibit the ability to render these within a loop
   React.useEffect(() => {
     if (!state.tiles) return;
-    const efficiencyTile = state.tiles.find(({ title }) => title.toLowerCase().includes('efficiency index'));
-    const headlineTile = state.tiles.find(({ title }) => title.toLowerCase() === 'efficiency');
-    const onTimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('on-time'));
-    const otTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
-    const utilizationTile = state.tiles.find(({ title }) => title.toLowerCase().includes('block'));
-    const turnoverTile = state.tiles.find(({ title }) => title.toLowerCase().includes('turnover'));
-    const scheduleTile = state.tiles.find(({ title }) => title.toLowerCase().includes('under-schedule'));
-    const specialtyTile = state.tiles.find(({ title }) => title.toLowerCase().includes('specialty'));
-    const roomTile = state.tiles.find(({ title }) => title.toLowerCase().includes('room'));
+    const efficiencyTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'index');
+    const headlineTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'headlines');
+    const onTimeTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'ots');
+    const otTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'overtime');
+    const utilizationTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'block utilization');
+    const turnoverTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'turnover');
+    const scheduleTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'scheduling');
+    const specialtyTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'throughput specialty');
+    const roomTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'throughput room');
 
-    const formattedHorizontalBarData = formatBarGraphData(roomTile?.data);
+    const formattedHorizontalBarData = formatBarGraphData(otTile?.data);
     setOrGraphData(formattedHorizontalBarData);
 
     setTile({
@@ -127,6 +141,8 @@ const Efficiency = () => {
       turnover: turnoverTile,
       schedule: scheduleTile,
       specialty: specialtyTile,
+      room: roomTile,
+      totalCases: specialtyTile?.data?.total
     });
   }, [state]);
 
@@ -137,11 +153,11 @@ const Efficiency = () => {
   * @param {Array<object>} dataset - Data object retrieved from the API, specific to the donut "tile"
   * @returns {Array<object>} dataset (modified) - The data modified to suit a structure the charting library can use
   */
-  const formatDonutData = (dataset) => dataset.specialties.map((specialty, i) => ({
-    name: specialty,
+  const formatDonutData = (dataset) => dataset?.[caseCountsBy === 'By Specialty' ? 'specialties' : 'rooms'].map((name, i) => ({
+    name,
     value: dataset.counts[i],
-    color: DONUT_COLOURS[i]
-  }));
+    // color: DONUT_COLOURS[i % DONUT_COLOURS.length]
+  }))?.sort((a, b) => a?.value - b?.value)?.map((data,i) => ({...data, color: DONUT_COLOURS[i % DONUT_COLOURS.length]}));
 
   /*
   * @TODO: Remove this code if the backend returns data formatted as an array of objects
@@ -152,8 +168,8 @@ const Efficiency = () => {
   */
   const formatBarGraphData = (dataset) => dataset?.rooms.map((room, i) => ({
     room,
-    Time: dataset.counts[i]
-  }));
+    Time: dataset.overtime[i]
+  }))?.sort((a, b) => a?.Time - b?.Time);
 
   /*
   * @TODO: Remove this code if the backend returns more than two singular data points for use in creating a graph
@@ -175,10 +191,9 @@ const Efficiency = () => {
     return chartData;
   };
 
-
   return (
     <div className="page-container">
-      <Header displayDate={date}/>
+      <Header displayDate={date} />
       <Grid container spacing={5} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header header-2" spacing={0}>
           Efficiency Dashboard
@@ -289,10 +304,9 @@ const Efficiency = () => {
                             flexDirection: 'row',
                             flexWrap: 'wrap'
                           }}
-                          dangerouslySetInnerHTML={{
-                            __html: sentence.replace(/\[([^\]]+)\]/gm, '&nbsp;<strong style="display: inline-flex; color: #004F6E;">$1</strong>&nbsp;')
-                          }}
-                        />
+                        >
+                          {renderFormattedText(sentence)}
+                        </div>
                       ))}
                     </Carousel>
                   </div>
@@ -360,11 +374,11 @@ const Efficiency = () => {
                     }}
                     dataKeys={['Time']}
                     colors={colors}
-                    height={300}
+                    height={250}
                     margin={{
                       top: 20, right: 30, left: 20, bottom: 20
                     }}
-                    
+
                     barCategoryGap={'10%'}
                   />
                 </React.Fragment>
@@ -382,27 +396,31 @@ const Efficiency = () => {
                     style={{
                       display: 'flex',
                       flexDirection: 'row',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
                     }}
                   >
-                    {tile?.specialty?.title}
-                    <LightTooltip
-                      placement="top"
-                      fontSize="small"
-                      interactive
-                      arrow
-                      title={tile?.specialty?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
-                    >
-                      <InfoOutlinedIcon
-                        style={{ fontSize: 16, margin: '4px', color: '#8282828' }}
-                        className="log-mouseover"
-                        id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`}
-                      />
-                    </LightTooltip>
+                    <div>
+                      {tile?.specialty?.title}
+                      <LightTooltip
+                        placement="top"
+                        fontSize="small"
+                        interactive
+                        arrow
+                        title={tile?.specialty?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
+                      >
+                        <InfoOutlinedIcon
+                          style={{ fontSize: 16, margin: '4px', color: '#8282828' }}
+                          className="log-mouseover"
+                          id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`}
+                        />
+                      </LightTooltip>
+                    </div>
+                    <RadioButtonGroup value={caseCountsBy} onChange={handleCaseToggle} options={options} highlightColour="#004F6E" />
                   </div>
                   {!!tile?.specialty && (
                     <Donut
-                      data={formatDonutData(tile.specialty.data)}
+                      data={formatDonutData(caseCountsBy === 'By Specialty' ? tile.specialty.data : tile.room.data)}
                       tooltips={tile.specialty.toolTip}
                       label={
                         <React.Fragment>
@@ -427,3 +445,35 @@ const Efficiency = () => {
 };
 
 export default Efficiency;
+//Given a sentence with words in brackets like "[Hey] everyone what [is happening]."
+//Bold the words with brackets
+function renderFormattedText(text) {
+  if (!text) {
+    return '';
+  }
+  const pattern = /\[(.*?)\]/g;
+  const matches = text.matchAll(pattern);
+  const placementMap = {}
+  //Replace bracketed words with a single expression '{0}' (to handle spaces in brackets)
+  for (const match of matches) {
+    const brackets = match[0]
+    const contents = match[1]
+    const index = match.index
+    const key = `{${index}}`
+    text = text.replace(brackets, key)
+    placementMap[key] = contents
+  }
+  //For every word we bracket those we have saved/matched
+  const formattedText = text.split(" ").map((word, index) => {
+    //Matches {0}, {1}, ... etc -(in case a matched replacement has a character attached "{0}.")
+    const pattern = /{(\d+)}/g;
+    const match = word.match(pattern);
+    const brackets = match?.[0]
+    if (placementMap[brackets]) {
+      return <span style={{ fontWeight: 'bold', color: '#004F6E', margin: '0 4px' }} key={index}>{`${placementMap[brackets]} `}</span>
+    } else {
+      return `${word} `
+    }
+  });
+  return formattedText;
+}

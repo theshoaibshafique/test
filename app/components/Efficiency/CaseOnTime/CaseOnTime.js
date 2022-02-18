@@ -363,8 +363,8 @@ const CaseOnTime = () => {
         </Grid>
         <Grid container item xs={4}>
           <Grid item xs={12}>
-            <Card className='tile-card'>
-              <CardContent style={{ height: '760px', overflowY: 'auto' }}>
+            <Card className='tile-card' style={{height: '720px'}}>
+              <CardContent style={{  overflowY: 'auto' }}>
                 {maxData > 12 ? (
                   <React.Fragment>
                     {bySpecialty === 'By Room' && renderTileData(tile?.room)}

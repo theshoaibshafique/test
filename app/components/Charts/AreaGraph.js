@@ -4,10 +4,10 @@ import { AreaChart, Area, ReferenceLine, Tooltip, ResponsiveContainer } from 're
 const equalProps = (props, prevProps) => prevProps === props;
 
 const AreaGraph = React.memo(({ data, reference }) => (
-  <ResponsiveContainer width="100%" height={200}>
+  <ResponsiveContainer width="100%" height={165}>
     <AreaChart
       width={600}
-      height={200}
+      height={140}
       data={data}
       margin={{
         top: 10,

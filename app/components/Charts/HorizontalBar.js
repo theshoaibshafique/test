@@ -26,7 +26,7 @@ const HorizontalBar = React.memo(({
     >
       {/* Currently only used by Eff dashboard and Turnover which both use ROOM and Mins */}
       <YAxis tickFormatter={tickFormatter} interval={0} type="category" dataKey="room" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
-      <XAxis type="number" label={{ ...xAxisLabel, axisLabelStyle }} style={axisStyles} />
+      <XAxis type="number" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} />
       <Tooltip formatter={(value, name, props) => [`${value} min`, name]} />
       {rest?.legend && (
         <Legend

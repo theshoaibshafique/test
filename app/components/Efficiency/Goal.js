@@ -24,7 +24,7 @@ const AnimatedGoal = styled.div`
     z-index: 1;
     width: 100%;
     height: 2px;
-    bottom: ${(props) => props.target || 50}%;
+    bottom: ${(props) => props.target}%;
     left: 0px;
     background-color: #4f4f4f;
   }
@@ -52,7 +52,7 @@ const AnimatedGoal = styled.div`
     font-size: 12px !important;
     content: '';
     left: -40px;
-    bottom: ${(props) => props.target || 50}%;
+    bottom: ${(props) => props.target}%;
   }
 `;
 
