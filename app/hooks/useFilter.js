@@ -6,12 +6,13 @@ const defaultPayload = {
   roomNames: [],
   specialtyNames: []
 };
-
+const defaultDate = 'Most recent month';
 const useFilter = () => {
   const [loading, setLoading] = React.useState(false);
   //rooms are Room IDs - they're translated to displays values on using an orMap
   const [rooms, setRooms] = React.useState([]);
   const [viewFirstCase, setViewFirstCase] = React.useState(false);
+  const [dateLabel, setDateLabel] = React.useState(defaultDate);
   const { setItemInStore } = useLocalStorage();
 
   const selectOrs = React.useCallback(( event) => {
@@ -27,6 +28,7 @@ const useFilter = () => {
 
   const clearFilters = () => {
     setRooms([]);
+    setDateLabel(defaultDate);
   };
   const fetchConfigData = async ({ userFacility, userToken, cancelToken }, payload, cb) => {
     // @TODO: hook up loading animation if necessary, not currently hooked up in any way
@@ -90,6 +92,9 @@ const useFilter = () => {
     room: {
       selectOrs,
       orFilterVal: rooms
+    },
+    date: {
+      dateLabel, setDateLabel
     }
   };
 

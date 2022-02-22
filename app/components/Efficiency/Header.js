@@ -42,7 +42,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
   const ors = Object.keys(orMap ?? {})
   const specialties = getItemFromStore('efficiencyV2')?.efficiency?.filters?.Specialties;
   const [informationModalOpen, setInformationModalOpen] = React.useState(false);
-
+  
   const onClick = React.useCallback(() => {
     setInformationModalOpen((prev) => !prev);
   }, [informationModalOpen]);
@@ -75,8 +75,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
           {/* @TODO: Update the start and end dates with dates reflecting the expected defaults  */}
           {config?.date && (
             <Grid item xs={2} style={{ paddingLeft: '0px' }}>
-              <CustomDateRangePicker
-              />
+              <CustomDateRangePicker {...handlers?.date}/>
             </Grid>
           )}
           {config?.room && (

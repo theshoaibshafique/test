@@ -232,7 +232,7 @@ const Efficiency = () => {
         </Grid>
         <Grid item xs={9}>
           <Card className='tile-card' >
-            <CardContent>
+            <CardContent >
               {tile?.headline && (
                 <React.Fragment>
                   <div
@@ -250,7 +250,7 @@ const Efficiency = () => {
                   </div>
                   <div
                     style={{
-                      display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '300px'
+                      display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '267px'
                     }}
                   >
                     <Carousel
@@ -274,7 +274,7 @@ const Efficiency = () => {
                       customLeftArrow={
                         <div
                           style={{
-                            display: 'flex', left: 50, top: 0, justifyContent: 'flex-start', position: 'absolute', cursor: 'pointer'
+                            display: 'flex', left: 15, top: 86, justifyContent: 'flex-start', position: 'absolute', cursor: 'pointer'
                           }}
                         >
                           <ArrowBackIosIcon />
@@ -283,7 +283,7 @@ const Efficiency = () => {
                       customRightArrow={
                         <div
                           style={{
-                            display: 'flex', right: 50, top: 0, justifyContent: 'flex-end', position: 'absolute', cursor: 'pointer',
+                            display: 'flex', right: 15, top: 86, justifyContent: 'flex-end', position: 'absolute', cursor: 'pointer',
                           }}
                         >
                           <ArrowForwardIosIcon />
@@ -294,15 +294,9 @@ const Efficiency = () => {
                         <div
                           key={uuidv4()}
                           style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '850px',
-                            marginRight: 'auto',
-                            marginLeft: 'auto',
-                            marginBottom: 36,
-                            flexDirection: 'row',
-                            flexWrap: 'wrap'
+                            display:'inline-block',
+                            textAlign:'center',
+                            width:'100%'
                           }}
                         >
                           {renderFormattedText(sentence)}

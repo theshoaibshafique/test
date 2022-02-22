@@ -27,11 +27,11 @@ const MultiSelectFilter = ({
         {...rest}
       >
         {options?.map((o) => (
-          <MenuItem key={o} value={o}>
+          <MenuItem key={o} value={o} >
             <StyledCheckbox
               checked={value?.includes(o)} />
 
-            <ListItemText primary={optionMap?.[o] ?? o} />
+            <ListItemText primaryTypographyProps={{ style: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }} primary={optionMap?.[o] ?? o} title={optionMap?.[o] ?? o} />
           </MenuItem>
         ))}
       </StyledSelect>

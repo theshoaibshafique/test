@@ -62,6 +62,19 @@
             margin: 0px;
             margin-top: 36px;
         }
+        .react-multi-carousel-list{
+            height: 80%;
+            .react-multi-carousel-dot button{
+                border: none;
+                background: #BDBDBD;
+            }
+            .react-multi-carousel-dot--active button{
+                background: #004F6E;
+            }
+        }
+        .react-multi-carousel-item{
+            padding: 0 80px;
+        }
     }
     .display-number {
         display: inline-flex;

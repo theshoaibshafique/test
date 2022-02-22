@@ -413,7 +413,10 @@ const dropdownStyles = (theme, props) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     borderRadius: 4,
-  }
+  },
+  icon: {
+    marginRight:8
+  },
 })
 const DefaultSelect = (props) => (
   <Select MenuProps={{

@@ -26,88 +26,96 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
     paddingLeft: 16,
-    paddingRight: 8,
+    paddingRight: 5,
     alignItems: 'center',
     border: '1px solid #ccc',
     color: 'rgba(133, 133, 133, 0.8)'
   }
 });
-
+const getPresetDates = (label) => {
+  
+  switch (label) {
+    case 'Most recent week':
+      return {
+        start: moment().subtract(1, 'weeks').startOf('week'),
+        end: moment().subtract(1, 'weeks').endOf('week')
+      };
+    case 'Most recent month':
+      return {
+        start: moment().subtract(1, 'months').startOf('month'),
+        end: moment().subtract(1, 'months').endOf('month'),
+      };
+    case 'Most recent year':
+      return {
+        start: moment().subtract(1, 'years').startOf('year'),
+        end: moment().subtract(1, 'years').endOf('year'),
+      };
+    case 'All time':
+      const { efficiency } = JSON.parse(localStorage.getItem('efficiencyV2')) ?? {};
+      const { startDate, endDate } = efficiency ?? {}
+      return {
+        start: moment(startDate),
+        end: moment(endDate)
+      };
+    default:
+      break;
+  }
+}
+const defaultDate = 'Most recent month';
 const CustomDateRangePicker = React.memo(({
-  startDate: startDateProp, endDate: endDateProp,
+  dateLabel, setDateLabel
 }) => {
-  const [label, setLabel] = React.useState('Most recent month');
+  
   //Key is only used to control rerender - (kinda hacky) - change key (force rerender) on preset click to focus selected date
   const [key, setKey] = React.useState(uuidv4())
-  const [date, setDate] = React.useState({
-    start: moment().subtract(1, 'months').startOf('month'),
-    end: moment().subtract(1, 'months').endOf('month'),
-  });
+  const [date, setDate] = React.useState(getPresetDates(dateLabel || defaultDate));
+
   const [lastDate, setLastDate] = React.useState({ ...date });
   const { setItemInStore, getItemFromStore } = useLocalStorage();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [focusedInput, setFocusedInput] = React.useState('endDate');
   const styles = useStyles();
 
-
+  //Save the date whenever its changed
   React.useEffect(() => {
     const globalFilter = getItemFromStore('globalFilter');
     setItemInStore('globalFilter', { ...globalFilter, startDate: date.start, endDate: date.end });
-    if (date.end){
-      setLastDate({ ...date, label })
+    if (date.end) {
+      setLastDate({ ...date, dateLabel })
     }
   }, [date.start, date.end]);
-
 
   const handleMenuClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
+  //Update dates on label change
+  React.useEffect(() => {
+    const newDate = getPresetDates(dateLabel)
+    if (newDate){
+      setDate(newDate)
+    }
+  }, [dateLabel])
 
+  //Closing dates with any empty will revive last valid
   const handleClose = () => {
     if (!date.start || !date.end) {
-      const { label, ...old } = lastDate;
+      const { dateLabel, ...old } = lastDate;
       setDate(old);
-      setLabel(label);
+      setDateLabel(dateLabel);
     }
     setAnchorEl(null)
 
   };
 
+  //We manually set dates instead of only label to trigger proper rerender
   const setInputLabel = (label) => () => {
-    switch (label) {
-      case 'Most recent week':
-        setDate({
-          start: moment().subtract(1, 'weeks').startOf('week'),
-          end: moment().subtract(1, 'weeks').endOf('week')
-        });
-        break;
-      case 'Most recent month':
-        setDate({
-          start: moment().subtract(1, 'months').startOf('month'),
-          end: moment().subtract(1, 'months').endOf('month'),
-        });
-        break;
-      case 'Most recent year':
-        setDate({
-          start: moment().subtract(1, 'years').startOf('year'),
-          end: moment().subtract(1, 'years').endOf('year'),
-        });
-        break;
-      case 'All time':
-        const { efficiency: { startDate, endDate } } = getItemFromStore('efficiencyV2');
-        setDate({
-          start: moment(startDate),
-          end: moment(endDate)
-        });
-        break;
-      default:
-        break;
-    }
+    setDate(getPresetDates(label));
+    
     //We change the key to trigger a rerender to navigate back to relevant/focused/selected dates
     //Rerender isnt triggered on regular date change (custom)
     setKey(uuidv4())
     setFocusedInput('endDate')
-    setLabel(label);
+    setDateLabel(label);
   };
 
   const onFocusChange = (fi) => {
@@ -115,12 +123,13 @@ const CustomDateRangePicker = React.memo(({
     setFocusedInput(fi ?? 'endDate')
   };
 
+  //On custom date change
   const onDatesChange = ({ startDate, endDate }) => {
     let label = startDate?.format('YYYY-MM-DD');
     if (endDate) {
       label = `${label} to ${endDate?.format('YYYY-MM-DD')}`
     }
-    setLabel(label);
+    setDateLabel(label);
     setDate({
       start: startDate,
       end: endDate
@@ -155,14 +164,14 @@ const CustomDateRangePicker = React.memo(({
       </div>
     </div>
   )
-  // console.log(date)
+  
   return (
     <React.Fragment>
       <FormControl size='small' fullWidth>
         <FormLabel >Date</FormLabel>
         <Grid container>
           <Grid item xs={12} onClick={handleMenuClick} classes={{ root: styles.root }}>
-            {label || 'Most Recent Week'}
+            {dateLabel || 'Most Recent Week'}
             <IconButton size="small">{anchorEl ? <ArrowDropUpIcon color="#000" /> : <ArrowDropDownIcon color="#000" />}</IconButton>
           </Grid>
         </Grid>
@@ -195,12 +204,12 @@ const CustomDateRangePicker = React.memo(({
             </div>
             <div className='arrow'><Icon color="#828282" path={mdiArrowRight} size={'22px'} /></div>
             <div
-              className={`${focusedInput === 'endDate' ? 'selected' : ''} date`}
+              className={`${focusedInput === 'endDate' ? 'selected' : ''} date ${!date.start && 'disabled'}`}
               onClick={() => setFocusedInput('endDate')}
             >
               {date.end?.format('MMM DD YYYY') ?? 'End Date'}
             </div>
-            <div className='clear link' onClick={() => setDate({ start: null, end: null })}> Clear Dates</div>
+            <div className='clear link' onClick={() => setDate({ start: null, end: null }) || setFocusedInput('startDate')}> Clear Dates</div>
           </div>
           <DayPickerRangeController
             key={key}
