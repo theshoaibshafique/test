@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Switch from '@material-ui/core/Switch';
 import InformationModal from './InformationModal';
-import GracePeriod from './GracePeriodFilter/GracePeriod';
 import CustomDateRangePicker from '../SharedComponents/CustomDateRangePicker';
 import MultiSelectFilter from '../../components/SharedComponents/MultiSelectFilter';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -35,22 +34,32 @@ const CustomSwitch = withStyles({
 * @param {Function} applyGlobalFilter - The function called when we're applying filters
 * @param {object} handlers - An object containing all the handlers necessary for various filters on the page
 */
-const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
+const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate }) => {
   const { getItemFromStore } = useLocalStorage();
   //ORs and Specialties have different formats
   const orMap = getItemFromStore('efficiencyV2')?.efficiency?.filters?.ORs;
   const ors = Object.keys(orMap ?? {})
   const specialties = getItemFromStore('efficiencyV2')?.efficiency?.filters?.Specialties;
   const [informationModalOpen, setInformationModalOpen] = React.useState(false);
-  
+
   const onClick = React.useCallback(() => {
     setInformationModalOpen((prev) => !prev);
   }, [informationModalOpen]);
+  const { startDate, endDate } = displayDate ?? {};
   return (
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
         <Grid item xs={12}>
           <div onClick={onClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
+          <div className='display-date'>
+            {displayDate && (
+              <>
+                <div className='normal-text bold'>Most Recent Week</div>
+                <div className='subtle-subtext'>{`${moment(startDate)?.format('MMM DD YYYY')} to ${moment(endDate)?.format('MMM DD YYYY')}`}</div>
+              </>
+            )}
+
+          </div>
         </Grid>
         <Grid container spacing={3} style={{ margin: '14px 0 0 0' }}>
           {config?.case && (
@@ -75,7 +84,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers }) => {
           {/* @TODO: Update the start and end dates with dates reflecting the expected defaults  */}
           {config?.date && (
             <Grid item xs={2} style={{ paddingLeft: '0px' }}>
-              <CustomDateRangePicker {...handlers?.date}/>
+              <CustomDateRangePicker {...handlers?.date} />
             </Grid>
           )}
           {config?.room && (

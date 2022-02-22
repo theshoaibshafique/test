@@ -55,6 +55,10 @@
         height: auto;
         background-color: #e0e0e0;
         padding: 0 40px;
+        .display-date{
+            text-align: center;
+            min-height: 16px;
+        }
     }
 
     .efficiency-container {
