@@ -5,7 +5,8 @@ import axios from 'axios';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
+import { Card as MaterialCard } from '@material-ui/core';
+
 import CardContent from '@material-ui/core/CardContent';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
@@ -18,11 +19,10 @@ import Header from './Header';
 import Donut from '../Charts/Donut';
 import HorizontalBar from '../Charts/HorizontalBar';
 import { makeSelectToken, makeSelectUserFacility } from '../../containers/App/selectors';
-import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
+import { LightTooltip, StyledSkeleton } from '../../components/SharedComponents/SharedComponents';
 import TimeCard from './TimeCard';
 import AreaGraph from '../Charts/AreaGraph';
-import useLocalStorage from '../../hooks/useLocalStorage';
-import useSelectData from '../../hooks/useSelectData';
+
 import './styles.scss';
 import useFilter from '../../hooks/useFilter';
 import RadioButtonGroup from '../SharedComponents/RadioButtonGroup';
@@ -87,14 +87,14 @@ const Efficiency = () => {
   const handleCaseToggle = (e) => {
     setCaseCountsBy(e.target.value);
   }
-  const { fetchConfigData, applyGlobalFilter } = useFilter();
-
+  const { fetchConfigData, applyGlobalFilter, loading} = useFilter();
+  // const loading = true;
   React.useEffect(() => {
     const fetchData = async () => {
       const config = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
       //Dashboard page starts as 7 days
       const { endDate } = config ?? {};
-      const startDate = moment(endDate)?.subtract(700, 'days')?.format('YYYY-MM-DD');
+      const startDate = moment(endDate)?.subtract(7, 'days')?.format('YYYY-MM-DD');
       setDate({ startDate, endDate });
       // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
       await applyGlobalFilter({
@@ -157,7 +157,7 @@ const Efficiency = () => {
     name,
     value: dataset.counts[i],
     // color: DONUT_COLOURS[i % DONUT_COLOURS.length]
-  }))?.sort((a, b) => a?.value - b?.value)?.map((data,i) => ({...data, color: DONUT_COLOURS[i % DONUT_COLOURS.length]}));
+  }))?.sort((a, b) => a?.value - b?.value)?.map((data, i) => ({ ...data, color: DONUT_COLOURS[i % DONUT_COLOURS.length] }));
 
   /*
   * @TODO: Remove this code if the backend returns data formatted as an array of objects
@@ -191,6 +191,8 @@ const Efficiency = () => {
     return chartData;
   };
 
+  const Card = loading ? StyledSkeleton : MaterialCard;
+
   return (
     <div className="page-container">
       <Header displayDate={date} />
@@ -199,7 +201,7 @@ const Efficiency = () => {
           Efficiency Dashboard
         </Grid>
         <Grid item xs={3}>
-          <Card className='tile-card'>
+          <Card className='tile-card' >
             <CardContent>
               {tile?.efficiency && (
                 <React.Fragment>
@@ -294,9 +296,9 @@ const Efficiency = () => {
                         <div
                           key={uuidv4()}
                           style={{
-                            display:'inline-block',
-                            textAlign:'center',
-                            width:'100%'
+                            display: 'inline-block',
+                            textAlign: 'center',
+                            width: '100%'
                           }}
                         >
                           {renderFormattedText(sentence)}

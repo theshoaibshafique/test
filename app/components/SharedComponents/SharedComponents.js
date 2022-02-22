@@ -27,6 +27,7 @@ import Icon from '@mdi/react';
 import { MTableCell } from 'material-table';
 import './style.scss';
 import { updateUserFacility } from './helpers';
+import { Skeleton } from '@material-ui/lab';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
@@ -452,3 +453,16 @@ export const StyledCheckbox = (props) => (
     checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
     {...props} />
 )
+const skeletonStyles = (theme, props) => ({
+  root:{
+    background:'#DDDDDD !important'
+  },
+  wave: {
+    '&::after': {
+      animationDuration: '.7s',
+      animationDelay: '0s'
+    }
+  },
+})
+const StyledSkeleton_ = withStyles((theme) => skeletonStyles(theme))(Skeleton)
+export const StyledSkeleton = props => <StyledSkeleton_ variant='rectangular' width='100%' animation='wave' {...props} />

@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
+import { Card as MaterialCard } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
-import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, StyledSkeleton } from '../../../components/SharedComponents/SharedComponents';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import HorizontalBar from '../../Charts/HorizontalBar';
@@ -79,23 +79,48 @@ const TurnoverTime = () => {
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore } = useLocalStorage();
   const config = getItemFromStore('efficiencyV2')?.efficiency ?? {};
-  const { data } = useSelectData(process.env.TURNOVER_API, 'post', userToken, {
-    ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
-  }, axios.CancelToken.source());
+  
 
   const {
     selectGracePeriod,
     rooms,
     defaultFilterConfig,
     defaultHandlerConfig,
-    applyGlobalFilter
+    applyGlobalFilter,
+    fetchConfigData,
+    loading
   } = useFilter();
-
   React.useEffect(() => {
-    if (data) {
-      dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
+    const fetchData = async () => {
+      const config = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
+      //TODO: centralize default date selection
+      const { endDate } = config ?? {};
+      const startDate = moment(endDate)?.subtract(1, 'month');
+      // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
+      await applyGlobalFilter({
+        endpoint: process.env.TURNOVER_API,
+        userToken,
+        cancelToken: axios.CancelToken.source()
+      }, {
+        ...state.defaultPayload, facilityName: userFacility, startDate: startDate.format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')
+      },
+        (data) => {
+          if (data?.tiles) {
+            dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
+          }
+        }
+      )
     }
-  }, [data]);
+    fetchData();
+  }, []);
+  // const { data } = useSelectData(process.env.TURNOVER_API, 'post', userToken, {
+  //   ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
+  // }, axios.CancelToken.source());
+  // React.useEffect(() => {
+  //   if (data) {
+  //     dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
+  //   }
+  // }, [data]);
 
   React.useEffect(() => {
     if (!state.tiles) return;
@@ -143,7 +168,7 @@ const TurnoverTime = () => {
     turnover: dataset?.turnover[i],
     idle: dataset?.idle[i]
   }));
-
+  const Card = loading ? StyledSkeleton : MaterialCard;
   return (
     <div className="page-container">
       <Header

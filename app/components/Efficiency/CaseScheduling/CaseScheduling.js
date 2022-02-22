@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
+import { Card as MaterialCard } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import Header from '../Header';
 import FooterText from '../FooterText';
@@ -17,6 +17,7 @@ import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
 import useLocalStorage from '../../../hooks/useLocalStorage';
+import { StyledSkeleton } from '../../SharedComponents/SharedComponents';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -76,24 +77,46 @@ const CaseScheduling = () => {
     }
   ];
 
-  const { data } = useSelectData(process.env.SCHEDULING_API, 'post', userToken, {
-    ...state.defaultPayload,
-    facilityName: userFacility,
-    startDate: state.startDate.format('YYYY-MM-DD'),
-    endDate: state.endDate.format('YYYY-MM-DD')
-  }, axios.CancelToken.source());
+
 
   const { getItemFromStore } = useLocalStorage();
 
   const {
     defaultHandlerConfig,
-    defaultFilterConfig
+    defaultFilterConfig,
+    fetchConfigData,
+    applyGlobalFilter,
+    rooms,
+    loading
   } = useFilter();
 
   React.useEffect(() => {
-    if (!data) return;
-    dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
-  }, [data]);
+    const fetchData = async () => {
+      const config = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
+      //TODO: centralize default date selection
+      const { endDate } = config ?? {};
+      const startDate = moment(endDate)?.subtract(100, 'month');
+      // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
+      await applyGlobalFilter({
+        endpoint: process.env.SCHEDULING_API,
+        userToken,
+        cancelToken: axios.CancelToken.source()
+      }, {
+        ...state.defaultPayload,
+        facilityName: userFacility,
+        startDate: startDate.format('YYYY-MM-DD'),
+        endDate: moment(endDate).format('YYYY-MM-DD')
+      },
+        (data) => {
+          if (data?.tiles) {
+            dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
+          }
+        }
+      )
+    }
+    fetchData();
+  }, []);
+
 
   React.useEffect(() => {
     if (!state.tiles) return;
@@ -119,7 +142,6 @@ const CaseScheduling = () => {
   React.useEffect(() => {
     const trendTile = tile?.trend;
     const procedureTile = tile?.procedure;
-    
     const formattedProcedureListData = formatProcedureListData(procedureTile?.data);
     setProcedureListData(formattedProcedureListData);
     setTrendStartDate(trendTile?.data?.start_date);
@@ -157,7 +179,7 @@ const CaseScheduling = () => {
     setChartData(e.target.value);
     setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
   };
-
+  const Card = loading ? StyledSkeleton : MaterialCard;
   return (
     <div className="page-container">
       <Header
@@ -166,12 +188,12 @@ const CaseScheduling = () => {
           endpoint: process.env.TURNOVER_API,
           userToken,
           cancelToken: axios.CancelToken.source()
-          }, {
-            startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
-            endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
-            facilityName: userFacility,
-            roomNames: rooms,
-          },
+        }, {
+          startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+          endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+          facilityName: userFacility,
+          roomNames: rooms,
+        },
           (tileData) => {
             if (tileData?.tiles?.length) {
               dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
@@ -229,7 +251,7 @@ const CaseScheduling = () => {
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.delays && (
-                    <DistributionTile data={tile.delays} xAxisLabel={tile.delays.independentVarTitle} yAxisLabel={tile.delays.dependentVarTitle} dualColour/>
+                    <DistributionTile data={tile.delays} xAxisLabel={tile.delays.independentVarTitle} yAxisLabel={tile.delays.dependentVarTitle} dualColour />
                   )}
                 </CardContent>
               </Card>
@@ -242,7 +264,7 @@ const CaseScheduling = () => {
               <Card className='tile-card' style={{ height: '1110px', overflowY: 'auto' }}>
                 <CardContent>
                   {tile?.procedure && (
-                    <ProcedureList 
+                    <ProcedureList
                       title={tile.procedure.title}
                       procedureData={procedureListData}
                     />

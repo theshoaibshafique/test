@@ -54,6 +54,7 @@ export default HorizontalBar;
 
 const tickFormatter = (value, index) => {
   const limit = 6; // put your maximum character
+  if (!value) return '';
   if (value.length < limit) return value;
-  return `${value.substring(0, limit)}...`;
+  return `${value?.substring?.(0, limit)}...`;
 };

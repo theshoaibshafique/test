@@ -3,13 +3,13 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
+import { Card as MaterialCard } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
-import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, StyledSkeleton } from '../../../components/SharedComponents/SharedComponents';
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
 import useLocalStorage from '../../../hooks/useLocalStorage';
@@ -105,17 +105,16 @@ const CaseOnTime = () => {
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore, setItemInStore } = useLocalStorage();
   const config = getItemFromStore('efficiencyV2')?.efficiency ?? {};
-  const { data } = useSelectData(process.env.ONTIMESTART_API, 'post', userToken, {
-    ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
-  }, axios.CancelToken.source());
 
   const {
     rooms,
+    fetchConfigData,
     defaultFilterConfig,
     defaultHandlerConfig,
     toggleFirstCaseOnTime,
     applyGlobalFilter,
     viewFirstCase,
+    loading
   } = useFilter();
   const [specialtyNames, setSpecialtyNames] = React.useState([]);
   const selectSpecialty = (event) => {
@@ -124,11 +123,29 @@ const CaseOnTime = () => {
     } = event;
     setSpecialtyNames(value);
   }
-
   React.useEffect(() => {
-    if (!data) return;
-    dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
-  }, [data]);
+    const fetchData = async () => {
+      const config = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
+      //TODO: centralize default date selection
+      const { endDate } = config ?? {};
+      const startDate = moment(endDate)?.subtract(1, 'month');
+      // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
+      await applyGlobalFilter({
+        endpoint: process.env.ONTIMESTART_API,
+        userToken,
+        cancelToken: axios.CancelToken.source()
+      }, {
+        ...state.defaultPayload, facilityName: userFacility, startDate: startDate.format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')
+      },
+        (data) => {
+          if (data?.tiles) {
+            dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
+          }
+        }
+      )
+    }
+    fetchData();
+  }, []);
 
   const formatLineData = (dataset) => dataset?.map((percentage, idx) => ({
     date: moment(trendStartDate).add(idx, 'days').valueOf(),
@@ -294,6 +311,7 @@ const CaseOnTime = () => {
       </React.Fragment>
     );
   }
+  const Card = loading ? StyledSkeleton : MaterialCard;
   return (
     <div className="page-container">
       <Header
@@ -363,8 +381,8 @@ const CaseOnTime = () => {
         </Grid>
         <Grid container item xs={4}>
           <Grid item xs={12}>
-            <Card className='tile-card' style={{height: '720px'}}>
-              <CardContent style={{  overflowY: 'auto' }}>
+            <Card className='tile-card' style={{ height: '720px' }}>
+              <CardContent style={{ overflowY: 'auto' }}>
                 {maxData > 12 ? (
                   <React.Fragment>
                     {bySpecialty === 'By Room' && renderTileData(tile?.room)}

@@ -49,7 +49,7 @@ const useFilter = () => {
         });
         
       }
-
+      // await new Promise(resolve => setTimeout(resolve, 300000))
       setLoading(false);
       return configData;
     } catch (err) {
@@ -68,10 +68,11 @@ const useFilter = () => {
       };
       const retrieveTileData = request('post');
       data = await retrieveTileData(endpoint, userToken, requestPayload, cancelToken);
+      setLoading(false);
       if (data?.tiles?.length) {
         return cb(data);
       }
-      setLoading(false);
+      
     } catch (err) {
       setLoading(false);
     }

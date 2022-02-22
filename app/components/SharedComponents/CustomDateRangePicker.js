@@ -33,26 +33,26 @@ const useStyles = makeStyles({
   }
 });
 const getPresetDates = (label) => {
-  
+  const { efficiency } = JSON.parse(localStorage.getItem('efficiencyV2')) ?? {};
+  const { startDate, endDate } = efficiency ?? { startDate: moment(), endDate: moment() }
+
   switch (label) {
     case 'Most recent week':
       return {
-        start: moment().subtract(1, 'weeks').startOf('week'),
-        end: moment().subtract(1, 'weeks').endOf('week')
+        start: moment(endDate).subtract(1, 'weeks'),
+        end: moment(endDate)
       };
     case 'Most recent month':
       return {
-        start: moment().subtract(1, 'months').startOf('month'),
-        end: moment().subtract(1, 'months').endOf('month'),
+        start: moment(endDate).subtract(1, 'months'),
+        end: moment(endDate),
       };
     case 'Most recent year':
       return {
-        start: moment().subtract(1, 'years').startOf('year'),
-        end: moment().subtract(1, 'years').endOf('year'),
+        start: moment(endDate).subtract(1, 'years'),
+        end: moment(endDate),
       };
     case 'All time':
-      const { efficiency } = JSON.parse(localStorage.getItem('efficiencyV2')) ?? {};
-      const { startDate, endDate } = efficiency ?? {}
       return {
         start: moment(startDate),
         end: moment(endDate)
@@ -65,13 +65,15 @@ const defaultDate = 'Most recent month';
 const CustomDateRangePicker = React.memo(({
   dateLabel, setDateLabel
 }) => {
-  
+
   //Key is only used to control rerender - (kinda hacky) - change key (force rerender) on preset click to focus selected date
   const [key, setKey] = React.useState(uuidv4())
   const [date, setDate] = React.useState(getPresetDates(dateLabel || defaultDate));
 
   const [lastDate, setLastDate] = React.useState({ ...date });
   const { setItemInStore, getItemFromStore } = useLocalStorage();
+  const { efficiency } = getItemFromStore('efficiencyV2');
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [focusedInput, setFocusedInput] = React.useState('endDate');
   const styles = useStyles();
@@ -91,7 +93,7 @@ const CustomDateRangePicker = React.memo(({
   //Update dates on label change
   React.useEffect(() => {
     const newDate = getPresetDates(dateLabel)
-    if (newDate){
+    if (newDate) {
       setDate(newDate)
     }
   }, [dateLabel])
@@ -110,7 +112,7 @@ const CustomDateRangePicker = React.memo(({
   //We manually set dates instead of only label to trigger proper rerender
   const setInputLabel = (label) => () => {
     setDate(getPresetDates(label));
-    
+
     //We change the key to trigger a rerender to navigate back to relevant/focused/selected dates
     //Rerender isnt triggered on regular date change (custom)
     setKey(uuidv4())
@@ -164,7 +166,7 @@ const CustomDateRangePicker = React.memo(({
       </div>
     </div>
   )
-  
+
   return (
     <React.Fragment>
       <FormControl size='small' fullWidth>
@@ -215,6 +217,7 @@ const CustomDateRangePicker = React.memo(({
             key={key}
             startDate={date.start}
             endDate={date.end}
+            isOutsideRange={(date) => date.isAfter(efficiency?.endDate) || date.isBefore(efficiency?.startDate)}
             focusedInput={focusedInput}
             numberOfMonths={2}
             minimumNights={0}

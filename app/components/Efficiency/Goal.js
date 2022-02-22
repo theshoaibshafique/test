@@ -23,7 +23,7 @@ const AnimatedGoal = styled.div`
     content: '';
     z-index: 1;
     width: 100%;
-    height: 2px;
+    height: ${(props) => props.target ? '2px' : '0px'};
     bottom: ${(props) => props.target}%;
     left: 0px;
     background-color: #4f4f4f;
@@ -52,7 +52,7 @@ const AnimatedGoal = styled.div`
     font-size: 12px !important;
     content: '';
     left: -40px;
-    bottom: ${(props) => props.target}%;
+    bottom: ${(props) => props.target-5}%;
   }
 `;
 
@@ -62,7 +62,7 @@ const AnimatedGoal = styled.div`
 */
 const Goal = ({ target, goal }) => (
   <AnimatedGoal target={target} goal={goal}>
-    <span>Goal</span>
+    {target && <span>Goal</span>}
   </AnimatedGoal>
 );
 

@@ -5,13 +5,12 @@ import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Card from '@material-ui/core/Card';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import CardContent from '@material-ui/core/CardContent';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
-import { LightTooltip } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, StyledSkeleton } from '../../../components/SharedComponents/SharedComponents';
 import Donut from '../../Charts/Donut';
 import TrendTile from '../TrendTile';
 import TimeCard from '../TimeCard';
@@ -23,7 +22,7 @@ import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
 import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
 import Icon from '@mdi/react'
-import { Divider } from '@material-ui/core';
+import { Card as MaterialCard, Divider } from '@material-ui/core';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -75,7 +74,7 @@ const BlockUtilization = React.memo(() => {
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore } = useLocalStorage();
   // grab the rooms object, default filters, default handlers, and apply global filter function from the useFilter hook for use on the page - note: not all pages will need all of this
-  const { rooms, defaultFilterConfig, defaultHandlerConfig, applyGlobalFilter } = useFilter();
+  const { rooms, defaultFilterConfig, defaultHandlerConfig, fetchConfigData, applyGlobalFilter, loading } = useFilter();
   const [tile, setTile] = React.useState({});
   const [trendStartDate, setTrendStartDate] = React.useState('');
 
@@ -98,17 +97,34 @@ const BlockUtilization = React.memo(() => {
       value: '7-day moving average'
     }
   ];
-
-  const { data } = useSelectData(process.env.BLOCKUTILIZATION_API, 'post', userToken, { ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD') }, axios.CancelToken.source())
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const config = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
+      //TODO: centralize default date selection
+      const { endDate } = config ?? {};
+      const startDate = moment(endDate)?.subtract(1, 'month');
+      // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
+      await applyGlobalFilter({
+        endpoint: process.env.BLOCKUTILIZATION_API,
+        userToken,
+        cancelToken: axios.CancelToken.source()
+      }, {
+        ...state.defaultPayload, facilityName: userFacility, startDate: startDate.format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')
+      },
+        (data) => {
+          if (data?.tiles) {
+            dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
+          }
+        }
+      )
+    }
+    fetchData();
+  }, []);
 
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
   const [trendLineData, setTrendLineData] = React.useState([]);
 
-  React.useEffect(() => {
-    if (!data) return;
-    dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
-  }, [data]);
 
   React.useEffect(() => {
     if (!!state.tiles) {
@@ -261,7 +277,7 @@ const BlockUtilization = React.memo(() => {
 
     )
   }
-
+  const Card = loading ? StyledSkeleton : MaterialCard;
   /*
    * Note: This Header component might be a little intimidating, so I'm leaving this comment here to hopefully help explain how everything is hooked up. Feel free to delete if you don't feel it's helpful / after understanding
    *
@@ -363,7 +379,7 @@ const BlockUtilization = React.memo(() => {
                     <Divider style={{ color: '#e0e0e0' }} />
                   </Grid>
 
-                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight: 267, paddingBottom: data?.length > 6 ? 4 : 16 }}>
+                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight: 267, paddingBottom: 16 }}>
                     {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage, (data) => data?.map((row) => {
                       return (
                         <>
