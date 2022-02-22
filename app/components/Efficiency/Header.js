@@ -49,7 +49,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate }) => {
   return (
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{position:'relative'}}>
           <div onClick={onClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
           <div className='display-date'>
             {displayDate && (
