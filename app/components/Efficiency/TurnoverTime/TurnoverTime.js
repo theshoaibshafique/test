@@ -271,7 +271,7 @@ const TurnoverTime = () => {
           <Card className='tile-card' style={{ height: '375px' }}>
             <CardContent>
               {tile?.duration && (
-                <DistributionTile data={tile?.duration} />
+                <DistributionTile {...tile?.duration} />
               )}
             </CardContent>
           </Card>

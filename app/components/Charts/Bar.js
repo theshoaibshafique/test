@@ -2,6 +2,7 @@ import React from 'react';
 // module is used to avoid React anti pattern -> using indexes as keys
 import { v4 as uuidv4 } from 'uuid';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { axisLabelStyle, axisStyles } from './styles';
 
 const equalProps = (props, prevProps) => prevProps === props;
 /*
@@ -22,8 +23,8 @@ const BarGraph = React.memo(({
         data={data}
         {...rest}
       >
-        <XAxis type="number" dataKey="bin" height={50} label={xAxisLabel} interval={interval} domain={[0, 'auto']} />
-        <YAxis dataKey={rest?.primaryKey ?? "count"} label={yAxisLabel} />
+        <XAxis type="number" dataKey="bin" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles}  interval={interval} domain={[0, 'auto']} />
+        <YAxis dataKey={rest?.primaryKey ?? "count"} label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
         <Tooltip />
         {rest?.tripleColour && (
           <Bar dataKey="count" fill={colors?.length === 1 ? colors?.toString() : colors?.map((color) => color)}>

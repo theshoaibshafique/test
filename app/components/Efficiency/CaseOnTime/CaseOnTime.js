@@ -496,7 +496,7 @@ const CaseOnTime = () => {
                 <CardContent style={{ height: 345 }}>
                   {tile?.distribution && (
                     <DistributionTile
-                      data={tile.distribution}
+                      {...tile.distribution}
                       viewFirstCase={viewFirstCase}
                       xAxisLabel={tile.distribution.independentVarTitle}
                       yAxisLabel={tile.distribution.dependentVarTitle}

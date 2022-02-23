@@ -6,7 +6,7 @@ import RangeSlider from '../../../components/SharedComponents/RangeSlider';
 import RadioButtonGroup from '../../../components/SharedComponents/RadioButtonGroup';
 import BarGraph from '../../Charts/Bar';
 
-const DistributionTile = ({ data }) => {
+const DistributionTile = ({ data, toolTip, title }) => {
   const barGraphToggleOptions = [
     {
       id: 1,
@@ -27,13 +27,9 @@ const DistributionTile = ({ data }) => {
   ];
   const [color, setColor] = React.useState('#A77ECD');
   const [graphData, setGraphData] = React.useState('Turnover');
-  const [filteredDistributionData, setFilteredDistributionData] = React.useState([]);
-  const [originalDistributionData, setOriginalDistributionData] = React.useState([]);
-  const [distributionLabel, setDistributionLabel] = React.useState({
-    start: '',
-    end: ''
-  });
-  const [distributionSlider, setDistributionSlider] = React.useState([0, 100]);
+  const [filteredData, setFilteredData] = React.useState([]);
+  const [originalData, setOriginalData] = React.useState([]);
+  const [sliderRange, setSliderRange] = React.useState([0, 100]);
   const [range, setRange] = React.useState({
     min: 0,
     max: 0
@@ -42,20 +38,18 @@ const DistributionTile = ({ data }) => {
   React.useEffect(() => {
     if (!data) return;
     setRange({
-      min: data?.data[graphData.toLowerCase()][0].bin,
-      max: data?.data[graphData.toLowerCase()][data?.data[graphData.toLowerCase()].length - 1].bin
+      min: data[graphData.toLowerCase()][0].bin,
+      max: data[graphData.toLowerCase()][data[graphData.toLowerCase()].length - 1].bin
     });
     // @TODO: Determine what range of values to use to start with
     // @TODO: Merge current and next value to determine range that should be shown on bar graph
-    setDistributionSlider([
-      data?.data[graphData.toLowerCase()][0].bin,
-      data?.data[graphData.toLowerCase()][data?.data[graphData.toLowerCase()].length - 1].bin
+    setSliderRange([
+      data[graphData.toLowerCase()][0].bin,
+      data[graphData.toLowerCase()][data[graphData.toLowerCase()].length - 1].bin
     ]);
-    setDistributionLabel((prev) => ({
-      ...prev,
-      start: data?.data[graphData.toLowerCase()][0].bin,
-      end: data?.data[graphData.toLowerCase()][data?.data[graphData.toLowerCase()].length - 1].bin
-    }));
+
+    setOriginalData(data[graphData.toLowerCase()]);
+    setFilteredData(data[graphData.toLowerCase()]);
   }, [data]);
 
   React.useEffect(() => {
@@ -75,38 +69,30 @@ const DistributionTile = ({ data }) => {
       default:
         break;
     }
-    setOriginalDistributionData(data?.data[graphData.toLowerCase()]);
-    setFilteredDistributionData(data?.data[graphData.toLowerCase()]);
+    setOriginalData(data[graphData.toLowerCase()]);
+    setFilteredData(data[graphData.toLowerCase()]);
   }, [graphData]);
 
   const toggleGraphData = (e) => {
     setGraphData(e.target.value);
   };
 
-  React.useEffect(() => {
-    const [first, second] = distributionSlider;
-    setDistributionLabel({
-      start: first,
-      end: second
-    });
-  }, [distributionSlider]);
-
   // keep filtered range from slider upon update of distribution data
   React.useEffect(() => {
-    const [first, second] = distributionSlider;
-    setFilteredDistributionData(originalDistributionData.filter((values) => values.bin > first && values.bin < second));
-  }, [originalDistributionData, distributionSlider]);
+    const [first, second] = sliderRange;
+    setFilteredData(originalData.filter((values) => values.bin > first && values.bin < second));
+  }, [originalData, sliderRange]);
 
   const filterDistribution = React.useCallback((_, val) => {
-    setDistributionSlider(val);
-  }, [distributionSlider]);
-
+    setSliderRange(val);
+  }, [sliderRange]);
+  const valueLabelFormat = (value) => `${value} min`;
   return (
     <React.Fragment>
       <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-        {data?.title}
-        <LightTooltip placement="top" fontSize="small" interactive arrow title={data?.toolTip?.toString()}>
-          <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${data?.toolTip?.toString()}`} />
+        {title}
+        <LightTooltip placement="top" fontSize="small" interactive arrow title={toolTip?.toString()}>
+          <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${toolTip?.toString()}`} />
         </LightTooltip>
       </div>
       <div
@@ -117,8 +103,8 @@ const DistributionTile = ({ data }) => {
         <RadioButtonGroup value={graphData} onChange={toggleGraphData} options={barGraphToggleOptions} highlightColour="#004F6E" />
       </div>
       <BarGraph
-        height={200}
-        data={filteredDistributionData}
+        height={230}
+        data={filteredData}
         xAxisLabel={{
           value: 'Turnover Duration (min)',
           offset: -10,
@@ -141,9 +127,10 @@ const DistributionTile = ({ data }) => {
           min={range.min}
           max={range.max}
           onChange={filterDistribution}
-          value={distributionSlider}
-          startLabel={distributionLabel.start}
-          endLabel={distributionLabel.end}
+          value={sliderRange}
+          startLabel={valueLabelFormat(range.min)}
+          endLabel={valueLabelFormat(range.max)}
+          valueLabelFormat={valueLabelFormat}
         />
       </Grid>
     </React.Fragment>

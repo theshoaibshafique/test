@@ -6,56 +6,35 @@ import RangeSlider from '../../SharedComponents/RangeSlider';
 import BarGraph from '../../Charts/Bar';
 
 const DistributionTile = ({
-  data, xAxisLabel, yAxisLabel, ...rest
+  data, xAxisLabel, yAxisLabel, toolTip, title, ...rest
 }) => {
-  const [distributionFilterableData, setDistributionFilterableData] = React.useState([]);
-  const [originalDistributionData, setOriginalDistributionData] = React.useState([]);
-  const [startDistributionSlider, setStartDistributionSlider] = React.useState([0, 100]);
-  const [startDistributionStartLabel, setStartDistributionStartLabel] = React.useState('');
-  const [startDistributionEndLabel, setStartDistributionEndLabel] = React.useState('');
+  const [sliderRange, setSliderRange] = React.useState([0, 100]);
+  const [filteredData, setFilteredData] = React.useState([]);
+  const [originalData, setOriginalData] = React.useState([]);
+
   const [range, setRange] = React.useState({
     min: 0,
     max: 100
   });
-
   React.useEffect(() => {
-    if (rest?.viewFirstCase) {
-      setDistributionFilterableData(data.data);
-      setOriginalDistributionData(data.data);
-      // @TODO: Determine what range of values to use to start with
-      // @TODO: Merge current and next value to determine range that should be shown on bar graph
-      setStartDistributionSlider([data.data[0].bin, data.data[data.data.length - 1].bin]);
-      setRange({
-        min: data.data[0].bin,
-        max: data.data[data.data.length - 1].bin
-      });
-      setStartDistributionStartLabel(data.data[0].bin);
-      setStartDistributionEndLabel(data.data[data.data.length - 1].bin);
-    } else {
-      setDistributionFilterableData(data.data);
-      setOriginalDistributionData(data.data);
-      setStartDistributionSlider([data.data[0].bin, data.data[data.data.length - 1].bin]);
-      setRange({
-        min: data.data[0].bin,
-        max: data.data[data.data.length - 1].bin
-      });
-      setStartDistributionStartLabel(data.data[0].bin);
-      setStartDistributionEndLabel(data.data[data.data.length - 1].bin);
-    }
+    const {values, binSize} = data ?? {}
+    setFilteredData(values);
+    setOriginalData(values);
+    const startValue = values?.[0].bin - binSize;
+    const endValue = values?.[data?.values.length - 1]?.bin;
+    setSliderRange([startValue, endValue]);
+    setRange({
+      min: startValue,
+      max: endValue
+    });
   }, [data, rest.viewFirstCase]);
-
-  React.useEffect(() => {
-    const [first, second] = startDistributionSlider;
-    setStartDistributionStartLabel(first);
-    setStartDistributionEndLabel(second);
-  }, [startDistributionSlider]);
 
   const filterStartDistribution = React.useCallback((_, val) => {
     const [first, second] = val;
-    setDistributionFilterableData(originalDistributionData.filter((values) => values.bin > first && values.bin < second));
-    setStartDistributionSlider(val);
-  }, [startDistributionSlider]);
-
+    setFilteredData(originalData.filter((values) => values.bin > first && values.bin < second));
+    setSliderRange(val);
+  }, [sliderRange]);
+  const valueLabelFormat = (value) => `${value} min`;
   return (
     <React.Fragment>
       <div
@@ -66,17 +45,17 @@ const DistributionTile = ({
           alignItems: 'center'
         }}
       >
-        {data.title}
-        <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(data.toolTip) ? data.toolTip.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : data.toolTip}>
-          <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${data.toolTip.toString()}`} />
+        {title}
+        <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(toolTip) ? toolTip.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : toolTip}>
+          <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${toolTip.toString()}`} />
         </LightTooltip>
       </div>
       <BarGraph
-        height={200}
+        height={230}
         stacked={rest?.viewFirstCase}
         primaryKey={rest?.viewFirstCase ? 'fcots_count' : 'ots_count'}
         secondaryKey={rest?.viewFirstCase ? 'ots_count' : 'fcots_count'}
-        data={distributionFilterableData}
+        data={filteredData}
         xAxisLabel={{
           value: xAxisLabel,
           offset: -10,
@@ -90,7 +69,7 @@ const DistributionTile = ({
         }}
         dualColour={rest?.dualColour}
         colors={['#3DB3E3']}
-        margin={{ bottom: 20 }}
+        margin={{ bottom: 20, right: 20 }}
       />
       <Grid item xs={12}>
         <RangeSlider
@@ -99,9 +78,10 @@ const DistributionTile = ({
           min={range.min}
           max={range.max}
           onChange={filterStartDistribution}
-          value={startDistributionSlider}
-          startLabel={startDistributionStartLabel}
-          endLabel={startDistributionEndLabel}
+          value={sliderRange}
+          startLabel={valueLabelFormat(range.min)}
+          endLabel={valueLabelFormat(range.max)}
+          valueLabelFormat={valueLabelFormat}
         />
       </Grid>
     </React.Fragment>
