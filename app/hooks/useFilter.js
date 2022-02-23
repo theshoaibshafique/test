@@ -28,7 +28,7 @@ const useFilter = () => {
 
   const clearFilters = () => {
     setRooms([]);
-    setDateLabel(defaultDate);
+    setDateLabel('All time');
   };
   const fetchConfigData = async ({ userFacility, userToken, cancelToken }, payload, cb) => {
     // @TODO: hook up loading animation if necessary, not currently hooked up in any way

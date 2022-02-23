@@ -104,7 +104,7 @@ function DonutLabel({ viewBox, title, value, formattedValue }) {
       <text x={cx} y={cy - 20} fill="#004F6E" className="recharts-text recharts-label" textAnchor="middle" dominantBaseline="central" style={{fontFamily:'Noto Sans'}}>
         <tspan alignmentBaseline="middle" style={{ fontSize: 14, fill: '#333' }}>{title}</tspan>
         {/* Value is just a string/number */}
-        {value !== undefined ? <tspan alignmentBaseline="bottom" x={cx} y={cy + 15} style={{ fontSize: 60, fill: '#004F6E', fontWeight: 'bold' }}>{value}</tspan> : ''}
+        {value !== undefined ? <tspan alignmentBaseline="bottom" x={cx} y={cy + 20} style={{ fontSize: 64, fill: '#004F6E', fontWeight: 'bold' }}>{value}</tspan> : ''}
       </text>
       {/* Value is an actual set of tspan */}
       {formattedValue && (

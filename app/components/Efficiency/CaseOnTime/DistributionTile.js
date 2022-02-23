@@ -72,14 +72,14 @@ const DistributionTile = ({
         </LightTooltip>
       </div>
       <BarGraph
-        height={200}
+        height={250}
         stacked={rest?.viewFirstCase}
         primaryKey={rest?.viewFirstCase ? 'fcots_count' : 'ots_count'}
         secondaryKey={rest?.viewFirstCase ? 'ots_count' : 'fcots_count'}
         data={distributionFilterableData}
         xAxisLabel={{
           value: xAxisLabel,
-          offset: -10,
+          offset: 10,
           position: 'insideBottom'
         }}
         yAxisLabel={{
@@ -90,9 +90,14 @@ const DistributionTile = ({
         }}
         dualColour={rest?.dualColour}
         colors={['#3DB3E3']}
-        margin={{ bottom: 20 }}
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
       />
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <RangeSlider
           id="caseOnTimeDistribution"
           step={1}
@@ -103,7 +108,7 @@ const DistributionTile = ({
           startLabel={startDistributionStartLabel}
           endLabel={startDistributionEndLabel}
         />
-      </Grid>
+      </Grid> */}
     </React.Fragment>
   );
 };

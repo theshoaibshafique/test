@@ -162,6 +162,17 @@
             }
         }
     }
+    .bar-chart{
+        .recharts-brush-slide{
+            fill: #028CC8;
+            fill-opacity: 1 !important;
+        }
+        .recharts-brush{
+            rect {
+                rx:4;
+            }
+        }
+    }
 
 }
 

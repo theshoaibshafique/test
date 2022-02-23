@@ -1,9 +1,9 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { axisStyles, axisLabelStyle } from './styles';
-
-const equalProps = (props, prevProps) => prevProps === props;
 // @TODO: Could colocate this / update the traditional bar graph to pass in the required props to be used for rendering this horizontal
+const equalProps = (props, prevProps) => prevProps === props;
+
 const NoDataOverlay = (props) => (
   <div style={{
     position: 'absolute', top: '40%',
