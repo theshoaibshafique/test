@@ -186,7 +186,7 @@ const BlockUtilization = React.memo(() => {
     name: key,
     value: val,
     color: DONUT_COLOURS[i % DONUT_COLOURS.length]
-  }), []).filter((({ name }) => name !== 'hours'));
+  }), []).filter((({ name, value }) => name !== 'hours' && value !== null));
 
   /*
   * @TODO: Remove this code if the backend returns data formatted as an array of objects
@@ -284,7 +284,6 @@ const BlockUtilization = React.memo(() => {
    * The Header component takes a config object, an applyGlobalFilter function as well as a handlers object which will allow it to render and re-use certain functions as necessary for the filtering options in the header. Each page will have a different configuration and the various configurations will determine which sections to render. The applyGlobalFilter function is a function that comes from the useFilter hook, which allows for passing in the data that's necessary for the filter to work properly. It returns a callback function with the data that it gets from making the request so that we can have access to it on this page (and the other pages that are using applyGlobalFilter).
    *
    */
-
   return (
     <div className="page-container">
       <Header
@@ -365,36 +364,46 @@ const BlockUtilization = React.memo(() => {
                   </Grid>
                   <Grid item xs={3} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('room')}>
                     Room
-                    {sort.key === 'room' && sort.order.room ? UpArrow : DownArrow}
+                    {sort.key === 'room' ? (sort.order.room ? UpArrow : DownArrow) : ''}
                   </Grid>
                   <Grid item xs={4} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('block')}>
                     Block Utilization
-                    {sort.key === 'block' && sort.order.block ? UpArrow : DownArrow}
+                    {sort.key === 'block' ? (sort.order.block ? UpArrow : DownArrow) : ''}
                   </Grid>
                   <Grid item xs={3} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('change')}>
                     % Change
-                    {sort.key === 'change' && sort.order.change ? UpArrow : DownArrow}
+                    {sort.key === 'change' ? (sort.order.change ? UpArrow : DownArrow) : ''}
                   </Grid>
                   <Grid item xs={12} style={{ marginTop: 8, marginBottom: 12 }}>
                     <Divider style={{ color: '#e0e0e0' }} />
                   </Grid>
 
                   <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight: 267, paddingBottom: 16 }}>
-                    {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage, (data) => data?.map((row) => {
-                      return (
-                        <>
-                          <Grid item xs={3}>
-                            {row.or}
-                          </Grid>
-                          <Grid item xs={4}>
-                            {row.percent}%
-                          </Grid>
-                          <Grid item xs={3} >
-                            {renderChangeIcon(row.change)}
-                          </Grid>
-                        </>
-                      );
-                    }))}
+                    {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage,
+                      (data) => {
+                        //No data view
+                        if (!data.length) {
+                          return <Grid style={{
+                            color: '#828282', width: '100%', height: 230
+                          }} item xs={12} className='header-1 flex vertical-center'>No Data</Grid>
+                        }
+                        return data?.map((row) => {
+                          return (
+                            <>
+                              <Grid item xs={3}>
+                                {row.or}
+                              </Grid>
+                              <Grid item xs={4}>
+                                {row.percent}%
+                              </Grid>
+                              <Grid item xs={3} >
+                                {renderChangeIcon(row.change)}
+                              </Grid>
+                            </>
+                          );
+                        })
+                      }
+                    )}
                   </Grid>
                 </Grid>
               )}
@@ -429,19 +438,17 @@ const BlockUtilization = React.memo(() => {
                       />
                     </LightTooltip>
                   </div>
-                  {!!tile?.composition && <Donut data={formatDonutData(tile.composition.data)} tooltips={tile.composition.toolTip} label={
-                    <React.Fragment>
-                      <text x={140} y={95} style={{ fontSize: 14, color: '#333' }}>
-                        Average Block Time
-                      </text>
-                      <text x={tile.composition.data.average_hours >= 10 && tile.composition.data.average_minutes >= 10 ? 110 : 130} y={160} style={{ fontSize: 60, color: '#004F6E', fontWeight: 'bold' }}>
-                        {tile.composition.data.average_hours}
-                        <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
-                        {tile.composition.data.average_minutes}
-                        <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
-                      </text>
-                    </React.Fragment>
-                  } />}
+                  {!!tile?.composition && <Donut data={formatDonutData(tile.composition.data)} tooltips={tile.composition.toolTip}
+                    label={{
+                      title: 'Average Block Time', formattedValue: (
+                        <>
+                          {tile.composition.data.average_hours}
+                          <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
+                          {tile.composition.data.average_minutes}
+                          <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
+                        </>
+                      )
+                    }} />}
                 </React.Fragment>
               )}
             </CardContent>

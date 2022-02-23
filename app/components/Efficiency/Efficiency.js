@@ -87,7 +87,7 @@ const Efficiency = () => {
   const handleCaseToggle = (e) => {
     setCaseCountsBy(e.target.value);
   }
-  const { fetchConfigData, applyGlobalFilter, loading} = useFilter();
+  const { fetchConfigData, applyGlobalFilter, loading } = useFilter();
   // const loading = true;
   React.useEffect(() => {
     const fetchData = async () => {
@@ -377,6 +377,9 @@ const Efficiency = () => {
 
                     barCategoryGap={'10%'}
                   />
+                  <div className='subtle-text' style={{ color: '#828282' }}>
+                    {`Combined Total: ${tile?.overtime?.data?.total || 0} min (${tile?.overtime?.data?.annualized || 0} annualized)`}
+                  </div>
                 </React.Fragment>
               )}
             </CardContent>
@@ -418,16 +421,7 @@ const Efficiency = () => {
                     <Donut
                       data={formatDonutData(caseCountsBy === 'By Specialty' ? tile.specialty.data : tile.room.data)}
                       tooltips={tile.specialty.toolTip}
-                      label={
-                        <React.Fragment>
-                          <text x={160} y={95} style={{ fontSize: 14, color: '#333' }}>
-                            Total Cases
-                          </text>
-                          <text x={150} y={160} style={{ fontSize: 60, color: '#004F6E', fontWeight: 'bold' }}>
-                            {tile.specialty.data.total}
-                          </text>
-                        </React.Fragment>
-                      }
+                      label={{title:'Total Cases', value:tile.specialty.data.total}}
                     />
                   )}
                 </React.Fragment>

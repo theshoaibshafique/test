@@ -4,7 +4,14 @@ import { axisStyles, axisLabelStyle } from './styles';
 
 const equalProps = (props, prevProps) => prevProps === props;
 // @TODO: Could colocate this / update the traditional bar graph to pass in the required props to be used for rendering this horizontal
-
+const NoDataOverlay = (props) => (
+  <div style={{
+    position: 'absolute', top: '40%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color:'#828282', width:'100%', height:'100%'
+  }} className='header-1 flex vertical-center'>No Data</div>
+)
 /*
 * @param {Array<object>} data - The data to be passed into the chart
 * @param {object} xAxisLabel - The x axis label we want to display
@@ -16,39 +23,47 @@ const equalProps = (props, prevProps) => prevProps === props;
 */
 const HorizontalBar = React.memo(({
   data, xAxisLabel, yAxisLabel, height, colors, dataKeys, ...rest
-}) => (
-  <ResponsiveContainer width="100%" height={height}>
-    <BarChart
-      layout="vertical"
-      data={data}
-      barGap='10'
-      {...rest}
-    >
-      {/* Currently only used by Eff dashboard and Turnover which both use ROOM and Mins */}
-      <YAxis tickFormatter={tickFormatter} interval={0} type="category" dataKey="room" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
-      <XAxis type="number" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} />
-      <Tooltip formatter={(value, name, props) => [`${value} min`, name]} />
-      {rest?.legend && (
-        <Legend
-          verticalAlign="top"
-          wrapperStyle={{
-            top: -20,
-            left: -210,
-            position: 'absolute'
-          }}
-          formatter={(value, entry, index) =>
-          (
-            <span style={{ color: '#333', fontSize: 12, lineHeight: '16px' }}>{entry.dataKey.replace(/^\w{1}/, ($1) => $1.toUpperCase())}</span>
-          )
-          }
-        />
-      )}
-      {dataKeys?.map((dataKey, i) => (
-        <Bar key={dataKey} dataKey={dataKey} stackId="a" fill={colors[i]} />
-      ))}
-    </BarChart>
-  </ResponsiveContainer>
-), equalProps);
+}) => {
+  const hasData = data?.length;
+  data = hasData ? data : [{ room: '' }]
+  return (
+    <div style={{ position: 'relative' }}>
+      <ResponsiveContainer width="100%" height={height}>
+        <BarChart
+          layout="vertical"
+          data={data}
+          barGap='10'
+          {...rest}
+        >
+          {/* Currently only used by Eff dashboard and Turnover which both use ROOM and Mins */}
+          <YAxis tickFormatter={tickFormatter} interval={0} type="category" dataKey="room" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
+          <XAxis type="number" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} />
+
+          <Tooltip formatter={(value, name, props) => [`${value} min`, name]} />
+          {rest?.legend && (
+            <Legend
+              verticalAlign="top"
+              wrapperStyle={{
+                top: -20,
+                left: -210,
+                position: 'absolute'
+              }}
+              formatter={(value, entry, index) =>
+              (
+                <span style={{ color: '#333', fontSize: 12, lineHeight: '16px' }}>{entry.dataKey.replace(/^\w{1}/, ($1) => $1.toUpperCase())}</span>
+              )
+              }
+            />
+          )}
+          {dataKeys?.map((dataKey, i) => (
+            <Bar key={dataKey} dataKey={dataKey} stackId="a" fill={colors[i]} />
+          ))}
+        </BarChart>
+      </ResponsiveContainer>
+      {!hasData && <NoDataOverlay />}
+    </div>
+  )
+}, equalProps);
 
 export default HorizontalBar;
 
