@@ -64,12 +64,12 @@ const DistributionTile = ({
             </LightTooltip>
           </div>
           <BarGraph
-            height={250}
+            height={200}
             data={startGapFilterableData}
             primaryKey="count"
             xAxisLabel={{
               value: xAxisLabel,
-              offset: 10,
+              offset: -10,
               position: 'insideBottom'
             }}
             yAxisLabel={{
@@ -81,14 +81,9 @@ const DistributionTile = ({
             singleColour={rest?.singleColour}
             dualColour={rest?.dualColour}
             colors={['#3DB3E3']}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
+            margin={{ bottom: 20 }}
           />
-          {/* <Grid item xs={12}>
+          <Grid item xs={12}>
             <RangeSlider
               id="startDistribution"
               step={1}
@@ -99,7 +94,7 @@ const DistributionTile = ({
               startLabel={startDistributionStartLabel}
               endLabel={startDistributionEndLabel}
             />
-          </Grid> */}
+          </Grid>
         </React.Fragment>
       )}
     </React.Fragment>

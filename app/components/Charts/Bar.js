@@ -1,15 +1,9 @@
 import React from 'react';
 // module is used to avoid React anti pattern -> using indexes as keys
 import { v4 as uuidv4 } from 'uuid';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, Brush } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const equalProps = (props, prevProps) => prevProps === props;
-const Traveller = ({ x, y, height, ...props }) => {
-  // console.log(props)
-  return (
-    <circle {...props} cx={x} cy={y + 4} height='1' fill='#004F6E' stroke='#004F6E' stroke-width="2" r="8" />
-  )
-}
 /*
 * @param {Array<object>} data - The data the chart is expecting to render
 * @param {object} xAxisLabel - The x axis label data, to be used for the chart
@@ -31,7 +25,6 @@ const BarGraph = React.memo(({
         <XAxis type="number" dataKey="bin" height={50} label={xAxisLabel} interval={interval} domain={[0, 'auto']} />
         <YAxis dataKey={rest?.primaryKey ?? "count"} label={yAxisLabel} />
         <Tooltip />
-        <Brush dataKey="bin" height={8} traveller={<Traveller />} stroke="#BDBDBD" />
         {rest?.tripleColour && (
           <Bar dataKey="count" fill={colors?.length === 1 ? colors?.toString() : colors?.map((color) => color)}>
             {data.map((entry) => {
