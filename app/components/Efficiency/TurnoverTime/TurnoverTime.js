@@ -198,7 +198,7 @@ const TurnoverTime = () => {
           }
         }}
       />
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header header-2">
           Turnover Time
         </Grid>
@@ -236,7 +236,7 @@ const TurnoverTime = () => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={6}>
           <Card className='tile-card' style={{ height: '375px' }}>
             <CardContent>
@@ -276,7 +276,7 @@ const TurnoverTime = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid spacing={5} container className="efficiency-container">
+        <Grid spacing={4} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
             <FooterText
               days={tile?.elective?.value}

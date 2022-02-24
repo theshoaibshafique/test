@@ -203,13 +203,13 @@ const CaseScheduling = () => {
           ...defaultHandlerConfig
         }}
       />
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header header-2">
           Case Scheduling
         </Grid>
-        <Grid item container spacing={5} xs={6} style={{ paddingRight: '0px' }} className="efficiency-container">
-          <Grid container item xs={12} spacing={5} style={{paddingBottom:20}}>
-            <Grid item xs={6}>
+        <Grid item container spacing={0} xs={6} style={{ paddingRight: '0px', paddingBottom:0 }} className="efficiency-container">
+          <Grid container item xs={12} spacing={4} style={{paddingBottom:32}}>
+            <Grid item xs={6} >
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.schedule && (
@@ -218,7 +218,7 @@ const CaseScheduling = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={6} style={{paddingRight:0}}>
+            <Grid item xs={6} style={{paddingRight:0}} >
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.overtime && (
@@ -228,7 +228,7 @@ const CaseScheduling = () => {
               </Card>
             </Grid>
           </Grid>
-          <Grid container item xs={12} spacing={5} style={{paddingBottom:20}}>
+          <Grid container item xs={12} spacing={4} style={{paddingBottom:32}}>
             <Grid item xs={12} style={{paddingRight:0}}>
               <Card className='tile-card'>
                 <CardContent>
@@ -245,7 +245,7 @@ const CaseScheduling = () => {
               </Card>
             </Grid>
           </Grid>
-          <Grid container item xs={12} spacing={5} style={{paddingBottom:20}}>
+          <Grid container item xs={12} spacing={4} style={{paddingBottom:32}}>
             <Grid item xs={12} style={{paddingRight:0}}>
               <Card className='tile-card'>
                 <CardContent>
@@ -258,7 +258,7 @@ const CaseScheduling = () => {
           </Grid>
         </Grid>
         <Grid item xs={6} >
-          <Card className='tile-card' style={{ height: '1110px' }}>
+          <Card className='tile-card' style={{ height: 1084 }}>
             <CardContent style={{padding:0, position:'relative'}}>
               {tile?.procedure && (
                 <ProcedureList
@@ -269,7 +269,7 @@ const CaseScheduling = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid spacing={5} container className="efficiency-container">
+        <Grid spacing={4} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
             <FooterText days={tile?.elective?.value} />
           </Grid>

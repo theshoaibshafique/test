@@ -196,7 +196,7 @@ const Efficiency = () => {
   return (
     <div className="page-container">
       <Header displayDate={date} />
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header header-2" spacing={0}>
           Efficiency Dashboard
         </Grid>
@@ -312,7 +312,7 @@ const Efficiency = () => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={3}>
           <Card className='tile-card'>
             <CardContent>
@@ -350,7 +350,7 @@ const Efficiency = () => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={6}>
           <Card className='tile-card'>
             <CardContent>

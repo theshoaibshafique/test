@@ -308,7 +308,7 @@ const BlockUtilization = React.memo(() => {
           ...defaultHandlerConfig
         }}
       />
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header header-2">
           Block Utilization
         </Grid>
@@ -344,7 +344,7 @@ const BlockUtilization = React.memo(() => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={6}>
           <Card className='tile-card' >
             <CardContent>
@@ -455,7 +455,7 @@ const BlockUtilization = React.memo(() => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={6}>
           <Card className='tile-card'>
             <CardContent>
@@ -470,7 +470,7 @@ const BlockUtilization = React.memo(() => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid spacing={5} container className="efficiency-container">
+        <Grid spacing={4} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
             <FooterText days={tile?.elective?.value} />
           </Grid>

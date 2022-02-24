@@ -276,7 +276,7 @@ const CaseOnTime = () => {
           </Grid>
         </Grid>
         <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-        <Grid container spacing={5}>
+        <Grid container spacing={4}>
           <Grid item xs={4}>
             {tile?.independentVarTitle}
           </Grid>
@@ -293,7 +293,7 @@ const CaseOnTime = () => {
             <Grid
               container
               key={row.room}
-              spacing={5}
+              spacing={4}
               className="room-data-container"
             >
               <Grid item xs={5}>
@@ -353,12 +353,12 @@ const CaseOnTime = () => {
           }
         }}
       />
-      <Grid container spacing={5} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={12} className="efficiency-dashboard-header header-2">
           Case On Time
         </Grid>
         <Grid item xs={3} style={{ paddingRight: '0px' }}>
-          <Grid container item xs={12} spacing={5}>
+          <Grid container item xs={12} spacing={4}>
             <Grid item xs={12} style={{ paddingRight: '0px' }}>
               <Card className='tile-card'>
                 <CardContent>
@@ -402,7 +402,7 @@ const CaseOnTime = () => {
                         {viewFirstCase ? 'First Case On Time Percentage' : 'Case On Time Percentage'}
                       </div>
                       <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                      <Grid container spacing={5}>
+                      <Grid container spacing={4}>
                         <Grid item xs={4}>
                           {tile?.room?.independentVarTitle}
                         </Grid>
@@ -419,7 +419,7 @@ const CaseOnTime = () => {
                           <Grid
                             container
                             key={row.room}
-                            spacing={5}
+                            spacing={4}
                             className="room-data-container"
                           >
                             <Grid item xs={5}>
@@ -437,7 +437,7 @@ const CaseOnTime = () => {
                     </React.Fragment>
                     <React.Fragment>
                       <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                      <Grid container spacing={5}>
+                      <Grid container spacing={4}>
                         <Grid item xs={4}>
                           {tile?.specialty?.independentVarTitle}
                         </Grid>
@@ -454,7 +454,7 @@ const CaseOnTime = () => {
                           <Grid
                             container
                             key={row.specialty}
-                            spacing={5}
+                            spacing={4}
                             className="room-data-container"
                           >
                             <Grid item xs={4} style={{ fontSize: 12 }}>
@@ -477,7 +477,7 @@ const CaseOnTime = () => {
           </Grid>
         </Grid>
         <Grid item xs={5}>
-          <Grid container spacing={5}>
+          <Grid container spacing={4}>
             <Grid item xs={12}>
               <Card className='tile-card'>
                 <CardContent>
@@ -508,7 +508,7 @@ const CaseOnTime = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid spacing={5} container className="efficiency-container">
+        <Grid spacing={4} container className="efficiency-container">
           <Grid item xs={12} style={{ paddingLeft: '0px' }}>
             <FooterText
               days={tile?.elective?.value}

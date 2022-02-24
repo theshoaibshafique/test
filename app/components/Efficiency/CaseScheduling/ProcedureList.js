@@ -86,7 +86,7 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
             />
           </FormControl>
           <div style={{ marginRight: 42 }}>
-            <Icon path={mdiSort} size={1} />
+            <Icon path={mdiSort} color='#828282'size={1} />
           </div>
         </div>
         <Divider style={{ marginTop: 16 }} />
