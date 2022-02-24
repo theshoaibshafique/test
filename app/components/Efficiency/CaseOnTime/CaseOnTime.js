@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
-import { Card as MaterialCard } from '@material-ui/core';
+import { Card as MaterialCard, Divider } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Header from '../Header';
@@ -215,34 +215,33 @@ const CaseOnTime = () => {
 
   const transformData = (tileData, category, cb) => {
     let transformed;
-
     if (!viewFirstCase && category === 'By Specialty') {
       transformed = tileData?.ots.map((time, i) => ({
         start: time,
-        change: tileData?.ots_momentum[i],
-        specialty: tileData?.specialty[i]
+        change: tileData?.ots_momentum?.[i],
+        specialty: tileData?.specialty?.[i]
       }));
     } else if (viewFirstCase && category === 'By Specialty') {
       transformed = tileData?.fcots.map((time, i) => ({
         start: time,
-        change: tileData?.fcots_momentum[i],
-        specialty: tileData?.specialty[i],
-        ots: tileData?.ots_momentum[i]
+        change: tileData?.fcots_momentum?.[i],
+        specialty: tileData?.specialty?.[i],
+        ots: tileData?.ots_momentum?.[i]
       }));
     }
 
     if (!viewFirstCase && category === 'By Room') {
       transformed = tileData?.ots?.map((time, i) => ({
         start: time,
-        room: tileData?.room[i],
-        change: tileData?.ots_momentum[i]
+        room: tileData?.room?.[i],
+        change: tileData?.ots_momentum?.[i]
       }));
     } else if (viewFirstCase && category === 'By Room') {
       transformed = tileData?.fcots?.map((time, i) => ({
         start: time,
         room: tileData?.room[i],
-        change: tileData?.fcots_momentum[i],
-        ots: tileData?.ots_momentum[i]
+        change: tileData?.fcots_momentum?.[i],
+        ots: tileData?.ots_momentum?.[i]
       }));
     }
 
@@ -254,10 +253,11 @@ const CaseOnTime = () => {
     setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
   };
 
-  const renderTileData = (tile) => {
+  const renderTileData = (tile, hideRadio, hideTitle) => {
+    console.log(tile)
     return (
       <React.Fragment>
-        <div
+        {!hideTitle && <div
           className='tile-title'
           style={{
             display: 'flex',
@@ -269,45 +269,55 @@ const CaseOnTime = () => {
           <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.toolTip) ? tile?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.toolTip}>
             <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.toolTip?.toString()}`} />
           </LightTooltip>
-        </div>
-        <Grid container>
+        </div>}
+        {!hideRadio && <Grid container>
           <Grid item xs={12}>
             <RadioButtonGroup style={{ display: 'flex', alignItems: 'flex-end' }} value={bySpecialty} onChange={toggleSpecialty} options={options} highlightColour="#004F6E" />
           </Grid>
-        </Grid>
-        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
+        </Grid>}
+        <Divider style={{ color: '#e0e0e0', marginTop: '12px' }} />
         <Grid container spacing={4}>
-          <Grid item xs={4}>
+          <Grid item xs={4} className='flex vertical-center'>
             {tile?.independentVarTitle}
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={4} className='flex vertical-center'>
             {tile?.dependentVarTitle}
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={4} className='flex vertical-center'>
             Change
           </Grid>
         </Grid>
-        <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-        <div style={{ overflowY: 'auto', height: '100%' }}>
+        <Divider style={{ color: '#e0e0e0' }} />
+        <Grid
+          container
+          // key={row.room}
+          spacing={0}
+          className="room-data-container"
+          style={{ overflowY: 'auto', maxHeight: 590, overflowX: 'hidden' }}
+        >
+
           {transformData(tile?.data, bySpecialty, (rowData) => rowData?.map((row) => (
-            <Grid
-              container
-              key={row.room}
-              spacing={4}
-              className="room-data-container"
-            >
-              <Grid item xs={5}>
-                {row.room}
+            // <Grid
+            //   container
+            //   key={row.room}
+            //   spacing={0}
+            //   className="room-data-container"
+            // >
+            <>
+              <Grid item xs={5} className='ellipses' title={row.room || row.specialty}>
+                {row.room || row.specialty}
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={3} className='flex vertical-center'>
                 {row.start}%
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={4} className='flex vertical-center'>
                 {row.change}
               </Grid>
-            </Grid>
+            </>
+            // </Grid>
           )))}
-        </div>
+
+        </Grid>
       </React.Fragment>
     );
   }
@@ -389,88 +399,10 @@ const CaseOnTime = () => {
                     {bySpecialty === 'By Specialty' && renderTileData(tile?.specialty)}
                   </React.Fragment>
                 ) : (
-                  <React.Fragment>
-                    <React.Fragment>
-                      <div
-                        className='tile-title'
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center'
-                        }}
-                      >
-                        {viewFirstCase ? 'First Case On Time Percentage' : 'Case On Time Percentage'}
-                      </div>
-                      <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                      <Grid container spacing={4}>
-                        <Grid item xs={4}>
-                          {tile?.room?.independentVarTitle}
-                        </Grid>
-                        <Grid item xs={3}>
-                          {tile?.room?.dependentVarTitle}
-                        </Grid>
-                        <Grid item xs={3}>
-                          Change
-                        </Grid>
-                      </Grid>
-                      <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                      <div>
-                        {transformData(tile?.room?.data, 'By Room', (rowData) => rowData?.map((row) => (
-                          <Grid
-                            container
-                            key={row.room}
-                            spacing={4}
-                            className="room-data-container"
-                          >
-                            <Grid item xs={5}>
-                              {row.room}
-                            </Grid>
-                            <Grid item xs={3}>
-                              {row.start}%
-                            </Grid>
-                            <Grid item xs={3}>
-                              {row.change}
-                            </Grid>
-                          </Grid>
-                        )))}
-                      </div>
-                    </React.Fragment>
-                    <React.Fragment>
-                      <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                      <Grid container spacing={4}>
-                        <Grid item xs={4}>
-                          {tile?.specialty?.independentVarTitle}
-                        </Grid>
-                        <Grid item xs={3}>
-                          {tile?.specialty?.dependentVarTitle}
-                        </Grid>
-                        <Grid item xs={2}>
-                          Change
-                        </Grid>
-                      </Grid>
-                      <hr style={{ color: '#e0e0e0', marginTop: '12px' }} />
-                      <div>
-                        {transformData(tile?.specialty?.data, 'By Specialty', (rowData) => rowData?.map((row) => (
-                          <Grid
-                            container
-                            key={row.specialty}
-                            spacing={4}
-                            className="room-data-container"
-                          >
-                            <Grid item xs={4} style={{ fontSize: 12 }}>
-                              {row.specialty}
-                            </Grid>
-                            <Grid item xs={3}>
-                              {row.start}%
-                            </Grid>
-                            <Grid item xs={3}>
-                              {row.change}
-                            </Grid>
-                          </Grid>
-                        )))}
-                      </div>
-                    </React.Fragment>
-                  </React.Fragment>
+                  <>
+                    {renderTileData(tile?.room, true)}
+                    {renderTileData(tile?.specialty, true, true)}
+                  </>
                 )}
               </CardContent>
             </Card>

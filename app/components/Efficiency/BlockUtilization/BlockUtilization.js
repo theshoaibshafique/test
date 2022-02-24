@@ -10,7 +10,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
-import { LightTooltip, StyledSkeleton } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, StyledSkeleton, ChangeIcon } from '../../../components/SharedComponents/SharedComponents';
 import Donut from '../../Charts/Donut';
 import TrendTile from '../TrendTile';
 import TimeCard from '../TimeCard';
@@ -18,10 +18,7 @@ import OvertimeCard from '../OvertimeCard';
 import DistributionTile from './DistributionTile';
 import './styles.scss';
 import useLocalStorage from '../../../hooks/useLocalStorage';
-import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
-import { mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
-import Icon from '@mdi/react'
 import { Card as MaterialCard, Divider } from '@material-ui/core';
 
 const INITIAL_STATE = {
@@ -248,35 +245,6 @@ const BlockUtilization = React.memo(() => {
   }
   const UpArrow = <ArrowUpward style={{ color: 'rgba(0, 0, 0, 0.54)', fontSize: 18 }} size="18px" />;
   const DownArrow = <ArrowDownward style={{ color: 'rgba(0, 0, 0, 0.54)', fontSize: 18 }} size="18px" />;
-  const renderChangeIcon = (diff) => {
-    let tag = '';
-    let className = ''
-    let tooltip = '';
-    if (diff === null || isNaN(diff) || diff == 0) {
-      diff = `—`;
-      tooltip = "No Change";
-    } else if (diff < 0) {
-      className = "trending-down";
-      tooltip = "Negative Trend";
-      tag = <Icon color="#FF0000" path={mdiTrendingDown} size={'32px'} />
-    } else {
-      tooltip = "Positive Trend";
-      className = "trending-up";
-      tag = <Icon color="#009483" path={mdiTrendingUp} size={'32px'} />
-    }
-    return (
-      <LightTooltip interactive arrow
-        title={tooltip}
-        placement="top" fontSize="small"
-      >
-        <div className={`change-value ${className} log-mouseover`} >
-          <span>{`${diff}%`}</span>
-          <span>{tag}</span>
-        </div>
-      </LightTooltip>
-
-    )
-  }
   const Card = loading ? StyledSkeleton : MaterialCard;
   /*
    * Note: This Header component might be a little intimidating, so I'm leaving this comment here to hopefully help explain how everything is hooked up. Feel free to delete if you don't feel it's helpful / after understanding
@@ -378,7 +346,7 @@ const BlockUtilization = React.memo(() => {
                     <Divider style={{ color: '#e0e0e0' }} />
                   </Grid>
 
-                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight: 267, paddingBottom: 16 }}>
+                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight: 248, paddingBottom: 16 }}>
                     {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage,
                       (data) => {
                         //No data view
@@ -397,7 +365,7 @@ const BlockUtilization = React.memo(() => {
                                 {row.percent}%
                               </Grid>
                               <Grid item xs={3} >
-                                {renderChangeIcon(row.change)}
+                                <ChangeIcon change={row.change}/>
                               </Grid>
                             </>
                           );

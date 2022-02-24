@@ -21,7 +21,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectSnackbar, makeSelectToken } from '../../containers/App/selectors';
-import { mdiClose, mdiSwapHorizontal, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
+import { mdiClose, mdiSwapHorizontal, mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
 import Icon from '@mdi/react';
 
 import { MTableCell } from 'material-table';
@@ -466,3 +466,34 @@ const skeletonStyles = (theme, props) => ({
 })
 const StyledSkeleton_ = withStyles((theme) => skeletonStyles(theme))(Skeleton)
 export const StyledSkeleton = props => <StyledSkeleton_ variant='rectangular' width='100%' animation='wave' {...props} />
+
+
+export const ChangeIcon = ({change}) => {
+  let tag = '';
+  let className = ''
+  let tooltip = '';
+  if (change === null || isNaN(change) || change == 0) {
+    change = `—`;
+    tooltip = "No Change";
+  } else if (change < 0) {
+    className = "trending-down";
+    tooltip = "Negative Trend";
+    tag = <Icon color="#FF0000" path={mdiTrendingDown} size={'32px'} />
+  } else {
+    tooltip = "Positive Trend";
+    className = "trending-up";
+    tag = <Icon color="#009483" path={mdiTrendingUp} size={'32px'} />
+  }
+  return (
+    <LightTooltip interactive arrow
+      title={tooltip}
+      placement="top" fontSize="small"
+    >
+      <div className={`change-value ${className} log-mouseover`} >
+        <span>{`${change}%`}</span>
+        <span>{tag}</span>
+      </div>
+    </LightTooltip>
+
+  )
+}
