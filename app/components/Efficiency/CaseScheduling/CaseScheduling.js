@@ -95,7 +95,7 @@ const CaseScheduling = () => {
       const config = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
       //TODO: centralize default date selection
       const { endDate } = config ?? {};
-      const startDate = moment(endDate)?.subtract(100, 'month');
+      const startDate = moment(endDate)?.subtract(1, 'month');
       // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
       await applyGlobalFilter({
         endpoint: process.env.SCHEDULING_API,
@@ -127,7 +127,6 @@ const CaseScheduling = () => {
     const electiveTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
     const procedureTile = state.tiles.find(({ title }) => title.toLowerCase().includes('procedure'));
     const delaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('delays'));
-
     setTrendStartDate(trendTile?.data?.start_date);
     setTile({
       schedule: scheduleTile,
@@ -185,7 +184,7 @@ const CaseScheduling = () => {
       <Header
         config={{ ...defaultFilterConfig }}
         applyGlobalFilter={() => applyGlobalFilter({
-          endpoint: process.env.TURNOVER_API,
+          endpoint: process.env.SCHEDULING_API,
           userToken,
           cancelToken: axios.CancelToken.source()
         }, {
@@ -251,7 +250,7 @@ const CaseScheduling = () => {
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.delays && (
-                    <DistributionTile data={tile.delays} xAxisLabel={tile.delays.independentVarTitle} yAxisLabel={tile.delays.dependentVarTitle} dualColour />
+                    <DistributionTile {...tile.delays} xAxisLabel={tile.delays.independentVarTitle} yAxisLabel={tile.delays.dependentVarTitle} dualColour />
                   )}
                 </CardContent>
               </Card>

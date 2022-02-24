@@ -5,9 +5,9 @@ const FooterText = ({ days, facilityName, fcotsThreshold, otsThreshold, turnover
   const [hh, mm, ss] = globalFunctions.formatSecsToTime(turnoverThreshold ?? 0)?.split(':');
   return (
     <div>
-      <i>Based on <strong>{days} days</strong> with elective hours from your filter criteria <br />
+      {days >= 0 && <i>Based on <strong>{days} days</strong> with elective hours from your filter criteria <br />
         ORs with no data available are excluded from the report
-      </i>
+      </i>}
       {facilityName && !isNaN(fcotsThreshold) && (
         <div>
           <i>

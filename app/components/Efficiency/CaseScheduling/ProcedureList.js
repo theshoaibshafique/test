@@ -40,8 +40,8 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
   }, [procedureData]);
 
   /*
-* @TODO: To be determined: Whether or not the text input to filter the data is too slow. Removing the area chart will fix the sluggish feeling of the input, but also... remove the area chart. This can likely be fixed by optimizing this function, or by changing how we want to render this data.
-*/
+  * @TODO: To be determined: Whether or not the text input to filter the data is too slow. Removing the area chart will fix the sluggish feeling of the input, but also... remove the area chart. This can likely be fixed by optimizing this function, or by changing how we want to render this data.
+  */
   const formatAreaChartData = (mean, sd) => {
     const chartData = [];
     const lowerBound = mean - sd * 3;
@@ -60,7 +60,6 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
   const handlePanelChange = (panel) => (_, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
   return (
     <React.Fragment>
       <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
@@ -90,7 +89,7 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
       </Grid>
       <hr style={{ marginTop: 16 }} />
       {filteredProcedures?.map((dataPoint) => (
-        <Accordion key={dataPoint.id} expanded={expanded === dataPoint.id} onChange={handlePanelChange(dataPoint.id)}>
+        <Accordion TransitionProps={{ unmountOnExit: true }} key={dataPoint.id} expanded={expanded === dataPoint.id} onChange={handlePanelChange(dataPoint.id)}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             classes={{ content: styles.content }}
@@ -115,7 +114,7 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
           <AccordionDetails style={{ height: '450px', flexDirection: 'column' }}>
             <BarGraph
               height={200}
-              data={dataPoint.percentage}
+              data={dataPoint.percentage?.values}
               xAxisLabel={{
                 value: 'Turnover Duration (min)',
                 offset: -10,
@@ -127,7 +126,7 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
                 offset: 15,
                 position: 'insideBottomLeft'
               }}
-              margin={{ bottom: 40 }}
+              margin={{ bottom: 40, right: 20 }}
               tripleColour
               colors={['#009483', '#FFB718', '#FF7D7D']}
             />
