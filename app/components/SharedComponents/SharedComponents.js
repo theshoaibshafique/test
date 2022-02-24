@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import {
   Backdrop,
   Button,
@@ -17,6 +17,14 @@ import {
   Tooltip,
   withStyles,
 } from '@material-ui/core';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Search from '@material-ui/icons/Search';
 import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +32,7 @@ import { makeSelectSnackbar, makeSelectToken } from '../../containers/App/select
 import { mdiClose, mdiSwapHorizontal, mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
 import Icon from '@mdi/react';
 
-import { MTableCell } from 'material-table';
+import MaterialTable, { MTableCell } from 'material-table';
 import './style.scss';
 import { updateUserFacility } from './helpers';
 import { Skeleton } from '@material-ui/lab';
@@ -467,6 +475,18 @@ const skeletonStyles = (theme, props) => ({
 const StyledSkeleton_ = withStyles((theme) => skeletonStyles(theme))(Skeleton)
 export const StyledSkeleton = props => <StyledSkeleton_ variant='rectangular' width='100%' animation='wave' {...props} />
 
+const tableIcons = {
+  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
+};
+
+export const StyledTable = props => <MaterialTable icons={tableIcons} {...props}/>
 
 export const ChangeIcon = ({change}) => {
   let tag = '';

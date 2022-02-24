@@ -166,3 +166,26 @@
     color: #fff;
   }
 }
+.change-value {
+  width: fit-content;
+  opacity: 0.8;
+  border-radius: 4px;
+  min-height: 24px;
+  background-color: rgba(200, 200, 200, 0.3);
+  &.trending-down {
+      color: #ff0000;
+      background-color: rgba(255, 125, 125, 0.3);
+  }
+  &.trending-up {
+      color: #009483;
+      background-color: rgba(151, 231, 179, 0.3);
+  }
+  .change-header {
+      float: right;
+      text-align: right;
+  }
+  span {
+      padding: 2px;
+  }
+  padding: 0 2px;
+}

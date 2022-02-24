@@ -22,7 +22,7 @@
         position: absolute;
     }
     .tile-card {
-        height:340px;
+        height: 340px;
         background: #ffffff;
         /* card shadow */
         box-shadow: 4px 12px 32px rgba(109, 141, 173, 0.12) !important ;
@@ -37,7 +37,7 @@
         line-height: 25px;
         margin-bottom: 16px;
     }
-    .apply-cancel-buttons{
+    .apply-cancel-buttons {
         > button {
             &:first-child {
                 margin-right: 10px;
@@ -55,7 +55,7 @@
         height: auto;
         background-color: #e0e0e0;
         padding: 0 40px;
-        .display-date{
+        .display-date {
             text-align: center;
             min-height: 16px;
         }
@@ -67,17 +67,17 @@
             margin: 0px;
             margin-top: 36px;
         }
-        .react-multi-carousel-list{
+        .react-multi-carousel-list {
             height: 80%;
-            .react-multi-carousel-dot button{
+            .react-multi-carousel-dot button {
                 border: none;
-                background: #BDBDBD;
+                background: #bdbdbd;
             }
-            .react-multi-carousel-dot--active button{
-                background: #004F6E;
+            .react-multi-carousel-dot--active button {
+                background: #004f6e;
             }
         }
-        .react-multi-carousel-item{
+        .react-multi-carousel-item {
             padding: 0 80px;
         }
     }
@@ -86,7 +86,7 @@
         align-items: flex-start;
         text-align: left;
         color: #004f6e;
-        font-family: 'Noto Sans';
+        font-family: "Noto Sans";
         font-style: normal;
         font-weight: bold;
         font-size: 88px;
@@ -155,25 +155,48 @@
             margin-bottom: 24px;
         }
     }
+    .efficiency-table {
+        .MuiTable-root{
+            border-collapse: separate;
+        }
+        ::-webkit-scrollbar {
+            width: 12px;
+            border-radius: 4px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #c2c2c2;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(85, 85, 85, 0.8);
+        }
+    }
     .donut-chart {
-        &.no-data{
-            .recharts-legend-item .recharts-surface{
+        &.no-data {
+            .recharts-legend-item .recharts-surface {
                 display: none !important;
             }
         }
     }
-    .bar-chart{
-        .recharts-brush-slide{
-            fill: #028CC8;
+    .bar-chart {
+        .recharts-brush-slide {
+            fill: #028cc8;
             fill-opacity: 1 !important;
         }
-        .recharts-brush{
+        .recharts-brush {
             rect {
-                rx:4;
+                rx: 4;
             }
         }
     }
-
 }
 
 .change-percent-badge-increase {

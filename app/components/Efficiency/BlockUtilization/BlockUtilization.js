@@ -3,14 +3,12 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import CardContent from '@material-ui/core/CardContent';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
-import { LightTooltip, StyledSkeleton, ChangeIcon } from '../../../components/SharedComponents/SharedComponents';
+import { LightTooltip, StyledSkeleton, ChangeIcon, StyledTable } from '../../../components/SharedComponents/SharedComponents';
 import Donut from '../../Charts/Donut';
 import TrendTile from '../TrendTile';
 import TimeCard from '../TimeCard';
@@ -19,7 +17,7 @@ import DistributionTile from './DistributionTile';
 import './styles.scss';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import useFilter from '../../../hooks/useFilter';
-import { Card as MaterialCard, Divider } from '@material-ui/core';
+import { Card as MaterialCard, Paper } from '@material-ui/core';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -74,15 +72,6 @@ const BlockUtilization = React.memo(() => {
   const { rooms, defaultFilterConfig, defaultHandlerConfig, fetchConfigData, applyGlobalFilter, loading } = useFilter();
   const [tile, setTile] = React.useState({});
   const [trendStartDate, setTrendStartDate] = React.useState('');
-
-  const [sort, setSort] = React.useState({
-    key: 'block',
-    order: {
-      block: true,
-      change: false,
-      room: false
-    }
-  });
 
   const options = [
     {
@@ -207,8 +196,6 @@ const BlockUtilization = React.memo(() => {
   };
 
   /*
-  * @TODO: Remove the map function but keep the sorting / move the sorting logic somewhere else if the data being returned is an array of objects
-  *
   * Returns formatted data for data presented in a table-esque format, taken from malformed backend data
   * @param {Array<object>} dataset - Data object retrieved from the API, specific to the donut "tile"
   * @returns {Array<object>} dataset (modified) - The data modified to suit a structure the charting library can use
@@ -219,32 +206,9 @@ const BlockUtilization = React.memo(() => {
       or,
       change: momentum[i],
       percent: percentage[i]
-    })).sort((a, b) => {
-      switch (sort.key) {
-        case 'block':
-          return (sort.order.block ? a.percent - b.percent : b.percent - a.percent);
-        case 'change':
-          return (sort.order.change ? a.change - b.change : b.change - a.change);
-        case 'room':
-          return (sort.order.room ? a.or.localeCompare(b.or) : b.or.localeCompare(a.or));
-      }
-    });;
+    }))
     return cb(transformed);
   };
-
-  // set current sort key to be reflected in sort arrows
-  const setUtilizationByRoomSort = (key) => () => {
-    setSort((prev) => ({
-      ...prev,
-      order: {
-        ...prev.order,
-        [key]: !prev.order[key]
-      },
-      key
-    }));
-  }
-  const UpArrow = <ArrowUpward style={{ color: 'rgba(0, 0, 0, 0.54)', fontSize: 18 }} size="18px" />;
-  const DownArrow = <ArrowDownward style={{ color: 'rgba(0, 0, 0, 0.54)', fontSize: 18 }} size="18px" />;
   const Card = loading ? StyledSkeleton : MaterialCard;
   /*
    * Note: This Header component might be a little intimidating, so I'm leaving this comment here to hopefully help explain how everything is hooked up. Feel free to delete if you don't feel it's helpful / after understanding
@@ -315,10 +279,10 @@ const BlockUtilization = React.memo(() => {
       <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={6}>
           <Card className='tile-card' >
-            <CardContent>
+            <CardContent style={{padding:0}}>
               {tile?.room && (
-                <Grid container spacing={0}>
-                  <Grid item xs={12} className='tile-title'>
+                <Grid container spacing={0} className='efficiency-table'>
+                  <Grid item xs={12} className='tile-title' style={{padding: '16px 0 0 16px'}}>
                     {tile?.room?.title}
                     <LightTooltip
                       placement="top"
@@ -330,49 +294,57 @@ const BlockUtilization = React.memo(() => {
                       <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.room?.toolTip?.toString()}`} />
                     </LightTooltip>
                   </Grid>
-                  <Grid item xs={3} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('room')}>
-                    Room
-                    {sort.key === 'room' ? (sort.order.room ? UpArrow : DownArrow) : ''}
-                  </Grid>
-                  <Grid item xs={4} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('block')}>
-                    Block Utilization
-                    {sort.key === 'block' ? (sort.order.block ? UpArrow : DownArrow) : ''}
-                  </Grid>
-                  <Grid item xs={3} style={{ cursor: 'pointer' }} onClick={setUtilizationByRoomSort('change')}>
-                    % Change
-                    {sort.key === 'change' ? (sort.order.change ? UpArrow : DownArrow) : ''}
-                  </Grid>
-                  <Grid item xs={12} style={{ marginTop: 8, marginBottom: 12 }}>
-                    <Divider style={{ color: '#e0e0e0' }} />
-                  </Grid>
-
-                  <Grid container spacing={3} style={{ overflowY: 'auto', overflowX: 'none', maxHeight: 248, paddingBottom: 16 }}>
-                    {transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage,
+                  <StyledTable
+                    
+                    columns={[{
+                      field: 'id', title: 'id', hidden: true
+                    },
+                    {
+                      field: 'or', title: 'Room', defaultSort: 'desc'
+                    }, {
+                      field: 'percent', title: 'Percentage'
+                    }, {
+                      field: 'change', title: 'Change',
+                      render: rowData => <ChangeIcon change={rowData?.change} />
+                    }]}
+                    data={transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage,
                       (data) => {
-                        //No data view
-                        if (!data.length) {
-                          return <Grid style={{
-                            color: '#828282', width: '100%', height: 230
-                          }} item xs={12} className='header-1 flex vertical-center'>No Data</Grid>
-                        }
-                        return data?.map((row) => {
-                          return (
-                            <>
-                              <Grid item xs={3}>
-                                {row.or}
-                              </Grid>
-                              <Grid item xs={4}>
-                                {row.percent}%
-                              </Grid>
-                              <Grid item xs={3} >
-                                <ChangeIcon change={row.change}/>
-                              </Grid>
-                            </>
-                          );
-                        })
+                        return data;
                       }
                     )}
-                  </Grid>
+                    options={{
+                      search: false,
+                      paging: false,
+                      toolbar: false,
+                      sorting: true,
+                      maxBodyHeight: 278,
+                      headerStyle: {
+                        fontFamily: "Noto Sans",
+                        fontSize: 16,
+                        color: '#333333',
+                        borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                        lineHeight: "22px",
+                        width: 'unset',
+                        top: 0
+                      },
+                      cellStyle: {
+                        padding: '8px 16px'
+                      },
+                      thirdSortClick: false,
+                      draggable: false
+                    }}
+                    localization={{
+                      body: {
+                        emptyDataSourceMessage: (<div style={{
+                          color: '#828282', width: '100%', height: 210
+                        }} item xs={12} className='header-1 flex vertical-center'>No Data</div>)
+                      }
+                    }}
+                    components={{
+                      Container: props => <Paper {...props} style={{ width: '100%' }} elevation={0} />
+                    }}
+                  />
+
                 </Grid>
               )}
             </CardContent>
