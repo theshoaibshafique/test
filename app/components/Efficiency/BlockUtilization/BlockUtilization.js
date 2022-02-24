@@ -282,7 +282,7 @@ const BlockUtilization = React.memo(() => {
             <CardContent style={{padding:0}}>
               {tile?.room && (
                 <Grid container spacing={0} className='efficiency-table'>
-                  <Grid item xs={12} className='tile-title' style={{padding: '16px 0 0 16px'}}>
+                  <Grid item xs={12} className='tile-title' style={{padding: '16px 0 0 16px', marginBottom:0}}>
                     {tile?.room?.title}
                     <LightTooltip
                       placement="top"
@@ -317,7 +317,7 @@ const BlockUtilization = React.memo(() => {
                       paging: false,
                       toolbar: false,
                       sorting: true,
-                      maxBodyHeight: 278,
+                      maxBodyHeight: 294,
                       headerStyle: {
                         fontFamily: "Noto Sans",
                         fontSize: 16,
