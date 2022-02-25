@@ -3,13 +3,13 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
-import { Card as MaterialCard, Divider } from '@material-ui/core';
+import { Card as MaterialCard, Divider, Paper } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
-import { LightTooltip, StyledSkeleton } from '../../../components/SharedComponents/SharedComponents';
+import { ChangeIcon, LightTooltip, StyledSkeleton, StyledTable } from '../../../components/SharedComponents/SharedComponents';
 import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
 import useLocalStorage from '../../../hooks/useLocalStorage';
@@ -215,13 +215,13 @@ const CaseOnTime = () => {
 
   const transformData = (tileData, category, cb) => {
     let transformed;
-    if (!viewFirstCase && category === 'By Specialty') {
+    if (!viewFirstCase && category === 'Specialty') {
       transformed = tileData?.ots.map((time, i) => ({
         start: time,
         change: tileData?.ots_momentum?.[i],
         specialty: tileData?.specialty?.[i]
       }));
-    } else if (viewFirstCase && category === 'By Specialty') {
+    } else if (viewFirstCase && category === 'Specialty') {
       transformed = tileData?.fcots.map((time, i) => ({
         start: time,
         change: tileData?.fcots_momentum?.[i],
@@ -230,13 +230,13 @@ const CaseOnTime = () => {
       }));
     }
 
-    if (!viewFirstCase && category === 'By Room') {
+    if (!viewFirstCase && category === 'Room') {
       transformed = tileData?.ots?.map((time, i) => ({
         start: time,
         room: tileData?.room?.[i],
         change: tileData?.ots_momentum?.[i]
       }));
-    } else if (viewFirstCase && category === 'By Room') {
+    } else if (viewFirstCase && category === 'Room') {
       transformed = tileData?.fcots?.map((time, i) => ({
         start: time,
         room: tileData?.room[i],
@@ -254,7 +254,6 @@ const CaseOnTime = () => {
   };
 
   const renderTileData = (tile, hideRadio, hideTitle) => {
-    console.log(tile)
     return (
       <React.Fragment>
         {!hideTitle && <div
@@ -262,7 +261,8 @@ const CaseOnTime = () => {
           style={{
             display: 'flex',
             flexDirection: 'row',
-            alignItems: 'center'
+            alignItems: 'center',
+            padding: '16px 0 0 16px'
           }}
         >
           {tile?.title}
@@ -276,49 +276,59 @@ const CaseOnTime = () => {
           </Grid>
         </Grid>}
         <Divider style={{ color: '#e0e0e0', marginTop: '12px' }} />
-        <Grid container spacing={4}>
-          <Grid item xs={4} className='flex vertical-center'>
-            {tile?.independentVarTitle}
-          </Grid>
-          <Grid item xs={4} className='flex vertical-center'>
-            {tile?.dependentVarTitle}
-          </Grid>
-          <Grid item xs={4} className='flex vertical-center'>
-            Change
-          </Grid>
-        </Grid>
-        <Divider style={{ color: '#e0e0e0' }} />
-        <Grid
-          container
-          // key={row.room}
-          spacing={0}
-          className="room-data-container"
-          style={{ overflowY: 'auto', maxHeight: 590, overflowX: 'hidden' }}
-        >
+        <StyledTable
 
-          {transformData(tile?.data, bySpecialty, (rowData) => rowData?.map((row) => (
-            // <Grid
-            //   container
-            //   key={row.room}
-            //   spacing={0}
-            //   className="room-data-container"
-            // >
-            <>
-              <Grid item xs={5} className='ellipses' title={row.room || row.specialty}>
-                {row.room || row.specialty}
-              </Grid>
-              <Grid item xs={3} className='flex vertical-center'>
-                {row.start}%
-              </Grid>
-              <Grid item xs={4} className='flex vertical-center'>
-                {row.change}
-              </Grid>
-            </>
-            // </Grid>
-          )))}
-
-        </Grid>
-      </React.Fragment>
+          columns={[
+            {
+              field: tile?.independentVarTitle?.toLowerCase(), title: tile?.independentVarTitle, defaultSort: 'desc',
+              render: rowData => <div className='ellipses' title={rowData?.[tile?.independentVarTitle?.toLowerCase()]} style={{ maxWidth: 120 }}>{rowData?.[tile?.independentVarTitle?.toLowerCase()]}</div>
+            }, {
+              field: 'start', title: tile?.dependentVarTitle
+            }, {
+              field: 'change', title: 'Change', 
+              render: rowData => <ChangeIcon change={rowData?.change} />
+            }]}
+          data={transformData(tile?.data, tile?.independentVarTitle,
+            (data) => {
+              return data;
+            }
+          )}
+          options={{
+            search: false,
+            paging: false,
+            toolbar: false,
+            sorting: true,
+            maxBodyHeight: hideRadio ? 308 : 615,
+            headerStyle: {
+              fontFamily: "Noto Sans",
+              fontSize: 16,
+              color: '#333333',
+              borderBottom: '1px solid rgba(224, 224, 224, 1)',
+              lineHeight: "22px",
+              width: 'unset',
+              top: 0,
+              padding: '8px 16px',
+              whiteSpace: 'nowrap',
+            },
+            cellStyle: {
+              padding: '8px 16px'
+            },
+            tableLayout: "fixed",
+            thirdSortClick: false,
+            draggable: false
+          }}
+          localization={{
+            body: {
+              emptyDataSourceMessage: (<div style={{
+                color: '#828282', width: '100%', height: 210
+              }} item xs={12} className='header-1 flex vertical-center'>No Data</div>)
+            }
+          }}
+          components={{
+            Container: props => <Paper {...props} style={{overflowX:'hidden'}} elevation={0} />
+          }}
+        />
+      </React.Fragment >
     );
   }
   const Card = loading ? StyledSkeleton : MaterialCard;
@@ -392,7 +402,7 @@ const CaseOnTime = () => {
         <Grid container item xs={4}>
           <Grid item xs={12}>
             <Card className='tile-card' style={{ height: '720px' }}>
-              <CardContent style={{ overflowY: 'auto' }}>
+              <CardContent style={{ overflowY: 'auto', padding:0 }}>
                 {maxData > 12 ? (
                   <React.Fragment>
                     {bySpecialty === 'By Room' && renderTileData(tile?.room)}
