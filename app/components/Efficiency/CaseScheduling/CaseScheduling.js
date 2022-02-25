@@ -263,6 +263,7 @@ const CaseScheduling = () => {
               {tile?.procedure && (
                 <ProcedureList
                   title={tile.procedure.title}
+                  networkAverage={tile.procedure.data?.network_average || tile.procedure.data?.networkAverage}
                   procedureData={procedureListData}
                 />
               )}

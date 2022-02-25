@@ -4,14 +4,24 @@ import { axisStyles, axisLabelStyle } from './styles';
 // @TODO: Could colocate this / update the traditional bar graph to pass in the required props to be used for rendering this horizontal
 const equalProps = (props, prevProps) => prevProps === props;
 
-const NoDataOverlay = (props) => (
-  <div style={{
-    position: 'absolute', top: '40%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    color:'#828282', width:'100%', height:'100%'
-  }} className='header-1 flex vertical-center'>No Data</div>
-)
+const NoDataOverlay = () => (
+  <div
+    style={
+      {
+        position: 'absolute',
+        top: '40%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        color: '#828282',
+        width: '100%',
+        height: '100%'
+      }
+    }
+    className="header-1 flex vertical-center"
+  >
+    No Data
+  </div>
+);
 /*
 * @param {Array<object>} data - The data to be passed into the chart
 * @param {object} xAxisLabel - The x axis label we want to display

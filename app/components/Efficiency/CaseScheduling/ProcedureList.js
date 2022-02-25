@@ -14,6 +14,8 @@ import { mdiSort } from '@mdi/js';
 import AreaGraph from '../../Charts/AreaGraph';
 import BarGraph from '../../Charts/Bar';
 import { Divider } from '@material-ui/core';
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 const useStyles = makeStyles({
   content: {
@@ -29,7 +31,7 @@ const useStyles = makeStyles({
 // Even though this function appears duplicated across various pages / components, I promise this is necessary because trying to extract it will give you errors
 const equalProps = (props, prevProps) => props === prevProps;
 
-const ProcedureList = React.memo(({ title, procedureData }) => {
+const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
   const styles = useStyles();
   const [filteredProcedures, setFilteredProcedures] = React.useState([]);
   const [expanded, setExpanded] = React.useState(false);
@@ -62,6 +64,7 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
   const handlePanelChange = (panel) => (_, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
   return (
     <React.Fragment>
       <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 16, paddingBottom: 0 }} >
@@ -86,13 +89,13 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
             />
           </FormControl>
           <div style={{ marginRight: 42 }}>
-            <Icon path={mdiSort} color='#828282'size={1} />
+            <Icon path={mdiSort} color='#828282' size={1} />
           </div>
         </div>
         <Divider style={{ marginTop: 16 }} />
       </Grid>
 
-      <Grid item xs={12} style={{height: 980, overflowY: 'auto'}}>
+      <Grid item xs={12} style={{ height: 980, overflowY: 'auto' }}>
         {filteredProcedures?.map((dataPoint) => (
           <Accordion
             TransitionProps={{ unmountOnExit: true }}
@@ -117,17 +120,26 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
                     position: 'relative', width: '80%', display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                   }}
                 >
-                  <div>Underschedule percentage: {dataPoint.underscheduled}%</div>
-                  <div>Cases in Sample: {dataPoint.case}</div>
+                  <div
+                    className={`${dataPoint.underscheduled > networkAverage ? 'red-label' : 'green-label'} subtext`}>
+                    Underschedule percentage: <span className="normal-text">{dataPoint.underscheduled}%</span>
+                  </div>
+                  <div className="subtext">Cases in Sample: <span className="bold normal-text" style={{ color: "#004F6E" }}>{dataPoint.case}</span></div>
                 </div>
               </div>
             </AccordionSummary>
-            <AccordionDetails style={{ height: '450px', flexDirection: 'column' }}>
+            <AccordionDetails style={{ flexDirection: 'column', borderTop: '1px solid #F2F2F2' }}>
+              <div className="subtle-text" style={{ marginBottom: 20 }}>
+                {"Distibution of Changes in Delay"}
+                <LightTooltip placement="top" fontSize="small" interactive arrow title="Distribution of how much a case increased the delay of the next case relative to the cases length. ">
+                  <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" />
+                </LightTooltip>
+              </div>
               <BarGraph
                 height={200}
                 data={dataPoint.percentage?.values}
                 xAxisLabel={{
-                  value: 'Change in Delay (%)',
+                  value: 'Change in Delay',
                   offset: -10,
                   position: 'insideBottom'
                 }}
@@ -141,6 +153,9 @@ const ProcedureList = React.memo(({ title, procedureData }) => {
                 tripleColour
                 colors={['#009483', '#FFB718', '#FF7D7D']}
               />
+              <div className="subtle-text" style={{ marginBottom: 20 }}>
+                {"Case Duration"}
+              </div>
               <AreaGraph data={formatAreaChartData(dataPoint.allTimeMean, dataPoint.allTimeSd)} reference={dataPoint.mean} />
             </AccordionDetails>
           </Accordion>

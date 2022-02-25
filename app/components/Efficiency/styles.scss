@@ -156,7 +156,7 @@
         }
     }
     .efficiency-table {
-        .MuiTable-root{
+        .MuiTable-root {
             border-collapse: separate;
         }
         ::-webkit-scrollbar {
@@ -195,6 +195,26 @@
             rect {
                 rx: 4;
             }
+        }
+    }
+    .red-label {
+        color: #ff4d4d;
+        padding: 8px 16px;
+        background: rgba(255, 125, 125, 0.2);
+        border-radius: 4px;
+        span {
+            font-weight: bold;
+            color: #FF4D4D;
+        }
+    }
+    .green-label {
+        color: #009483;
+        padding: 8px 16px;
+        background: rgba(151, 231, 179, 0.2);
+        border-radius: 4px;
+        span {
+            font-weight: bold;
+            color: #009483;
         }
     }
 }
