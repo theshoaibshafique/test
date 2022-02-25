@@ -55,7 +55,7 @@ const TrendTile = ({
     ));
     setTrendSlider(val);
   };
-
+  const valueLabelFormat = (value) => moment(value).format('MMM D YYYY');
   return !!data && (
     <React.Fragment>
       <div
@@ -91,8 +91,9 @@ const TrendTile = ({
           step={86400}
           onChange={filterTrend}
           value={trendSlider}
-          startLabel={moment(date.start).format('MMM D YYYY')}
-          endLabel={moment(date.end).format('MMM D YYYY')}
+          startLabel={valueLabelFormat(date.start)}
+          endLabel={valueLabelFormat(date.end)}
+          valueLabelFormat={valueLabelFormat}
         />
       </Grid>
     </React.Fragment>
