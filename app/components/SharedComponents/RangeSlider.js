@@ -63,7 +63,7 @@ const RangeSlider = React.memo(({
           value={value}
           onChange={onChange}
           ValueLabelComponent={ValueLabelComponent}
-          disabled
+          disabled={disabled}
           {...rest}
         />
       </Grid>
