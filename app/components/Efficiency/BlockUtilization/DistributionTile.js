@@ -18,10 +18,10 @@ const DistributionTile = ({
   });
 
   React.useEffect(() => {
-    const { values, binSize } = data ?? {}
+    const { values } = data ?? {}
     setFilteredData(values);
     setOriginalData(values);
-    const startValue = values?.[0].bin - binSize;
+    const startValue = values?.[0].bin;
     const endValue = values?.[data?.values.length - 1]?.bin;
     setSliderRange([startValue, endValue]);
     setRange({
