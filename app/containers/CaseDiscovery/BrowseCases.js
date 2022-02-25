@@ -182,7 +182,7 @@ export function BrowseCases(props) {
     setShowTagsModal(show);
   }
 
-  // Scrol to top on filter change 
+  // Scrol to top on filter change
   const scrollToTop = () => {
     // topElementRef.current.scrollIntoView(true);
     document.getElementById("cases-id").scrollTop = 0;

@@ -584,7 +584,7 @@ export function DetailedCase(props) {
 
 /***  ADD FLAG FORM COMPONENT. ***/
 const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDescription, roomIds, roomName, wheelsInLocal, wheelsInUtc, caseId, openAddFlag, flagReport, setShowAddFlag }) => {
-  // Retrieve userToken from redux store 
+  // Retrieve userToken from redux store
   const userToken = useSelector(makeSelectToken());
   const firstName = useSelector(makeSelectFirstName());
   const lastName = useSelector(makeSelectLastName());
@@ -1006,7 +1006,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
     }
   }, [flagState.flagLocationPopped, flagState.flagReportLocation.length]);
 
-  // Flag Submission handlers 
+  // Flag Submission handlers
   // TODO: Remove both functions below, not being used.
   const handleSelectTypeChoice = (questionId) => ({ type: SELECT_TYPE_CHOICE, payload: { questionId } });
   const handleSelectTypeChoiceOther = (questionId, optionObject) => ({ type: SELECT_TYPE_CHOICE_OTHER, payload: { questionId, choiceOtherOptionObject: optionObject } });
@@ -1177,7 +1177,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       handleFlagSubmit(newFlag);
     }
   };
-  
+
   return (
     <React.Fragment>
       <div className="close-button">
@@ -1259,7 +1259,7 @@ const FlagSelect = ({ title, questionType, options, isRequired, questionId, hand
     logger.manualAddLog('onchange', title, newValue)
     setValue(newValue);
   };
-  
+
   return (
     <CSSTransition
       in={flagData.includes(ques => ques.id === questionId)}
@@ -1303,7 +1303,7 @@ const FlagTextInput = (props) => {
       /*handleChoiceOtherEmpty(question.id)*/
       handleSetOtherInputError(questionId);
       // TODO: Remove
-      // setInputError(prevState => ({ 
+      // setInputError(prevState => ({
       //   ...prevState,
       //   [question.id]: true
       // }));
@@ -1326,7 +1326,7 @@ const FlagTextInput = (props) => {
     if (!event.target.value) {
       handleSetOtherInputError(id);
       // TDOD: Remove.
-      // setInputError(prevState => ({ 
+      // setInputError(prevState => ({
       //   ...prevState,
       //   [id]: true
       // }));
@@ -1470,7 +1470,7 @@ function ProcedureDistribution(props) {
 
   return (
     <div className="procedure-distribution" id="procedure-dist" >
-      <div className="title">Case Time <LightTooltip interactive arrow title={`Case time distribution is a best approximation based on ${sampleSize} case${sampleSize == 1 ? '' : 's'} of the same procedure type`} placement="top" fontSize="small">
+      <div className="title">Case Duration <LightTooltip interactive arrow title={`Case time distribution is a best approximation based on ${sampleSize} case${sampleSize == 1 ? '' : 's'} of the same procedure type`} placement="top" fontSize="small">
         <InfoOutlinedIcon className="log-mouseover" id="procedure-time-info-tooltip" style={{ fontSize: 16, margin: '0 0 4px 0px' }} />
       </LightTooltip></div>
       <C3Chart ref={chartRef} {...data} />
@@ -1690,7 +1690,7 @@ function HL7Chart(props) {
     var parent = content.parentNode;
     parent.insertBefore(content, parent.firstChild)
 
-    //Log initial setup 
+    //Log initial setup
     logger?.manualAddLog('session', `initial-hl7`, hl7Data.map((h) => {
       return { abbreviation: h.abbreviation, title: h.title }
     }));
