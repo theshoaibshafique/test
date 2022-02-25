@@ -21,7 +21,7 @@ const DistributionTile = ({
     const { values } = data ?? {}
     setFilteredData(values);
     setOriginalData(values);
-    const startValue = values?.[0].bin;
+    const startValue = values?.[0]?.bin;
     const endValue = values?.[data?.values.length - 1]?.bin;
     setSliderRange([startValue, endValue]);
     setRange({
@@ -89,6 +89,7 @@ const DistributionTile = ({
               startLabel={valueLabelFormat(range.min)}
               endLabel={valueLabelFormat(range.max)}
               valueLabelFormat={valueLabelFormat}
+              disabled={range.min === undefined || range.max === undefined}
             />
           </Grid>
         </React.Fragment>

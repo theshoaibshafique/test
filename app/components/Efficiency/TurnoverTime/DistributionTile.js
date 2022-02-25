@@ -38,14 +38,14 @@ const DistributionTile = ({ data, toolTip, title }) => {
   React.useEffect(() => {
     if (!data) return;
     setRange({
-      min: data[graphData.toLowerCase()][0].bin,
-      max: data[graphData.toLowerCase()][data[graphData.toLowerCase()].length - 1].bin
+      min: data[graphData.toLowerCase()][0]?.bin,
+      max: data[graphData.toLowerCase()][data[graphData.toLowerCase()].length - 1]?.bin
     });
     // @TODO: Determine what range of values to use to start with
     // @TODO: Merge current and next value to determine range that should be shown on bar graph
     setSliderRange([
-      data[graphData.toLowerCase()][0].bin,
-      data[graphData.toLowerCase()][data[graphData.toLowerCase()].length - 1].bin
+      data[graphData.toLowerCase()][0]?.bin,
+      data[graphData.toLowerCase()][data[graphData.toLowerCase()].length - 1]?.bin
     ]);
 
     setOriginalData(data[graphData.toLowerCase()]);
@@ -131,6 +131,7 @@ const DistributionTile = ({ data, toolTip, title }) => {
           startLabel={valueLabelFormat(range.min)}
           endLabel={valueLabelFormat(range.max)}
           valueLabelFormat={valueLabelFormat}
+          disabled={range.min === undefined || range.max === undefined}
         />
       </Grid>
     </React.Fragment>

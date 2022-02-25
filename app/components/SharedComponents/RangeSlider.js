@@ -15,13 +15,21 @@ const SSTSlider = withStyles({
     height: 16,
     width: 16,
     backgroundColor: '#004F6E',
-    // border: '2px solid currentColor',
     marginTop: -6,
     marginLeft: -8,
     '&:focus, &:hover, &$active': {
       boxShadow: 'inherit',
     },
+    '&.Mui-disabled':{
+      height: 16,
+      width: 16,
+      backgroundColor: '#BDBDBD',
+      marginTop: -6,
+      marginLeft: -8,
+    }
+
   },
+
 
   track: {
     height: 4,
@@ -34,7 +42,7 @@ const SSTSlider = withStyles({
     opacity: 1
   },
 })(Slider);
-const Label = (props) => <div className='subtle-text' style={{ color: '#4F4F4F' }} {...props}/>
+const Label = (props) => <div className='subtle-text' style={{ color: '#4F4F4F' }} {...props} />
 /*
 * @param {(string|number)} value - The value the slider is expecting to use
 * @param {Function} onChange - The change handler function
@@ -43,23 +51,24 @@ const Label = (props) => <div className='subtle-text' style={{ color: '#4F4F4F' 
 * @param {object} rest - The rest of the props, to be passed to the slider component
 */
 const RangeSlider = React.memo(({
-  value, onChange, startLabel, endLabel, ...rest
+  value, onChange, startLabel, endLabel, disabled, ...rest
 }) => (
   <React.Fragment>
     <Grid container>
       <Grid item xs={2} style={{ textAlign: 'end', paddingRight: 24, paddingTop: 6 }}>
-        <Label >{startLabel}</Label>
+        {!disabled && <Label >{startLabel}</Label>}
       </Grid>
       <Grid item xs={8}>
         <SSTSlider
           value={value}
           onChange={onChange}
           ValueLabelComponent={ValueLabelComponent}
+          disabled
           {...rest}
         />
       </Grid>
       <Grid item xs={2} style={{ paddingLeft: 24, paddingTop: 6 }}>
-        <Label>{endLabel}</Label>
+        {!disabled && <Label>{endLabel}</Label>}
       </Grid>
     </Grid>
   </React.Fragment>
