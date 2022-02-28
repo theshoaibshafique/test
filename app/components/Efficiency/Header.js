@@ -7,27 +7,7 @@ import InformationModal from './InformationModal';
 import CustomDateRangePicker from '../SharedComponents/CustomDateRangePicker';
 import MultiSelectFilter from '../../components/SharedComponents/MultiSelectFilter';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { SaveAndCancel } from '../SharedComponents/SharedComponents';
-
-const CustomSwitch = withStyles({
-  checked: {
-    opacity: 1
-  },
-  switchBase: {
-    color: '#4F4F4F',
-    '&$checked': {
-      color: '#004F6E'
-    },
-    '&$checked + $track': {
-      opacity: 1,
-      backgroundColor: '#3DB3E3'
-    }
-  },
-  track: {
-    opacity: 1,
-    backgroundColor: '#BDBDBD'
-  }
-})(Switch);
+import { SaveAndCancel, SSTSwitch } from '../SharedComponents/SharedComponents';
 
 /*
 * @param {object} config - The configuration object to determine what to show in the header
@@ -77,7 +57,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate }) => {
                 }}
               >
                 Only First Cases
-                <CustomSwitch checked={handlers?.case?.viewFirstCase} onChange={handlers?.case?.toggleFirstCaseOnTime} />
+                <SSTSwitch disableRipple disableFocusRipple checked={handlers?.case?.viewFirstCase} onChange={handlers?.case?.toggleFirstCaseOnTime} />
               </div>
             </Grid>
           )}

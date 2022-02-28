@@ -2,38 +2,7 @@ import React, { useEffect } from 'react';
 import './style.scss';
 import { Card, Divider, FormControlLabel, Grid, Slider, Switch, withStyles } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { LightTooltip, SaveAndCancel, StyledCheckbox } from '../../../components/SharedComponents/SharedComponents';
-
-const SSTSwitch = withStyles((theme) => ({
-  root: {
-    padding: '16px 11px',
-  },
-  thumb: {
-    width: 14,
-    height: 14,
-  },
-  switchBase: {
-    padding: '12px 16px',
-    transform: 'translateX(-8px)',
-    color: '#004F6E',
-    '&$checked': {
-      color: '#004F6E',
-    },
-    '&$checked + $track': {
-      opacity: 1,
-      backgroundColor: '#3DB3E3',
-    },
-    '&:hover': {
-      backgroundColor: 'unset !important'
-    }
-  },
-  checked: {},
-  track: {
-    opacity: 1,
-    borderRadius: 8,
-    backgroundColor: '#C8C8C8'
-  }
-}))(Switch);
+import { LightTooltip, SaveAndCancel, SSTSwitch, StyledCheckbox } from '../../../components/SharedComponents/SharedComponents';
 const SSTSlider = withStyles({
   root: {
     color: '#D8D8D8',

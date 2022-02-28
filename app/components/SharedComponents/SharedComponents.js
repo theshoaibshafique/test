@@ -179,24 +179,6 @@ export function StyledRadio(props) {
   );
 }
 
-export const SSTSwitch = withStyles((theme) => ({
-  switchBase: {
-    color: '#ABABAB',
-    '&$checked': {
-      color: '#3DB3E3',
-    },
-    '&$checked + $track': {
-      opacity: 1,
-      backgroundColor: '#028CC8',
-    },
-  },
-  checked: {},
-  track: {
-    opacity: 1,
-    backgroundColor: '#575757'
-  }
-}))(Switch);
-
 
 export const StyledSnackbarContent = withStyles((theme) => ({
   message: {
@@ -516,4 +498,36 @@ export const ChangeIcon = ({change}) => {
     </LightTooltip>
 
   )
-}
+};
+
+export const SSTSwitch = withStyles((theme) => ({
+  root: {
+    padding: '16px 11px',
+  },
+  thumb: {
+    width: 16,
+    height: 16,
+  },
+  switchBase: {
+    padding: '12px 16px',
+    transform: 'translateX(-8px)',
+    color: '#4F4F4F',
+    '&$checked': {
+      color: '#004F6E',
+    },
+    '&$checked + $track': {
+      opacity: 1,
+      backgroundColor: '#3DB3E3',
+    },
+    '&:hover': {
+      backgroundColor: 'unset !important'
+    }
+  },
+  checked: {},
+  track: {
+    opacity: 1,
+    borderRadius: 8,
+    height:8,
+    backgroundColor: '#C8C8C8'
+  }
+}))(Switch);

@@ -13,8 +13,6 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { request } from '../../utils/global-functions';
-// import LoadingIndicator from '../LoadingIndicator';
 import Header from './Header';
 import Donut from '../Charts/Donut';
 import HorizontalBar from '../Charts/HorizontalBar';
@@ -73,6 +71,7 @@ const Efficiency = () => {
   const [orGraphData, setOrGraphData] = React.useState([]);
   const [tile, setTile] = React.useState({});
   const [date, setDate] = React.useState({});
+  const [fco, setFCO] = React.useState(false);
   const options = [
     {
       id: 1,
@@ -122,6 +121,7 @@ const Efficiency = () => {
     const efficiencyTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'index');
     const headlineTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'headlines');
     const onTimeTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'ots');
+    const fcotTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'fcots');
     const otTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'overtime');
     const utilizationTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'block utilization');
     const turnoverTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'turnover');
@@ -136,6 +136,7 @@ const Efficiency = () => {
       efficiency: efficiencyTile,
       headline: headlineTile,
       onTime: onTimeTile,
+      fcot: fcotTile,
       overtime: otTile,
       utilization: utilizationTile,
       turnover: turnoverTile,
@@ -192,7 +193,10 @@ const Efficiency = () => {
   };
 
   const Card = loading ? StyledSkeleton : MaterialCard;
-
+  const handleFCO = () => {
+    setFCO(!fco)
+  }
+  const fcotToggle = {value: fco, onChange: handleFCO};
   return (
     <div className="page-container">
       <Header displayDate={date} />
@@ -317,7 +321,7 @@ const Efficiency = () => {
           <Card className='tile-card'>
             <CardContent>
               {tile?.onTime && (
-                <TimeCard data={tile.onTime} />
+                <TimeCard data={fco ? tile.fcot : tile.onTime} toggle={fcotToggle} />
               )}
             </CardContent>
           </Card>

@@ -1,16 +1,42 @@
 import React from 'react';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
+import { LightTooltip, SSTSwitch } from '../../components/SharedComponents/SharedComponents';
 import Goal from './Goal';
 
-const TimeCard = ({ data, suffix }) => (
+const TimeCard = ({ data, suffix, toggle }) => (
   <React.Fragment>
-    <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+    <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: toggle ? 0 : 32 }}>
       {data?.title}
       <LightTooltip placement="top" fontSize="small" interactive arrow title={data?.toolTip?.toString()}>
         <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${data?.toolTip?.toString()}`} />
       </LightTooltip>
     </div>
+    {toggle && (
+      <>
+        <div
+          style={{
+            display: 'flex',
+            height: 32,
+            justifyContent: 'flex-end',
+            marginTop: 0,
+            paddingBottom:4,
+            alignItems: 'center',
+            flexDirection: 'row',
+            fontSize: '14px',
+            color: '#333'
+          }}
+        >
+          Only First Cases
+          <SSTSwitch
+            disableRipple
+            disableFocusRipple
+            checked={toggle.value}
+            onChange={toggle.onChange} />
+        </div>
+        <div></div>
+      </>
+    )}
+
     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <span className="display-number">
