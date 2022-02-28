@@ -13,9 +13,10 @@ import Icon from '@mdi/react';
 import { mdiSort } from '@mdi/js';
 import AreaGraph from '../../Charts/AreaGraph';
 import BarGraph from '../../Charts/Bar';
-import { Divider } from '@material-ui/core';
-import { LightTooltip } from '../../SharedComponents/SharedComponents';
+import { Divider, ListItemText, Menu, MenuItem } from '@material-ui/core';
+import { LightTooltip, StyledCheckbox } from '../../SharedComponents/SharedComponents';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { createFilterOptions } from '@material-ui/lab';
 
 const useStyles = makeStyles({
   content: {
@@ -65,6 +66,36 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  //Order is the index in options from sortOptions
+  const [sort, setSort] = React.useState({ key: 'procedure', order: 0 });
+  const openFilter = Boolean(anchorEl);
+
+  const handleFilterClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleSortClick = (key, order) => {
+    setSort({ key, order });
+    handleClose();
+  }
+  filteredProcedures?.sort((a, b) => {
+    switch (sort.key) {
+      case 'case':
+        return (sort.order ? a?.[sort.key] - b?.[sort.key] : b?.[sort.key] - a?.[sort.key]);
+      case 'underscheduled':
+        return (sort.order ? a?.[sort.key] - b?.[sort.key] : b?.[sort.key] - a?.[sort.key]);
+      case 'procedure':
+        return (!sort.order ? a?.[sort.key].localeCompare(b?.[sort.key]) : b?.[sort.key].localeCompare(a?.[sort.key]));
+    }
+  });
+  const sortOptions = [
+    { key: 'procedure', name: 'Procedure Type: ', options: ['A-Z', 'Z-A'] },
+    { key: 'case', name: 'Cases in Sample: ', options: ['Descend', 'Ascend'] },
+    { key: 'underscheduled', name: 'Underschedule percentage: ', options: ['Descend', 'Ascend'] }
+  ]
   return (
     <React.Fragment>
       <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 16, paddingBottom: 0 }} >
@@ -89,7 +120,42 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
             />
           </FormControl>
           <div style={{ marginRight: 42 }}>
-            <Icon path={mdiSort} color='#828282' size={1} />
+            <Icon
+              path={mdiSort} color='#828282' className='pointer' size={1}
+              aria-haspopup="true"
+              onClick={handleFilterClick}
+            />
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                'aria-labelledby': 'long-button',
+              }}
+              anchorEl={anchorEl}
+              open={openFilter}
+              onClose={handleClose}
+              getContentAnchorEl={null}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+              {sortOptions.map(({ key, name, options }) => (
+                options.map((option, i) => {
+                  //The options are chosen by index of options
+                  const selected = sort?.key === key && options[sort?.order] === option;
+                  return (
+                    <MenuItem selected={selected} onClick={() => handleSortClick(key, i)}>
+                      <StyledCheckbox
+                        checked={selected}
+                      />
+                      <ListItemText
+                        primary={
+                          <div className='subtext' style={{ paddingLeft: 4 }}>{name}<span style={selected ? {fontWeight: 'bold', color:'#004F6E'} : {}}>{option}</span></div>
+                        }
+                      />
+                    </MenuItem>
+                  )
+                })
+              ))}
+            </Menu>
           </div>
         </div>
         <Divider style={{ marginTop: 16 }} />
@@ -150,8 +216,9 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                   position: 'insideBottomLeft'
                 }}
                 margin={{ bottom: 40, right: 20 }}
-                tripleColour
-                colors={['#009483', '#FFB718', '#FF7D7D']}
+                // tripleColour
+                singleColour
+                colors={['#3DB3E3']}
               />
               <div className="subtle-text" style={{ marginBottom: 20 }}>
                 {"Case Duration"}
