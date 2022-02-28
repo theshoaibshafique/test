@@ -25,7 +25,12 @@ const useStyles = makeStyles({
     transition: 'margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     flexDirection: 'column',
   },
+  MuiAccordionroot: {
+    "&.MuiAccordion-root.Mui-expanded": {
+      margin: 0
+    }
 
+  }
 });
 
 // Even though this function appears duplicated across various pages / components, I promise this is necessary because trying to extract it will give you errors
@@ -160,9 +165,13 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
       <Grid item xs={12} style={{ height: 980, overflowY: 'auto' }}>
         {filteredProcedures?.map((dataPoint) => (
           <Accordion
+            // elevation={0}
             TransitionProps={{ unmountOnExit: true }}
             key={dataPoint.id}
             disableGutters={true}
+            classes={{
+              root: styles.MuiAccordionroot
+            }}
             expanded={expanded === dataPoint.id} onChange={handlePanelChange(dataPoint.id)}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
