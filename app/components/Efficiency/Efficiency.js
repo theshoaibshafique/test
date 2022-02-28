@@ -344,7 +344,7 @@ const Efficiency = () => {
           <Card className='tile-card'>
             <CardContent>
               {tile?.turnover && (
-                <TimeCard data={tile.turnover} />
+                <TimeCard data={tile.turnover} suffix=' min'/>
               )}
             </CardContent>
           </Card>

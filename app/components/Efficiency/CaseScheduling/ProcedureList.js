@@ -33,6 +33,25 @@ const useStyles = makeStyles({
   }
 });
 
+const NoDataOverlay = () => (
+  <div
+    style={
+      {
+        position: 'absolute',
+        top: '40%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        color: '#828282',
+        width: '100%',
+        height: '100%'
+      }
+    }
+    className="header-1 flex vertical-center"
+  >
+    No Data
+  </div>
+);
+
 // Even though this function appears duplicated across various pages / components, I promise this is necessary because trying to extract it will give you errors
 const equalProps = (props, prevProps) => props === prevProps;
 
@@ -163,7 +182,9 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
       </Grid>
 
       <Grid item xs={12} style={{ height: 980, overflowY: 'auto' }}>
-        {filteredProcedures?.map((dataPoint) => (
+        {filteredProcedures?.length === 0 ? (
+          <NoDataOverlay/>
+        ) : filteredProcedures?.map((dataPoint) => (
           <Accordion
             // elevation={0}
             TransitionProps={{ unmountOnExit: true }}
@@ -232,6 +253,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
             </AccordionDetails>
           </Accordion>
         ))}
+        
       </Grid>
     </React.Fragment>
   );
