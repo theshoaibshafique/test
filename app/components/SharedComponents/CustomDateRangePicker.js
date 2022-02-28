@@ -32,7 +32,7 @@ const useStyles = makeStyles({
     color: 'rgba(133, 133, 133, 0.8)'
   }
 });
-const getPresetDates = (label) => {
+export const getPresetDates = (label) => {
   const { efficiency } = JSON.parse(localStorage.getItem('efficiencyV2')) ?? {};
   const { startDate, endDate } = efficiency ?? { startDate: moment(), endDate: moment() }
 
@@ -81,7 +81,7 @@ const CustomDateRangePicker = React.memo(({
   //Save the date whenever its changed
   React.useEffect(() => {
     const globalFilter = getItemFromStore('globalFilter');
-    setItemInStore('globalFilter', { ...globalFilter, startDate: date.start, endDate: date.end });
+    setItemInStore('globalFilter', { ...globalFilter, startDate: date.start, endDate: date.end, dateLabel });
     if (date.end) {
       setLastDate({ ...date, dateLabel })
     }

@@ -281,11 +281,16 @@ const CaseOnTime = () => {
           columns={[
             {
               field: tile?.independentVarTitle?.toLowerCase(), title: tile?.independentVarTitle, defaultSort: 'desc',
-              render: rowData => <div className='ellipses' title={rowData?.[tile?.independentVarTitle?.toLowerCase()]} style={{ maxWidth: 120 }}>{rowData?.[tile?.independentVarTitle?.toLowerCase()]}</div>
+              headerStyle:{maxWidth:70},cellStyle:{maxWidth:70},
+              render: rowData => (
+                <div style={{maxWidth:170}} className='ellipses' title={rowData?.[tile?.independentVarTitle?.toLowerCase()]} >
+                  {rowData?.[tile?.independentVarTitle?.toLowerCase()]}
+                </div>
+              )
             }, {
               field: 'start', title: tile?.dependentVarTitle
             }, {
-              field: 'change', title: 'Change', 
+              field: 'change', title: 'Change',
               render: rowData => <ChangeIcon change={rowData?.change} />
             }]}
           data={transformData(tile?.data, tile?.independentVarTitle,
@@ -293,19 +298,21 @@ const CaseOnTime = () => {
               return data;
             }
           )}
+          style={{ overflowX: 'hidden' }}
           options={{
             search: false,
             paging: false,
             toolbar: false,
             sorting: true,
             maxBodyHeight: hideRadio ? 308 : 615,
+
             headerStyle: {
               fontFamily: "Noto Sans",
               fontSize: 16,
               color: '#333333',
               borderBottom: '1px solid rgba(224, 224, 224, 1)',
               lineHeight: "22px",
-              width: 'unset',
+              // width: 'unset',
               top: 0,
               padding: '8px 16px',
               whiteSpace: 'nowrap',
@@ -313,7 +320,7 @@ const CaseOnTime = () => {
             cellStyle: {
               padding: '8px 16px'
             },
-            tableLayout: "fixed",
+            // tableLayout: "fixed",
             thirdSortClick: false,
             draggable: false
           }}
@@ -325,7 +332,7 @@ const CaseOnTime = () => {
             }
           }}
           components={{
-            Container: props => <Paper {...props} style={{overflowX:'hidden'}} elevation={0} />
+            Container: props => <Paper {...props} elevation={0} />
           }}
         />
       </React.Fragment >
@@ -402,7 +409,7 @@ const CaseOnTime = () => {
         <Grid container item xs={4}>
           <Grid item xs={12}>
             <Card className='tile-card' style={{ height: '720px' }}>
-              <CardContent style={{ overflowY: 'auto', padding:0 }}>
+              <CardContent style={{ overflowY: 'auto', padding: 0 }}>
                 {maxData > 12 ? (
                   <React.Fragment>
                     {bySpecialty === 'By Room' && renderTileData(tile?.room)}
