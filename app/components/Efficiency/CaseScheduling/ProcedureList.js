@@ -14,9 +14,8 @@ import { mdiSort } from '@mdi/js';
 import AreaGraph from '../../Charts/AreaGraph';
 import BarGraph from '../../Charts/Bar';
 import { Divider, ListItemText, Menu, MenuItem } from '@material-ui/core';
-import { LightTooltip, StyledCheckbox } from '../../SharedComponents/SharedComponents';
+import { LightTooltip } from '../../SharedComponents/SharedComponents';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { createFilterOptions } from '@material-ui/lab';
 
 const useStyles = makeStyles({
   content: {
@@ -143,12 +142,9 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                   const selected = sort?.key === key && options[sort?.order] === option;
                   return (
                     <MenuItem selected={selected} onClick={() => handleSortClick(key, i)}>
-                      <StyledCheckbox
-                        checked={selected}
-                      />
                       <ListItemText
                         primary={
-                          <div className='subtext' style={{ paddingLeft: 4 }}>{name}<span style={selected ? {fontWeight: 'bold', color:'#004F6E'} : {}}>{option}</span></div>
+                          <div className='subtext' style={{ paddingLeft: 4 }}>{name}<span style={selected ? { fontWeight: 'bold', color: '#004F6E' } : {}}>{option}</span></div>
                         }
                       />
                     </MenuItem>
