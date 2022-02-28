@@ -13,9 +13,11 @@ import Icon from '@mdi/react';
 import { mdiSort } from '@mdi/js';
 import AreaGraph from '../../Charts/AreaGraph';
 import BarGraph from '../../Charts/Bar';
+import globalFunctions from '../../../utils/global-functions';
 import { Divider, ListItemText, Menu, MenuItem } from '@material-ui/core';
 import { LightTooltip } from '../../SharedComponents/SharedComponents';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { log_norm_pdf } from '../../../containers/CaseDiscovery/misc/Utils';
 
 const useStyles = makeStyles({
   content: {
@@ -70,14 +72,16 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
   /*
   * @TODO: To be determined: Whether or not the text input to filter the data is too slow. Removing the area chart will fix the sluggish feeling of the input, but also... remove the area chart. This can likely be fixed by optimizing this function, or by changing how we want to render this data.
   */
-  const formatAreaChartData = (mean, sd) => {
-    const chartData = [];
-    const lowerBound = mean - sd * 3;
-    const upperBound = mean + sd * 3;
+  const formatAreaChartData = (base, mean, sd) => {
 
-    for (let x = lowerBound; x < upperBound; x++) {
-      chartData.push({ x, y: Math.exp(-0.5 * Math.pow((x - mean) / sd, 2)) });
+    const lower = Math.max(0, Math.min(base - (0.2 * sd), mean - (3.5 * sd)))
+    const upper = Math.max(mean + (3.5 * sd), base + (0.2 * sd))
+    const shape = sd / mean;
+    const chartData = [];
+    for (let x = lower; x < upper; x++) {
+      chartData.push({ x, y: log_norm_pdf(x, mean, shape) });
     }
+    
     return chartData;
   };
 
@@ -183,7 +187,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
 
       <Grid item xs={12} style={{ height: 950, overflowY: 'auto' }}>
         {filteredProcedures?.length === 0 ? (
-          <NoDataOverlay/>
+          <NoDataOverlay />
         ) : filteredProcedures?.map((dataPoint) => (
           <Accordion
             // elevation={0}
@@ -249,11 +253,11 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
               <div className="subtle-text" style={{ marginBottom: 20 }}>
                 {"Case Duration"}
               </div>
-              <AreaGraph data={formatAreaChartData(dataPoint.allTimeMean, dataPoint.allTimeSd)} reference={dataPoint.mean} />
+              <AreaGraph data={formatAreaChartData(dataPoint.mean, dataPoint.allTimeMean, dataPoint.allTimeSd)} reference={dataPoint.mean} />
             </AccordionDetails>
           </Accordion>
         ))}
-        
+
       </Grid>
     </React.Fragment>
   );
