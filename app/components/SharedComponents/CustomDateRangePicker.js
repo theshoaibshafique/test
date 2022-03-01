@@ -29,7 +29,7 @@ const useStyles = makeStyles({
     paddingRight: 5,
     alignItems: 'center',
     border: '1px solid #ccc',
-    color: 'rgba(133, 133, 133, 0.8)'
+    // color: 'rgba(133, 133, 133, 0.8)'
   }
 });
 export const getPresetDates = (label) => {
@@ -172,7 +172,7 @@ const CustomDateRangePicker = React.memo(({
       <FormControl size='small' fullWidth>
         <FormLabel >Date</FormLabel>
         <Grid container>
-          <Grid item xs={12} onClick={handleMenuClick} classes={{ root: styles.root }}>
+          <Grid item xs={12} onClick={handleMenuClick} classes={{ root: styles.root }} style={dateLabel === 'All time' ? { color: 'rgba(133, 133, 133, 0.8)' } : {}}>
             {dateLabel || 'Most Recent Week'}
             <IconButton size="small">{anchorEl ? <ArrowDropUpIcon color="#000" /> : <ArrowDropDownIcon color="#000" />}</IconButton>
           </Grid>
