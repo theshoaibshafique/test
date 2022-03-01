@@ -170,7 +170,9 @@ const CaseScheduling = () => {
       allTimeMean: dataset?.allTimeMean[idx],
       allTimeMedian: dataset?.allTimeMedian[idx],
       allTimeSd: dataset?.allTimeSd[idx],
-      underscheduled: dataset?.underscheduledPercentage[idx]
+      underscheduled: dataset?.underscheduledPercentage[idx],
+      shape: dataset?.shape[idx],
+      scale: dataset?.scale[idx],
     }
   });
 

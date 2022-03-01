@@ -72,16 +72,16 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
   /*
   * @TODO: To be determined: Whether or not the text input to filter the data is too slow. Removing the area chart will fix the sluggish feeling of the input, but also... remove the area chart. This can likely be fixed by optimizing this function, or by changing how we want to render this data.
   */
-  const formatAreaChartData = (base, mean, sd) => {
-
-    const lower = Math.max(0, Math.min(base - (0.2 * sd), mean - (3.5 * sd)))
-    const upper = Math.max(mean + (3.5 * sd), base + (0.2 * sd))
-    const shape = sd / mean;
+  const formatAreaChartData = (duration, shape, scale) => {
+    const mu = scale;
+    const sigma = shape * scale;
+    const lower = Math.max(0, Math.min(duration - (0.2 * sigma), mu - (3.5 * sigma)))
+    const upper = Math.max(mu + (3.5 * sigma), duration + (0.2 * sigma))
     const chartData = [];
     for (let x = lower; x < upper; x++) {
-      chartData.push({ x, y: log_norm_pdf(x, mean, shape) });
+      chartData.push({ x, y: log_norm_pdf(x, scale, shape) });
     }
-    
+
     return chartData;
   };
 
@@ -253,7 +253,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
               <div className="subtle-text" style={{ marginBottom: 20 }}>
                 {"Case Duration"}
               </div>
-              <AreaGraph data={formatAreaChartData(dataPoint.mean, dataPoint.allTimeMean, dataPoint.allTimeSd)} reference={dataPoint.mean} />
+              <AreaGraph data={formatAreaChartData(dataPoint.mean, dataPoint.shape, dataPoint.scale)} reference={dataPoint.mean} />
             </AccordionDetails>
           </Accordion>
         ))}
