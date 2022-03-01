@@ -230,6 +230,10 @@
     ::-webkit-scrollbar-thumb:hover {
         background: rgba(85, 85, 85, 0.8);
     }
+    .faded{
+        opacity: .8;
+        color: #4f4f4f;
+    }
 }
 
 .change-percent-badge-increase {

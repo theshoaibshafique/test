@@ -18,6 +18,7 @@ import TimeCard from '../TimeCard';
 import TrendTile from '../TrendTile';
 import OvertimeCard from '../OvertimeCard';
 import DistributionTile from './DistributionTile';
+import { MTableBodyRow } from 'material-table';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -219,14 +220,16 @@ const CaseOnTime = () => {
       transformed = tileData?.ots.map((time, i) => ({
         start: time,
         change: tileData?.otsMomentum?.[i],
-        specialty: tileData?.specialty?.[i]
+        specialty: tileData?.specialty?.[i],
+        display: tileData?.displayOts?.[i],
       }));
     } else if (viewFirstCase && category === 'Specialty') {
       transformed = tileData?.fcots.map((time, i) => ({
         start: time,
         change: tileData?.fcotsMomentum?.[i],
         specialty: tileData?.specialty?.[i],
-        ots: tileData?.otsMomentum?.[i]
+        ots: tileData?.otsMomentum?.[i],
+        display: tileData?.displayFcots?.[i],
       }));
     }
 
@@ -234,14 +237,16 @@ const CaseOnTime = () => {
       transformed = tileData?.ots?.map((time, i) => ({
         start: time,
         room: tileData?.room?.[i],
-        change: tileData?.otsMomentum?.[i]
+        change: tileData?.otsMomentum?.[i],
+        display: tileData?.displayOts?.[i],
       }));
     } else if (viewFirstCase && category === 'Room') {
       transformed = tileData?.fcots?.map((time, i) => ({
         start: time,
         room: tileData?.room[i],
         change: tileData?.fcotsMomentum?.[i],
-        ots: tileData?.otsMomentum?.[i]
+        ots: tileData?.otsMomentum?.[i],
+        display: tileData?.displayFcots?.[i],
       }));
     }
 
@@ -288,7 +293,10 @@ const CaseOnTime = () => {
                 </div>
               )
             }, {
-              field: 'start', title: tile?.dependentVarTitle
+              field: 'start', title: tile?.dependentVarTitle,
+              render: rowData => <span >{rowData?.start ?? 'N/A'}</span>
+            }, {
+              field: 'display', title: 'display', hidden: true, defaultSort: 'desc'
             }, {
               field: 'change', title: 'Change',
               render: rowData => <ChangeIcon change={rowData?.change} />
@@ -332,7 +340,8 @@ const CaseOnTime = () => {
             }
           }}
           components={{
-            Container: props => <Paper {...props} elevation={0} />
+            Container: props => <Paper {...props} elevation={0} />,
+            Row: props => <MTableBodyRow className={props?.data?.display ? '' : 'faded'} {...props} />
           }}
         />
       </React.Fragment >

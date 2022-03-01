@@ -36,7 +36,7 @@ const BarGraph = React.memo(({
           {...rest}
         >
           <XAxis type="number" dataKey="bin" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} padding={{ left: 40, right: 40 }} interval={interval} domain={[0, 'auto']} />
-          <YAxis dataKey={rest?.primaryKey ?? "count"} label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
+          <YAxis allowDecimals={false} dataKey={rest?.primaryKey ?? "count"} label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
           <Tooltip />
           {rest?.tripleColour && (
             <Bar dataKey="count" fill={colors?.length === 1 ? colors?.toString() : colors?.map((color) => color)}>

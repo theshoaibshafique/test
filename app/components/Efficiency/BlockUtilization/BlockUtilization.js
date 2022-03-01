@@ -18,6 +18,7 @@ import './styles.scss';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import useFilter from '../../../hooks/useFilter';
 import { Card as MaterialCard, Paper } from '@material-ui/core';
+import { MTableBodyRow } from 'material-table';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -200,12 +201,13 @@ const BlockUtilization = React.memo(() => {
   * @param {Array<object>} dataset - Data object retrieved from the API, specific to the donut "tile"
   * @returns {Array<object>} dataset (modified) - The data modified to suit a structure the charting library can use
   */
-  const transformRoomData = (room, momentum, percentage, cb) => {
+  const transformRoomData = ({ room, momentum, percentage, display }, cb) => {
     const transformed = room?.map((or, i) => ({
       id: Math.floor(Math.random() * 25000),
       or,
       change: momentum[i],
-      percent: percentage[i]
+      percent: percentage[i],
+      display: display[i]
     }))
     return cb(transformed);
   };
@@ -257,7 +259,7 @@ const BlockUtilization = React.memo(() => {
           <Card className='tile-card'>
             <CardContent>
               {tile?.overtime && (
-                <OvertimeCard data={tile.overtime} reverse/>
+                <OvertimeCard data={tile.overtime} reverse />
               )}
             </CardContent>
           </Card>
@@ -279,10 +281,10 @@ const BlockUtilization = React.memo(() => {
       <Grid container spacing={4} className="efficiency-container">
         <Grid item xs={6}>
           <Card className='tile-card' >
-            <CardContent style={{padding:0}}>
+            <CardContent style={{ padding: 0 }}>
               {tile?.room && (
                 <Grid container spacing={0} className='efficiency-table'>
-                  <Grid item xs={12} className='tile-title' style={{padding: '16px 0 0 16px', marginBottom:0}}>
+                  <Grid item xs={12} className='tile-title' style={{ padding: '16px 0 0 16px', marginBottom: 0 }}>
                     {tile?.room?.title}
                     <LightTooltip
                       placement="top"
@@ -295,19 +297,24 @@ const BlockUtilization = React.memo(() => {
                     </LightTooltip>
                   </Grid>
                   <StyledTable
-                    
+
                     columns={[{
                       field: 'id', title: 'id', hidden: true
                     },
                     {
-                      field: 'or', title: 'Room', defaultSort: 'desc'
+                      field: 'display', title: 'display', hidden: true, defaultSort: 'desc'
+                    },
+                    {
+                      field: 'or', title: 'Room', defaultSort: 'desc',
+                      // render: rowData => <span className={`${rowData.display}`}>{rowData?.or}</span>
                     }, {
-                      field: 'percent', title: 'Percentage'
+                      field: 'percent', title: 'Percentage',
+                      render: rowData => <span >{rowData?.percent ?? 'N/A'}</span>
                     }, {
                       field: 'change', title: 'Change',
                       render: rowData => <ChangeIcon change={rowData?.change} />
                     }]}
-                    data={transformRoomData(tile?.room?.data?.room, tile?.room?.data?.momentum, tile?.room?.data?.percentage,
+                    data={transformRoomData(tile?.room?.data,
                       (data) => {
                         return data;
                       }
@@ -341,7 +348,8 @@ const BlockUtilization = React.memo(() => {
                       }
                     }}
                     components={{
-                      Container: props => <Paper {...props} style={{ width: '100%' }} elevation={0} />
+                      Container: props => <Paper {...props} style={{ width: '100%' }} elevation={0} />,
+                      Row: props => <MTableBodyRow className={props?.data?.display ? '' : 'faded'} {...props} />
                     }}
                   />
 
