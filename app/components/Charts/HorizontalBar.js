@@ -1,5 +1,6 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { v4 as uuidv4 } from 'uuid';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend, Tooltip, Cell } from 'recharts';
 import { axisStyles, axisLabelStyle } from './styles';
 // @TODO: Could colocate this / update the traditional bar graph to pass in the required props to be used for rendering this horizontal
 const equalProps = (props, prevProps) => prevProps === props;
@@ -66,7 +67,11 @@ const HorizontalBar = React.memo(({
             />
           )}
           {dataKeys?.map((dataKey, i) => (
-            <Bar key={dataKey} dataKey={dataKey} stackId="a" fill={colors[i]} />
+            <Bar key={dataKey} dataKey={dataKey} stackId="a" fill={colors[i]} >
+              {data.map((entry) => (
+                <Cell key={uuidv4()} fillOpacity={entry.display ? 1 : .6} />
+              ))}
+            </Bar>
           ))}
         </BarChart>
       </ResponsiveContainer>

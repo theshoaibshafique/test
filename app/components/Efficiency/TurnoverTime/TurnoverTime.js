@@ -166,7 +166,8 @@ const TurnoverTime = () => {
     cleanup: dataset?.cleanup[i],
     setup: dataset?.setup[i],
     turnover: dataset?.turnover[i],
-    idle: dataset?.idle[i]
+    idle: dataset?.idle[i],
+    display: dataset?.display[i],
   }));
   const Card = loading ? StyledSkeleton : MaterialCard;
   return (
