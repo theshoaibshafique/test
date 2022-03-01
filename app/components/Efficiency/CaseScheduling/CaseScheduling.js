@@ -222,7 +222,7 @@ const CaseScheduling = () => {
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.overtime && (
-                    <OvertimeCard data={tile.overtime} />
+                    <OvertimeCard data={tile.overtime} reverse/>
                   )}
                 </CardContent>
               </Card>

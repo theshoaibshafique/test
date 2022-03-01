@@ -1,8 +1,8 @@
 import React from 'react';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { LightTooltip } from '../SharedComponents/SharedComponents';
+import { ChangeIcon, LightTooltip } from '../SharedComponents/SharedComponents';
 
-const OvertimeCard = ({ data }) => (
+const OvertimeCard = ({ data, reverse }) => (
   <React.Fragment>
     <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
       <span>
@@ -21,7 +21,10 @@ const OvertimeCard = ({ data }) => (
         in total
       </div>
       <div className="overtime-block-number">{data?.value?.annualized || 0}
-        <sub>min</sub>
+        <span >
+          <sup ><ChangeIcon change={data?.momentum} className='subtle-subtext' reverse={reverse} /></sup>
+          <sub>min</sub>
+        </span>
       </div>
       <div className="overtime-helper">
         Annualized Average Per Room

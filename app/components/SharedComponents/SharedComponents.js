@@ -406,7 +406,7 @@ const dropdownStyles = (theme, props) => ({
     borderRadius: 4,
   },
   icon: {
-    marginRight:8
+    marginRight: 8
   },
 })
 const DefaultSelect = (props) => (
@@ -444,8 +444,8 @@ export const StyledCheckbox = (props) => (
     {...props} />
 )
 const skeletonStyles = (theme, props) => ({
-  root:{
-    background:'#DDDDDD !important'
+  root: {
+    background: '#DDDDDD !important'
   },
   wave: {
     '&::after': {
@@ -468,30 +468,30 @@ const tableIcons = {
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
 };
 
-export const StyledTable = props => <MaterialTable icons={tableIcons} {...props}/>
+export const StyledTable = props => <MaterialTable icons={tableIcons} {...props} />
 
-export const ChangeIcon = ({change}) => {
+export const ChangeIcon = ({ change, className, reverse, ...props }) => {
   let tag = '';
-  let className = ''
+  let classLabel = ''
   let tooltip = '';
   if (change === null || isNaN(change) || change == 0) {
     change = `—`;
     tooltip = "No Change";
   } else if (change < 0) {
-    className = "trending-down";
+    classLabel = reverse ? 'trending-up' : 'trending-down';
     tooltip = "Negative Trend";
-    tag = <Icon color="#FF0000" path={mdiTrendingDown} size={'32px'} />
+    tag = <Icon path={mdiTrendingDown} size={'32px'} />
   } else {
     tooltip = "Positive Trend";
-    className = "trending-up";
-    tag = <Icon color="#009483" path={mdiTrendingUp} size={'32px'} />
+    classLabel = reverse ? 'trending-down' : 'trending-up';
+    tag = <Icon path={mdiTrendingUp} size={'32px'} />
   }
   return (
     <LightTooltip interactive arrow
       title={tooltip}
       placement="top" fontSize="small"
     >
-      <div className={`change-value ${className} log-mouseover`} >
+      <div className={`change-value ${classLabel} ${className} log-mouseover`} {...props} >
         <span>{`${change}%`}</span>
         <span>{tag}</span>
       </div>
@@ -527,7 +527,7 @@ export const SSTSwitch = withStyles((theme) => ({
   track: {
     opacity: 1,
     borderRadius: 8,
-    height:8,
+    height: 8,
     backgroundColor: '#C8C8C8'
   }
 }))(Switch);

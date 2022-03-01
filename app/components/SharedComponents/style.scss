@@ -175,10 +175,16 @@
   &.trending-down {
       color: #ff0000;
       background-color: rgba(255, 125, 125, 0.3);
+      svg { 
+        fill: #FF0000;
+      }
   }
   &.trending-up {
       color: #009483;
       background-color: rgba(151, 231, 179, 0.3);
+      svg {
+        fill: #009483;
+      }
   }
   .change-header {
       float: right;
