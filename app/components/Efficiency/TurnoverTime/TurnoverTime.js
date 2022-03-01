@@ -79,7 +79,7 @@ const TurnoverTime = () => {
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore } = useLocalStorage();
   const config = getItemFromStore('efficiencyV2')?.efficiency ?? {};
-  
+
 
   const {
     selectGracePeriod,
@@ -199,93 +199,96 @@ const TurnoverTime = () => {
           }
         }}
       />
-      <Grid container spacing={4} className="efficiency-container">
-        <Grid item xs={12} className="efficiency-dashboard-header header-2">
-          Turnover Time
-        </Grid>
-        <Grid item xs={3}>
-          <Card className='tile-card' style={{ height: '365px' }}>
-            <CardContent>
-              {tile?.time && (
-                <TimeCard data={tile.time} suffix="Min" />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={3}>
-          <Card className='tile-card' style={{ height: '365px' }}>
-            <CardContent>
-              {tile?.overtime && (
-                <OvertimeCard data={tile.overtime} />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <Card className='tile-card'>
-            <CardContent>
-              {tile?.trend && (
-                <TrendTile
-                  data={tile.trend}
-                  trendLineData={trendLineData}
-                  chartData={chartData}
-                  toggleChartData={toggleChartData}
-                  options={options}
-                />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-      <Grid container spacing={4} className="efficiency-container">
-        <Grid item xs={6}>
-          <Card className='tile-card' style={{ height: '375px' }}>
-            <CardContent>
-              {tile?.or && (
-                <React.Fragment>
-                  <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
-                    {tile?.or?.title}
-                    <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.or?.toolTip) ? tile?.or?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.or?.toolTip}>
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.or?.toolTip?.toString()}`} />
-                    </LightTooltip>
-                  </div>
-                  <HorizontalBar
-                    legend
-                    data={orGraphData}
-                    xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }}
-                    yAxisLabel={{
-                      value: 'Room', angle: -90, offset: -5, position: 'insideLeft'
-                    }}
-                    dataKeys={['cleanup', 'idle', 'setup']}
-                    colors={colors}
-                    height={300}
-                    margin={{
-                      top: 20, right: 30, left: 20, bottom: 20
-                    }}
+      <div className='tile-container'>
+        <Grid container spacing={4} className="efficiency-container">
+          <Grid item xs={12} className="efficiency-dashboard-header header-2">
+            Turnover Time
+          </Grid>
+          <Grid item xs={3}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.time && (
+                  <TimeCard data={tile.time} suffix="Min" />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.overtime && (
+                  <OvertimeCard data={tile.overtime} />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.trend && (
+                  <TrendTile
+                    data={tile.trend}
+                    trendLineData={trendLineData}
+                    chartData={chartData}
+                    toggleChartData={toggleChartData}
+                    options={options}
                   />
-                </React.Fragment>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <Card className='tile-card' style={{ height: '375px' }}>
-            <CardContent>
-              {tile?.duration && (
-                <DistributionTile {...tile?.duration} />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid spacing={4} container className="efficiency-container">
-          <Grid item xs={12} style={{ paddingLeft: '0px' }}>
-            <FooterText
-              days={tile?.elective?.value}
-              facilityName={config?.facilityName}
-              turnoverThreshold={config?.turnoverThreshold} />
+                )}
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
-      </Grid>
+        <Grid container spacing={4} className="efficiency-container">
+          <Grid item xs={6}>
+            <Card className='tile-card' style={{ height: '375px' }}>
+              <CardContent>
+                {tile?.or && (
+                  <React.Fragment>
+                    <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
+                      {tile?.or?.title}
+                      <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.or?.toolTip) ? tile?.or?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.or?.toolTip}>
+                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.or?.toolTip?.toString()}`} />
+                      </LightTooltip>
+                    </div>
+                    <HorizontalBar
+                      legend
+                      data={orGraphData}
+                      xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }}
+                      yAxisLabel={{
+                        value: 'Room', angle: -90, offset: -5, position: 'insideLeft'
+                      }}
+                      dataKeys={['cleanup', 'idle', 'setup']}
+                      colors={colors}
+                      height={300}
+                      margin={{
+                        top: 20, right: 30, left: 20, bottom: 20
+                      }}
+                    />
+                  </React.Fragment>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card className='tile-card' style={{ height: '375px' }}>
+              <CardContent>
+                {tile?.duration && (
+                  <DistributionTile {...tile?.duration} />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid spacing={4} container className="efficiency-container">
+            <Grid item xs={12} style={{ paddingLeft: '0px' }}>
+              <FooterText
+                days={tile?.elective?.value}
+                facilityName={config?.facilityName}
+                turnoverThreshold={config?.turnoverThreshold} />
+            </Grid>
+          </Grid>
+        </Grid>
+      </div>
+
     </div>
   );
 };

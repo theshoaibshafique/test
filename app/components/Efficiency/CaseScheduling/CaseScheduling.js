@@ -205,7 +205,7 @@ const CaseScheduling = () => {
           ...defaultHandlerConfig
         }}
       />
-      <Grid container spacing={4} className="efficiency-container">
+      <Grid container spacing={4} className="efficiency-container tile-container">
         <Grid item xs={12} className="efficiency-dashboard-header header-2">
           Case Scheduling
         </Grid>

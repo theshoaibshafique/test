@@ -196,244 +196,246 @@ const Efficiency = () => {
   const handleFCO = () => {
     setFCO(!fco)
   }
-  const fcotToggle = {value: fco, onChange: handleFCO};
+  const fcotToggle = { value: fco, onChange: handleFCO };
   return (
     <div className="page-container">
       <Header displayDate={date} />
-      <Grid container spacing={4} className="efficiency-container">
-        <Grid item xs={12} className="efficiency-dashboard-header header-2" spacing={0}>
-          Efficiency Dashboard
-        </Grid>
-        <Grid item xs={3}>
-          <Card className='tile-card' >
-            <CardContent>
-              {tile?.efficiency && (
-                <React.Fragment>
-                  <div
-                    className='tile-title'
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center'
-                    }}
-                  >
-                    {tile.efficiency.title}
-                    <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.efficiency?.toolTip) ? tile?.efficiency?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.efficiency?.toolTip}>
-                      <InfoOutlinedIcon style={{ fontSize: 16, marginLeft: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.efficiency?.toolTip?.toString()}`} />
-                    </LightTooltip>
-                  </div>
-                  <AreaGraph data={formatAreaChartData(tile.efficiency.network.mean, tile.efficiency.network.sd)} reference={tile.efficiency.network.mean} />
-                  <div className="additional-scores" style={{ display: 'none' }}> {/* TODO: Change styles to avoid needing these empty divs */}
-                    <div className="additional-scores-title"></div>
-                    <div className="additional-scores-value"></div>
-                  </div>
-                  <div className="additional-scores" style={{ marginTop: 24 }}>
-                    <div className="additional-scores-title">OR Black Box<sup>&reg;</sup> Network</div>
-                    <div className="additional-scores-value">{tile.efficiency.value || 0}</div>
-                  </div>
-                </React.Fragment>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={9}>
-          <Card className='tile-card' >
-            <CardContent >
-              {tile?.headline && (
-                <React.Fragment>
-                  <div
-                    className='tile-title'
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center'
-                    }}
-                  >
-                    {tile.headline.title}
-                    <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.headline?.toolTip) ? tile?.headline?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.headline?.toolTip}>
-                      <InfoOutlinedIcon style={{ fontSize: 16, marginLeft: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.headline?.toolTip?.toString()}`} />
-                    </LightTooltip>
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '267px'
-                    }}
-                  >
-                    <Carousel
-                      responsive={{
-                        desktop: {
-                          breakpoint: { max: 3000, min: 1024 },
-                          items: 1,
-                        },
-                        tablet: {
-                          breakpoint: { max: 1024, min: 464 },
-                          items: 1,
-                        },
-                        mobile: {
-                          breakpoint: { max: 464, min: 0 },
-                          items: 1,
-                        }
+      <div className='tile-container'>
+        <Grid container spacing={4} className="efficiency-container">
+          <Grid item xs={12} className="efficiency-dashboard-header header-2" spacing={0}>
+            Efficiency Dashboard
+          </Grid>
+          <Grid item xs={3}>
+            <Card className='tile-card' >
+              <CardContent>
+                {tile?.efficiency && (
+                  <React.Fragment>
+                    <div
+                      className='tile-title'
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center'
                       }}
-                      showDots
-                      infinite
-                      transitionDuration={500}
-                      customLeftArrow={
-                        <div
-                          style={{
-                            display: 'flex', left: 15, top: 86, justifyContent: 'flex-start', position: 'absolute', cursor: 'pointer'
-                          }}
-                        >
-                          <ArrowBackIosIcon />
-                        </div>
-                      }
-                      customRightArrow={
-                        <div
-                          style={{
-                            display: 'flex', right: 15, top: 86, justifyContent: 'flex-end', position: 'absolute', cursor: 'pointer',
-                          }}
-                        >
-                          <ArrowForwardIosIcon />
-                        </div>
-                      }
                     >
-                      {tile.headline.data.sentences.map((sentence) => (
-                        <div
-                          key={uuidv4()}
-                          style={{
-                            display: 'inline-block',
-                            textAlign: 'center',
-                            width: '100%'
-                          }}
-                        >
-                          {renderFormattedText(sentence)}
-                        </div>
-                      ))}
-                    </Carousel>
-                  </div>
-                </React.Fragment>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-      <Grid container spacing={4} className="efficiency-container">
-        <Grid item xs={3}>
-          <Card className='tile-card'>
-            <CardContent>
-              {tile?.onTime && (
-                <TimeCard data={fco ? tile.fcot : tile.onTime} toggle={fcotToggle} />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={3}>
-          <Card className='tile-card'>
-            <CardContent>
-              {tile?.utilization && (
-                <TimeCard data={tile.utilization} />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={3}>
-          <Card className='tile-card'>
-            <CardContent>
-              {tile?.schedule && (
-                <TimeCard data={tile.schedule} />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={3}>
-          <Card className='tile-card'>
-            <CardContent>
-              {tile?.turnover && (
-                <TimeCard data={tile.turnover} suffix=' min'/>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-      <Grid container spacing={4} className="efficiency-container">
-        <Grid item xs={6}>
-          <Card className='tile-card'>
-            <CardContent>
-              {tile?.overtime && (
-                <React.Fragment>
-                  <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    {tile?.overtime?.title}
-                    <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.overtime?.toolTip) ? tile?.overtime?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.overtime?.toolTip}>
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.overtime?.toolTip?.toString()}`} />
-                    </LightTooltip>
-                  </div>
-                  <HorizontalBar
-                    data={orGraphData}
-                    xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }}
-                    yAxisLabel={{
-                      value: 'Room', angle: -90, offset: -5, position: 'insideLeft'
-                    }}
-                    dataKeys={['Time']}
-                    colors={colors}
-                    height={250}
-                    margin={{
-                      top: 20, right: 30, left: 20, bottom: 20
-                    }}
-
-                    barCategoryGap={'10%'}
-                  />
-                  <div className='subtle-text' style={{ color: '#828282' }}>
-                    {`Combined Total: ${tile?.overtime?.data?.total || 0} min (${tile?.overtime?.data?.annualized || 0} annualized)`}
-                  </div>
-                </React.Fragment>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <Card className='tile-card'>
-            <CardContent style={{ height: 390 }}>
-              {tile?.specialty && (
-                <React.Fragment>
-                  <div
-                    className='tile-title'
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
-                  >
-                    <div>
-                      {tile?.specialty?.title}
-                      <LightTooltip
-                        placement="top"
-                        fontSize="small"
-                        interactive
-                        arrow
-                        title={tile?.specialty?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
-                      >
-                        <InfoOutlinedIcon
-                          style={{ fontSize: 16, margin: '4px', color: '#8282828' }}
-                          className="log-mouseover"
-                          id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`}
-                        />
+                      {tile.efficiency.title}
+                      <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.efficiency?.toolTip) ? tile?.efficiency?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.efficiency?.toolTip}>
+                        <InfoOutlinedIcon style={{ fontSize: 16, marginLeft: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.efficiency?.toolTip?.toString()}`} />
                       </LightTooltip>
                     </div>
-                    <RadioButtonGroup value={caseCountsBy} onChange={handleCaseToggle} options={options} highlightColour="#004F6E" />
-                  </div>
-                  {!!tile?.specialty && (
-                    <Donut
-                      data={formatDonutData(caseCountsBy === 'By Specialty' ? tile.specialty.data : tile.room.data)}
-                      tooltips={tile.specialty.toolTip}
-                      label={{title:'Total Cases', value:tile.specialty.data.total}}
-                    />
-                  )}
-                </React.Fragment>
-              )}
-            </CardContent>
-          </Card>
+                    <AreaGraph data={formatAreaChartData(tile.efficiency.network.mean, tile.efficiency.network.sd)} reference={tile.efficiency.network.mean} />
+                    <div className="additional-scores" style={{ display: 'none' }}> {/* TODO: Change styles to avoid needing these empty divs */}
+                      <div className="additional-scores-title"></div>
+                      <div className="additional-scores-value"></div>
+                    </div>
+                    <div className="additional-scores" style={{ marginTop: 24 }}>
+                      <div className="additional-scores-title">OR Black Box<sup>&reg;</sup> Network</div>
+                      <div className="additional-scores-value">{tile.efficiency.value || 0}</div>
+                    </div>
+                  </React.Fragment>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={9}>
+            <Card className='tile-card' >
+              <CardContent >
+                {tile?.headline && (
+                  <React.Fragment>
+                    <div
+                      className='tile-title'
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center'
+                      }}
+                    >
+                      {tile.headline.title}
+                      <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.headline?.toolTip) ? tile?.headline?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.headline?.toolTip}>
+                        <InfoOutlinedIcon style={{ fontSize: 16, marginLeft: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.headline?.toolTip?.toString()}`} />
+                      </LightTooltip>
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '267px'
+                      }}
+                    >
+                      <Carousel
+                        responsive={{
+                          desktop: {
+                            breakpoint: { max: 3000, min: 1024 },
+                            items: 1,
+                          },
+                          tablet: {
+                            breakpoint: { max: 1024, min: 464 },
+                            items: 1,
+                          },
+                          mobile: {
+                            breakpoint: { max: 464, min: 0 },
+                            items: 1,
+                          }
+                        }}
+                        showDots
+                        infinite
+                        transitionDuration={500}
+                        customLeftArrow={
+                          <div
+                            style={{
+                              display: 'flex', left: 15, top: 86, justifyContent: 'flex-start', position: 'absolute', cursor: 'pointer'
+                            }}
+                          >
+                            <ArrowBackIosIcon />
+                          </div>
+                        }
+                        customRightArrow={
+                          <div
+                            style={{
+                              display: 'flex', right: 15, top: 86, justifyContent: 'flex-end', position: 'absolute', cursor: 'pointer',
+                            }}
+                          >
+                            <ArrowForwardIosIcon />
+                          </div>
+                        }
+                      >
+                        {tile.headline.data.sentences.map((sentence) => (
+                          <div
+                            key={uuidv4()}
+                            style={{
+                              display: 'inline-block',
+                              textAlign: 'center',
+                              width: '100%'
+                            }}
+                          >
+                            {renderFormattedText(sentence)}
+                          </div>
+                        ))}
+                      </Carousel>
+                    </div>
+                  </React.Fragment>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+        <Grid container spacing={4} className="efficiency-container">
+          <Grid item xs={3}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.onTime && (
+                  <TimeCard data={fco ? tile.fcot : tile.onTime} toggle={fcotToggle} />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.utilization && (
+                  <TimeCard data={tile.utilization} />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.schedule && (
+                  <TimeCard data={tile.schedule} />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.turnover && (
+                  <TimeCard data={tile.turnover} suffix=' min' />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid container spacing={4} className="efficiency-container">
+          <Grid item xs={6}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.overtime && (
+                  <React.Fragment>
+                    <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                      {tile?.overtime?.title}
+                      <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.overtime?.toolTip) ? tile?.overtime?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.overtime?.toolTip}>
+                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.overtime?.toolTip?.toString()}`} />
+                      </LightTooltip>
+                    </div>
+                    <HorizontalBar
+                      data={orGraphData}
+                      xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }}
+                      yAxisLabel={{
+                        value: 'Room', angle: -90, offset: -5, position: 'insideLeft'
+                      }}
+                      dataKeys={['Time']}
+                      colors={colors}
+                      height={250}
+                      margin={{
+                        top: 20, right: 30, left: 20, bottom: 20
+                      }}
+
+                      barCategoryGap={'10%'}
+                    />
+                    <div className='subtle-text' style={{ color: '#828282' }}>
+                      {`Combined Total: ${tile?.overtime?.data?.total || 0} min (${tile?.overtime?.data?.annualized || 0} annualized)`}
+                    </div>
+                  </React.Fragment>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card className='tile-card'>
+              <CardContent style={{ height: 390 }}>
+                {tile?.specialty && (
+                  <React.Fragment>
+                    <div
+                      className='tile-title'
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <div>
+                        {tile?.specialty?.title}
+                        <LightTooltip
+                          placement="top"
+                          fontSize="small"
+                          interactive
+                          arrow
+                          title={tile?.specialty?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
+                        >
+                          <InfoOutlinedIcon
+                            style={{ fontSize: 16, margin: '4px', color: '#8282828' }}
+                            className="log-mouseover"
+                            id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`}
+                          />
+                        </LightTooltip>
+                      </div>
+                      <RadioButtonGroup value={caseCountsBy} onChange={handleCaseToggle} options={options} highlightColour="#004F6E" />
+                    </div>
+                    {!!tile?.specialty && (
+                      <Donut
+                        data={formatDonutData(caseCountsBy === 'By Specialty' ? tile.specialty.data : tile.room.data)}
+                        tooltips={tile.specialty.toolTip}
+                        label={{ title: 'Total Cases', value: tile.specialty.data.total }}
+                      />
+                    )}
+                  </React.Fragment>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </div>
     </div>
   );
 };

@@ -29,7 +29,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate }) => {
   return (
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
-        <Grid item xs={12} style={{position:'relative'}}>
+        <Grid item xs={12} style={{position:'relative'}} className='header-element'>
           <div onClick={onClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
           <div className='display-date'>
             {displayDate && (
@@ -41,7 +41,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate }) => {
 
           </div>
         </Grid>
-        <Grid container spacing={3} style={{ margin: '14px 0 0 0' }}>
+        <Grid container spacing={3} style={{ margin: '14px 0 0 0' }} className='header-element'>
           {config?.case && (
             <Grid item xs={2} style={{ paddingLeft: '0px', maxWidth: 200 }}>
               <div
@@ -63,7 +63,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate }) => {
           )}
           {/* @TODO: Update the start and end dates with dates reflecting the expected defaults  */}
           {config?.date && (
-            <Grid item xs={2} style={{ paddingLeft: '0px' }}>
+            <Grid item xs={2} style={{ paddingLeft: '0px', minWidth:260 }} >
               <CustomDateRangePicker {...handlers?.date} />
             </Grid>
           )}

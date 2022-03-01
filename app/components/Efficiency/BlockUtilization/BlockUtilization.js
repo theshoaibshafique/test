@@ -242,188 +242,190 @@ const BlockUtilization = React.memo(() => {
           ...defaultHandlerConfig
         }}
       />
-      <Grid container spacing={4} className="efficiency-container">
-        <Grid item xs={12} className="efficiency-dashboard-header header-2">
-          Block Utilization
-        </Grid>
-        <Grid item xs={3}>
-          <Card className='tile-card'>
-            <CardContent>
-              {tile?.blockUtilization && (
-                <TimeCard data={tile.blockUtilization} />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={3}>
-          <Card className='tile-card'>
-            <CardContent>
-              {tile?.overtime && (
-                <OvertimeCard data={tile.overtime} reverse />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <Card className='tile-card'>
-            <CardContent>
-              <TrendTile
-                data={tile?.trend}
-                toggleChartData={toggleChartData}
-                trendLineData={trendLineData}
-                options={options}
-                chartData={chartData}
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-      <Grid container spacing={4} className="efficiency-container">
-        <Grid item xs={6}>
-          <Card className='tile-card' >
-            <CardContent style={{ padding: 0 }}>
-              {tile?.room && (
-                <Grid container spacing={0} className='efficiency-table'>
-                  <Grid item xs={12} className='tile-title' style={{ padding: '16px 0 0 16px', marginBottom: 0 }}>
-                    {tile?.room?.title}
-                    <LightTooltip
-                      placement="top"
-                      fontSize="small"
-                      interactive
-                      arrow
-                      title={tile?.room?.toolTip?.toString()}
-                    >
-                      <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.room?.toolTip?.toString()}`} />
-                    </LightTooltip>
-                  </Grid>
-                  <StyledTable
-
-                    columns={[{
-                      field: 'id', title: 'id', hidden: true
-                    },
-                    {
-                      field: 'display', title: 'display', hidden: true, defaultSort: 'desc'
-                    },
-                    {
-                      field: 'or', title: 'Room', defaultSort: 'desc',
-                      // render: rowData => <span className={`${rowData.display}`}>{rowData?.or}</span>
-                    }, {
-                      field: 'percent', title: 'Percentage',
-                      render: rowData => <span >{rowData?.percent ?? 'N/A'}</span>
-                    }, {
-                      field: 'change', title: 'Change',
-                      render: rowData => <ChangeIcon change={rowData?.change} />
-                    }]}
-                    data={transformRoomData(tile?.room?.data,
-                      (data) => {
-                        return data;
-                      }
-                    )}
-                    options={{
-                      search: false,
-                      paging: false,
-                      toolbar: false,
-                      sorting: true,
-                      maxBodyHeight: 294,
-                      headerStyle: {
-                        fontFamily: "Noto Sans",
-                        fontSize: 16,
-                        color: '#333333',
-                        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-                        lineHeight: "22px",
-                        width: 'unset',
-                        top: 0
-                      },
-                      cellStyle: {
-                        padding: '8px 16px'
-                      },
-                      thirdSortClick: false,
-                      draggable: false
-                    }}
-                    localization={{
-                      body: {
-                        emptyDataSourceMessage: (<div style={{
-                          color: '#828282', width: '100%', height: 210
-                        }} item xs={12} className='header-1 flex vertical-center'>No Data</div>)
-                      }
-                    }}
-                    components={{
-                      Container: props => <Paper {...props} style={{ width: '100%' }} elevation={0} />,
-                      Row: props => <MTableBodyRow className={props?.data?.display ? '' : 'faded'} {...props} />
-                    }}
-                  />
-
-                </Grid>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <Card className='tile-card'>
-            <CardContent>
-              {tile?.composition && (
-                <React.Fragment>
-                  <div
-                    className='tile-title'
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center'
-                    }}
-                  >
-                    {tile?.composition?.title}
-                    <LightTooltip
-                      placement="top"
-                      fontSize="small"
-                      interactive
-                      arrow
-                      title={tile?.composition?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
-                    >
-                      <InfoOutlinedIcon
-                        style={{ fontSize: 16, margin: '4px', color: '#8282828' }}
-                        className="log-mouseover"
-                        id={`info-tooltip-${tile?.composition?.toolTip?.toString()}`}
-                      />
-                    </LightTooltip>
-                  </div>
-                  {!!tile?.composition && <Donut data={formatDonutData(tile.composition.data)} tooltips={tile.composition.toolTip}
-                    label={{
-                      title: 'Average Block Time', formattedValue: (
-                        <>
-                          {tile.composition.data.averageHours}
-                          <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
-                          {tile.composition.data.averageMinutes}
-                          <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
-                        </>
-                      )
-                    }} />}
-                </React.Fragment>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-      <Grid container spacing={4} className="efficiency-container">
-        <Grid item xs={6}>
-          <Card className='tile-card'>
-            <CardContent>
-              <DistributionTile {...tile?.startGap} xAxisLabel={tile?.startGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={6}>
-          <Card className='tile-card'>
-            <CardContent>
-              <DistributionTile {...tile?.endGap} xAxisLabel={tile?.endGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid spacing={4} container className="efficiency-container">
-          <Grid item xs={12} style={{ paddingLeft: '0px' }}>
-            <FooterText days={tile?.elective?.value} />
+      <div className='tile-container'>
+        <Grid container spacing={4} className="efficiency-container">
+          <Grid item xs={12} className="efficiency-dashboard-header header-2">
+            Block Utilization
+          </Grid>
+          <Grid item xs={3}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.blockUtilization && (
+                  <TimeCard data={tile.blockUtilization} />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={3}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.overtime && (
+                  <OvertimeCard data={tile.overtime} reverse />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card className='tile-card'>
+              <CardContent>
+                <TrendTile
+                  data={tile?.trend}
+                  toggleChartData={toggleChartData}
+                  trendLineData={trendLineData}
+                  options={options}
+                  chartData={chartData}
+                />
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
-      </Grid>
+        <Grid container spacing={4} className="efficiency-container">
+          <Grid item xs={6}>
+            <Card className='tile-card' >
+              <CardContent style={{ padding: 0 }}>
+                {tile?.room && (
+                  <Grid container spacing={0} className='efficiency-table'>
+                    <Grid item xs={12} className='tile-title' style={{ padding: '16px 0 0 16px', marginBottom: 0 }}>
+                      {tile?.room?.title}
+                      <LightTooltip
+                        placement="top"
+                        fontSize="small"
+                        interactive
+                        arrow
+                        title={tile?.room?.toolTip?.toString()}
+                      >
+                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.room?.toolTip?.toString()}`} />
+                      </LightTooltip>
+                    </Grid>
+                    <StyledTable
+
+                      columns={[{
+                        field: 'id', title: 'id', hidden: true
+                      },
+                      {
+                        field: 'display', title: 'display', hidden: true, defaultSort: 'desc'
+                      },
+                      {
+                        field: 'or', title: 'Room', defaultSort: 'desc',
+                        // render: rowData => <span className={`${rowData.display}`}>{rowData?.or}</span>
+                      }, {
+                        field: 'percent', title: 'Percentage',
+                        render: rowData => <span >{rowData?.percent ?? 'N/A'}</span>
+                      }, {
+                        field: 'change', title: 'Change',
+                        render: rowData => <ChangeIcon change={rowData?.change} />
+                      }]}
+                      data={transformRoomData(tile?.room?.data,
+                        (data) => {
+                          return data;
+                        }
+                      )}
+                      options={{
+                        search: false,
+                        paging: false,
+                        toolbar: false,
+                        sorting: true,
+                        maxBodyHeight: 294,
+                        headerStyle: {
+                          fontFamily: "Noto Sans",
+                          fontSize: 16,
+                          color: '#333333',
+                          borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                          lineHeight: "22px",
+                          width: 'unset',
+                          top: 0
+                        },
+                        cellStyle: {
+                          padding: '8px 16px'
+                        },
+                        thirdSortClick: false,
+                        draggable: false
+                      }}
+                      localization={{
+                        body: {
+                          emptyDataSourceMessage: (<div style={{
+                            color: '#828282', width: '100%', height: 210
+                          }} item xs={12} className='header-1 flex vertical-center'>No Data</div>)
+                        }
+                      }}
+                      components={{
+                        Container: props => <Paper {...props} style={{ width: '100%' }} elevation={0} />,
+                        Row: props => <MTableBodyRow className={props?.data?.display ? '' : 'faded'} {...props} />
+                      }}
+                    />
+
+                  </Grid>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card className='tile-card'>
+              <CardContent>
+                {tile?.composition && (
+                  <React.Fragment>
+                    <div
+                      className='tile-title'
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center'
+                      }}
+                    >
+                      {tile?.composition?.title}
+                      <LightTooltip
+                        placement="top"
+                        fontSize="small"
+                        interactive
+                        arrow
+                        title={tile?.composition?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
+                      >
+                        <InfoOutlinedIcon
+                          style={{ fontSize: 16, margin: '4px', color: '#8282828' }}
+                          className="log-mouseover"
+                          id={`info-tooltip-${tile?.composition?.toolTip?.toString()}`}
+                        />
+                      </LightTooltip>
+                    </div>
+                    {!!tile?.composition && <Donut data={formatDonutData(tile.composition.data)} tooltips={tile.composition.toolTip}
+                      label={{
+                        title: 'Average Block Time', formattedValue: (
+                          <>
+                            {tile.composition.data.averageHours}
+                            <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
+                            {tile.composition.data.averageMinutes}
+                            <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
+                          </>
+                        )
+                      }} />}
+                  </React.Fragment>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid container spacing={4} className="efficiency-container">
+          <Grid item xs={6}>
+            <Card className='tile-card'>
+              <CardContent>
+                <DistributionTile {...tile?.startGap} xAxisLabel={tile?.startGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card className='tile-card'>
+              <CardContent>
+                <DistributionTile {...tile?.endGap} xAxisLabel={tile?.endGap?.independentVarTitle} yAxisLabel={tile?.startGap?.dependentVarTitle} singleColour />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid spacing={4} container className="efficiency-container">
+            <Grid item xs={12} style={{ paddingLeft: '0px' }}>
+              <FooterText days={tile?.elective?.value} />
+            </Grid>
+          </Grid>
+        </Grid>
+      </div>
     </div>
   );
 }, equalProps);
