@@ -26,8 +26,8 @@ const TrendTile = ({
   }, [trendLineData]);
 
   React.useEffect(() => {
-    const startDate = moment(data?.data?.start_date).valueOf();
-    const endDate = moment(data?.data?.end_date).valueOf();
+    const startDate = moment(data?.data?.startDate).valueOf();
+    const endDate = moment(data?.data?.endDate).valueOf();
 
     setRange({
       min: startDate,

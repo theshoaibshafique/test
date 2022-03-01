@@ -62,7 +62,7 @@ const CaseScheduling = () => {
   const [tile, setTile] = React.useState('');
   const [trendStartDate, setTrendStartDate] = React.useState('');
   const [chartData, setChartData] = React.useState('30-day moving average');
-  const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
+  const [filteredChartData, setFilteredChartData] = React.useState('monthTrend');
   const [trendLineData, setTrendLineData] = React.useState([]);
   const [procedureListData, setProcedureListData] = React.useState([]);
 
@@ -127,7 +127,7 @@ const CaseScheduling = () => {
     const electiveTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
     const procedureTile = state.tiles.find(({ title }) => title.toLowerCase().includes('procedure'));
     const delaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('delays'));
-    setTrendStartDate(trendTile?.data?.start_date);
+    setTrendStartDate(trendTile?.data?.startDate);
     setTile({
       schedule: scheduleTile,
       overtime: overtimeTile,
@@ -143,7 +143,7 @@ const CaseScheduling = () => {
     const procedureTile = tile?.procedure;
     const formattedProcedureListData = formatProcedureListData(procedureTile?.data);
     setProcedureListData(formattedProcedureListData);
-    setTrendStartDate(trendTile?.data?.start_date);
+    setTrendStartDate(trendTile?.data?.startDate);
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
     setTrendLineData(formattedData);
   }, [tile]);
@@ -165,18 +165,18 @@ const CaseScheduling = () => {
       id: uuidv4(),
       procedure,
       case: dataset?.cases[idx],
-      percentage: dataset?.percentage_change[idx],
+      percentage: dataset?.percentageChange[idx],
       mean: dataset?.mean[idx],
-      allTimeMean: dataset?.all_time_mean[idx],
-      allTimeMedian: dataset?.all_time_median[idx],
-      allTimeSd: dataset?.all_time_sd[idx],
-      underscheduled: dataset?.underscheduled_percentage[idx]
+      allTimeMean: dataset?.allTimeMean[idx],
+      allTimeMedian: dataset?.allTimeMedian[idx],
+      allTimeSd: dataset?.allTimeSd[idx],
+      underscheduled: dataset?.underscheduledPercentage[idx]
     }
   });
 
   const toggleChartData = (e) => {
     setChartData(e.target.value);
-    setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
+    setFilteredChartData(e.target.value.includes('7') ? 'weekTrend' : 'monthTrend');
   };
   const Card = loading ? StyledSkeleton : MaterialCard;
   return (
@@ -263,7 +263,7 @@ const CaseScheduling = () => {
               {tile?.procedure && (
                 <ProcedureList
                   title={tile.procedure.title}
-                  networkAverage={tile.procedure.data?.network_average || tile.procedure.data?.networkAverage}
+                  networkAverage={tile.procedure.data?.networkAverage}
                   procedureData={procedureListData}
                 />
               )}

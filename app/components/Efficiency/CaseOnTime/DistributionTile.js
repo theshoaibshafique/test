@@ -53,8 +53,8 @@ const DistributionTile = ({
       <BarGraph
         height={230}
         stacked={rest?.viewFirstCase}
-        primaryKey={rest?.viewFirstCase ? 'fcots_count' : 'ots_count'}
-        secondaryKey={rest?.viewFirstCase ? 'ots_count' : 'fcots_count'}
+        primaryKey={rest?.viewFirstCase ? 'fcotsCount' : 'otsCount'}
+        secondaryKey={rest?.viewFirstCase ? 'otsCount' : 'fcotsCount'}
         data={filteredData}
         xAxisLabel={{
           value: xAxisLabel,

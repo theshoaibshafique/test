@@ -88,7 +88,7 @@ const CaseOnTime = () => {
   const [chartData, setChartData] = React.useState('30-day moving average');
   const [trendLineData, setTrendLineData] = React.useState([]);
   const [trendStartDate, setTrendStartDate] = React.useState('');
-  const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
+  const [filteredChartData, setFilteredChartData] = React.useState('monthTrend');
   const [maxData, setMaxData] = React.useState(0);
   const [bySpecialty, setBySpecialty] = React.useState('By Specialty');
   const [tile, setTile] = React.useState({
@@ -161,7 +161,7 @@ const CaseOnTime = () => {
       formattedData = formatLineData(trendTile?.data[filteredChartData].fcots);
     }
     setTrendLineData(formattedData);
-    setTrendStartDate(trendTile?.data?.start_date);
+    setTrendStartDate(trendTile?.data?.startDate);
   }, [tile, viewFirstCase]);
 
   React.useEffect(() => {
@@ -187,7 +187,7 @@ const CaseOnTime = () => {
     const distributionTile = state.tiles.find(({ title }) => title.toLowerCase().includes('distribution'));
     const max = specialtyTile?.data?.specialty?.length + roomTile?.data?.room?.length;
     setMaxData(max);
-    setTrendStartDate(trendTile?.data?.start_date);
+    setTrendStartDate(trendTile?.data?.startDate);
     setTile({
       specialty: specialtyTile,
       room: roomTile,
@@ -218,15 +218,15 @@ const CaseOnTime = () => {
     if (!viewFirstCase && category === 'Specialty') {
       transformed = tileData?.ots.map((time, i) => ({
         start: time,
-        change: tileData?.ots_momentum?.[i],
+        change: tileData?.otsMomentum?.[i],
         specialty: tileData?.specialty?.[i]
       }));
     } else if (viewFirstCase && category === 'Specialty') {
       transformed = tileData?.fcots.map((time, i) => ({
         start: time,
-        change: tileData?.fcots_momentum?.[i],
+        change: tileData?.fcotsMomentum?.[i],
         specialty: tileData?.specialty?.[i],
-        ots: tileData?.ots_momentum?.[i]
+        ots: tileData?.otsMomentum?.[i]
       }));
     }
 
@@ -234,14 +234,14 @@ const CaseOnTime = () => {
       transformed = tileData?.ots?.map((time, i) => ({
         start: time,
         room: tileData?.room?.[i],
-        change: tileData?.ots_momentum?.[i]
+        change: tileData?.otsMomentum?.[i]
       }));
     } else if (viewFirstCase && category === 'Room') {
       transformed = tileData?.fcots?.map((time, i) => ({
         start: time,
         room: tileData?.room[i],
-        change: tileData?.fcots_momentum?.[i],
-        ots: tileData?.ots_momentum?.[i]
+        change: tileData?.fcotsMomentum?.[i],
+        ots: tileData?.otsMomentum?.[i]
       }));
     }
 
@@ -250,7 +250,7 @@ const CaseOnTime = () => {
 
   const toggleChartData = (e) => {
     setChartData(e.target.value);
-    setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
+    setFilteredChartData(e.target.value.includes('7') ? 'weekTrend' : 'monthTrend');
   };
 
   const renderTileData = (tile, hideRadio, hideTitle) => {

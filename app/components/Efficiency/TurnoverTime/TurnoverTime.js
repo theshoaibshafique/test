@@ -67,7 +67,7 @@ const TurnoverTime = () => {
 
   const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
   const [chartData, setChartData] = React.useState('30-day moving average');
-  const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
+  const [filteredChartData, setFilteredChartData] = React.useState('monthTrend');
   const [trendLineData, setTrendLineData] = React.useState([]);
   const [orGraphData, setOrGraphData] = React.useState([]);
   const [tile, setTile] = React.useState({});
@@ -132,7 +132,7 @@ const TurnoverTime = () => {
     const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
     setTrendLineData(formattedData);
-    setTrendStartDate(trendTile?.data?.start_date);
+    setTrendStartDate(trendTile?.data?.startDate);
     const formattedHorizontalBarData = formatBarGraphData(orTile?.data);
     setOrGraphData(formattedHorizontalBarData);
     setTile({
@@ -153,7 +153,7 @@ const TurnoverTime = () => {
 
   const toggleChartData = (e) => {
     setChartData(e.target.value);
-    setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
+    setFilteredChartData(e.target.value.includes('7') ? 'weekTrend' : 'monthTrend');
   };
 
   const formatLineData = (dataset) => dataset?.map((percentage, idx) => ({

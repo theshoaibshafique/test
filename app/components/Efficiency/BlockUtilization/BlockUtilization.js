@@ -108,7 +108,7 @@ const BlockUtilization = React.memo(() => {
   }, []);
 
   const [chartData, setChartData] = React.useState('30-day moving average');
-  const [filteredChartData, setFilteredChartData] = React.useState('month_trend');
+  const [filteredChartData, setFilteredChartData] = React.useState('monthTrend');
   const [trendLineData, setTrendLineData] = React.useState([]);
 
 
@@ -123,7 +123,7 @@ const BlockUtilization = React.memo(() => {
       const startGapTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('start distribution'));
       const electiveDaysTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('days'));
 
-      setTrendStartDate(trendTile?.data?.start_date);
+      setTrendStartDate(trendTile?.data?.startDate);
       const { toolTip } = compositionTile ?? {}
       const [CLEANUP, IDLE, SETUP, CASE] = toolTip;
       compositionTile.toolTip = { CLEANUP, IDLE, SETUP, CASE }
@@ -143,7 +143,7 @@ const BlockUtilization = React.memo(() => {
   // format the line data and set the start date when we have tile information
   React.useEffect(() => {
     const trendTile = tile?.trend;
-    setTrendStartDate(trendTile?.data?.start_date)
+    setTrendStartDate(trendTile?.data?.startDate)
     const formattedData = formatLineData(trendTile?.data[filteredChartData]);
     setTrendLineData(formattedData);
   }, [tile]);
@@ -192,7 +192,7 @@ const BlockUtilization = React.memo(() => {
 
   const toggleChartData = (e) => {
     setChartData(e.target.value);
-    setFilteredChartData(e.target.value.includes('7') ? 'week_trend' : 'month_trend');
+    setFilteredChartData(e.target.value.includes('7') ? 'weekTrend' : 'monthTrend');
   };
 
   /*
