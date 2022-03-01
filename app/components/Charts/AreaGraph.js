@@ -17,19 +17,19 @@ const AreaGraph = React.memo(({ data, reference }) => (
       }}
     >
       <Tooltip />
-      <ReferenceLine
-        x={reference}
-        stroke="#BDBDBD"
-        label={{
-          angle: -90, value: 'Average', offset: 10, position: 'left'
-        }}
-      />
       <Area
         type="monotone"
         dataKey="y"
         stackId="1"
         stroke="#004F6E"
         fill="#EEFAFF"
+      />
+      <ReferenceLine
+        x={reference}
+        stroke="#BDBDBD"
+        label={{
+          angle: -90, value: 'Average', offset: 10, position: 'left'
+        }}
       />
     </AreaChart>
   </ResponsiveContainer>
