@@ -126,7 +126,7 @@ const TurnoverTime = () => {
     if (!state.tiles) return;
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
     const orTile = state.tiles.find(({ title }) => title.toLowerCase().includes('or'));
-    const overtimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('ot'));
+    const overtimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
     const timeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('time'));
     const durationTile = state.tiles.find(({ title }) => title.toLowerCase().includes('duration'));
     const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));

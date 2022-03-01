@@ -122,7 +122,7 @@ const CaseScheduling = () => {
     if (!state.tiles) return;
 
     const scheduleTile = state.tiles.find(({ title }) => title.toLowerCase().includes('schedule'));
-    const overtimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('ot'));
+    const overtimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
     const electiveTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
     const procedureTile = state.tiles.find(({ title }) => title.toLowerCase().includes('procedure'));

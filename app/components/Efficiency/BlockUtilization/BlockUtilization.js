@@ -33,7 +33,7 @@ const INITIAL_STATE = {
 };
 
 // filter out these keys from the payload so that they don't appear in the legend
-const filteredKeys = ['average_hours', 'average_minutes', 'days'];
+const filteredKeys = ['averageHours', 'averageMinutes', 'days'];
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -382,9 +382,9 @@ const BlockUtilization = React.memo(() => {
                     label={{
                       title: 'Average Block Time', formattedValue: (
                         <>
-                          {tile.composition.data.average_hours}
+                          {tile.composition.data.averageHours}
                           <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
-                          {tile.composition.data.average_minutes}
+                          {tile.composition.data.averageMinutes}
                           <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
                         </>
                       )

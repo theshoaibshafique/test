@@ -180,7 +180,7 @@ const CaseOnTime = () => {
     const specialtyTile = state.tiles.find(({ independentVarTitle }) => independentVarTitle?.toLowerCase().includes('specialty'));
     const onTimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('on-time'));
     // const percentageTile = state.tiles.find(({ title }) => title.toLowerCase().includes('specialty'));
-    const otTile = state.tiles.find(({ title }) => title.toLowerCase().includes('ot'));
+    const otTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
     const roomTile = state.tiles.find(({ independentVarTitle }) => independentVarTitle?.toLowerCase().includes('room'));
     const electiveDaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
