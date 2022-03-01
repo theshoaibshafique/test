@@ -92,18 +92,32 @@ const TurnoverTime = () => {
   } = useFilter();
   React.useEffect(() => {
     const fetchData = async () => {
-      const config = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
-      //TODO: centralize default date selection
-      const { endDate } = config ?? {};
-      const startDate = moment(endDate)?.subtract(1, 'month');
+      const defaultConfig = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
+      const config = getItemFromStore('globalFilter');
+      let body = null;
+      if (config) {
+        const { startDate, endDate, rooms, specialtyNames } = config;
+        body = {
+          ...state.defaultPayload,
+          facilityName: userFacility,
+          startDate: moment(startDate).format('YYYY-MM-DD'),
+          endDate: moment(endDate).format('YYYY-MM-DD'),
+          roomNames: rooms ?? [],
+        }
+      } else {
+        const { endDate } = defaultConfig ?? {};
+        const startDate = moment(endDate)?.subtract(1, 'month');
+        body = {
+          ...state.defaultPayload, facilityName: userFacility, startDate: startDate.format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')
+        }
+      }
       // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
       await applyGlobalFilter({
         endpoint: process.env.TURNOVER_API,
         userToken,
         cancelToken: axios.CancelToken.source()
-      }, {
-        ...state.defaultPayload, facilityName: userFacility, startDate: startDate.format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')
       },
+        body,
         (data) => {
           if (data?.tiles) {
             dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });

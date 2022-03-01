@@ -58,7 +58,11 @@ export const getPresetDates = (label) => {
         end: moment(endDate)
       };
     default:
-      break;
+      const [start, end] = label?.split?.(' - ');
+      return {
+        start: moment(start),
+        end: moment(end)
+      }
   }
 }
 const defaultDate = 'Most recent month';
@@ -72,7 +76,7 @@ const CustomDateRangePicker = React.memo(({
 
   const [lastDate, setLastDate] = React.useState({ ...date });
   const { setItemInStore, getItemFromStore } = useLocalStorage();
-  const { efficiency } = getItemFromStore('efficiencyV2');
+  const { efficiency } = getItemFromStore('efficiencyV2') ?? {};
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [focusedInput, setFocusedInput] = React.useState('endDate');

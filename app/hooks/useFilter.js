@@ -9,13 +9,18 @@ const defaultPayload = {
 const defaultDate = 'Most recent month';
 const useFilter = () => {
   const [loading, setLoading] = React.useState(false);
+  const { setItemInStore, getItemFromStore } = useLocalStorage();
+  const defaultState = getItemFromStore('globalFilter') ?? {}
   //rooms are Room IDs - they're translated to displays values on using an orMap
-  const [rooms, setRooms] = React.useState([]);
-  const [viewFirstCase, setViewFirstCase] = React.useState(false);
-  const [dateLabel, setDateLabel] = React.useState(defaultDate);
-  const { setItemInStore } = useLocalStorage();
+  const [rooms, setRooms] = React.useState(defaultState?.rooms ?? []);
+  const [viewFirstCase, setViewFirstCase] = React.useState(defaultState?.viewFirstCase ?? false);
+  const [dateLabel, setDateLabel] = React.useState(defaultState?.dateLabel ?? defaultDate);
+  React.useEffect(() => {
+    const globalFilter = getItemFromStore('globalFilter');
+    setItemInStore('globalFilter', { ...globalFilter, rooms, viewFirstCase, dateLabel });
+  }, [rooms, viewFirstCase, dateLabel])
 
-  const selectOrs = React.useCallback(( event) => {
+  const selectOrs = React.useCallback((event) => {
     const {
       target: { value },
     } = event;
@@ -40,14 +45,15 @@ const useFilter = () => {
         setItemInStore('efficiencyV2', {
           efficiency: configData
         });
+        const globalFilter = getItemFromStore('globalFilter');
+        console.log('This is current', globalFilter);
         setItemInStore('globalFilter', {
-          startDate: configData.startDate,
-          endDate: configData.endDate,
+          ...globalFilter,
           fcotsThreshold: configData.fcotsThreshold,
           otsThreshold: configData.otsThreshold,
           turnoverThreshold: configData.turnoverThreshold
         });
-        
+
       }
       // await new Promise(resolve => setTimeout(resolve, 300000))
       setLoading(false);
@@ -55,7 +61,7 @@ const useFilter = () => {
     } catch (err) {
       setLoading(false);
     }
-    
+
   };
 
   const applyGlobalFilter = async ({ endpoint, userToken, cancelToken }, payload, cb) => {
@@ -72,7 +78,7 @@ const useFilter = () => {
       if (data?.tiles?.length) {
         return cb(data);
       }
-      
+
     } catch (err) {
       setLoading(false);
     }

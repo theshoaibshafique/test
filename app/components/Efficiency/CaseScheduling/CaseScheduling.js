@@ -92,21 +92,32 @@ const CaseScheduling = () => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const config = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
-      //TODO: centralize default date selection
-      const { endDate } = config ?? {};
-      const startDate = moment(endDate)?.subtract(1, 'month');
+      const defaultConfig = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
+      const config = getItemFromStore('globalFilter');
+      let body = null;
+      if (config) {
+        const { startDate, endDate, rooms, specialtyNames } = config;
+        body = {
+          ...state.defaultPayload,
+          facilityName: userFacility,
+          startDate: moment(startDate).format('YYYY-MM-DD'),
+          endDate: moment(endDate).format('YYYY-MM-DD'),
+          roomNames: rooms ?? [],
+        }
+      } else {
+        const { endDate } = defaultConfig ?? {};
+        const startDate = moment(endDate)?.subtract(1, 'month');
+        body = {
+          ...state.defaultPayload, facilityName: userFacility, startDate: startDate.format('YYYY-MM-DD'), endDate: moment(endDate).format('YYYY-MM-DD')
+        }
+      }
       // GET data from the efficiency API using a POST request, passing in pieces of data that will be used to determine the initial response to populate the page    
       await applyGlobalFilter({
         endpoint: process.env.SCHEDULING_API,
         userToken,
         cancelToken: axios.CancelToken.source()
-      }, {
-        ...state.defaultPayload,
-        facilityName: userFacility,
-        startDate: startDate.format('YYYY-MM-DD'),
-        endDate: moment(endDate).format('YYYY-MM-DD')
       },
+        body,
         (data) => {
           if (data?.tiles) {
             dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
@@ -209,8 +220,8 @@ const CaseScheduling = () => {
         <Grid item xs={12} className="efficiency-dashboard-header header-2">
           Case Scheduling
         </Grid>
-        <Grid item container spacing={0} xs={6} style={{ paddingRight: '0px', paddingBottom:0 }} className="efficiency-container">
-          <Grid container item xs={12} spacing={4} style={{paddingBottom:32}}>
+        <Grid item container spacing={0} xs={6} style={{ paddingRight: '0px', paddingBottom: 0 }} className="efficiency-container">
+          <Grid container item xs={12} spacing={4} style={{ paddingBottom: 32 }}>
             <Grid item xs={6} >
               <Card className='tile-card'>
                 <CardContent>
@@ -220,18 +231,18 @@ const CaseScheduling = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={6} style={{paddingRight:0}} >
+            <Grid item xs={6} style={{ paddingRight: 0 }} >
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.overtime && (
-                    <OvertimeCard data={tile.overtime} reverse/>
+                    <OvertimeCard data={tile.overtime} reverse />
                   )}
                 </CardContent>
               </Card>
             </Grid>
           </Grid>
-          <Grid container item xs={12} spacing={4} style={{paddingBottom:32}}>
-            <Grid item xs={12} style={{paddingRight:0}}>
+          <Grid container item xs={12} spacing={4} style={{ paddingBottom: 32 }}>
+            <Grid item xs={12} style={{ paddingRight: 0 }}>
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.trend && (
@@ -247,8 +258,8 @@ const CaseScheduling = () => {
               </Card>
             </Grid>
           </Grid>
-          <Grid container item xs={12} spacing={4} style={{paddingBottom:32}}>
-            <Grid item xs={12} style={{paddingRight:0}}>
+          <Grid container item xs={12} spacing={4} style={{ paddingBottom: 32 }}>
+            <Grid item xs={12} style={{ paddingRight: 0 }}>
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.delays && (
@@ -261,7 +272,7 @@ const CaseScheduling = () => {
         </Grid>
         <Grid item xs={6} >
           <Card className='tile-card' style={{ height: 1084 }}>
-            <CardContent style={{padding:0, position:'relative'}}>
+            <CardContent style={{ padding: 0, position: 'relative' }}>
               {tile?.procedure && (
                 <ProcedureList
                   title={tile.procedure.title}
