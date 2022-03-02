@@ -46,7 +46,6 @@ const useFilter = () => {
           efficiency: configData
         });
         const globalFilter = getItemFromStore('globalFilter');
-        console.log('This is current', globalFilter);
         setItemInStore('globalFilter', {
           ...globalFilter,
           fcotsThreshold: configData.fcotsThreshold,

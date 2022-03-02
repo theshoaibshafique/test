@@ -70,7 +70,7 @@ const BarGraph = React.memo(({
               </Bar>
             </React.Fragment>
           )}
-          {rest?.dualColour && (
+          {rest?.dualColour && !rest?.stacked && (
             <Bar dataKey={rest?.primaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
               {data.map((entry) => (
                 <Cell key={uuidv4()} fill={entry.bin > 0 ? '#FF7D7D' : '#009483'} />
@@ -80,7 +80,7 @@ const BarGraph = React.memo(({
           {rest?.singleColour && (
             <Bar dataKey="count" fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'} />
           )}
-          <XAxis dataKey="bin" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles}  interval={interval} domain={[0, 'auto']} />
+          <XAxis dataKey="bin" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles}  interval={interval} domain={[0, 'auto']}/>
           <YAxis allowDecimals={false} dataKey={rest?.primaryKey ?? "count"} label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
         </BarChart>
       </ResponsiveContainer>

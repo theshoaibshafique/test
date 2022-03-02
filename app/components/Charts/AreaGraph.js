@@ -26,9 +26,9 @@ const AreaGraph = React.memo(({ data, reference }) => (
       />
       <ReferenceLine
         x={reference}
-        stroke="#BDBDBD"
+        stroke="#004f6e"
         label={{
-          angle: -90, value: 'Average', offset: 10, position: 'left'
+          angle: -90, value: 'Average', offset: 10, position: 'left', color: '#004f6e'
         }}
       />
     </AreaChart>
