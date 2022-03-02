@@ -43,14 +43,14 @@ const Donut = React.memo(({ data, tooltips, label }) => {
       <PieChart>
         <Pie
           stroke=''
-          data={data?.slice(1, data.length)}
+          data={data}
           cx={200}
           cy={120}
           innerRadius={95}
           outerRadius={120}
           dataKey="value"
         >
-          {data?.slice(1, data?.length).map((entry, index) => (
+          {data?.map((entry, index) => (
             <Cell key={`entry-${Math.floor(Math.random() * data.length)}`} fill={entry.color} />
           ))}
           <Label position="center" style={{ fontSize: 14, color: '#004F6E' }} content={<DonutLabel {...label} />} />

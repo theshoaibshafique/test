@@ -41,7 +41,7 @@ const TimeCard = ({ data, suffix, toggle }) => (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <span className="display-number">
           {data?.value ?? "N/A"}
-          {data?.value && <sup className="superscript-text">{suffix || '%'}</sup>}
+          {data?.value !== null && <sup className="superscript-text">{suffix || '%'}</sup>}
         </span>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', marginRight: 24 }}>

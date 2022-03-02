@@ -246,7 +246,6 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                   position: 'insideBottomLeft'
                 }}
                 margin={{ bottom: 40, right: 20 }}
-                // tripleColour
                 singleColour
                 colors={['#3DB3E3']}
               />

@@ -473,30 +473,20 @@ export const StyledTable = props => <MaterialTable icons={tableIcons} {...props}
 export const ChangeIcon = ({ change, className, reverse, ...props }) => {
   let tag = '';
   let classLabel = ''
-  let tooltip = '';
   if (change === null || isNaN(change) || change == 0) {
     change = `—`;
-    tooltip = "No Change";
   } else if (change < 0) {
     classLabel = reverse ? 'trending-up' : 'trending-down';
-    tooltip = "Negative Trend";
     tag = <Icon path={mdiTrendingDown} size={'32px'} />
   } else {
-    tooltip = "Positive Trend";
     classLabel = reverse ? 'trending-down' : 'trending-up';
     tag = <Icon path={mdiTrendingUp} size={'32px'} />
   }
   return (
-    <LightTooltip interactive arrow
-      title={tooltip}
-      placement="top" fontSize="small"
-    >
-      <div className={`change-value ${classLabel} ${className} log-mouseover`} {...props} >
-        <span>{`${change}%`}</span>
-        <span>{tag}</span>
-      </div>
-    </LightTooltip>
-
+    <div className={`change-value ${classLabel} ${className}`} {...props} >
+      <span>{`${change}%`}</span>
+      <span>{tag}</span>
+    </div>
   )
 };
 
