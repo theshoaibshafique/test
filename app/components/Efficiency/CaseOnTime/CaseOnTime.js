@@ -312,7 +312,7 @@ const CaseOnTime = () => {
               )
             }, {
               field: 'start', title: tile?.dependentVarTitle,
-              render: rowData => <span >{rowData?.start ?? 'N/A'}</span>
+              render: rowData => <span >{rowData?.start !== null ? `${rowData?.start}%` : 'N/A'}</span>
             }, {
               field: 'display', title: 'display', hidden: true, defaultSort: 'desc'
             }, {

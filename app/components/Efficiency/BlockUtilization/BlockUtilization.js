@@ -324,8 +324,8 @@ const BlockUtilization = React.memo(() => {
                         field: 'or', title: 'Room', defaultSort: 'desc',
                         // render: rowData => <span className={`${rowData.display}`}>{rowData?.or}</span>
                       }, {
-                        field: 'percent', title: 'Percentage',
-                        render: rowData => <span >{rowData?.percent ?? 'N/A'}</span>
+                        field: 'percent', title: 'Block Utilization',
+                        render: rowData => <span >{rowData?.percent !== null ? `${rowData?.percent}%` : 'N/A'}</span>
                       }, {
                         field: 'change', title: 'Change',
                         render: rowData => <ChangeIcon change={rowData?.change} />
