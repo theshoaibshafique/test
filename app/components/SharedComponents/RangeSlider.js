@@ -42,7 +42,7 @@ const SSTSlider = withStyles({
     opacity: 1
   },
 })(Slider);
-const Label = (props) => <div className='subtle-text' style={{ color: '#4F4F4F' }} {...props} />
+const Label = (props) => <div className='subtle-text' style={{ color: '#4F4F4F', whiteSpace:'nowrap' }} {...props} />
 /*
 * @param {(string|number)} value - The value the slider is expecting to use
 * @param {Function} onChange - The change handler function

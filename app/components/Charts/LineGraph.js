@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { axisLabelStyle, axisStyles } from './styles';
 
 const equalProps = (props, prevProps) => props === prevProps;
 
@@ -41,8 +42,8 @@ const LineGraph = React.memo(({
       <LineChart
         data={data}
       >
-        <XAxis dataKey="date" label={xAxisLabel} interval={interval} tickSize={xTickSize} tickMargin={xTickMargin} tickFormatter={formatTick} />
-        <YAxis dataKey="percentage" label={yAxisLabel} />
+        <XAxis dataKey="date" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} interval={interval} tickSize={xTickSize} tickMargin={xTickMargin} tickFormatter={formatTick} />
+        <YAxis dataKey="percentage" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
         <Line type="monotone" dataKey="percentage" stroke="#028CC8" dot={false} />
         <Line type="monotone" dataKey="network" stroke="#e0e0e0" dot={false} />
         <Tooltip content={<CustomTooltip />} />
