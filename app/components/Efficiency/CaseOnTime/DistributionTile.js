@@ -56,6 +56,7 @@ const DistributionTile = ({
         primaryKey={rest?.viewFirstCase ? 'fcotsCount' : 'otsCount'}
         secondaryKey={rest?.viewFirstCase ? 'otsCount' : 'fcotsCount'}
         data={filteredData}
+        binSize={data?.binSize}
         xAxisLabel={{
           value: xAxisLabel,
           offset: -10,

@@ -105,6 +105,7 @@ const DistributionTile = ({ data, toolTip, title }) => {
       <BarGraph
         height={230}
         data={filteredData}
+        binSize={data?.binSize}
         xAxisLabel={{
           value: 'Turnover Duration (min)',
           offset: -10,

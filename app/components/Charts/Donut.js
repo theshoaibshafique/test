@@ -12,15 +12,14 @@ const CustomTooltip = ({ active, payload }) => {
   if (active && payload?.length) {
     const [{ name, value, payload: { payload: { color } } }] = payload;
     return (
-      <div style={{ color: '#333', fontSize: 12, lineHeight: '16px', display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }}>
-        <span style={{ display: 'flex', backgroundColor: color, width: 10, height: 10, position: 'absolute', top: 8, left: -10, paddingLeft: 15 }} />
-        <span style={{ display: 'flex', marginLeft: 5 }}>{name.toUpperCase()}: {value}</span>
+      <div className='subtle-subtext flex' style={{background:'#F2F2F2', borderRadius:4, padding:8}}>
+        <div style={{ backgroundColor: color, width: 16, height: 16 }} />
+        <div style={{ marginLeft: 4 }}>{name.toUpperCase()}: <span style={{ marginLeft: 2 }} className='bold'>{value}</span></div>
       </div>
     )
   }
   return null;
 }
-
 const NoDataOverlay = (props) => (
   <div style={{
     position: 'absolute', 

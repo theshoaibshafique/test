@@ -263,7 +263,11 @@ const CaseScheduling = () => {
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.delays && (
-                    <DistributionTile {...tile.delays} xAxisLabel={tile.delays.independentVarTitle} yAxisLabel={tile.delays.dependentVarTitle} dualColour />
+                    <DistributionTile
+                      {...tile.delays}
+                      xAxisLabel={tile.delays.independentVarTitle}
+                      yAxisLabel={tile.delays.dependentVarTitle} dualColour
+                    />
                   )}
                 </CardContent>
               </Card>

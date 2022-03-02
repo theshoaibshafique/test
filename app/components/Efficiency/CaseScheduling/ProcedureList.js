@@ -234,6 +234,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
               <BarGraph
                 height={200}
                 data={dataPoint.percentage?.values}
+                binSize={dataPoint.percentage?.binSize}
                 xAxisLabel={{
                   value: 'Change in Delay',
                   offset: -10,

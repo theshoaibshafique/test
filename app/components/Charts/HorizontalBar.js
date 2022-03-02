@@ -23,6 +23,16 @@ const NoDataOverlay = () => (
     No Data
   </div>
 );
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active) {
+    return (
+      <div style={{background:'#F2F2F2', borderRadius:4, padding:8}}>
+        <div className="subtle-subtext">{`${label}:`} <span className='bold'>{`${payload[0].value}`}</span></div>
+      </div>
+    );
+  }
+  return ''
+}
 /*
 * @param {Array<object>} data - The data to be passed into the chart
 * @param {object} xAxisLabel - The x axis label we want to display
@@ -47,7 +57,7 @@ const HorizontalBar = React.memo(({
           {...rest}
         >
 
-          <Tooltip formatter={(value, name, props) => [`${value} min`, name]} />
+          <Tooltip formatter={(value, name, props) => [`${value} min`, name]} content={<CustomTooltip />} />
           {rest?.legend && (
             <Legend
               verticalAlign="top"

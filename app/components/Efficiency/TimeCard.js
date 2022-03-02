@@ -3,7 +3,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { LightTooltip, SSTSwitch } from '../../components/SharedComponents/SharedComponents';
 import Goal from './Goal';
 
-const TimeCard = ({ data, suffix, toggle }) => (
+const TimeCard = ({ data, suffix, toggle, hideGoal }) => (
   <React.Fragment>
     <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: toggle ? 0 : 32 }}>
       {data?.title}
@@ -19,7 +19,7 @@ const TimeCard = ({ data, suffix, toggle }) => (
             height: 32,
             justifyContent: 'flex-end',
             marginTop: 0,
-            paddingBottom:4,
+            paddingBottom: 4,
             alignItems: 'center',
             flexDirection: 'row',
             fontSize: '14px',
@@ -45,7 +45,7 @@ const TimeCard = ({ data, suffix, toggle }) => (
         </span>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', marginRight: 24 }}>
-        <Goal target={data.goal} goal={data.value} />
+        {!hideGoal && <Goal target={data.goal} goal={data.value} />}
       </div>
     </div>
     <div className="additional-scores">

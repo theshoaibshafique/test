@@ -61,6 +61,7 @@ const DistributionTile = ({
           <BarGraph
             height={230}
             data={filteredData}
+            binSize={data?.binSize}
             primaryKey="count"
             xAxisLabel={{
               value: xAxisLabel,

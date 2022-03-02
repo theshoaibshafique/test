@@ -13,12 +13,10 @@ const CustomTooltip = ({ active, payload }) => {
     const [{ payload: { date, percentage } }] = payload;
     return (
       <div
-        style={{
-          display: 'flex', flexDirection: 'column', flexWrap: 'column wrap', backgroundColor: 'rgba(0, 0, 0, 0.1)', padding: 4
-        }}
+        style={{background:'#F2F2F2', borderRadius:4, padding:8}}
       >
-        <div>Date: {moment(date).format('MMM D YYYY')}&nbsp;</div>
-        <div>Percentage: {percentage}</div>
+        <div>Date: <span className='bold'>{moment(date).format('MMM D YYYY')}</span></div>
+        <div>Percentage: <span className='bold'>{percentage}</span></div>
       </div>
     );
   }
