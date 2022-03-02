@@ -64,6 +64,7 @@ const HorizontalBar = React.memo(({
             />
           )}
           {dataKeys?.map((dataKey, i) => (
+            // colors is set by a preset list
             <Bar key={dataKey} dataKey={dataKey} stackId="a" fill={colors[i]} >
               {data.map((entry) => (
                 <Cell key={uuidv4()} fillOpacity={entry.display ?? true ? 1 : .6} />

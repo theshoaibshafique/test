@@ -58,8 +58,9 @@ const reducer = (state, action) => {
       return state;
   }
 };
-
-const DONUT_COLOURS = ['#A77ECD', '#50CBFB', '#FFDB8C', '#97E7B3'];
+const COLOR_MAP = {
+  case: '#A77ECD', setup: '#50CBFB', cleanup: '#97E7B3', idle: '#FFDB8C'
+}
 
 // Note: only change the below if you know what you're doing / need to change this based on passing new props in or performing some logic to change how this is memoized, this function helps to memoize the component so it'll only re-render upon updates to its props changing
 const equalProps = (props, prevProps) => props === prevProps;
@@ -186,7 +187,7 @@ const BlockUtilization = React.memo(() => {
   const formatDonutData = (data) => Object.entries(data).filter(filterKeys).reduce((acc, [key, val], i) => acc.concat({
     name: key,
     value: val,
-    color: DONUT_COLOURS[i % DONUT_COLOURS.length]
+    color: COLOR_MAP[key]
   }), []).filter((({ name, value }) => name !== 'hours' && value !== null));
 
   /*
