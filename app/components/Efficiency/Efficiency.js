@@ -260,7 +260,7 @@ const Efficiency = () => {
                     </div>
                     <div className="additional-scores" style={{ marginTop: 24 }}>
                       <div className="additional-scores-title">OR Black Box<sup>&reg;</sup> Network</div>
-                      <div className="additional-scores-value">{tile.efficiency.value || 0}</div>
+                      <div className="additional-scores-value">{tile.efficiency.network.mean || 0}</div>
                     </div>
                   </React.Fragment>
                 )}

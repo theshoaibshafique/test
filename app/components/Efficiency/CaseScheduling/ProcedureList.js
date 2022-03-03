@@ -57,7 +57,6 @@ const NoDataOverlay = () => (
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload?.length) {
     const [{ payload: { x, y, scale, shape } }] = payload;
-    console.log(payload)
     const percentile = `${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(x, scale, shape) * 100))} percentile`;
     return (
       <div
