@@ -147,16 +147,14 @@ const Efficiency = () => {
     const headlineTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'headlines');
     const onTimeTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'ots');
     const fcotTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'fcots');
-    const otTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'overtime');
+    const otTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'overtime by room');
     const utilizationTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'block utilization');
     const turnoverTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'turnover');
     const scheduleTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'scheduling');
     const specialtyTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'throughput specialty');
     const roomTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'throughput room');
-
     const formattedHorizontalBarData = formatBarGraphData(otTile?.data);
     setOrGraphData(formattedHorizontalBarData);
-
     setTile({
       efficiency: efficiencyTile,
       headline: headlineTile,
