@@ -222,7 +222,7 @@ const TurnoverTime = () => {
             <Card className='tile-card'>
               <CardContent>
                 {tile?.time && (
-                  <TimeCard data={tile.time} suffix="Min" />
+                  <TimeCard data={tile.time} suffix=" min" hideGoal/>
                 )}
               </CardContent>
             </Card>

@@ -226,7 +226,7 @@ const CaseScheduling = () => {
               <Card className='tile-card'>
                 <CardContent>
                   {tile?.schedule && (
-                    <TimeCard data={tile.schedule} />
+                    <TimeCard data={tile.schedule} hideGoal/>
                   )}
                 </CardContent>
               </Card>
