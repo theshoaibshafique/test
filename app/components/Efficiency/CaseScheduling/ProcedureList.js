@@ -17,7 +17,7 @@ import globalFunctions from '../../../utils/global-functions';
 import { Divider, ListItemText, Menu, MenuItem } from '@material-ui/core';
 import { LightTooltip } from '../../SharedComponents/SharedComponents';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { log_norm_pdf } from '../../../containers/CaseDiscovery/misc/Utils';
+import { log_norm_cdf, log_norm_pdf } from '../../../containers/CaseDiscovery/misc/Utils';
 
 const useStyles = makeStyles({
   content: {
@@ -54,6 +54,23 @@ const NoDataOverlay = () => (
   </div>
 );
 
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload?.length) {
+    const [{ payload: { x, y, scale, shape } }] = payload;
+    console.log(payload)
+    const percentile = `${globalFunctions.ordinal_suffix_of(Math.round(log_norm_cdf(x, scale, shape) * 100))} percentile`;
+    return (
+      <div
+        style={{ background: '#F2F2F2', borderRadius: 4, padding: 8 }}
+      >
+        <div><span className='bold'>{globalFunctions.formatSecsToTime(x*60, true, true)}</span></div>
+        <div><span className='bold'>{percentile}</span> percentile</div>
+      </div>
+    );
+  }
+  return null;
+};
+
 // Even though this function appears duplicated across various pages / components, I promise this is necessary because trying to extract it will give you errors
 const equalProps = (props, prevProps) => props === prevProps;
 
@@ -79,7 +96,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
     const upper = Math.max(mu + (3.5 * sigma), duration + (0.2 * sigma))
     const chartData = [];
     for (let x = lower; x < upper; x++) {
-      chartData.push({ x, y: log_norm_pdf(x, scale, shape) });
+      chartData.push({ x, y: log_norm_pdf(x, scale, shape), duration, shape, scale });
     }
 
     return chartData;
@@ -227,7 +244,12 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
             <AccordionDetails style={{ flexDirection: 'column', borderTop: '1px solid #F2F2F2' }}>
               <div className="subtle-text" style={{ marginBottom: 20 }}>
                 {"Distibution of Changes in Delay"}
-                <LightTooltip placement="top" fontSize="small" interactive arrow title="Distribution of how much a case increased the delay of the next case relative to the cases length. ">
+                <LightTooltip
+                  placement="top"
+                  fontSize="small"
+                  interactive arrow
+                  title="Distribution of how much a case increased the delay of the next case relative to the cases length. "
+                >
                   <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" />
                 </LightTooltip>
               </div>
@@ -235,8 +257,9 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                 height={200}
                 data={dataPoint.percentage?.values}
                 binSize={dataPoint.percentage?.binSize}
+                unit='%'
                 xAxisLabel={{
-                  value: 'Change in Delay',
+                  value: 'Change in Delay (%)',
                   offset: -10,
                   position: 'insideBottom'
                 }}
@@ -252,8 +275,28 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
               />
               <div className="subtle-text" style={{ marginBottom: 20 }}>
                 {"Case Duration"}
+                <LightTooltip
+                  placement="top"
+                  fontSize="small"
+                  interactive arrow
+                  title={(
+                    <div>
+                      <div style={{ marginBottom: 8 }}>Case duration distribution is best approximation based on all historical cases of the same procedure type.</div>
+                      <div>Case Count: <span className='bold'>{`${dataPoint.case}`}</span></div>
+                      <div>Mean: <span className='bold'>{`${globalFunctions.formatSecsToTime(dataPoint.allTimeMean*60, true, true)}`}</span></div>
+                      <div>Median: <span className='bold'>{`${globalFunctions.formatSecsToTime(dataPoint.allTimeMedian*60, true, true)}`}</span></div>
+                      <div>Standard Deviation: <span className='bold'>{`${globalFunctions.formatSecsToTime(dataPoint.allTimeSd*60, true, true)}`}</span></div>
+                    </div>
+                  )}
+                >
+                  <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" />
+                </LightTooltip>
               </div>
-              <AreaGraph data={formatAreaChartData(dataPoint.mean, dataPoint.shape, dataPoint.scale)} reference={dataPoint.mean} />
+              <AreaGraph
+                data={formatAreaChartData(dataPoint.mean, dataPoint.shape, dataPoint.scale)}
+                reference={dataPoint.mean}
+                CustomTooltip={CustomTooltip}
+              />
             </AccordionDetails>
           </Accordion>
         ))}

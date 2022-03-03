@@ -14,7 +14,7 @@ const NoDataOverlay = (props) => (
     color: '#828282', width: '100%', height: '100%'
   }} className='header-1 flex vertical-center'>No Data</div>
 )
-const CustomTooltip = ({ active, payload, binSize }) => {
+const CustomTooltip = ({ active, payload, binSize, unit }) => {
   if (active && payload?.length) {
     const [{ payload: { count, bin, fcotsCount, otsCount } }, secondEntry] = payload;
     let body = null;
@@ -22,14 +22,14 @@ const CustomTooltip = ({ active, payload, binSize }) => {
     if (count !== undefined) {
       body = (
         <>
-          <div>Range: <span className='bold'>{`${bin} to ${bin + binSize} min`}</span></div>
+          <div>Range: <span className='bold'>{`${bin} to ${bin + binSize} ${unit ?? 'min'}`}</span></div>
           <div>Frequency: <span className='bold'>{count}</span></div>
         </>
       )
     } else if (otsCount !== undefined){
       body = (
         <>
-          <div>Range: <span className='bold'>{`${bin} to ${bin + binSize} min`}</span></div>
+          <div>Range: <span className='bold'>{`${bin} to ${bin + binSize} ${unit ?? 'min'}`}</span></div>
           <div>Frequency: <span className='bold'>{`${otsCount}`}</span></div>
           {secondEntry && <div>FCOT Frequency: <span className='bold'>{`${fcotsCount}`}</span></div>}
         </>
@@ -55,7 +55,7 @@ const CustomTooltip = ({ active, payload, binSize }) => {
 * @param {object} rest - Any additional props to be passed into the component
 */
 const BarGraph = React.memo(({
-  data, xAxisLabel, yAxisLabel, height, interval, colors, binSize, ...rest
+  data, xAxisLabel, yAxisLabel, height, interval, colors, binSize, unit, ...rest
 }) => {
   const hasData = data?.length;
   data = hasData ? data : [{ room: '' }]
@@ -67,7 +67,7 @@ const BarGraph = React.memo(({
           {...rest}
         >
 
-          <Tooltip content={<CustomTooltip binSize={binSize} />} />
+          <Tooltip content={<CustomTooltip binSize={binSize} unit={unit}/>} />
           {rest?.tripleColour && (
             <Bar dataKey="count" fill={colors?.length === 1 ? colors?.toString() : colors?.map((color) => color)}>
               {data.map((entry) => {
