@@ -67,10 +67,6 @@ export const getPresetDates = (label) => {
           end: moment(end)
         }
       }
-      return ({
-        start: moment(),
-        end: moment()
-      })
   }
 }
 const defaultDate = 'Most recent month';
@@ -80,7 +76,7 @@ const CustomDateRangePicker = React.memo(({
 
   //Key is only used to control rerender - (kinda hacky) - change key (force rerender) on preset click to focus selected date
   const [key, setKey] = React.useState(uuidv4())
-  const [date, setDate] = React.useState(getPresetDates(dateLabel || defaultDate));
+  const [date, setDate] = React.useState(getPresetDates(dateLabel || defaultDate) ?? {});
 
   const [lastDate, setLastDate] = React.useState({ ...date });
   const { setItemInStore, getItemFromStore } = useLocalStorage();
@@ -92,12 +88,16 @@ const CustomDateRangePicker = React.memo(({
 
   //Save the date whenever its changed
   React.useEffect(() => {
+    
+    if (!(date?.start?.isValid() && date?.end?.isValid())){
+      return;
+    }
     const globalFilter = getItemFromStore('globalFilter');
     setItemInStore('globalFilter', { ...globalFilter, startDate: date.start?.format('YYYY-MM-DD'), endDate: date.end?.format('YYYY-MM-DD'), dateLabel });
     if (date.end) {
       setLastDate({ ...date, dateLabel })
     }
-  }, [date.start, date.end]);
+  }, [date?.start, date?.end]);
 
   const handleMenuClick = (e) => {
     setAnchorEl(e.currentTarget);
