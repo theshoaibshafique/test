@@ -30,8 +30,8 @@ const CustomTooltip = ({ active, payload, binSize, unit }) => {
       body = (
         <>
           <div>Range: <span className='bold'>{`${bin} to ${bin + binSize} ${unit ?? 'min'}`}</span></div>
-          <div>Frequency: <span className='bold'>{`${otsCount}`}</span></div>
-          {secondEntry && <div>FCOT Frequency: <span className='bold'>{`${fcotsCount}`}</span></div>}
+          <div>Case Frequency: <span className='bold'>{`${otsCount+fcotsCount}`}</span></div>
+          {secondEntry && <div>First Case Frequency: <span className='bold'>{`${fcotsCount}`}</span></div>}
         </>
       )
     }
