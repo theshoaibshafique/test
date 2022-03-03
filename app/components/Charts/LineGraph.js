@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceArea } from 'recharts';
 import { axisLabelStyle, axisStyles } from './styles';
 
 const equalProps = (props, prevProps) => props === prevProps;
@@ -32,19 +32,22 @@ const CustomTooltip = ({ active, payload }) => {
  * @param {(number|object)} xTickMargin - The margin around the chart (defaulting currently to all margins)
  */
 const LineGraph = React.memo(({
-  data, xAxisLabel, yAxisLabel, interval, xTickSize, xTickMargin
+  data, xAxisLabel, yAxisLabel, interval, xTickSize, xTickMargin, areaReference
 }) => {
   const formatTick = (item) => moment(item).format('MMM');
+  const [start,end] = areaReference ?? []
   return (
     <ResponsiveContainer width="100%" height={200}>
       <LineChart
         data={data}
       >
-        <XAxis dataKey="date" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} interval={interval} tickSize={xTickSize} tickMargin={xTickMargin} tickFormatter={formatTick} />
+        <ReferenceArea x1={start} x2={end} fill="#B3CAD3" fillOpacity={.2} alwaysShow/>
+        <XAxis scale='linear' dataKey="date" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} interval={interval} tickSize={xTickSize} tickMargin={xTickMargin} tickFormatter={formatTick} />
         <YAxis dataKey="percentage" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
         <Line type="monotone" dataKey="percentage" stroke="#028CC8" dot={false} />
         <Line type="monotone" dataKey="network" stroke="#e0e0e0" dot={false} />
         <Tooltip content={<CustomTooltip />} />
+        
       </LineChart>
     </ResponsiveContainer>
   );

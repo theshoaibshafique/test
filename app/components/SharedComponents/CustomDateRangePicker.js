@@ -85,7 +85,7 @@ const CustomDateRangePicker = React.memo(({
   //Save the date whenever its changed
   React.useEffect(() => {
     const globalFilter = getItemFromStore('globalFilter');
-    setItemInStore('globalFilter', { ...globalFilter, startDate: date.start, endDate: date.end, dateLabel });
+    setItemInStore('globalFilter', { ...globalFilter, startDate: date.start?.format('YYYY-MM-DD'), endDate: date.end?.format('YYYY-MM-DD'), dateLabel });
     if (date.end) {
       setLastDate({ ...date, dateLabel })
     }

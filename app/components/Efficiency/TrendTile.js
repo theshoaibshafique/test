@@ -6,6 +6,7 @@ import { LightTooltip } from '../../components/SharedComponents/SharedComponents
 import RangeSlider from '../../components/SharedComponents/RangeSlider';
 import RadioButtonGroup from '../../components/SharedComponents/RadioButtonGroup';
 import LineGraph from '../Charts/LineGraph';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const TrendTile = ({
   data, trendLineData, chartData, toggleChartData, options
@@ -15,47 +16,67 @@ const TrendTile = ({
     start: '',
     end: ''
   });
+
+  //Range of the default Area
   const [range, setRange] = React.useState({
     min: 0,
     max: 0
   });
   const [filteredTrendData, setFilteredTrendData] = React.useState([]);
-
+  const { getItemFromStore } = useLocalStorage();
+  //Update line - without updating slider or area range
   React.useEffect(() => {
-    setFilteredTrendData(trendLineData);
+    filterTrend(null, trendSlider)
   }, [trendLineData]);
 
+  //If data changes - we assume APPLY was clicked and we re-set ranges
   React.useEffect(() => {
     const startDate = moment(data?.data?.startDate).valueOf();
     const endDate = moment(data?.data?.endDate).valueOf();
 
+    const config = getItemFromStore('globalFilter');
+    const min = config?.startDate ? moment(config?.startDate).valueOf() + 86400000 : null;
+    const max = config?.endDate ? moment(config?.endDate).valueOf() : null;
     setRange({
-      min: startDate,
-      max: endDate
+      min,
+      max
     });
 
-    setDate({
-      start: startDate,
-      end: endDate
-    });
-    setTrendSlider([startDate, endDate]);
+    const start = config?.startDate ? moment(config?.startDate).valueOf() : startDate;
+    const end = config?.endDate ? moment(config?.endDate).valueOf() : endDate;
+    setTrendSlider([start, end]);
   }, [data]);
 
   React.useEffect(() => {
     const [first, last] = trendSlider;
+    const start = moment(first).valueOf();
+    const end = moment(last).valueOf();
+
+    setFilteredTrendData(trendLineData?.filter((values) =>
+      moment(values.date).isBetween(start, end)
+    ) ?? []);
+
     setDate({
-      start: moment(first).valueOf(),
-      end: moment(last).valueOf()
+      start,
+      end
     });
   }, [trendSlider]);
 
   const filterTrend = (_, val) => {
-    setFilteredTrendData(trendLineData.filter((values) =>
+    setFilteredTrendData(trendLineData?.filter((values) =>
       moment(values.date).isBetween(date.start, date.end)
     ));
     setTrendSlider(val);
   };
   const valueLabelFormat = (value) => moment(value).format('MMM D YYYY');
+
+  //Max range
+  const startDate = moment(data?.data?.startDate).valueOf();
+  const endDate = moment(data?.data?.endDate).valueOf();
+
+
+  const [sliderStart, sliderEnd] = trendSlider;
+
   return !!data && (
     <React.Fragment>
       <div
@@ -82,12 +103,13 @@ const TrendTile = ({
         yAxisLabel={{
           value: data.dependentVarTitle, angle: -90, offset: 15, position: 'insideBottomLeft'
         }}
+        areaReference={[Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
         xTickMargin={8}
       />
       <Grid item xs={12} style={{ marginTop: 10 }}>
         <RangeSlider
-          min={range.min}
-          max={range.max}
+          min={startDate}
+          max={endDate}
           step={86400}
           onChange={filterTrend}
           value={trendSlider}
