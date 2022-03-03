@@ -24,15 +24,36 @@ const NoDataOverlay = () => (
   </div>
 );
 const CustomTooltip = ({ active, payload, label }) => {
-  if (active) {
+  if (active && payload?.length) {
+    if (payload?.length === 1) {
+      const [{ payload: { Time } }] = payload;
+      return (
+        <div
+          style={{ background: '#F2F2F2', borderRadius: 4, padding: 8 }}
+        >
+          {`${label}: `} <span className='bold'>{`${Time} min`}</span>
+        </div>
+      )
+    }
     return (
-      <div style={{background:'#F2F2F2', borderRadius:4, padding:8}}>
-        <div className="subtle-subtext">{`${label}:`} <span className='bold'>{`${payload[0].value}`}</span></div>
+      <div
+        style={{ background: '#F2F2F2', borderRadius: 4, padding: 8 }}
+      >
+        <div>{label}</div>
+        {payload.map(({ color, name, payload }) => (
+          <div className='subtle-subtext flex' style={{marginBottom:2}} >
+            <div style={{ backgroundColor: color, width: 16, height: 16 }} />
+            <div style={{ marginLeft: 4 }}>
+              {name.toUpperCase()}:
+              <span style={{ marginLeft: 2 }} className='bold'>{`${payload?.[name]} min`}</span>
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
-  return ''
-}
+  return null;
+};
 /*
 * @param {Array<object>} data - The data to be passed into the chart
 * @param {object} xAxisLabel - The x axis label we want to display

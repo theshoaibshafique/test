@@ -24,6 +24,7 @@ import AreaGraph from '../Charts/AreaGraph';
 import './styles.scss';
 import useFilter from '../../hooks/useFilter';
 import RadioButtonGroup from '../SharedComponents/RadioButtonGroup';
+import globalFunctions from '../../utils/global-functions';
 
 // @TODO: Possibly remove state as some of this is handled through a hook instead
 const INITIAL_STATE = {
@@ -37,7 +38,31 @@ const INITIAL_STATE = {
     specialtyNames: []
   }
 };
-
+function normalCdf(value) {
+  const z = (value - 50) / 12.5;  // mean and std. dev. of norm dist
+  const t = 1 / (1 + .2315419 * Math.abs(z));
+  const d =.3989423 * Math.exp( -z * z / 2);
+  const prob = d * t * (.3193815 + t * ( -.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+  return z < 0 ? prob : 1 - prob;
+}
+function normalPdf(value) {  // mean 50; std 12.5
+  return (Math.E ** -((value - 50) ** 2 / (2 * 12.5 ** 2))) / (12.5 * Math.sqrt(2 * Math.PI));
+}
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload?.length) {
+    const [{ payload: { x, y } }] = payload;
+    const percentile = `${globalFunctions.ordinal_suffix_of(Math.round(normalCdf(x) * 100))} percentile`;
+    return (
+      <div
+        style={{ background: '#F2F2F2', borderRadius: 4, padding: 8 }}
+      >
+        <div><span className='bold'>{x}</span> Efficiency Index</div>
+        <div><span className='bold'>{percentile}</span> percentile</div>
+      </div>
+    );
+  }
+  return null;
+};
 const reducer = (state, action) => {
   switch (action.type) {
     case 'TOGGLE_INFORMATION_MODAL':
@@ -183,11 +208,11 @@ const Efficiency = () => {
   */
   const formatAreaChartData = (mean, sd) => {
     const chartData = [];
-    const lowerBound = mean - sd * 3;
-    const upperBound = mean + sd * 3;
+    const lowerBound = 0;
+    const upperBound = 100;
 
     for (let x = lowerBound; x < upperBound; x++) {
-      chartData.push({ x, y: Math.exp(-0.5 * Math.pow((x - mean) / sd, 2)) });
+      chartData.push({ x, y: normalPdf(x) });
     }
     return chartData;
   };
@@ -223,7 +248,12 @@ const Efficiency = () => {
                         <InfoOutlinedIcon style={{ fontSize: 16, marginLeft: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.efficiency?.toolTip?.toString()}`} />
                       </LightTooltip>
                     </div>
-                    <AreaGraph data={formatAreaChartData(tile.efficiency.network.mean, tile.efficiency.network.sd)} reference={tile.efficiency.value} topReference />
+                    <AreaGraph
+                      data={formatAreaChartData(tile.efficiency.network.mean, tile.efficiency.network.sd)}
+                      reference={tile.efficiency.value}
+                      topReference
+                      CustomTooltip={CustomTooltip}
+                    />
                     <div className="additional-scores" style={{ display: 'none' }}> {/* TODO: Change styles to avoid needing these empty divs */}
                       <div className="additional-scores-title"></div>
                       <div className="additional-scores-value"></div>

@@ -2,13 +2,8 @@ import React from 'react';
 import { AreaChart, Area, ReferenceLine, Tooltip, ResponsiveContainer, YAxis } from 'recharts';
 
 const equalProps = (props, prevProps) => prevProps === props;
-const CustomTooltip = (props) => {
-  console.log(props)
-  return (
-    <div>WOW</div>
-  )
-}
-const AreaGraph = React.memo(({ data, reference, topReference }) => (
+
+const AreaGraph = React.memo(({ data, reference, topReference, CustomTooltip }) => (
   <ResponsiveContainer width="100%" height={165}>
     <AreaChart
       width={600}
@@ -21,8 +16,8 @@ const AreaGraph = React.memo(({ data, reference, topReference }) => (
         bottom: 0
       }}
     >
-      {/* <Tooltip content={<CustomTooltip />}/> */}
-      <Tooltip />
+      {CustomTooltip && <Tooltip content={<CustomTooltip />}/>}
+      {/* <Tooltip /> */}
       <Area
         type="monotone"
         dataKey="y"
