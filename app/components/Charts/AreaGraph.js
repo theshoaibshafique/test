@@ -1,5 +1,5 @@
 import React from 'react';
-import { AreaChart, Area, ReferenceLine, Tooltip, ResponsiveContainer, YAxis } from 'recharts';
+import { AreaChart, Area, ReferenceLine, Tooltip, ResponsiveContainer, YAxis, XAxis } from 'recharts';
 
 const equalProps = (props, prevProps) => prevProps === props;
 
@@ -17,7 +17,7 @@ const AreaGraph = React.memo(({ data, reference, topReference, CustomTooltip }) 
       }}
     >
       {CustomTooltip && <Tooltip content={<CustomTooltip />}/>}
-      {/* <Tooltip /> */}
+      <XAxis scale='linear' dataKey='x' hide/>
       <Area
         type="monotone"
         dataKey="y"
@@ -42,7 +42,7 @@ const AreaGraph = React.memo(({ data, reference, topReference, CustomTooltip }) 
           }}
         />
       )}
-      <YAxis padding={{top:8}}hide/>
+      <YAxis dataKey='y' padding={{top:8}} hide/>
     </AreaChart>
   </ResponsiveContainer>
 ), equalProps);

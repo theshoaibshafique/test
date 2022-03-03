@@ -95,7 +95,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
     const upper = Math.max(mu + (3.5 * sigma), duration + (0.2 * sigma))
     const chartData = [];
     for (let x = lower; x < upper; x++) {
-      chartData.push({ x, y: log_norm_pdf(x, scale, shape), duration, shape, scale });
+      chartData.push({ x, y: log_norm_pdf(x, scale, shape), shape, scale });
     }
 
     return chartData;
