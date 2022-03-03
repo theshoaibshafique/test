@@ -59,10 +59,15 @@ export const getPresetDates = (label) => {
       };
     default:
       const [start, end] = label?.split?.(' - ');
-      return {
-        start: moment(start),
-        end: moment(end)
+      const sDate = moment(start);
+      const eDate = moment(end);
+      if (sDate.isValid() && eDate.isValid()){
+        return {
+          start: moment(start),
+          end: moment(end)
+        }
       }
+      
   }
 }
 const defaultDate = 'Most recent month';
@@ -79,7 +84,7 @@ const CustomDateRangePicker = React.memo(({
   const { efficiency } = getItemFromStore('efficiencyV2') ?? {};
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [focusedInput, setFocusedInput] = React.useState('endDate');
+  const [focusedInput, setFocusedInput] = React.useState('startDate');
   const styles = useStyles();
 
   //Save the date whenever its changed
