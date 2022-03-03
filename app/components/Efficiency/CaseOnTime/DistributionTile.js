@@ -17,12 +17,21 @@ const DistributionTile = ({
     max: 100
   });
   React.useEffect(() => {
-    const {values} = data ?? {}
-    setFilteredData(values);
+    const { values } = data ?? {}
+    // setFilteredData(values);
     setOriginalData(values);
     const startValue = values?.[0]?.bin;
     const endValue = values?.[data?.values.length - 1]?.bin;
-    setSliderRange([startValue, endValue]);
+
+    
+    const yValues = values?.map(({ fcotsCount, otsCount }) => fcotsCount + otsCount) ?? [];
+    const indexOfMax = yValues.indexOf(Math.max(...yValues))
+    //Find the peak of the values and show 15% left and right of it or a min of 15 bins
+    const leftSpan = Math.max(Math.round(yValues.length * .15), 10)
+    const rightSpan = Math.max(Math.round(yValues.length * .15), 10)
+    const leftEl = values?.[Math.max(indexOfMax - leftSpan, 0)];
+    const rightEl = values?.[Math.min(indexOfMax + rightSpan, yValues.length - 1)];
+    setSliderRange([leftEl?.bin ?? startValue, rightEl?.bin ?? endValue]);
     setRange({
       min: startValue,
       max: endValue
@@ -30,10 +39,12 @@ const DistributionTile = ({
   }, [data, rest.viewFirstCase]);
 
   const filterStartDistribution = React.useCallback((_, val) => {
-    const [first, second] = val;
-    setFilteredData(originalData.filter((values) => values.bin > first && values.bin < second));
     setSliderRange(val);
   }, [sliderRange]);
+  React.useEffect(() => {
+    const [first, second] = sliderRange;
+    setFilteredData(originalData.filter((values) => values.bin > first && values.bin < second));
+  }, [sliderRange])
   const valueLabelFormat = (value) => `${value} min`;
   return (
     <React.Fragment>

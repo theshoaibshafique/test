@@ -137,7 +137,7 @@ const CaseScheduling = () => {
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
     const electiveTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
     const procedureTile = state.tiles.find(({ title }) => title.toLowerCase().includes('procedure'));
-    const delaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('delays'));
+    const delaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('delay'));
     setTrendStartDate(trendTile?.data?.startDate);
     setTile({
       schedule: scheduleTile,

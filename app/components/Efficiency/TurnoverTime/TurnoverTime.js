@@ -139,7 +139,7 @@ const TurnoverTime = () => {
   React.useEffect(() => {
     if (!state.tiles) return;
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
-    const orTile = state.tiles.find(({ title }) => title.toLowerCase().includes('or'));
+    const orTile = state.tiles.find(({ title }) => title.toLowerCase().includes('room'));
     const overtimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
     const timeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('time'));
     const durationTile = state.tiles.find(({ title }) => title.toLowerCase().includes('duration'));

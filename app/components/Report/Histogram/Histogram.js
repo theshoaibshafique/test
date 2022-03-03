@@ -12,7 +12,6 @@ export default class Histogram extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    console.log(this.props);
     this.chartRef = React.createRef();
     this.id = `histogram-${this.props.id}`;
     this.state = {
