@@ -58,7 +58,7 @@ export const getPresetDates = (label) => {
         end: moment(endDate)
       };
     default:
-      const [start, end] = label?.split?.(' - ');
+      const [start, end] = label?.split?.(' to ');
       const sDate = moment(start);
       const eDate = moment(end);
       if (sDate.isValid() && eDate.isValid()){

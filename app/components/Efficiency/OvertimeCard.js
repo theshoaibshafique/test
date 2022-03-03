@@ -17,7 +17,7 @@ const OvertimeCard = ({ data, reverse }) => (
       <div className="overtime-block-number">{data?.value?.sum || 0}
         <sub>min</sub>
       </div>
-      <div className="overtime-helper" style={{ flex: '1 0 20%' }}>
+      <div className="overtime-helper subtext" style={{ flex: '1 0 20%' }}>
         in total
       </div>
       <div className="overtime-block-number">{data?.value?.annualized || 0}
@@ -26,8 +26,8 @@ const OvertimeCard = ({ data, reverse }) => (
           <sub>min</sub>
         </span>
       </div>
-      <div className="overtime-helper">
-        Annualized Average Per Room
+      <div className="overtime-helper subtext">
+        annualized average per room
       </div>
     </div>
   </React.Fragment>
