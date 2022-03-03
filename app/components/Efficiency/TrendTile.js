@@ -36,7 +36,7 @@ const TrendTile = ({
 
     const config = getItemFromStore('globalFilter');
     const min = config?.startDate ? moment(config?.startDate).valueOf() + 86400000 : null;
-    const max = config?.endDate ? moment(config?.endDate).valueOf() : null;
+    const max = config?.endDate ? moment(config?.endDate).valueOf(): null;
     setRange({
       min,
       max
@@ -76,7 +76,6 @@ const TrendTile = ({
 
 
   const [sliderStart, sliderEnd] = trendSlider;
-
   return !!data && (
     <React.Fragment>
       <div
@@ -103,7 +102,7 @@ const TrendTile = ({
         yAxisLabel={{
           value: data.dependentVarTitle, angle: -90, offset: 15, position: 'insideBottomLeft'
         }}
-        areaReference={[Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
+        areaReference={range.max < sliderStart ? []: [Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
         xTickMargin={8}
       />
       <Grid item xs={12} style={{ marginTop: 10 }}>
