@@ -123,10 +123,11 @@ const CaseOnTime = () => {
       target: { value },
     } = event;
     setSpecialtyNames(value);
-    //TODO: maybe move into useFilter
-    const globalFilter = getItemFromStore('globalFilter');
-    setItemInStore('globalFilter', { ...globalFilter, specialtyNames:value });
   }
+  React.useEffect(() => {
+    const globalFilter = getItemFromStore('globalFilter');
+    setItemInStore('globalFilter', { ...globalFilter, specialtyNames });
+  }, [specialtyNames])
   React.useEffect(() => {
     const fetchData = async () => {
       const defaultConfig = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
