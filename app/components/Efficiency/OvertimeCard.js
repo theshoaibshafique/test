@@ -21,7 +21,7 @@ const OvertimeCard = ({ data, reverse }) => {
       </div>
       <div className="overtime-rows">
         <div className="flex" style={{ flex: '1 0 60%' }}>
-          {sumHr && <div className="overtime-block-number">
+          {parseInt(sumHr) > 0 && <div className="overtime-block-number">
             {sumHr || 0}
             <sub>hr</sub>
           </div>}
@@ -36,7 +36,7 @@ const OvertimeCard = ({ data, reverse }) => {
       </div>
       <div  className="overtime-rows">
         <div className="flex" style={{ flex: '1 0 60%' }}>
-          {annHr && <div className="overtime-block-number">
+          {parseInt(annHr) > 0 && <div className="overtime-block-number">
             {annHr || 0}
             <sub>hr</sub>
           </div>}
