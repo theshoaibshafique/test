@@ -67,7 +67,10 @@ export const getPresetDates = (label) => {
           end: moment(end)
         }
       }
-      
+      return ({
+        start: moment(),
+        end: moment()
+      })
   }
 }
 const defaultDate = 'Most recent month';
