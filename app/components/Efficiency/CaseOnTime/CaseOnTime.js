@@ -318,7 +318,8 @@ const CaseOnTime = () => {
               field: 'display', title: 'display', hidden: true, defaultSort: 'desc'
             }, {
               field: 'change', title: 'Change',
-              render: rowData => <ChangeIcon change={rowData?.change} />
+              render: rowData => <ChangeIcon change={rowData?.change} />,
+              customSort: (a, b) => (a.change == null ? -.1 : a.change) - (b.change == null ? -.1 : b.change),
             }]}
           data={transformData(tile?.data, tile?.independentVarTitle,
             (data) => {

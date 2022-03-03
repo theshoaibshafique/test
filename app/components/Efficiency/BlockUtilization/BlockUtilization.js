@@ -328,7 +328,8 @@ const BlockUtilization = React.memo(() => {
                         render: rowData => <span >{rowData?.percent !== null ? `${rowData?.percent}%` : 'N/A'}</span>
                       }, {
                         field: 'change', title: 'Change',
-                        render: rowData => <ChangeIcon change={rowData?.change} />
+                        render: rowData => <ChangeIcon change={rowData?.change} />,
+                        customSort: (a, b) => (a.change == null ? -.1 : a.change) - (b.change == null ? -.1 : b.change),
                       }]}
                       data={transformRoomData(tile?.room?.data,
                         (data) => {
