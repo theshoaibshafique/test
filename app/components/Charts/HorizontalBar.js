@@ -78,7 +78,7 @@ const HorizontalBar = React.memo(({
           {...rest}
         >
 
-          <Tooltip formatter={(value, name, props) => [`${value} min`, name]} content={<CustomTooltip />} />
+          <Tooltip cursor={{fill: '#fff'}} formatter={(value, name, props) => [`${value} min`, name]} content={<CustomTooltip />} />
           {rest?.legend && (
             <Legend
               verticalAlign="top"

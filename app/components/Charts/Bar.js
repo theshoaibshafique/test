@@ -67,7 +67,7 @@ const BarGraph = React.memo(({
           {...rest}
         >
 
-          <Tooltip content={<CustomTooltip binSize={binSize} unit={unit}/>} />
+          <Tooltip cursor={{fill: '#fff'}} content={<CustomTooltip binSize={binSize} unit={unit}/>} />
           {rest?.tripleColour && (
             <Bar dataKey="count" fill={colors?.length === 1 ? colors?.toString() : colors?.map((color) => color)}>
               {data.map((entry) => {
