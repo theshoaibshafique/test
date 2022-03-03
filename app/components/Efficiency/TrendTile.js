@@ -102,14 +102,14 @@ const TrendTile = ({
         yAxisLabel={{
           value: data.dependentVarTitle, angle: -90, offset: 15, position: 'insideBottomLeft'
         }}
-        areaReference={range.max < sliderStart ? []: [Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
+        areaReference={(range.max <= sliderStart ) ? []: [Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
         xTickMargin={8}
       />
       <Grid item xs={12} style={{ marginTop: 10 }}>
         <RangeSlider
           min={startDate}
           max={endDate}
-          step={86400}
+          step={86400000}
           onChange={filterTrend}
           value={trendSlider}
           startLabel={valueLabelFormat(date.start)}
