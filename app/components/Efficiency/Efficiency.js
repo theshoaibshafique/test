@@ -111,7 +111,7 @@ const Efficiency = () => {
   const handleCaseToggle = (e) => {
     setCaseCountsBy(e.target.value);
   }
-  const { fetchConfigData, applyGlobalFilter, loading } = useFilter();
+  const { fetchConfigData, applyGlobalFilter, loading, isApplied } = useFilter();
   // const loading = true;
   React.useEffect(() => {
     const fetchData = async () => {
@@ -222,7 +222,7 @@ const Efficiency = () => {
   const fcotToggle = { value: fco, onChange: handleFCO };
   return (
     <div className="page-container">
-      <Header displayDate={date} />
+      <Header displayDate={date} loading={loading} isApplied={isApplied} />
       <div className='tile-container'>
         <Grid container spacing={4} className="efficiency-container">
           <Grid item xs={12} className="efficiency-dashboard-header header-2" spacing={0}>

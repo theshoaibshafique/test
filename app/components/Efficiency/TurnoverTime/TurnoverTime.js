@@ -88,7 +88,8 @@ const TurnoverTime = () => {
     defaultHandlerConfig,
     applyGlobalFilter,
     fetchConfigData,
-    loading
+    loading,
+    isApplied
   } = useFilter();
   React.useEffect(() => {
     const fetchData = async () => {
@@ -187,6 +188,7 @@ const TurnoverTime = () => {
   return (
     <div className="page-container">
       <Header
+        loading={loading} isApplied={isApplied}
         config={{
           ...defaultFilterConfig
         }}

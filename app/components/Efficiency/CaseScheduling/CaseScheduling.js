@@ -87,7 +87,8 @@ const CaseScheduling = () => {
     fetchConfigData,
     applyGlobalFilter,
     rooms,
-    loading
+    loading,
+    isApplied
   } = useFilter();
 
   React.useEffect(() => {
@@ -195,6 +196,7 @@ const CaseScheduling = () => {
   return (
     <div className="page-container">
       <Header
+        loading={loading} isApplied={isApplied}
         config={{ ...defaultFilterConfig }}
         applyGlobalFilter={() => applyGlobalFilter({
           endpoint: process.env.SCHEDULING_API,

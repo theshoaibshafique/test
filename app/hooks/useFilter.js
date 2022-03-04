@@ -15,10 +15,23 @@ const useFilter = () => {
   const [rooms, setRooms] = React.useState(defaultState?.rooms ?? []);
   const [viewFirstCase, setViewFirstCase] = React.useState(defaultState?.viewFirstCase ?? false);
   const [dateLabel, setDateLabel] = React.useState(defaultState?.dateLabel ?? defaultDate);
+  const [specialtyNames, setSpecialtyNames] = React.useState(defaultState?.specialtyNames ?? []);
+  const [isApplied, setIsApplied] = React.useState(true)
+  const selectSpecialty = (event) => {
+    if (!event){
+      setSpecialtyNames([])
+      return;
+    }
+    const {
+      target: { value },
+    } = event;
+    setSpecialtyNames(value);
+  }
   React.useEffect(() => {
     const globalFilter = getItemFromStore('globalFilter');
-    setItemInStore('globalFilter', { ...globalFilter, rooms, viewFirstCase, dateLabel });
-  }, [rooms, viewFirstCase, dateLabel])
+    setItemInStore('globalFilter', { ...globalFilter, rooms, viewFirstCase, dateLabel, specialtyNames });
+    setIsApplied(false);
+  }, [rooms, viewFirstCase, dateLabel, specialtyNames])
 
   const selectOrs = React.useCallback((event) => {
     const {
@@ -38,6 +51,7 @@ const useFilter = () => {
   const fetchConfigData = async ({ userFacility, userToken, cancelToken }, payload, cb) => {
     // @TODO: hook up loading animation if necessary, not currently hooked up in any way
     setLoading(true);
+    
     try {
       const retrieveConfiguration = request('get');
       const configData = await retrieveConfiguration(`${process.env.CONFIGURATION_API}?facility_id=${userFacility}`, userToken, null, cancelToken);
@@ -52,13 +66,15 @@ const useFilter = () => {
           otsThreshold: configData.otsThreshold,
           turnoverThreshold: configData.turnoverThreshold
         });
-
+        
       }
       // await new Promise(resolve => setTimeout(resolve, 300000))
+      setIsApplied(true);
       setLoading(false);
       return configData;
     } catch (err) {
       setLoading(false);
+      setIsApplied(true);
     }
 
   };
@@ -74,12 +90,14 @@ const useFilter = () => {
       const retrieveTileData = request('post');
       data = await retrieveTileData(endpoint, userToken, requestPayload, cancelToken);
       setLoading(false);
+      setIsApplied(true);
       if (data?.tiles?.length) {
         return cb(data);
       }
 
     } catch (err) {
       setLoading(false);
+      setIsApplied(true);
     }
     return cb(data);
   };
@@ -114,7 +132,10 @@ const useFilter = () => {
     toggleFirstCaseOnTime,
     viewFirstCase,
     defaultFilterConfig,
-    defaultHandlerConfig
+    defaultHandlerConfig,
+    specialtyNames, 
+    selectSpecialty,
+    isApplied
   };
 };
 

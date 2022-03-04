@@ -115,19 +115,12 @@ const CaseOnTime = () => {
     toggleFirstCaseOnTime,
     applyGlobalFilter,
     viewFirstCase,
-    loading
+    loading,
+    specialtyNames, 
+    selectSpecialty,
+    isApplied
   } = useFilter();
-  const [specialtyNames, setSpecialtyNames] = React.useState(getItemFromStore('globalFilter')?.specialtyNames ?? []);
-  const selectSpecialty = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setSpecialtyNames(value);
-  }
-  React.useEffect(() => {
-    const globalFilter = getItemFromStore('globalFilter');
-    setItemInStore('globalFilter', { ...globalFilter, specialtyNames });
-  }, [specialtyNames])
+  
   React.useEffect(() => {
     const fetchData = async () => {
       const defaultConfig = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
@@ -372,6 +365,7 @@ const CaseOnTime = () => {
   return (
     <div className="page-container">
       <Header
+        loading={loading} isApplied={isApplied}
         config={{
           ...defaultFilterConfig,
           specialty: true,
@@ -407,7 +401,7 @@ const CaseOnTime = () => {
           },
           clearFilters: () => {
             defaultHandlerConfig?.clearFilters?.();
-            setSpecialtyNames([]);
+            selectSpecialty(null);
           }
         }}
       />

@@ -1,8 +1,6 @@
 import React from 'react';
 import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Switch from '@material-ui/core/Switch';
 import InformationModal from './InformationModal';
 import CustomDateRangePicker from '../SharedComponents/CustomDateRangePicker';
 import MultiSelectFilter from '../../components/SharedComponents/MultiSelectFilter';
@@ -14,7 +12,7 @@ import { SaveAndCancel, SSTSwitch } from '../SharedComponents/SharedComponents';
 * @param {Function} applyGlobalFilter - The function called when we're applying filters
 * @param {object} handlers - An object containing all the handlers necessary for various filters on the page
 */
-const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate }) => {
+const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isApplied, loading }) => {
   const { getItemFromStore } = useLocalStorage();
   //ORs and Specialties have different formats
   const orMap = getItemFromStore('efficiencyV2')?.efficiency?.filters?.ORs;
@@ -96,10 +94,10 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate }) => {
             <Grid item xs style={{ display: 'flex', alignItems: 'center', paddingTop: 20 }} >
               <SaveAndCancel
                 className={'apply-cancel-buttons'}
-                // disabled={isLoading}
+                disabled={loading || isApplied}
                 handleSubmit={applyGlobalFilter}
                 submitText={'Apply'}
-                // isLoading={isLoading}
+                isLoading={loading}
                 cancelText={'Clear Filters'}
                 handleCancel={handlers?.clearFilters}
               />

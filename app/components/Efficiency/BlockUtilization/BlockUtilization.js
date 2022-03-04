@@ -71,7 +71,15 @@ const BlockUtilization = React.memo(() => {
   const userFacility = useSelector(makeSelectUserFacility());
   const { getItemFromStore } = useLocalStorage();
   // grab the rooms object, default filters, default handlers, and apply global filter function from the useFilter hook for use on the page - note: not all pages will need all of this
-  const { rooms, defaultFilterConfig, defaultHandlerConfig, fetchConfigData, applyGlobalFilter, loading } = useFilter();
+  const {
+    rooms,
+    defaultFilterConfig,
+    defaultHandlerConfig,
+    fetchConfigData,
+    applyGlobalFilter,
+    loading,
+    isApplied
+  } = useFilter();
   const [tile, setTile] = React.useState({});
   const [trendStartDate, setTrendStartDate] = React.useState('');
 
@@ -237,6 +245,7 @@ const BlockUtilization = React.memo(() => {
     <div className="page-container">
       <Header
         config={{ ...defaultFilterConfig }}
+        loading={loading} isApplied={isApplied}
         applyGlobalFilter={() => applyGlobalFilter({
           endpoint: process.env.BLOCKUTILIZATION_API,
           userToken,
@@ -328,7 +337,7 @@ const BlockUtilization = React.memo(() => {
                         render: rowData => <span >{rowData?.percent !== null ? `${rowData?.percent}%` : 'N/A'}</span>
                       }, {
                         field: 'change', title: 'Change',
-                        render: rowData => <ChangeIcon change={rowData?.change}style={{minWidth:69, textAlign:'center'}} />,
+                        render: rowData => <ChangeIcon change={rowData?.change} style={{ minWidth: 69, textAlign: 'center' }} />,
                         customSort: (a, b) => (a.change == null ? -.1 : a.change) - (b.change == null ? -.1 : b.change),
                       }]}
                       data={transformRoomData(tile?.room?.data,
