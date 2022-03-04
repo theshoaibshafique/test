@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import { StyledTab, StyledTabs, TabPanel } from '../SharedComponents/SharedComponents';
 import './informationModal.scss';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import globalFunctions from '../../utils/global-functions';
 
 const closeButtonStyles = makeStyles({
   item: {
@@ -73,43 +74,42 @@ const InformationModal = ({ open, onToggle }) => {
               <StyledTab label="Block Utilization" />
               <StyledTab label="Case Scheduling" />
             </StyledTabs>
-            <TabPanel value={tab} index={0} className="panel">
+            <TabPanel value={tab} index={0} className="panel subtext">
               <div>
-                <i style={{ marginRight: 4 }}>Case On-Time</i>
-                {`provides analytics comparing the actual time that cases started to the time they were scheduled to start. First cases of a block are considered to be on-time if they start earlier than the
-                ${facilityName} defined grace period of
-                ${fcotsThreshold / 60} min
-                relative to their scheduled start .
-                All other cases are considered to be on-time if they start earlier then 
-                ${facilityName} defined grace period of 
-                ${otsThreshold / 60} min relative to their scheduled start.`}
+                <span className="bold " style={{ marginRight: 4, color: '#004F6E' }}>Case On-Time</span>
+                {`provides analytics comparing the actual time that cases started to the time they were scheduled to start. 
+                First cases of a block are considered to be on-time if they start earlier than the 
+                ${facilityName} defined grace period of ${globalFunctions.formatSecsToTime(fcotsThreshold, true, true)} 
+                after their scheduled start . All other cases are considered to be on-time if they start earlier then 
+                ${facilityName} defined grace period of ${globalFunctions.formatSecsToTime(otsThreshold, true, true)} after their 
+                scheduled start.`}
               </div>
 
             </TabPanel>
-            <TabPanel value={tab} index={1} className="panel">
-              <i style={{ marginRight: 4 }}>Turnover Time</i>
-              {`provides analytics measuring the duration of time between the end of one case and the beginning of 
-              the next case. It also provides a breakdown of the time between cases into cleanup, setup, and idle time.
+            <TabPanel value={tab} index={1} className="panel subtext">
+              <span className="bold " style={{ marginRight: 4, color: '#004F6E' }}>Turnover Time</span>
+              {`provides analytics measuring the duration of time between the end of one case and the beginning of the subsequent 
+              case of the block. It also provides a breakdown of this time in terms of cleanup, setup, and idle time. 
               If the time between cases is longer than the ${facilityName} defined cutoff threshold of 
-              ${turnoverThreshold / 60} min it is ommitted from the analysis.`}
+              ${turnoverThreshold} it is omitted from the analysis.`}
 
             </TabPanel>
-            <TabPanel value={tab} index={2} className="panel">
-              <i style={{ marginRight: 4 }}>Block Utilization</i>
-              {`provides analytics on how operating room block hours were used. 
-              It provides a breakdown of block hours into setup, cleanup, idle, and case time. 
-              It also provides information on how closely the start of first cases of blocks allign to the 
-              scheduled start of the block, and how closely the end of the last cases of blocks allign to the 
-              sheduled end of the block.`}
+            <TabPanel value={tab} index={2} className="panel subtext">
+              <span className="bold " style={{ marginRight: 4, color: '#004F6E' }}>Block Utilization</span>
+              {`provides analytics on how operating room block hours were used. It provides a breakdown of block hours in 
+              terms of setup, cleanup, idle, and case time. It also provides information on how closely the start of first cases of 
+              blocks align to the scheduled start of the block, and how closely the end of the last cases of blocks align to the scheduled 
+              end of the block.`}
 
 
             </TabPanel>
-            <TabPanel value={tab} index={3} className="panel">
-            <i style={{ marginRight: 4 }}>Case Scheduling</i> 
-            {`provides analytics on whether there was sufficient time scheduled for cases based on their observered 
-            durations. This is determined by comparing the lateness of a case, with the lateness of the subsequent case, 
-            to determine a case's impact on the overall delay of the block. Cases that increase the delay of the block are 
-            considered to be underscheduled. `}
+            <TabPanel value={tab} index={3} className="panel subtext">
+              <span className="bold " style={{ marginRight: 4, color: '#004F6E' }}>Case Scheduling</span>
+              {`Case Scheduling provides analytics on whether there was sufficient time scheduled for cases based on their observed 
+              durations. When the amount of time allotted for a case was less than 80% of the time that was actually required to avoid 
+              a delay to the next case, it is considered to be "Underscheduled". "Change in Delay" is the amount of a case's duration 
+              that contributed to a delay in subsequent case. This can be expressed in absolute time (ie. minutes) or as a percentage of 
+              the case's duration.`}
 
 
             </TabPanel>
