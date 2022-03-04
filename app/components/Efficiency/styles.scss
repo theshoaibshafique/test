@@ -129,7 +129,7 @@
         justify-content: space-between;
         flex-flow: row wrap;
         align-items: center; 
-        margin-bottom: 35px;
+        margin-bottom: 50px;
         .overtime-block-number {
             display: flex;
             color: #004f6e;
@@ -137,8 +137,7 @@
             font-size: 48px;
             font-weight: bold;
             line-height: 66px;
-            margin-bottom: 35px;
-            sup,
+            
             sub {
                 display: flex;
                 font-size: 16px;
@@ -146,11 +145,6 @@
                 font-weight: normal;
                 line-height: 22px;
                 margin: 0 4px;
-            }
-            sup {
-                top: 0;
-                margin-bottom: 8px;
-                min-height: 32px;
             }
             sub {
                 bottom: 12px;
@@ -162,7 +156,8 @@
             text-align: right;
             color: #4f4f4f;
             padding: 8px;
-            margin-bottom: 24px;
+            align-items: center;
+            justify-content: center;
         }
     }
     .MuiTable-root {
