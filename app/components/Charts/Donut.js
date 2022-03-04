@@ -2,6 +2,7 @@ import React from 'react';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { PieChart, Pie, Label, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
+import globalFunctions from '../../utils/global-functions';
 
 const equalProps = (props, prevProps) => prevProps === props;
 
@@ -14,7 +15,7 @@ const CustomTooltip = ({ active, payload }) => {
     return (
       <div className='subtle-subtext flex' style={{background:'#F2F2F2', borderRadius:4, padding:8}}>
         <div style={{ backgroundColor: color, width: 16, height: 16 }} />
-        <div style={{ marginLeft: 4 }}>{name.toUpperCase()}: <span style={{ marginLeft: 2 }} className='bold'>{value}</span></div>
+        <div style={{ marginLeft: 4 }}>{globalFunctions.toTitleCase(name)}: <span style={{ marginLeft: 2 }} className='bold'>{value}</span></div>
       </div>
     )
   }
