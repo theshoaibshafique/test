@@ -305,7 +305,7 @@ const CaseOnTime = () => {
           columns={[
             {
               field: tile?.independentVarTitle?.toLowerCase(), title: tile?.independentVarTitle, defaultSort: 'desc',
-              headerStyle:{maxWidth:70},cellStyle:{maxWidth:70},
+              headerStyle:{maxWidth:70},cellStyle:{maxWidth:70, borderBottom:'none'},
               render: rowData => (
                 <div style={{maxWidth:170}} className='ellipses' title={rowData?.[tile?.independentVarTitle?.toLowerCase()]} >
                   {rowData?.[tile?.independentVarTitle?.toLowerCase()]}
@@ -318,7 +318,7 @@ const CaseOnTime = () => {
               field: 'display', title: 'display', hidden: true, defaultSort: 'desc'
             }, {
               field: 'change', title: 'Change',
-              render: rowData => <ChangeIcon change={rowData?.change} />,
+              render: rowData => <ChangeIcon change={rowData?.change} style={{minWidth:69, textAlign:'center'}}/>,
               customSort: (a, b) => (a.change == null ? -.1 : a.change) - (b.change == null ? -.1 : b.change),
             }]}
           data={transformData(tile?.data, tile?.independentVarTitle,
@@ -346,7 +346,8 @@ const CaseOnTime = () => {
               whiteSpace: 'nowrap',
             },
             cellStyle: {
-              padding: '8px 16px'
+              padding: '8px 16px',
+              borderBottom: 'none',
             },
             // tableLayout: "fixed",
             thirdSortClick: false,
@@ -384,7 +385,8 @@ const CaseOnTime = () => {
           startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
           endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
           facilityName: userFacility,
-          roomNames: rooms
+          roomNames: rooms,
+          specialtyNames: specialtyNames
         },
           (tileData) => {
             if (tileData?.tiles?.length) {

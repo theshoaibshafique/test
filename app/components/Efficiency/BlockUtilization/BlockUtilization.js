@@ -328,7 +328,7 @@ const BlockUtilization = React.memo(() => {
                         render: rowData => <span >{rowData?.percent !== null ? `${rowData?.percent}%` : 'N/A'}</span>
                       }, {
                         field: 'change', title: 'Change',
-                        render: rowData => <ChangeIcon change={rowData?.change} />,
+                        render: rowData => <ChangeIcon change={rowData?.change}style={{minWidth:69, textAlign:'center'}} />,
                         customSort: (a, b) => (a.change == null ? -.1 : a.change) - (b.change == null ? -.1 : b.change),
                       }]}
                       data={transformRoomData(tile?.room?.data,
@@ -352,7 +352,8 @@ const BlockUtilization = React.memo(() => {
                           top: 0
                         },
                         cellStyle: {
-                          padding: '8px 16px'
+                          padding: '8px 16px',
+                          borderBottom: 'none',
                         },
                         thirdSortClick: false,
                         draggable: false
