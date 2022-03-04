@@ -229,7 +229,7 @@ const CustomDateRangePicker = React.memo(({
             key={key}
             startDate={date.start}
             endDate={date.end}
-            isOutsideRange={(date) => date.isAfter(efficiency?.endDate) || date.isBefore(efficiency?.startDate)}
+            isOutsideRange={(date) => date.isAfter(moment(efficiency?.endDate).endOf('day')) || date.isBefore(efficiency?.startDate)}
             focusedInput={focusedInput}
             numberOfMonths={2}
             minimumNights={0}
