@@ -390,19 +390,6 @@ const BlockUtilization = React.memo(() => {
                       }}
                     >
                       {tile?.composition?.title}
-                      <LightTooltip
-                        placement="top"
-                        fontSize="small"
-                        interactive
-                        arrow
-                        title={tile?.composition?.toolTip?.toString().replace(/\b.,\b/g, '. ')}
-                      >
-                        <InfoOutlinedIcon
-                          style={{ fontSize: 16, margin: '4px', color: '#8282828' }}
-                          className="log-mouseover"
-                          id={`info-tooltip-${tile?.composition?.toolTip?.toString()}`}
-                        />
-                      </LightTooltip>
                     </div>
                     {!!tile?.composition && (
                       <Donut

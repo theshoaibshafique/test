@@ -80,7 +80,7 @@ const InformationModal = ({ open, onToggle }) => {
                 {`provides analytics comparing the actual time that cases started to the time they were scheduled to start. 
                 First cases of a block are considered to be on-time if they start earlier than the 
                 ${facilityName} defined grace period of ${globalFunctions.formatSecsToTime(fcotsThreshold, true, true)} 
-                after their scheduled start . All other cases are considered to be on-time if they start earlier then 
+                after their scheduled start . All other cases are considered to be on-time if they start earlier than 
                 ${facilityName} defined grace period of ${globalFunctions.formatSecsToTime(otsThreshold, true, true)} after their 
                 scheduled start.`}
               </div>
@@ -91,7 +91,7 @@ const InformationModal = ({ open, onToggle }) => {
               {`provides analytics measuring the duration of time between the end of one case and the beginning of the subsequent 
               case of the block. It also provides a breakdown of this time in terms of cleanup, setup, and idle time. 
               If the time between cases is longer than the ${facilityName} defined cutoff threshold of 
-              ${turnoverThreshold} it is omitted from the analysis.`}
+              ${globalFunctions.formatSecsToTime(turnoverThreshold, true, true)} it is omitted from the analysis.`}
 
             </TabPanel>
             <TabPanel value={tab} index={2} className="panel subtext">
