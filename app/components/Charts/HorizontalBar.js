@@ -2,6 +2,7 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend, Tooltip, Cell } from 'recharts';
 import { axisStyles, axisLabelStyle } from './styles';
+import globalFunctions from '../../utils/global-functions';
 // @TODO: Could colocate this / update the traditional bar graph to pass in the required props to be used for rendering this horizontal
 const equalProps = (props, prevProps) => prevProps === props;
 
@@ -44,7 +45,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           <div className='subtle-subtext flex' style={{marginBottom:2}} >
             <div style={{ backgroundColor: color, width: 16, height: 16 }} />
             <div style={{ marginLeft: 4 }}>
-              {name.toUpperCase()}:
+              {globalFunctions.toTitleCase(name)}:
               <span style={{ marginLeft: 2 }} className='bold'>{`${payload?.[name]} min`}</span>
             </div>
           </div>
