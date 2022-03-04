@@ -9,13 +9,13 @@ const equalProps = (props, prevProps) => prevProps === props;
 /*
 * @TODO: Customize tool tip latr according to spacing, colours / no colours, etc.
 */
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({ active, payload, toTitleCase }) => {
   if (active && payload?.length) {
     const [{ name, value, payload: { payload: { color } } }] = payload;
     return (
       <div className='subtle-subtext flex' style={{background:'#F2F2F2', borderRadius:4, padding:8}}>
         <div style={{ backgroundColor: color, width: 16, height: 16 }} />
-        <div style={{ marginLeft: 4 }}>{globalFunctions.toTitleCase(name)}: <span style={{ marginLeft: 2 }} className='bold'>{value}</span></div>
+        <div style={{ marginLeft: 4 }}>{toTitleCase ? globalFunctions.toTitleCase(name) : name}: <span style={{ marginLeft: 2 }} className='bold'>{value}</span></div>
       </div>
     )
   }
@@ -34,7 +34,7 @@ const NoDataOverlay = (props) => (
  * @param {(Array<objects>|Array<string>)} tooltips - The tooltips we want to use for each category in the legend
  * @param {string} label - The inner label of the chart
  */
-const Donut = React.memo(({ data, tooltips, label }) => {
+const Donut = React.memo(({ data, tooltips, label, toTitleCase }) => {
   const hasData = data?.length;
   data = hasData ? data : [{ name: 'No Data 2', value: 100, color: '#BDBDBD' }, { name: 'No Data', value: 100, color: '#BDBDBD' }]
   label = hasData ? label : {...label, value: 'N/A', formattedValue: null}
@@ -55,7 +55,7 @@ const Donut = React.memo(({ data, tooltips, label }) => {
           ))}
           <Label position="center" style={{ fontSize: 14, color: '#004F6E' }} content={<DonutLabel {...label} />} />
         </Pie>
-        {hasData && <Tooltip content={<CustomTooltip />} />}
+        {hasData && <Tooltip content={<CustomTooltip toTitleCase={toTitleCase} />} />}
         {<Legend width={270} height={250} wrapperStyle={{ overflowY: 'auto' }} layout="vertical" align="right" payload={data}
           formatter={(_, entry, index) => {
             const { name } = entry ?? {};

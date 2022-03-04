@@ -403,17 +403,22 @@ const BlockUtilization = React.memo(() => {
                         />
                       </LightTooltip>
                     </div>
-                    {!!tile?.composition && <Donut data={formatDonutData(tile.composition.data)} tooltips={tile.composition.toolTip}
-                      label={{
-                        title: 'Average Block Time', formattedValue: (
-                          <>
-                            {tile.composition.data.averageHours}
-                            <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
-                            {tile.composition.data.averageMinutes}
-                            <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
-                          </>
-                        )
-                      }} />}
+                    {!!tile?.composition && (
+                      <Donut
+                        data={formatDonutData(tile.composition.data)}
+                        tooltips={tile.composition.toolTip}
+                        label={{
+                          title: 'Average Block Time', formattedValue: (
+                            <>
+                              {tile.composition.data.averageHours}
+                              <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>hr</tspan>
+                              {tile.composition.data.averageMinutes}
+                              <tspan style={{ fontSize: 18, color: '#004F6E', fontWeight: 'normal' }}>min</tspan>
+                            </>
+                          )
+                        }}
+                        toTitleCase
+                      />)}
                   </React.Fragment>
                 )}
               </CardContent>
