@@ -107,7 +107,7 @@ class SSTNav extends React.Component {
     const hasEMMPages = this.props.emmPublishAccess || this.props.emmRequestAccess;
 
     let facilityMenuItem = '';
-    if(this.canSwitchFacility()){
+    if (this.canSwitchFacility()) {
       facilityMenuItem = (
         <MenuItem className="sst-menu-item">
           <div onClick={() => this.handleSwitchFacility(true)}>Switch Facility</div>
@@ -125,33 +125,33 @@ class SSTNav extends React.Component {
             </ListItem>
 
             {this.props.isLoading &&
-            <ListItem disableGutters><LoadingOverlay
-              active={this.props.isLoading}
-              spinner
-              className="overlays text-link"
-              styles={{
-                overlay: (base) => ({
-                  ...base,
-                  background: 'none',
-                  color: '#000'
-                }),
-                spinner: (base) => ({
-                  ...base,
-                  width: 40,
-                  '& svg circle': {
-                    stroke: 'rgba(0, 0, 0, 0.5)'
-                  }
-                })
-              }}
-            >
+              <ListItem disableGutters><LoadingOverlay
+                active={this.props.isLoading}
+                spinner
+                className="overlays text-link"
+                styles={{
+                  overlay: (base) => ({
+                    ...base,
+                    background: 'none',
+                    color: '#000'
+                  }),
+                  spinner: (base) => ({
+                    ...base,
+                    width: 40,
+                    '& svg circle': {
+                      stroke: 'rgba(0, 0, 0, 0.5)'
+                    }
+                  })
+                }}
+              >
 
-                                     </LoadingOverlay>
-            </ListItem>
+              </LoadingOverlay>
+              </ListItem>
             }
             {(this.props.caseDiscoveryAccess) &&
-            <ListItem disableGutters id="caseDiscovery-nav"><NavLink to="/caseDiscovery" className="text-link" >Case Discovery</NavLink></ListItem>
+              <ListItem disableGutters id="caseDiscovery-nav"><NavLink to="/caseDiscovery" className="text-link" >Case Discovery</NavLink></ListItem>
             }
-
+            {/* 
             {(this.props.efficiencyAccess) &&
             <ListItem disableGutters>
               <NavLink to="/efficiency" className="text-link">
@@ -175,84 +175,84 @@ class SSTNav extends React.Component {
               <ListItem disableGutters><NavLink to="/turnoverTime" className="text-link sub-item" >Turnover Time</NavLink></ListItem>
               <ListItem disableGutters><NavLink to="/orUtilization" className="text-link sub-item" >Block Utilization</NavLink></ListItem>
             </Collapse>
+            } */}
+
+            {(this.props.efficiencyAccess) &&
+              <ListItem disableGutters>
+                <NavLink exact to="/efficiencyV2" className="text-link">
+                  <div>EfficiencyV2</div>
+                  <div
+                    style={{
+                      position: 'absolute', right: 8, top: 14, cursor: 'pointer'
+                    }}
+                    onClick={this.toggleEfficiencyV2}
+                  >
+                    {this.state.isEfficiencyV2Open ? <IconExpandLess /> : <IconExpandMore />}
+                  </div>
+                </NavLink>
+
+              </ListItem>
             }
 
-            {(this.props.efficiencyV2Access) &&
-            <ListItem disableGutters>
-              <NavLink exact to="/efficiencyV2" className="text-link">
-                <div>EfficiencyV2</div>
-                <div
-                  style={{
-                    position: 'absolute', right: 8, top: 14, cursor: 'pointer'
-                  }}
-                  onClick={this.toggleEfficiencyV2}
-                >
-                  {this.state.isEfficiencyV2Open ? <IconExpandLess /> : <IconExpandMore />}
-                </div>
-              </NavLink>
-
-            </ListItem>
-            }
-
-            {(this.props.efficiencyV2Access) &&
-            <Collapse in={this.state.isEfficiencyV2Open} timeout="auto" unmountOnExit>
-              <ListItem disableGutters><NavLink to="/efficiencyV2/or-utilization" className="text-link sub-item" >Block Utilization</NavLink></ListItem>
-              <ListItem disableGutters><NavLink to="/efficiencyV2/case-on-time" className="text-link sub-item" >Case On-Time</NavLink></ListItem>
-              <ListItem disableGutters><NavLink to="/efficiencyV2/case-scheduling" className="text-link sub-item" >Case Scheduling</NavLink></ListItem>
-              <ListItem disableGutters><NavLink to="/efficiencyV2/turnover-time" className="text-link sub-item" >Turnover Time</NavLink></ListItem>
-            </Collapse>
+            {(this.props.efficiencyAccess) &&
+              <Collapse in={this.state.isEfficiencyV2Open} timeout="auto" unmountOnExit>
+                <ListItem disableGutters><NavLink to="/efficiencyV2/or-utilization" className="text-link sub-item" >Block Utilization</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/efficiencyV2/case-on-time" className="text-link sub-item" >Case On-Time</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/efficiencyV2/case-scheduling" className="text-link sub-item" >Case Scheduling</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/efficiencyV2/turnover-time" className="text-link sub-item" >Turnover Time</NavLink></ListItem>
+              </Collapse>
             }
 
             {(this.props.emmAccess) &&
-            <ListItem disableGutters>
-              <NavLink to="/emmcases" className="text-link" >
-                <div>eM&M</div>
-                {hasEMMPages && <div
-                  style={{
-                    position: 'absolute', right: 8, top: 14, cursor: 'pointer'
-                  }}
-                  onClick={() => this.toggleEMM()}
-                >
-                  {this.state.isEMMOpen ? <IconExpandLess /> : <IconExpandMore />}
-                                </div>
-                }
-              </NavLink>
-            </ListItem>
+              <ListItem disableGutters>
+                <NavLink to="/emmcases" className="text-link" >
+                  <div>eM&M</div>
+                  {hasEMMPages && <div
+                    style={{
+                      position: 'absolute', right: 8, top: 14, cursor: 'pointer'
+                    }}
+                    onClick={() => this.toggleEMM()}
+                  >
+                    {this.state.isEMMOpen ? <IconExpandLess /> : <IconExpandMore />}
+                  </div>
+                  }
+                </NavLink>
+              </ListItem>
             }
             {hasEMMPages && (
               <Collapse in={this.state.isEMMOpen} timeout="auto" unmountOnExit>
                 {(this.props.emmPublishAccess) && <ListItem disableGutters><NavLink to="/emmpublish" className="text-link sub-item" >eM&M Publisher</NavLink></ListItem>}
                 {(this.props.emmRequestAccess) &&
-                <ListItem disableGutters>
-                  <NavLink to="/requestemm" className="text-link  sub-item" >
+                  <ListItem disableGutters>
+                    <NavLink to="/requestemm" className="text-link  sub-item" >
                       Request for eM&M
-                  </NavLink>
-                </ListItem>
+                    </NavLink>
+                  </ListItem>
                 }
               </Collapse>
             )}
 
             {(this.props.sscAccess) &&
-            <ListItem disableGutters>
-              <NavLink to="/sschecklist" className="text-link">
-                <div>Surgical Safety Checklist</div>
-                <div
-                  style={{
-                    position: 'absolute', right: 8, top: 14, cursor: 'pointer'
-                  }}
-                  onClick={() => this.toggleSSC()}
-                >
-                  {this.state.isSSCOpen ? <IconExpandLess /> : <IconExpandMore />}
-                </div>
-              </NavLink>
-            </ListItem>
+              <ListItem disableGutters>
+                <NavLink to="/sschecklist" className="text-link">
+                  <div>Surgical Safety Checklist</div>
+                  <div
+                    style={{
+                      position: 'absolute', right: 8, top: 14, cursor: 'pointer'
+                    }}
+                    onClick={() => this.toggleSSC()}
+                  >
+                    {this.state.isSSCOpen ? <IconExpandLess /> : <IconExpandMore />}
+                  </div>
+                </NavLink>
+              </ListItem>
             }
             {(this.props.sscAccess) &&
-            <Collapse in={this.state.isSSCOpen} timeout="auto" unmountOnExit>
-              <ListItem disableGutters><NavLink to="/compliance" className="text-link sub-item" >Compliance</NavLink></ListItem>
-              <ListItem disableGutters><NavLink to="/engagement" className="text-link sub-item" >Engagement</NavLink></ListItem>
-              <ListItem disableGutters><NavLink to="/quality" className="text-link sub-item" >Quality</NavLink></ListItem>
-            </Collapse>
+              <Collapse in={this.state.isSSCOpen} timeout="auto" unmountOnExit>
+                <ListItem disableGutters><NavLink to="/compliance" className="text-link sub-item" >Compliance</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/engagement" className="text-link sub-item" >Engagement</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/quality" className="text-link sub-item" >Quality</NavLink></ListItem>
+              </Collapse>
             }
 
           </List>
@@ -261,19 +261,19 @@ class SSTNav extends React.Component {
           <List disablePadding style={{ width: '100%' }}>
 
             {(this.props.settingsAccess) &&
-            <ListItem disableGutters>
-              <NavLink to="/settings" className="text-link" ><Icon color="#000" style={{ marginRight: 16 }} path={mdiCogOutline} size={'24px'} />Settings</NavLink>
-            </ListItem>
+              <ListItem disableGutters>
+                <NavLink to="/settings" className="text-link" ><Icon color="#000" style={{ marginRight: 16 }} path={mdiCogOutline} size={'24px'} />Settings</NavLink>
+              </ListItem>
             }
             {(this.props.adminPanelAccess) &&
-            <ListItem disableGutters>
-              <NavLink to="/adminPanel" className="text-link" ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariantOutline} size={'24px'} />Admin Panel</NavLink>
-            </ListItem>
+              <ListItem disableGutters>
+                <NavLink to="/adminPanel" className="text-link" ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariantOutline} size={'24px'} />Admin Panel</NavLink>
+              </ListItem>
             }
             {(this.props.sstAdminAccess) &&
-            <ListItem disableGutters>
-              <NavLink to="/sstAdmin" className="text-link" ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariant} size={'24px'} />SST Admin</NavLink>
-            </ListItem>
+              <ListItem disableGutters>
+                <NavLink to="/sstAdmin" className="text-link" ><Icon color="#000" style={{ marginRight: 16 }} path={mdiShieldAccountVariant} size={'24px'} />SST Admin</NavLink>
+              </ListItem>
             }
             <ListItem disableGutters >
 
@@ -306,7 +306,7 @@ class SSTNav extends React.Component {
               userFacility={this.props.userFacility}
               facilityDetails={this.props.facilityDetails}
               open={Boolean(this.state.switchFacility)}
-              toggleModal={this.handleSwitchFacility.bind(this)}/>
+              toggleModal={this.handleSwitchFacility.bind(this)} />
           }
         </Grid>
         <IdleTimer

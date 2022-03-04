@@ -47,7 +47,6 @@ export default class MainLayout extends React.PureComponent {
       emmPublishAccess: false,
       sscAccess: false,
       efficiencyAccess: false,
-      efficiencyV2Access: false,
       isLoading: true
     }
   }
@@ -74,8 +73,6 @@ export default class MainLayout extends React.PureComponent {
       emmRequestAccess: emmRoles.isAdmin,//&& !cdRoles.hasAccess,
       sscAccess: sscRoles.hasAccess,
       efficiencyAccess: effRoles.hasAccess,
-      //@TODO: Access role and update boolean below to use it
-      efficiencyV2Access: true,
       caseDiscoveryAccess: cdRoles.hasAccess,
       emmPublishAccess: emmRoles.hasPublisher,
       sstAdminAccess: Boolean(roles?.[SST_ADMIN_ID]),
@@ -166,7 +163,7 @@ export default class MainLayout extends React.PureComponent {
           <Route path="/quality" render={(props) => <SSChecklist {...props} reportType={"Quality"} />} />
         }
 
-        {(this.state.efficiencyAccess) &&
+        {/* {(this.state.efficiencyAccess) &&
           <Route path="/efficiency" render={(props) => <Efficiency {...props} reportType={"efficiency"} />} />
         }
         {(this.state.efficiencyAccess) &&
@@ -177,25 +174,25 @@ export default class MainLayout extends React.PureComponent {
         }
         {(this.state.efficiencyAccess) &&
           <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"blockUtilization"} />} />
-        }
+        } */}
         {(this.state.caseDiscoveryAccess) &&
           <Route path="/caseDiscovery" render={(props) => <CaseDiscovery {...props} showEMMReport={this.props.showEMMReport} />} />
         }
 
-        {(this.state.efficiencyV2Access) &&
+        {(this.state.efficiencyAccess) &&
           <Route exact path="/efficiencyV2" render={(props) => <EfficiencyV2 {...props} />} />
         }
-        {(this.state.efficiencyV2Access) &&
+        {(this.state.efficiencyAccess) &&
           <Route path="/efficiencyV2/case-on-time" render={(props) => <CaseOnTime {...props} />} />
         }
-        {(this.state.efficiencyV2Access) &&
+        {(this.state.efficiencyAccess) &&
           <Route path="/efficiencyV2/turnover-time" render={(props) => <TurnoverTime {...props} />} />
         }
-        {(this.state.efficiencyV2Access) &&
+        {(this.state.efficiencyAccess) &&
           <Route path="/efficiencyV2/or-utilization" render={(props) => <BlockUtilization {...props} />} />
         }
 
-        {(this.state.efficiencyV2Access) &&
+        {(this.state.efficiencyAccess) &&
           <Route path="/efficiencyV2/case-scheduling" render={(props) => <CaseScheduling {...props} />} />
         }
 
@@ -242,7 +239,7 @@ export default class MainLayout extends React.PureComponent {
                       emmPublishAccess={this.state.emmPublishAccess}
                       sscAccess={this.state.sscAccess}
                       efficiencyAccess={this.state.efficiencyAccess}
-                      efficiencyV2Access={this.state.efficiencyV2Access}
+                      // efficiencyV2Access={this.state.efficiencyV2Access}
                       caseDiscoveryAccess={this.state.caseDiscoveryAccess}
                       settingsAccess={this.state.settingsAccess}
                       pathname={this.props.location.pathname}
