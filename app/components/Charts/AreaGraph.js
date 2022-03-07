@@ -12,7 +12,7 @@ const AreaGraph = React.memo(({ data, reference, topReference, CustomTooltip }) 
       margin={{
         top: topReference ? 30 : 10,
         right: 30,
-        left: 0,
+        left: 10,
         bottom: 0
       }}
     >
@@ -25,7 +25,7 @@ const AreaGraph = React.memo(({ data, reference, topReference, CustomTooltip }) 
         stroke="#004F6E"
         fill="#EEFAFF"
       />
-      {reference && topReference ? (
+      {reference !== null && topReference ? (
         <ReferenceLine
           x={reference}
           stroke="#004f6e"
