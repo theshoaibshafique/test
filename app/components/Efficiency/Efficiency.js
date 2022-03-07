@@ -455,6 +455,7 @@ const Efficiency = () => {
                         data={formatDonutData(caseCountsBy === 'By Specialty' ? tile.specialty.data : tile.room.data)}
                         tooltips={tile.specialty.toolTip}
                         label={{ title: 'Total Cases', value: tile.specialty.data.total }}
+                        CustomTooltip={CustomDonutTooltip}
                       />
                     )}
                   </React.Fragment>
@@ -500,4 +501,20 @@ function renderFormattedText(text) {
     }
   });
   return formattedText;
+}
+
+/*
+* @TODO: Customize tool tip latr according to spacing, colours / no colours, etc.
+*/
+const CustomDonutTooltip = ({ active, payload, toTitleCase }) => {
+  if (active && payload?.length) {
+    const [{ name, value, payload: { payload: { color } } }] = payload;
+    return (
+      <div className='subtle-subtext flex' style={{background:'#F2F2F2', borderRadius:4, padding:8}}>
+        <div style={{ backgroundColor: color, width: 16, height: 16 }} />
+        <div style={{ marginLeft: 4 }}>{name}: <span style={{ marginLeft: 2 }} className='bold'>{value} cases</span></div>
+      </div>
+    )
+  }
+  return null;
 }

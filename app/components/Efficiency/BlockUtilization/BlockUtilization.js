@@ -19,6 +19,7 @@ import useLocalStorage from '../../../hooks/useLocalStorage';
 import useFilter from '../../../hooks/useFilter';
 import { Card as MaterialCard, Paper } from '@material-ui/core';
 import { MTableBodyRow } from 'material-table';
+import globalFunctions from '../../../utils/global-functions';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -163,6 +164,29 @@ const BlockUtilization = React.memo(() => {
       });
     }
   }, [state.tiles]);
+
+  const CustomDonutTooltip = ({ active, payload, toTitleCase }) => {
+    if (active && payload?.length) {
+      const hours = tile.composition.data.averageHours;
+      const mins = tile.composition.data.averageMinutes;
+      //Get total minutes and break down what the # time of each
+      const totalTime = (hours * 60 + mins) * 60;
+
+      const [{ name, value, payload: { payload: { color } } }] = payload;
+      return (
+        <div className='subtle-subtext flex' style={{ background: '#F2F2F2', borderRadius: 4, padding: 8 }}>
+          <div style={{ backgroundColor: color, width: 16, height: 16 }} />
+          <div style={{ marginLeft: 4 }}>
+            {globalFunctions.toTitleCase(name)}:
+            <span style={{ marginLeft: 2 }} className='bold'>
+              {`${globalFunctions.formatSecsToTime(totalTime * (value / 100), true, true)} (${value}%)`}
+            </span>
+          </div>
+        </div>
+      )
+    }
+    return null;
+  }
 
   // format the line data and set the start date when we have tile information
   React.useEffect(() => {
@@ -404,6 +428,7 @@ const BlockUtilization = React.memo(() => {
                       <Donut
                         data={formatDonutData(tile.composition.data)}
                         tooltips={tile.composition.toolTip}
+                        CustomTooltip={CustomDonutTooltip}
                         label={{
                           title: 'Average Block Time', formattedValue: (
                             <>
@@ -459,3 +484,4 @@ const BlockUtilization = React.memo(() => {
 }, equalProps);
 
 export default BlockUtilization;
+

@@ -234,7 +234,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                 >
                   <div
                     className={`${dataPoint.underscheduled > networkAverage ? 'red-label' : 'green-label'} subtext`}>
-                    Underschedule percentage: <span className="normal-text">{dataPoint.underscheduled}%</span>
+                    Case Underscheduled: <span className="normal-text">{dataPoint.underscheduled}%</span>
                   </div>
                   <div className="subtext">Cases in Sample: <span className="bold normal-text" style={{ color: "#004F6E" }}>{dataPoint.case}</span></div>
                 </div>
