@@ -180,7 +180,7 @@ class SSTNav extends React.Component {
             {(this.props.efficiencyAccess) &&
               <ListItem disableGutters>
                 <NavLink exact to="/efficiencyV2" className="text-link">
-                  <div>EfficiencyV2</div>
+                  <div>Efficiency</div>
                   <div
                     style={{
                       position: 'absolute', right: 8, top: 14, cursor: 'pointer'
@@ -197,7 +197,7 @@ class SSTNav extends React.Component {
             {(this.props.efficiencyAccess) &&
               <Collapse in={this.state.isEfficiencyV2Open} timeout="auto" unmountOnExit>
                 <ListItem disableGutters><NavLink to="/efficiencyV2/or-utilization" className="text-link sub-item" >Block Utilization</NavLink></ListItem>
-                <ListItem disableGutters><NavLink to="/efficiencyV2/case-on-time" className="text-link sub-item" >Case On-Time</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/efficiencyV2/case-on-time" className="text-link sub-item" >Case On-Time Start</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/efficiencyV2/case-scheduling" className="text-link sub-item" >Case Scheduling</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/efficiencyV2/turnover-time" className="text-link sub-item" >Turnover Time</NavLink></ListItem>
               </Collapse>

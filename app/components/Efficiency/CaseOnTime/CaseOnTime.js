@@ -407,7 +407,7 @@ const CaseOnTime = () => {
       />
       <Grid container spacing={4} className="efficiency-container tile-container">
         <Grid item xs={12} className="efficiency-dashboard-header header-2">
-          Case On Time
+          Case On-Time Start
         </Grid>
         <Grid item xs={3} style={{ paddingRight: '0px' }}>
           <Grid container item xs={12} spacing={4}>
