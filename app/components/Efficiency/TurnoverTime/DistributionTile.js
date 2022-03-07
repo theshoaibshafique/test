@@ -10,7 +10,8 @@ const DistributionTile = ({ data, toolTip, title }) => {
   const barGraphToggleOptions = [
     {
       id: 1,
-      value: 'Turnover'
+      value: 'Turnover',
+      display: 'Total Turnover'
     },
     {
       id: 2,
@@ -109,7 +110,7 @@ const DistributionTile = ({ data, toolTip, title }) => {
         data={filteredData}
         binSize={data?.binSize}
         xAxisLabel={{
-          value: 'Turnover Duration (min)',
+          value: `${graphData} Duration (min)`,
           offset: -10,
           position: 'insideBottom'
         }}

@@ -38,7 +38,7 @@ const RadioButtonGroup = ({
             key={option.id}
             id={option.id}
             value={option.value}
-            label={<span style={commonStyle}>{option.value}</span>}
+            label={<span style={commonStyle}>{option.display ?? option.value}</span>}
             control={<Radio classes={{ root: styles.radio, checked: styles.checked }} />}
           />
         ))}
