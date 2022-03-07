@@ -105,7 +105,7 @@ const InformationModal = ({ open, onToggle }) => {
             </TabPanel>
             <TabPanel value={tab} index={3} className="panel subtext">
               <span className="bold " style={{ marginRight: 4, color: '#004F6E' }}>Case Scheduling</span>
-              {`Case Scheduling provides analytics on whether there was sufficient time scheduled for cases based on their observed 
+              {`provides analytics on whether there was sufficient time scheduled for cases based on their observed 
               durations. When the amount of time allotted for a case was less than 80% of the time that was actually required to avoid 
               a delay to the next case, it is considered to be "Underscheduled". "Change in Delay" is the amount of a case's duration 
               that contributed to a delay in subsequent case. This can be expressed in absolute time (ie. minutes) or as a percentage of 
