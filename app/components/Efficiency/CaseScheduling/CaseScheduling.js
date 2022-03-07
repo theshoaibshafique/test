@@ -268,7 +268,7 @@ const CaseScheduling = () => {
                     <DistributionTile
                       {...tile.delays}
                       xAxisLabel={tile.delays.independentVarTitle}
-                      yAxisLabel={tile.delays.dependentVarTitle} dualColour
+                      yAxisLabel={tile.delays.dependentVarTitle} singleColour
                     />
                   )}
                 </CardContent>

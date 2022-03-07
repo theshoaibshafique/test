@@ -256,6 +256,8 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                 height={200}
                 data={dataPoint.percentage?.values}
                 binSize={dataPoint.percentage?.binSize}
+                //Anything 20 or above turns red
+                threshold={19}
                 unit='%'
                 xAxisLabel={{
                   value: 'Change in Delay (%)',
@@ -269,8 +271,8 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                   position: 'insideBottomLeft'
                 }}
                 margin={{ bottom: 40, right: 20 }}
-                singleColour
-                colors={['#3DB3E3']}
+                dualColour
+                colors={['#009483','#FF7D7D']}
               />
               <div className="subtle-text" style={{ marginBottom: 20 }}>
                 {"Case Duration"}

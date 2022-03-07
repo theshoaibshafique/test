@@ -55,7 +55,7 @@ const CustomTooltip = ({ active, payload, binSize, unit }) => {
 * @param {object} rest - Any additional props to be passed into the component
 */
 const BarGraph = React.memo(({
-  data, xAxisLabel, yAxisLabel, height, interval, colors, binSize, unit, ...rest
+  data, xAxisLabel, yAxisLabel, height, interval, colors, binSize, unit, threshold, ...rest
 }) => {
   const hasData = data?.length;
   data = hasData ? data : [{ room: '' }]
@@ -91,7 +91,7 @@ const BarGraph = React.memo(({
             <React.Fragment>
               <Bar stackId="a" dataKey={rest?.primaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
                 {data.map((entry) => (
-                  <Cell key={uuidv4()} fill={entry.bin > 0 ? '#FF7D7D' : '#009483'} />
+                  <Cell key={uuidv4()} fill={(entry.bin > (threshold ?? 0)) ? '#FF7D7D' : '#009483'} />
                 ))}
               </Bar>
               <Bar stackId="a" dataKey={rest?.secondaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
@@ -104,7 +104,7 @@ const BarGraph = React.memo(({
           {rest?.dualColour && !rest?.stacked && (
             <Bar dataKey={rest?.primaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
               {data.map((entry) => (
-                <Cell key={uuidv4()} fill={entry.bin > 0 ? '#FF7D7D' : '#009483'} />
+                <Cell key={uuidv4()} fill={entry.bin > (threshold ?? 0) ? '#FF7D7D' : '#009483'} />
               ))}
             </Bar>
           )}
