@@ -57,7 +57,7 @@ const CustomTooltip = ({ active, payload }) => {
         style={{ background: '#F2F2F2', borderRadius: 4, padding: 8 }}
       >
         <div><span className='bold'>{x}</span> Efficiency Index</div>
-        <div><span className='bold'>{percentile}</span> percentile</div>
+        <div><span className='bold'>{percentile}</span></div>
       </div>
     );
   }
@@ -434,7 +434,7 @@ const Efficiency = () => {
                     >
                       <div>
                         {tile?.specialty?.title}
-                        <LightTooltip
+                        {tile?.specialty?.toolTip?.length > 0 && <LightTooltip
                           placement="top"
                           fontSize="small"
                           interactive
@@ -446,7 +446,7 @@ const Efficiency = () => {
                             className="log-mouseover"
                             id={`info-tooltip-${tile?.specialty?.toolTip?.toString()}`}
                           />
-                        </LightTooltip>
+                        </LightTooltip>}
                       </div>
                       <RadioButtonGroup value={caseCountsBy} onChange={handleCaseToggle} options={options} highlightColour="#004F6E" />
                     </div>
