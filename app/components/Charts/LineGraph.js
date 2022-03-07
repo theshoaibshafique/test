@@ -52,7 +52,15 @@ const LineGraph = React.memo(({
           data={data}
         >
           <ReferenceArea x1={start} x2={end} fill="#B3CAD3" fillOpacity={.2} alwaysShow />
-          <XAxis scale='linear' dataKey="date" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} interval={interval} tickSize={xTickSize} tickMargin={xTickMargin} tickFormatter={formatTick} />
+          <XAxis
+            scale='linear'
+            dataKey="date"
+            label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles}
+            interval={interval}
+            tickSize={xTickSize}
+            tickMargin={xTickMargin}
+            tickFormatter={formatTick}
+          />
           <YAxis dataKey="percentage" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
           <Line type="monotone" dataKey="percentage" stroke="#028CC8" dot={false} />
           <Line type="monotone" dataKey="network" stroke="#e0e0e0" dot={false} />

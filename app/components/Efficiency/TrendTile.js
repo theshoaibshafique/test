@@ -7,7 +7,7 @@ import RangeSlider from '../../components/SharedComponents/RangeSlider';
 import RadioButtonGroup from '../../components/SharedComponents/RadioButtonGroup';
 import LineGraph from '../Charts/LineGraph';
 import useLocalStorage from '../../hooks/useLocalStorage';
-
+const DAY_MS = 86400000;
 const TrendTile = ({
   data, trendLineData, chartData, toggleChartData, options
 }) => {
@@ -36,7 +36,7 @@ const TrendTile = ({
 
     const config = getItemFromStore('globalFilter');
     const min = config?.startDate ? moment(config?.startDate).valueOf() + 86400000 : null;
-    const max = config?.endDate ? moment(config?.endDate).valueOf(): null;
+    const max = config?.endDate ? moment(config?.endDate).valueOf() : null;
     setRange({
       min,
       max
@@ -76,6 +76,8 @@ const TrendTile = ({
 
 
   const [sliderStart, sliderEnd] = trendSlider;
+  //Get rough # of visible months
+  const visibleMonths = (sliderEnd - sliderStart) / (30 * DAY_MS);
   return !!data && (
     <React.Fragment>
       <div
@@ -96,20 +98,20 @@ const TrendTile = ({
       </div>
       <LineGraph
         xTickSize={0}
-        interval={30}
+        interval={visibleMonths > 24 ? 60 : 30}
         data={filteredTrendData}
         xAxisLabel={{ value: data.independentVarTitle, offset: -5, position: 'insideBottom' }}
         yAxisLabel={{
           value: data.dependentVarTitle, angle: -90, offset: 15, position: 'insideBottomLeft'
         }}
-        areaReference={(range.max <= sliderStart ) ? []: [Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
+        areaReference={(range.max <= sliderStart) ? [] : [Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
         xTickMargin={8}
       />
       <Grid item xs={12} style={{ marginTop: 10 }}>
         <RangeSlider
           min={startDate}
           max={endDate}
-          step={86400000}
+          step={DAY_MS}
           onChange={filterTrend}
           value={trendSlider}
           startLabel={valueLabelFormat(date.start)}
