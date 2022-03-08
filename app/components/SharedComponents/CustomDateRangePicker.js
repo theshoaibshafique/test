@@ -164,25 +164,25 @@ const CustomDateRangePicker = React.memo(({
     <div className='subtle-subtext' style={{ display: 'flex', padding: '16px 24px', borderTop: '1px solid #f2f2f2' }}>
       <div
         onClick={setInputLabel('Most recent week')}
-        className='preset-tag subtle-text'
+        className='preset-tag'
       >
         Most recent week
       </div>
       <div
         onClick={setInputLabel('Most recent month')}
-        className='preset-tag subtle-text'
+        className='preset-tag'
       >
         Most recent month
       </div>
       <div
         onClick={setInputLabel('Most recent year')}
-        className='preset-tag subtle-text'
+        className='preset-tag'
       >
         Most recent year
       </div>
       <div
         onClick={setInputLabel('All time')}
-        className='preset-tag subtle-text'
+        className='preset-tag'
       >
         All time
       </div>
