@@ -5,13 +5,11 @@ import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
 import { Card as MaterialCard } from '@material-ui/core';
 import CardContent from '@material-ui/core/CardContent';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
-import { LightTooltip, StyledSkeleton } from '../../../components/SharedComponents/SharedComponents';
+import { StyledSkeleton } from '../../../components/SharedComponents/SharedComponents';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import HorizontalBar from '../../Charts/HorizontalBar';
-import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import DistributionTile from './DistributionTile';
@@ -176,6 +174,7 @@ const TurnoverTime = () => {
     display: dataset?.display[i],
   }));
   const Card = loading ? StyledSkeleton : MaterialCard;
+  const [cleanup, idle, setup] = tile?.or?.toolTip ?? [];
   return (
     <div className="page-container">
       <Header
@@ -215,7 +214,7 @@ const TurnoverTime = () => {
             <Card className='tile-card' id='turnover-time'>
               <CardContent>
                 {tile?.time && (
-                  <TimeCard data={tile.time} suffix=" min" hideGoal/>
+                  <TimeCard data={tile.time} suffix=" min" hideGoal />
                 )}
               </CardContent>
             </Card>
@@ -253,12 +252,10 @@ const TurnoverTime = () => {
                   <React.Fragment>
                     <div className='tile-title' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 24 }}>
                       {tile?.or?.title}
-                      <LightTooltip placement="top" fontSize="small" interactive arrow title={Array.isArray(tile?.or?.toolTip) ? tile?.or?.toolTip?.map((text) => (<div key={text.charAt(Math.random() * text.length)}>{text}</div>)) : tile?.or?.toolTip}>
-                        <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" id={`info-tooltip-${tile?.or?.toolTip?.toString()}`} />
-                      </LightTooltip>
                     </div>
                     <HorizontalBar
                       legend
+                      legendTooltip={{cleanup, idle, setup}}
                       data={orGraphData}
                       xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }}
                       yAxisLabel={{
