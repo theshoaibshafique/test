@@ -47,7 +47,7 @@ const OvertimeCard = ({ data, reverse }) => {
               <sub>min</sub>
             </div>
           </div>
-          <ChangeIcon change={momentum} className='subtle-subtext' reverse={reverse} />
+          <ChangeIcon change={momentum} className='subtle-subtext' reverse={reverse} tooltip='Change in 30-day moving average over the period'/>
 
         </div>
         <div className="overtime-helper subtext" style={{ flex: '1 0 20%' }}>
