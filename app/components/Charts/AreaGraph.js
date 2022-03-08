@@ -16,8 +16,8 @@ const AreaGraph = React.memo(({ data, reference, topReference, CustomTooltip }) 
         bottom: 0
       }}
     >
-      {CustomTooltip && <Tooltip content={<CustomTooltip />}/>}
-      <XAxis scale='linear' dataKey='x' hide/>
+      {CustomTooltip && <Tooltip content={<CustomTooltip />} />}
+      <XAxis scale='linear' dataKey='x' hide />
       <Area
         type="monotone"
         dataKey="y"
@@ -37,12 +37,21 @@ const AreaGraph = React.memo(({ data, reference, topReference, CustomTooltip }) 
         <ReferenceLine
           x={reference}
           stroke="#004f6e"
+          style={{ fontWeight: 'bold' }}
           label={{
-            angle: -90, value: 'Average', offset: 10, position: 'left', color: '#004f6e'
+            angle: -90, value: 'Sample Average', offset: 70, position: 'insideBottom', color: '#004f6e'
+          }}
+          label={({ viewBox }) => {
+            const { cx, cy, x,y } = viewBox;
+            return (
+              <text color='#004f6e' x={x} y={cy} transform={`rotate(-90,${x},8)`} className='recharts-text recharts-label' textAnchor='middle'>
+                <tspan x={x-75} dy={3}>Sample Average</tspan>
+              </text>
+            )
           }}
         />
       )}
-      <YAxis dataKey='y' padding={{top:8}} hide/>
+      <YAxis dataKey='y' padding={{ top: 8 }} hide />
     </AreaChart>
   </ResponsiveContainer>
 ), equalProps);

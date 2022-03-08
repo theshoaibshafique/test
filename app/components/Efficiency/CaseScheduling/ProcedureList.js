@@ -63,7 +63,7 @@ const CustomTooltip = ({ active, payload }) => {
         style={{ background: '#F2F2F2', borderRadius: 4, padding: 8 }}
       >
         <div><span className='bold'>{globalFunctions.formatSecsToTime(x*60, true, true)}</span></div>
-        <div><span className='bold'>{percentile}</span> percentile</div>
+        <div><span className='bold'>{percentile}</span></div>
       </div>
     );
   }
@@ -241,7 +241,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
               </div>
             </AccordionSummary>
             <AccordionDetails style={{ flexDirection: 'column', borderTop: '1px solid #F2F2F2' }}>
-              <div className="subtle-text" style={{ marginBottom: 20 }}>
+              <div className="subtext" style={{ marginBottom: 20 }}>
                 {"Distibution of Changes in Delay"}
                 <LightTooltip
                   placement="top"
@@ -274,7 +274,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                 dualColour
                 colors={['#009483','#FF7D7D']}
               />
-              <div className="subtle-text" style={{ marginBottom: 20 }}>
+              <div className="subtext" style={{ marginBottom: 20 }}>
                 {"Case Duration"}
                 <LightTooltip
                   placement="top"
@@ -283,7 +283,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                   title={(
                     <div>
                       <div style={{ marginBottom: 8 }}>Case duration distribution is best approximation based on all historical cases of the same procedure type.</div>
-                      <div>Case Count: <span className='bold'>{`${dataPoint.case}`}</span></div>
+                      <div>Case Count: <span className='bold'>{`${dataPoint.allTimeCases}`}</span></div>
                       <div>Mean: <span className='bold'>{`${globalFunctions.formatSecsToTime(dataPoint.allTimeMean*60, true, true)}`}</span></div>
                       <div>Median: <span className='bold'>{`${globalFunctions.formatSecsToTime(dataPoint.allTimeMedian*60, true, true)}`}</span></div>
                       <div>Standard Deviation: <span className='bold'>{`${globalFunctions.formatSecsToTime(dataPoint.allTimeSd*60, true, true)}`}</span></div>

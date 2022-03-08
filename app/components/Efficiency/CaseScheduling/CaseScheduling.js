@@ -182,6 +182,7 @@ const CaseScheduling = () => {
       allTimeMean: dataset?.allTimeMean[idx],
       allTimeMedian: dataset?.allTimeMedian[idx],
       allTimeSd: dataset?.allTimeSd[idx],
+      allTimeCases: dataset?.allTimeCases[idx],
       underscheduled: dataset?.underscheduledPercentage[idx],
       shape: dataset?.shape[idx],
       scale: dataset?.scale[idx],
@@ -228,7 +229,7 @@ const CaseScheduling = () => {
               <Card className='tile-card' id='case-underscheduled'>
                 <CardContent>
                   {tile?.schedule && (
-                    <TimeCard data={tile.schedule} hideGoal/>
+                    <TimeCard data={tile.schedule} hideGoal />
                   )}
                 </CardContent>
               </Card>
