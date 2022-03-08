@@ -6,7 +6,7 @@ import RangeSlider from '../../SharedComponents/RangeSlider';
 import BarGraph from '../../Charts/Bar';
 
 const DistributionTile = ({
-  data, xAxisLabel, yAxisLabel, toolTip, title, ...rest
+  data, xAxisLabel, yAxisLabel, toolTip, title, threshold, ...rest
 }) => {
   const [sliderRange, setSliderRange] = React.useState([0, 100]);
   const [filteredData, setFilteredData] = React.useState([]);
@@ -80,6 +80,7 @@ const DistributionTile = ({
           position: 'insideBottomLeft'
         }}
         dualColour={rest?.dualColour}
+        threshold={threshold}
         colors={['#3DB3E3']}
         margin={{ bottom: 20, right: 20 }}
       />

@@ -475,6 +475,8 @@ const CaseOnTime = () => {
                       xAxisLabel={tile.distribution.independentVarTitle}
                       yAxisLabel={tile.distribution.dependentVarTitle}
                       dualColour
+                      //Set the threshold - subtract bin size so its threshold and above thats red
+                      threshold={((viewFirstCase ? config.fcotsThreshold : config.otsThreshold) /60) - tile.distribution.data.binSize}
                     />
                   )}
                 </CardContent>
