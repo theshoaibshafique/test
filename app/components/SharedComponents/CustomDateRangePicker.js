@@ -32,7 +32,7 @@ const useStyles = makeStyles({
     // color: 'rgba(133, 133, 133, 0.8)'
   }
 });
-export const getPresetDates = (label) => {
+export const getPresetDates = (label, init) => {
   const { efficiency } = JSON.parse(localStorage.getItem('efficiencyV2')) ?? {};
   const { startDate, endDate } = efficiency ?? { startDate: moment(), endDate: moment() }
 
@@ -61,10 +61,24 @@ export const getPresetDates = (label) => {
       const [start, end] = label?.split?.(' to ');
       const sDate = moment(start);
       const eDate = moment(end);
-      if (sDate.isValid() && eDate.isValid()){
+      //if an end date doesnt exist - could be from setting a date or refresh
+      if (!end) {
+        //if its initializing we need a start/endDate (should only happen when refreshing while setting date)
+        if (init) {
+          return {
+            start: sDate,
+            end: sDate
+          }
+        }
         return {
-          start: moment(start),
-          end: moment(end)
+          start: sDate,
+          end: null
+        }
+      }
+      if (sDate.isValid() && eDate.isValid()) {
+        return {
+          start: sDate,
+          end: eDate
         }
       }
   }
@@ -76,7 +90,7 @@ const CustomDateRangePicker = React.memo(({
 
   //Key is only used to control rerender - (kinda hacky) - change key (force rerender) on preset click to focus selected date
   const [key, setKey] = React.useState(uuidv4())
-  const [date, setDate] = React.useState(getPresetDates(dateLabel || defaultDate) ?? {});
+  const [date, setDate] = React.useState(getPresetDates(dateLabel || defaultDate, true) ?? {});
 
   const [lastDate, setLastDate] = React.useState({ ...date });
   const { setItemInStore, getItemFromStore } = useLocalStorage();
@@ -88,8 +102,8 @@ const CustomDateRangePicker = React.memo(({
 
   //Save the date whenever its changed
   React.useEffect(() => {
-    
-    if (!(date?.start?.isValid() && date?.end?.isValid())){
+
+    if (!(date?.start?.isValid() && date?.end?.isValid())) {
       return;
     }
     const globalFilter = getItemFromStore('globalFilter');
@@ -144,10 +158,6 @@ const CustomDateRangePicker = React.memo(({
       label = `${label} to ${endDate?.format('YYYY-MM-DD')}`
     }
     setDateLabel(label);
-    setDate({
-      start: startDate,
-      end: endDate
-    });
   };
 
   const renderPresetTags = () => (
