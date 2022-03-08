@@ -190,8 +190,9 @@ const CaseOnTime = () => {
 
   React.useEffect(() => {
     if (!state.tiles) return;
-    const specialtyTile = state.tiles.find(({ independentVarTitle }) => independentVarTitle?.toLowerCase().includes('specialty'));
-    const onTimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('on-time'));
+    const specialtyTile = state.tiles.find(({ identifier }) => identifier?.toLowerCase() === 'specialty');
+    const onTimeTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'main ots');
+    const fcotTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'main fcots');
     // const percentageTile = state.tiles.find(({ title }) => title.toLowerCase().includes('specialty'));
     const otTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
     const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
@@ -206,6 +207,7 @@ const CaseOnTime = () => {
       room: roomTile,
       trend: trendTile,
       time: onTimeTile,
+      fcot: fcotTile,
       overtime: otTile,
       elective: electiveDaysTile,
       distribution: distributionTile
@@ -414,8 +416,8 @@ const CaseOnTime = () => {
             <Grid item xs={12} style={{ paddingRight: '0px' }}>
               <Card className='tile-card' id='case-on-time-start'>
                 <CardContent>
-                  {tile?.time && (
-                    <TimeCard data={tile?.time} />
+                  {(tile?.time || tile?.fcot) && (
+                    <TimeCard data={viewFirstCase ? tile?.fcot : tile?.time} />
                   )}
                 </CardContent>
               </Card>
