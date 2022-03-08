@@ -82,6 +82,13 @@
 }
 
 .date-range-picker {
+  .message {
+    padding: 16px 24px;
+    border-top: 1px solid #f2f2f2;
+    strong {
+      color: #004f6e;
+    }
+  }
   .date-header {
     width: 100%;
     position: relative;
@@ -101,10 +108,10 @@
     .date {
       cursor: pointer;
     }
-    .selected{
+    .selected {
       border-bottom: 2px solid #008489;
     }
-    .disabled{
+    .disabled {
       pointer-events: none;
       cursor: default;
     }
@@ -123,7 +130,7 @@
     }
     width: fit-content;
   }
-  .DayPicker_weekHeader{
+  .DayPicker_weekHeader {
     font-size: 12px;
   }
   .DateRangePickerInput * {
@@ -173,25 +180,25 @@
   min-height: 24px;
   background-color: rgba(200, 200, 200, 0.3);
   &.trending-down {
-      color: #ff0000;
-      background-color: rgba(255, 125, 125, 0.3);
-      svg { 
-        fill: #FF0000;
-      }
+    color: #ff0000;
+    background-color: rgba(255, 125, 125, 0.3);
+    svg {
+      fill: #ff0000;
+    }
   }
   &.trending-up {
-      color: #009483;
-      background-color: rgba(151, 231, 179, 0.3);
-      svg {
-        fill: #009483;
-      }
+    color: #009483;
+    background-color: rgba(151, 231, 179, 0.3);
+    svg {
+      fill: #009483;
+    }
   }
   .change-header {
-      float: right;
-      text-align: right;
+    float: right;
+    text-align: right;
   }
   span {
-      padding: 2px;
+    padding: 2px;
   }
   padding: 0 2px;
 }

@@ -161,34 +161,37 @@ const CustomDateRangePicker = React.memo(({
   };
 
   const renderPresetTags = () => (
-    <div className='subtle-subtext' style={{ display: 'flex', padding: '16px 24px 8px', borderTop: '1px solid #f2f2f2' }}>
+    <div className='subtle-subtext' style={{ display: 'flex', padding: '16px 24px', borderTop: '1px solid #f2f2f2' }}>
       <div
         onClick={setInputLabel('Most recent week')}
-        className='preset-tag'
+        className='preset-tag subtle-text'
       >
         Most recent week
       </div>
       <div
         onClick={setInputLabel('Most recent month')}
-        className='preset-tag'
+        className='preset-tag subtle-text'
       >
         Most recent month
       </div>
       <div
         onClick={setInputLabel('Most recent year')}
-        className='preset-tag'
+        className='preset-tag subtle-text'
       >
         Most recent year
       </div>
       <div
         onClick={setInputLabel('All time')}
-        className='preset-tag'
+        className='preset-tag subtle-text'
       >
         All time
       </div>
     </div>
   )
-
+  const dataEndDate = moment(efficiency?.endDate);
+  const format = (date, day) => (
+    date.clone().add(day ?? 0, 'day').format('MMM DD')
+  )
   return (
     <React.Fragment>
       <FormControl size='small' fullWidth id='date-range-dropdown'>
@@ -239,7 +242,7 @@ const CustomDateRangePicker = React.memo(({
             key={key}
             startDate={date.start}
             endDate={date.end}
-            isOutsideRange={(date) => date.isAfter(moment(efficiency?.endDate).endOf('day')) || date.isBefore(efficiency?.startDate)}
+            isOutsideRange={(date) => date.isAfter(dataEndDate.endOf('day')) || date.isBefore(efficiency?.startDate)}
             focusedInput={focusedInput}
             numberOfMonths={2}
             minimumNights={0}
@@ -249,7 +252,12 @@ const CustomDateRangePicker = React.memo(({
             onFocusChange={onFocusChange}
             onDatesChange={onDatesChange}
           />
+          <div className='message subtle-text' >
+            Data from <strong>{format(dataEndDate, 1)}</strong> to <strong>{format(dataEndDate, 7)}</strong> will be available on <strong>{format(dataEndDate, 22)}</strong>.
+            Updates made every <strong>Monday</strong>
+          </div>
         </div>
+
       </Popover>
     </React.Fragment>
   );
