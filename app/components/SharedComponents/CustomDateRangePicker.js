@@ -161,7 +161,7 @@ const CustomDateRangePicker = React.memo(({
   };
 
   const renderPresetTags = () => (
-    <div className='subtle-subtext' style={{ display: 'flex', padding: '16px 24px', borderTop: '1px solid #f2f2f2' }}>
+    <div className='subtle-subtext' style={{ display: 'flex', padding: '16px 24px' }}>
       <div
         onClick={setInputLabel('Most recent week')}
         className='preset-tag'
