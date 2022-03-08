@@ -225,7 +225,7 @@ const CaseScheduling = () => {
         <Grid item container spacing={0} xs={6} style={{ paddingRight: '0px', paddingBottom: 0 }} className="efficiency-container">
           <Grid container item xs={12} spacing={4} style={{ paddingBottom: 32 }}>
             <Grid item xs={6} >
-              <Card className='tile-card'>
+              <Card className='tile-card' id='case-underscheduled'>
                 <CardContent>
                   {tile?.schedule && (
                     <TimeCard data={tile.schedule} hideGoal/>
@@ -234,7 +234,7 @@ const CaseScheduling = () => {
               </Card>
             </Grid>
             <Grid item xs={6} style={{ paddingRight: 0 }} >
-              <Card className='tile-card'>
+              <Card className='tile-card' id='overtime'>
                 <CardContent>
                   {tile?.overtime && (
                     <OvertimeCard data={tile.overtime} reverse />
@@ -245,7 +245,7 @@ const CaseScheduling = () => {
           </Grid>
           <Grid container item xs={12} spacing={4} style={{ paddingBottom: 32 }}>
             <Grid item xs={12} style={{ paddingRight: 0 }}>
-              <Card className='tile-card'>
+              <Card className='tile-card' id='trend'>
                 <CardContent>
                   {tile?.trend && (
                     <TrendTile
@@ -262,7 +262,7 @@ const CaseScheduling = () => {
           </Grid>
           <Grid container item xs={12} spacing={4} style={{ paddingBottom: 32 }}>
             <Grid item xs={12} style={{ paddingRight: 0 }}>
-              <Card className='tile-card'>
+              <Card className='tile-card' id='change-in-delay'>
                 <CardContent>
                   {tile?.delays && (
                     <DistributionTile
@@ -277,7 +277,7 @@ const CaseScheduling = () => {
           </Grid>
         </Grid>
         <Grid item xs={6} >
-          <Card className='tile-card' style={{ height: 1084 }}>
+          <Card className='tile-card' style={{ height: 1084 }} id='procedure-list'>
             <CardContent style={{ padding: 0, position: 'relative' }}>
               {tile?.procedure && (
                 <ProcedureList

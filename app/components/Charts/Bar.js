@@ -60,7 +60,7 @@ const BarGraph = React.memo(({
   const hasData = data?.length;
   data = hasData ? data : [{ room: '' }]
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative' }} >
       <ResponsiveContainer width="100%" height={height} className='bar-chart'>
         <BarChart
           data={data}

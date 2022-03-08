@@ -296,7 +296,7 @@ const BlockUtilization = React.memo(() => {
             Block Utilization
           </Grid>
           <Grid item xs={3}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='block-util'>
               <CardContent>
                 {tile?.blockUtilization && (
                   <TimeCard data={tile.blockUtilization} />
@@ -305,7 +305,7 @@ const BlockUtilization = React.memo(() => {
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='overtime'>
               <CardContent>
                 {tile?.overtime && (
                   <OvertimeCard data={tile.overtime} reverse />
@@ -314,7 +314,7 @@ const BlockUtilization = React.memo(() => {
             </Card>
           </Grid>
           <Grid item xs={6}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='trend'>
               <CardContent>
                 <TrendTile
                   data={tile?.trend}
@@ -329,7 +329,7 @@ const BlockUtilization = React.memo(() => {
         </Grid>
         <Grid container spacing={4} className="efficiency-container">
           <Grid item xs={6}>
-            <Card className='tile-card' >
+            <Card className='tile-card' id='block-util-by-room'>
               <CardContent style={{ padding: 0 }}>
                 {tile?.room && (
                   <Grid container spacing={0} className='efficiency-table'>
@@ -410,7 +410,7 @@ const BlockUtilization = React.memo(() => {
             </Card>
           </Grid>
           <Grid item xs={6}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='block-comp'>
               <CardContent>
                 {tile?.composition && (
                   <React.Fragment>
@@ -449,7 +449,7 @@ const BlockUtilization = React.memo(() => {
         </Grid>
         <Grid container spacing={4} className="efficiency-container">
           <Grid item xs={6}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='block-start-gap'>
               <CardContent>
                 <DistributionTile
                   {...tile?.startGap}
@@ -461,7 +461,7 @@ const BlockUtilization = React.memo(() => {
             </Card>
           </Grid>
           <Grid item xs={6}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='block-end-gap'>
               <CardContent>
                 <DistributionTile
                   {...tile?.endGap}

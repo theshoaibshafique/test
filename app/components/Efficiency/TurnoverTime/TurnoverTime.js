@@ -212,7 +212,7 @@ const TurnoverTime = () => {
             Turnover Time
           </Grid>
           <Grid item xs={3}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='turnover-time'>
               <CardContent>
                 {tile?.time && (
                   <TimeCard data={tile.time} suffix=" min" hideGoal/>
@@ -221,7 +221,7 @@ const TurnoverTime = () => {
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='overtime'>
               <CardContent>
                 {tile?.overtime && (
                   <OvertimeCard data={tile.overtime} />
@@ -230,7 +230,7 @@ const TurnoverTime = () => {
             </Card>
           </Grid>
           <Grid item xs={6}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='trend'>
               <CardContent>
                 {tile?.trend && (
                   <TrendTile
@@ -247,7 +247,7 @@ const TurnoverTime = () => {
         </Grid>
         <Grid container spacing={4} className="efficiency-container">
           <Grid item xs={6}>
-            <Card className='tile-card' style={{ height: '375px' }}>
+            <Card className='tile-card' style={{ height: '375px' }} id='turnover-time-by-room'>
               <CardContent>
                 {tile?.or && (
                   <React.Fragment>
@@ -277,7 +277,7 @@ const TurnoverTime = () => {
             </Card>
           </Grid>
           <Grid item xs={6}>
-            <Card className='tile-card' style={{ height: '375px' }}>
+            <Card className='tile-card' style={{ height: '375px' }} id='duration-distribution'>
               <CardContent>
                 {tile?.duration && (
                   <DistributionTile {...tile?.duration} />

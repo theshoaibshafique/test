@@ -191,7 +191,7 @@ const CustomDateRangePicker = React.memo(({
 
   return (
     <React.Fragment>
-      <FormControl size='small' fullWidth>
+      <FormControl size='small' fullWidth id='date-range-dropdown'>
         <FormLabel >Date</FormLabel>
         <Grid container>
           <Grid item xs={12} onClick={handleMenuClick} classes={{ root: styles.root }} style={dateLabel === 'All time' ? { color: 'rgba(133, 133, 133, 0.8)' } : {}}>
@@ -221,7 +221,7 @@ const CustomDateRangePicker = React.memo(({
           style: { width: 'fit-content', minWidth: 620 },
         }}
       >
-        <div className='date-range-picker' >
+        <div className='date-range-picker' id='date-range-picker' >
           <div className='date-header subtle-subtext'>
             <div className={`${focusedInput === 'startDate' ? 'selected' : ''} date`} onClick={() => setFocusedInput('startDate')}>
               {date.start?.format('MMM DD YYYY') ?? 'Start Date'}

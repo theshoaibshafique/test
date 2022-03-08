@@ -412,7 +412,7 @@ const CaseOnTime = () => {
         <Grid item xs={3} style={{ paddingRight: '0px' }}>
           <Grid container item xs={12} spacing={4}>
             <Grid item xs={12} style={{ paddingRight: '0px' }}>
-              <Card className='tile-card'>
+              <Card className='tile-card' id='case-on-time-start'>
                 <CardContent>
                   {tile?.time && (
                     <TimeCard data={tile?.time} />
@@ -421,7 +421,7 @@ const CaseOnTime = () => {
               </Card>
             </Grid>
             <Grid item xs={12} style={{ paddingRight: '0px' }}>
-              <Card className='tile-card'>
+              <Card className='tile-card' id='overtime'>
                 <CardContent>
                   {tile?.overtime && (
                     <OvertimeCard data={tile.overtime} reverse />
@@ -433,7 +433,7 @@ const CaseOnTime = () => {
         </Grid>
         <Grid container item xs={4}>
           <Grid item xs={12}>
-            <Card className='tile-card' style={{ height: '720px' }}>
+            <Card className='tile-card' style={{ height: '720px' }} id='breakdown'>
               <CardContent style={{ overflowY: 'auto', padding: 0 }}>
                 {maxData > 12 ? (
                   <React.Fragment>
@@ -453,7 +453,7 @@ const CaseOnTime = () => {
         <Grid item xs={5}>
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Card className='tile-card'>
+              <Card className='tile-card' id='trend'>
                 <CardContent>
                   <TrendTile
                     data={tile?.trend}
@@ -466,7 +466,7 @@ const CaseOnTime = () => {
               </Card>
             </Grid>
             <Grid item xs={12}>
-              <Card className='tile-card'>
+              <Card className='tile-card' id='case-delay'>
                 <CardContent style={{ height: 345 }}>
                   {tile?.distribution && (
                     <DistributionTile

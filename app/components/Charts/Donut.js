@@ -25,7 +25,7 @@ const Donut = React.memo(({ data, tooltips, label, toTitleCase, CustomTooltip })
   data = hasData ? data : [{ name: 'No Data 2', value: 100, color: '#BDBDBD' }, { name: 'No Data', value: 100, color: '#BDBDBD' }]
   label = hasData ? label : {...label, value: 'N/A', formattedValue: null}
   return (
-    <ResponsiveContainer width="100%" height={250} className={hasData ? '' : 'donut-chart no-data'}>
+    <ResponsiveContainer width="100%" height={250} className={`${hasData ? '' : 'no-data'} donut-chart `}>
       <PieChart>
         <Pie
           stroke=''

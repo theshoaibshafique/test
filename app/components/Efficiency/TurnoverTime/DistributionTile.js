@@ -9,20 +9,20 @@ import BarGraph from '../../Charts/Bar';
 const DistributionTile = ({ data, toolTip, title }) => {
   const barGraphToggleOptions = [
     {
-      id: 1,
+      id: 'turnover',
       value: 'Turnover',
       display: 'Total Turnover'
     },
     {
-      id: 2,
+      id: 'cleanup',
       value: 'Cleanup'
     },
     {
-      id: 3,
+      id: 'idle',
       value: 'Idle'
     },
     {
-      id: 4,
+      id: 'setup',
       value: 'Setup'
     },
   ];

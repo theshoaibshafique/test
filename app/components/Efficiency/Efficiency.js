@@ -229,7 +229,7 @@ const Efficiency = () => {
             Efficiency Dashboard
           </Grid>
           <Grid item xs={3}>
-            <Card className='tile-card' >
+            <Card className='tile-card' id='efficiency-index' >
               <CardContent>
                 {tile?.efficiency && (
                   <React.Fragment>
@@ -266,7 +266,7 @@ const Efficiency = () => {
             </Card>
           </Grid>
           <Grid item xs={9}>
-            <Card className='tile-card' >
+            <Card className='tile-card' id='headlines'>
               <CardContent >
                 {tile?.headline && (
                   <React.Fragment>
@@ -347,7 +347,7 @@ const Efficiency = () => {
         </Grid>
         <Grid container spacing={4} className="efficiency-container">
           <Grid item xs={3}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='case-on-time-start'>
               <CardContent>
                 {tile?.onTime && (
                   <TimeCard data={fco ? tile.fcot : tile.onTime} toggle={fcotToggle} />
@@ -356,7 +356,7 @@ const Efficiency = () => {
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='block-util'>
               <CardContent>
                 {tile?.utilization && (
                   <TimeCard data={tile.utilization} />
@@ -365,7 +365,7 @@ const Efficiency = () => {
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='case-underscheduled'>
               <CardContent>
                 {tile?.schedule && (
                   <TimeCard data={tile.schedule} hideGoal />
@@ -374,7 +374,7 @@ const Efficiency = () => {
             </Card>
           </Grid>
           <Grid item xs={3}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='turnover-time'>
               <CardContent>
                 {tile?.turnover && (
                   <TimeCard data={tile.turnover} suffix=' min' hideGoal/>
@@ -385,7 +385,7 @@ const Efficiency = () => {
         </Grid>
         <Grid container spacing={4} className="efficiency-container">
           <Grid item xs={6}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='overtime-by-room'>
               <CardContent>
                 {tile?.overtime && (
                   <React.Fragment>
@@ -419,7 +419,7 @@ const Efficiency = () => {
             </Card>
           </Grid>
           <Grid item xs={6}>
-            <Card className='tile-card'>
+            <Card className='tile-card' id='case-counts'>
               <CardContent style={{ height: 390 }}>
                 {tile?.specialty && (
                   <React.Fragment>

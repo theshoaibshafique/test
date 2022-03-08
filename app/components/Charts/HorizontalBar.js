@@ -70,7 +70,7 @@ const HorizontalBar = React.memo(({
   const hasData = data?.length;
   data = hasData ? data : [{ room: '' }]
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative' }} className='horizontal-bar'>
       <ResponsiveContainer width="100%" height={height}>
         <BarChart
           layout="vertical"

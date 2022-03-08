@@ -27,7 +27,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
   return (
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
-        <Grid item xs={12} style={{position:'relative'}} className='header-element'>
+        <Grid item xs={12} style={{ position: 'relative' }} className='header-element'>
           <div onClick={onClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
           <div className='display-date'>
             {displayDate && (
@@ -55,13 +55,19 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
                 }}
               >
                 Only First Cases
-                <SSTSwitch disableRipple disableFocusRipple checked={handlers?.case?.viewFirstCase} onChange={handlers?.case?.toggleFirstCaseOnTime} />
+                <SSTSwitch
+                  disableRipple
+                  disableFocusRipple
+                  checked={handlers?.case?.viewFirstCase}
+                  onChange={handlers?.case?.toggleFirstCaseOnTime}
+                  id='first-case-toggle'
+                />
               </div>
             </Grid>
           )}
           {/* @TODO: Update the start and end dates with dates reflecting the expected defaults  */}
           {config?.date && (
-            <Grid item xs={2} style={{ paddingLeft: '0px', minWidth:260 }} >
+            <Grid item xs={2} style={{ paddingLeft: '0px', minWidth: 260 }} >
               <CustomDateRangePicker {...handlers?.date} />
             </Grid>
           )}
