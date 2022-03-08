@@ -32,6 +32,9 @@ const InformationModal = ({ open, onToggle }) => {
   const { getItemFromStore } = useLocalStorage();
   const config = getItemFromStore('efficiencyV2')?.efficiency ?? {};
   const { facilityName, fcotsThreshold, otsThreshold, turnoverThreshold } = config;
+  const format = (time) => {
+    return time == 0 ? '0 min' : globalFunctions.formatSecsToTime(time ?? 0, true, true)
+  }
   return (
 
     <Modal open={open} onClose={onToggle}>
@@ -79,9 +82,9 @@ const InformationModal = ({ open, onToggle }) => {
                 <span className="bold " style={{ marginRight: 4, color: '#004F6E' }}>Case On-Time</span>
                 {`provides analytics comparing the actual time that cases started to the time they were scheduled to start. 
                 First cases of a block are considered to be on-time if they start earlier than the 
-                ${facilityName} defined grace period of ${globalFunctions.formatSecsToTime(fcotsThreshold, true, true)} 
+                ${facilityName} defined grace period of ${format(fcotsThreshold)} 
                 after their scheduled start . All other cases are considered to be on-time if they start earlier than 
-                ${facilityName} defined grace period of ${globalFunctions.formatSecsToTime(otsThreshold, true, true)} after their 
+                ${facilityName} defined grace period of ${format(otsThreshold)} after their 
                 scheduled start.`}
               </div>
 
@@ -91,7 +94,7 @@ const InformationModal = ({ open, onToggle }) => {
               {`provides analytics measuring the duration of time between the end of one case and the beginning of the subsequent 
               case of the block. It also provides a breakdown of this time in terms of cleanup, setup, and idle time. 
               If the time between cases is longer than the ${facilityName} defined cutoff threshold of 
-              ${globalFunctions.formatSecsToTime(turnoverThreshold, true, true)} it is omitted from the analysis.`}
+              ${format(turnoverThreshold)} it is omitted from the analysis.`}
 
             </TabPanel>
             <TabPanel value={tab} index={2} className="panel subtext">
