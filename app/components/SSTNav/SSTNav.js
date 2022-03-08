@@ -179,7 +179,7 @@ class SSTNav extends React.Component {
 
             {(this.props.efficiencyAccess) &&
               <ListItem disableGutters>
-                <NavLink exact to="/efficiencyV2" className="text-link">
+                <NavLink exact to="/efficiency" className="text-link">
                   <div>Efficiency</div>
                   <div
                     style={{
@@ -196,10 +196,10 @@ class SSTNav extends React.Component {
 
             {(this.props.efficiencyAccess) &&
               <Collapse in={this.state.isEfficiencyV2Open} timeout="auto" unmountOnExit>
-                <ListItem disableGutters><NavLink to="/efficiencyV2/or-utilization" className="text-link sub-item" >Block Utilization</NavLink></ListItem>
-                <ListItem disableGutters><NavLink to="/efficiencyV2/case-on-time" className="text-link sub-item" >Case On-Time Start</NavLink></ListItem>
-                <ListItem disableGutters><NavLink to="/efficiencyV2/case-scheduling" className="text-link sub-item" >Case Scheduling</NavLink></ListItem>
-                <ListItem disableGutters><NavLink to="/efficiencyV2/turnover-time" className="text-link sub-item" >Turnover Time</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/efficiency/or-utilization" className="text-link sub-item" >Block Utilization</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/efficiency/case-on-time" className="text-link sub-item" >Case On-Time Start</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/efficiency/case-scheduling" className="text-link sub-item" >Case Scheduling</NavLink></ListItem>
+                <ListItem disableGutters><NavLink to="/efficiency/turnover-time" className="text-link sub-item" >Turnover Time</NavLink></ListItem>
               </Collapse>
             }
 

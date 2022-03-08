@@ -180,20 +180,20 @@ export default class MainLayout extends React.PureComponent {
         }
 
         {(this.state.efficiencyAccess) &&
-          <Route exact path="/efficiencyV2" render={(props) => <EfficiencyV2 {...props} />} />
+          <Route exact path="/efficiency" render={(props) => <EfficiencyV2 {...props} />} />
         }
         {(this.state.efficiencyAccess) &&
-          <Route path="/efficiencyV2/case-on-time" render={(props) => <CaseOnTime {...props} />} />
+          <Route path="/efficiency/case-on-time" render={(props) => <CaseOnTime {...props} />} />
         }
         {(this.state.efficiencyAccess) &&
-          <Route path="/efficiencyV2/turnover-time" render={(props) => <TurnoverTime {...props} />} />
+          <Route path="/efficiency/turnover-time" render={(props) => <TurnoverTime {...props} />} />
         }
         {(this.state.efficiencyAccess) &&
-          <Route path="/efficiencyV2/or-utilization" render={(props) => <BlockUtilization {...props} />} />
+          <Route path="/efficiency/or-utilization" render={(props) => <BlockUtilization {...props} />} />
         }
 
         {(this.state.efficiencyAccess) &&
-          <Route path="/efficiencyV2/case-scheduling" render={(props) => <CaseScheduling {...props} />} />
+          <Route path="/efficiency/case-scheduling" render={(props) => <CaseScheduling {...props} />} />
         }
 
         <Route path="/my-profile" component={MyProfile} />
