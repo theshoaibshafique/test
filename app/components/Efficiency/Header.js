@@ -40,31 +40,6 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
           </div>
         </Grid>
         <Grid container spacing={3} style={{ margin: '14px 0 0 0' }} className='header-element'>
-          {config?.case && (
-            <Grid item xs={2} style={{ paddingLeft: '0px', maxWidth: 200 }}>
-              <div
-                style={{
-                  display: 'flex',
-                  // height: '100%',
-                  justifyContent: 'flex-start',
-                  marginTop: '16px',
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  fontSize: '14px',
-                  color: '#333'
-                }}
-              >
-                Only First Cases
-                <SSTSwitch
-                  disableRipple
-                  disableFocusRipple
-                  checked={handlers?.case?.viewFirstCase}
-                  onChange={handlers?.case?.toggleFirstCaseOnTime}
-                  id='first-case-toggle'
-                />
-              </div>
-            </Grid>
-          )}
           {/* @TODO: Update the start and end dates with dates reflecting the expected defaults  */}
           {config?.date && (
             <Grid item xs={2} style={{ paddingLeft: '0px', minWidth: 260 }} >

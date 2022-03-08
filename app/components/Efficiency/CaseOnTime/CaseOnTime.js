@@ -9,8 +9,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Header from '../Header';
 import FooterText from '../FooterText';
 import { makeSelectToken, makeSelectUserFacility } from '../../../containers/App/selectors';
-import { ChangeIcon, LightTooltip, StyledSkeleton, StyledTable } from '../../../components/SharedComponents/SharedComponents';
-import useSelectData from '../../../hooks/useSelectData';
+import { ChangeIcon, LightTooltip, SSTSwitch, StyledSkeleton, StyledTable } from '../../../components/SharedComponents/SharedComponents';
 import useFilter from '../../../hooks/useFilter';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import RadioButtonGroup from '../../SharedComponents/RadioButtonGroup';
@@ -116,11 +115,11 @@ const CaseOnTime = () => {
     applyGlobalFilter,
     viewFirstCase,
     loading,
-    specialtyNames, 
+    specialtyNames,
     selectSpecialty,
     isApplied
   } = useFilter();
-  
+
   React.useEffect(() => {
     const fetchData = async () => {
       const defaultConfig = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
@@ -148,8 +147,8 @@ const CaseOnTime = () => {
         endpoint: process.env.ONTIMESTART_API,
         userToken,
         cancelToken: axios.CancelToken.source()
-      }, 
-      body,
+      },
+        body,
         (data) => {
           if (data?.tiles) {
             dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
@@ -300,9 +299,9 @@ const CaseOnTime = () => {
           columns={[
             {
               field: tile?.independentVarTitle?.toLowerCase(), title: tile?.independentVarTitle, defaultSort: 'desc',
-              headerStyle:{maxWidth:70},cellStyle:{maxWidth:70, borderBottom:'none'},
+              headerStyle: { maxWidth: 70 }, cellStyle: { maxWidth: 70, borderBottom: 'none' },
               render: rowData => (
-                <div style={{maxWidth:170}} className='ellipses' title={rowData?.[tile?.independentVarTitle?.toLowerCase()]} >
+                <div style={{ maxWidth: 170 }} className='ellipses' title={rowData?.[tile?.independentVarTitle?.toLowerCase()]} >
                   {rowData?.[tile?.independentVarTitle?.toLowerCase()]}
                 </div>
               )
@@ -313,7 +312,7 @@ const CaseOnTime = () => {
               field: 'display', title: 'display', hidden: true, defaultSort: 'desc'
             }, {
               field: 'change', title: 'Change',
-              render: rowData => <ChangeIcon change={rowData?.change} style={{minWidth:69, textAlign:'center'}}/>,
+              render: rowData => <ChangeIcon change={rowData?.change} style={{ minWidth: 69, textAlign: 'center' }} />,
               customSort: (a, b) => (a.change == null ? -.1 : a.change) - (b.change == null ? -.1 : b.change),
             }]}
           data={transformData(tile?.data, tile?.independentVarTitle,
@@ -370,8 +369,7 @@ const CaseOnTime = () => {
         loading={loading} isApplied={isApplied}
         config={{
           ...defaultFilterConfig,
-          specialty: true,
-          case: true
+          specialty: true
         }}
         applyGlobalFilter={() => applyGlobalFilter({
           endpoint: process.env.ONTIMESTART_API,
@@ -408,8 +406,29 @@ const CaseOnTime = () => {
         }}
       />
       <Grid container spacing={4} className="efficiency-container tile-container">
-        <Grid item xs={12} className="efficiency-dashboard-header header-2">
+        <Grid item xs={12} className="efficiency-dashboard-header header-2 flex">
           Case On-Time Start
+          <Grid item xs={2} style={{ marginLeft: '23px', maxWidth: 200 }} className='flex vertical-center'>
+            <div
+              style={{
+                display: 'flex',
+                height: '100%',
+                flexDirection: 'row',
+                fontSize: '14px',
+                color: '#333'
+              }}
+              className='flex vertical-center'
+            >
+              Only First Cases
+              <SSTSwitch
+                disableRipple
+                disableFocusRipple
+                checked={viewFirstCase}
+                onChange={toggleFirstCaseOnTime}
+                id='first-case-toggle'
+              />
+            </div>
+          </Grid>
         </Grid>
         <Grid item xs={3} style={{ paddingRight: '0px' }}>
           <Grid container item xs={12} spacing={4}>
@@ -478,7 +497,7 @@ const CaseOnTime = () => {
                       yAxisLabel={tile.distribution.dependentVarTitle}
                       dualColour
                       //Set the threshold - subtract bin size so its threshold and above thats red
-                      threshold={((viewFirstCase ? config.fcotsThreshold : config.otsThreshold) /60) - tile.distribution.data.binSize}
+                      threshold={((viewFirstCase ? config.fcotsThreshold : config.otsThreshold) / 60) - tile.distribution.data.binSize}
                     />
                   )}
                 </CardContent>

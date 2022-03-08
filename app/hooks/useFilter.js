@@ -30,8 +30,10 @@ const useFilter = () => {
   React.useEffect(() => {
     const globalFilter = getItemFromStore('globalFilter');
     setItemInStore('globalFilter', { ...globalFilter, rooms, viewFirstCase, dateLabel, specialtyNames });
-    setIsApplied(false);
   }, [rooms, viewFirstCase, dateLabel, specialtyNames])
+  React.useEffect(() => {
+    setIsApplied(false);
+  }, [rooms, dateLabel, specialtyNames])
 
   const selectOrs = React.useCallback((event) => {
     const {
