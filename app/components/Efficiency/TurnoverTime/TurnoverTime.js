@@ -27,7 +27,6 @@ const INITIAL_STATE = {
   defaultPayload: {
     roomNames: [],
     specialtyNames: [],
-    threshold: 3600
   }
 };
 
@@ -128,14 +127,6 @@ const TurnoverTime = () => {
     }
     fetchData();
   }, []);
-  // const { data } = useSelectData(process.env.TURNOVER_API, 'post', userToken, {
-  //   ...state.defaultPayload, facilityName: userFacility, startDate: state.startDate.format('YYYY-MM-DD'), endDate: state.endDate.format('YYYY-MM-DD')
-  // }, axios.CancelToken.source());
-  // React.useEffect(() => {
-  //   if (data) {
-  //     dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data } });
-  //   }
-  // }, [data]);
 
   React.useEffect(() => {
     if (!state.tiles) return;
