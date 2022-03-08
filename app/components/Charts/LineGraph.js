@@ -47,7 +47,7 @@ const LineGraph = React.memo(({
   data = hasData ? data : [{ date: '' }]
   return (
     <div style={{ position: 'relative' }}>
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" height={200} className='line-graph'>
         <LineChart
           data={data}
         >
