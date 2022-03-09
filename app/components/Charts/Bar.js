@@ -3,7 +3,7 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { axisLabelStyle, axisStyles } from './styles';
-
+import { useTooltipContext, CustomTooltip } from "./CustomBarTooltip";
 const equalProps = (props, prevProps) => prevProps === props;
 
 const NoDataOverlay = (props) => (
@@ -14,9 +14,11 @@ const NoDataOverlay = (props) => (
     color: '#828282', width: '100%', height: '100%'
   }} className='header-1 flex vertical-center'>No Data</div>
 )
-const CustomTooltip = ({ active, payload, binSize, unit }) => {
-  if (active && payload?.length) {
-    const [{ payload: { count, bin, fcotsCount, otsCount } }, secondEntry] = payload;
+const CustomTooltipContent = (e) => {
+  const { active, payload, binSize, unit, value } = e;
+  if (payload) {
+    const { count, bin, fcotsCount, otsCount } = payload;
+    const hasSecondEntry = Array.isArray(value)
     let body = null;
     //Default operation if COUNT is present
     if (count !== undefined) {
@@ -26,12 +28,12 @@ const CustomTooltip = ({ active, payload, binSize, unit }) => {
           <div>Frequency: <span className='bold'>{count}</span></div>
         </>
       )
-    } else if (otsCount !== undefined){
+    } else if (otsCount !== undefined) {
       body = (
         <>
           <div>Range: <span className='bold'>{`${bin} to ${bin + binSize} ${unit ?? 'min'}`}</span></div>
-          <div>Case Frequency: <span className='bold'>{`${otsCount+fcotsCount}`}</span></div>
-          {secondEntry && <div>First Case Frequency: <span className='bold'>{`${fcotsCount}`}</span></div>}
+          <div>Case Frequency: <span className='bold'>{`${otsCount + fcotsCount}`}</span></div>
+          {hasSecondEntry && <div>First Case Frequency: <span className='bold'>{`${fcotsCount}`}</span></div>}
         </>
       )
     }
@@ -45,7 +47,10 @@ const CustomTooltip = ({ active, payload, binSize, unit }) => {
   }
   return null;
 };
+
 /*
+* This now generates a Histogram Bar graph - where the bars are in between tick marks
+*
 * @param {Array<object>} data - The data the chart is expecting to render
 * @param {object} xAxisLabel - The x axis label data, to be used for the chart
 * @param {object} yAxisLabel - The y axis label data, to be used for the chart
@@ -59,6 +64,16 @@ const BarGraph = React.memo(({
 }) => {
   const hasData = data?.length;
   data = hasData ? data : [{ room: '' }]
+  const { openTooltip, closeTooltip } = useTooltipContext() ?? {};
+  // Default Tooltip overrides don't position Tooltip over the bars themselves now that we shifted to histograms
+  const barProps = {
+    onMouseEnter: e => (
+      openTooltip?.({
+        content: <CustomTooltipContent {...e} binSize={binSize} unit={unit} />,
+      })
+    ),
+    onMouseLeave: () => closeTooltip?.()
+  }
   return (
     <div style={{ position: 'relative' }} >
       <ResponsiveContainer width="100%" height={height} className='bar-chart'>
@@ -66,10 +81,8 @@ const BarGraph = React.memo(({
           data={data}
           {...rest}
         >
-
-          <Tooltip cursor={{fill: '#fff'}} content={<CustomTooltip binSize={binSize} unit={unit}/>} />
           {rest?.tripleColour && (
-            <Bar dataKey="count" fill={colors?.length === 1 ? colors?.toString() : colors?.map((color) => color)}>
+            <Bar {...barProps} dataKey="count" fill={colors?.length === 1 ? colors?.toString() : colors?.map((color) => color)}>
               {data.map((entry) => {
                 if (entry.bin < 0) {
                   return (
@@ -89,12 +102,12 @@ const BarGraph = React.memo(({
           )}
           {rest?.dualColour && rest?.stacked && (
             <React.Fragment>
-              <Bar stackId="a" dataKey={rest?.primaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
+              <Bar {...barProps} stackId="a" dataKey={rest?.primaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
                 {data.map((entry) => (
                   <Cell key={uuidv4()} fill={(entry.bin > (threshold ?? 0)) ? '#FF7D7D' : '#009483'} />
                 ))}
               </Bar>
-              <Bar stackId="a" dataKey={rest?.secondaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
+              <Bar {...barProps} stackId="a" dataKey={rest?.secondaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
                 {data.map((_) => (
                   <Cell key={uuidv4()} fill="#cdcdcd" />
                 ))}
@@ -102,16 +115,16 @@ const BarGraph = React.memo(({
             </React.Fragment>
           )}
           {rest?.dualColour && !rest?.stacked && (
-            <Bar dataKey={rest?.primaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
+            <Bar {...barProps} dataKey={rest?.primaryKey ?? 'count'} fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'}>
               {data.map((entry) => (
                 <Cell key={uuidv4()} fill={entry.bin > (threshold ?? 0) ? '#FF7D7D' : '#009483'} />
               ))}
             </Bar>
           )}
           {rest?.singleColour && (
-            <Bar dataKey="count" fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'} />
+            <Bar {...barProps} dataKey="count" fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'} />
           )}
-          <XAxis dataKey="bin" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} interval={interval} domain={[0, 'auto']} />
+          <XAxis scale='linear'  dataKey="bin" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} interval={interval} domain={[0, 'auto']} />
           <YAxis allowDecimals={false} dataKey={rest?.primaryKey ?? "count"} label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
         </BarChart>
       </ResponsiveContainer>
@@ -120,5 +133,13 @@ const BarGraph = React.memo(({
   );
 }, equalProps);
 
+/*
+  We wrap the bar with a tooltip so we can track cursor positions on top of the bars
+*/
+const TooltipBarGraph = React.memo(props => (
+  <CustomTooltip>
+    <BarGraph {...props} />
+  </CustomTooltip>
+), equalProps)
 
-export default BarGraph;
+export default TooltipBarGraph;
