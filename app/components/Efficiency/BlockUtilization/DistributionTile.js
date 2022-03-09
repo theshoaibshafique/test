@@ -29,7 +29,7 @@ const DistributionTile = ({
     const leftSpan = Math.min(Math.round(yValues.length * .35), 20)
     const rightSpan = Math.min(Math.round(yValues.length * .35), 25)
     const leftEl = values?.[Math.max(indexOfMax - leftSpan, 0)];
-    const rightEl = values?.[Math.min(indexOfMax + rightSpan, yValues.length-1)];
+    const rightEl = values?.[Math.min(indexOfMax + rightSpan, yValues.length - 1)];
     setSliderRange([leftEl?.bin ?? startValue, rightEl?.bin ?? endValue]);
     setRange({
       min: startValue,
@@ -42,12 +42,15 @@ const DistributionTile = ({
   const filterStartDistribution = React.useCallback((_, val) => {
     setSliderRange(val);
   }, [sliderRange]);
+
   React.useEffect(() => {
     const { binSize } = data ?? {}
     const [first, second] = sliderRange;
-    setFilteredData(originalData?.filter((values) => values.bin >= first && values.bin <= (second+binSize)));
+    setFilteredData(originalData?.filter((values) => values.bin >= first && values.bin <= (second + binSize)));
   }, [sliderRange])
+
   const valueLabelFormat = (value) => `${value} min`;
+  const [min, max] = sliderRange ?? [];
   return (
     <React.Fragment>
       {data && (
@@ -101,6 +104,7 @@ const DistributionTile = ({
               endLabel={valueLabelFormat(range.max)}
               valueLabelFormat={valueLabelFormat}
               disabled={range.min === undefined || range.max === undefined}
+              rangeLabel={`${max - min} min selected`}
             />
           </Grid>
         </React.Fragment>

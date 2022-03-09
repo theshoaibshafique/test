@@ -41,7 +41,6 @@ const TrendTile = ({
       min,
       max
     });
-
     const start = config?.startDate ? moment(config?.startDate).valueOf() : startDate;
     const end = config?.endDate ? moment(config?.endDate).valueOf() : endDate;
     setTrendSlider([start, end]);
@@ -100,23 +99,24 @@ const TrendTile = ({
         xTickSize={0}
         interval={visibleMonths > 24 ? 60 : 30}
         data={filteredTrendData}
-        xAxisLabel={{ value: data.independentVarTitle, offset: -5, position: 'insideBottom' }}
+        xAxisLabel={{ value: data.independentVarTitle, offset: -10, position: 'insideBottom' }}
         yAxisLabel={{
           value: data.dependentVarTitle, angle: -90, offset: 15, position: 'insideBottomLeft'
         }}
         areaReference={(range.max <= sliderStart) ? [] : [Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
         xTickMargin={8}
       />
-      <Grid item xs={12} style={{ marginTop: 10 }}>
+      <Grid item xs={12} >
         <RangeSlider
-          min={startDate}
-          max={endDate}
+          min={range.min}
+          max={range.max}
           step={DAY_MS}
           onChange={filterTrend}
           value={trendSlider}
-          startLabel={valueLabelFormat(date.start)}
-          endLabel={valueLabelFormat(date.end)}
+          startLabel={valueLabelFormat(range.min)}
+          endLabel={valueLabelFormat(range.max)}
           valueLabelFormat={valueLabelFormat}
+          rangeLabel={`${Math.floor((sliderEnd - sliderStart) / DAY_MS)} days selected`}
         />
       </Grid>
     </React.Fragment>

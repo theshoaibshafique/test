@@ -50,8 +50,9 @@ const LineGraph = React.memo(({
       <ResponsiveContainer width="100%" height={200} className='line-graph'>
         <LineChart
           data={data}
+          margin={{bottom:12, right:24}}
         >
-          <ReferenceArea x1={start} x2={end} fill="#B3CAD3" fillOpacity={.2} alwaysShow />
+          <ReferenceArea x1={start} x2={end} fill="#B3CAD3" fillOpacity={.2} ifOverflow="extendDomain"/>
           <XAxis
             scale='linear'
             dataKey="date"
