@@ -18,14 +18,14 @@ class SSTNav extends React.Component {
   constructor(props) {
     super(props);
     this.sscLinks = ['/sschecklist', '/compliance', '/engagement', '/quality'];
-    this.efficiencyLinks = ['/efficiency', '/daysStarting', '/turnovertime', '/orUtilization', '/caseAnalysis'];
-    this.efficiencyV2Links = ['/efficiencyV2', '/efficiencyV2/case-on-time', '/efficiencyV2/turnover-time', '/efficiencyV2/or-utilization', '/efficiencyV2/case-scheduling'];
+    // this.efficiencyLinks = ['/efficiency', '/daysStarting', '/turnovertime', '/orUtilization', '/caseAnalysis'];
+    this.efficiencyLinks = ['/efficiency', '/efficiency/case-on-time', '/efficiency/turnover-time', '/efficiency/or-utilization', '/efficiency/case-scheduling'];
     this.emmLinks = ['/emmcases', '/emm', '/emmpublish', '/requestemm'];
     this.state = {
       pathname: this.props.pathname,
       isSSCOpen: this.isInNav(this.sscLinks, this.props.pathname),
       isEfficiencyOpen: this.isInNav(this.efficiencyLinks, this.props.pathname),
-      isEfficiencyV2Open: this.isInNav(this.efficiencyV2Links, this.props.pathname),
+      // isEfficiencyV2Open: this.isInNav(this.efficiencyV2Links, this.props.pathname),
       isEMMOpen: this.isInNav(this.emmLinks, this.props.pathname),
       menu: null,
       switchFacility: false
@@ -37,8 +37,7 @@ class SSTNav extends React.Component {
     if (this.props.pathname != this.state.pathname) {
       this.setState({
         isSSCOpen: this.isInNav(this.sscLinks, this.props.pathname),
-        // isEfficiencyOpen: this.isInNav(this.efficiencyLinks, this.props.pathname),
-        // isEfficiencyV2Open: this.isInNav(this.efficiencyV2Links, this.props.pathname),
+        isEfficiencyOpen: this.isInNav(this.efficiencyLinks, this.props.pathname),
         isEMMOpen: this.isInNav(this.emmLinks, this.props.pathname),
         pathname: this.props.pathname
       });
@@ -55,9 +54,6 @@ class SSTNav extends React.Component {
 
   toggleEfficiency = () => {
     this.setState({ isEfficiencyOpen: !this.state.isEfficiencyOpen });
-  }
-  toggleEfficiencyV2 = () => {
-    this.setState({ isEfficiencyV2Open: !this.state.isEfficiencyV2Open });
   }
   toggleEMM() {
     this.setState({ isEMMOpen: !this.state.isEMMOpen });
@@ -151,31 +147,6 @@ class SSTNav extends React.Component {
             {(this.props.caseDiscoveryAccess) &&
               <ListItem disableGutters id="caseDiscovery-nav"><NavLink to="/caseDiscovery" className="text-link" >Case Discovery</NavLink></ListItem>
             }
-            {/* 
-            {(this.props.efficiencyAccess) &&
-            <ListItem disableGutters>
-              <NavLink to="/efficiency" className="text-link">
-                <div>Efficiency</div>
-                <div
-                  style={{
-                    position: 'absolute', right: 8, top: 14, cursor: 'pointer'
-                  }}
-                  onClick={this.toggleEfficiency}
-                >
-                  {this.state.isEfficiencyOpen ? <IconExpandLess /> : <IconExpandMore />}
-                </div>
-              </NavLink>
-
-            </ListItem>
-            }
-
-            {(this.props.efficiencyAccess) &&
-            <Collapse in={this.state.isEfficiencyOpen} timeout="auto" unmountOnExit>
-              <ListItem disableGutters><NavLink to="/daysStarting" className="text-link sub-item" >First Case On-Time</NavLink></ListItem>
-              <ListItem disableGutters><NavLink to="/turnoverTime" className="text-link sub-item" >Turnover Time</NavLink></ListItem>
-              <ListItem disableGutters><NavLink to="/orUtilization" className="text-link sub-item" >Block Utilization</NavLink></ListItem>
-            </Collapse>
-            } */}
 
             {(this.props.efficiencyAccess) &&
               <ListItem disableGutters>
@@ -185,9 +156,9 @@ class SSTNav extends React.Component {
                     style={{
                       position: 'absolute', right: 8, top: 14, cursor: 'pointer'
                     }}
-                    onClick={this.toggleEfficiencyV2}
+                    onClick={this.toggleEfficiency}
                   >
-                    {this.state.isEfficiencyV2Open ? <IconExpandLess /> : <IconExpandMore />}
+                    {this.state.isEfficiencyOpen ? <IconExpandLess /> : <IconExpandMore />}
                   </div>
                 </NavLink>
 
@@ -195,7 +166,7 @@ class SSTNav extends React.Component {
             }
 
             {(this.props.efficiencyAccess) &&
-              <Collapse in={this.state.isEfficiencyV2Open} timeout="auto" unmountOnExit>
+              <Collapse in={this.state.isEfficiencyOpen} timeout="auto" unmountOnExit>
                 <ListItem disableGutters><NavLink to="/efficiency/or-utilization" className="text-link sub-item" >Block Utilization</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/efficiency/case-on-time" className="text-link sub-item" >Case On-Time Start</NavLink></ListItem>
                 <ListItem disableGutters><NavLink to="/efficiency/case-scheduling" className="text-link sub-item" >Case Scheduling</NavLink></ListItem>
