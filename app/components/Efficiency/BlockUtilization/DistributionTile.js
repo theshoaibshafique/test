@@ -43,8 +43,9 @@ const DistributionTile = ({
     setSliderRange(val);
   }, [sliderRange]);
   React.useEffect(() => {
+    const { binSize } = data ?? {}
     const [first, second] = sliderRange;
-    setFilteredData(originalData?.filter((values) => values.bin >= first && values.bin <= second));
+    setFilteredData(originalData?.filter((values) => values.bin >= first && values.bin <= (second+binSize)));
   }, [sliderRange])
   const valueLabelFormat = (value) => `${value} min`;
   return (

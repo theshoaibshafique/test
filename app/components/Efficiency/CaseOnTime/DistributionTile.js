@@ -17,12 +17,11 @@ const DistributionTile = ({
     max: 100
   });
   React.useEffect(() => {
-    const { values, binSize } = data ?? {}
+    const { values } = data ?? {}
     setOriginalData(values);
     const startValue = values?.[0]?.bin;
-    const endValue = values?.[data?.values.length - 1]?.bin ;
+    const endValue = values?.[data?.values.length - 1]?.bin;
 
-    
     const yValues = values?.map(({ fcotsCount, otsCount }) => fcotsCount + otsCount) ?? [];
     const indexOfMax = yValues.indexOf(Math.max(...yValues))
     //Find the peak of the values and show 15% left and right of it or a min of 15 bins
@@ -41,8 +40,9 @@ const DistributionTile = ({
     setSliderRange(val);
   }, [sliderRange]);
   React.useEffect(() => {
+    const { binSize } = data ?? {}
     const [first, second] = sliderRange;
-    setFilteredData(originalData.filter((values) => values.bin >= first && values.bin <= second));
+    setFilteredData(originalData.filter((values) => values.bin >= first && values.bin <= (second + binSize)));
   }, [sliderRange])
   const valueLabelFormat = (value) => `${value} min`;
   return (

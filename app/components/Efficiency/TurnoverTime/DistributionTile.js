@@ -82,8 +82,9 @@ const DistributionTile = ({ data, toolTip, title }) => {
 
   // keep filtered range from slider upon update of distribution data
   React.useEffect(() => {
+    const { binSize } = data ?? {}
     const [min, max] = sliderRange;
-    setFilteredData(originalData.filter((values) => values.bin >= min && values.bin <= max));
+    setFilteredData(originalData.filter((values) => values.bin >= min && values.bin <= (max + binSize)));
   }, [originalData, sliderRange]);
 
   const filterDistribution = React.useCallback((_, val) => {
