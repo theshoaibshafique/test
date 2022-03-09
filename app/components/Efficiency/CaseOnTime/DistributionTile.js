@@ -17,11 +17,10 @@ const DistributionTile = ({
     max: 100
   });
   React.useEffect(() => {
-    const { values } = data ?? {}
-    // setFilteredData(values);
+    const { values, binSize } = data ?? {}
     setOriginalData(values);
     const startValue = values?.[0]?.bin;
-    const endValue = values?.[data?.values.length - 1]?.bin;
+    const endValue = values?.[data?.values.length - 1]?.bin ;
 
     
     const yValues = values?.map(({ fcotsCount, otsCount }) => fcotsCount + otsCount) ?? [];
@@ -43,7 +42,7 @@ const DistributionTile = ({
   }, [sliderRange]);
   React.useEffect(() => {
     const [first, second] = sliderRange;
-    setFilteredData(originalData.filter((values) => values.bin > first && values.bin < second));
+    setFilteredData(originalData.filter((values) => values.bin >= first && values.bin <= second));
   }, [sliderRange])
   const valueLabelFormat = (value) => `${value} min`;
   return (
@@ -71,7 +70,7 @@ const DistributionTile = ({
         xAxisLabel={{
           value: xAxisLabel,
           offset: -10,
-          position: 'insideBottom'
+          position: 'insideBottom',
         }}
         yAxisLabel={{
           value: yAxisLabel,

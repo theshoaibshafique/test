@@ -43,7 +43,7 @@ const DistributionTile = ({
 
   const filterStartDistribution = React.useCallback((_, val) => {
     const [first, second] = val;
-    setStartGapFilterableData(startGapOriginalData.filter((values) => values.bin > first && values.bin < second));
+    setStartGapFilterableData(startGapOriginalData.filter((values) => values.bin >= first && values.bin <= second));
     setStartDistributionSlider(val);
   }, [startDistributionSlider]);
 
