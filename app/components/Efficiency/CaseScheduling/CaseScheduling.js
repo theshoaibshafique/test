@@ -133,12 +133,12 @@ const CaseScheduling = () => {
   React.useEffect(() => {
     if (!state.tiles) return;
 
-    const scheduleTile = state.tiles.find(({ title }) => title.toLowerCase().includes('schedule'));
-    const overtimeTile = state.tiles.find(({ title }) => title.toLowerCase().includes('overtime'));
-    const trendTile = state.tiles.find(({ title }) => title.toLowerCase().includes('trend'));
-    const electiveTile = state.tiles.find(({ title }) => title.toLowerCase().includes('elective'));
-    const procedureTile = state.tiles.find(({ title }) => title.toLowerCase().includes('procedure'));
-    const delaysTile = state.tiles.find(({ title }) => title.toLowerCase().includes('delay'));
+    const scheduleTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'main');
+    const overtimeTile = state.tiles.find(({ identifier }) => identifier.toLowerCase() === 'overtime');
+    const trendTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('trend'));
+    const electiveTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('days'));
+    const procedureTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('summary'));
+    const delaysTile = state.tiles.find(({ identifier }) => identifier.toLowerCase().includes('absolute distribution'));
     setTrendStartDate(trendTile?.data?.startDate);
     setTile({
       schedule: scheduleTile,
