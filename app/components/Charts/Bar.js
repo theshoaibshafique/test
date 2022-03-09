@@ -74,11 +74,13 @@ const BarGraph = React.memo(({
     ),
     onMouseLeave: () => closeTooltip?.()
   }
+  const lastEl = data?.[data?.length-1];
   return (
     <div style={{ position: 'relative' }} >
       <ResponsiveContainer width="100%" height={height} className='bar-chart'>
         <BarChart
-          data={data}
+          //Add one final bar to pad the ends
+          data={hasData ? [...data, {bin:lastEl?.bin + binSize}] : data}
           {...rest}
         >
           {rest?.tripleColour && (
