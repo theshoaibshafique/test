@@ -91,7 +91,7 @@ export default class EfficiencySettings extends React.PureComponent {
     return (
       <section className={`efficiency-settings-page ${this.props.hasEMR && 'has-emr'}`}>
         <div className="title normal-text">
-          First Case On-Time Settings
+          Case On-Time Start Settings
         </div>
         <div className="no-emr subtle-subtext">Settings are unavailable without case schedule data.</div>
         <div className="grace-period">
@@ -159,10 +159,10 @@ export default class EfficiencySettings extends React.PureComponent {
           Turnover Time Settings
         </div>
         <div className="subtitle subtle-subtext">
-          Outlier Threshold
+          Cutoff Threshold
         </div>
         <div className="content subtle-subtext">
-          Outlier Threshold sets the cut-off for whether a turnover is considered for Turnover Time analytics. Changes in Outlier Threshold will be reflected in historical data.
+          Cutoff Threshold sets the maximum turnover time that will be considered for Turnover Time analytics. Changes in Cutoff Threshold will be reflected in historical data.
         </div>
         <div className="selectors">
           <FormControl variant="outlined" size="small" style={{ width: 85 }} >
