@@ -105,7 +105,7 @@ const InformationModal = React.memo(({ open, onToggle }) => {
               {`provides analytics comparing the actual time that cases started to the time they were scheduled to start. 
                 First cases of a block are considered to be on-time if they start earlier than the 
                 ${facilityName} defined grace period of ${format(fcotsThreshold)} 
-                after their scheduled start . All other cases are considered to be on-time if they start earlier than 
+                after their scheduled start . All other cases are considered to be on-time if they start earlier than the
                 ${facilityName} defined grace period of ${format(otsThreshold)} after their 
                 scheduled start.`}
             </TabPanel>
