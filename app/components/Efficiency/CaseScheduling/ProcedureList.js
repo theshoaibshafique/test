@@ -242,12 +242,12 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
             </AccordionSummary>
             <AccordionDetails style={{ flexDirection: 'column', borderTop: '1px solid #F2F2F2' }}>
               <div className="subtext" style={{ marginBottom: 20 }}>
-                {"Distibution of Changes in Delay"}
+                {"Distribution of Relative Change in Delay"}
                 <LightTooltip
                   placement="top"
                   fontSize="small"
                   interactive arrow
-                  title="Distribution of how much a case increased the delay of the next case relative to the cases length. "
+                  title="Distribution of how much a case increased the delay of the next case relative to the case's length. "
                 >
                   <InfoOutlinedIcon style={{ fontSize: 16, margin: '4px', color: '#8282828' }} className="log-mouseover" />
                 </LightTooltip>
@@ -275,7 +275,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
                 colors={['#009483','#FF7D7D']}
               />
               <div className="subtext" style={{ marginBottom: 20 }}>
-                {"Case Duration"}
+                {"Modelled Case Duration Distribution"}
                 <LightTooltip
                   placement="top"
                   fontSize="small"
