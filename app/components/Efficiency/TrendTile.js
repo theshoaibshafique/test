@@ -35,8 +35,8 @@ const TrendTile = ({
     const endDate = moment(data?.data?.endDate).valueOf();
 
     const config = getItemFromStore('globalFilter');
-    const min = config?.startDate ? moment(config?.startDate).valueOf() + 86400000 : null;
-    const max = config?.endDate ? moment(config?.endDate).valueOf() : null;
+    const min = config?.startDate ? moment(config?.startDate).valueOf() + 86400000 : 0;
+    const max = config?.endDate ? moment(config?.endDate).valueOf() : 100;
     setRange({
       min,
       max
@@ -68,7 +68,9 @@ const TrendTile = ({
     setTrendSlider(val);
   };
   const valueLabelFormat = (value) => moment(value).format('MMM D YYYY');
-
+  //Max range
+  const startDate = moment(data?.data?.startDate).valueOf();
+  const endDate = moment(data?.data?.endDate).valueOf();
 
   const [sliderStart, sliderEnd] = trendSlider;
   //Get rough # of visible months
@@ -104,8 +106,8 @@ const TrendTile = ({
       />
       <Grid item xs={12} >
         <RangeSlider
-          min={range.min}
-          max={range.max}
+          min={startDate}
+          max={endDate}
           step={DAY_MS}
           onChange={filterTrend}
           value={trendSlider}
