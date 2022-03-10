@@ -44,7 +44,7 @@ const TimeCard = ({ data, suffix, toggle, hideGoal }) => (
           {data?.value !== null && <sup className="superscript-text">{suffix || '%'}</sup>}
         </span>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', marginRight: 24 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', marginRight: 24, height: 128 }}>
         {!hideGoal && <Goal target={data.goal} goal={data.value} />}
       </div>
     </div>
