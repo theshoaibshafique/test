@@ -235,7 +235,7 @@ function formatWords(value, word, short = false) {
 }
 
 function pad(string) {
-  return (`0${string}`).slice(-2);
+  return `${string}`.padStart(2, '0')
 }
 
 // n = starting number
