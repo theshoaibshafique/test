@@ -95,14 +95,17 @@ const CaseScheduling = () => {
     const fetchData = async () => {
       const defaultConfig = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
       const config = getItemFromStore('globalFilter');
+      const { startDate, endDate, rooms, specialtyNames } = config ?? defaultConfig;
+      const dates = {
+        startDate: moment(startDate).format('YYYY-MM-DD'),
+        endDate: moment(endDate).format('YYYY-MM-DD'),
+      }
       let body = null;
       if (config) {
-        const { startDate, endDate, rooms, specialtyNames } = config;
         body = {
           ...state.defaultPayload,
           facilityName: userFacility,
-          startDate: moment(startDate).format('YYYY-MM-DD'),
-          endDate: moment(endDate).format('YYYY-MM-DD'),
+          ...dates,
           roomNames: rooms ?? [],
         }
       } else {
@@ -122,6 +125,7 @@ const CaseScheduling = () => {
         (data) => {
           if (data?.tiles) {
             dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
+            dispatch({ type: 'SET_FILTER_DATE', payload: dates });
           }
         }
       )
@@ -193,6 +197,13 @@ const CaseScheduling = () => {
     setChartData(e.target.value);
     setFilteredChartData(e.target.value.includes('7') ? 'weekTrend' : 'monthTrend');
   };
+
+  const get30DayTooltip = () => {
+    const endRange = moment(state.endDate);
+    const startRange = endRange.clone().add(-30, 'day');
+    return `Change in 30 day moving average from ${startRange.format('MMM D YYYY')} to ${endRange.format('MMM D YYYY')}`
+  }
+
   const Card = loading ? StyledSkeleton : MaterialCard;
   return (
     <div className="page-container">
@@ -212,6 +223,12 @@ const CaseScheduling = () => {
           (tileData) => {
             if (tileData?.tiles?.length) {
               dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
+              dispatch({
+                type: 'SET_FILTER_DATE', payload: {
+                  startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+                  endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+                }
+              });
             }
           }
         )}
@@ -238,7 +255,7 @@ const CaseScheduling = () => {
               <Card className='tile-card' id='overtime'>
                 <CardContent>
                   {tile?.overtime && (
-                    <OvertimeCard data={tile.overtime} reverse />
+                    <OvertimeCard data={tile.overtime} reverse trendTooltip={get30DayTooltip()} />
                   )}
                 </CardContent>
               </Card>

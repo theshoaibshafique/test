@@ -3,7 +3,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { ChangeIcon, LightTooltip } from '../SharedComponents/SharedComponents';
 import globalFunctions from '../../utils/global-functions';
 
-const OvertimeCard = ({ data, reverse }) => {
+const OvertimeCard = ({ data, reverse, trendTooltip }) => {
   const { value, momentum, toolTip } = data ?? {}
   const { sum, annualized } = value ?? {};
   const [sumHr, sumMin, sumSec] = globalFunctions.formatSecsToTime(sum * 60)?.split(':');
@@ -47,7 +47,7 @@ const OvertimeCard = ({ data, reverse }) => {
               <sub>min</sub>
             </div>
           </div>
-          <ChangeIcon change={momentum} className='subtle-subtext' reverse={reverse} tooltip='Change in 30-day moving average over the period'/>
+          <ChangeIcon change={momentum} className='subtle-subtext' reverse={reverse} tooltip={trendTooltip}/>
 
         </div>
         <div className="overtime-helper subtext" style={{ flex: '1 0 20%' }}>

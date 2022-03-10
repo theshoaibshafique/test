@@ -92,14 +92,18 @@ const TurnoverTime = () => {
     const fetchData = async () => {
       const defaultConfig = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
       const config = getItemFromStore('globalFilter');
+      const { startDate, endDate, rooms, specialtyNames } = config ?? defaultConfig;
+      const dates = {
+        startDate: moment(startDate).format('YYYY-MM-DD'),
+        endDate: moment(endDate).format('YYYY-MM-DD'),
+      }
       let body = null;
       if (config) {
-        const { startDate, endDate, rooms, specialtyNames } = config;
+
         body = {
           ...state.defaultPayload,
           facilityName: userFacility,
-          startDate: moment(startDate).format('YYYY-MM-DD'),
-          endDate: moment(endDate).format('YYYY-MM-DD'),
+          ...dates,
           roomNames: rooms ?? [],
         }
       } else {
@@ -119,6 +123,7 @@ const TurnoverTime = () => {
         (data) => {
           if (data?.tiles) {
             dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
+            dispatch({ type: 'SET_FILTER_DATE', payload: dates });
           }
         }
       )
@@ -173,6 +178,13 @@ const TurnoverTime = () => {
     idle: dataset?.idle[i],
     display: dataset?.display[i],
   }));
+
+  const get30DayTooltip = () => {
+    const endRange = moment(state.endDate);
+    const startRange = endRange.clone().add(-30, 'day');
+    return `Change in 30 day moving average from ${startRange.format('MMM D YYYY')} to ${endRange.format('MMM D YYYY')}`
+  }
+
   const Card = loading ? StyledSkeleton : MaterialCard;
   const [cleanup, idle, setup] = tile?.or?.toolTip ?? [];
   return (
@@ -195,6 +207,12 @@ const TurnoverTime = () => {
           (tileData) => {
             if (tileData?.tiles?.length) {
               dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
+              dispatch({
+                type: 'SET_FILTER_DATE', payload: {
+                  startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+                  endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+                }
+              });
             }
           }
         )}
@@ -223,7 +241,7 @@ const TurnoverTime = () => {
             <Card className='tile-card' id='overtime'>
               <CardContent>
                 {tile?.overtime && (
-                  <OvertimeCard data={tile.overtime} />
+                  <OvertimeCard data={tile.overtime} trendTooltip={get30DayTooltip()} />
                 )}
               </CardContent>
             </Card>
@@ -256,7 +274,7 @@ const TurnoverTime = () => {
                     </div>
                     <HorizontalBar
                       legend
-                      legendTooltip={{cleanup, idle, setup}}
+                      legendTooltip={{ cleanup, idle, setup }}
                       data={orGraphData}
                       xAxisLabel={{ value: 'Time (min)', offset: -10, position: 'insideBottom' }}
                       yAxisLabel={{

@@ -96,13 +96,16 @@ const BlockUtilization = React.memo(() => {
     const fetchData = async () => {
       const defaultConfig = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
       const config = getItemFromStore('globalFilter');
+      const { startDate, endDate, rooms } = config ?? defaultConfig;
+      const dates = {
+        startDate: moment(startDate).format('YYYY-MM-DD'),
+        endDate: moment(endDate).format('YYYY-MM-DD'),
+      }
       let body = null;
       if (config) {
-        const { startDate, endDate, rooms } = config;
         body = {
           facilityName: userFacility,
-          startDate: moment(startDate).format('YYYY-MM-DD'),
-          endDate: moment(endDate).format('YYYY-MM-DD'),
+          ...dates,
           roomNames: rooms
         }
       } else {
@@ -123,6 +126,7 @@ const BlockUtilization = React.memo(() => {
         (data) => {
           if (data?.tiles) {
             dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
+            dispatch({ type: 'SET_FILTER_DATE', payload: dates });
           }
         }
       )
@@ -256,6 +260,13 @@ const BlockUtilization = React.memo(() => {
     }))
     return cb(transformed);
   };
+
+  const get30DayTooltip = () => {
+    const endRange = moment(state.endDate);
+    const startRange = endRange.clone().add(-30, 'day');
+    return `Change in 30 day moving average from ${startRange.format('MMM D YYYY')} to ${endRange.format('MMM D YYYY')}`
+  }
+
   const Card = loading ? StyledSkeleton : MaterialCard;
   /*
    * Note: This Header component might be a little intimidating, so I'm leaving this comment here to hopefully help explain how everything is hooked up. Feel free to delete if you don't feel it's helpful / after understanding
@@ -281,6 +292,12 @@ const BlockUtilization = React.memo(() => {
           (tileData) => {
             if (tileData?.tiles?.length) {
               dispatch({ type: 'SET_TILE_DATA', payload: { tiles: tileData.tiles } });
+              dispatch({
+                type: 'SET_FILTER_DATE', payload: {
+                  startDate: moment(getItemFromStore('globalFilter')?.startDate).format('YYYY-MM-DD') ?? state.startDate.format('YYYY-MM-DD'),
+                  endDate: moment(getItemFromStore('globalFilter')?.endDate).format('YYYY-MM-DD') ?? state.endDate.format('YYYY-MM-DD'),
+                }
+              });
             }
           }
         )}
@@ -306,7 +323,7 @@ const BlockUtilization = React.memo(() => {
             <Card className='tile-card' id='overtime'>
               <CardContent>
                 {tile?.overtime && (
-                  <OvertimeCard data={tile.overtime} reverse />
+                  <OvertimeCard data={tile.overtime} trendTooltip={get30DayTooltip()} reverse />
                 )}
               </CardContent>
             </Card>
@@ -359,7 +376,11 @@ const BlockUtilization = React.memo(() => {
                         render: rowData => <span >{rowData?.percent !== null ? `${rowData?.percent}%` : 'N/A'}</span>
                       }, {
                         field: 'change', title: 'Change',
-                        render: rowData => <ChangeIcon change={rowData?.change} style={{ minWidth: 69, textAlign: 'center' }} tooltip='Change in 30-day moving average over the period' />,
+                        render: rowData => <ChangeIcon
+                          change={rowData?.change}
+                          style={{ minWidth: 69, textAlign: 'center' }}
+                          tooltip={get30DayTooltip()}
+                        />,
                         customSort: (a, b) => (a.change == null ? -.1 : a.change) - (b.change == null ? -.1 : b.change),
                       }]}
                       data={transformRoomData(tile?.room?.data,
