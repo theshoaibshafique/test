@@ -23,8 +23,6 @@ import globalFunctions from '../../../utils/global-functions';
 
 const INITIAL_STATE = {
   tabIndex: 0,
-  // startDate: moment().subtract(1, 'weeks').startOf('week'),
-  // endDate: moment().subtract(1, 'weeks').endOf('week'),
   startDate: moment().subtract(8, 'months').startOf('month'),
   endDate: moment().subtract(1, 'months').endOf('month'),
   defaultPayload: {

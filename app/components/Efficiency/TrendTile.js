@@ -69,10 +69,6 @@ const TrendTile = ({
   };
   const valueLabelFormat = (value) => moment(value).format('MMM D YYYY');
 
-  //Max range
-  const startDate = moment(data?.data?.startDate).valueOf();
-  const endDate = moment(data?.data?.endDate).valueOf();
-
 
   const [sliderStart, sliderEnd] = trendSlider;
   //Get rough # of visible months

@@ -42,9 +42,8 @@ const DistributionTile = ({
   }, [startDistributionSlider]);
 
   const filterStartDistribution = React.useCallback((_, val) => {
-    const { binSize } = data ?? {}
     const [first, second] = val;
-    setStartGapFilterableData(startGapOriginalData.filter((values) => values.bin >= first && values.bin <= (second + binSize)));
+    setStartGapFilterableData(startGapOriginalData.filter((values) => values.bin >= first && values.bin <= second));
     setStartDistributionSlider(val);
   }, [startDistributionSlider]);
 

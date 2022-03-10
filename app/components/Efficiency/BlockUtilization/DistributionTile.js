@@ -4,7 +4,6 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import BarGraph from '../../Charts/Bar';
 import { LightTooltip } from '../../SharedComponents/SharedComponents';
 import RangeSlider from '../../SharedComponents/RangeSlider';
-import { Tooltip } from '@material-ui/core';
 
 const DistributionTile = ({
   data, xAxisLabel, yAxisLabel, toolTip, title, ...rest
@@ -19,7 +18,6 @@ const DistributionTile = ({
 
   React.useEffect(() => {
     const { values } = data ?? {}
-    // setFilteredData(values);
     setOriginalData(values);
     const startValue = values?.[0]?.bin;
     const endValue = values?.[data?.values.length - 1]?.bin;
@@ -44,9 +42,8 @@ const DistributionTile = ({
   }, [sliderRange]);
 
   React.useEffect(() => {
-    const { binSize } = data ?? {}
     const [first, second] = sliderRange;
-    setFilteredData(originalData?.filter((values) => values.bin >= first && values.bin <= (second + binSize)));
+    setFilteredData(originalData?.filter((values) => values.bin >= first && values.bin <= second));
   }, [sliderRange])
 
   const valueLabelFormat = (value) => `${value} min`;
