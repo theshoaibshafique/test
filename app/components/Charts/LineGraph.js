@@ -15,7 +15,7 @@ const NoDataOverlay = (props) => (
 /*
 * @TODO: Possibly move this to a new component if a universal tooltip design can be decided on. Also, decide on colours / format
 */
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({ active, payload, unitTitle }) => {
   if (active && payload?.length) {
     const [{ payload: { date, percentage } }] = payload;
     return (
@@ -23,7 +23,7 @@ const CustomTooltip = ({ active, payload }) => {
         style={{ background: '#F2F2F2', borderRadius: 4, padding: 8 }}
       >
         <div>Date: <span className='bold'>{moment(date).format('MMM D YYYY')}</span></div>
-        <div>Percentage: <span className='bold'>{percentage}</span></div>
+        <div>{`${unitTitle ?? 'Percentage'}`}: <span className='bold'>{percentage}</span></div>
       </div>
     );
   }
@@ -39,7 +39,7 @@ const CustomTooltip = ({ active, payload }) => {
  * @param {(number|object)} xTickMargin - The margin around the chart (defaulting currently to all margins)
  */
 const LineGraph = React.memo(({
-  data, xAxisLabel, yAxisLabel, interval, xTickSize, xTickMargin, areaReference
+  data, xAxisLabel, yAxisLabel, interval, xTickSize, xTickMargin, areaReference, unitTitle
 }) => {
   const formatTick = (item) => moment(item).format('MMM');
   const [start, end] = areaReference ?? []
@@ -65,7 +65,7 @@ const LineGraph = React.memo(({
           <YAxis dataKey="percentage" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
           <Line type="monotone" dataKey="percentage" stroke="#028CC8" dot={false} />
           <Line type="monotone" dataKey="network" stroke="#e0e0e0" dot={false} />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip unitTitle={unitTitle} />} />
 
         </LineChart>
       </ResponsiveContainer>

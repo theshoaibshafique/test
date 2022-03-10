@@ -9,7 +9,7 @@ import LineGraph from '../Charts/LineGraph';
 import useLocalStorage from '../../hooks/useLocalStorage';
 const DAY_MS = 86400000;
 const TrendTile = ({
-  data, trendLineData, chartData, toggleChartData, options
+  data, trendLineData, chartData, toggleChartData, options, unitTitle
 }) => {
   const [trendSlider, setTrendSlider] = React.useState([0, 100]);
   const [date, setDate] = React.useState({
@@ -103,6 +103,7 @@ const TrendTile = ({
         }}
         areaReference={(range.max <= sliderStart) ? [] : [Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
         xTickMargin={8}
+        unitTitle={unitTitle}
       />
       <Grid item xs={12} >
         <RangeSlider

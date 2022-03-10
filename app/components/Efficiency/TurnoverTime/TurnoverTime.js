@@ -238,6 +238,7 @@ const TurnoverTime = () => {
                     chartData={chartData}
                     toggleChartData={toggleChartData}
                     options={options}
+                    unitTitle={'Minutes'}
                   />
                 )}
               </CardContent>
