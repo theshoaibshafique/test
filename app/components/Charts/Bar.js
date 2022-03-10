@@ -14,8 +14,8 @@ const NoDataOverlay = (props) => (
     color: '#828282', width: '100%', height: '100%'
   }} className='header-1 flex vertical-center'>No Data</div>
 )
-const CustomTooltipContent = (e) => {
-  const { active, payload, binSize, unit, value } = e;
+const CustomTooltipContent = ({ payload, binSize, unit, value, customTooltipLine }) => {
+
   if (payload) {
     const { count, bin, fcotsCount, otsCount } = payload;
     const hasSecondEntry = Array.isArray(value)
@@ -26,6 +26,7 @@ const CustomTooltipContent = (e) => {
         <>
           <div>Range: <span className='bold'>{`${bin} to ${bin + binSize} ${unit ?? 'min'}`}</span></div>
           <div>Frequency: <span className='bold'>{count}</span></div>
+          {bin === 0 && customTooltipLine ? customTooltipLine : ''}
         </>
       )
     } else if (otsCount !== undefined) {
@@ -60,7 +61,7 @@ const CustomTooltipContent = (e) => {
 * @param {object} rest - Any additional props to be passed into the component
 */
 const BarGraph = React.memo(({
-  data, xAxisLabel, yAxisLabel, height, interval, colors, binSize, unit, threshold, ...rest
+  data, xAxisLabel, yAxisLabel, height, interval, colors, binSize, unit, threshold, customTooltipLine, ...rest
 }) => {
   const hasData = data?.length;
   data = hasData ? data : [{ room: '' }]
@@ -69,18 +70,18 @@ const BarGraph = React.memo(({
   const barProps = {
     onMouseEnter: e => (
       openTooltip?.({
-        content: <CustomTooltipContent {...e} binSize={binSize} unit={unit} />,
+        content: <CustomTooltipContent {...e} binSize={binSize} unit={unit} customTooltipLine={customTooltipLine} />,
       })
     ),
     onMouseLeave: () => closeTooltip?.()
   }
-  const lastEl = data?.[data?.length-1];
+  const lastEl = data?.[data?.length - 1];
   return (
     <div style={{ position: 'relative' }} >
       <ResponsiveContainer width="100%" height={height} className='bar-chart'>
         <BarChart
           //Add one final bar to pad the ends
-          data={hasData ? [...data, {bin:lastEl?.bin + binSize}] : data}
+          data={hasData ? [...data, { bin: lastEl?.bin + binSize }] : data}
           {...rest}
         >
           {rest?.tripleColour && (
@@ -126,7 +127,7 @@ const BarGraph = React.memo(({
           {rest?.singleColour && (
             <Bar {...barProps} dataKey="count" fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'} />
           )}
-          <XAxis scale='linear'  dataKey="bin" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} interval={interval} domain={[0, 'auto']} />
+          <XAxis scale='linear' dataKey="bin" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} interval={interval} domain={[0, 'auto']} />
           <YAxis allowDecimals={false} dataKey={rest?.primaryKey ?? "count"} label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
         </BarChart>
       </ResponsiveContainer>

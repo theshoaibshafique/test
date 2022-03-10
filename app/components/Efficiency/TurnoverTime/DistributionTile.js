@@ -109,6 +109,7 @@ const DistributionTile = ({ data, toolTip, title }) => {
         height={230}
         data={filteredData}
         binSize={data?.binSize}
+        customTooltipLine={graphData === 'Idle' ? <div>Omitted Turnovers with no idle time: <span className='bold'>{data?.excludedIdles}</span></div> : null}
         xAxisLabel={{
           value: `${graphData} Duration (min)`,
           offset: -10,
