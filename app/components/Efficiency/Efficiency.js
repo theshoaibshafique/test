@@ -497,7 +497,7 @@ function renderFormattedText(text) {
     const match = word.match(pattern);
     const brackets = match?.[0]
     if (placementMap[brackets]) {
-      return <span style={{ fontWeight: 'bold', color: '#004F6E', margin: '0 4px' }} key={index}>{`${placementMap[brackets]} `}</span>
+      return <span style={{ fontWeight: 'bold', color: '#004F6E', margin: '0' }} key={index}>{`${word.replace(brackets,placementMap[brackets])} `}</span>
     } else {
       return `${word} `
     }
