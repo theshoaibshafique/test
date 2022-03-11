@@ -128,7 +128,7 @@ const BarGraph = React.memo(({
             <Bar {...barProps} dataKey="count" fill={colors?.length === 1 ? colors?.toString() : '#3Db3E3'} />
           )}
           <XAxis scale='linear' dataKey="bin" label={{ ...xAxisLabel, ...axisLabelStyle }} style={axisStyles} interval={interval} domain={[0, 'auto']} />
-          <YAxis allowDecimals={false} dataKey={rest?.primaryKey ?? "count"} label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
+          <YAxis allowDecimals={false} label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} padding={{top:10}} />
         </BarChart>
       </ResponsiveContainer>
       {!hasData && <NoDataOverlay />}
