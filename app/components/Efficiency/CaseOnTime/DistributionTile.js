@@ -17,12 +17,15 @@ const DistributionTile = ({
     max: 100
   });
   React.useEffect(() => {
-    const { values } = data ?? {}
+    const values = data?.values?.map((value => ({
+      ...value,
+      totalCount: value?.fcotsCount + value?.otsCount
+    }))) ?? [];
     setOriginalData(values);
     const startValue = values?.[0]?.bin;
     const endValue = values?.[data?.values.length - 1]?.bin;
 
-    const yValues = values?.map(({ fcotsCount, otsCount }) => fcotsCount + otsCount) ?? [];
+    const yValues = values?.map(({ totalCount }) => totalCount) ?? [];
     const indexOfMax = yValues.indexOf(Math.max(...yValues))
     //Find the peak of the values and show 15% left and right of it or a min of 15 bins
     const leftSpan = Math.max(Math.round(yValues.length * .15), 10)
@@ -62,7 +65,7 @@ const DistributionTile = ({
       <BarGraph
         height={230}
         stacked={rest?.viewFirstCase}
-        primaryKey={rest?.viewFirstCase ? 'fcotsCount' : 'otsCount'}
+        primaryKey={rest?.viewFirstCase ? 'fcotsCount' : 'totalCount'}
         secondaryKey={rest?.viewFirstCase ? 'otsCount' : 'fcotsCount'}
         data={filteredData}
         binSize={data?.binSize}

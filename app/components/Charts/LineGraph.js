@@ -62,7 +62,7 @@ const LineGraph = React.memo(({
             tickMargin={xTickMargin}
             tickFormatter={formatTick}
           />
-          <YAxis dataKey="percentage" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} />
+          <YAxis dataKey="percentage" label={{ ...yAxisLabel, ...axisLabelStyle }} style={axisStyles} padding={{top:10}}/>
           <Line type="monotone" dataKey="percentage" stroke="#028CC8" dot={false} />
           <Line type="monotone" dataKey="network" stroke="#e0e0e0" dot={false} />
           <Tooltip content={<CustomTooltip unitTitle={unitTitle} />} />
