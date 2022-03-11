@@ -41,8 +41,8 @@ const INITIAL_STATE = {
 function normalCdf(value) {
   const z = (value - 50) / 12.5;  // mean and std. dev. of norm dist
   const t = 1 / (1 + .2315419 * Math.abs(z));
-  const d =.3989423 * Math.exp( -z * z / 2);
-  const prob = d * t * (.3193815 + t * ( -.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+  const d = .3989423 * Math.exp(-z * z / 2);
+  const prob = d * t * (.3193815 + t * (-.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
   return z < 0 ? prob : 1 - prob;
 }
 function normalPdf(value) {  // mean 50; std 12.5
@@ -220,6 +220,7 @@ const Efficiency = () => {
     setFCO(!fco)
   }
   const fcotToggle = { value: fco, onChange: handleFCO };
+  const hasHeadline = tile.headline?.data?.sentences;
   return (
     <div className="page-container">
       <Header displayDate={date} loading={loading} isApplied={isApplied} />
@@ -284,6 +285,7 @@ const Efficiency = () => {
                       </LightTooltip>
                     </div>
                     <div
+                      className={`${hasHeadline ? '' : 'no-headline'}`}
                       style={{
                         display: 'flex', justifyContent: 'center', flexDirection: 'column', height: '267px'
                       }}
@@ -325,7 +327,7 @@ const Efficiency = () => {
                           </div>
                         }
                       >
-                        {tile.headline.data.sentences.map((sentence) => (
+                        {tile.headline?.data?.sentences?.map((sentence) => (
                           <div
                             key={uuidv4()}
                             style={{
@@ -336,7 +338,7 @@ const Efficiency = () => {
                           >
                             {renderFormattedText(sentence)}
                           </div>
-                        ))}
+                        )) ?? <NoDataOverlay />}
                       </Carousel>
                     </div>
                   </React.Fragment>
@@ -377,7 +379,7 @@ const Efficiency = () => {
             <Card className='tile-card' id='turnover-time'>
               <CardContent>
                 {tile?.turnover && (
-                  <TimeCard data={tile.turnover} suffix=' min' hideGoal/>
+                  <TimeCard data={tile.turnover} suffix=' min' hideGoal />
                 )}
               </CardContent>
             </Card>
@@ -510,7 +512,7 @@ const CustomDonutTooltip = ({ active, payload, toTitleCase }) => {
   if (active && payload?.length) {
     const [{ name, value, payload: { payload: { color } } }] = payload;
     return (
-      <div className='subtle-subtext flex' style={{background:'#F2F2F2', borderRadius:4, padding:8}}>
+      <div className='subtle-subtext flex' style={{ background: '#F2F2F2', borderRadius: 4, padding: 8 }}>
         <div style={{ backgroundColor: color, width: 16, height: 16 }} />
         <div style={{ marginLeft: 4 }}>{name}: <span style={{ marginLeft: 2 }} className='bold'>{value} cases</span></div>
       </div>
@@ -518,3 +520,13 @@ const CustomDonutTooltip = ({ active, payload, toTitleCase }) => {
   }
   return null;
 }
+
+
+const NoDataOverlay = (props) => (
+  <div style={{
+    position: 'absolute', top: '40%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: '#828282', width: '100%', height: '100%'
+  }} className='header-1 flex vertical-center'>No Data</div>
+)
