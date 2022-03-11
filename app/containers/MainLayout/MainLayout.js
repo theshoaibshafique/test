@@ -119,7 +119,6 @@ export default class MainLayout extends React.PureComponent {
     }
 
     if (this.state.userLoggedIn) {
-      // console.log(this.state.userLoggedIn);
       if (this.props.emmReportID) {
         logger?.manualAddLog('session', `open-emm-report`, this.props.emmReportID);
       } else {
@@ -163,18 +162,6 @@ export default class MainLayout extends React.PureComponent {
           <Route path="/quality" render={(props) => <SSChecklist {...props} reportType={"Quality"} />} />
         }
 
-        {/* {(this.state.efficiencyAccess) &&
-          <Route path="/efficiency" render={(props) => <Efficiency {...props} reportType={"efficiency"} />} />
-        }
-        {(this.state.efficiencyAccess) &&
-          <Route path="/daysStarting" render={(props) => <Efficiency {...props} reportType={"firstCaseOnTimeStart"} />} />
-        }
-        {(this.state.efficiencyAccess) &&
-          <Route path="/turnoverTime" render={(props) => <Efficiency {...props} reportType={"turnoverTime"} />} />
-        }
-        {(this.state.efficiencyAccess) &&
-          <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"blockUtilization"} />} />
-        } */}
         {(this.state.caseDiscoveryAccess) &&
           <Route path="/caseDiscovery" render={(props) => <CaseDiscovery {...props} showEMMReport={this.props.showEMMReport} />} />
         }

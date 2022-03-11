@@ -51,7 +51,6 @@ const reducer = (state, action) => {
         tiles: action.payload.tiles
       };
     case 'SET_FILTER_DATE':
-      console.log(action.payload)
       return {
         ...state,
         startDate: action.payload.startDate,
