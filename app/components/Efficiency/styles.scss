@@ -200,6 +200,12 @@
             color: #009483;
         }
     }
+    .no-headline{
+        .react-multi-carousel-dot-list,
+        svg {
+            display: none;
+        }
+    }
     .change-value {
         svg {
             width: 24px !important;

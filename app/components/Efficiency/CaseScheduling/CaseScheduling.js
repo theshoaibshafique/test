@@ -18,6 +18,7 @@ import useSelectData from '../../../hooks/useSelectData';
 import useFilter from '../../../hooks/useFilter';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 import { StyledSkeleton } from '../../SharedComponents/SharedComponents';
+import { getPresetDates } from '../../SharedComponents/CustomDateRangePicker';
 
 const INITIAL_STATE = {
   tabIndex: 0,
@@ -95,17 +96,15 @@ const CaseScheduling = () => {
     const fetchData = async () => {
       const defaultConfig = await fetchConfigData({ userFacility, userToken, cancelToken: axios.CancelToken.source() });
       const config = getItemFromStore('globalFilter');
-      const { startDate, endDate, rooms, specialtyNames } = config ?? defaultConfig;
-      const dates = {
-        startDate: moment(startDate).format('YYYY-MM-DD'),
-        endDate: moment(endDate).format('YYYY-MM-DD'),
-      }
+      const { rooms, dateLabel } = config ?? defaultConfig;
       let body = null;
       if (config) {
+        const {start,end} = getPresetDates(dateLabel)
         body = {
           ...state.defaultPayload,
           facilityName: userFacility,
-          ...dates,
+          startDate: moment(start).format('YYYY-MM-DD'),
+          endDate: moment(end).format('YYYY-MM-DD'),
           roomNames: rooms ?? [],
         }
       } else {
@@ -125,7 +124,7 @@ const CaseScheduling = () => {
         (data) => {
           if (data?.tiles) {
             dispatch({ type: 'SET_TILE_DATA', payload: { tiles: data?.tiles } });
-            dispatch({ type: 'SET_FILTER_DATE', payload: dates });
+            dispatch({ type: 'SET_FILTER_DATE', payload: body });
           }
         }
       )
