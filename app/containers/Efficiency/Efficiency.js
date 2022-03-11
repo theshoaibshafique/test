@@ -54,7 +54,7 @@ export default class Efficiency extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.reportType != this.props.reportType) {
+    if (prevProps.reportType !== this.props.reportType) {
       let selectedSpecialty = this.state.selectedSpecialty
       if (!selectedSpecialty?.value) {
         selectedSpecialty = "";
@@ -480,6 +480,7 @@ export default class Efficiency extends React.PureComponent {
                 maxDate={this.state.latestEndDate}
                 updateState={(key, value) => this.updateState(key, value)}
                 displayWarning={this.state.pendingWarning}
+                displayLabel
               />
             </div>
           </Grid>

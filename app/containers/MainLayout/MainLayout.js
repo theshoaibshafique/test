@@ -15,6 +15,11 @@ import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SSChecklist from 'containers/SSChecklist/Loadable';
 import Efficiency from 'containers/Efficiency/Loadable';
+import EfficiencyV2 from 'components/Efficiency/Efficiency';
+import TurnoverTime from 'components/Efficiency/TurnoverTime/TurnoverTime';
+import BlockUtilization from 'components/Efficiency/BlockUtilization/BlockUtilization';
+import CaseScheduling from 'components/Efficiency/CaseScheduling/CaseScheduling';
+import CaseOnTime from 'components/Efficiency/CaseOnTime/CaseOnTime';
 import NoAccess from 'containers/NoAccess/Loadable';
 import Forbidden from 'containers/Forbidden/Loadable';
 
@@ -157,20 +162,25 @@ export default class MainLayout extends React.PureComponent {
           <Route path="/quality" render={(props) => <SSChecklist {...props} reportType={"Quality"} />} />
         }
 
-        {(this.state.efficiencyAccess) &&
-          <Route path="/efficiency" render={(props) => <Efficiency {...props} reportType={"efficiency"} />} />
-        }
-        {(this.state.efficiencyAccess) &&
-          <Route path="/daysStarting" render={(props) => <Efficiency {...props} reportType={"firstCaseOnTimeStart"} />} />
-        }
-        {(this.state.efficiencyAccess) &&
-          <Route path="/turnoverTime" render={(props) => <Efficiency {...props} reportType={"turnoverTime"} />} />
-        }
-        {(this.state.efficiencyAccess) &&
-          <Route path="/orUtilization" render={(props) => <Efficiency {...props} reportType={"blockUtilization"} />} />
-        }
         {(this.state.caseDiscoveryAccess) &&
           <Route path="/caseDiscovery" render={(props) => <CaseDiscovery {...props} showEMMReport={this.props.showEMMReport} />} />
+        }
+
+        {(this.state.efficiencyAccess) &&
+          <Route exact path="/efficiency" render={(props) => <EfficiencyV2 {...props} />} />
+        }
+        {(this.state.efficiencyAccess) &&
+          <Route path="/efficiency/case-on-time" render={(props) => <CaseOnTime {...props} />} />
+        }
+        {(this.state.efficiencyAccess) &&
+          <Route path="/efficiency/turnover-time" render={(props) => <TurnoverTime {...props} />} />
+        }
+        {(this.state.efficiencyAccess) &&
+          <Route path="/efficiency/or-utilization" render={(props) => <BlockUtilization {...props} />} />
+        }
+
+        {(this.state.efficiencyAccess) &&
+          <Route path="/efficiency/case-scheduling" render={(props) => <CaseScheduling {...props} />} />
         }
 
         <Route path="/my-profile" component={MyProfile} />
@@ -216,6 +226,7 @@ export default class MainLayout extends React.PureComponent {
                       emmPublishAccess={this.state.emmPublishAccess}
                       sscAccess={this.state.sscAccess}
                       efficiencyAccess={this.state.efficiencyAccess}
+                      // efficiencyV2Access={this.state.efficiencyV2Access}
                       caseDiscoveryAccess={this.state.caseDiscoveryAccess}
                       settingsAccess={this.state.settingsAccess}
                       pathname={this.props.location.pathname}

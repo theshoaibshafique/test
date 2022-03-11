@@ -9,8 +9,8 @@ import { LightTooltip } from '../../SharedComponents/SharedComponents';
 export default class DisplayNumber extends React.PureComponent {
   constructor(props) {
     super(props);
-  };
-  
+  }
+
   render() {
     return (
       <LoadingOverlay
@@ -35,11 +35,14 @@ export default class DisplayNumber extends React.PureComponent {
           <Grid item xs className="display-number-title normal-text">
             <span >
               {this.props.title}
-              {this.props.tooltipText && <LightTooltip interactive arrow
-                title={Array.isArray(this.props.tooltipText) ? this.props.tooltipText.map((line, index) => { return <div key={index}>{line}</div> }) : this.props.tooltipText}
-                placement="top" fontSize="small"
+              {this.props.tooltipText && <LightTooltip
+                interactive
+                arrow
+                title={Array.isArray(this.props.tooltipText) ? this.props.tooltipText.map((line, index) => <div key={index}>{line}</div>) : this.props.tooltipText}
+                placement="top"
+                fontSize="small"
               >
-                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${this.props.title}`}/>
+                <InfoOutlinedIcon style={{ fontSize: 16, margin: '0 0 8px 4px' }} className="log-mouseover" id={`info-tooltip-${this.props.title}`} />
               </LightTooltip>}
             </span>
           </Grid>
@@ -48,11 +51,11 @@ export default class DisplayNumber extends React.PureComponent {
             this.props.message
               ?
               <Grid item xs className="display-number-message normal-text">
-                {this.props.message}
-              </Grid>
+                  {this.props.message}
+                </Grid>
               :
-              <Grid item xs>
-                <span className="display-number">{this.props.number}</span>{this.props.unit && <span className="display-number-unit normal-text">{this.props.unit}</span>}
+                <Grid item xs>
+                <span className="display-number">{this.props.number}</span>{this.props.unit && <span className="display-number-unit superscript-text">{this.props.unit}</span>}
                 {this.props.footer && <span className="display-number-footer normal-text">{this.props.footer}</span>}
               </Grid>
           }

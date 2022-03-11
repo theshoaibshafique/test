@@ -1,42 +1,8 @@
 import React, { useEffect } from 'react';
-import Button from '@material-ui/core/Button';
 import './style.scss';
-import { Card, Checkbox, Divider, FormControlLabel, Grid, Slider, Switch, withStyles } from '@material-ui/core';
-import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
+import { Card, Divider, FormControlLabel, Grid, Slider, Switch, withStyles } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Icon from '@mdi/react'
-import { LightTooltip, SaveAndCancel } from '../../../components/SharedComponents/SharedComponents';
-
-const SSTSwitch = withStyles((theme) => ({
-  root: {
-    padding: '16px 11px',
-  },
-  thumb: {
-    width: 14,
-    height: 14,
-  },
-  switchBase: {
-    padding: '12px 16px',
-    transform: 'translateX(-8px)',
-    color: '#004F6E',
-    '&$checked': {
-      color: '#004F6E',
-    },
-    '&$checked + $track': {
-      opacity: 1,
-      backgroundColor: '#3DB3E3',
-    },
-    '&:hover': {
-      backgroundColor: 'unset !important'
-    }
-  },
-  checked: {},
-  track: {
-    opacity: 1,
-    borderRadius: 8,
-    backgroundColor: '#C8C8C8'
-  }
-}))(Switch);
+import { LightTooltip, SaveAndCancel, SSTSwitch, StyledCheckbox } from '../../../components/SharedComponents/SharedComponents';
 const SSTSlider = withStyles({
   root: {
     color: '#D8D8D8',
@@ -96,12 +62,9 @@ function PhaseItem(props) {
       style={{ display: 'table' }}
       control={
         <div style={{ display: 'table-cell' }}>
-          <Checkbox
-            disableRipple
+          <StyledCheckbox
             id={`phaseitem-${pIndex}-${qIndex}`}
             className="SST-Checkbox"
-            icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
-            checkedIcon={<Icon path={mdiCheckboxOutline} size={'18px'} />}
             onChange={toggle}
             checked={isActive}
             value={questionId}

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, Modal, TextField, Select, FormControl, ListItemIcon, Checkbox, ListItemText, FormHelperText } from '@material-ui/core';
+import { Button, Divider, Grid, InputLabel, makeStyles, MenuItem, TextField, Select, FormControl, ListItemIcon, ListItemText, FormHelperText } from '@material-ui/core';
 import Icon from '@mdi/react'
 import moment from 'moment/moment';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,11 +8,11 @@ import { selectAssignableRoles, selectLocationLookups, selectLocations, selectUs
 import { CD_PRODUCT_ID, EFF_PRODUCT_ID, EMM_PRODUCT_ID, MAX_INPUT, SSC_PRODUCT_ID, UM_PRODUCT_ID } from '../../../constants';
 import { createUser, deleteUser, generateProductUpdateBody, getRoleMapping, getSelectedRoles, isWithinScope, patchRoles, resetUser } from '../helpers';
 import { makeSelectLogger, makeSelectProductRoles, makeSelectToken, makeSelectUserFacility } from '../../App/selectors';
-import { mdiPlaylistEdit, mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
+import { mdiPlaylistEdit } from '@mdi/js';
 import globalFunctions from '../../../utils/global-functions';
 import { setUsers } from '../../App/store/UserManagement/um-actions';
 import { LEARNMORE_DESC, LEARNMORE_HEADER, LEARNMORE_INFO } from '../constants';
-import { GenericModal, ProfileIcon, SaveAndCancel, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
+import { GenericModal, ProfileIcon, SaveAndCancel, StyledCheckbox, StyledTab, StyledTabs, TabPanel } from '../../../components/SharedComponents/SharedComponents';
 import { setSnackbar } from '../../App/actions';
 
 
@@ -611,12 +611,9 @@ const ProductPermissions = props => {
                             return (
                                 <MenuItem key={locationId} value={locationId} style={{ padding: "4px 14px 4px 0" }}>
                                     <ListItemIcon style={{ minWidth: 30, marginLeft: (scopeId - 1) * 12 }}>
-                                        <Checkbox
+                                        <StyledCheckbox
                                             style={{ padding: 0 }}
-                                            disableRipple
                                             disabled
-                                            icon={<Icon path={mdiCheckboxBlankOutline} size={'18px'} />}
-                                            checkedIcon={<Icon path={mdiCheckboxOutline} size={'18px'} />}
                                             className="SST-Checkbox"
                                             checked={selectedLocations.includes(locationId)}
                                         />

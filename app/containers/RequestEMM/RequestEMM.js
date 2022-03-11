@@ -6,21 +6,16 @@ import CloseIcon from '@material-ui/icons/Close';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Snackbar from '@material-ui/core/Snackbar';
-import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider,  DatePicker } from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import './style.scss';
 import globalFuncs from '../../utils/global-functions';
 import { Grid, FormHelperText } from '@material-ui/core';
-import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckboxOutline } from '@mdi/js';
-import moment from 'moment/moment';
 import globalFunctions from '../../utils/global-functions';
-import { SaveAndCancel } from '../../components/SharedComponents/SharedComponents';
+import { SaveAndCancel, StyledCheckbox } from '../../components/SharedComponents/SharedComponents';
 
 export default class RequestEMM extends React.PureComponent {
   constructor(props) {
@@ -561,11 +556,8 @@ export default class RequestEMM extends React.PureComponent {
             </Grid>
             {/* Other checkbox and field */}
             <Grid item xs={12} className="other-checkbox" style={this.state.specialtyCheck ? { marginBottom: -8 } : {}}>
-              <Checkbox
-                disableRipple
+              <StyledCheckbox
                 id="other-procedure-checkbox"
-                icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
                 checked={this.state.specialtyCheck} onChange={(e) => this.handleCheckSpecialty(e)} />Other
             </Grid>
             {(this.state.specialtyCheck) &&
@@ -637,11 +629,8 @@ export default class RequestEMM extends React.PureComponent {
               />
             </Grid>
             <Grid item xs={12} className="other-checkbox" >
-              <Checkbox
-                disableRipple
+              <StyledCheckbox
                 id="other-complication-checkbox"
-                icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
-                checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
                 checked={this.state.complicationsCheck} onChange={(e) => this.handleCheckComplications(e)} />Other
             </Grid>
             <Grid item xs={12} >

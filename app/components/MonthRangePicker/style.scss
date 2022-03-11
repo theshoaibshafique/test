@@ -28,7 +28,46 @@
     .DateInput_input{
         cursor: pointer;
     }
-    
+
+    .CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover{
+        background: #004F6E !important;
+        border: 1px double #004F6E !important;
+        color: #fff;
+    }
+    .CalendarDay__hovered_span, .CalendarDay__hovered_span:hover,
+    .CalendarDay__selected_span{
+        background: #3DB3E3 !important;
+        border: 1px double #3DB3E3 !important;
+        color: #fff;
+    }
+}
+.month-range-picker-v2 {
+    .DateRangePickerInput *{
+        font-family: "Noto Sans" !important;
+    }
+    .DateInput{
+        width: 135px !important;
+    }
+
+    .DateRangePickerInput_arrow_svg{
+        width: 16px;
+        height: 16px;
+        margin-bottom: 3px;
+    }
+    .display-warning{
+        padding: 16px;
+        font-weight: bold;
+      }
+
+    .DateRangePickerInput,
+    .DateInput_input{
+        background-color: #e8e8e8 !important;
+    }
+    .DateInput_input{
+        cursor: pointer;
+        color: #000000 !important;
+    }
+
     .CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover{
         background: #004F6E !important;
         border: 1px double #004F6E !important;

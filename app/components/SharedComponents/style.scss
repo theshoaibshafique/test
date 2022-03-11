@@ -1,7 +1,7 @@
 .modal-header {
   font-size: 26px;
   line-height: 35px;
-  color: #004F6E;
+  color: #004f6e;
 }
 
 .current-facility {
@@ -15,7 +15,7 @@
   .current-facility__label {
     font-size: 14px;
     line-height: 19px;
-    color: #BDBDBD;
+    color: #bdbdbd;
   }
 
   .current-facility__name {
@@ -28,9 +28,9 @@
   img {
     border-radius: 50%;
     background-size: cover;
-    border-radius:50% 50% 50% 50%;
-    width:100px;
-    height:100px;
+    border-radius: 50% 50% 50% 50%;
+    width: 100px;
+    height: 100px;
   }
 }
 
@@ -45,15 +45,15 @@
   img {
     border-radius: 50%;
     background-size: cover;
-    border-radius:50% 50% 50% 50%;
-    width:50px;
-    height:50px;
+    border-radius: 50% 50% 50% 50%;
+    width: 50px;
+    height: 50px;
   }
 
   .other-facilities__list-item {
     display: inline-flex;
     align-items: center;
-    border-bottom: #F2F2F2 1px solid;
+    border-bottom: #f2f2f2 1px solid;
     padding: 2px 50px;
     margin: 0 -50px;
     background: rgba(196, 196, 196, 0.1);
@@ -81,4 +81,124 @@
   }
 }
 
+.date-range-picker {
+  .message {
+    padding: 16px 24px;
+    border-top: 1px solid #f2f2f2;
+    strong {
+      color: #004f6e;
+    }
+  }
+  .date-header {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+    border-bottom: 1px solid #f2f2f2;
+    .arrow {
+      margin: 0 16px;
+      margin-bottom: 4px;
+    }
+    .clear {
+      position: absolute;
+      top: 0;
+      right: 18px;
+    }
+    .date {
+      cursor: pointer;
+    }
+    .selected {
+      border-bottom: 2px solid #008489;
+    }
+    .disabled {
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+  .preset-tag {
+    background-color: #f2f2f2;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    margin: 0 8px;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+    width: fit-content;
+  }
+  .DayPicker_weekHeader {
+    font-size: 12px;
+  }
+  .DateRangePickerInput * {
+    font-family: "Noto Sans" !important;
+  }
+  .DateInput {
+    width: 135px !important;
+  }
+  .DateRangePickerInput_arrow_svg {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 3px;
+  }
+  .display-warning {
+    padding: 16px;
+    font-weight: bold;
+  }
 
+  .DateRangePickerInput,
+  .DateInput_input {
+    background-color: #e0e0e0 !important;
+  }
+  .DateInput_input {
+    cursor: pointer;
+    color: #000000 !important;
+  }
+
+  .CalendarDay__selected,
+  .CalendarDay__selected:active,
+  .CalendarDay__selected:hover {
+    background: #004f6e !important;
+    border: 1px double #004f6e !important;
+    color: #fff;
+  }
+  .CalendarDay__hovered_span,
+  .CalendarDay__hovered_span:hover,
+  .CalendarDay__selected_span {
+    background: #3db3e3 !important;
+    border: 1px double #3db3e3 !important;
+    color: #fff;
+  }
+}
+.change-value {
+  width: fit-content;
+  opacity: 0.8;
+  border-radius: 4px;
+  min-height: 24px;
+  background-color: rgba(200, 200, 200, 0.3);
+  &.trending-down {
+    color: #ff0000;
+    background-color: rgba(255, 125, 125, 0.3);
+    svg {
+      fill: #ff0000;
+    }
+  }
+  &.trending-up {
+    color: #009483;
+    background-color: rgba(151, 231, 179, 0.3);
+    svg {
+      fill: #009483;
+    }
+  }
+  .change-header {
+    float: right;
+    text-align: right;
+  }
+  span {
+    padding: 2px;
+  }
+  padding: 0 2px;
+}

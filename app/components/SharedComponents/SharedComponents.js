@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import {
   Backdrop,
   Button,
+  Checkbox,
   Fade,
   IconButton,
   makeStyles,
   Modal,
   Radio,
+  Select,
   Snackbar,
   SnackbarContent,
   Switch,
@@ -15,15 +17,25 @@ import {
   Tooltip,
   withStyles,
 } from '@material-ui/core';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Search from '@material-ui/icons/Search';
 import CloseIcon from '@material-ui/icons/Close';
 import { exitSnackbar, setSnackbar } from '../../containers/App/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeSelectSnackbar, makeSelectToken } from '../../containers/App/selectors';
-import { mdiClose, mdiSwapHorizontal } from '@mdi/js';
+import { mdiClose, mdiSwapHorizontal, mdiCheckboxBlankOutline, mdiCheckboxOutline, mdiTrendingDown, mdiTrendingUp } from '@mdi/js';
 import Icon from '@mdi/react';
-import { MTableCell } from 'material-table';
+
+import MaterialTable, { MTableCell } from 'material-table';
 import './style.scss';
 import { updateUserFacility } from './helpers';
+import { Skeleton } from '@material-ui/lab';
 
 export const LightTooltip = withStyles((theme) => ({
   tooltipPlacementTop: {
@@ -166,24 +178,6 @@ export function StyledRadio(props) {
     />
   );
 }
-
-export const SSTSwitch = withStyles((theme) => ({
-  switchBase: {
-    color: '#ABABAB',
-    '&$checked': {
-      color: '#3DB3E3',
-    },
-    '&$checked + $track': {
-      opacity: 1,
-      backgroundColor: '#028CC8',
-    },
-  },
-  checked: {},
-  track: {
-    opacity: 1,
-    backgroundColor: '#575757'
-  }
-}))(Switch);
 
 
 export const StyledSnackbarContent = withStyles((theme) => ({
@@ -330,7 +324,6 @@ export const TableCell = (props) => {
     <MTableCell {...props} title={rowData?.[columnDef?.field]} className={`ellipses ${classes.root}`} columnDef={{ ...columnDef, tableData: { ...tableData, width: `${width}px` } }} />
   )
 }
-
 export const SwitchFacilityModal = props => {
   const userToken = useSelector(makeSelectToken());
   const dispatch = useDispatch();
@@ -367,7 +360,7 @@ export const SwitchFacilityModal = props => {
       <div className={'modal-content'}>
         <div className={'current-facility'}>
           <div className={'current-facility__img'}>
-            <img src={currentFacility.thumbnailSource}/>
+            <img src={currentFacility.thumbnailSource} />
           </div>
           <div className={'current-facility__desc'}>
             <div className={'current-facility__label'}>
@@ -381,26 +374,156 @@ export const SwitchFacilityModal = props => {
         <div>
           <div className={'other-facilities'}>
             {Object.keys(props?.facilityDetails)
-              .filter((facilityId)=>facilityId!==currentFacilityId)
-              .map((key)=>{
-              const value = props?.facilityDetails[key];
-              return (
-                <div className={'other-facilities__list-item'} key={key}>
-                  <div className={'other-facilities__img'}>
-                    <img src={value.thumbnailSource}/>
+              .filter((facilityId) => facilityId !== currentFacilityId)
+              .map((key) => {
+                const value = props?.facilityDetails[key];
+                return (
+                  <div className={'other-facilities__list-item'} key={key}>
+                    <div className={'other-facilities__img'}>
+                      <img src={value.thumbnailSource} />
+                    </div>
+                    <div className={'other-facilities__name'}>
+                      <span>{value.facilityName}</span>
+                    </div>
+                    <div className={'other-facilities__action'} onClick={() => switchFacility(key, value.facilityName)}>
+                      <Icon color="#828282" path={mdiSwapHorizontal} size={'24px'} />
+                    </div>
                   </div>
-                  <div className={'other-facilities__name'}>
-                    <span>{value.facilityName}</span>
-                  </div>
-                  <div className={'other-facilities__action'} onClick={()=>switchFacility(key, value.facilityName)}>
-                    <Icon color="#828282" path={mdiSwapHorizontal} size={'24px'} />
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
           </div>
         </div>
       </div>
     </GenericModal>
   )
 }
+
+
+
+const dropdownStyles = (theme, props) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 4,
+  },
+  icon: {
+    marginRight: 8
+  },
+})
+const DefaultSelect = (props) => (
+  <Select MenuProps={{
+    anchorOrigin: {
+      vertical: "bottom",
+      horizontal: "left"
+    },
+    transformOrigin: {
+      vertical: "top",
+      horizontal: "left"
+    },
+    getContentAnchorEl: null,
+    PaperProps: {
+      style: {
+        maxHeight: 400,
+        maxWidth: 240
+      }
+    }
+  }} {...props} />
+)
+
+export const StyledSelect = withStyles((theme) => dropdownStyles(theme, { width: 400 }))(DefaultSelect)
+export const Placeholder = ({ value }) => (
+  <span style={{ color: 'rgba(133, 133, 133, 0.8)' }}>{value ?? 'Select an Option'}</span>
+)
+
+
+export const StyledCheckbox = (props) => (
+  <Checkbox
+    disableRipple
+    className="checkbox"
+    icon={<Icon color="#004F6E" path={mdiCheckboxBlankOutline} size={'18px'} />}
+    checkedIcon={<Icon color="#004F6E" path={mdiCheckboxOutline} size={'18px'} />}
+    {...props} />
+)
+const skeletonStyles = (theme, props) => ({
+  root: {
+    background: '#DDDDDD !important'
+  },
+  wave: {
+    '&::after': {
+      animationDuration: '.7s',
+      animationDelay: '0s'
+    }
+  },
+})
+const StyledSkeleton_ = withStyles((theme) => skeletonStyles(theme))(Skeleton)
+export const StyledSkeleton = props => <StyledSkeleton_ variant='rectangular' width='100%' animation='wave' {...props} />
+
+const tableIcons = {
+  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />)
+};
+
+export const StyledTable = props => <MaterialTable icons={tableIcons} {...props} />
+
+export const ChangeIcon = ({ change, className, reverse, tooltip, ...props }) => {
+  let tag = '';
+  let classLabel = ''
+  if (change === null || isNaN(change) || change == 0) {
+    change = `—`;
+  } else if (change < 0) {
+    classLabel = reverse ? 'trending-up' : 'trending-down';
+    tag = <Icon path={mdiTrendingDown} size={'32px'} />
+  } else {
+    classLabel = reverse ? 'trending-down' : 'trending-up';
+    tag = <Icon path={mdiTrendingUp} size={'32px'} />
+  }
+  return (
+    <LightTooltip interactive arrow
+      title={tooltip ?? ''}
+      placement="top" fontSize="small"
+    >
+      <div className={`change-value ${classLabel} ${className} log-mouseover`} {...props} >
+        <span>{`${change}%`}</span>
+        <span>{tag}</span>
+      </div>
+    </LightTooltip>
+
+  )
+};
+
+export const SSTSwitch = withStyles((theme) => ({
+  root: {
+    padding: '16px 11px',
+  },
+  thumb: {
+    width: 16,
+    height: 16,
+  },
+  switchBase: {
+    padding: '12px 16px',
+    transform: 'translateX(-8px)',
+    color: '#4F4F4F',
+    '&$checked': {
+      color: '#004F6E',
+    },
+    '&$checked + $track': {
+      opacity: 1,
+      backgroundColor: '#3DB3E3',
+    },
+    '&:hover': {
+      backgroundColor: 'unset !important'
+    }
+  },
+  checked: {},
+  track: {
+    opacity: 1,
+    borderRadius: 8,
+    height: 8,
+    backgroundColor: '#C8C8C8'
+  }
+}))(Switch);

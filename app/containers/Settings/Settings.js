@@ -42,19 +42,19 @@ export default class Settings extends React.PureComponent {
   }
 
   async getEfficiencyConfig() {
-    return await globalFunctions.genericFetch(process.env.EFFICIENCY_API + "/config?facility_id=" + this.props.facilityName, 'get', this.props.userToken, {})
+    return await globalFunctions.genericFetch(process.env.CONFIGURATION_API + "?facility_id=" + this.props.facilityName, 'get', this.props.userToken, {})
       .then(result => {
         if (!result) {
           return;
         }
         // result = JSON.parse(result)
-        this.setState({ fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, hasEMR: result.hasEMR });
+        this.setState({ fcotsThreshold: result.fcotsThreshold, turnoverThreshold: result.turnoverThreshold, otsThreshold: result.otsThreshold, hasEMR: result.hasEMR });
       });
 
   }
 
   async submitEfficiencyConfig(jsonBody) {
-    const url = `${process.env.EFFICIENCY_API}/config`;
+    const url = `${process.env.CONFIGURATION_API}`;
     return await globalFunctions.genericFetch(url, 'put', this.props.userToken, jsonBody)
       .then(result => {
         if (!result) {
@@ -113,6 +113,7 @@ export default class Settings extends React.PureComponent {
           <EfficiencySettings
             fcotsThreshold={this.state.fcotsThreshold}
             turnoverThreshold={this.state.turnoverThreshold}
+            otsThreshold={this.state.otsThreshold}
             hasEMR={this.state.hasEMR}
             submit={(updates) => this.submitEfficiencyConfig(updates)}
           />
