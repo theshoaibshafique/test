@@ -101,7 +101,7 @@ const TrendTile = ({
         yAxisLabel={{
           value: data.dependentVarTitle, angle: -90, offset: 15, position: 'insideBottomLeft'
         }}
-        areaReference={(range.max <= sliderStart) ? [] : [Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
+        areaReference={(range.max <= sliderStart || sliderEnd <= range.min) ? [] : [Math.max(range.min, sliderStart), Math.min(range.max, sliderEnd)]}
         xTickMargin={8}
         unitTitle={unitTitle}
       />
