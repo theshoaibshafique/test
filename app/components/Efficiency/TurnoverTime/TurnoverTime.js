@@ -240,7 +240,7 @@ const TurnoverTime = () => {
             <Card className='tile-card' id='overtime'>
               <CardContent>
                 {tile?.overtime && (
-                  <OvertimeCard data={tile.overtime} trendTooltip={get30DayTooltip()} />
+                  <OvertimeCard data={tile.overtime} trendTooltip={get30DayTooltip()} reverse />
                 )}
               </CardContent>
             </Card>
