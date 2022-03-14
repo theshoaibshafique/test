@@ -4,7 +4,7 @@ import { AreaChart, Area, ReferenceLine, Tooltip, ResponsiveContainer, YAxis, XA
 const equalProps = (props, prevProps) => prevProps === props;
 
 const AreaGraph = React.memo(({ data, reference, topReference, CustomTooltip }) => (
-  <ResponsiveContainer width="100%" height={165}>
+  <ResponsiveContainer width="100%" height={165} className='area-graph'>
     <AreaChart
       width={600}
       height={140}

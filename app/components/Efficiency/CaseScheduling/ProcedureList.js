@@ -201,7 +201,7 @@ const ProcedureList = React.memo(({ title, procedureData, networkAverage }) => {
         <Divider style={{ marginTop: 16 }} />
       </Grid>
 
-      <Grid item xs={12} style={{ height: 950, overflowY: 'auto' }}>
+      <Grid item xs={12} style={{ height: 950, overflowY: 'auto' }} className='procedure-list'>
         {filteredProcedures?.length === 0 ? (
           <NoDataOverlay />
         ) : filteredProcedures?.map((dataPoint) => (
