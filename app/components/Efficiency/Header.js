@@ -36,7 +36,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
                 <div className='subtle-subtext'>{`${moment(startDate)?.format('MMM DD YYYY')} to ${moment(endDate)?.format('MMM DD YYYY')}`}</div>
               </>
             )}
-
+            <div onClick={onClick} className="demo-video-link link">See what's new</div>
           </div>
         </Grid>
         <Grid container spacing={3} style={{ margin: '14px 0 0 0' }} className='header-element'>
