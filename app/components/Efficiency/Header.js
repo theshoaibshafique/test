@@ -5,7 +5,8 @@ import InformationModal from './InformationModal';
 import CustomDateRangePicker from '../SharedComponents/CustomDateRangePicker';
 import MultiSelectFilter from '../../components/SharedComponents/MultiSelectFilter';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { SaveAndCancel, SSTSwitch } from '../SharedComponents/SharedComponents';
+import { SaveAndCancel } from '../SharedComponents/SharedComponents';
+import DemoVideoModal from './DemoVideoModal';
 
 /*
 * @param {object} config - The configuration object to determine what to show in the header
@@ -19,16 +20,20 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
   const ors = Object.keys(orMap ?? {})
   const specialties = getItemFromStore('efficiencyV2')?.efficiency?.filters?.Specialties;
   const [informationModalOpen, setInformationModalOpen] = React.useState(false);
+  const [demoVideoModalOpen, setDemoVideoModalOpen] = React.useState(false);
 
-  const onClick = React.useCallback(() => {
+  const onInformationModalButtonClick = React.useCallback(() => {
     setInformationModalOpen((prev) => !prev);
   }, [informationModalOpen]);
+  const onDemoVideoButtonClick = React.useCallback(() => {
+    setDemoVideoModalOpen((prev) => !prev);
+  }, [demoVideoModalOpen]);
   const { startDate, endDate } = displayDate ?? {};
   return (
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
         <Grid item xs={12} style={{ position: 'relative' }} className='header-element'>
-          <div onClick={onClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
+          <div onClick={onInformationModalButtonClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
           <div className='display-date'>
             {displayDate && (
               <>
@@ -36,7 +41,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
                 <div className='subtle-subtext'>{`${moment(startDate)?.format('MMM DD YYYY')} to ${moment(endDate)?.format('MMM DD YYYY')}`}</div>
               </>
             )}
-            <div onClick={onClick} className="demo-video-link link">See what's new</div>
+            <div onClick={onDemoVideoButtonClick} className="demo-video-link link">See what's new</div>
           </div>
         </Grid>
         <Grid container spacing={3} style={{ margin: '14px 0 0 0' }} className='header-element'>
@@ -86,7 +91,8 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
           )}
         </Grid>
       </Grid>
-      <InformationModal open={informationModalOpen} onToggle={onClick} />
+      <InformationModal open={informationModalOpen} onToggle={onInformationModalButtonClick} />
+      <DemoVideoModal open={demoVideoModalOpen} onToggle={onDemoVideoButtonClick} />
     </React.Fragment>
   );
 };
