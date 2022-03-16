@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Grid from '@material-ui/core/Grid';
 import './demoVideoModal.scss';
+import { PublicVideoVideoPlayer } from '../VideoPlayer/PublicVideoVideoPlayer';
 
 const closeButtonStyles = makeStyles({
   item: {
@@ -35,16 +36,15 @@ const DemoVideoModal = React.memo(({
           </Grid>
           <Grid item xs={2} className={closeClass.item}>
             <IconButton disableRipple disableFocusRipple onClick={onToggle} className="close"><CloseIcon
-              fontSize="small"/></IconButton>
+              fontSize="small"
+            />
+            </IconButton>
           </Grid>
-          <video
-            width="653"
-            height="336"
-            src="https://media.insights.surgicalsafety.com/public/efficiency/demo/hls.m3u8"
-            controls
-            autoPlay
-          />
+
         </Grid>
+        <PublicVideoVideoPlayer
+          src={'https://media.insights.surgicalsafety.com/public/efficiency/demo/hls.m3u8'}
+        />
       </DialogContent>
     </Modal>
   );
