@@ -7,6 +7,7 @@ import MultiSelectFilter from '../../components/SharedComponents/MultiSelectFilt
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { SaveAndCancel } from '../SharedComponents/SharedComponents';
 import DemoVideoModal from './DemoVideoModal';
+import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 
 /*
 * @param {object} config - The configuration object to determine what to show in the header
@@ -41,7 +42,15 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
                 <div className='subtle-subtext'>{`${moment(startDate)?.format('MMM DD YYYY')} to ${moment(endDate)?.format('MMM DD YYYY')}`}</div>
               </>
             )}
-            <div onClick={onDemoVideoButtonClick} className="demo-video-link link">See what's new</div>
+            <div onClick={onDemoVideoButtonClick} className="demo-video-link link">
+              <OndemandVideoIcon
+                style={{
+                  fontSize: 16,
+                  margin: '4px',
+                  color: '#8282828',
+                }}
+              />
+              See what&apos;s new</div>
           </div>
         </Grid>
         <Grid container spacing={3} style={{ margin: '14px 0 0 0' }} className='header-element'>

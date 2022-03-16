@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import './demoVideoModal.scss';
 import { PublicVideoVideoPlayer } from '../VideoPlayer/PublicVideoVideoPlayer';
 
+
 const closeButtonStyles = makeStyles({
   item: {
     marginRight: '-2px',
@@ -32,7 +33,7 @@ const DemoVideoModal = React.memo(({
       <DialogContent className="efficiency-content modal">
         <Grid container spacing={0} justify="center">
           <Grid item xs={10} className="title header-2">
-            What's new?
+            What&apos;s new?
           </Grid>
           <Grid item xs={2} className={closeClass.item}>
             <IconButton disableRipple disableFocusRipple onClick={onToggle} className="close"><CloseIcon
