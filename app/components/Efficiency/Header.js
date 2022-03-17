@@ -34,15 +34,8 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
         <Grid item xs={12} style={{ position: 'relative' }} className='header-element'>
-          <div onClick={onInformationModalButtonClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
-          <div className='display-date'>
-            {displayDate && (
-              <>
-                <div className='normal-text bold'>Most Recent Week</div>
-                <div className='subtle-subtext'>{`${moment(startDate)?.format('MMM DD YYYY')} to ${moment(endDate)?.format('MMM DD YYYY')}`}</div>
-              </>
-            )}
-            <div onClick={onDemoVideoButtonClick} className="demo-video-link link">
+          {displayDate && (
+            <div onClick={onDemoVideoButtonClick} className="efficiencyOnboard-link link">
               <OndemandVideoIcon
                 style={{
                   fontSize: 16,
@@ -50,7 +43,16 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
                   color: '#8282828',
                 }}
               />
-              See what&apos;s new</div>
+              See what&apos;s new
+            </div>
+          )}
+          <div className='display-date'>
+            {displayDate && (
+              <>
+                <div className='normal-text bold'>Most Recent Week</div>
+                <div className='subtle-subtext'>{`${moment(startDate)?.format('MMM DD YYYY')} to ${moment(endDate)?.format('MMM DD YYYY')}`}</div>
+              </>
+            )}
           </div>
         </Grid>
         <Grid container spacing={3} style={{ margin: '14px 0 0 0' }} className='header-element'>
