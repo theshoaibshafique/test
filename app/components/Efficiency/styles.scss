@@ -25,6 +25,8 @@
     .efficiencyOnboard-link {
         width: fit-content;
         position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
     }
     .demo-video-link {
       position: absolute;
