@@ -52,10 +52,6 @@ export function PublicVideoVideoPlayer(props) {
         rel="stylesheet"
       />
       <link
-        href="https://unpkg.com/@videojs/themes@1/dist/sea/index.css"
-        rel="stylesheet"
-      />
-      <link
         href="https://cdn.jsdelivr.net/npm/videojs-playlist-ui@3.8.0/dist/videojs-playlist-ui.css"
         rel="stylesheet"
       />
@@ -66,7 +62,7 @@ export function PublicVideoVideoPlayer(props) {
       <div data-vjs-player>
         <video
           ref={node => (setNode(node))}
-          className="video-js vjs-theme-sea"
+          className="video-js"
         />
         <div className="vjs-playlist"/>
       </div>
