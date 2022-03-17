@@ -1,5 +1,3 @@
-$efficiency-head-container-height: 73px;
-
 .modal {
     top: 50%;
     left: 50%;
@@ -20,9 +18,9 @@ $efficiency-head-container-height: 73px;
     overflow-x: auto;
     font-family: "Noto Sans";
 
-    .tile-container {
+    .tile-container,
+    .header-element {
         width: 1525px;
-        padding-top: $efficiency-head-container-height;
     }
     .efficiencyOnboard-link {
         width: fit-content;
@@ -60,12 +58,10 @@ $efficiency-head-container-height: 73px;
         }
     }
     .efficiency-head-container {
-        height: $efficiency-head-container-height;
+        width: fit-content;
+        height: auto;
         background-color: #e0e0e0;
         padding: 0 40px;
-        width: calc(100% - 240px);
-        position: absolute;
-        z-index: 1000;
         .display-date {
             text-align: center;
             min-height: 16px;
