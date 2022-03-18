@@ -34,6 +34,9 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
         <Grid item xs={12} style={{ position: 'relative' }} className='header-element'>
+          {!displayDate && (
+            <div onClick={onInformationModalButtonClick} className="efficiencyOnboard-link link">What is this dashboard about?</div>
+          )}
           {displayDate && (
             <div onClick={onDemoVideoButtonClick} className="efficiencyOnboard-link link">
               <OndemandVideoIcon
