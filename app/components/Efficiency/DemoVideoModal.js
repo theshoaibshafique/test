@@ -30,7 +30,7 @@ const DemoVideoModal = React.memo(({
   return (
 
     <Modal open={open} onClose={onToggle}>
-      <DialogContent className="efficiency-content modal">
+      <DialogContent className="efficiency-content modal demo-video-modal">
         <Grid container spacing={0} justify="center">
           <Grid item xs={10} className="title header-2">
             What&apos;s new?

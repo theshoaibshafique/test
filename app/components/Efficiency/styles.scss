@@ -304,3 +304,17 @@
     font-size: 16px;
     line-height: 22px;
 }
+
+.demo-video-modal {
+  border-radius: 8px;
+
+  .title {
+    padding-bottom: 8px;
+    padding-top: 32px;
+    padding-left: 16px;
+  }
+
+  .video-player {
+    padding: 16px 16px 32px 16px;
+  }
+}
