@@ -14,7 +14,6 @@ import MyProfile from 'containers/MyProfile/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import LoadingIndicator from 'components/LoadingIndicator';
 import SSChecklist from 'containers/SSChecklist/Loadable';
-import Efficiency from 'containers/Efficiency/Loadable';
 import EfficiencyV2 from 'components/Efficiency/Efficiency';
 import TurnoverTime from 'components/Efficiency/TurnoverTime/TurnoverTime';
 import BlockUtilization from 'components/Efficiency/BlockUtilization/BlockUtilization';
