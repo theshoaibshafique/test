@@ -56,14 +56,12 @@ export function Overview(props) {
             </div>
         </LightTooltip>
     );
-    const CustomSkeleton = [...Array(4)].map((e, i) => <StyledSkeleton key={i} height={170} style={{marginBottom:"1rem", borderRadius: "8px"}} />);
 
     return (
         <div className="case-discovery-overview">
             <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
-            <div className="carousel-list">
-               {overview? 
-                <React.Fragment>
+            <div className="carousel-list" >
+
                 <CarouselCases
                     cases={recommendations}
                     title="Cases of Interest"
@@ -96,8 +94,6 @@ export function Overview(props) {
                     isThumbnail
                     titleText="Most Recent Flag Clips"
                     />
-                </React.Fragment>
-                    : CustomSkeleton}
             </div>
         </div>
     )
@@ -274,14 +270,16 @@ function CarouselCases(props) {
         }
 
     }
+    const CustomSkeleton =  <StyledSkeleton height={212} style={{borderRadius:"8px"}} />;
 
     return (
         <React.Fragment>
-            <div className="title normal-text">
+            <div className={CASES ?"title normal-text":"title normal-text skeleton-title"}>
                 <>{title}</>
             </div>
            <div className="carousel-cases">
-           <Carousel
+           {CASES ?
+                <Carousel
                     className={'carousel'}
                     infinite={isInfinite}
                     showDots={false}
@@ -295,7 +293,7 @@ function CarouselCases(props) {
                     {
                         (caseLength ? CASES : [null]).map((c, i) => renderCase(c, i))
                     }
-                </Carousel>
+                </Carousel>: CustomSkeleton}
 
             </div>
         </React.Fragment>

@@ -1207,8 +1207,13 @@
     .carousel-list {
         min-width: 60%;
         height: 100%;
-        margin-bottom: 24px;
-
+        
+        .carousel-cases{
+            .MuiSkeleton-root{
+                margin: 8px 32px
+            }
+        }
+        
         .title.normal-text {
             margin-left: 8px;
             
@@ -1288,12 +1293,15 @@
         color: #3e6a81;
         text-transform: uppercase;
     }
+    .title.normal-text.skeleton-title {
+        margin-left: 32px;
+    }
     .overview-tile {
         padding: 16px 25px;
         border-radius: 8px;
         min-width: 375px;
         max-width: 375px;
-        min-height: 500px;
+        min-height: 600px;
         height: fit-content;
         &.MuiSkeleton-wave{
             top:15px;

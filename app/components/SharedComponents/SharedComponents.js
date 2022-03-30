@@ -449,7 +449,7 @@ const skeletonStyles = (theme, props) => ({
   },
   wave: {
     '&::after': {
-      animationDuration: '.7s',
+      animationDuration: '3s',
       animationDelay: '0s'
     }
   },
