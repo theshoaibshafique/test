@@ -66,22 +66,21 @@ export function Overview(props) {
                     cases={recommendations}
                     title="Cases of Interest"
                     {...commonProps}
-                isInfinite />
-               
+                    isInfinite 
+                />
                 <CarouselCases
                     cases={recentSaved}
                     title="Most Recently Saved Cases"
                     message="No Saved Cases"
                     {...commonProps}
                 />
-             
                 <CarouselCases
                     cases={recentFlags}
                     title="Most Recently Flagged Cases"
                     message={flagReport && (recentFlags?.length) ?
                         "Most Recently Flagged Cases" : "No Flagged Cases"}
                     {...commonProps}
-                    />
+                />
                 <CarouselCases
                     cases={recentClips}
                     title={<>Most Recent Flag Clips
@@ -93,7 +92,7 @@ export function Overview(props) {
                     {...commonProps}
                     isThumbnail
                     titleText="Most Recent Flag Clips"
-                    />
+                />
             </div>
         </div>
     )
