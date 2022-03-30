@@ -1,4 +1,4 @@
-import { Card } from '@material-ui/core';
+import { Card as MaterialCard  } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
@@ -12,7 +12,8 @@ import { DATE_OPTIONS, CLIP_NOTIFICATION_STATUS_TOOLTIPS } from './misc/constant
 import { getTag } from './misc/helper-components';
 import { formatCaseForLogs, getPresetDates } from './misc/Utils';
 import { makeSelectLogger } from '../App/selectors';
-import { LightTooltip } from '../../components/SharedComponents/SharedComponents';
+import { LightTooltip, StyledSkeleton } from '../../components/SharedComponents/SharedComponents';
+
 export function Overview(props) {
     const { recentFlags, recentClips, recommendations, recentSaved, overview } = props;
     const [animateShake, setAnimateShake] = useState(false);
@@ -55,31 +56,34 @@ export function Overview(props) {
             </div>
         </LightTooltip>
     );
+    const CustomSkeleton = [...Array(4)].map((e, i) => <StyledSkeleton key={i} height={170} style={{marginBottom:"1rem", borderRadius: "8px"}} />);
 
     return (
         <div className="case-discovery-overview">
             <OverviewTile overview={overview} handleFilterChange={handleFilterChange} />
             <div className="carousel-list">
+               {overview? 
+                <React.Fragment>
                 <CarouselCases
                     cases={recommendations}
                     title="Cases of Interest"
                     {...commonProps}
-                    isInfinite />
-
+                isInfinite />
+               
                 <CarouselCases
                     cases={recentSaved}
                     title="Most Recently Saved Cases"
                     message="No Saved Cases"
                     {...commonProps}
                 />
-
+             
                 <CarouselCases
                     cases={recentFlags}
                     title="Most Recently Flagged Cases"
                     message={flagReport && (recentFlags?.length) ?
                         "Most Recently Flagged Cases" : "No Flagged Cases"}
                     {...commonProps}
-                />
+                    />
                 <CarouselCases
                     cases={recentClips}
                     title={<>Most Recent Flag Clips
@@ -91,7 +95,9 @@ export function Overview(props) {
                     {...commonProps}
                     isThumbnail
                     titleText="Most Recent Flag Clips"
-                />
+                    />
+                </React.Fragment>
+                    : CustomSkeleton}
             </div>
         </div>
     )
@@ -134,7 +140,9 @@ function OverviewTile(props) {
             update: ({ y }) => ({ y })
         }
     );
-
+    
+    const Card = overview ? MaterialCard: StyledSkeleton;
+    
     return (
         <Card variant="outlined" className="overview-tile">
             <div className="title normal-text">OVERVIEW</div>
@@ -272,8 +280,8 @@ function CarouselCases(props) {
             <div className="title normal-text">
                 <>{title}</>
             </div>
-            <div className="carousel-cases">
-                <Carousel
+           <div className="carousel-cases">
+           <Carousel
                     className={'carousel'}
                     infinite={isInfinite}
                     showDots={false}

@@ -1205,6 +1205,7 @@
         }
     }
     .carousel-list {
+        min-width: 60%;
         height: 100%;
         margin-bottom: 24px;
 
@@ -1291,7 +1292,12 @@
         padding: 16px 25px;
         border-radius: 8px;
         min-width: 375px;
+        max-width: 375px;
+        min-height: 500px;
         height: fit-content;
+        &.MuiSkeleton-wave{
+            top:15px;
+        }
         .overview-info,
         .title {
             margin-bottom: 12px;

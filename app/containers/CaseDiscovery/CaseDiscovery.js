@@ -410,13 +410,13 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
         </StyledTabs>
 
         <TabPanel value={tabIndex} index={0}>
-          {OVERVIEW_DATA && <Overview
+          <Overview
             handleChangeCaseId={(cId) => handleChangeCaseId(cId)}
             handleSaveCase={handleSaveCase}
             handleFilterChange={(e, v) => { handleFilterChange(e, v); setTabIndex(2) }}
             handleToggleClipNotification={handleToggleClipNotification}
             {...OVERVIEW_DATA}
-          /> || <LoadingIndicator />}
+          />  
         </TabPanel>
         <TabPanel value={tabIndex} index={2}>
           <BrowseCases
