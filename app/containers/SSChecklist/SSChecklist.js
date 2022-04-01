@@ -403,16 +403,7 @@ export default class SSChecklist extends React.PureComponent {
       <div className="ssc-page">
         <Grid container spacing={0} className="ssc-picker-container" >
           <Grid item xs={12} className="ssc-picker">
-            <div style={{ maxWidth: 800, margin: 'auto' }}>
-              <MonthRangePicker
-                startDate={this.state.startDate}
-                endDate={this.state.endDate}
-                minDate={this.state.earliestStartDate}
-                maxDate={this.state.latestEndDate}
-                updateState={(key, value) => this.updateState(key, value)}
-                displayWarning={this.state.pendingWarning}
-              />
-            </div>
+            <div style={{ maxWidth: 800, margin: 'auto', minHeight:50 }}/>
           </Grid>
           <Grid item xs={12}>
             {/* <Divider className="ssc-divider" /> */}

@@ -5,6 +5,8 @@ import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import moment from 'moment/moment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import CustomDateRangePicker from "../../components/SharedComponents/CustomDateRangePicker";
+
 const dropdownStyles = (theme, props) => {
   return {
     listbox: {
@@ -44,6 +46,7 @@ class UniversalPicker extends React.Component {
     this.state = {
       isORLoading: true,
       operatingRooms: [],
+      selectedDate: "All time",
       selectedOperatingRoom: "",
       selectedWeekday: "",
       selectedSpecialty: "",
@@ -88,7 +91,7 @@ class UniversalPicker extends React.Component {
   }
 
   getDisplayOptions() {
-    if (Boolean(this.props.showOR || this.props.showDays || this.props.showSpecialty || this.props.showOR2)) {
+    if (Boolean(this.props.showOR || this.props.showDays || this.props.showSpecialty || this.props.showOR2 || this.props.showDate)) {
       return {
 
         showOR: this.props.showOR,
@@ -97,7 +100,8 @@ class UniversalPicker extends React.Component {
         showGracePeriod: this.props.showGracePeriod,
         showOutlierThreshold: this.props.showOutlierThreshold,
         //Default to hiding
-        showOR2: this.props.showOR2
+        showOR2: this.props.showOR2,
+        showDate: this.props.showDate
       };
     }
     return {//Default to showing
@@ -105,7 +109,8 @@ class UniversalPicker extends React.Component {
       // showDays: true,
       showSpecialty: true,
       //Default to hiding
-      showOR2: false
+      showOR2: false,
+      showDate:true
     };
   }
 
@@ -117,6 +122,14 @@ class UniversalPicker extends React.Component {
       this.props.updateState('selectedOperatingRoom', value);
     });
   };
+
+  handleDateChange(value){
+    this.setState({
+      selectedDate: value,
+    }, () => {
+      this.props.updateState('selectedDate', value);
+    });
+  }
 
   handleSelectedWeekdayChange(e) {
     this.setState({
@@ -140,6 +153,7 @@ class UniversalPicker extends React.Component {
     const outlierThresholdMinute = this.state.defaultMinutes.toString().padStart(2, 0);
     this.setState({
       selectedOperatingRoom: "",
+      selectedDate:"",
       selectedWeekday: "",
       selectedSpecialty: "",
       gracePeriodMinute,
@@ -147,6 +161,7 @@ class UniversalPicker extends React.Component {
       outlierThresholdMinute
     }, () => {
       this.props.updateState('selectedOperatingRoom', "");
+      this.props.updateState('selectedDate', "");
       this.props.updateState('selectedWeekday', "");
       this.props.updateState('selectedSpecialty', "");
       if (this.props.showGracePeriod){
@@ -178,6 +193,9 @@ class UniversalPicker extends React.Component {
     return (
       <Grid container spacing={1} justify="center" className="universal-picker">
         <span style={{ display: 'flex', alignItems: 'center', marginRight: 16 }}><SearchIcon /></span>
+        {this.state.showDate && <Grid item xs={1} style={{ minWidth: 258 }}>
+          <CustomDateRangePicker dateLabel={this.state.selectedDate} setDateLabel={(e, value) => this.handleDateChange(e, value)}/> 
+        </Grid>}
         {this.state.showOR && <Grid item xs={1} style={{ minWidth: 150 }}>
           <InputLabel shrink className="filter-label">
             OR
