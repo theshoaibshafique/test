@@ -155,7 +155,7 @@ class UniversalPicker extends React.Component {
     const outlierThresholdMinute = this.state.defaultMinutes.toString().padStart(2, 0);
     this.setState({
       selectedOperatingRoom: "",
-      selectedDate:"",
+      selectedDate: "",
       selectedWeekday: "",
       selectedSpecialty: "",
       gracePeriodMinute,
