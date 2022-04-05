@@ -118,7 +118,7 @@ const CustomDateRangePicker = React.memo(({
   };
   //Update dates on label change
   React.useEffect(() => {
-    const newDate = getPresetDates(dateLabel, configCookieKey)
+    const newDate = getPresetDates(dateLabel, configCookieKey);
     if (newDate) {
       setDate(newDate)
     }

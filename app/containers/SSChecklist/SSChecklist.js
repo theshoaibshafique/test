@@ -180,16 +180,16 @@ export default class SSChecklist extends React.PureComponent {
     if (!this.state.endDate || !this.state.startDate) {
       return;
     }
+    const valFromCookie = JSON.parse(localStorage.getItem('userFilter'));
     this.setState({ tileRequest: [], reportData: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
       () => {
-
         const specialty = this.state.selectedSpecialty?.id;
         const jsonBody = {
           "dashboardName": this.state.reportType,
           "facilityId": this.props.userFacility,
 
-          "startDate": this.state.startDate?.format('YYYY-MM-DD'),
-          "endDate": this.state.endDate?.format('YYYY-MM-DD'),
+          "startDate": valFromCookie?.startDate,
+          "endDate": valFromCookie?.endDate,
 
           "roomId": this.state.selectedOperatingRoom?.id || null,
           "specialtyName": specialty == "" ? null : specialty,
