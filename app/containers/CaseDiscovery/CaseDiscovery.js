@@ -189,7 +189,7 @@ export default function CaseDiscovery(props) { // eslint-disable-line react/pref
     }
 
     const fetchFacilityConfig = async () => {
-      const result = await globalFunctions.axiosFetch(process.env.EFFICIENCY_API + "/config?facility_id=" + userFacility, 'get', userToken, {})
+      const result = await globalFunctions.axiosFetch(process.env.CONFIGURATION_API + "?facility_id=" + userFacility, 'get', userToken, {})
         .then(result => {
           const { facilityName, fcotsThreshold, turnoverThreshold } = result;
 
