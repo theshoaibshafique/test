@@ -43,10 +43,12 @@ class UniversalPicker extends React.Component {
   constructor(props) {
     super(props);
     const defaultThreshold = this.props.defaultThreshold || 0;
+    const defaultDate = 'All time';
+    const defaultState = JSON.parse(localStorage.getItem('userFilter')) ?? {}
     this.state = {
       isORLoading: true,
       operatingRooms: [],
-      selectedDate: "All time",
+      selectedDate: defaultState?.dateLabel ?? defaultDate,
       selectedOperatingRoom: "",
       selectedWeekday: "",
       selectedSpecialty: "",
@@ -55,6 +57,7 @@ class UniversalPicker extends React.Component {
       defaultHours: Math.floor(defaultThreshold / 3600),
       defaultMinutes: Math.floor((defaultThreshold % 3600) / 60),
       defaultSeconds: Math.floor(defaultThreshold % 3600 % 60),
+      configCookieObj: {configCookieKey: this.props.configCookieKey, userCustomConfigCookieKey: this.props.userCustomConfigCookieKey},
       ...this.getDisplayOptions()
     }
     this.state.specialties.sort((a, b) => ("" + a.name).localeCompare("" + b.name))
@@ -161,7 +164,7 @@ class UniversalPicker extends React.Component {
       outlierThresholdMinute
     }, () => {
       this.props.updateState('selectedOperatingRoom', "");
-      this.props.updateState('selectedDate', "");
+      this.props.updateState('selectedDate', "All time");
       this.props.updateState('selectedWeekday', "");
       this.props.updateState('selectedSpecialty', "");
       if (this.props.showGracePeriod){
@@ -194,7 +197,11 @@ class UniversalPicker extends React.Component {
       <Grid container spacing={1} justify="center" className="universal-picker">
         <span style={{ display: 'flex', alignItems: 'center', marginRight: 16 }}><SearchIcon /></span>
         {this.state.showDate && <Grid item xs={1} style={{ minWidth: 258 }}>
-          <CustomDateRangePicker dateLabel={this.state.selectedDate} setDateLabel={(e, value) => this.handleDateChange(e, value)}/> 
+          <CustomDateRangePicker 
+            dateLabel={this.state.selectedDate} 
+            setDateLabel={(e, value) => this.handleDateChange(e, value)}
+            {...this.state.configCookieObj}
+          /> 
         </Grid>}
         {this.state.showOR && <Grid item xs={1} style={{ minWidth: 150 }}>
           <InputLabel shrink className="filter-label">

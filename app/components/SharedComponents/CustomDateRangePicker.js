@@ -29,12 +29,13 @@ const useStyles = makeStyles({
     paddingRight: 5,
     alignItems: 'center',
     border: '1px solid #ccc',
-    // color: 'rgba(133, 133, 133, 0.8)'
+    // color: 'rgba(133, 133, 133, 0.8)' 
   }
 });
-export const getPresetDates = (label, init) => {
-  const { efficiency } = JSON.parse(localStorage.getItem('efficiencyV2')) ?? {};
-  const { startDate, endDate } = efficiency ?? { startDate: moment(), endDate: moment() }
+export const getPresetDates = (label, configCookieKey, init) => {
+  const { efficiency, checklist }  = JSON.parse(localStorage.getItem(configCookieKey)) ?? {}; // TBD- Diana- more dynamic prop
+  const { startDate, endDate } = efficiency ?? checklist ?? { startDate: moment(), endDate: moment() }
+ 
 
   switch (label) {
     case 'Most recent week':
@@ -85,16 +86,16 @@ export const getPresetDates = (label, init) => {
 }
 const defaultDate = 'Most recent month';
 const CustomDateRangePicker = React.memo(({
-  dateLabel, setDateLabel
+  dateLabel, setDateLabel, configCookieKey, userCustomConfigCookieKey
 }) => {
-
   //Key is only used to control rerender - (kinda hacky) - change key (force rerender) on preset click to focus selected date
   const [key, setKey] = React.useState(uuidv4())
-  const [date, setDate] = React.useState(getPresetDates(dateLabel || defaultDate, true) ?? {});
+  const [date, setDate] = React.useState(getPresetDates(dateLabel || defaultDate, configCookieKey, true) ?? {});
 
   const [lastDate, setLastDate] = React.useState({ ...date });
   const { setItemInStore, getItemFromStore } = useLocalStorage();
-  const { efficiency } = getItemFromStore('efficiencyV2') ?? {};
+  const { efficiency, checklist } = getItemFromStore(configCookieKey) ?? {};
+  const cookieParentProp = efficiency ?? checklist ?? {}; 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [focusedInput, setFocusedInput] = React.useState('startDate');
@@ -106,8 +107,8 @@ const CustomDateRangePicker = React.memo(({
     if (!(date?.start?.isValid() && date?.end?.isValid())) {
       return;
     }
-    const globalFilter = getItemFromStore('globalFilter');
-    setItemInStore('globalFilter', { ...globalFilter, startDate: date.start?.format('YYYY-MM-DD'), endDate: date.end?.format('YYYY-MM-DD'), dateLabel });
+    const globalFilter = getItemFromStore(userCustomConfigCookieKey);
+    setItemInStore(userCustomConfigCookieKey, { ...globalFilter, startDate: date.start?.format('YYYY-MM-DD'), endDate: date.end?.format('YYYY-MM-DD'), dateLabel });
     if (date.end) {
       setLastDate({ ...date, dateLabel })
     }
@@ -118,7 +119,7 @@ const CustomDateRangePicker = React.memo(({
   };
   //Update dates on label change
   React.useEffect(() => {
-    const newDate = getPresetDates(dateLabel)
+    const newDate = getPresetDates(dateLabel, configCookieKey)
     if (newDate) {
       setDate(newDate)
     }
@@ -137,7 +138,7 @@ const CustomDateRangePicker = React.memo(({
 
   //We manually set dates instead of only label to trigger proper rerender
   const setInputLabel = (label) => () => {
-    setDate(getPresetDates(label));
+    setDate(getPresetDates(label, configCookieKey));
 
     //We change the key to trigger a rerender to navigate back to relevant/focused/selected dates
     //Rerender isnt triggered on regular date change (custom)
@@ -188,7 +189,7 @@ const CustomDateRangePicker = React.memo(({
       </div>
     </div>
   )
-  const dataEndDate = moment(efficiency?.endDate);
+  const dataEndDate = moment(cookieParentProp?.endDate);
   const format = (date, day) => (
     date.clone().add(day ?? 0, 'day').format('MMM DD')
   )
@@ -242,7 +243,7 @@ const CustomDateRangePicker = React.memo(({
             key={key}
             startDate={date.start}
             endDate={date.end}
-            isOutsideRange={(date) => date.isAfter(dataEndDate.endOf('day')) || date.isBefore(efficiency?.startDate)}
+            isOutsideRange={(date) => date.isAfter(dataEndDate.endOf('day')) || date.isBefore(cookieParentProp?.startDate)}
             focusedInput={focusedInput}
             numberOfMonths={2}
             minimumNights={0}

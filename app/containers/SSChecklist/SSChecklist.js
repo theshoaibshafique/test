@@ -91,7 +91,7 @@ export default class SSChecklist extends React.PureComponent {
           return;
         }
         // result = JSON.parse(result)
-
+        
         let earliestStartDate = moment(result.startDate);
         let latestEndDate = moment(result.endDate).endOf('day');
         let startDate = latestEndDate.clone().subtract(3, 'month');
@@ -126,6 +126,13 @@ export default class SSChecklist extends React.PureComponent {
           this.getReportLayout();
 
         });
+        localStorage.setItem(this.ONBOARD_TYPE, 
+          JSON.stringify({
+            checklist:{
+              startDate: this.state.earliestStartDate?.format('YYYY-MM-DD'),
+              endDate: this.state.latestEndDate?.format('YYYY-MM-DD'),
+            }
+          }));
       });
 
   }
@@ -399,6 +406,7 @@ export default class SSChecklist extends React.PureComponent {
 
   render() {
     let isLoading = this.state.isLoading;
+    const configCookieObj = {configCookieKey: this.ONBOARD_TYPE, userCustomConfigCookieKey: "userFilter"};
     return (
       <div className="ssc-page">
         <Grid container spacing={0} className="ssc-picker-container" >
@@ -418,6 +426,7 @@ export default class SSChecklist extends React.PureComponent {
               apply={() => this.getReportLayout()}
               disabled={Boolean(this.state.isFilterApplied || !this.state.startDate || !this.state.endDate)}
               updateState={(key, value) => this.updateState(key, value)}
+               {...configCookieObj}
             />
           </Grid>
           <Grid item xs={12}>
