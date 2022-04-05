@@ -103,7 +103,6 @@ const CustomDateRangePicker = React.memo(({
 
   //Save the date whenever its changed
   React.useEffect(() => {
-    
     if (!(date?.start?.isValid() && date?.end?.isValid())) {
       return;
     }

@@ -31,7 +31,6 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
   }, [demoVideoModalOpen]);
   const { startDate, endDate } = displayDate ?? {};
   const configCookieObj = {configCookieKey: "efficiencyV2", userCustomConfigCookieKey: "globalFilter"}
-
   return (
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>

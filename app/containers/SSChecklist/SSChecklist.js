@@ -91,7 +91,6 @@ export default class SSChecklist extends React.PureComponent {
           return;
         }
         // result = JSON.parse(result)
-        
         let earliestStartDate = moment(result.startDate);
         let latestEndDate = moment(result.endDate).endOf('day');
         let startDate = latestEndDate.clone().subtract(3, 'month');

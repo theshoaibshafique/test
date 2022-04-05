@@ -6,7 +6,6 @@ import globalFunctions from '../../utils/global-functions';
 import moment from 'moment/moment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CustomDateRangePicker from "../../components/SharedComponents/CustomDateRangePicker";
-
 const dropdownStyles = (theme, props) => {
   return {
     listbox: {
