@@ -1020,8 +1020,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 
   const translateRoomNametoId = () => {
     if (roomIds && roomName) {
-      const room = roomIds.find(room => room.display === roomName);
-      if (room) return room.id;
+      return Object.keys(roomIds).find(key => roomIds[key] === roomName);
     }
   };
 
@@ -1097,6 +1096,10 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
       .then(async result => {
         flagDispatch({ type: FLAG_SUCCESS });
         result = result.data;
+        if (!result){
+          flagDispatch({ type: FLAG_FAIL });
+          return;
+        }
         const toolTipArray = result.description.map(el => `${el.questionTitle}: ${el.answer}`).concat(`Submitted By: ${firstName} ${lastName}`);
 
         const newFlagObject = {
