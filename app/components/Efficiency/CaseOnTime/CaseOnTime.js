@@ -128,7 +128,7 @@ const CaseOnTime = () => {
       const { rooms, specialtyNames, dateLabel } = config ?? defaultConfig;
       let body = null;
       if (config) {
-        const {start,end} = getPresetDates(dateLabel)
+        const {start,end} = getPresetDates(dateLabel, 'efficiencyV2')
         body = {
           ...state.defaultPayload,
           facilityName: userFacility,

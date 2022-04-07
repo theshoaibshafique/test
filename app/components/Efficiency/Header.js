@@ -30,6 +30,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
     setDemoVideoModalOpen((prev) => !prev);
   }, [demoVideoModalOpen]);
   const { startDate, endDate } = displayDate ?? {};
+  const configCookieObj = {configCookieKey: "efficiencyV2", userCustomConfigCookieKey: "globalFilter"}
   return (
     <React.Fragment>
       <Grid className="efficiency-head-container" container style={{ paddingTop: '16px' }}>
@@ -62,7 +63,7 @@ const Header = ({ config = {}, applyGlobalFilter, handlers, displayDate, isAppli
           {/* @TODO: Update the start and end dates with dates reflecting the expected defaults  */}
           {config?.date && (
             <Grid item xs={2} style={{ paddingLeft: '0px', minWidth: 260 }} >
-              <CustomDateRangePicker {...handlers?.date} />
+              <CustomDateRangePicker {...handlers?.date} {...configCookieObj} />
             </Grid>
           )}
           {config?.room && (
