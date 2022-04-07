@@ -65,8 +65,8 @@ export default class SSChecklist extends React.PureComponent {
       //If they change the page without setting a start/endDate we use the default date
       let {startDate, endDate, defaultStartDate, defaultEndDate} = this.state;
       if (!endDate || !startDate) {
-        startDate= defaultStartDate
-        endDate= defaultEndDate
+        startDate= defaultStartDate; 
+        endDate= defaultEndDate;
       }
       this.setState({ reportType: this.props.reportType, reportData: [], startDate, endDate }, () => {
         this.getReportLayout();
@@ -176,20 +176,21 @@ export default class SSChecklist extends React.PureComponent {
   }
 
   getReportLayout() {
+    const valFromCookie = JSON.parse(localStorage.getItem('userFilter'));
     this.state.source?.cancel('Cancel outdated report calls');
     if (!this.state.endDate || !this.state.startDate) {
       return;
     }
-    const valFromCookie = JSON.parse(localStorage.getItem('userFilter'));
-    this.setState({ tileRequest: [], reportData: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source() },
+    this.setState({ tileRequest: [], reportData: [], isFilterApplied: true, isLoading: true, modalTile: null, source: axios.CancelToken.source(),
+      startDate: moment(valFromCookie?.startDate), endDate: moment(valFromCookie?.endDate)}, 
       () => {
         const specialty = this.state.selectedSpecialty?.id;
         const jsonBody = {
           "dashboardName": this.state.reportType,
           "facilityId": this.props.userFacility,
 
-          "startDate": valFromCookie?.startDate,
-          "endDate": valFromCookie?.endDate,
+          "startDate": this.state.startDate?.format('YYYY-MM-DD'),
+          "endDate": this.state.endDate?.format('YYYY-MM-DD'),
 
           "roomId": this.state.selectedOperatingRoom?.id || null,
           "specialtyName": specialty == "" ? null : specialty,
