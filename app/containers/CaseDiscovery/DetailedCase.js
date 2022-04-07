@@ -1020,8 +1020,7 @@ const AddFlagForm = ({ handleOpenAddFlag, reportId, procedureTitle, requestEMMDe
 
   const translateRoomNametoId = () => {
     if (roomIds && roomName) {
-      const room = roomIds.find(room => room.display === roomName);
-      if (room) return room.id;
+      return Object.keys(roomIds).find(key => roomIds[key] === roomName);
     }
   };
 
