@@ -42,7 +42,7 @@ class UniversalPicker extends React.Component {
   constructor(props) {
     super(props);
     const defaultThreshold = this.props.defaultThreshold || 0;
-    const defaultDate = 'All time';
+    const defaultDate = 'Most recent month';
     const defaultState = JSON.parse(localStorage.getItem('userFilter')) ?? {}
     this.state = {
       isORLoading: true,
