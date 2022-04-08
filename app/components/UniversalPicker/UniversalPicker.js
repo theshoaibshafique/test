@@ -194,7 +194,7 @@ class UniversalPicker extends React.Component {
     const defaultThreshold = globalFunctions.formatSecsToTime(this.props.defaultThreshold, true, true).trim() || "0 min";
     return (
       <Grid container spacing={1} justify="center" className="universal-picker">
-        <span style={{ display: 'flex', alignItems: 'center', marginRight: 16 }}><SearchIcon /></span>
+        <span style={{ display: 'flex', alignItems: 'center', marginRight: 16 }}></span>
         {this.state.showDate && <Grid item xs={1} style={{ minWidth: 258 }}>
           <CustomDateRangePicker 
             dateLabel={this.state.selectedDate} 
