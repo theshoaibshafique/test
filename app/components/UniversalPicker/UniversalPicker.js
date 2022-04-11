@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid, TextField, FormControl, MenuItem, Select, Button, withStyles, Typography, InputLabel, FormHelperText } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
 import './style.scss';
 import globalFunctions from '../../utils/global-functions';
 import moment from 'moment/moment';
