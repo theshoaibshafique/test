@@ -80,8 +80,9 @@ function Phase(props) {
   const { isActive, phaseName, cIndex, pIndex, questions, togglePhase } = props;
   const toggle = () => togglePhase(cIndex, pIndex);
 
+  const clss = phaseName?.toLowerCase().replace(/\s/g, '');
   return (
-    <Card className={`phase ${isActive ? 'active' : 'inactive'}`} variant="outlined">
+    <Card className={`phase ${isActive ? 'active' : 'inactive'} ${clss}`} variant="outlined">
       <div className="phase-header">
         <div className="subtitle subtle-subtext">{phaseName}</div>
         <div>
