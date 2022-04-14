@@ -101,7 +101,7 @@ const BlockUtilization = React.memo(() => {
       
       let body = null;
       if (config) {
-        const {start,end} = getPresetDates(dateLabel)
+        const {start,end} = getPresetDates(dateLabel, 'efficiencyV2')
         body = {
           facilityName: userFacility,
           startDate: moment(start).format('YYYY-MM-DD'),
