@@ -1557,9 +1557,6 @@ function HL7Chart(props) {
     legend: {
       show: false
     },
-    point: {
-      show: hasHL7Data
-    },
     axis: {
       x: {
         tick: {
@@ -1943,24 +1940,13 @@ function ClipTimeline(props) {
             {leftArrow}
             <Grid container spacing={0} className="clip-details">
               <Grid item xs={9}>
-                <VideoPlayer params={selectedMarker.params} presenterMode={presenterMode} />
+                <VideoPlayer params={selectedMarker.params} presenterMode={true} />
                 <div className="subtle-text clip-information">
                   <div>({displayStart} to {displayEnd})</div>
                   <div>{index + 1} of {timeline.length} Clips</div>
                 </div>
               </Grid>
               <Grid item xs={3} className="flag-details normal-text">
-                {isAdmin && <div>
-                  <FormControlLabel
-                    control={
-                      <SSTSwitch
-                        checked={presenterMode}
-                        onChange={switchPresenterMode}
-                      />
-                    }
-                    label="Presentation Mode"
-                  />
-                </div>}
                 <div className="details-header">
                   Flag Details
                 </div>

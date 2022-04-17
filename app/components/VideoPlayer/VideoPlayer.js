@@ -27,20 +27,20 @@ export function VideoPlayer(props) {
   const drmType = checkDrmType();
   const [Node, setNode] = React.useState(0);
   const [mediaPlayer, setPlayer] = React.useState(null);
-  
+
   //Delete the player on close
   useEffect(() => {
     return () => {
       mediaPlayer?.dispose();
     }
   }, [])
-  
+
   useEffect(() => {
     if (!Node || !params) {
       return;
     }
     let player = mediaPlayer;
-    const mediaUrl = `${process.env.CASE_DISCOVERY_API}${(presenterMode) ? 'presenter' : 'media'}${params}`;
+    const mediaUrl = `${process.env.CASE_DISCOVERY_API}media${params}`;
     globalFunctions.axiosFetchWithCredentials(`${mediaUrl}&drm_type=${drmType}`, 'get', userToken, {})
       .then(result => {
         result = result.data
@@ -51,52 +51,17 @@ export function VideoPlayer(props) {
           function onPlayerReady() { }
         );
 
-        const { src, token } = result;
+        const { src } = result;
         if (typeof player.eme === 'function') {
           player.eme();
         }
 
-        let playerConfig;
-        if (presenterMode) {
-          playerConfig = {
-            src: src,
-            type: 'application/dash+xml',
-            withCredentials: true,
-          };
-        } else if (drmType === 'Widevine') {
-
-          playerConfig = {
-            src: src,
-            type: 'application/dash+xml',
-            withCredentials: true,
-            keySystems: {
-              'com.widevine.alpha': {
-                url: licenseUri,
-                licenseHeaders: {
-                  'pallycon-customdata-v2': token
-                },
-                videoRobustness: 'SW_SECURE_CRYPTO',
-                audioRobustness: 'SW_SECURE_CRYPTO'
-              }
-            }
-          };
-        } else if (drmType === 'PlayReady') {
-          playerConfig = {
-            src: src,
-            type: 'application/dash+xml',
-            withCredentials: true,
-            keySystems: {
-              'com.microsoft.playready': {
-                url: licenseUri,
-                licenseHeaders: {
-                  'pallycon-customdata-v2': token
-                },
-                videoRobustness: 'SW_SECURE_CRYPTO',
-                audioRobustness: 'SW_SECURE_CRYPTO'
-              }
-            }
-          };
-        }
+        let playerConfig = {
+          src: src,
+          // 'private' in src means url is video is HLS, otherwise dash made by AWS MediaConvert
+          type: src.includes('private') ? 'application/x-mpegURL' : 'application/dash+xml',
+          withCredentials: true,
+        };
         player.src(playerConfig);
         setPlayer(player);
       });
