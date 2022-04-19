@@ -7,6 +7,7 @@ export function redirectLogin(logger) {
     const scope = '&scope=openid';
     const grant_type = '&grant_type=password';
     const code_challenge_method = '&code_challenge_method=S256';
+    const expires = `&expires=${(new Date()).getTime() + 1000 * 60 * 30}`;
 
     const code_verifier = generate_code_verifier();
     const verifier_list = JSON.parse(localStorage.getItem('verifier_list')) || [];
@@ -14,16 +15,16 @@ export function redirectLogin(logger) {
     localStorage.setItem('verifier_list', JSON.stringify([...verifier_list, code_verifier]));
     const challenge = generate_code_challenge(code_verifier);
     const code_challenge = `&code_challenge=${challenge}`;
-    
+
     logger?.manualAddLog('session', `verifier_and_challenge`, {'verifier': code_verifier, 'challenge':challenge});
     logger?.sendLogs();
     const state = `&state=${generate_code_verifier()}`;
     localStorage.setItem('state', state);
     localStorage.setItem('redirect', window.location.pathname + window.location.search)
 
-    const parameters = `${redirectUri}${code_challenge}${code_challenge_method}${clientId}${state}${response_type}${grant_type}${scope}`
+    const parameters = `${redirectUri}${code_challenge}${code_challenge_method}${clientId}${state}${response_type}${grant_type}${scope}${expires}`
     return  `${url}${parameters}`;
-    
+
 }
 
 function generate_code_verifier() {
@@ -92,7 +93,7 @@ var sha256 = function sha256(ascii) {
         for (i = 0; i < 64; i++) {
             var i2 = i + j;
             // Expand the message into 64 words
-            // Used below if 
+            // Used below if
             var w15 = w[i - 15], w2 = w[i - 2];
 
             // Iterate
