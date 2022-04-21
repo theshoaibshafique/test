@@ -31,9 +31,6 @@ const TrendTile = ({
 
   //If data changes - we assume APPLY was clicked and we re-set ranges
   React.useEffect(() => {
-    const startDate = moment(data?.data?.startDate).valueOf();
-    const endDate = moment(data?.data?.endDate).valueOf();
-
     const config = getItemFromStore('globalFilter');
     const min = startDate;
     const max = endDate;
