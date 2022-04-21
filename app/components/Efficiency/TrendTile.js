@@ -35,14 +35,14 @@ const TrendTile = ({
     const endDate = moment(data?.data?.endDate).valueOf();
 
     const config = getItemFromStore('globalFilter');
-    const min = config?.startDate ? moment(config?.startDate).valueOf() + 86400000 : 0;
-    const max = config?.endDate ? moment(config?.endDate).valueOf() : 100;
+    const min = startDate;
+    const max = endDate;
     setRange({
       min,
       max
     });
-    const start = config?.startDate ? moment(config?.startDate).valueOf() : startDate;
-    const end = config?.endDate ? moment(config?.endDate).valueOf() : endDate;
+    const start = data?.data?.startDate ? moment(data?.data?.startDate).valueOf() : 0;
+    const end = data?.data?.endDate ? moment(data?.data?.endDate).valueOf() : 0;
     setTrendSlider([start, end]);
   }, [data]);
 
