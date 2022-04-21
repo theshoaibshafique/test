@@ -112,7 +112,7 @@ const TrendTile = ({
           startLabel={valueLabelFormat(range.min)}
           endLabel={valueLabelFormat(range.max)}
           valueLabelFormat={valueLabelFormat}
-          rangeLabel={`${Math.floor((sliderEnd - sliderStart) / DAY_MS)} days selected`}
+          rangeLabel={`${Math.floor((sliderEnd - sliderStart + 1) / DAY_MS)} days selected`}
         />
       </Grid>
     </React.Fragment>
