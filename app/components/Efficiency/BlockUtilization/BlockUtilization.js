@@ -263,7 +263,7 @@ const BlockUtilization = React.memo(() => {
 
   const get30DayTooltip = () => {
     const endRange = moment(state.endDate);
-    const startRange = endRange.clone().add(-30, 'day');
+    const startRange = endRange.clone().add(-29, 'day');
     return `Change in 30 day moving average from ${startRange.format('MMM D YYYY')} to ${endRange.format('MMM D YYYY')}`
   }
 
